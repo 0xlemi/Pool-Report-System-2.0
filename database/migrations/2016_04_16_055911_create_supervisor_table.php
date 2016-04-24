@@ -21,15 +21,16 @@ class CreateSupervisorTable extends Migration
             $table->string('address');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->string('image');
-            $table->string('tn_image');
+            $table->char('language', 2);
             $table->text('comments');
             $table->integer('user_id')->unsigned();
+            $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->timestamps();
         });
 
         Schema::table('supervisors', function(Blueprint $table){
+            $table->unique(array('user_id', 'email'), 'supervisors_email_unique');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')

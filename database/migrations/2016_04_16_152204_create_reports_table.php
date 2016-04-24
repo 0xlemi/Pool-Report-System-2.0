@@ -16,24 +16,19 @@ class CreateReportsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->dateTime('completed');
-            $table->tinyInteger('on_time');
+            $table->tinyInteger('on_time'); // 1=onTime, 2=late, 3=early
             $table->integer('ph');
             $table->integer('clorine')->nullable();
             $table->integer('temperature');
             $table->integer('turbidity');
             $table->integer('salt')->nullable();
-            $table->string('image_1');
-            $table->string('image_2');
-            $table->string('image_3');
-            $table->string('tn_image_1');
-            $table->string('tn_image_2');
-            $table->string('tn_image_3');
             $table->decimal('latitude', 9, 6);
             $table->decimal('longitude', 9, 6);
             $table->decimal('altitude', 8, 2);
             $table->decimal('accuracy', 8, 2);
             $table->integer('service_id')->unsigned();
             $table->integer('technician_id')->unsigned();
+            $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->timestamps();
         });

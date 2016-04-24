@@ -1,38 +1,38 @@
 <div class="mobile-menu-left-overlay"></div>
 <nav class="side-menu">
     <ul class="side-menu-list">
-        <li class="brown">
-            <a href="mail.html">
+        <li class="brown {{ Request::is('reports*')? 'opened':'' }}">
+            <a href="{{ url('/reports') }}">
                 <i class="font-icon font-icon-notebook"></i>
-                <span class="lbl">Report</span>
+                <span class="lbl">Reports</span>
             </a>
         </li>
-        <li class="red">
-            <a href="mail.html">
+        <li class="red {{ Request::is('services*')? 'opened':'' }}">
+            <a href="{{ url('/services') }}">
                 <i class="font-icon glyphicon glyphicon-home"></i>
-                <span class="lbl">Service</span>
+                <span class="lbl">Services</span>
             </a>
         </li>
-        <li class="blue">
-            <a href="mail.html">
+        <li class="blue {{ Request::is('clients*')? 'opened':'' }}">
+            <a href="{{ url('/clients') }}">
                 <i class="font-icon glyphicon glyphicon-user"></i>
                 <span class="lbl">Clients</span>
             </a>
         </li>
-        <li class="gold">
-            <a href="mail.html">
+        <li class="gold {{ Request::is('supervisors*')? 'opened':'' }}">
+            <a href="{{ url('/supervisors') }}">
                 <i class="font-icon glyphicon glyphicon-eye-open"></i>
-                <span class="lbl">Supervisor</span>
+                <span class="lbl">Supervisors</span>
             </a>
         </li>
-        <li class="magenta">
-            <a href="mail.html">
+        <li class="magenta {{ Request::is('technicians*')? 'opened':'' }}">
+            <a href="{{ url('/technicians') }}">
                 <i class="font-icon glyphicon glyphicon-wrench"></i>
-                <span class="lbl">Technician</span>
+                <span class="lbl">Technicians</span>
             </a>
         </li>
-        <li class="aquamarine">
-            <a href="mail.html">
+        <li class="aquamarine {{ Request::is('chat*')? 'opened':'' }}">
+            <a href="{{ url('/chat') }}">
                 <i class="font-icon font-icon-comments"></i>
                 <span class="lbl">Chat</span>
             </a>

@@ -160,6 +160,7 @@ return [
          * Third Party Service Providers
          */
         Intervention\Image\ImageServiceProvider::class,
+        Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
 
     ],
 
@@ -208,6 +209,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
         'Image' => Intervention\Image\Facades\Image::class,
+        'JavaScript' => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
     ],
 
 ];

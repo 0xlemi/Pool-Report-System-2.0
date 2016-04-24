@@ -20,6 +20,7 @@ class CreateClientServicesTable extends Migration
         });
 
         Schema::table('client_service', function(Blueprint $table){
+            $table->primary(['client_id', 'service_id']);
             $table->foreign('client_id')
                 ->references('id')
                 ->on('clients')

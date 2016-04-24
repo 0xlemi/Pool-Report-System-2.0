@@ -1,10 +1,91 @@
 <?php
-function set_up_database_examples(){
-	factory(App\User::class, 2)->create();
-	factory(App\Service::class, 60)->create();
-	factory(App\Supervisor::class, 10)->create();
+use Carbon\Carbon;
+
+/**
+ * Reports Controller functions
+ */
+
+function validateDate($date){
+    $d = DateTime::createFromFormat('Y-m-d', $date);
+    return $d && $d->format('Y-m-d') === $date;
+}
+
+function onTime_tag($on_time){
+	switch ($on_time) {
+		case '1':
+			return '<span class="label label-success">Done on Time</span>';
+			break;
+		case '2':
+			return '<span class="label label-danger">Done Late</span>';
+			break;
+		case '3':
+			return '<span class="label label-warning">Done Early</span>';
+			break;
+		default:
+			return '<span class="label label-default">Unknown</span>';
+			break;
+	}
+}
+
+function readings_tag($value, $is_turbidity = false){
+	if(!$is_turbidity){
+		switch ($value) {
+			case '1':
+				return '<span class="label label-info">Very Low</span>';
+				break;
+			case '2':
+				return '<span class="label label-primary">Low</span>';
+				break;
+			case '3':
+				return '<span class="label label-success">Perfect</span>';
+				break;
+			case '4':
+				return '<span class="label label-warning">High</span>';
+				break;
+			case '5':
+				return '<span class="label label-danger">Very High</span>';
+				break;
+			default:
+				return '<span class="label label-default">Unknown</span>';
+				break;
+		}
+	}
+	switch ($value) {
+		case '1':
+			return '<span class="label label-success">Perfect</span>';
+			break;
+		case '2':
+			return '<span class="label label-primary">Low</span>';
+			break;
+		case '3':
+			return '<span class="label label-warning">High</span>';
+			break;
+		case '4':
+			return '<span class="label label-danger">Very High</span>';
+			break;
+		default:
+			return '<span class="label label-default">Unknown</span>';
+			break;
+	}
+}
+
+function format_date($date){
+	//****** missing thing is to convert the time to client timezone before sendig *********
+	return (new Carbon($date))->format('l jS \\of F Y h:i:s A');
+}
+
+
+/**
+ * Database factory functions
+ */
+
+function fill_database(){
+	// factory(App\User::class, 2)->create();
 	factory(App\Service::class, 30)->create();
-	factory(App\Service::class, 30)->create();
+	factory(App\Supervisor::class, 3)->create();
+	factory(App\Client::class, 15)->create();
+	factory(App\Technician::class, 10)->create();
+	factory(App\Report::class, 150)->create();
 }
 
 function save_random_image($folder_to_save, $type_of_photo = "nature"){

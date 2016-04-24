@@ -25,6 +25,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * Get reports associatod with this user
+     */
+    public function reports(){
+        return $this->hasManyThrough('App\Report', 'App\Service');
+    }
+
+    /**
      *  Get services associated with this user
      * 
      */
@@ -32,12 +39,23 @@ class User extends Authenticatable
         return $this->hasMany('App\Service');
     }
 
+    // public function clients(){
+    //     return $this->belongsToManyThrough('App\Client', 'App\Service');
+    // }
+
     /**
      *  Get supervisors assaciated with this user
      * 
      */
     public function supervisors(){
         return $this->hasMany('App\Supervisor');
+    }
+    
+    /**
+     * Get technicians assaciated with this user
+     */
+    public function technicians(){
+        return $this->hasManyThrough('App\Technician', 'App\Supervisor');
     }
 
 }

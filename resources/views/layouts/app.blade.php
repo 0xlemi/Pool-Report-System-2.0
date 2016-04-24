@@ -6,9 +6,10 @@
 
 <div class="page-content">
     <div class="container-fluid">
-        Blank page.
+        @yield('content')
     </div><!--.container-fluid-->
 </div><!--.page-content-->
 
+@include('layouts.footer')
 </body>
 </html>

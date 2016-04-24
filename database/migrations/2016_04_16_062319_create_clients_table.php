@@ -20,11 +20,12 @@ class CreateClientsTable extends Migration
             $table->string('cellphone');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->string('image');
-            $table->string('tn_image');
             $table->tinyInteger('type');
             $table->tinyInteger('email_preferences');
+            $table->char('language', 2);
             $table->text('comments');
+            $table->integer('seq_id')->index();
+            $table->integer('user_id');
             $table->softDeletes();
             $table->timestamps();
         });

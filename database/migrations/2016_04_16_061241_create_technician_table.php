@@ -21,10 +21,10 @@ class CreateTechnicianTable extends Migration
             $table->string('address');
             $table->string('username')->unique()->index();
             $table->string('password');
-            $table->string('image');
-            $table->string('tn_image');
+            $table->char('language', 2);
             $table->text('comments');
             $table->integer('supervisor_id')->unsigned();
+            $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->timestamps();
         });

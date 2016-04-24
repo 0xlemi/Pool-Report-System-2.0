@@ -1,8 +1,8 @@
 <header class="site-header">
     <div class="container-fluid">
         <a href="#" class="site-logo">
-            <img class="hidden-md-down" src="img/logo-2.png" alt="">
-            <img class="hidden-lg-up" src="img/logo-2-mob.png" alt="">
+            <img class="hidden-md-down" src="{{ url('img/logo-2.png') }}" alt="">
+            <img class="hidden-lg-up" src="{{ url('img/logo-2-mob.png') }}" alt="">
         </a>
         <button class="hamburger hamburger--htla">
             <span>toggle menu</span>
@@ -27,7 +27,7 @@
                             <div class="dropdown-menu-notif-list">
                                 <div class="dropdown-menu-notif-item">
                                     <div class="photo">
-                                        <img src="img/photo-64-1.jpg" alt="">
+                                        <img src="{{ url('img/photo-64-1.jpg') }}" alt="">
                                     </div>
                                     <div class="dot"></div>
                                     <a href="#">Morgan</a> was bothering about something
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="dropdown-menu-notif-item">
                                     <div class="photo">
-                                        <img src="img/photo-64-2.jpg" alt="">
+                                        <img src="{{ url('img/photo-64-2.jpg') }}" alt="">
                                     </div>
                                     <div class="dot"></div>
                                     <a href="#">Lioneli</a> had commented on this <a href="#">Super Important Thing</a>
@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="dropdown-menu-notif-item">
                                     <div class="photo">
-                                        <img src="img/photo-64-3.jpg" alt="">
+                                        <img src="{{ url('img/photo-64-3.jpg') }}" alt="">
                                     </div>
                                     <div class="dot"></div>
                                     <a href="#">Xavier</a> had commented on the <a href="#">Movie title</a>
@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="dropdown-menu-notif-item">
                                     <div class="photo">
-                                        <img src="img/photo-64-4.jpg" alt="">
+                                        <img src="{{ url('img/photo-64-4.jpg') }}" alt="">
                                     </div>
                                     <a href="#">Lionely</a> wants to go to <a href="#">Cinema</a> with you to see <a href="#">This Movie</a>
                                     <div class="color-blue-grey-lighter">7 hours ago</div>
@@ -99,22 +99,22 @@
                                 <div class="tab-pane active" id="tab-incoming" role="tabpanel">
                                     <div class="dropdown-menu-messages-list">
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/photo-64-2.jpg" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/photo-64-2.jpg') }}" alt=""></span>
                                             <span class="mess-item-name">Tim Collins</span>
                                             <span class="mess-item-txt">Morgan was bothering about something!</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/avatar-2-64.png" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/avatar-2-64.png') }}" alt=""></span>
                                             <span class="mess-item-name">Christian Burton</span>
                                             <span class="mess-item-txt">Morgan was bothering about something! Morgan was bothering about something.</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/photo-64-2.jpg" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/photo-64-2.jpg') }}" alt=""></span>
                                             <span class="mess-item-name">Tim Collins</span>
                                             <span class="mess-item-txt">Morgan was bothering about something!</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/avatar-2-64.png" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/avatar-2-64.png') }}" alt=""></span>
                                             <span class="mess-item-name">Christian Burton</span>
                                             <span class="mess-item-txt">Morgan was bothering about something...</span>
                                         </a>
@@ -123,22 +123,22 @@
                                 <div class="tab-pane" id="tab-outgoing" role="tabpanel">
                                     <div class="dropdown-menu-messages-list">
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/avatar-2-64.png" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/avatar-2-64.png') }}" alt=""></span>
                                             <span class="mess-item-name">Christian Burton</span>
                                             <span class="mess-item-txt">Morgan was bothering about something! Morgan was bothering about something...</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/photo-64-2.jpg" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/photo-64-2.jpg') }}" alt=""></span>
                                             <span class="mess-item-name">Tim Collins</span>
                                             <span class="mess-item-txt">Morgan was bothering about something! Morgan was bothering about something.</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/avatar-2-64.png" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/avatar-2-64.png') }}" alt=""></span>
                                             <span class="mess-item-name">Christian Burtons</span>
                                             <span class="mess-item-txt">Morgan was bothering about something!</span>
                                         </a>
                                         <a href="#" class="mess-item">
-                                            <span class="avatar-preview avatar-preview-32"><img src="img/photo-64-2.jpg" alt=""></span>
+                                            <span class="avatar-preview avatar-preview-32"><img src="{{ url('img/photo-64-2.jpg') }}" alt=""></span>
                                             <span class="mess-item-name">Tim Collins</span>
                                             <span class="mess-item-txt">Morgan was bothering about something!</span>
                                         </a>
@@ -177,14 +177,14 @@
 
                     <div class="dropdown user-menu">
                         <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="img/avatar-2-64.png" alt="">
+                            <img src="{{ url('img/avatar-2-64.png') }}" alt="">
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-user-menu">
-                            <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-user"></span>Profile</a>
-                            <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-cog"></span>Settings</a>
+                            <a class="dropdown-item" href="{{ url('/profile') }}"><span class="font-icon glyphicon glyphicon-user"></span>Profile</a>
+                            <a class="dropdown-item" href="{{ url('/settings') }}"><span class="font-icon glyphicon glyphicon-cog"></span>Settings</a>
                             <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-question-sign"></span>Help</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
+                            <a class="dropdown-item" href="{{ url('/logout') }}"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
                         </div>
                     </div>
 

@@ -21,6 +21,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
         'password' => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
+        'language' => $faker->languageCode,
     ];
 });
 
@@ -37,12 +38,11 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
 
 	return [
 		'name' => $faker->words($nb = 2, $asText = true),
-		'address_line_1' => $faker->streetAddress,
-		'address_line_2' => $faker->secondaryAddress,
+		'address_line' => $faker->streetAddress,
         'state' => $faker->state,
         'postal_code' => $faker->postcode,
         'country' => $faker->country,
-        'type' => $faker->numberBetween(1, 2),
+        'type' => $faker->numberBetween(1, 2), // not sure what types
         'service_days' => $faker->numberBetween(0, 127),
         'amount' => $faker->numberBetween(75, 350),
         'currency' => $faker->currencyCode,
@@ -158,4 +158,8 @@ $factory->define(App\Report::class, function (Faker\Generator $faker){
         'service_id' => $service_id,
         'technician_id' => $technician_id,
 	];
+});
+
+$factory->define(App\Image::class, function (Faker\Generator $faker){
+
 });

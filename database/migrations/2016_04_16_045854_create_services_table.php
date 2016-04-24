@@ -16,8 +16,7 @@ class CreateServicesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name');
-            $table->string('address_line_1');
-            $table->string('address_line_2');
+            $table->string('address_line');
             $table->string('state');
             $table->integer('postal_code');
             $table->string('country');
@@ -28,10 +27,9 @@ class CreateServicesTable extends Migration
             $table->integer('start_time');
             $table->integer('end_time');
             $table->boolean('status');
-            $table->string('image');
-            $table->string('tn_image');
             $table->text('comments');
             $table->integer('user_id')->unsigned();
+            $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->timestamps();
         });
