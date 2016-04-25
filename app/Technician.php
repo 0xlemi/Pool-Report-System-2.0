@@ -43,4 +43,9 @@ class Technician extends Model
     public function reports(){
     	return $this->hasMany('App\Report');
     }
+
+    public function user(){
+    	$user_id = Supervisor::findOrFail($this->supervisor_id)->user_id;
+    	return User::findOrFail($user_id);
+    }
 }

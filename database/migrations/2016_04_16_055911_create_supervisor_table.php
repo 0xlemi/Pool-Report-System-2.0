@@ -19,7 +19,7 @@ class CreateSupervisorTable extends Migration
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->string('email')->unique()->index();
+            $table->string('email')->index();
             $table->string('password');
             $table->char('language', 2);
             $table->text('comments');

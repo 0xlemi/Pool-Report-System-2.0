@@ -20,7 +20,7 @@ class CreateClientsTable extends Migration
             $table->string('cellphone');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->tinyInteger('type');
+            $table->tinyInteger('type'); // 1=owner, 2=house administrator
             $table->tinyInteger('email_preferences');
             $table->char('language', 2);
             $table->text('comments');

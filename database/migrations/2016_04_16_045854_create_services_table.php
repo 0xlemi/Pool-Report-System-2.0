@@ -20,7 +20,7 @@ class CreateServicesTable extends Migration
             $table->string('state');
             $table->integer('postal_code');
             $table->string('country');
-            $table->tinyInteger('type');
+            $table->tinyInteger('type'); // 1=clorine, 2=salt
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);
             $table->char('currency', 3);

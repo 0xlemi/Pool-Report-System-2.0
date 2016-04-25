@@ -76,7 +76,7 @@ function format_date($date){
 
 
 /**
- * Database factory functions
+ * Database factory and seed functions
  */
 
 function fill_database(){
@@ -130,4 +130,29 @@ function get_random_table_id($table){
 	
 	$table_ids = \DB::table($table)->select('id')->get();
     return $faker->randomElement($table_ids)->id;
+}
+
+function get_random_service_form_user_id($user_id){
+	$faker = Faker\Factory::create();
+
+	$table_ids = \DB::table('services')->select('id')->where('user_id', '=', $user_id)->get();
+    return $faker->randomElement($table_ids)->id;
+}
+
+function truncate_tables($toTruncate){
+	DB::unprepared('SET FOREIGN_KEY_CHECKS = 0;');
+	foreach($toTruncate as $table){
+		DB::table($table)->truncate();
+	}
+	DB::unprepared('SET FOREIGN_KEY_CHECKS = 1;');
+}
+
+function delete_in_public_storage($foldersToDelete){
+	foreach ($foldersToDelete as $folder) {
+		$files = glob(public_path('storage/images/'.$folder.'/*')); // get all file names
+		foreach($files as $file){ // iterate files
+		  if(is_file($file))
+		    unlink($file); // delete file
+		}
+	}
 }
