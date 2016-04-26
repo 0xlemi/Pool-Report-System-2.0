@@ -31,15 +31,6 @@ class Report extends Model
         'altitude',
         'accuracy',
     ];
-
-    /**
-     * Get the reports in this date
-     * @param  String $date  YYYY-MM-DD format date
-     */
-    public function scopeInDate($query, $date){
-        $date_carbon = (new Carbon($date))->toDateTimeString();
-        return $this->where(\DB::raw('DATEDIFF(completed, "'.$date_carbon.'")'), '=', '0')->get();
-    }
     
     /**
      * associated service with this report

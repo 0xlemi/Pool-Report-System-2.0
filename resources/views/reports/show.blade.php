@@ -7,8 +7,8 @@
 				<div class="tbl-cell">
 					<h3>View Report</h3>
 					<ol class="breadcrumb breadcrumb-simple">
-						<li><a href="{{ url('reports') }}">All Reports</a></li>
-						<li class="active">View Report {{ $report->id }}</li>
+						<li><a href="{{ url('reports') }}">Reports</a></li>
+						<li class="active">View Report {{ $report->seq_id }}</li>
 					</ol>
 				</div>
 			</div>
@@ -25,7 +25,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">ID</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->id }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->seq_id }}"></p>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -87,11 +87,11 @@
 						<p style="float: right;">
 							<a class="btn btn-danger" 
 							data-method="delete" data-token="{{ csrf_token() }}" 
-			        		data-confirm="Are you sure?" href="{{ url('/reports/'.$report->id) }}">
+			        		data-confirm="Are you sure?" href="{{ url('/reports/'.$report->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
-							href="{{ url('/reports/'.$report->id.'/edit') }}">
+							href="{{ url('/reports/'.$report->seq_id.'/edit') }}">
 							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Report</a>
 						</p>
 						<br>

@@ -44,6 +44,14 @@ class DatabaseSeeder extends Seeder
     		'timezone' => 'America/Mazatlan'
 
     	]);
+    	App\User::create([
+    		'name' => 'Pepe Gonzales',
+    		'email' => 'pepe@example.com',
+    		'password' => bcrypt('password'),
+    		'language' => 'es',
+    		'timezone' => 'America/Mazatlan'
+
+    	]);
     	$this->call(ServicesTableSeeder::class);
     	$this->call(SupervisorsTableSeeder::class);
     	$this->call(TechniciansTableSeeder::class);

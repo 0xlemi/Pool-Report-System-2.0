@@ -5,7 +5,7 @@ use App\Image;
 class ClientsTableSeeder extends Seeder
 {
     // number of clients to create
-    private $number_of_clients = 15;
+    private $number_of_clients = 60;
 
     /**
      * Run the database seeds.
@@ -52,6 +52,12 @@ class ClientsTableSeeder extends Seeder
     			'image' => $img['tn_img_path'],
     			'image_type' => 'T',
     		]);
+            // extra small image
+            Image::create([
+                'client_id' => $client_id,
+                'image' => $img['xs_img_path'],
+                'image_type' => 'S',
+            ]);
     	}
     }
 }

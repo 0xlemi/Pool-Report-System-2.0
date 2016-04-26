@@ -5,7 +5,7 @@ use App\Image;
 class SupervisorsTableSeeder extends Seeder
 {
     // number of supervisors to create
-    private $number_of_supervisors = 2;
+    private $number_of_supervisors = 6;
 
     /**
      * Run the database seeds.
@@ -32,6 +32,12 @@ class SupervisorsTableSeeder extends Seeder
     			'image' => $img['tn_img_path'],
     			'image_type' => 'T',
     		]);
+            // extra small image
+            Image::create([
+                'supervisor_id' => $supervisor_id,
+                'image' => $img['xs_img_path'],
+                'image_type' => 'S',
+            ]);
         }
     }
 }

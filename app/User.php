@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -32,6 +33,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the reports in this date
+     * @param  String $date  YYYY-MM-DD format date
+     */
+    public function reportsByDate($date){
+        $date_carbon = (new Carbon($date))->toDateTimeString();
+        return $this->hasManyThrough('App\Report', 'App\Service')
+                    ->where(\DB::raw('DATEDIFF(completed, "'.$date_carbon.'")'), '=', '0')
+                    ->get();
+    }
+
+    public function reportsBySeqId($seq_id){
+        return $this->hasManyThrough('App\Report', 'App\Service')
+                    ->where('reports.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
      *  Get services associated with this user
      * 
      */
@@ -55,7 +73,7 @@ class User extends Authenticatable
      * Get technicians assaciated with this user
      */
     public function technicians(){
-        return $this->hasManyThrough('App\Technician', 'App\Supervisor');
+        return $this->hasManyThrough('App\Technician', 'App\Supervisor')->orderBy('seq_id');
     }
 
 }

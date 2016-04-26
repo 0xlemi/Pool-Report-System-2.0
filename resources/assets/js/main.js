@@ -1,7 +1,39 @@
 var dateFormat = require('dateformat');
+var Vue = require('vue');
 
 $(document).ready(function(){
 // var dateFormat = require('dateformat');
+
+
+ /* ==========================================================================
+    Custom functions
+    ========================================================================== */
+
+/**
+ * Check if variable is instanciated
+ * @param  {string} strVariableName name of the variable to pass
+ * @return {boolean}
+ */
+function isset(strVariableName) { 
+	if(typeof back !== 'undefined'){
+        return (typeof back[strVariableName] !== 'undefined');
+	}
+	return false
+ } 
+
+ /* ==========================================================================
+    VueJs code
+    ========================================================================== */
+
+	 new Vue({
+	  el: 'body',
+	  data: {
+
+	  },
+	  methods:{
+
+	  }
+	});
 
 /* ==========================================================================
 	Scroll
@@ -1101,10 +1133,13 @@ $(document).ready(function(){
 			paginationSwitchDown:'font-icon-arrow-square-down',
 			paginationSwitchUp: 'font-icon-arrow-square-down up',
 			refresh: 'font-icon-refresh',
-			export: 'font-icon-download',
+			toggle: 'font-icon-list-square',
+			columns: 'font-icon-list-rotate',
+			export: 'font-icon-download'
 		},
 		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
 		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+		
 	});
 
     $('#reports_table').on( 'click-row.bs.table', function (e, row, $element) {
@@ -1121,18 +1156,30 @@ $(document).ready(function(){
 /* ==========================================================================
     Side datepicker
     ========================================================================== */
+    if(isset('date_selected')){
+	    $('#side-datetimepicker').datetimepicker({
+	        inline: true,
+	        format: 'YYYY-MM-DD',
+	        defaultDate: back.date_selected,
+	    });
+	}
 
-    $('#side-datetimepicker').datetimepicker({
-        inline: true,
-        format: 'YYYY-MM-DD',
-        defaultDate: back.date_selected,
-    });
-
-   $("#side-datetimepicker").on("dp.change", function(e) {
-   		var date = new Date(e.date._d);
-   		var date_selected = dateFormat(date, "yyyy-mm-dd");
-        window.location.href = back.date_url+date_selected;
-    });
+	if(isset('date_url')){
+	   	$("#side-datetimepicker").on("dp.change", function(e) {
+	   		var date = new Date(e.date._d);
+	   		var date_selected = dateFormat(date, "yyyy-mm-dd");
+	        window.location.href = back.date_url+date_selected;
+	    });
+   }
+   	if(isset('default_date')){
+	    $('#edit_report_datepicker').datetimepicker({
+	        widgetPositioning: {
+				horizontal: 'right'
+			},
+			debug: false,
+	        defaultDate: back.default_date,
+	    });
+	}
 
 /* ========================================================================== */
 });

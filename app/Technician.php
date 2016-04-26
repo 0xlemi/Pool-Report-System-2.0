@@ -44,8 +44,27 @@ class Technician extends Model
     	return $this->hasMany('App\Report');
     }
 
+    /**
+     * Associated reports with this technician
+     */
     public function user(){
     	$user_id = Supervisor::findOrFail($this->supervisor_id)->user_id;
     	return User::findOrFail($user_id);
+    }
+
+    /**
+     * Associated reports with this technician
+     */
+    public function images(){
+    	return $this->hasMany('App\Image');
+    }
+
+    /**
+     * Get the extra small image
+     */
+    public function icon(){
+    	return $this->hasMany('App\Image')
+    		->where('image_type', '=', 'S')
+           	->first()->image;
     }
 }

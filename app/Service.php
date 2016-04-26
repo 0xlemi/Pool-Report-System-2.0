@@ -50,4 +50,20 @@ class Service extends Model
     public function reports(){
     	return $this->hasMany('App\Report');
     }
+
+    /**
+     * Associated reports with this service
+     */
+    public function images(){
+        return $this->hasMany('App\Image');
+    }
+
+    /**
+     * Get the extra small image
+     */
+    public function icon(){
+        return $this->hasMany('App\Image')
+            ->where('image_type', '=', 'S')
+            ->first()->image;
+    }
 }

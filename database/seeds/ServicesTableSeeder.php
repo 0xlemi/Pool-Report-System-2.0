@@ -5,7 +5,7 @@ use App\Image;
 class ServicesTableSeeder extends Seeder
 {
     // number of services to create
-    private $number_of_services = 30;
+    private $number_of_services = 120;
 
     /**
      * Run the database seeds.
@@ -32,6 +32,12 @@ class ServicesTableSeeder extends Seeder
     			'image' => $img['tn_img_path'],
     			'image_type' => 'T',
     		]);
+            // extra small image
+            Image::create([
+                'service_id' => $service_id,
+                'image' => $img['xs_img_path'],
+                'image_type' => 'S',
+            ]);
     	}
     }
 }

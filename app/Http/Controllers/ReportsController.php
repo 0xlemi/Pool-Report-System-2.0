@@ -41,7 +41,7 @@ class ReportsController extends Controller
             return $this->index();
         }
 
-        $reports = Auth::user()->reports()->inDate($date);
+        $reports = Auth::user()->reportsByDate($date);
 
         JavaScript::put([
             'date_url' => url('reports/date').'/',
@@ -79,9 +79,9 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seq_id)
     {
-        $report = Report::findOrFail($id);
+        $report = Auth::user()->reportsBySeqId($seq_id);
         return view('reports.show', compact('report'));
     }
 
@@ -91,9 +91,17 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($seq_id)
     {
-        //
+        $report = Auth::user()->reportsBySeqId($seq_id);
+        $services = Auth::user()->services;
+        $technicians = Auth::user()->technicians;
+
+        $date = (new Carbon($report->completed))->format('m/d/Y h:i:s A');
+        JavaScript::put([
+            'default_date' => $date,
+        ]);
+        return view('reports.edit', compact('report', 'services', 'technicians'));
     }
 
     /**

@@ -5,7 +5,7 @@ use App\Image;
 class ReportsTableSeeder extends Seeder
 {
     // number of reports to create
-    private $number_of_reports = 50;
+    private $number_of_reports = 300;
 
     /**
      * Run the database seeds.

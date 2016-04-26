@@ -5,7 +5,7 @@ use App\Image;
 class TechniciansTableSeeder extends Seeder
 {
     // number of technicians to create
-    private $number_of_technicians = 7;
+    private $number_of_technicians = 30;
 
     /**
      * Run the database seeds.
@@ -32,6 +32,12 @@ class TechniciansTableSeeder extends Seeder
     			'image' => $img['tn_img_path'],
     			'image_type' => 'T',
     		]);
+            // extra small image
+            Image::create([
+                'technician_id' => $technician_id,
+                'image' => $img['xs_img_path'],
+                'image_type' => 'S',
+            ]);
         }
     }
 }

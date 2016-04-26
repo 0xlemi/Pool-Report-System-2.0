@@ -112,16 +112,23 @@ function get_random_image($folder_to_save, $folder_to_get, $file_number = 1){
 	$image_name = 'image_'.str_random(10).'.jpg';
     $img_path = 'storage/images/'.$folder_to_save.'/'.$image_name;
     $tn_img_path = 'storage/images/'.$folder_to_save.'/tn_'.$image_name;
+    $xs_img_path = 'storage/images/'.$folder_to_save.'/xs_'.$image_name;
 
 	$img = Image::make(base_path('resources/images/'.$folder_to_get.'/'.$file_number.'.jpg'));
 	$img->save('public/'.$img_path);
+
 	$img->resize(300, null, function ($constraint){
 	    $constraint->aspectRatio();
 	});
 	$img->save('public/'.$tn_img_path);
+
+	$img->resize(64, 64);
+	$img->save('public/'.$xs_img_path);
+
 	return [
 		'img_path' => $img_path,
 		'tn_img_path' => $tn_img_path,
+		'xs_img_path' => $xs_img_path,
 	];
 }
 

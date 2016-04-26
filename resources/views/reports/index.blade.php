@@ -42,19 +42,20 @@
 					   data-minimum-count-columns="2"
 					   data-pagination="true"
 					   data-show-footer="false"
-					   data-response-handler="responseHandler">
+					   data-response-handler="responseHandler"
+					   >
 					<thead>
 					    <tr>       
-					        <th data-field="id"># service</th>
-					        <th data-field="service">Service</th>
-					        <th data-field="on_time">On time</th>
-					        <th data-field="technician">Technician</th>
+					        <th data-field="id" data-sortable="true">#</th>
+					        <th data-field="service" data-sortable="true">Service</th>
+					        <th data-field="on_time" data-sortable="true">On time</th>
+					        <th data-field="technician" data-sortable="true">Technician</th>
 					    </tr>
 					</thead>
 					<tbody>
 						@foreach ($reports as $report)
 							<tr>
-								<td>{{ $report->id }}</td>
+								<td>{{ $report->seq_id }}</td>
 								<td>{{ $report->service->name }}</td>
 								<td>{{ $report->on_time }}</td>
 								<td>{{ $report->technician->name }}</td>
