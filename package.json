@@ -6,6 +6,8 @@
   "dependencies": {
     "bootstrap-sass": "^3.0.0",
     "dateformat": "^1.0.12",
+    "dropzone": "^4.3.0",
+    "fancybox": "^3.0.0",
     "laravel-elixir": "^5.0.0",
     "v": "0.0.9",
     "vue": "^1.0.21"

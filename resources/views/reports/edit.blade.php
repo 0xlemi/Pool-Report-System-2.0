@@ -214,6 +214,22 @@
 								</div>
 							</div>
 						</form>
+						<br>
+						<h4>Photos</h4>
+						<hr>
+						<div class="row">
+                            <div class="col-sm-12">
+                                <div class="box-typical-upload box-typical-upload-in">
+                                    <div class="drop-zone">
+	                                    <form id="addPhotosReport" action="{{ url('reports/photos/'.$report->seq_id)}}" method="POST" class="dropzone">
+	                                    	{{ csrf_field() }}
+	                                    	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
+	                                        <div class="drop-zone-caption">Drag file or click to upload</div></span></div>
+	                                    </form>   
+                                    </div><!--.drop-zone-->
+                                </div>
+                            </div><!--.col-->
+                        </div><!--.row-->
 						<hr>
 						<p style="float: left;">
 							<a  class="btn btn-danger"

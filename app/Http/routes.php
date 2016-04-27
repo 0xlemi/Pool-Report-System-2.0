@@ -22,6 +22,7 @@ Route::auth();
 
 Route::resource('reports', 'ReportsController');
 Route::get('reports/date/{date}', 'ReportsController@index_by_date');
+Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 
 Route::resource('services', 'ServicesController');
 Route::resource('clients', 'ClientsController');

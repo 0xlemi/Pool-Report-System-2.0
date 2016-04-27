@@ -16,8 +16,6 @@ class Client extends Model
 		'last_name',
 		'cellphone',
 		'email',
-		'image',
-		'tn_image',
 		'type',
 		'email_preferences',
 		'comments',

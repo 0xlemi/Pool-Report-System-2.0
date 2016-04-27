@@ -83,6 +83,12 @@
 								</div>
 							</div>
 						</form>
+						<br>
+						<h4>Pool Photos</h4>
+						<hr>
+						<div class="row">
+				            <!-- The Report image preview should go here -->
+						</div>
 						<hr>
 						<p style="float: right;">
 							<a class="btn btn-danger" 

@@ -10,6 +10,9 @@
     </div><!--.container-fluid-->
 </div><!--.page-content-->
 
+
+<script src="{{ url('js/plugins.js') }}"></script>
+<script src="{{ elixir('js/bundle.js') }}"></script>
 @include('layouts.footer')
 </body>
 </html>

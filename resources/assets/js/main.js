@@ -1,5 +1,6 @@
 var dateFormat = require('dateformat');
 var Vue = require('vue');
+var Dropzone = require("dropzone");
 
 $(document).ready(function(){
 // var dateFormat = require('dateformat');
@@ -1180,6 +1181,17 @@ function isset(strVariableName) {
 	        defaultDate: back.default_date,
 	    });
 	}
+
+/* ==========================================================================
+    Dropzone
+    ========================================================================== */
+
+    Dropzone.options.addPhotosReport = {
+    	paramName: 'photo',
+    	maxFilesize: 8,
+    	acceptedFiles: '.jpg, .jpeg, .png'
+    }
+
 
 /* ========================================================================== */
 });

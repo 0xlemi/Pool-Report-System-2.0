@@ -5,6 +5,12 @@ use Carbon\Carbon;
  * Reports Controller functions
  */
 
+function get_random_name($prefix, $file_type){
+	$faker = Faker\Factory::create();
+	return $prefix.'_'.str_random(5).'_'.time().'.'.$file_type;
+
+}
+
 function validateDate($date){
     $d = DateTime::createFromFormat('Y-m-d', $date);
     return $d && $d->format('Y-m-d') === $date;

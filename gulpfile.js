@@ -16,9 +16,10 @@ elixir(function(mix) {
     	.less('app.less', 'public/css/less.css')
     	.styles([
     		'bootstrap-table.css',
+    		'dropzone.css',
         	'app.css',
         	'custom.css'
     	], 'public/css/main.css')
-    	.browserify(['bootstrap-table.js','main.js'])
+    	.browserify(['bootstrap-table.js', 'main.js'])
     	.version(['css/sass.css', 'css/less.css', 'css/main.css', 'js/bundle.js']);
 });

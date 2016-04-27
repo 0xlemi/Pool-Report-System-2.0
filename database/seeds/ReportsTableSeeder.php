@@ -25,15 +25,15 @@ class ReportsTableSeeder extends Seeder
     			// normal image
 				Image::create([
 					'report_id' => $report_id,
-					'image' => $img['img_path'],
-					'image_order' => $e,
+					'path' => $img['img_path'],
+					'order' => $e,
 				]);
 				// thumbnail image
 				Image::create([
 					'report_id' => $report_id,
-					'image' => $img['tn_img_path'],
-					'image_type' => 'T',
-					'image_order' => $e,
+					'path' => $img['tn_img_path'],
+					'type' => 'T',
+					'order' => $e,
 				]);
     		}
     	}

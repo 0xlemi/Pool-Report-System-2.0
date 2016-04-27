@@ -31,6 +31,10 @@ class Report extends Model
         'altitude',
         'accuracy',
     ];
+
+    public function addImage(Image $image){
+        return $this->images()->save($image);
+    }
     
     /**
      * associated service with this report
@@ -44,5 +48,28 @@ class Report extends Model
      */
     public function technician(){
     	return $this->belongsTo('App\Technician');
+    }
+
+    /**
+     * associated images with this report
+     */
+    public function images(){
+        return $this->hasMany('App\Image');
+    }
+
+    /**
+     * Get the thumbnail image
+     */
+    public function thumbnail($num){
+        return $this->hasMany('App\Image')
+            ->where('type', '=', 'T')
+            ->where('order', '=', $num)
+            ->first()->image;
+    }
+
+    public function num_images(){
+        return $this->hasMany('App\Image')
+            ->where('type', '=', 'T')
+            ->count();
     }
 }

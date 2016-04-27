@@ -40,6 +40,7 @@ class User extends Authenticatable
         $date_carbon = (new Carbon($date))->toDateTimeString();
         return $this->hasManyThrough('App\Report', 'App\Service')
                     ->where(\DB::raw('DATEDIFF(completed, "'.$date_carbon.'")'), '=', '0')
+                    ->orderBy('seq_id')
                     ->get();
     }
 

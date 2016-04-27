@@ -24,19 +24,19 @@ class TechniciansTableSeeder extends Seeder
     		// normal image
     		Image::create([
     			'technician_id' => $technician_id,
-    			'image' => $img['img_path'],
+    			'path' => $img['img_path'],
     		]);
     		// thumbnail image
     		Image::create([
     			'technician_id' => $technician_id,
-    			'image' => $img['tn_img_path'],
-    			'image_type' => 'T',
+    			'path' => $img['tn_img_path'],
+    			'type' => 'T',
     		]);
             // extra small image
             Image::create([
                 'technician_id' => $technician_id,
-                'image' => $img['xs_img_path'],
-                'image_type' => 'S',
+                'path' => $img['xs_img_path'],
+                'type' => 'S',
             ]);
         }
     }
