@@ -15,7 +15,7 @@ class CreateChatTable extends Migration
         Schema::create('chat', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('report_id')->unsigned()->index();
+            $table->integer('report_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('technician_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);

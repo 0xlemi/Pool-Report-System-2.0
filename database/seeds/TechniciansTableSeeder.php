@@ -21,23 +21,12 @@ class TechniciansTableSeeder extends Seeder
     		$technician_id = factory(App\Technician::class)->create()->id;
 
     		// create images link it to technician
-    		// normal image
     		Image::create([
     			'technician_id' => $technician_id,
-    			'path' => $img['img_path'],
+    			'normal_path' => $img['img_path'],
+                'thumbnail_path' => $img['tn_img_path'],
+                'icon_path' => $img['xs_img_path'],
     		]);
-    		// thumbnail image
-    		Image::create([
-    			'technician_id' => $technician_id,
-    			'path' => $img['tn_img_path'],
-    			'type' => 'T',
-    		]);
-            // extra small image
-            Image::create([
-                'technician_id' => $technician_id,
-                'path' => $img['xs_img_path'],
-                'type' => 'S',
-            ]);
         }
     }
 }

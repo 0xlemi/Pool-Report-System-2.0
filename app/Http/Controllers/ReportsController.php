@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Report;
 use App\Photo;
+use App\Image;
 use Carbon\Carbon;
 use JavaScript;
 use Auth;
@@ -105,22 +106,25 @@ class ReportsController extends Controller
         return view('reports.edit', compact('report', 'services', 'technicians'));
     }
 
+
     public function addPhoto(Request $request, $seq_id){
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
+        $report = Auth::user()->reportsBySeqId($seq_id);
         $file = $request->file('photo');
 
-        // $name = get_random_name('image', $file->guessExtension());
+        $report->addImageFromForm($file);
 
-        // $file->move(public_path('storage/images/report/'), $name);
+    }
 
-        // $report = Auth::user()->reportsBySeqId($seq_id);
-
-        
-
-        // $report->addImage($image);
+    public function removePhoto($seq_id, $order){
+        $report = Auth::user()->reportsBySeqId($seq_id);
+        $image = $report->image($order);
+        if($image->delete()){
+            return redirect()->back();
+        }
     }
 
     /**

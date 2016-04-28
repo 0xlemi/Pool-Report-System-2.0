@@ -22,7 +22,8 @@
 						Report info:
 					</header>
 					<div class="card-block">
-						<form>
+						<form method="POST" action="{{ url('reports/'.$report->seq_id) }}">
+							{{ csrf_field() }}
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Compleated at:</label>
 								<div class="col-sm-10">
@@ -213,10 +214,49 @@
 									</select>
 								</div>
 							</div>
+							<br>
+							<br>
+							<p style="float: left;">
+								<a  class="btn btn-danger"
+								href="{{ url('/reports/'.$report->seq_id) }}">
+								<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
+								<button  class="btn btn-success"
+								type='submit'>
+								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Save Changes</button>
+							</p>
 						</form>
 						<br>
-						<h4>Photos</h4>
+						<br>
 						<hr>
+						<h4>Photos</h4>
+						<br>
+						<div class="row">
+							@foreach($report->images as $image)
+	                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
+	                                <div class="gallery-col">
+										<article class="gallery-item">
+											<img class="gallery-picture" src="{{ url($image->thumbnail_path) }}" alt="" height="158">
+											<div class="gallery-hover-layout">
+												<div class="gallery-hover-layout-in">
+													<p class="gallery-item-title">{{ get_image_tag($image->order) }}</p>
+													<div class="btn-group">
+														<a class="fancybox btn" href="{{ url($image->normal_path) }}" title="{{ get_image_tag($image->order) }}">
+															<i class="font-icon font-icon-eye"></i>
+														</a>
+														<a href="{{ url('reports/photos/'.$report->seq_id.'/'.$image->order) }}" 
+															data-method="delete" data-token="{{ csrf_token() }}"  class="btn">
+															<i class="font-icon font-icon-trash"></i>
+														</a>
+													</div>
+													<p>Photo number {{ $image->order }}</p>
+												</div>
+											</div>
+										</article>
+									</div><!--.gallery-col-->
+	                            </div><!--.col-->
+                            @endforeach
+                        </div><!--.row-->
+                        <br>
 						<div class="row">
                             <div class="col-sm-12">
                                 <div class="box-typical-upload box-typical-upload-in">
@@ -224,23 +264,12 @@
 	                                    <form id="addPhotosReport" action="{{ url('reports/photos/'.$report->seq_id)}}" method="POST" class="dropzone">
 	                                    	{{ csrf_field() }}
 	                                    	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
-	                                        <div class="drop-zone-caption">Drag file or click to upload</div></span></div>
+	                                        <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
 	                                    </form>   
                                     </div><!--.drop-zone-->
                                 </div>
                             </div><!--.col-->
                         </div><!--.row-->
-						<hr>
-						<p style="float: left;">
-							<a  class="btn btn-danger"
-							href="{{ url('/reports/'.$report->seq_id) }}">
-							<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
-							<a  class="btn btn-success"
-							href="{{ url('/reports/'.$report->seq_id) }}">
-							<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Save Changes</a>
-						</p>
-						<br>
-						<br>
 					</div>
 			</section>
 		</div>

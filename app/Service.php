@@ -63,7 +63,6 @@ class Service extends Model
      */
     public function icon(){
         return $this->hasMany('App\Image')
-            ->where('images.type', '=', 'S')
-            ->first()->path;
+            ->first()->icon_path;
     }
 }

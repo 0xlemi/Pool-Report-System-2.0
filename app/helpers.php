@@ -5,6 +5,23 @@ use Carbon\Carbon;
  * Reports Controller functions
  */
 
+function get_image_tag($order){
+	switch($order){
+		case 1:
+			return 'Main Pool Photo';
+			break;
+		case 2:
+			return 'Water Quality';
+			break;
+		case 3:
+			return 'Engine Room';
+			break;
+		default:
+			return 'Extra Photo';
+			break;
+	}
+}
+
 function get_random_name($prefix, $file_type){
 	$faker = Faker\Factory::create();
 	return $prefix.'_'.str_random(5).'_'.time().'.'.$file_type;
@@ -85,50 +102,19 @@ function format_date($date){
  * Database factory and seed functions
  */
 
-function fill_database(){
-	// factory(App\User::class, 2)->create();
-	factory(App\Service::class, 30)->create();
-	factory(App\Supervisor::class, 3)->create();
-	factory(App\Client::class, 15)->create();
-	factory(App\Technician::class, 10)->create();
-	factory(App\Report::class, 150)->create();
-}
-
-function save_random_image($folder_to_save, $type_of_photo = "nature"){
-	$faker = Faker\Factory::create();
-
-	$image_name = 'image_'.str_random(10).'.jpg';
-    $img_path = 'storage/images/'.$folder_to_save.'/'.$image_name;
-    $tn_img_path = 'storage/images/'.$folder_to_save.'/tn_'.$image_name;
-    $width = rand(1000, 1600);
-	$height = $width - rand(50, 250);
-	$img = Image::make($faker->imageUrl($width, $height, $type_of_photo));
-	$img->save('public/'.$img_path);
-	$img->resize(300, null, function ($constraint){
-	    $constraint->aspectRatio();
-	});
-	$img->save('public/'.$tn_img_path);
-	return [
-		'img_path' => $img_path,
-		'tn_img_path' => $tn_img_path,
-	];
-}
-
 function get_random_image($folder_to_save, $folder_to_get, $file_number = 1){
 	$image_name = 'image_'.str_random(10).'.jpg';
     $img_path = 'storage/images/'.$folder_to_save.'/'.$image_name;
     $tn_img_path = 'storage/images/'.$folder_to_save.'/tn_'.$image_name;
     $xs_img_path = 'storage/images/'.$folder_to_save.'/xs_'.$image_name;
 
-	$img = Image::make(base_path('resources/images/'.$folder_to_get.'/'.$file_number.'.jpg'));
+	$img = Intervention::make(base_path('resources/images/'.$folder_to_get.'/'.$file_number.'.jpg'));
 	$img->save('public/'.$img_path);
 
-	$img->resize(300, null, function ($constraint){
-	    $constraint->aspectRatio();
-	});
+	$img->fit(300);
 	$img->save('public/'.$tn_img_path);
 
-	$img->resize(64, 64);
+	$img->fit(64);
 	$img->save('public/'.$xs_img_path);
 
 	return [

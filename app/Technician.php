@@ -17,8 +17,6 @@ class Technician extends Model
 		'cellphone',
 		'address',
 		'username',
-		'image',
-		'tn_image',
 		'comments',
 	];
     
@@ -64,7 +62,6 @@ class Technician extends Model
      */
     public function icon(){
     	return $this->hasMany('App\Image')
-    		->where('images.type', '=', 'S')
-           	->first()->path;
+           	->first()->icon_path;
     }
 }

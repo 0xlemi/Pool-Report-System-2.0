@@ -17,8 +17,6 @@ class Supervisor extends Model
 		'cellphone',
 		'address',
 		'email',
-		'image',
-		'tn_image',
 		'comments',
 	];
     

@@ -22,17 +22,10 @@ class ReportsTableSeeder extends Seeder
     		for ($e=1; $e <= 3; $e++) {
     			$img = get_random_image('report', 'pool_photo_'.$e , rand(1, 50));
 
-    			// normal image
 				Image::create([
 					'report_id' => $report_id,
-					'path' => $img['img_path'],
-					'order' => $e,
-				]);
-				// thumbnail image
-				Image::create([
-					'report_id' => $report_id,
-					'path' => $img['tn_img_path'],
-					'type' => 'T',
+					'normal_path' => $img['img_path'],
+                    'thumbnail_path' => $img['tn_img_path'],
 					'order' => $e,
 				]);
     		}

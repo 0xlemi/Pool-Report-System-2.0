@@ -20,8 +20,9 @@ class CreateImagesTable extends Migration
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('service_id')->unsigned()->index()->nullable()->default(null);
-            $table->string('path');
-            $table->char('type', 1)->default('N'); // N=normal, T=thumbnail, S=icon
+            $table->string('normal_path'); // full resolution 
+            $table->string('thumbnail_path');   // 300x* image
+            $table->string('icon_path'); // 64x64 image
             $table->smallInteger('order')->default(1);
             $table->timestamps();
             $table->softDeletes();

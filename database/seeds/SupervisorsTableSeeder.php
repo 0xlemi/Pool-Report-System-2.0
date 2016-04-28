@@ -21,23 +21,12 @@ class SupervisorsTableSeeder extends Seeder
     		$supervisor_id = factory(App\Supervisor::class)->create()->id;
 
     		// create images link it to supervisor
-    		// normal image
     		Image::create([
     			'supervisor_id' => $supervisor_id,
-    			'path' => $img['img_path'],
+    			'normal_path' => $img['img_path'],
+                'thumbnail_path' => $img['tn_img_path'],
+                'icon_path' => $img['xs_img_path'],
     		]);
-    		// thumbnail image
-    		Image::create([
-    			'supervisor_id' => $supervisor_id,
-    			'path' => $img['tn_img_path'],
-    			'type' => 'T',
-    		]);
-            // extra small image
-            Image::create([
-                'supervisor_id' => $supervisor_id,
-                'path' => $img['xs_img_path'],
-                'type' => 'S',
-            ]);
         }
     }
 }
