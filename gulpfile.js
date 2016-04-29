@@ -17,6 +17,7 @@ elixir(function(mix) {
     	.styles([
     		'bootstrap-table.css',
     		'dropzone.css',
+            'slick.css',
         	'app.css',
         	'custom.css'
     	], 'public/css/main.css')

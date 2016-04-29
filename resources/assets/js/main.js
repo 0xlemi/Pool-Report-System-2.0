@@ -1,6 +1,7 @@
 var dateFormat = require('dateformat');
 var Vue = require('vue');
 var Dropzone = require("dropzone");
+var swal = require('sweetalert');
 
 $(document).ready(function(){
 // var dateFormat = require('dateformat');
@@ -1191,6 +1192,18 @@ function isset(strVariableName) {
     	maxFilesize: 8,
     	acceptedFiles: '.jpg, .jpeg, .png'
     }
+
+/* ==========================================================================
+    Custom Slick Carousel
+    ========================================================================== */
+
+    $(".reports_slider").slick({
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		dots: true,
+		centerMode: true,
+		focusOnSelect: true
+	});
 
 
 /* ========================================================================== */

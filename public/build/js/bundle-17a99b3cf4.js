@@ -13184,6 +13184,18 @@ $(document).ready(function () {
 		acceptedFiles: '.jpg, .jpeg, .png'
 	};
 
+	/* ==========================================================================
+     Custom Slick Carousel
+     ========================================================================== */
+
+	$(".reports_slider").slick({
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		dots: true,
+		centerMode: true,
+		focusOnSelect: true
+	});
+
 	/* ========================================================================== */
 });
 

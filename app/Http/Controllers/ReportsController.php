@@ -134,9 +134,40 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $seq_id)
     {
-        //
+        $this->validate($request, [
+            'service' => 'required|integer|min:1',
+            'technician' => 'required|integer|min:1',
+            'completed_at' => 'required|date',
+            'ph' => 'required|integer|min:1|max:5',
+            'clorine' => 'required|integer|min:1|max:5',
+            'temperature' => 'required|integer|min:1|max:5',
+            'turbidity' => 'required|integer|min:1|max:4',
+            'salt' => 'required|integer|min:1|max:5',
+        ]);
+
+        $report = Auth::user()->reportsBySeqId($seq_id);
+        $service = Auth::user()->serviceBySeqId($request->service);
+        $technician = Auth::user()->technicianBySeqId($request->technician);
+
+        $report->service_id     = $service->id;
+        $report->technician_id  = $technician->id;
+        $report->completed      = (new Carbon($request->completed_at));
+        $report->ph             = $request->ph;
+        $report->clorine        = $request->clorine;
+        $report->temperature    = $request->temperature;
+        $report->turbidity      = $request->turbidity;
+        $report->salt           = $request->salt;
+
+        if($report->save()){
+            flash()->success('Updated', 'The report was successfuly updated');
+            return redirect('reports/'.$seq_id);
+        }
+
+        flash()->success('Nope', 'We could not uptade the report, please try again later.');
+        return redirect()->back();
+
     }
 
     /**

@@ -58,6 +58,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Service');
     }
 
+    /**
+     * Get services accacited with this user and seq_id convination
+     * @param  int $seq_id 
+     */
+    public function serviceBySeqId($seq_id){
+        return $this->hasMany('App\Service')
+                    ->where('services.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
     // public function clients(){
     //     return $this->belongsToManyThrough('App\Client', 'App\Service');
     // }
@@ -75,6 +85,16 @@ class User extends Authenticatable
      */
     public function technicians(){
         return $this->hasManyThrough('App\Technician', 'App\Supervisor')->orderBy('seq_id');
+    }
+
+    /**
+     * Get technicains associated with this user and seq_id convination
+     * @param  int $seq_id 
+     */
+    public function technicianBySeqId($seq_id){
+        return $this->hasManyThrough('App\Technician', 'App\Supervisor')
+                    ->where('technicians.seq_id', '=', $seq_id)
+                    ->firstOrFail();
     }
 
 }

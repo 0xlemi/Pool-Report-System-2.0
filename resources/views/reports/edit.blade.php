@@ -24,11 +24,12 @@
 					<div class="card-block">
 						<form method="POST" action="{{ url('reports/'.$report->seq_id) }}">
 							{{ csrf_field() }}
+							{{ method_field('PATCH') }}
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Compleated at:</label>
 								<div class="col-sm-10">
 									<div class='input-group date' id="edit_report_datepicker">
-									<input type='text' class="form-control" id="edit_report_datepicker_input"/>
+									<input type='text' name='completed_at' class="form-control" id="edit_report_datepicker_input"/>
 									<span class="input-group-addon">
 										<i class="font-icon font-icon-calend"></i>
 									</span>
@@ -38,11 +39,13 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" data-live-search="true">
+									<select class="bootstrap-select bootstrap-select-arrow" name="service" data-live-search="true">
 										@foreach($services as $service)
 											<option data-content='<span class="user-item"><img src="{{ url($service->icon()) }}"/>
 														{{ $service->seq_id.' '.$service->name.' '.$service->last_name}}
-														</span>'>{{ $service->seq_id }}</option>
+														</span>' {{ ($report->service->id == $service->id) ? 'selected':''}}
+														value="{{ $service->seq_id }}">
+														{{ $service->name.' '.$service->last_name }}</option>
 										@endforeach
 									</select>
 								</div>
@@ -50,11 +53,14 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" data-live-search="true">
+									<select class="bootstrap-select bootstrap-select-arrow" name="technician" data-live-search="true">
 										@foreach($technicians as $technician)
-											<option data-content='<span class="user-item"><img src="{{ url($technician->icon()) }}"/>
+											<option data-content='<span class="user-item">
+														<img src="{{ url($technician->icon()) }}"/>
 														{{ $technician->seq_id.' '.$technician->name.' '.$technician->last_name}}
-														</span>'>{{ $technician->seq_id }}</option>
+														</span>' {{ ($report->technician->id == $technician->id) ? 'selected':''}}
+														value="{{ $technician->seq_id }}">
+														{{ $technician->name.' '.$technician->last_name }}</option>
 										@endforeach
 									</select>
 								</div>
@@ -62,31 +68,36 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">PH</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow">
+									<select class="bootstrap-select bootstrap-select-arrow" name="ph">
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->ph == 5) ? 'selected':''}}>5
+																{{ ($report->ph == 5) ? 'selected':''}}
+																value="5" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->ph == 4) ? 'selected':''}}>4
+																{{ ($report->ph == 4) ? 'selected':''}}
+																value="4" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->ph == 3) ? 'selected':''}}>3
+																{{ ($report->ph == 3) ? 'selected':''}}
+																value="3" >Perfect
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->ph == 2) ? 'selected':''}}>2
+																{{ ($report->ph == 2) ? 'selected':''}}
+																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																{{ ($report->ph == 1) ? 'selected':''}}>1
+																{{ ($report->ph == 1) ? 'selected':''}}
+																value="1" >Very Low
 										</option>
 									</select>
 								</div>
@@ -94,31 +105,36 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Clorine</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow">
+									<select class="bootstrap-select bootstrap-select-arrow" name="clorine">
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->clorine == 5) ? 'selected':''}}>5
+																{{ ($report->clorine == 5) ? 'selected':''}}
+																value="5" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->clorine == 4) ? 'selected':''}}>4
+																{{ ($report->clorine == 4) ? 'selected':''}}
+																value="4" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->clorine == 3) ? 'selected':''}}>3
+																{{ ($report->clorine == 3) ? 'selected':''}}
+																value="3" >Perfect
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->clorine == 2) ? 'selected':''}}>2
+																{{ ($report->clorine == 2) ? 'selected':''}}
+																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																{{ ($report->clorine == 1) ? 'selected':''}}>1
+																{{ ($report->clorine == 1) ? 'selected':''}}
+																value="1" >Very Low
 										</option>
 									</select>
 								</div>
@@ -126,31 +142,36 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Temperature</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow">
+									<select class="bootstrap-select bootstrap-select-arrow" name="temperature">
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->temperature == 5) ? 'selected':''}}>5
+																{{ ($report->temperature == 5) ? 'selected':''}}
+																value="5" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->temperature == 4) ? 'selected':''}}>4
+																{{ ($report->temperature == 4) ? 'selected':''}}
+																value="4" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->temperature == 3) ? 'selected':''}}>3
+																{{ ($report->temperature == 3) ? 'selected':''}}
+																value="3" >Perfect
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->temperature == 2) ? 'selected':''}}>2
+																{{ ($report->temperature == 2) ? 'selected':''}}
+																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																{{ ($report->temperature == 1) ? 'selected':''}}>1
+																{{ ($report->temperature == 1) ? 'selected':''}}
+																value="1" >Very Low
 										</option>
 									</select>
 								</div>
@@ -158,26 +179,30 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Turbidity</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow">
+									<select class="bootstrap-select bootstrap-select-arrow" name="turbidity">
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->turbidity == 4) ? 'selected':''}}>4
+																{{ ($report->turbidity == 4) ? 'selected':''}}
+																value="4" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->turbidity == 3) ? 'selected':''}}>3
+																{{ ($report->turbidity == 3) ? 'selected':''}}
+																value="3" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->turbidity == 2) ? 'selected':''}}>2
+																{{ ($report->turbidity == 2) ? 'selected':''}}
+																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->turbidity == 1) ? 'selected':''}}>1
+																{{ ($report->turbidity == 1) ? 'selected':''}}
+																value="1" >Perfect
 										</option>
 									</select>
 								</div>
@@ -185,31 +210,36 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Salt</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow">
+									<select class="bootstrap-select bootstrap-select-arrow" name="salt">
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->salt == 5) ? 'selected':''}}>5
+																{{ ($report->salt == 5) ? 'selected':''}}
+																value="5" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->salt == 4) ? 'selected':''}}>4
+																{{ ($report->salt == 4) ? 'selected':''}}
+																value="5" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->salt == 3) ? 'selected':''}}>3
+																{{ ($report->salt == 3) ? 'selected':''}}
+																value="3" >Perfect
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->salt == 2) ? 'selected':''}}>2
+																{{ ($report->salt == 2) ? 'selected':''}}
+																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk" 
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																{{ ($report->salt == 1) ? 'selected':''}}>1
+																{{ ($report->salt == 1) ? 'selected':''}}
+																value="1" >Very Low
 										</option>
 									</select>
 								</div>
@@ -223,6 +253,9 @@
 								<button  class="btn btn-success"
 								type='submit'>
 								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Save Changes</button>
+								<button  class="btn btn-info swal-btn-text"
+								type='button'>
+								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Sweet alert</button>
 							</p>
 						</form>
 						<br>
