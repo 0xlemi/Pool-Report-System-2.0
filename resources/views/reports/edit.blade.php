@@ -256,9 +256,6 @@
 								<button  class="btn btn-success"
 								type='submit'>
 								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Save Changes</button>
-								<button  class="btn btn-info swal-btn-text"
-								type='button'>
-								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Sweet alert</button>
 							</p>
 						</form>
 						<br>
