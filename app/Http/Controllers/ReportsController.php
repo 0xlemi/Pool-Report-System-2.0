@@ -168,7 +168,7 @@ class ReportsController extends Controller
             return redirect('reports/'.$seq_id);
         }
 
-        flash()->success('Nope', 'We could not uptade the report, please try again later.');
+        flash()->error('Nope', 'We could not uptade the report, please try again later.');
         return redirect()->back();
 
     }
@@ -183,7 +183,10 @@ class ReportsController extends Controller
     {
         $report = Auth::user()->reportsBySeqId($seq_id);
         if($report->delete()){
+            flash()->success('Deleted', 'The report was successfuly deleted');
             return redirect('reports');
         }
+        flash()->error('Nope', 'We could not delete the report, please try again later.');
+        return redirect()->back();
     }
 }
