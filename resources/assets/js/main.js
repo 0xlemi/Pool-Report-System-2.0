@@ -1,7 +1,7 @@
 var dateFormat = require('dateformat');
 var Vue = require('vue');
 var Dropzone = require("dropzone");
-var swal = require('sweetalert');
+var swal = require("sweetalert");
 
 $(document).ready(function(){
 // var dateFormat = require('dateformat');
@@ -452,7 +452,7 @@ function isset(strVariableName) {
 	========================================================================== */
 
 	$('.swal-btn-basic').click(function(e){
-		e.preventDefault();
+		// e.preventDefault();
 		swal("Here's a message!");
 	});
 

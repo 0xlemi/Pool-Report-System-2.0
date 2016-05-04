@@ -37,22 +37,22 @@ class CreateImagesTable extends Migration
             $table->foreign('report_id')
                 ->references('id')
                 ->on('reports')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('service_id')
                 ->references('id')
                 ->on('services')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('supervisor_id')
                 ->references('id')
                 ->on('supervisors')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('technician_id')
                 ->references('id')
                 ->on('technicians')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
     }
 

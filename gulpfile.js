@@ -17,8 +17,8 @@ elixir(function(mix) {
     	.styles([
     		'bootstrap-table.css',
     		'dropzone.css',
-            'slick.css',
         	'app.css',
+            'sweetalert.css',
         	'custom.css'
     	], 'public/css/main.css')
     	.browserify(['bootstrap-table.js', 'main.js'])

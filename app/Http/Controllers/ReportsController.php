@@ -61,7 +61,10 @@ class ReportsController extends Controller
      */
     public function create()
     {
-        view('reports.create');
+        $services = Auth::user()->services;
+        $technicians = Auth::user()->technicians;
+
+        return view('reports.create', compact('services', 'technicians'));
     }
 
     /**
@@ -176,8 +179,11 @@ class ReportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-        //
+        $report = Auth::user()->reportsBySeqId($seq_id);
+        if($report->delete()){
+            return redirect('reports');
+        }
     }
 }
