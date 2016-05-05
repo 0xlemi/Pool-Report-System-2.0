@@ -1183,6 +1183,14 @@ function isset(strVariableName) {
 	    });
 	}
 
+	$('#new_report_datepicker').datetimepicker({
+	        widgetPositioning: {
+				horizontal: 'right'
+			},
+			debug: false,
+	        useCurrent: true,
+	    });
+
 /* ==========================================================================
     Dropzone
     ========================================================================== */

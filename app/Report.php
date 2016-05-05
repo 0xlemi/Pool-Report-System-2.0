@@ -18,6 +18,8 @@ class Report extends Model
      * @var array
      */
     protected $fillable = [
+        'service_id',
+        'technician_id',
         'completed',
         'on_time',
         'ph',
@@ -55,7 +57,7 @@ class Report extends Model
         $image->order = $this->num_images() + 1;
 
         // presist image to the database
-        $this->addImage($image);
+        return $this->addImage($image);
     }
     
     /**

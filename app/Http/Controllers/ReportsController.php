@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\CreateReportRequest;
 use App\Report;
 use App\Photo;
 use App\Image;
@@ -63,7 +64,6 @@ class ReportsController extends Controller
     {
         $services = Auth::user()->services;
         $technicians = Auth::user()->technicians;
-
         return view('reports.create', compact('services', 'technicians'));
     }
 
@@ -73,9 +73,34 @@ class ReportsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateReportRequest $request)
     {
-        //
+        $completed_at = (new Carbon($request->completed_at));
+        $service = Auth::user()->serviceBySeqId($request->service);
+        $technician = Auth::user()->technicianBySeqId($request->technician);
+
+        $report = Report::create([
+            'service_id' => $service->id,
+            'technician_id' => $technician->id,
+            'completed' => $completed_at,
+            'ph' => $request->ph,
+            'clorine' => $request->clorine,
+            'temperature' => $request->temperature,
+            'turbidity' => $request->turbidity,
+            'salt' => $request->salt,
+        ]);
+
+        // add the 3 main photos
+        $image1 = $report->addImageFromForm($request->file('photo1'));
+        $image2 = $report->addImageFromForm($request->file('photo2'));
+        $image3 = $report->addImageFromForm($request->file('photo3'));
+        
+        if($report && $image1 && $image2 && $image3){
+            flash()->success('Created', 'Report was created successfuly.');
+            return redirect('reports/date/'.$completed_at->toDateString());
+        }
+        flash()->error('Not created', 'Report was not created, please try again later.');
+        return redirect()->back();
     }
 
     /**

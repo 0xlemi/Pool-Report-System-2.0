@@ -18,14 +18,14 @@ class CreateReportsTable extends Migration
             $table->dateTime('completed');
             $table->tinyInteger('on_time'); // 1=onTime, 2=late, 3=early
             $table->integer('ph');
-            $table->integer('clorine')->nullable();
+            $table->integer('clorine');
             $table->integer('temperature');
             $table->integer('turbidity');
             $table->integer('salt')->nullable();
-            $table->decimal('latitude', 9, 6);
-            $table->decimal('longitude', 9, 6);
-            $table->decimal('altitude', 8, 2);
-            $table->decimal('accuracy', 8, 2);
+            $table->decimal('latitude', 9, 6)->nullable();
+            $table->decimal('longitude', 9, 6)->nullable();
+            $table->decimal('altitude', 8, 2)->nullable();
+            $table->decimal('accuracy', 8, 2)->nullable();
             $table->integer('service_id')->unsigned();
             $table->integer('technician_id')->unsigned();
             $table->integer('seq_id')->index();

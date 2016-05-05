@@ -18,9 +18,10 @@ elixir(function(mix) {
     		'bootstrap-table.css',
     		'dropzone.css',
         	'app.css',
+            'bootstrap-fileupload.css',
             'sweetalert.css',
         	'custom.css'
     	], 'public/css/main.css')
-    	.browserify(['bootstrap-table.js', 'main.js'])
+    	.browserify(['bootstrap-table.js', 'bootstrap-fileupload.js', 'main.js'])
     	.version(['css/sass.css', 'css/less.css', 'css/main.css', 'js/bundle.js']);
 });
