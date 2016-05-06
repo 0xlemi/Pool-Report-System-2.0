@@ -29,7 +29,7 @@
 									<div class='input-group date' id="new_report_datepicker">
 										<input type='text' name='completed_at' class="form-control"
 												id="new_report_datepicker_input" 
-												value="{{ old('completed_at') }}" required/>
+												value="{{ old('completed_at') }}"/>
 										@if ($errors->has('completed_at'))
 											<small class="text-muted">{{ $errors->first('completed_at') }}</small>
 										@endif
@@ -355,7 +355,7 @@
 					                    <span class="btn btn-default btn-file">
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo1" id="photo1" required></span>
+					                    <input type="file" name="photo1" id="photo1" ></span>
 					                    <a href="#" class="btn btn-default fileupload-exists" 
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
@@ -379,7 +379,7 @@
 					                    <span class="btn btn-default btn-file">
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo2" id="photo2" required></span>
+					                    <input type="file" name="photo2" id="photo2" ></span>
 					                    <a href="#" class="btn btn-default fileupload-exists" 
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
@@ -403,7 +403,7 @@
 					                    <span class="btn btn-default btn-file">
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo3" id="photo3" required></span>
+					                    <input type="file" name="photo3" id="photo3" ></span>
 					                    <a href="#" class="btn btn-default fileupload-exists" 
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>

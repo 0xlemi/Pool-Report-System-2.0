@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Auth;
+use JavaScript;
 use App\Http\Requests;
 
 class ServicesController extends Controller
@@ -25,7 +27,11 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        //
+        JavaScript::put([
+            'click_url' => url('services').'/',
+        ]);
+        $services = Auth::user()->services;
+        return view('services.index', compact('services'));
     }
 
     /**
@@ -35,7 +41,7 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        //
+        return view('services.create');
     }
 
     /**
@@ -46,7 +52,7 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

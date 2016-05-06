@@ -19,9 +19,16 @@ elixir(function(mix) {
     		'dropzone.css',
         	'app.css',
             'bootstrap-fileupload.css',
+            'bootstrap-toggle.css',
+            'bootstrap-clockpicker.css',
             'sweetalert.css',
         	'custom.css'
     	], 'public/css/main.css')
-    	.browserify(['bootstrap-table.js', 'bootstrap-fileupload.js', 'main.js'])
+    	.browserify([
+            'bootstrap-table.js', 
+            'bootstrap-fileupload.js',
+            'bootstrap-clockpicker.js',
+            'main.js'
+        ])
     	.version(['css/sass.css', 'css/less.css', 'css/main.css', 'js/bundle.js']);
 });

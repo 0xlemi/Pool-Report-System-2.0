@@ -15,6 +15,57 @@ function flash($title = null, $message = null){
 	return $flash->info($title, $message);
 }
 
+/**
+ * Service Functions
+ */
+
+function get_styled_service_days($num){
+	// we are expecting a number between 0 and 127
+    // is basically a decimal to binary conversionS
+    $days = array();
+    if($num >= 64){
+        array_unshift($days, 'sun');
+        $num -= 64;
+    }if($num >= 32){
+        array_unshift($days, 'sat');
+        $num -= 32;
+    }if($num >= 16){
+        array_unshift($days, 'fri');
+        $num -= 16;
+    }if($num >= 8){
+        array_unshift($days, 'thu');
+        $num -= 8;
+    }if($num >= 4){
+        array_unshift($days, 'wen');
+        $num -= 4;
+    }if($num >= 2){
+        array_unshift($days, 'tue');
+        $num -= 2;
+    }if($num >= 1){
+        array_unshift($days, 'mon');
+        $num -= 1;
+    }
+    $result = '';
+    foreach ($days as $day) {
+    	$result .= $day.', ';
+    }
+    return '<span class="label label-pill label-default">'.$result.'</span>';
+}
+
+function get_styled_type($type){
+	switch ($type) {
+		case 1:
+			return '<span class="label label-pill label-primary">Clorine</span>';
+			break;
+		case 2:
+			return '<span class="label label-pill label-default">Salt</span>';
+			break;
+		default:
+			return '<span class="label label-pill label-default">Unknown</span>';
+			break;
+	}
+}
+
 
 /**
  * Reports Controller functions
