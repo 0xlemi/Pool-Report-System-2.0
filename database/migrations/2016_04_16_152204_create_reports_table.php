@@ -37,11 +37,11 @@ class CreateReportsTable extends Migration
             $table->foreign('service_id')
                 ->references('id')
                 ->on('services')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
             $table->foreign('technician_id')
                 ->references('id')
                 ->on('technicians')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
     }
 

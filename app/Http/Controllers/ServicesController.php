@@ -79,7 +79,7 @@ class ServicesController extends Controller
             'currency' => $request->currency,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'status' => ($request->status)? 0:1, // 0=inactive, 1=active
+            'status' => ($request->status)? 1:0, // 0=inactive, 1=active
             'comments' => $request->comments,
             'user_id' => Auth::user()->id,
         ]);
@@ -153,7 +153,7 @@ class ServicesController extends Controller
         $service->currency = $request->currency;
         $service->start_time = $request->start_time;
         $service->end_time = $request->end_time;
-        $service->status = ($request->status)? 0:1; // 0=inactive, 1=active
+        $service->status = ($request->status)? 1:0; // 0=inactive, 1=active
         $service->comments = $request->comments;
 
         $photo = true;
@@ -166,7 +166,7 @@ class ServicesController extends Controller
             flash()->success('Updated', 'New service successfully updated.');
             return redirect('services/'.$id_seq);
         }
-        flash()->error('Not Updated', 'New was not updated, please try again later.');
+        flash()->error('Not Updated', 'Service was not updated, please try again later.');
         return redirect()->back();
 
     }
@@ -177,14 +177,14 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-        $service = Auth::user()->reportsBySeqId($seq_id);
-        if($report->delete()){
-            flash()->success('Deleted', 'The report was successfuly deleted');
-            return redirect('reports');
+        $service = Auth::user()->serviceBySeqId($seq_id);
+        if($service->delete()){
+            flash()->success('Deleted', 'The service was successfuly deleted');
+            return redirect('services');
         }
-        flash()->error('Nope', 'We could not delete the report, please try again later.');
+        flash()->error('Not Deleted', 'We could not delete the service, please try again later.');
         return redirect()->back();
     }
 }

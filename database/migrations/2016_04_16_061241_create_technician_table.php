@@ -33,7 +33,7 @@ class CreateTechnicianTable extends Migration
             $table->foreign('supervisor_id')
                 ->references('id')
                 ->on('supervisors')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
     }
 
