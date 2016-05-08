@@ -29,7 +29,8 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Service::class, function (Faker\Generator $faker){
 
 	// time between 7am and 8pm
-	$start_time = $faker->numberBetween(25200, 72000);
+	// $start_time = $faker->numberBetween(25200, 72000);
+	// dateTimeBetween('today', 'now');
 
 	// get a random user_id that exists in database
 	$user_id = get_random_table_id('users');
@@ -37,15 +38,16 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
 	return [
 		'name' => $faker->words($nb = 2, $asText = true),
 		'address_line' => $faker->streetAddress,
+		'city' => $faker->city,
         'state' => $faker->state,
         'postal_code' => $faker->postcode,
-        'country' => $faker->country,
+        'country' => $faker->countryCode,
         'type' => $faker->numberBetween(1, 2), // not sure what types
         'service_days' => $faker->numberBetween(0, 127),
         'amount' => $faker->numberBetween(75, 350),
         'currency' => $faker->currencyCode,
-        'start_time' => $start_time,
-        'end_time' => $faker->numberBetween($start_time, 86399), // between start and end of day
+        'start_time' => $faker->dateTimeBetween('today', 'now')->format('H:i:s'),
+        'end_time' => $faker->dateTimeBetween('now', 'tomorrow')->format('H:i:s'), // between start and end of day
         'status' => $faker->numberBetween(0, 1),
         'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
         'user_id' => $user_id,

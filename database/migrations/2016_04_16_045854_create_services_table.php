@@ -17,15 +17,16 @@ class CreateServicesTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('address_line');
+            $table->string('city');
             $table->string('state');
-            $table->integer('postal_code');
-            $table->string('country');
+            $table->string('postal_code');
+            $table->char('country', 2);
             $table->tinyInteger('type'); // 1=clorine, 2=salt
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);
             $table->char('currency', 3);
-            $table->integer('start_time');
-            $table->integer('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->boolean('status');
             $table->text('comments');
             $table->integer('user_id')->unsigned();

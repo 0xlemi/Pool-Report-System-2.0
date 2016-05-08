@@ -13803,6 +13803,517 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 }(window.jQuery);
 
 },{}],17:[function(require,module,exports){
+'use strict';
+
+(function ($) {
+  'use strict';
+  /**
+   * We need an event when the elements are destroyed
+   * because if an input is removed, we have to remove the
+   * maxlength object associated (if any).
+   * From:
+   * http://stackoverflow.com/questions/2200494/jquery-trigger-event-when-an-element-is-removed-from-the-dom
+   */
+
+  if (!$.event.special.destroyed) {
+    $.event.special.destroyed = {
+      remove: function remove(o) {
+        if (o.handler) {
+          o.handler();
+        }
+      }
+    };
+  }
+
+  $.fn.extend({
+    maxlength: function maxlength(options, callback) {
+      var documentBody = $('body'),
+          defaults = {
+        showOnReady: false, // true to always show when indicator is ready
+        alwaysShow: false, // if true the indicator it's always shown.
+        threshold: 10, // Represents how many chars left are needed to show up the counter
+        warningClass: 'label label-success',
+        limitReachedClass: 'label label-important label-danger',
+        separator: ' / ',
+        preText: '',
+        postText: '',
+        showMaxLength: true,
+        placement: 'bottom',
+        message: null, // an alternative way to provide the message text
+        showCharsTyped: true, // show the number of characters typed and not the number of characters remaining
+        validate: false, // if the browser doesn't support the maxlength attribute, attempt to type more than
+        // the indicated chars, will be prevented.
+        utf8: false, // counts using bytesize rather than length. eg: 'Â£' is counted as 2 characters.
+        appendToParent: false, // append the indicator to the input field's parent instead of body
+        twoCharLinebreak: true, // count linebreak as 2 characters to match IE/Chrome textarea validation. As well as DB storage.
+        customMaxAttribute: null, // null = use maxlength attribute and browser functionality, string = use specified attribute instead.
+        allowOverMax: false
+        // Form submit validation is handled on your own.  when maxlength has been exceeded 'overmax' class added to element
+      };
+
+      if ($.isFunction(options) && !callback) {
+        callback = options;
+        options = {};
+      }
+      options = $.extend(defaults, options);
+
+      /**
+      * Return the length of the specified input.
+      *
+      * @param input
+      * @return {number}
+      */
+      function inputLength(input) {
+        var text = input.val();
+
+        if (options.twoCharLinebreak) {
+          // Count all line breaks as 2 characters
+          text = text.replace(/\r(?!\n)|\n(?!\r)/g, '\r\n');
+        } else {
+          // Remove all double-character (\r\n) linebreaks, so they're counted only once.
+          text = text.replace(new RegExp('\r?\n', 'g'), '\n');
+        }
+
+        var currentLength = 0;
+
+        if (options.utf8) {
+          currentLength = utf8Length(text);
+        } else {
+          currentLength = text.length;
+        }
+        return currentLength;
+      }
+
+      /**
+      * Truncate the text of the specified input.
+      *
+      * @param input
+      * @param limit
+      */
+      function truncateChars(input, maxlength) {
+        var text = input.val();
+        var newlines = 0;
+
+        if (options.twoCharLinebreak) {
+          text = text.replace(/\r(?!\n)|\n(?!\r)/g, '\r\n');
+
+          if (text.substr(text.length - 1) === '\n' && text.length % 2 === 1) {
+            newlines = 1;
+          }
+        }
+
+        input.val(text.substr(0, maxlength - newlines));
+      }
+
+      /**
+      * Return the length of the specified input in UTF8 encoding.
+      *
+      * @param input
+      * @return {number}
+      */
+      function utf8Length(string) {
+        var utf8length = 0;
+        for (var n = 0; n < string.length; n++) {
+          var c = string.charCodeAt(n);
+          if (c < 128) {
+            utf8length++;
+          } else if (c > 127 && c < 2048) {
+            utf8length = utf8length + 2;
+          } else {
+            utf8length = utf8length + 3;
+          }
+        }
+        return utf8length;
+      }
+
+      /**
+       * Return true if the indicator should be showing up.
+       *
+       * @param input
+       * @param thereshold
+       * @param maxlength
+       * @return {number}
+       */
+      function charsLeftThreshold(input, thereshold, maxlength) {
+        var output = true;
+        if (!options.alwaysShow && maxlength - inputLength(input) > thereshold) {
+          output = false;
+        }
+        return output;
+      }
+
+      /**
+       * Returns how many chars are left to complete the fill up of the form.
+       *
+       * @param input
+       * @param maxlength
+       * @return {number}
+       */
+      function remainingChars(input, maxlength) {
+        var length = maxlength - inputLength(input);
+        return length;
+      }
+
+      /**
+       * When called displays the indicator.
+       *
+       * @param indicator
+       */
+      function showRemaining(currentInput, indicator) {
+        indicator.css({
+          display: 'block'
+        });
+        currentInput.trigger('maxlength.shown');
+      }
+
+      /**
+       * When called shows the indicator.
+       *
+       * @param indicator
+       */
+      function hideRemaining(currentInput, indicator) {
+
+        if (options.alwaysShow) {
+          return;
+        }
+
+        indicator.css({
+          display: 'none'
+        });
+        currentInput.trigger('maxlength.hidden');
+      }
+
+      /**
+      * This function updates the value in the indicator
+      *
+      * @param maxLengthThisInput
+      * @param typedChars
+      * @return String
+      */
+      function updateMaxLengthHTML(currentInputText, maxLengthThisInput, typedChars) {
+        var output = '';
+        if (options.message) {
+          if (typeof options.message === 'function') {
+            output = options.message(currentInputText, maxLengthThisInput);
+          } else {
+            output = options.message.replace('%charsTyped%', typedChars).replace('%charsRemaining%', maxLengthThisInput - typedChars).replace('%charsTotal%', maxLengthThisInput);
+          }
+        } else {
+          if (options.preText) {
+            output += options.preText;
+          }
+          if (!options.showCharsTyped) {
+            output += maxLengthThisInput - typedChars;
+          } else {
+            output += typedChars;
+          }
+          if (options.showMaxLength) {
+            output += options.separator + maxLengthThisInput;
+          }
+          if (options.postText) {
+            output += options.postText;
+          }
+        }
+        return output;
+      }
+
+      /**
+       * This function updates the value of the counter in the indicator.
+       * Wants as parameters: the number of remaining chars, the element currently managed,
+       * the maxLength for the current input and the indicator generated for it.
+       *
+       * @param remaining
+       * @param currentInput
+       * @param maxLengthCurrentInput
+       * @param maxLengthIndicator
+       */
+      function manageRemainingVisibility(remaining, currentInput, maxLengthCurrentInput, maxLengthIndicator) {
+        if (maxLengthIndicator) {
+          maxLengthIndicator.html(updateMaxLengthHTML(currentInput.val(), maxLengthCurrentInput, maxLengthCurrentInput - remaining));
+
+          if (remaining > 0) {
+            if (charsLeftThreshold(currentInput, options.threshold, maxLengthCurrentInput)) {
+              showRemaining(currentInput, maxLengthIndicator.removeClass(options.limitReachedClass).addClass(options.warningClass));
+            } else {
+              hideRemaining(currentInput, maxLengthIndicator);
+            }
+          } else {
+            showRemaining(currentInput, maxLengthIndicator.removeClass(options.warningClass).addClass(options.limitReachedClass));
+          }
+        }
+
+        if (options.customMaxAttribute) {
+          // class to use for form validation on custom maxlength attribute
+          if (remaining < 0) {
+            currentInput.addClass('overmax');
+          } else {
+            currentInput.removeClass('overmax');
+          }
+        }
+      }
+
+      /**
+       * This function returns an object containing all the
+       * informations about the position of the current input
+       *
+       * @param currentInput
+       * @return object {bottom height left right top width}
+       *
+       */
+      function getPosition(currentInput) {
+        var el = currentInput[0];
+        return $.extend({}, typeof el.getBoundingClientRect === 'function' ? el.getBoundingClientRect() : {
+          width: el.offsetWidth,
+          height: el.offsetHeight
+        }, currentInput.offset());
+      }
+
+      /**
+       * This function places the maxLengthIndicator at the
+       * top / bottom / left / right of the currentInput
+       *
+       * @param currentInput
+       * @param maxLengthIndicator
+       * @return null
+       *
+       */
+      function place(currentInput, maxLengthIndicator) {
+        var pos = getPosition(currentInput);
+
+        // Supports custom placement handler
+        if ($.type(options.placement) === 'function') {
+          options.placement(currentInput, maxLengthIndicator, pos);
+          return;
+        }
+
+        // Supports custom placement via css positional properties
+        if ($.isPlainObject(options.placement)) {
+          placeWithCSS(options.placement, maxLengthIndicator);
+          return;
+        }
+
+        var inputOuter = currentInput.outerWidth(),
+            outerWidth = maxLengthIndicator.outerWidth(),
+            actualWidth = maxLengthIndicator.width(),
+            actualHeight = maxLengthIndicator.height();
+
+        // get the right position if the indicator is appended to the input's parent
+        if (options.appendToParent) {
+          pos.top -= currentInput.parent().offset().top;
+          pos.left -= currentInput.parent().offset().left;
+        }
+
+        switch (options.placement) {
+          case 'bottom':
+            maxLengthIndicator.css({ top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2 });
+            break;
+          case 'top':
+            maxLengthIndicator.css({ top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 });
+            break;
+          case 'left':
+            maxLengthIndicator.css({ top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth });
+            break;
+          case 'right':
+            maxLengthIndicator.css({ top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width });
+            break;
+          case 'bottom-right':
+            maxLengthIndicator.css({ top: pos.top + pos.height, left: pos.left + pos.width });
+            break;
+          case 'top-right':
+            maxLengthIndicator.css({ top: pos.top - actualHeight, left: pos.left + inputOuter });
+            break;
+          case 'top-left':
+            maxLengthIndicator.css({ top: pos.top - actualHeight, left: pos.left - outerWidth });
+            break;
+          case 'bottom-left':
+            maxLengthIndicator.css({ top: pos.top + currentInput.outerHeight(), left: pos.left - outerWidth });
+            break;
+          case 'centered-right':
+            maxLengthIndicator.css({ top: pos.top + actualHeight / 2, left: pos.left + inputOuter - outerWidth - 3 });
+            break;
+
+          // Some more options for placements
+          case 'bottom-right-inside':
+            maxLengthIndicator.css({ top: pos.top + pos.height, left: pos.left + pos.width - outerWidth });
+            break;
+          case 'top-right-inside':
+            maxLengthIndicator.css({ top: pos.top - actualHeight, left: pos.left + inputOuter - outerWidth });
+            break;
+          case 'top-left-inside':
+            maxLengthIndicator.css({ top: pos.top - actualHeight, left: pos.left });
+            break;
+          case 'bottom-left-inside':
+            maxLengthIndicator.css({ top: pos.top + currentInput.outerHeight(), left: pos.left });
+            break;
+        }
+      }
+
+      /**
+       * This function places the maxLengthIndicator based on placement config object.
+       *
+       * @param {object} placement
+       * @param {$} maxLengthIndicator
+       * @return null
+       *
+       */
+      function placeWithCSS(placement, maxLengthIndicator) {
+        if (!placement || !maxLengthIndicator) {
+          return;
+        }
+
+        var POSITION_KEYS = ['top', 'bottom', 'left', 'right', 'position'];
+
+        var cssPos = {};
+
+        // filter css properties to position
+        $.each(POSITION_KEYS, function (i, key) {
+          var val = options.placement[key];
+          if (typeof val !== 'undefined') {
+            cssPos[key] = val;
+          }
+        });
+
+        maxLengthIndicator.css(cssPos);
+
+        return;
+      }
+
+      /**
+       * This function returns true if the indicator position needs to
+       * be recalculated when the currentInput changes
+       *
+       * @return {boolean}
+       *
+       */
+      function isPlacementMutable() {
+        return options.placement === 'bottom-right-inside' || options.placement === 'top-right-inside' || typeof options.placement === 'function' || options.message && typeof options.message === 'function';
+      }
+
+      /**
+       * This function retrieves the maximum length of currentInput
+       *
+       * @param currentInput
+       * @return {number}
+       *
+       */
+      function getMaxLength(currentInput) {
+        var max = currentInput.attr('maxlength') || options.customMaxAttribute;
+
+        if (options.customMaxAttribute && !options.allowOverMax) {
+          var custom = currentInput.attr(options.customMaxAttribute);
+          if (!max || custom < max) {
+            max = custom;
+          }
+        }
+
+        if (!max) {
+          max = currentInput.attr('size');
+        }
+        return max;
+      }
+
+      return this.each(function () {
+
+        var currentInput = $(this),
+            maxLengthCurrentInput,
+            maxLengthIndicator;
+
+        $(window).resize(function () {
+          if (maxLengthIndicator) {
+            place(currentInput, maxLengthIndicator);
+          }
+        });
+
+        function firstInit() {
+          var maxlengthContent = updateMaxLengthHTML(currentInput.val(), maxLengthCurrentInput, '0');
+          maxLengthCurrentInput = getMaxLength(currentInput);
+
+          if (!maxLengthIndicator) {
+            maxLengthIndicator = $('<span class="bootstrap-maxlength"></span>').css({
+              display: 'none',
+              position: 'absolute',
+              whiteSpace: 'nowrap',
+              zIndex: 1099
+            }).html(maxlengthContent);
+          }
+
+          // We need to detect resizes if we are dealing with a textarea:
+          if (currentInput.is('textarea')) {
+            currentInput.data('maxlenghtsizex', currentInput.outerWidth());
+            currentInput.data('maxlenghtsizey', currentInput.outerHeight());
+
+            currentInput.mouseup(function () {
+              if (currentInput.outerWidth() !== currentInput.data('maxlenghtsizex') || currentInput.outerHeight() !== currentInput.data('maxlenghtsizey')) {
+                place(currentInput, maxLengthIndicator);
+              }
+
+              currentInput.data('maxlenghtsizex', currentInput.outerWidth());
+              currentInput.data('maxlenghtsizey', currentInput.outerHeight());
+            });
+          }
+
+          if (options.appendToParent) {
+            currentInput.parent().append(maxLengthIndicator);
+            currentInput.parent().css('position', 'relative');
+          } else {
+            documentBody.append(maxLengthIndicator);
+          }
+
+          var remaining = remainingChars(currentInput, getMaxLength(currentInput));
+          manageRemainingVisibility(remaining, currentInput, maxLengthCurrentInput, maxLengthIndicator);
+          place(currentInput, maxLengthIndicator);
+        }
+
+        if (options.showOnReady) {
+          currentInput.ready(function () {
+            firstInit();
+          });
+        } else {
+          currentInput.focus(function () {
+            firstInit();
+          });
+        }
+
+        currentInput.on('maxlength.reposition', function () {
+          place(currentInput, maxLengthIndicator);
+        });
+
+        currentInput.on('destroyed', function () {
+          if (maxLengthIndicator) {
+            maxLengthIndicator.remove();
+          }
+        });
+
+        currentInput.on('blur', function () {
+          if (maxLengthIndicator && !options.showOnReady && !options.alwaysShow) {
+            maxLengthIndicator.remove();
+          }
+        });
+
+        currentInput.on('input', function () {
+          var maxlength = getMaxLength(currentInput),
+              remaining = remainingChars(currentInput, maxlength),
+              output = true;
+
+          if (options.validate && remaining < 0) {
+            truncateChars(currentInput, maxlength);
+            output = false;
+          } else {
+            manageRemainingVisibility(remaining, currentInput, maxLengthCurrentInput, maxLengthIndicator);
+          }
+
+          if (isPlacementMutable()) {
+            place(currentInput, maxLengthIndicator);
+          }
+
+          return output;
+        });
+      });
+    }
+  });
+})(jQuery);
+
+},{}],18:[function(require,module,exports){
 'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;}; /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * version: 1.10.0
@@ -13908,7 +14419,7 @@ $(function(){$('[data-toggle="table"]').bootstrapTable();});}(jQuery); /*
  * Table export
  */(function(c){c.fn.extend({tableExport:function tableExport(p){function y(b,u,d,e,k){if(-1==c.inArray(d,a.ignoreRow)&&-1==c.inArray(d-e,a.ignoreRow)){var L=c(b).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display")||"always"==c(this).closest("table").data("tableexport-display"));}).find(u),f=0;L.each(function(b){if(("always"==c(this).data("tableexport-display")||"none"!=c(this).css("display")&&"hidden"!=c(this).css("visibility")&&"none"!=c(this).data("tableexport-display"))&&-1==c.inArray(b,a.ignoreColumn)&&-1==c.inArray(b-L.length,a.ignoreColumn)&&"function"===typeof k){var e,u=0,g,h=0;if("undefined"!=typeof B[d]&&0<B[d].length)for(e=0;e<=b;e++){"undefined"!=typeof B[d][e]&&(k(null,d,e),delete B[d][e],b++);}c(this).is("[colspan]")&&(u=parseInt(c(this).attr("colspan")),f+=0<u?u-1:0);c(this).is("[rowspan]")&&(h=parseInt(c(this).attr("rowspan")));k(this,d,b);for(e=0;e<u-1;e++){k(null,d,b+e);}if(h)for(g=1;g<h;g++){for("undefined"==typeof B[d+g]&&(B[d+g]=[]),B[d+g][b+f]="",e=1;e<u;e++){B[d+g][b+f-e]="";}}}});}}function M(b){!0===a.consoleLog&&console.log(b.output());if("string"===a.outputMode)return b.output();if("base64"===a.outputMode)return C(b.output());try{var u=b.output("blob");saveAs(u,a.fileName+".pdf");}catch(d){D(a.fileName+".pdf","data:application/pdf;base64,",b.output());}}function N(b,a,d){var e=0;"undefined"!=typeof d&&(e=d.colspan);if(0<=e){for(var k=b.width,c=b.textPos.x,f=a.table.columns.indexOf(a.column),g=1;g<e;g++){k+=a.table.columns[f+g].width;}1<e&&("right"===b.styles.halign?c=b.textPos.x+k-b.width:"center"===b.styles.halign&&(c=b.textPos.x+(k-b.width)/2));b.width=k;b.textPos.x=c;"undefined"!=typeof d&&1<d.rowspan&&("middle"===b.styles.valign?b.textPos.y+=b.height*(d.rowspan-1)/2:"bottom"===b.styles.valign&&(b.textPos.y+=(d.rowspan-1)*b.height),b.height*=d.rowspan);if("middle"===b.styles.valign||"bottom"===b.styles.valign)d=("string"===typeof b.text?b.text.split(/\r\n|\r|\n/g):b.text).length||1,2<d&&(b.textPos.y-=(2-1.15)/2*a.row.styles.fontSize*(d-2)/3);return !0;}return !1;}function J(b,a,d){return b.replace(new RegExp(a.replace(/([.*+?^=!:${}()|\[\]\/\\])/g,"\\$1"),"g"),d);}function V(b){b=J(b||"0",a.numbers.html.decimalMark,".");b=J(b,a.numbers.html.thousandsSeparator,"");return "number"===typeof b||!1!==jQuery.isNumeric(b)?b:!1;}function v(b,u,d){var e="";if(null!=b){b=c(b);var k=b.html();"function"===typeof a.onCellHtmlData&&(k=a.onCellHtmlData(b,u,d,k));if(!0===a.htmlContent)e=c.trim(k);else {var f=k.replace(/\n/g,'\u2028').replace(/<br\s*[\/]?>/gi,'⁠'),k=c("<div/>").html(f).contents(),f="";c.each(k.text().split('\u2028'),function(b,a){0<b&&(f+=" ");f+=c.trim(a);});c.each(f.split('⁠'),function(b,a){0<b&&(e+="\n");e+=c.trim(a).replace(/\u00AD/g,"");});if(a.numbers.html.decimalMark!=a.numbers.output.decimalMark||a.numbers.html.thousandsSeparator!=a.numbers.output.thousandsSeparator)if(k=V(e),!1!==k){var g=(""+k).split(".");1==g.length&&(g[1]="");var h=3<g[0].length?g[0].length%3:0,e=(0>k?"-":"")+(a.numbers.output.thousandsSeparator?(h?g[0].substr(0,h)+a.numbers.output.thousandsSeparator:"")+g[0].substr(h).replace(/(\d{3})(?=\d)/g,"$1"+a.numbers.output.thousandsSeparator):g[0])+(g[1].length?a.numbers.output.decimalMark+g[1]:"");}}!0===a.escape&&(e=escape(e));"function"===typeof a.onCellData&&(e=a.onCellData(b,u,d,e));}return e;}function W(b,a,d){return a+"-"+d.toLowerCase();}function O(b,a){var d=/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(b),e=a;d&&(e=[parseInt(d[1]),parseInt(d[2]),parseInt(d[3])]);return e;}function P(b){var a=E(b,"text-align"),d=E(b,"font-weight"),e=E(b,"font-style"),k="";"start"==a&&(a="rtl"==E(b,"direction")?"right":"left");700<=d&&(k="bold");"italic"==e&&(k+=e);""==k&&(k="normal");return {style:{align:a,bcolor:O(E(b,"background-color"),[255,255,255]),color:O(E(b,"color"),[0,0,0]),fstyle:k},colspan:parseInt(c(b).attr("colspan"))||0,rowspan:parseInt(c(b).attr("rowspan"))||0};}function E(b,a){try{return window.getComputedStyle?(a=a.replace(/([a-z])([A-Z])/,W),window.getComputedStyle(b,null).getPropertyValue(a)):b.currentStyle?b.currentStyle[a]:b.style[a];}catch(d){}return "";}function K(b,a,d){a=E(b,a).match(/\d+/);if(null!==a){a=a[0];var e=document.createElement("div");e.style.overflow="hidden";e.style.visibility="hidden";b.parentElement.appendChild(e);e.style.width=100+d;d=100/e.offsetWidth;b.parentElement.removeChild(e);return a*d;}return 0;}function D(a,c,d){var e=window.navigator.userAgent;if(0<e.indexOf("MSIE ")||e.match(/Trident.*rv\:11\./)){if(c=document.createElement("iframe"))document.body.appendChild(c),c.setAttribute("style","display:none"),c.contentDocument.open("txt/html","replace"),c.contentDocument.write(d),c.contentDocument.close(),c.focus(),c.contentDocument.execCommand("SaveAs",!0,a),document.body.removeChild(c);}else if(e=document.createElement("a")){e.style.display="none";e.download=a;0<=c.toLowerCase().indexOf("base64,")?e.href=c+C(d):e.href=c+encodeURIComponent(d);document.body.appendChild(e);if(document.createEvent)null==H&&(H=document.createEvent("MouseEvents")),H.initEvent("click",!0,!1),e.dispatchEvent(H);else if(document.createEventObject)e.fireEvent("onclick");else if("function"==typeof e.onclick)e.onclick();document.body.removeChild(e);}}function C(a){var c="",d,e,k,g,f,h,l=0;a=a.replace(/\x0d\x0a/g,"\n");e="";for(k=0;k<a.length;k++){g=a.charCodeAt(k),128>g?e+=String.fromCharCode(g):(127<g&&2048>g?e+=String.fromCharCode(g>>6|192):(e+=String.fromCharCode(g>>12|224),e+=String.fromCharCode(g>>6&63|128)),e+=String.fromCharCode(g&63|128));}for(a=e;l<a.length;){d=a.charCodeAt(l++),e=a.charCodeAt(l++),k=a.charCodeAt(l++),g=d>>2,d=(d&3)<<4|e>>4,f=(e&15)<<2|k>>6,h=k&63,isNaN(e)?f=h=64:isNaN(k)&&(h=64),c=c+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(g)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(f)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h);}return c;}var a={consoleLog:!1,csvEnclosure:'"',csvSeparator:",",csvUseBOM:!0,displayTableName:!1,escape:!1,excelstyles:["border-bottom","border-top","border-left","border-right"],fileName:"tableExport",htmlContent:!1,ignoreColumn:[],ignoreRow:[],jspdf:{orientation:"p",unit:"pt",format:"a4",margins:{left:20,right:10,top:10,bottom:10},autotable:{styles:{cellPadding:2,rowHeight:12,fontSize:8,fillColor:255,textColor:50,fontStyle:"normal",overflow:"ellipsize",halign:"left",valign:"middle"},headerStyles:{fillColor:[52,73,94],textColor:255,fontStyle:"bold",halign:"center"},alternateRowStyles:{fillColor:245},tableExport:{onAfterAutotable:null,onBeforeAutotable:null,onTable:null}}},numbers:{html:{decimalMark:".",thousandsSeparator:","},output:{decimalMark:".",thousandsSeparator:","}},onCellData:null,onCellHtmlData:null,outputMode:"file",tbodySelector:"tr",theadSelector:"tr",tableName:"myTableName",type:"csv",worksheetName:"xlsWorksheetName"},r=this,H=null,q=[],n=[],m=0,B=[],g="";c.extend(!0,a,p);if("csv"==a.type||"txt"==a.type){p=function p(b,f,d,e){n=c(r).find(b).first().find(f);n.each(function(){g="";y(this,d,m,e+n.length,function(b,e,d){var c=g,f="";if(null!=b)if(b=v(b,e,d),e=null===b||""==b?"":b.toString(),b instanceof Date)f=a.csvEnclosure+b.toLocaleString()+a.csvEnclosure;else if(f=J(e,a.csvEnclosure,a.csvEnclosure+a.csvEnclosure),0<=f.indexOf(a.csvSeparator)||/[\r\n ]/g.test(f))f=a.csvEnclosure+f+a.csvEnclosure;g=c+(f+a.csvSeparator);});g=c.trim(g).substring(0,g.length-1);0<g.length&&(0<w.length&&(w+="\n"),w+=g);m++;});return n.length;};var w="",z=0,m=0,z=z+p("thead",a.theadSelector,"th,td",z),z=z+p("tbody",a.tbodySelector,"td",z);p("tfoot",a.tbodySelector,"td",z);w+="\n";!0===a.consoleLog&&console.log(w);if("string"===a.outputMode)return w;if("base64"===a.outputMode)return C(w);try{var A=new Blob([w],{type:"text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8"});saveAs(A,a.fileName+"."+a.type,"csv"!=a.type||!1===a.csvUseBOM);}catch(b){D(a.fileName+"."+a.type,"data:text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8,"+("csv"==a.type&&a.csvUseBOM?'﻿':""),w);}}else if("sql"==a.type){var m=0,l="INSERT INTO `"+a.tableName+"` (",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,q.length,function(a,c,d){l+="'"+v(a,c,d)+"',";});m++;l=c.trim(l);l=c.trim(l).substring(0,l.length-1);});l+=") VALUES ";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(a,c,d){g+="'"+v(a,c,d)+"',";});3<g.length&&(l+="("+g,l=c.trim(l).substring(0,l.length-1),l+="),");m++;});l=c.trim(l).substring(0,l.length-1);l+=";";!0===a.consoleLog&&console.log(l);if("string"===a.outputMode)return l;if("base64"===a.outputMode)return C(l);try{A=new Blob([l],{type:"text/plain;charset=utf-8"}),saveAs(A,a.fileName+".sql");}catch(b){D(a.fileName+".sql","data:application/sql;charset=utf-8,",l);}}else if("json"==a.type){var Q=[],q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){var a=[];y(this,"th,td",m,q.length,function(c,d,e){a.push(v(c,d,e));});Q.push(a);});var R=[],n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=[];y(this,"td",m,q.length+n.length,function(c,d,e){a.push(v(c,d,e));});0<a.length&&(1!=a.length||""!=a[0])&&R.push(a);m++;});p=[];p.push({header:Q,data:R});p=JSON.stringify(p);!0===a.consoleLog&&console.log(p);if("string"===a.outputMode)return p;if("base64"===a.outputMode)return C(p);try{A=new Blob([p],{type:"application/json;charset=utf-8"}),saveAs(A,a.fileName+".json");}catch(b){D(a.fileName+".json","data:application/json;charset=utf-8;base64,",p);}}else if("xml"===a.type){var m=0,t='<?xml version="1.0" encoding="utf-8"?>',t=t+"<tabledata><fields>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,n.length,function(a,c,d){t+="<field>"+v(a,c,d)+"</field>";});m++;});var t=t+"</fields><data>",S=1,n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=1;g="";y(this,"td",m,q.length+n.length,function(c,d,e){g+="<column-"+a+">"+v(c,d,e)+"</column-"+a+">";a++;});0<g.length&&"<column-1></column-1>"!=g&&(t+='<row id="'+S+'">'+g+"</row>",S++);m++;});t+="</data></tabledata>";!0===a.consoleLog&&console.log(t);if("string"===a.outputMode)return t;if("base64"===a.outputMode)return C(t);try{A=new Blob([t],{type:"application/xml;charset=utf-8"}),saveAs(A,a.fileName+".xml");}catch(b){D(a.fileName+".xml","data:application/xml;charset=utf-8;base64,",t);}}else if("excel"==a.type||"xls"==a.type||"word"==a.type||"doc"==a.type){p="excel"==a.type||"xls"==a.type?"excel":"word";var z="excel"==p?"xls":"doc",f="xls"==z?'xmlns:x="urn:schemas-microsoft-com:office:excel"':'xmlns:w="urn:schemas-microsoft-com:office:word"',m=0,x="<table><thead>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){g="";y(this,"th,td",m,q.length,function(b,f,d){if(null!=b){g+='<th style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</th>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});x+="</thead><tbody>";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(b,f,d){if(null!=b){g+='<td style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</td>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});a.displayTableName&&(x+="<tr><td></td></tr><tr><td></td></tr><tr><td>"+v(c("<p>"+a.tableName+"</p>"))+"</td></tr>");x+="</tbody></table>";!0===a.consoleLog&&console.log(x);f='<html xmlns:o="urn:schemas-microsoft-com:office:office" '+f+' xmlns="http://www.w3.org/TR/REC-html40">'+('<meta http-equiv="content-type" content="application/vnd.ms-'+p+'; charset=UTF-8">');f+="<head>";"excel"===p&&(f+="\x3c!--[if gte mso 9]>",f+="<xml>",f+="<x:ExcelWorkbook>",f+="<x:ExcelWorksheets>",f+="<x:ExcelWorksheet>",f+="<x:Name>",f+=a.worksheetName,f+="</x:Name>",f+="<x:WorksheetOptions>",f+="<x:DisplayGridlines/>",f+="</x:WorksheetOptions>",f+="</x:ExcelWorksheet>",f+="</x:ExcelWorksheets>",f+="</x:ExcelWorkbook>",f+="</xml>",f+="<![endif]--\x3e");f+="</head>";f+="<body>";f+=x;f+="</body>";f+="</html>";!0===a.consoleLog&&console.log(f);if("string"===a.outputMode)return f;if("base64"===a.outputMode)return C(f);try{A=new Blob([f],{type:"application/vnd.ms-"+a.type}),saveAs(A,a.fileName+"."+z);}catch(b){D(a.fileName+"."+z,"data:application/vnd.ms-"+p+";base64,",f);}}else if("png"==a.type)html2canvas(c(r)[0],{allowTaint:!0,background:"#fff",onrendered:function onrendered(b){b=b.toDataURL();b=b.substring(22);for(var c=atob(b),d=new ArrayBuffer(c.length),e=new Uint8Array(d),f=0;f<c.length;f++){e[f]=c.charCodeAt(f);}!0===a.consoleLog&&console.log(c);if("string"===a.outputMode)return c;if("base64"===a.outputMode)return C(b);try{var g=new Blob([d],{type:"image/png"});saveAs(g,a.fileName+".png");}catch(h){D(a.fileName+".png","data:image/png;base64,",b);}}});else if("pdf"==a.type)if(!1===a.jspdf.autotable){var A={dim:{w:K(c(r).first().get(0),"width","mm"),h:K(c(r).first().get(0),"height","mm")},pagesplit:!1},T=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);T.addHTML(c(r).first(),a.jspdf.margins.left,a.jspdf.margins.top,A,function(){M(T);});}else {var h=a.jspdf.autotable.tableExport;if("string"===typeof a.jspdf.format&&"bestfit"===a.jspdf.format.toLowerCase()){var F={a0:[2383.94,3370.39],a1:[1683.78,2383.94],a2:[1190.55,1683.78],a3:[841.89,1190.55],a4:[595.28,841.89]},I="",G="",U=0;c(r).filter(":visible").each(function(){if("none"!=c(this).css("display")){var a=K(c(this).get(0),"width","pt");if(a>U){a>F.a0[0]&&(I="a0",G="l");for(var f in F){F.hasOwnProperty(f)&&F[f][1]>a&&(I=f,G="l",F[f][0]>a&&(G="p"));}U=a;}}});a.jspdf.format=""==I?"a4":I;a.jspdf.orientation=""==G?"w":G;}h.doc=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);c(r).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display"));}).each(function(){var b,f=0;h.columns=[];h.rows=[];h.rowoptions={};if("function"===typeof h.onTable&&!1===h.onTable(c(this),a))return !0;a.jspdf.autotable.tableExport=null;var d=c.extend(!0,{},a.jspdf.autotable);a.jspdf.autotable.tableExport=h;d.margin={};c.extend(!0,d.margin,a.jspdf.margins);d.tableExport=h;"function"!==typeof d.beforePageContent&&(d.beforePageContent=function(a){1==a.pageCount&&a.table.rows.concat(a.table.headerRow).forEach(function(b){0<b.height&&(b.height+=(2-1.15)/2*b.styles.fontSize,a.table.height+=(2-1.15)/2*b.styles.fontSize);});});"function"!==typeof d.createdHeaderCell&&(d.createdHeaderCell=function(a,b){if("undefined"!=typeof h.columns[b.column.dataKey]){var c=h.columns[b.column.dataKey];a.styles.halign=c.style.align;"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor);"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color);"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle);}});"function"!==typeof d.createdCell&&(d.createdCell=function(a,b){var c=h.rowoptions[b.row.index+":"+b.column.dataKey];"undefined"!=typeof c&&"undefined"!=typeof c.style&&(a.styles.halign=c.style.align,"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor),"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color),"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle));});"function"!==typeof d.drawHeaderCell&&(d.drawHeaderCell=function(a,b){var c=h.columns[b.column.dataKey];return 1!=c.style.hasOwnProperty("hidden")||!0!==c.style.hidden?N(a,b,c):!1;});"function"!==typeof d.drawCell&&(d.drawCell=function(a,b){return N(a,b,h.rowoptions[b.row.index+":"+b.column.dataKey]);});q=c(this).find("thead").find(a.theadSelector);q.each(function(){b=0;y(this,"th,td",f,q.length,function(a,c,e){var d=P(a);d.title=v(a,c,e);d.key=b++;h.columns.push(d);});f++;});var e=0;n=c(this).find("tbody").find(a.tbodySelector);n.each(function(){var a=[];b=0;y(this,"td",f,q.length+n.length,function(d,f,g){if("undefined"===typeof h.columns[b]){var l={title:"",key:b,style:{hidden:!0}};h.columns.push(l);}null!==d?h.rowoptions[e+":"+b++]=P(d):(l=c.extend(!0,{},h.rowoptions[e+":"+(b-1)]),l.colspan=-1,h.rowoptions[e+":"+b++]=l);a.push(v(d,f,g));});a.length&&(h.rows.push(a),e++);f++;});if("function"===typeof h.onBeforeAutotable)h.onBeforeAutotable(c(this),h.columns,h.rows,d);h.doc.autoTable(h.columns,h.rows,d);if("function"===typeof h.onAfterAutotable)h.onAfterAutotable(c(this),d);a.jspdf.autotable.startY=h.doc.autoTableEndPosY()+d.margin.top;});M(h.doc);h.columns.length=0;h.rows.length=0;delete h.doc;h.doc=null;}return this;}});})(jQuery);
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -15021,6 +15532,30 @@ $(document).ready(function () {
 		});
 	});
 
+	/* ==========================================================================
+     Maxlenght
+     ========================================================================== */
+
+	$('input.maxlength-simple').maxlength();
+
+	$('input.maxlength-custom-message').maxlength({
+		threshold: 10,
+		warningClass: "label label-success",
+		limitReachedClass: "label label-danger",
+		separator: ' of ',
+		preText: 'You have ',
+		postText: ' chars remaining.',
+		validate: true
+	});
+
+	$('input.maxlength-always-show').maxlength({
+		alwaysShow: true
+	});
+
+	$('textarea.maxlength-simple').maxlength({
+		alwaysShow: true
+	});
+
 	/* ========================================================================== */
 });
 
@@ -15109,6 +15644,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":14}]},{},[17,16,15,18]);
+},{"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":14}]},{},[18,16,15,17,19]);
 
 //# sourceMappingURL=bundle.js.map

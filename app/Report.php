@@ -44,16 +44,16 @@ class Report extends Model
         $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
 
         // save normal image in folder
-        $file->move(public_path( env('FOLDER_IMG_REPORT') ), $name);
+        $file->move(public_path( env('FOLDER_IMG').'report/' ), $name);
 
         // make and save thumbnail
-        $img = Intervention::make(public_path( env('FOLDER_IMG_REPORT').$name));
-        $img->fit(300)->save(public_path( env('FOLDER_IMG_REPORT').$name_thumbnail));
+        $img = Intervention::make(public_path( env('FOLDER_IMG').'report/'.$name));
+        $img->fit(300)->save(public_path( env('FOLDER_IMG').'report/'.$name_thumbnail));
 
         // add image
         $image = new Image;
-        $image->normal_path = env('FOLDER_IMG_REPORT').$name;
-        $image->thumbnail_path = env('FOLDER_IMG_REPORT').$name_thumbnail;
+        $image->normal_path = env('FOLDER_IMG').'report/'.$name;
+        $image->thumbnail_path = env('FOLDER_IMG').'report/'.$name_thumbnail;
         $image->order = $this->num_images() + 1;
 
         // presist image to the database
