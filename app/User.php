@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
 class User extends Authenticatable
@@ -68,9 +69,23 @@ class User extends Authenticatable
                     ->firstOrFail();
     }
 
-    // public function clients(){
-    //     return $this->belongsToManyThrough('App\Client', 'App\Service');
-    // }
+    public function clientsThroughServices(){
+        $this->load('services.clients'); // eager load far relation
+        $clients = new Collection; // Illuminate\Database\Eloquent\Collection
+         
+        foreach ($this->services as $service)
+        {
+           $clients = $clients->merge($service->clients);
+        }
+         
+        $clients = $clients->unique()->sortBy('seq_id'); // remove the duplicates
+         
+        return $clients; // all clients collection
+    }
+
+    public function clients(){
+        return Client::where('user_id', $this->id)->orderBy('seq_id')->get();
+    }
 
     /**
      *  Get supervisors assaciated with this user
