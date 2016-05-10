@@ -388,7 +388,10 @@ function get_country_by_code($code){
 		'ZM' => 'Zambia',
 		'ZW' => 'Zimbabwe',
 	);
-	return $countries[$code];
+	if(array_key_exists($code, $countries)){
+		return $countries[$code];
+	}
+	return $code;
 }
 
 

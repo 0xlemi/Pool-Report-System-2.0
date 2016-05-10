@@ -44,4 +44,51 @@ class Supervisor extends Model
 		return $this->hasMany('App\Technician');
 	}
 
+	/**
+     * associated images with this report
+     */
+    public function images(){
+        return $this->hasMany('App\Image');
+    }
+
+     /**
+     * get the number of images this service has
+     */
+    public function numImages(){
+        return $this->hasMany('App\Image')->count();
+    }
+
+    /**
+     * get full size image
+     */
+    public function image(){
+        if($this->numImages() > 0){
+            return $this->hasMany('App\Image')
+                ->first()->normal_path;
+        }
+        return 'img/no_image.png';
+    }
+
+    /**
+     * get thumbnail image
+     */
+    public function thumbnail(){
+        if($this->numImages() > 0){
+            return $this->hasMany('App\Image')
+                ->first()->thumbnail_path;
+        }
+        return 'img/no_image.png';
+    }
+
+    /**
+     * Get the extra small image
+     */
+    public function icon(){
+        if($this->numImages() > 0){
+            return $this->hasMany('App\Image')
+                ->first()->icon_path;
+        }
+        return 'img/avatar-2-48.png';
+    }
+
 }

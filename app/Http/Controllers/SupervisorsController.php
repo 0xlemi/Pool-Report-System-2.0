@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Auth;
+use JavaScript;
+
 use App\Http\Requests;
 
 class SupervisorsController extends Controller
@@ -25,7 +28,11 @@ class SupervisorsController extends Controller
      */
     public function index()
     {
-        //
+        JavaScript::put([
+            'click_url' => url('supervisors').'/',
+        ]);
+        $supervisors = Auth::user()->supervisors;
+        return view('supervisors.index', compact('supervisors'));
     }
 
     /**
@@ -35,7 +42,7 @@ class SupervisorsController extends Controller
      */
     public function create()
     {
-        //
+        return view('supervisors.create', compact('supervisors'));
     }
 
     /**
@@ -46,7 +53,7 @@ class SupervisorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     /**
@@ -55,9 +62,10 @@ class SupervisorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seq_id)
     {
-        //
+        $supervisor = Auth::user()->supervisorBySeqId($seq_id);
+        return view('supervisors.show', compact('supervisor'));
     }
 
     /**

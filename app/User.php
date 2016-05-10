@@ -107,6 +107,16 @@ class User extends Authenticatable
     public function supervisors(){
         return $this->hasMany('App\Supervisor');
     }
+
+    /**
+     * Get supervisor accacited with this user and seq_id convination
+     * @param  int $seq_id 
+     */
+    public function supervisorBySeqId($seq_id){
+        return $this->hasMany('App\Supervisor')
+                    ->where('supervisors.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
     
     /**
      * Get technicians assaciated with this user

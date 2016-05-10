@@ -1242,7 +1242,7 @@ function isset(strVariableName) {
 	});
 
 /* ==========================================================================
-    Maxlenght
+    Maxlenght and Hide Show Password
     ========================================================================== */
 
 	$('input.maxlength-simple').maxlength();
@@ -1264,6 +1264,8 @@ function isset(strVariableName) {
     $('textarea.maxlength-simple').maxlength({
         alwaysShow: true
     });
+
+    $('.hide-show-password').password();
 
 /* ========================================================================== */
 });
