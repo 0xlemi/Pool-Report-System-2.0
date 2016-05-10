@@ -16,6 +16,42 @@ function flash($title = null, $message = null){
 }
 
 /**
+ * Clients Functions
+ */
+
+function clients_styled_type($type, $is_pill = true, $long_version = true){
+	$tag_type = '';
+	$extra_text = '';
+	if($is_pill){
+		$tag_type = 'label-pill';
+	}if($long_version){
+		$extra_text = 'House ';
+	}
+	switch ($type) {
+		case 1:
+			return '<span class="label '.$tag_type.' label-primary">'.$extra_text.'Owner</span>';
+			break;
+		case 2:
+			return '<span class="label '.$tag_type.' label-warning">'.$extra_text.'Administrator</span>';
+			break;
+		default:
+			return '<span class="label '.$tag_type.' label-default">Unknown</span>';
+			break;
+	}
+}
+
+function languageCode_to_text($code){
+	$languageCodes = array(
+		'en' => 'English',
+		'es' => 'Spanish',
+	);
+	if(array_key_exists($code, $languageCodes)){
+		return $languageCodes[$code];
+	}
+	return $code;
+}
+
+/**
  * Service Functions
  */
 

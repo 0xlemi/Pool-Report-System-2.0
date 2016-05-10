@@ -32,6 +32,15 @@ class Service extends Model
         'user_id',
     ];
 
+
+    /**
+     * hidden variables
+     * @var array
+     */
+    protected $hidden = [
+        'user_id',
+    ];
+
     /**
      * get the service days as a boolean for each day insted of the number
      * @return array

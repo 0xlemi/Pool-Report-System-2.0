@@ -492,7 +492,7 @@
 							<hr>
 							<p style="float: left;">
 								<a  class="btn btn-danger"
-								href="{{ url('services') }}">
+								href="{{ url('services/'.$service->seq_id) }}">
 								<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
 								<button  class="btn btn-success"
 								type='submit'>

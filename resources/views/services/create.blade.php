@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-	<header class="section-header">
+<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
 				<div class="tbl-cell">

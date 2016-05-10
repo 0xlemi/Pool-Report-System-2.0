@@ -18,7 +18,7 @@
 		<section class="box-typical">
 			<div id="toolbar">
 				<a href="{{ url('clients/create') }}" class="btn btn-primary">
-					<i class="font-icon font-icon-home"></i>&nbsp;&nbsp;&nbsp;New Service
+					<i class="font-icon font-icon-user"></i>&nbsp;&nbsp;&nbsp;New Client
 				</a>
 			</div>
 			<div class="table-responsive">
@@ -50,7 +50,7 @@
 								<td>{{ $client->seq_id }}</td>
 								<td>{{ $client->name }}</td>
 								<td>{{ $client->email }}</td>
-								<td>{!! $client->type !!}</td>
+								<td>{!! clients_styled_type($client->type, true, false) !!}</td>
 								<td>{{ $client->cellphone }}</td>
 							</tr>
 						@endforeach

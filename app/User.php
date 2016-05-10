@@ -83,8 +83,21 @@ class User extends Authenticatable
         return $clients; // all clients collection
     }
 
+    /**
+     * Get clients associated with this user
+     */
     public function clients(){
         return Client::where('user_id', $this->id)->orderBy('seq_id')->get();
+    }
+
+    /**
+     * Get clients accacited with this user and seq_id convination
+     * @param  int $seq_id 
+     */
+    public function clientsBySeqId($seq_id){
+        return Client::where('user_id', $this->id)
+                    ->where('clients.seq_id', '=', $seq_id)
+                    ->firstOrFail();
     }
 
     /**
