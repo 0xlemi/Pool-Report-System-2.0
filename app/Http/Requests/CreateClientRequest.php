@@ -23,10 +23,12 @@ class CreateClientRequest extends Request
      */
     public function rules()
     {
+        $client = \Auth::user()->clientsBySeqId($this->seq_id);
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'email' => 'required|email', // missing exist conditional
+            'email' => 'required|email|unique:clients,email,'
+                        .$client->id.',id,user_id,'.$client->user_id,
             'cellphone' => 'required|string|max:20',
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',

@@ -18,7 +18,7 @@ class CreateClientsTable extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
-            $table->string('email')->unique()->index();
+            $table->string('email')->index();
             $table->string('password');
             $table->tinyInteger('type'); // 1=owner, 2=house administrator
             $table->tinyInteger('email_preferences');
@@ -29,6 +29,10 @@ class CreateClientsTable extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        // Schema::table('clients', function(Blueprint $table){
+        //     $table->unique(array('user_id', 'email'), 'clients_email_unique');
+        // });
     }
 
     /**
