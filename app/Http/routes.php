@@ -30,5 +30,6 @@ Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
 
+Route::get('chat', 'ChatController@home');
 
 // Route::get('/home', 'HomeController@index');

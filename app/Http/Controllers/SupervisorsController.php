@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Auth;
 use JavaScript;
 
+use App\Supervisor;
+
+use App\Http\Requests\CreateSupervisorRequest;
 use App\Http\Requests;
 
 class SupervisorsController extends Controller
@@ -51,9 +54,29 @@ class SupervisorsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateSupervisorRequest $request)
     {
-        dd($request->all());
+        $supervisor = Supervisor::create([
+            'name'      => $request->name,
+            'last_name' => $request->last_name,
+            'email'     => $request->email,
+            'password'  => $request->password,
+            'cellphone' => $request->cellphone,
+            'address'   => $request->address,
+            'language'  => $request->language,
+            'comments'  => $request->comments,
+            'user_id'   => Auth::user()->id,
+        ]);
+        $photo = true;
+        if($request->photo){
+            $photo = $supervisor->addImageFromForm($request->file('photo'));
+        }
+        if($supervisor && $photo){
+            flash()->success('Created', 'New supervisor successfully created.');
+            return redirect('supervisors');
+        }
+        flash()->success('Not created', 'New supervisor was not created, please try again later.');
+        return redirect()->back();
     }
 
     /**
@@ -74,9 +97,10 @@ class SupervisorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($seq_id)
     {
-        //
+        $supervisor = Auth::user()->supervisorBySeqId($seq_id);
+        return view('supervisors.edit', compact('supervisor'));
     }
 
     /**
@@ -86,9 +110,31 @@ class SupervisorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateSupervisorRequest $request, $seq_id)
     {
-        //
+        $supervisor = Auth::user()->supervisorBySeqId($seq_id);
+
+        $supervisor->name = $request->name;
+        $supervisor->last_name = $request->last_name;
+        $supervisor->email = $request->email;
+        $supervisor->password = $request->password;
+        $supervisor->cellphone = $request->cellphone;
+        $supervisor->address = $request->address;
+        $supervisor->language = $request->language;
+        $supervisor->comments = $request->comments;
+
+        $photo = true;
+        if($request->photo){
+            $supervisor->images()->delete();
+            $photo = $supervisor->addImageFromForm($request->file('photo'));
+        }
+
+        if($supervisor->save() && $photo){
+            flash()->success('Updated', 'New supervisor successfully updated.');
+            return redirect('supervisors/'.$seq_id);
+        }
+        flash()->error('Not Updated', 'Supervisor was not updated, please try again later.');
+        return redirect()->back();
     }
 
     /**
@@ -97,8 +143,14 @@ class SupervisorsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-        //
+        $supervisor = Auth::user()->supervisorBySeqId($seq_id);
+        if($supervisor->delete()){
+            flash()->success('Deleted', 'The supervisor was successfuly deleted');
+            return redirect('supervisors');
+        }
+        flash()->error('Not Deleted', 'We could not delete the supervisor, please try again later.');
+        return redirect()->back();
     }
 }

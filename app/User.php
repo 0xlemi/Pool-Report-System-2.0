@@ -30,7 +30,7 @@ class User extends Authenticatable
      * Get reports associatod with this user
      */
     public function reports(){
-        return $this->hasManyThrough('App\Report', 'App\Service');
+        return $this->hasManyThrough('App\Report', 'App\Service')->orderBy('seq_id');
     }
 
     /**
@@ -56,7 +56,7 @@ class User extends Authenticatable
      * 
      */
     public function services(){
-        return $this->hasMany('App\Service');
+        return $this->hasMany('App\Service')->orderBy('seq_id');
     }
 
     /**
@@ -105,7 +105,7 @@ class User extends Authenticatable
      * 
      */
     public function supervisors(){
-        return $this->hasMany('App\Supervisor');
+        return $this->hasMany('App\Supervisor')->orderBy('seq_id');
     }
 
     /**

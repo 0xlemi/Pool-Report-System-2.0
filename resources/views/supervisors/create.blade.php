@@ -85,8 +85,8 @@
 						<div class="form-group row {{($errors->has('password'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Password:</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control"
-										name="password" value="{{ old('password') }}">
+								<input type="password" class="form-control hide-show-password"
+										name="password" value="">
 								@if ($errors->has('password'))
 									<small class="text-muted">{{ $errors->first('password') }}</small>
 								@endif
@@ -108,7 +108,7 @@
 							<label class="col-sm-2 form-control-label">Address Line:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="address" maxlength="20" value="{{ old('address') }}">
+										name="address" maxlength="100" value="{{ old('address') }}">
 								@if ($errors->has('address'))
 									<small class="text-muted">{{ $errors->first('address') }}</small>
 								@endif

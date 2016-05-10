@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Intervention;
+
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class Supervisor extends Model
 {
 
@@ -14,10 +18,13 @@ class Supervisor extends Model
 	protected $fillable = [
 		'name',
 		'last_name',
+		'email',
+		'password',
 		'cellphone',
 		'address',
-		'email',
+		'language',
 		'comments',
+		'user_id',
 	];
     
     /**
@@ -26,6 +33,7 @@ class Supervisor extends Model
      */
 	protected $hidden = [
 		'password',
+		'user_id',
 	];
 
     /**
@@ -43,6 +51,42 @@ class Supervisor extends Model
 	public function technicians(){
 		return $this->hasMany('App\Technician');
 	}
+
+    /**
+     * add a image from form information
+     */
+    public function addImageFromForm(UploadedFile $file){
+        //generate image names
+        $name = get_random_name('normal_'.$this->id, $file->guessExtension());
+        $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
+        $name_icon = get_random_name('xs_'.$this->id, $file->guessExtension());
+
+        // save normal image in folder
+        $file->move(public_path( env('FOLDER_IMG').'supervisor/' ), $name);
+
+        // make and save thumbnail
+        $img = Intervention::make(public_path( env('FOLDER_IMG').'supervisor/'.$name));
+        $img->fit(300)->save(public_path( env('FOLDER_IMG').'supervisor/'.$name_thumbnail));
+
+         // make and save icon
+        $img->fit(64)->save(public_path( env('FOLDER_IMG').'supervisor/'.$name_icon));
+
+        // add image
+        $image = new Image;
+        $image->normal_path = env('FOLDER_IMG').'supervisor/'.$name;
+        $image->thumbnail_path = env('FOLDER_IMG').'supervisor/'.$name_thumbnail;
+        $image->icon_path = env('FOLDER_IMG').'supervisor/'.$name_icon;
+
+        // presist image to the database
+        return $this->addImage($image);
+    }
+
+     /**
+     * Add a image to this supervisor
+     */
+    public function addImage(Image $image){
+        return $this->images()->save($image);
+    }
 
 	/**
      * associated images with this report

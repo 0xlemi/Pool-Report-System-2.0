@@ -24,7 +24,7 @@
 						<form>
 							@if($supervisor->numImages() > 0)
 								<div class="form-group row">
-									<label class="col-sm-2 form-control-label">Supervisor photo</label>
+									<label class="col-sm-2 form-control-label">Photo</label>
 									<div class="col-sm-10">
 										<div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
 			                                <div class="gallery-col">
@@ -86,6 +86,13 @@
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $supervisor->cellphone }}">
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Address Line</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control" value="{{ $supervisor->address }}">
 								</div>
 							</div>
 
