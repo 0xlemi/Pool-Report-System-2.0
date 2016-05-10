@@ -23,7 +23,7 @@
 				<div class="card-block">
 					<form method="POST" action="{{ url('clients') }}" enctype="multipart/form-data">
 						{{ csrf_field() }}
-
+						
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Client Photo:</label>
 							<div class="col-sm-10">
