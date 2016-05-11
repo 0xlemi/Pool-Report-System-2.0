@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Auth;
+
+use App\Technician;
+
 use App\Http\Requests;
+use App\Http\Requests\CreateTechnicianRequest;
 
 class TechniciansController extends Controller
 {
@@ -25,7 +30,9 @@ class TechniciansController extends Controller
      */
     public function index()
     {
-        //
+        $technicians = Auth::user()->technicians;
+
+        return view('technicians.index', compact('technicians'));
     }
 
     /**
@@ -35,7 +42,9 @@ class TechniciansController extends Controller
      */
     public function create()
     {
-        //
+        $supervisors = Auth::user()->supervisors;
+
+        return view('technicians.create', compact('supervisors'));
     }
 
     /**
@@ -44,9 +53,31 @@ class TechniciansController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateTechnicianRequest $request)
     {
-        //
+        $supervisor = Auth::user()->supervisorBySeqId($request->supervisor);
+                
+        $technician = Technician::create([
+            'name'          => $request->name,
+            'last_name'     => $request->last_name,
+            'supervisor_id' => $supervisor->id,
+            'username'      => $request->username,
+            'password'      => $request->password,
+            'cellphone'     => $request->cellphone,
+            'address'       => $request->address,
+            'language'      => $request->language,
+            'comments'      => $request->comments,
+        ]);
+        $photo = true;
+        if($request->photo){
+            $photo = $technician->addImageFromForm($request->file('photo'));
+        }
+        if($technician && $photo){
+            flash()->success('Created', 'New technician successfully created.');
+            return redirect('technicians');
+        }
+        flash()->success('Not created', 'New technician was not created, please try again later.');
+        return redirect()->back();
     }
 
     /**
