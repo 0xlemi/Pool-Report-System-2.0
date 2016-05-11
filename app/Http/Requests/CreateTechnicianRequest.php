@@ -35,11 +35,18 @@ class CreateTechnicianRequest extends Request
      */
     public function rules()
     {
+
+        // get the supervisor id if is upadate request if not null
+        $technician_id = NULL;
+        if($this->seq_id){
+            $technician_id = \Auth::user()->technicianBySeqId($this->seq_id)->id;
+        }
+
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'supervisor' => 'required|integer|min:1',
-            'username' => 'required|alpha_dash|between:4,25|unique:technicians,username',
+            'username' => 'required|alpha_dash|between:4,25|unique:technicians,username,'.$technician_id.',id',
             'password' => 'required|string|between:6,40',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',

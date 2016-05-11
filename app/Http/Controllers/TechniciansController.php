@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Auth;
+use JavaScript;
 
 use App\Technician;
 
@@ -31,7 +32,9 @@ class TechniciansController extends Controller
     public function index()
     {
         $technicians = Auth::user()->technicians;
-
+        JavaScript::put([
+            'click_url' => url('technicians').'/'
+        ]);
         return view('technicians.index', compact('technicians'));
     }
 
@@ -56,7 +59,7 @@ class TechniciansController extends Controller
     public function store(CreateTechnicianRequest $request)
     {
         $supervisor = Auth::user()->supervisorBySeqId($request->supervisor);
-                
+
         $technician = Technician::create([
             'name'          => $request->name,
             'last_name'     => $request->last_name,
@@ -86,9 +89,10 @@ class TechniciansController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seq_id)
     {
-        //
+        $technician = Auth::user()->technicianBySeqId($seq_id);
+        return view('technicians.show', compact('technician'));
     }
 
     /**
@@ -97,9 +101,12 @@ class TechniciansController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($seq_id)
     {
-        //
+        $technician = Auth::user()->technicianBySeqId($seq_id);
+        $supervisors = Auth::user()->supervisors;
+
+        return view('technicians.edit', compact('technician','supervisors'));
     }
 
     /**
@@ -109,9 +116,33 @@ class TechniciansController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateTechnicianRequest $request, $seq_id)
     {
-        //
+        $technician = Auth::user()->technicianBySeqId($seq_id);
+        $supervisor = Auth::user()->supervisorBySeqId($request->supervisor);
+
+        $technician->name = $request->name;
+        $technician->last_name = $request->last_name;
+        $technician->supervisor_id = $supervisor->id;
+        $technician->username = $request->username;
+        $technician->password = $request->password;
+        $technician->cellphone = $request->cellphone;
+        $technician->address = $request->address;
+        $technician->language = $request->language;
+        $technician->comments = $request->comments;
+
+        $photo = true;
+        if($request->photo){
+            $technician->images()->delete();
+            $photo = $technician->addImageFromForm($request->file('photo'));
+        }
+
+        if($technician->save() && $photo){
+            flash()->success('Updated', 'New technician successfully updated.');
+            return redirect('technicians/'.$seq_id);
+        }
+        flash()->error('Not Updated', 'Technician was not updated, please try again later.');
+        return redirect()->back();
     }
 
     /**
@@ -120,8 +151,14 @@ class TechniciansController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-        //
+        $technician = Auth::user()->technicianBySeqId($seq_id);
+        if($technician->delete()){
+            flash()->success('Deleted', 'The technician was successfuly deleted');
+            return redirect('technicians');
+        }
+        flash()->error('Not Deleted', 'We could not delete the technician, please try again later.');
+        return redirect()->back();
     }
 }

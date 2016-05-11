@@ -39,8 +39,9 @@
 					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
-					        <th data-field="address" data-sortable="true">Username</th>
-					        <th data-field="service_days" data-sortable="true">Cellphone</th>
+					        <th data-field="username" data-sortable="true">Username</th>
+					        <th data-field="cellphone" data-sortable="true">Cellphone</th>
+					        <th data-field="supervisor" data-sortable="true">Supervisor</th>
 					    </tr>
 					</thead>
 					<tbody>
@@ -50,6 +51,7 @@
 								<td>{{ $technician->name.' '.$technician->last_name }}</td>
 								<td>{{ $technician->username }}</td>
 								<td>{{ $technician->cellphone }}</td>
+								<td>{{ $technician->supervisor->name.' '.$technician->supervisor->last_name }}</td>
 							</tr>
 						@endforeach
 					</tbody>

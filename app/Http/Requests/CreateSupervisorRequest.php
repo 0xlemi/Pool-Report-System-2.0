@@ -23,7 +23,7 @@ class CreateSupervisorRequest extends Request
      */
     public function rules()
     {
-        // get the client id if is upadate request if not null
+        // get the supervisor id if is upadate request if not null
         $supervisor_id = NULL;
         if($this->seq_id){
             $supervisor_id = \Auth::user()->supervisorBySeqId($this->seq_id)->id;
