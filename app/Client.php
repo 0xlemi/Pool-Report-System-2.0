@@ -71,7 +71,7 @@ class Client extends Model
     public function addImage(Image $image){
         return $this->images()->save($image);
     }
-    
+
 	/**
 	 * associated services with this client
 	 */
