@@ -15,6 +15,7 @@ class CreateImagesTable extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('user_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('report_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('technician_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
@@ -29,6 +30,11 @@ class CreateImagesTable extends Migration
         });
 
         Schema::table('images', function(Blueprint $table){
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+
             $table->foreign('client_id')
                 ->references('id')
                 ->on('clients')

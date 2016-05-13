@@ -18,6 +18,10 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('company_name');
+            $table->string('website');
+            $table->string('facebook');
+            $table->string('twitter');
             $table->char('language', 2);
             $table->string('timezone');
             $table->softDeletes();

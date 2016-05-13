@@ -40,6 +40,10 @@ class DatabaseSeeder extends Seeder
     		'name' => 'Luis Espinosa',
     		'email' => 'lem.espinosa.m@gmail.com',
     		'password' => bcrypt('password'),
+            'company_name' => 'Hidroequipos',
+            'website' => 'www.hidroequipos.com',
+            'facebook' => 'poolreportsystem',
+            'twitter' => 'poolreportsys',
     		'language' => 'en',
     		'timezone' => 'America/Mazatlan'
 
@@ -48,6 +52,10 @@ class DatabaseSeeder extends Seeder
     		'name' => 'Pepe Gonzales',
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
+            'company_name' => 'Hidroequipos',
+            'website' => 'www.google.com',
+            'facebook' => 'poolreportsystem',
+            'twitter' => 'poolreportsys',
     		'language' => 'es',
     		'timezone' => 'America/Mazatlan'
 

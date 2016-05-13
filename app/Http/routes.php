@@ -32,4 +32,6 @@ Route::resource('technicians', 'TechniciansController');
 
 Route::get('chat', 'ChatController@home');
 
+Route::get('settings', 'UserController@settings');
+
 // Route::get('/home', 'HomeController@index');
