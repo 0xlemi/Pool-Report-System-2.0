@@ -26,7 +26,7 @@ class Client extends Model
 		'comments',
 		'user_id',
 	];
-    
+
     /**
      * hidden variables
      * @var array
