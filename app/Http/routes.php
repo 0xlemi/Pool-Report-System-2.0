@@ -33,5 +33,8 @@ Route::resource('technicians', 'TechniciansController');
 Route::get('chat', 'ChatController@home');
 
 Route::get('settings', 'UserController@settings');
+Route::patch('settings/company', 'UserController@updateCompany');
+Route::patch('settings/email', 'UserController@updateEmail');
+Route::patch('settings/password', 'UserController@updatePassword');
 
 // Route::get('/home', 'HomeController@index');

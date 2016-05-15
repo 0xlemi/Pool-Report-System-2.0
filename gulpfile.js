@@ -1,3 +1,4 @@
+process.env.DISABLE_NOTIFIER = true;
 var elixir = require('laravel-elixir');
 
 /*
@@ -25,7 +26,7 @@ elixir(function(mix) {
         	'custom.css'
     	], 'public/css/main.css')
     	.browserify([
-            'bootstrap-table.js', 
+            'bootstrap-table.js',
             'bootstrap-fileupload.js',
             'bootstrap-clockpicker.js',
             'bootstrap-maxlenght.js',

@@ -21,4 +21,3 @@
 
     <link href="{{ elixir('css/main.css') }}" rel="stylesheet">
 </head>
-

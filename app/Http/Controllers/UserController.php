@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Auth;
 
+use App\User;
+
 use App\Http\Requests;
 
 class UserController extends Controller
@@ -28,6 +30,49 @@ class UserController extends Controller
     public function settings()
     {
     	$user = Auth::user();
-        return view('user.settings', compact('user'));
+      return view('user.settings', compact('user'));
     }
+
+    public function updateCompany(Request $request){
+      $this->validate($request, [
+        'company_name' => 'required|between:2,30',
+        'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
+        'facebook' => 'string|max:50',
+        'twitter' => 'string|max:15',
+      ]);
+      $user = User::findOrFail($request->id);
+
+      $user->company_name = $request->company_name;
+      $user->website = $request->website;
+      $user->facebook = $request->facebook;
+      $user->twitter = $request->twitter;
+
+      $user->save(); // render exceptions later
+
+
+    }
+
+    public function updateEmail(Request $request){
+
+      $this->validate($request, [
+        'old_password' => 'required|string|max:255',
+        'new_email' => 'required|email|max:255',
+      ]);
+      $user = User::findOrFail($request->id);
+      
+
+      dd($request->all());
+    }
+
+    public function updatePassword(Request $request){
+      $this->validate($request, [
+        'old_password' => 'required|string|max:255',
+        'new_email' => 'required|email|max:255',
+      ]);
+
+      dd($request->all());
+    }
+
+
+
 }

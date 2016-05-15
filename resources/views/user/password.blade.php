@@ -1,7 +1,7 @@
 <h4>Change Password</h4>
 <br>
 
-<form method="POST" action="{{ url('settings/password') }}" enctype="multipart/form-data">
+<form method="POST" action="{{ url('settings/password') }}">
   {{ csrf_field() }}
   {{ method_field('PATCH') }}
   <input type="hidden" name="id" value="{{ $user->id }}">

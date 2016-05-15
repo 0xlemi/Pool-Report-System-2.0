@@ -3527,6 +3527,1534 @@ if (typeof window !== 'undefined') {
 }
 module.exports = exports['default'];
 },{"./modules/default-params":5,"./modules/handle-click":6,"./modules/handle-dom":7,"./modules/handle-key":8,"./modules/handle-swal-dom":9,"./modules/set-params":11,"./modules/utils":12}],14:[function(require,module,exports){
+/**
+ * Before Interceptor.
+ */
+
+var _ = require('../util');
+
+module.exports = {
+
+    request: function (request) {
+
+        if (_.isFunction(request.beforeSend)) {
+            request.beforeSend.call(this, request);
+        }
+
+        return request;
+    }
+
+};
+
+},{"../util":37}],15:[function(require,module,exports){
+/**
+ * Base client.
+ */
+
+var _ = require('../../util');
+var Promise = require('../../promise');
+var xhrClient = require('./xhr');
+
+module.exports = function (request) {
+
+    var response = (request.client || xhrClient)(request);
+
+    return Promise.resolve(response).then(function (response) {
+
+        if (response.headers) {
+
+            var headers = parseHeaders(response.headers);
+
+            response.headers = function (name) {
+
+                if (name) {
+                    return headers[_.toLower(name)];
+                }
+
+                return headers;
+            };
+
+        }
+
+        response.ok = response.status >= 200 && response.status < 300;
+
+        return response;
+    });
+
+};
+
+function parseHeaders(str) {
+
+    var headers = {}, value, name, i;
+
+    if (_.isString(str)) {
+        _.each(str.split('\n'), function (row) {
+
+            i = row.indexOf(':');
+            name = _.trim(_.toLower(row.slice(0, i)));
+            value = _.trim(row.slice(i + 1));
+
+            if (headers[name]) {
+
+                if (_.isArray(headers[name])) {
+                    headers[name].push(value);
+                } else {
+                    headers[name] = [headers[name], value];
+                }
+
+            } else {
+
+                headers[name] = value;
+            }
+
+        });
+    }
+
+    return headers;
+}
+
+},{"../../promise":30,"../../util":37,"./xhr":18}],16:[function(require,module,exports){
+/**
+ * JSONP client.
+ */
+
+var _ = require('../../util');
+var Promise = require('../../promise');
+
+module.exports = function (request) {
+    return new Promise(function (resolve) {
+
+        var callback = '_jsonp' + Math.random().toString(36).substr(2), response = {request: request, data: null}, handler, script;
+
+        request.params[request.jsonp] = callback;
+        request.cancel = function () {
+            handler({type: 'cancel'});
+        };
+
+        script = document.createElement('script');
+        script.src = _.url(request);
+        script.type = 'text/javascript';
+        script.async = true;
+
+        window[callback] = function (data) {
+            response.data = data;
+        };
+
+        handler = function (event) {
+
+            if (event.type === 'load' && response.data !== null) {
+                response.status = 200;
+            } else if (event.type === 'error') {
+                response.status = 404;
+            } else {
+                response.status = 0;
+            }
+
+            resolve(response);
+
+            delete window[callback];
+            document.body.removeChild(script);
+        };
+
+        script.onload = handler;
+        script.onerror = handler;
+
+        document.body.appendChild(script);
+    });
+};
+
+},{"../../promise":30,"../../util":37}],17:[function(require,module,exports){
+/**
+ * XDomain client (Internet Explorer).
+ */
+
+var _ = require('../../util');
+var Promise = require('../../promise');
+
+module.exports = function (request) {
+    return new Promise(function (resolve) {
+
+        var xdr = new XDomainRequest(), response = {request: request}, handler;
+
+        request.cancel = function () {
+            xdr.abort();
+        };
+
+        xdr.open(request.method, _.url(request), true);
+
+        handler = function (event) {
+
+            response.data = xdr.responseText;
+            response.status = xdr.status;
+            response.statusText = xdr.statusText;
+
+            resolve(response);
+        };
+
+        xdr.timeout = 0;
+        xdr.onload = handler;
+        xdr.onabort = handler;
+        xdr.onerror = handler;
+        xdr.ontimeout = function () {};
+        xdr.onprogress = function () {};
+
+        xdr.send(request.data);
+    });
+};
+
+},{"../../promise":30,"../../util":37}],18:[function(require,module,exports){
+/**
+ * XMLHttp client.
+ */
+
+var _ = require('../../util');
+var Promise = require('../../promise');
+
+module.exports = function (request) {
+    return new Promise(function (resolve) {
+
+        var xhr = new XMLHttpRequest(), response = {request: request}, handler;
+
+        request.cancel = function () {
+            xhr.abort();
+        };
+
+        xhr.open(request.method, _.url(request), true);
+
+        handler = function (event) {
+
+            response.data = xhr.responseText;
+            response.status = xhr.status;
+            response.statusText = xhr.statusText;
+            response.headers = xhr.getAllResponseHeaders();
+
+            resolve(response);
+        };
+
+        xhr.timeout = 0;
+        xhr.onload = handler;
+        xhr.onabort = handler;
+        xhr.onerror = handler;
+        xhr.ontimeout = function () {};
+        xhr.onprogress = function () {};
+
+        if (_.isPlainObject(request.xhr)) {
+            _.extend(xhr, request.xhr);
+        }
+
+        if (_.isPlainObject(request.upload)) {
+            _.extend(xhr.upload, request.upload);
+        }
+
+        _.each(request.headers || {}, function (value, header) {
+            xhr.setRequestHeader(header, value);
+        });
+
+        xhr.send(request.data);
+    });
+};
+
+},{"../../promise":30,"../../util":37}],19:[function(require,module,exports){
+/**
+ * CORS Interceptor.
+ */
+
+var _ = require('../util');
+var xdrClient = require('./client/xdr');
+var xhrCors = 'withCredentials' in new XMLHttpRequest();
+var originUrl = _.url.parse(location.href);
+
+module.exports = {
+
+    request: function (request) {
+
+        if (request.crossOrigin === null) {
+            request.crossOrigin = crossOrigin(request);
+        }
+
+        if (request.crossOrigin) {
+
+            if (!xhrCors) {
+                request.client = xdrClient;
+            }
+
+            request.emulateHTTP = false;
+        }
+
+        return request;
+    }
+
+};
+
+function crossOrigin(request) {
+
+    var requestUrl = _.url.parse(_.url(request));
+
+    return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
+}
+
+},{"../util":37,"./client/xdr":17}],20:[function(require,module,exports){
+/**
+ * Header Interceptor.
+ */
+
+var _ = require('../util');
+
+module.exports = {
+
+    request: function (request) {
+
+        request.method = request.method.toUpperCase();
+        request.headers = _.extend({}, _.http.headers.common,
+            !request.crossOrigin ? _.http.headers.custom : {},
+            _.http.headers[request.method.toLowerCase()],
+            request.headers
+        );
+
+        if (_.isPlainObject(request.data) && /^(GET|JSONP)$/i.test(request.method)) {
+            _.extend(request.params, request.data);
+            delete request.data;
+        }
+
+        return request;
+    }
+
+};
+
+},{"../util":37}],21:[function(require,module,exports){
+/**
+ * Service for sending network requests.
+ */
+
+var _ = require('../util');
+var Client = require('./client');
+var Promise = require('../promise');
+var interceptor = require('./interceptor');
+var jsonType = {'Content-Type': 'application/json'};
+
+function Http(url, options) {
+
+    var client = Client, request, promise;
+
+    Http.interceptors.forEach(function (handler) {
+        client = interceptor(handler, this.$vm)(client);
+    }, this);
+
+    options = _.isObject(url) ? url : _.extend({url: url}, options);
+    request = _.merge({}, Http.options, this.$options, options);
+    promise = client(request).bind(this.$vm).then(function (response) {
+
+        return response.ok ? response : Promise.reject(response);
+
+    }, function (response) {
+
+        if (response instanceof Error) {
+            _.error(response);
+        }
+
+        return Promise.reject(response);
+    });
+
+    if (request.success) {
+        promise.success(request.success);
+    }
+
+    if (request.error) {
+        promise.error(request.error);
+    }
+
+    return promise;
+}
+
+Http.options = {
+    method: 'get',
+    data: '',
+    params: {},
+    headers: {},
+    xhr: null,
+    upload: null,
+    jsonp: 'callback',
+    beforeSend: null,
+    crossOrigin: null,
+    emulateHTTP: false,
+    emulateJSON: false,
+    timeout: 0
+};
+
+Http.interceptors = [
+    require('./before'),
+    require('./timeout'),
+    require('./jsonp'),
+    require('./method'),
+    require('./mime'),
+    require('./header'),
+    require('./cors')
+];
+
+Http.headers = {
+    put: jsonType,
+    post: jsonType,
+    patch: jsonType,
+    delete: jsonType,
+    common: {'Accept': 'application/json, text/plain, */*'},
+    custom: {'X-Requested-With': 'XMLHttpRequest'}
+};
+
+['get', 'put', 'post', 'patch', 'delete', 'jsonp'].forEach(function (method) {
+
+    Http[method] = function (url, data, success, options) {
+
+        if (_.isFunction(data)) {
+            options = success;
+            success = data;
+            data = undefined;
+        }
+
+        if (_.isObject(success)) {
+            options = success;
+            success = undefined;
+        }
+
+        return this(url, _.extend({method: method, data: data, success: success}, options));
+    };
+});
+
+module.exports = _.http = Http;
+
+},{"../promise":30,"../util":37,"./before":14,"./client":15,"./cors":19,"./header":20,"./interceptor":22,"./jsonp":23,"./method":24,"./mime":25,"./timeout":26}],22:[function(require,module,exports){
+/**
+ * Interceptor factory.
+ */
+
+var _ = require('../util');
+var Promise = require('../promise');
+
+module.exports = function (handler, vm) {
+
+    return function (client) {
+
+        if (_.isFunction(handler)) {
+            handler = handler.call(vm, Promise);
+        }
+
+        return function (request) {
+
+            if (_.isFunction(handler.request)) {
+                request = handler.request.call(vm, request);
+            }
+
+            return when(request, function (request) {
+                return when(client(request), function (response) {
+
+                    if (_.isFunction(handler.response)) {
+                        response = handler.response.call(vm, response);
+                    }
+
+                    return response;
+                });
+            });
+        };
+    };
+};
+
+function when(value, fulfilled, rejected) {
+
+    var promise = Promise.resolve(value);
+
+    if (arguments.length < 2) {
+        return promise;
+    }
+
+    return promise.then(fulfilled, rejected);
+}
+
+},{"../promise":30,"../util":37}],23:[function(require,module,exports){
+/**
+ * JSONP Interceptor.
+ */
+
+var jsonpClient = require('./client/jsonp');
+
+module.exports = {
+
+    request: function (request) {
+
+        if (request.method == 'JSONP') {
+            request.client = jsonpClient;
+        }
+
+        return request;
+    }
+
+};
+
+},{"./client/jsonp":16}],24:[function(require,module,exports){
+/**
+ * HTTP method override Interceptor.
+ */
+
+module.exports = {
+
+    request: function (request) {
+
+        if (request.emulateHTTP && /^(PUT|PATCH|DELETE)$/i.test(request.method)) {
+            request.headers['X-HTTP-Method-Override'] = request.method;
+            request.method = 'POST';
+        }
+
+        return request;
+    }
+
+};
+
+},{}],25:[function(require,module,exports){
+/**
+ * Mime Interceptor.
+ */
+
+var _ = require('../util');
+
+module.exports = {
+
+    request: function (request) {
+
+        if (request.emulateJSON && _.isPlainObject(request.data)) {
+            request.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            request.data = _.url.params(request.data);
+        }
+
+        if (_.isObject(request.data) && /FormData/i.test(request.data.toString())) {
+            delete request.headers['Content-Type'];
+        }
+
+        if (_.isPlainObject(request.data)) {
+            request.data = JSON.stringify(request.data);
+        }
+
+        return request;
+    },
+
+    response: function (response) {
+
+        try {
+            response.data = JSON.parse(response.data);
+        } catch (e) {}
+
+        return response;
+    }
+
+};
+
+},{"../util":37}],26:[function(require,module,exports){
+/**
+ * Timeout Interceptor.
+ */
+
+module.exports = function () {
+
+    var timeout;
+
+    return {
+
+        request: function (request) {
+
+            if (request.timeout) {
+                timeout = setTimeout(function () {
+                    request.cancel();
+                }, request.timeout);
+            }
+
+            return request;
+        },
+
+        response: function (response) {
+
+            clearTimeout(timeout);
+
+            return response;
+        }
+
+    };
+};
+
+},{}],27:[function(require,module,exports){
+/**
+ * Install plugin.
+ */
+
+function install(Vue) {
+
+    var _ = require('./util');
+
+    _.config = Vue.config;
+    _.warning = Vue.util.warn;
+    _.nextTick = Vue.util.nextTick;
+
+    Vue.url = require('./url');
+    Vue.http = require('./http');
+    Vue.resource = require('./resource');
+    Vue.Promise = require('./promise');
+
+    Object.defineProperties(Vue.prototype, {
+
+        $url: {
+            get: function () {
+                return _.options(Vue.url, this, this.$options.url);
+            }
+        },
+
+        $http: {
+            get: function () {
+                return _.options(Vue.http, this, this.$options.http);
+            }
+        },
+
+        $resource: {
+            get: function () {
+                return Vue.resource.bind(this);
+            }
+        },
+
+        $promise: {
+            get: function () {
+                return function (executor) {
+                    return new Vue.Promise(executor, this);
+                }.bind(this);
+            }
+        }
+
+    });
+}
+
+if (window.Vue) {
+    Vue.use(install);
+}
+
+module.exports = install;
+
+},{"./http":21,"./promise":30,"./resource":31,"./url":32,"./util":37}],28:[function(require,module,exports){
+/**
+ * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
+ */
+
+var _ = require('../util');
+
+var RESOLVED = 0;
+var REJECTED = 1;
+var PENDING  = 2;
+
+function Promise(executor) {
+
+    this.state = PENDING;
+    this.value = undefined;
+    this.deferred = [];
+
+    var promise = this;
+
+    try {
+        executor(function (x) {
+            promise.resolve(x);
+        }, function (r) {
+            promise.reject(r);
+        });
+    } catch (e) {
+        promise.reject(e);
+    }
+}
+
+Promise.reject = function (r) {
+    return new Promise(function (resolve, reject) {
+        reject(r);
+    });
+};
+
+Promise.resolve = function (x) {
+    return new Promise(function (resolve, reject) {
+        resolve(x);
+    });
+};
+
+Promise.all = function all(iterable) {
+    return new Promise(function (resolve, reject) {
+        var count = 0, result = [];
+
+        if (iterable.length === 0) {
+            resolve(result);
+        }
+
+        function resolver(i) {
+            return function (x) {
+                result[i] = x;
+                count += 1;
+
+                if (count === iterable.length) {
+                    resolve(result);
+                }
+            };
+        }
+
+        for (var i = 0; i < iterable.length; i += 1) {
+            Promise.resolve(iterable[i]).then(resolver(i), reject);
+        }
+    });
+};
+
+Promise.race = function race(iterable) {
+    return new Promise(function (resolve, reject) {
+        for (var i = 0; i < iterable.length; i += 1) {
+            Promise.resolve(iterable[i]).then(resolve, reject);
+        }
+    });
+};
+
+var p = Promise.prototype;
+
+p.resolve = function resolve(x) {
+    var promise = this;
+
+    if (promise.state === PENDING) {
+        if (x === promise) {
+            throw new TypeError('Promise settled with itself.');
+        }
+
+        var called = false;
+
+        try {
+            var then = x && x['then'];
+
+            if (x !== null && typeof x === 'object' && typeof then === 'function') {
+                then.call(x, function (x) {
+                    if (!called) {
+                        promise.resolve(x);
+                    }
+                    called = true;
+
+                }, function (r) {
+                    if (!called) {
+                        promise.reject(r);
+                    }
+                    called = true;
+                });
+                return;
+            }
+        } catch (e) {
+            if (!called) {
+                promise.reject(e);
+            }
+            return;
+        }
+
+        promise.state = RESOLVED;
+        promise.value = x;
+        promise.notify();
+    }
+};
+
+p.reject = function reject(reason) {
+    var promise = this;
+
+    if (promise.state === PENDING) {
+        if (reason === promise) {
+            throw new TypeError('Promise settled with itself.');
+        }
+
+        promise.state = REJECTED;
+        promise.value = reason;
+        promise.notify();
+    }
+};
+
+p.notify = function notify() {
+    var promise = this;
+
+    _.nextTick(function () {
+        if (promise.state !== PENDING) {
+            while (promise.deferred.length) {
+                var deferred = promise.deferred.shift(),
+                    onResolved = deferred[0],
+                    onRejected = deferred[1],
+                    resolve = deferred[2],
+                    reject = deferred[3];
+
+                try {
+                    if (promise.state === RESOLVED) {
+                        if (typeof onResolved === 'function') {
+                            resolve(onResolved.call(undefined, promise.value));
+                        } else {
+                            resolve(promise.value);
+                        }
+                    } else if (promise.state === REJECTED) {
+                        if (typeof onRejected === 'function') {
+                            resolve(onRejected.call(undefined, promise.value));
+                        } else {
+                            reject(promise.value);
+                        }
+                    }
+                } catch (e) {
+                    reject(e);
+                }
+            }
+        }
+    });
+};
+
+p.then = function then(onResolved, onRejected) {
+    var promise = this;
+
+    return new Promise(function (resolve, reject) {
+        promise.deferred.push([onResolved, onRejected, resolve, reject]);
+        promise.notify();
+    });
+};
+
+p.catch = function (onRejected) {
+    return this.then(undefined, onRejected);
+};
+
+module.exports = Promise;
+
+},{"../util":37}],29:[function(require,module,exports){
+/**
+ * URL Template v2.0.6 (https://github.com/bramstein/url-template)
+ */
+
+exports.expand = function (url, params, variables) {
+
+    var tmpl = this.parse(url), expanded = tmpl.expand(params);
+
+    if (variables) {
+        variables.push.apply(variables, tmpl.vars);
+    }
+
+    return expanded;
+};
+
+exports.parse = function (template) {
+
+    var operators = ['+', '#', '.', '/', ';', '?', '&'], variables = [];
+
+    return {
+        vars: variables,
+        expand: function (context) {
+            return template.replace(/\{([^\{\}]+)\}|([^\{\}]+)/g, function (_, expression, literal) {
+                if (expression) {
+
+                    var operator = null, values = [];
+
+                    if (operators.indexOf(expression.charAt(0)) !== -1) {
+                        operator = expression.charAt(0);
+                        expression = expression.substr(1);
+                    }
+
+                    expression.split(/,/g).forEach(function (variable) {
+                        var tmp = /([^:\*]*)(?::(\d+)|(\*))?/.exec(variable);
+                        values.push.apply(values, exports.getValues(context, operator, tmp[1], tmp[2] || tmp[3]));
+                        variables.push(tmp[1]);
+                    });
+
+                    if (operator && operator !== '+') {
+
+                        var separator = ',';
+
+                        if (operator === '?') {
+                            separator = '&';
+                        } else if (operator !== '#') {
+                            separator = operator;
+                        }
+
+                        return (values.length !== 0 ? operator : '') + values.join(separator);
+                    } else {
+                        return values.join(',');
+                    }
+
+                } else {
+                    return exports.encodeReserved(literal);
+                }
+            });
+        }
+    };
+};
+
+exports.getValues = function (context, operator, key, modifier) {
+
+    var value = context[key], result = [];
+
+    if (this.isDefined(value) && value !== '') {
+        if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+            value = value.toString();
+
+            if (modifier && modifier !== '*') {
+                value = value.substring(0, parseInt(modifier, 10));
+            }
+
+            result.push(this.encodeValue(operator, value, this.isKeyOperator(operator) ? key : null));
+        } else {
+            if (modifier === '*') {
+                if (Array.isArray(value)) {
+                    value.filter(this.isDefined).forEach(function (value) {
+                        result.push(this.encodeValue(operator, value, this.isKeyOperator(operator) ? key : null));
+                    }, this);
+                } else {
+                    Object.keys(value).forEach(function (k) {
+                        if (this.isDefined(value[k])) {
+                            result.push(this.encodeValue(operator, value[k], k));
+                        }
+                    }, this);
+                }
+            } else {
+                var tmp = [];
+
+                if (Array.isArray(value)) {
+                    value.filter(this.isDefined).forEach(function (value) {
+                        tmp.push(this.encodeValue(operator, value));
+                    }, this);
+                } else {
+                    Object.keys(value).forEach(function (k) {
+                        if (this.isDefined(value[k])) {
+                            tmp.push(encodeURIComponent(k));
+                            tmp.push(this.encodeValue(operator, value[k].toString()));
+                        }
+                    }, this);
+                }
+
+                if (this.isKeyOperator(operator)) {
+                    result.push(encodeURIComponent(key) + '=' + tmp.join(','));
+                } else if (tmp.length !== 0) {
+                    result.push(tmp.join(','));
+                }
+            }
+        }
+    } else {
+        if (operator === ';') {
+            result.push(encodeURIComponent(key));
+        } else if (value === '' && (operator === '&' || operator === '?')) {
+            result.push(encodeURIComponent(key) + '=');
+        } else if (value === '') {
+            result.push('');
+        }
+    }
+
+    return result;
+};
+
+exports.isDefined = function (value) {
+    return value !== undefined && value !== null;
+};
+
+exports.isKeyOperator = function (operator) {
+    return operator === ';' || operator === '&' || operator === '?';
+};
+
+exports.encodeValue = function (operator, value, key) {
+
+    value = (operator === '+' || operator === '#') ? this.encodeReserved(value) : encodeURIComponent(value);
+
+    if (key) {
+        return encodeURIComponent(key) + '=' + value;
+    } else {
+        return value;
+    }
+};
+
+exports.encodeReserved = function (str) {
+    return str.split(/(%[0-9A-Fa-f]{2})/g).map(function (part) {
+        if (!/%[0-9A-Fa-f]/.test(part)) {
+            part = encodeURI(part);
+        }
+        return part;
+    }).join('');
+};
+
+},{}],30:[function(require,module,exports){
+/**
+ * Promise adapter.
+ */
+
+var _ = require('./util');
+var PromiseObj = window.Promise || require('./lib/promise');
+
+function Promise(executor, context) {
+
+    if (executor instanceof PromiseObj) {
+        this.promise = executor;
+    } else {
+        this.promise = new PromiseObj(executor.bind(context));
+    }
+
+    this.context = context;
+}
+
+Promise.all = function (iterable, context) {
+    return new Promise(PromiseObj.all(iterable), context);
+};
+
+Promise.resolve = function (value, context) {
+    return new Promise(PromiseObj.resolve(value), context);
+};
+
+Promise.reject = function (reason, context) {
+    return new Promise(PromiseObj.reject(reason), context);
+};
+
+Promise.race = function (iterable, context) {
+    return new Promise(PromiseObj.race(iterable), context);
+};
+
+var p = Promise.prototype;
+
+p.bind = function (context) {
+    this.context = context;
+    return this;
+};
+
+p.then = function (fulfilled, rejected) {
+
+    if (fulfilled && fulfilled.bind && this.context) {
+        fulfilled = fulfilled.bind(this.context);
+    }
+
+    if (rejected && rejected.bind && this.context) {
+        rejected = rejected.bind(this.context);
+    }
+
+    this.promise = this.promise.then(fulfilled, rejected);
+
+    return this;
+};
+
+p.catch = function (rejected) {
+
+    if (rejected && rejected.bind && this.context) {
+        rejected = rejected.bind(this.context);
+    }
+
+    this.promise = this.promise.catch(rejected);
+
+    return this;
+};
+
+p.finally = function (callback) {
+
+    return this.then(function (value) {
+            callback.call(this);
+            return value;
+        }, function (reason) {
+            callback.call(this);
+            return PromiseObj.reject(reason);
+        }
+    );
+};
+
+p.success = function (callback) {
+
+    _.warn('The `success` method has been deprecated. Use the `then` method instead.');
+
+    return this.then(function (response) {
+        return callback.call(this, response.data, response.status, response) || response;
+    });
+};
+
+p.error = function (callback) {
+
+    _.warn('The `error` method has been deprecated. Use the `catch` method instead.');
+
+    return this.catch(function (response) {
+        return callback.call(this, response.data, response.status, response) || response;
+    });
+};
+
+p.always = function (callback) {
+
+    _.warn('The `always` method has been deprecated. Use the `finally` method instead.');
+
+    var cb = function (response) {
+        return callback.call(this, response.data, response.status, response) || response;
+    };
+
+    return this.then(cb, cb);
+};
+
+module.exports = Promise;
+
+},{"./lib/promise":28,"./util":37}],31:[function(require,module,exports){
+/**
+ * Service for interacting with RESTful services.
+ */
+
+var _ = require('./util');
+
+function Resource(url, params, actions, options) {
+
+    var self = this, resource = {};
+
+    actions = _.extend({},
+        Resource.actions,
+        actions
+    );
+
+    _.each(actions, function (action, name) {
+
+        action = _.merge({url: url, params: params || {}}, options, action);
+
+        resource[name] = function () {
+            return (self.$http || _.http)(opts(action, arguments));
+        };
+    });
+
+    return resource;
+}
+
+function opts(action, args) {
+
+    var options = _.extend({}, action), params = {}, data, success, error;
+
+    switch (args.length) {
+
+        case 4:
+
+            error = args[3];
+            success = args[2];
+
+        case 3:
+        case 2:
+
+            if (_.isFunction(args[1])) {
+
+                if (_.isFunction(args[0])) {
+
+                    success = args[0];
+                    error = args[1];
+
+                    break;
+                }
+
+                success = args[1];
+                error = args[2];
+
+            } else {
+
+                params = args[0];
+                data = args[1];
+                success = args[2];
+
+                break;
+            }
+
+        case 1:
+
+            if (_.isFunction(args[0])) {
+                success = args[0];
+            } else if (/^(POST|PUT|PATCH)$/i.test(options.method)) {
+                data = args[0];
+            } else {
+                params = args[0];
+            }
+
+            break;
+
+        case 0:
+
+            break;
+
+        default:
+
+            throw 'Expected up to 4 arguments [params, data, success, error], got ' + args.length + ' arguments';
+    }
+
+    options.data = data;
+    options.params = _.extend({}, options.params, params);
+
+    if (success) {
+        options.success = success;
+    }
+
+    if (error) {
+        options.error = error;
+    }
+
+    return options;
+}
+
+Resource.actions = {
+
+    get: {method: 'GET'},
+    save: {method: 'POST'},
+    query: {method: 'GET'},
+    update: {method: 'PUT'},
+    remove: {method: 'DELETE'},
+    delete: {method: 'DELETE'}
+
+};
+
+module.exports = _.resource = Resource;
+
+},{"./util":37}],32:[function(require,module,exports){
+/**
+ * Service for URL templating.
+ */
+
+var _ = require('../util');
+var ie = document.documentMode;
+var el = document.createElement('a');
+
+function Url(url, params) {
+
+    var options = url, transform;
+
+    if (_.isString(url)) {
+        options = {url: url, params: params};
+    }
+
+    options = _.merge({}, Url.options, this.$options, options);
+
+    Url.transforms.forEach(function (handler) {
+        transform = factory(handler, transform, this.$vm);
+    }, this);
+
+    return transform(options);
+};
+
+/**
+ * Url options.
+ */
+
+Url.options = {
+    url: '',
+    root: null,
+    params: {}
+};
+
+/**
+ * Url transforms.
+ */
+
+Url.transforms = [
+    require('./template'),
+    require('./legacy'),
+    require('./query'),
+    require('./root')
+];
+
+/**
+ * Encodes a Url parameter string.
+ *
+ * @param {Object} obj
+ */
+
+Url.params = function (obj) {
+
+    var params = [], escape = encodeURIComponent;
+
+    params.add = function (key, value) {
+
+        if (_.isFunction(value)) {
+            value = value();
+        }
+
+        if (value === null) {
+            value = '';
+        }
+
+        this.push(escape(key) + '=' + escape(value));
+    };
+
+    serialize(params, obj);
+
+    return params.join('&').replace(/%20/g, '+');
+};
+
+/**
+ * Parse a URL and return its components.
+ *
+ * @param {String} url
+ */
+
+Url.parse = function (url) {
+
+    if (ie) {
+        el.href = url;
+        url = el.href;
+    }
+
+    el.href = url;
+
+    return {
+        href: el.href,
+        protocol: el.protocol ? el.protocol.replace(/:$/, '') : '',
+        port: el.port,
+        host: el.host,
+        hostname: el.hostname,
+        pathname: el.pathname.charAt(0) === '/' ? el.pathname : '/' + el.pathname,
+        search: el.search ? el.search.replace(/^\?/, '') : '',
+        hash: el.hash ? el.hash.replace(/^#/, '') : ''
+    };
+};
+
+function factory(handler, next, vm) {
+    return function (options) {
+        return handler.call(vm, options, next);
+    };
+}
+
+function serialize(params, obj, scope) {
+
+    var array = _.isArray(obj), plain = _.isPlainObject(obj), hash;
+
+    _.each(obj, function (value, key) {
+
+        hash = _.isObject(value) || _.isArray(value);
+
+        if (scope) {
+            key = scope + '[' + (plain || hash ? key : '') + ']';
+        }
+
+        if (!scope && array) {
+            params.add(value.name, value.value);
+        } else if (hash) {
+            serialize(params, value, key);
+        } else {
+            params.add(key, value);
+        }
+    });
+}
+
+module.exports = _.url = Url;
+
+},{"../util":37,"./legacy":33,"./query":34,"./root":35,"./template":36}],33:[function(require,module,exports){
+/**
+ * Legacy Transform.
+ */
+
+var _ = require('../util');
+
+module.exports = function (options, next) {
+
+    var variables = [], url = next(options);
+
+    url = url.replace(/(\/?):([a-z]\w*)/gi, function (match, slash, name) {
+
+        _.warn('The `:' + name + '` parameter syntax has been deprecated. Use the `{' + name + '}` syntax instead.');
+
+        if (options.params[name]) {
+            variables.push(name);
+            return slash + encodeUriSegment(options.params[name]);
+        }
+
+        return '';
+    });
+
+    variables.forEach(function (key) {
+        delete options.params[key];
+    });
+
+    return url;
+};
+
+function encodeUriSegment(value) {
+
+    return encodeUriQuery(value, true).
+        replace(/%26/gi, '&').
+        replace(/%3D/gi, '=').
+        replace(/%2B/gi, '+');
+}
+
+function encodeUriQuery(value, spaces) {
+
+    return encodeURIComponent(value).
+        replace(/%40/gi, '@').
+        replace(/%3A/gi, ':').
+        replace(/%24/g, '$').
+        replace(/%2C/gi, ',').
+        replace(/%20/g, (spaces ? '%20' : '+'));
+}
+
+},{"../util":37}],34:[function(require,module,exports){
+/**
+ * Query Parameter Transform.
+ */
+
+var _ = require('../util');
+
+module.exports = function (options, next) {
+
+    var urlParams = Object.keys(_.url.options.params), query = {}, url = next(options);
+
+   _.each(options.params, function (value, key) {
+        if (urlParams.indexOf(key) === -1) {
+            query[key] = value;
+        }
+    });
+
+    query = _.url.params(query);
+
+    if (query) {
+        url += (url.indexOf('?') == -1 ? '?' : '&') + query;
+    }
+
+    return url;
+};
+
+},{"../util":37}],35:[function(require,module,exports){
+/**
+ * Root Prefix Transform.
+ */
+
+var _ = require('../util');
+
+module.exports = function (options, next) {
+
+    var url = next(options);
+
+    if (_.isString(options.root) && !url.match(/^(https?:)?\//)) {
+        url = options.root + '/' + url;
+    }
+
+    return url;
+};
+
+},{"../util":37}],36:[function(require,module,exports){
+/**
+ * URL Template (RFC 6570) Transform.
+ */
+
+var UrlTemplate = require('../lib/url-template');
+
+module.exports = function (options) {
+
+    var variables = [], url = UrlTemplate.expand(options.url, options.params, variables);
+
+    variables.forEach(function (key) {
+        delete options.params[key];
+    });
+
+    return url;
+};
+
+},{"../lib/url-template":29}],37:[function(require,module,exports){
+/**
+ * Utility functions.
+ */
+
+var _ = exports, array = [], console = window.console;
+
+_.warn = function (msg) {
+    if (console && _.warning && (!_.config.silent || _.config.debug)) {
+        console.warn('[VueResource warn]: ' + msg);
+    }
+};
+
+_.error = function (msg) {
+    if (console) {
+        console.error(msg);
+    }
+};
+
+_.trim = function (str) {
+    return str.replace(/^\s*|\s*$/g, '');
+};
+
+_.toLower = function (str) {
+    return str ? str.toLowerCase() : '';
+};
+
+_.isArray = Array.isArray;
+
+_.isString = function (val) {
+    return typeof val === 'string';
+};
+
+_.isFunction = function (val) {
+    return typeof val === 'function';
+};
+
+_.isObject = function (obj) {
+    return obj !== null && typeof obj === 'object';
+};
+
+_.isPlainObject = function (obj) {
+    return _.isObject(obj) && Object.getPrototypeOf(obj) == Object.prototype;
+};
+
+_.options = function (fn, obj, options) {
+
+    options = options || {};
+
+    if (_.isFunction(options)) {
+        options = options.call(obj);
+    }
+
+    return _.merge(fn.bind({$vm: obj, $options: options}), fn, {$options: options});
+};
+
+_.each = function (obj, iterator) {
+
+    var i, key;
+
+    if (typeof obj.length == 'number') {
+        for (i = 0; i < obj.length; i++) {
+            iterator.call(obj[i], obj[i], i);
+        }
+    } else if (_.isObject(obj)) {
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                iterator.call(obj[key], obj[key], key);
+            }
+        }
+    }
+
+    return obj;
+};
+
+_.defaults = function (target, source) {
+
+    for (var key in source) {
+        if (target[key] === undefined) {
+            target[key] = source[key];
+        }
+    }
+
+    return target;
+};
+
+_.extend = function (target) {
+
+    var args = array.slice.call(arguments, 1);
+
+    args.forEach(function (arg) {
+        merge(target, arg);
+    });
+
+    return target;
+};
+
+_.merge = function (target) {
+
+    var args = array.slice.call(arguments, 1);
+
+    args.forEach(function (arg) {
+        merge(target, arg, true);
+    });
+
+    return target;
+};
+
+function merge(target, source, deep) {
+    for (var key in source) {
+        if (deep && (_.isPlainObject(source[key]) || _.isArray(source[key]))) {
+            if (_.isPlainObject(source[key]) && !_.isPlainObject(target[key])) {
+                target[key] = {};
+            }
+            if (_.isArray(source[key]) && !_.isArray(target[key])) {
+                target[key] = [];
+            }
+            merge(target[key], source[key], deep);
+        } else if (source[key] !== undefined) {
+            target[key] = source[key];
+        }
+    }
+}
+
+},{}],38:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.21
@@ -13452,7 +14980,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":4}],15:[function(require,module,exports){
+},{"_process":4}],39:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -13633,7 +15161,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 }();
 
-},{}],16:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 /* ===========================================================
@@ -13802,7 +15330,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],17:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -14363,7 +15891,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],18:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;}; /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * version: 1.10.0
@@ -14469,7 +15997,7 @@ $(function(){$('[data-toggle="table"]').bootstrapTable();});}(jQuery); /*
  * Table export
  */(function(c){c.fn.extend({tableExport:function tableExport(p){function y(b,u,d,e,k){if(-1==c.inArray(d,a.ignoreRow)&&-1==c.inArray(d-e,a.ignoreRow)){var L=c(b).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display")||"always"==c(this).closest("table").data("tableexport-display"));}).find(u),f=0;L.each(function(b){if(("always"==c(this).data("tableexport-display")||"none"!=c(this).css("display")&&"hidden"!=c(this).css("visibility")&&"none"!=c(this).data("tableexport-display"))&&-1==c.inArray(b,a.ignoreColumn)&&-1==c.inArray(b-L.length,a.ignoreColumn)&&"function"===typeof k){var e,u=0,g,h=0;if("undefined"!=typeof B[d]&&0<B[d].length)for(e=0;e<=b;e++){"undefined"!=typeof B[d][e]&&(k(null,d,e),delete B[d][e],b++);}c(this).is("[colspan]")&&(u=parseInt(c(this).attr("colspan")),f+=0<u?u-1:0);c(this).is("[rowspan]")&&(h=parseInt(c(this).attr("rowspan")));k(this,d,b);for(e=0;e<u-1;e++){k(null,d,b+e);}if(h)for(g=1;g<h;g++){for("undefined"==typeof B[d+g]&&(B[d+g]=[]),B[d+g][b+f]="",e=1;e<u;e++){B[d+g][b+f-e]="";}}}});}}function M(b){!0===a.consoleLog&&console.log(b.output());if("string"===a.outputMode)return b.output();if("base64"===a.outputMode)return C(b.output());try{var u=b.output("blob");saveAs(u,a.fileName+".pdf");}catch(d){D(a.fileName+".pdf","data:application/pdf;base64,",b.output());}}function N(b,a,d){var e=0;"undefined"!=typeof d&&(e=d.colspan);if(0<=e){for(var k=b.width,c=b.textPos.x,f=a.table.columns.indexOf(a.column),g=1;g<e;g++){k+=a.table.columns[f+g].width;}1<e&&("right"===b.styles.halign?c=b.textPos.x+k-b.width:"center"===b.styles.halign&&(c=b.textPos.x+(k-b.width)/2));b.width=k;b.textPos.x=c;"undefined"!=typeof d&&1<d.rowspan&&("middle"===b.styles.valign?b.textPos.y+=b.height*(d.rowspan-1)/2:"bottom"===b.styles.valign&&(b.textPos.y+=(d.rowspan-1)*b.height),b.height*=d.rowspan);if("middle"===b.styles.valign||"bottom"===b.styles.valign)d=("string"===typeof b.text?b.text.split(/\r\n|\r|\n/g):b.text).length||1,2<d&&(b.textPos.y-=(2-1.15)/2*a.row.styles.fontSize*(d-2)/3);return !0;}return !1;}function J(b,a,d){return b.replace(new RegExp(a.replace(/([.*+?^=!:${}()|\[\]\/\\])/g,"\\$1"),"g"),d);}function V(b){b=J(b||"0",a.numbers.html.decimalMark,".");b=J(b,a.numbers.html.thousandsSeparator,"");return "number"===typeof b||!1!==jQuery.isNumeric(b)?b:!1;}function v(b,u,d){var e="";if(null!=b){b=c(b);var k=b.html();"function"===typeof a.onCellHtmlData&&(k=a.onCellHtmlData(b,u,d,k));if(!0===a.htmlContent)e=c.trim(k);else {var f=k.replace(/\n/g,'\u2028').replace(/<br\s*[\/]?>/gi,'⁠'),k=c("<div/>").html(f).contents(),f="";c.each(k.text().split('\u2028'),function(b,a){0<b&&(f+=" ");f+=c.trim(a);});c.each(f.split('⁠'),function(b,a){0<b&&(e+="\n");e+=c.trim(a).replace(/\u00AD/g,"");});if(a.numbers.html.decimalMark!=a.numbers.output.decimalMark||a.numbers.html.thousandsSeparator!=a.numbers.output.thousandsSeparator)if(k=V(e),!1!==k){var g=(""+k).split(".");1==g.length&&(g[1]="");var h=3<g[0].length?g[0].length%3:0,e=(0>k?"-":"")+(a.numbers.output.thousandsSeparator?(h?g[0].substr(0,h)+a.numbers.output.thousandsSeparator:"")+g[0].substr(h).replace(/(\d{3})(?=\d)/g,"$1"+a.numbers.output.thousandsSeparator):g[0])+(g[1].length?a.numbers.output.decimalMark+g[1]:"");}}!0===a.escape&&(e=escape(e));"function"===typeof a.onCellData&&(e=a.onCellData(b,u,d,e));}return e;}function W(b,a,d){return a+"-"+d.toLowerCase();}function O(b,a){var d=/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(b),e=a;d&&(e=[parseInt(d[1]),parseInt(d[2]),parseInt(d[3])]);return e;}function P(b){var a=E(b,"text-align"),d=E(b,"font-weight"),e=E(b,"font-style"),k="";"start"==a&&(a="rtl"==E(b,"direction")?"right":"left");700<=d&&(k="bold");"italic"==e&&(k+=e);""==k&&(k="normal");return {style:{align:a,bcolor:O(E(b,"background-color"),[255,255,255]),color:O(E(b,"color"),[0,0,0]),fstyle:k},colspan:parseInt(c(b).attr("colspan"))||0,rowspan:parseInt(c(b).attr("rowspan"))||0};}function E(b,a){try{return window.getComputedStyle?(a=a.replace(/([a-z])([A-Z])/,W),window.getComputedStyle(b,null).getPropertyValue(a)):b.currentStyle?b.currentStyle[a]:b.style[a];}catch(d){}return "";}function K(b,a,d){a=E(b,a).match(/\d+/);if(null!==a){a=a[0];var e=document.createElement("div");e.style.overflow="hidden";e.style.visibility="hidden";b.parentElement.appendChild(e);e.style.width=100+d;d=100/e.offsetWidth;b.parentElement.removeChild(e);return a*d;}return 0;}function D(a,c,d){var e=window.navigator.userAgent;if(0<e.indexOf("MSIE ")||e.match(/Trident.*rv\:11\./)){if(c=document.createElement("iframe"))document.body.appendChild(c),c.setAttribute("style","display:none"),c.contentDocument.open("txt/html","replace"),c.contentDocument.write(d),c.contentDocument.close(),c.focus(),c.contentDocument.execCommand("SaveAs",!0,a),document.body.removeChild(c);}else if(e=document.createElement("a")){e.style.display="none";e.download=a;0<=c.toLowerCase().indexOf("base64,")?e.href=c+C(d):e.href=c+encodeURIComponent(d);document.body.appendChild(e);if(document.createEvent)null==H&&(H=document.createEvent("MouseEvents")),H.initEvent("click",!0,!1),e.dispatchEvent(H);else if(document.createEventObject)e.fireEvent("onclick");else if("function"==typeof e.onclick)e.onclick();document.body.removeChild(e);}}function C(a){var c="",d,e,k,g,f,h,l=0;a=a.replace(/\x0d\x0a/g,"\n");e="";for(k=0;k<a.length;k++){g=a.charCodeAt(k),128>g?e+=String.fromCharCode(g):(127<g&&2048>g?e+=String.fromCharCode(g>>6|192):(e+=String.fromCharCode(g>>12|224),e+=String.fromCharCode(g>>6&63|128)),e+=String.fromCharCode(g&63|128));}for(a=e;l<a.length;){d=a.charCodeAt(l++),e=a.charCodeAt(l++),k=a.charCodeAt(l++),g=d>>2,d=(d&3)<<4|e>>4,f=(e&15)<<2|k>>6,h=k&63,isNaN(e)?f=h=64:isNaN(k)&&(h=64),c=c+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(g)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(f)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h);}return c;}var a={consoleLog:!1,csvEnclosure:'"',csvSeparator:",",csvUseBOM:!0,displayTableName:!1,escape:!1,excelstyles:["border-bottom","border-top","border-left","border-right"],fileName:"tableExport",htmlContent:!1,ignoreColumn:[],ignoreRow:[],jspdf:{orientation:"p",unit:"pt",format:"a4",margins:{left:20,right:10,top:10,bottom:10},autotable:{styles:{cellPadding:2,rowHeight:12,fontSize:8,fillColor:255,textColor:50,fontStyle:"normal",overflow:"ellipsize",halign:"left",valign:"middle"},headerStyles:{fillColor:[52,73,94],textColor:255,fontStyle:"bold",halign:"center"},alternateRowStyles:{fillColor:245},tableExport:{onAfterAutotable:null,onBeforeAutotable:null,onTable:null}}},numbers:{html:{decimalMark:".",thousandsSeparator:","},output:{decimalMark:".",thousandsSeparator:","}},onCellData:null,onCellHtmlData:null,outputMode:"file",tbodySelector:"tr",theadSelector:"tr",tableName:"myTableName",type:"csv",worksheetName:"xlsWorksheetName"},r=this,H=null,q=[],n=[],m=0,B=[],g="";c.extend(!0,a,p);if("csv"==a.type||"txt"==a.type){p=function p(b,f,d,e){n=c(r).find(b).first().find(f);n.each(function(){g="";y(this,d,m,e+n.length,function(b,e,d){var c=g,f="";if(null!=b)if(b=v(b,e,d),e=null===b||""==b?"":b.toString(),b instanceof Date)f=a.csvEnclosure+b.toLocaleString()+a.csvEnclosure;else if(f=J(e,a.csvEnclosure,a.csvEnclosure+a.csvEnclosure),0<=f.indexOf(a.csvSeparator)||/[\r\n ]/g.test(f))f=a.csvEnclosure+f+a.csvEnclosure;g=c+(f+a.csvSeparator);});g=c.trim(g).substring(0,g.length-1);0<g.length&&(0<w.length&&(w+="\n"),w+=g);m++;});return n.length;};var w="",z=0,m=0,z=z+p("thead",a.theadSelector,"th,td",z),z=z+p("tbody",a.tbodySelector,"td",z);p("tfoot",a.tbodySelector,"td",z);w+="\n";!0===a.consoleLog&&console.log(w);if("string"===a.outputMode)return w;if("base64"===a.outputMode)return C(w);try{var A=new Blob([w],{type:"text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8"});saveAs(A,a.fileName+"."+a.type,"csv"!=a.type||!1===a.csvUseBOM);}catch(b){D(a.fileName+"."+a.type,"data:text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8,"+("csv"==a.type&&a.csvUseBOM?'﻿':""),w);}}else if("sql"==a.type){var m=0,l="INSERT INTO `"+a.tableName+"` (",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,q.length,function(a,c,d){l+="'"+v(a,c,d)+"',";});m++;l=c.trim(l);l=c.trim(l).substring(0,l.length-1);});l+=") VALUES ";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(a,c,d){g+="'"+v(a,c,d)+"',";});3<g.length&&(l+="("+g,l=c.trim(l).substring(0,l.length-1),l+="),");m++;});l=c.trim(l).substring(0,l.length-1);l+=";";!0===a.consoleLog&&console.log(l);if("string"===a.outputMode)return l;if("base64"===a.outputMode)return C(l);try{A=new Blob([l],{type:"text/plain;charset=utf-8"}),saveAs(A,a.fileName+".sql");}catch(b){D(a.fileName+".sql","data:application/sql;charset=utf-8,",l);}}else if("json"==a.type){var Q=[],q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){var a=[];y(this,"th,td",m,q.length,function(c,d,e){a.push(v(c,d,e));});Q.push(a);});var R=[],n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=[];y(this,"td",m,q.length+n.length,function(c,d,e){a.push(v(c,d,e));});0<a.length&&(1!=a.length||""!=a[0])&&R.push(a);m++;});p=[];p.push({header:Q,data:R});p=JSON.stringify(p);!0===a.consoleLog&&console.log(p);if("string"===a.outputMode)return p;if("base64"===a.outputMode)return C(p);try{A=new Blob([p],{type:"application/json;charset=utf-8"}),saveAs(A,a.fileName+".json");}catch(b){D(a.fileName+".json","data:application/json;charset=utf-8;base64,",p);}}else if("xml"===a.type){var m=0,t='<?xml version="1.0" encoding="utf-8"?>',t=t+"<tabledata><fields>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,n.length,function(a,c,d){t+="<field>"+v(a,c,d)+"</field>";});m++;});var t=t+"</fields><data>",S=1,n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=1;g="";y(this,"td",m,q.length+n.length,function(c,d,e){g+="<column-"+a+">"+v(c,d,e)+"</column-"+a+">";a++;});0<g.length&&"<column-1></column-1>"!=g&&(t+='<row id="'+S+'">'+g+"</row>",S++);m++;});t+="</data></tabledata>";!0===a.consoleLog&&console.log(t);if("string"===a.outputMode)return t;if("base64"===a.outputMode)return C(t);try{A=new Blob([t],{type:"application/xml;charset=utf-8"}),saveAs(A,a.fileName+".xml");}catch(b){D(a.fileName+".xml","data:application/xml;charset=utf-8;base64,",t);}}else if("excel"==a.type||"xls"==a.type||"word"==a.type||"doc"==a.type){p="excel"==a.type||"xls"==a.type?"excel":"word";var z="excel"==p?"xls":"doc",f="xls"==z?'xmlns:x="urn:schemas-microsoft-com:office:excel"':'xmlns:w="urn:schemas-microsoft-com:office:word"',m=0,x="<table><thead>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){g="";y(this,"th,td",m,q.length,function(b,f,d){if(null!=b){g+='<th style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</th>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});x+="</thead><tbody>";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(b,f,d){if(null!=b){g+='<td style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</td>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});a.displayTableName&&(x+="<tr><td></td></tr><tr><td></td></tr><tr><td>"+v(c("<p>"+a.tableName+"</p>"))+"</td></tr>");x+="</tbody></table>";!0===a.consoleLog&&console.log(x);f='<html xmlns:o="urn:schemas-microsoft-com:office:office" '+f+' xmlns="http://www.w3.org/TR/REC-html40">'+('<meta http-equiv="content-type" content="application/vnd.ms-'+p+'; charset=UTF-8">');f+="<head>";"excel"===p&&(f+="\x3c!--[if gte mso 9]>",f+="<xml>",f+="<x:ExcelWorkbook>",f+="<x:ExcelWorksheets>",f+="<x:ExcelWorksheet>",f+="<x:Name>",f+=a.worksheetName,f+="</x:Name>",f+="<x:WorksheetOptions>",f+="<x:DisplayGridlines/>",f+="</x:WorksheetOptions>",f+="</x:ExcelWorksheet>",f+="</x:ExcelWorksheets>",f+="</x:ExcelWorkbook>",f+="</xml>",f+="<![endif]--\x3e");f+="</head>";f+="<body>";f+=x;f+="</body>";f+="</html>";!0===a.consoleLog&&console.log(f);if("string"===a.outputMode)return f;if("base64"===a.outputMode)return C(f);try{A=new Blob([f],{type:"application/vnd.ms-"+a.type}),saveAs(A,a.fileName+"."+z);}catch(b){D(a.fileName+"."+z,"data:application/vnd.ms-"+p+";base64,",f);}}else if("png"==a.type)html2canvas(c(r)[0],{allowTaint:!0,background:"#fff",onrendered:function onrendered(b){b=b.toDataURL();b=b.substring(22);for(var c=atob(b),d=new ArrayBuffer(c.length),e=new Uint8Array(d),f=0;f<c.length;f++){e[f]=c.charCodeAt(f);}!0===a.consoleLog&&console.log(c);if("string"===a.outputMode)return c;if("base64"===a.outputMode)return C(b);try{var g=new Blob([d],{type:"image/png"});saveAs(g,a.fileName+".png");}catch(h){D(a.fileName+".png","data:image/png;base64,",b);}}});else if("pdf"==a.type)if(!1===a.jspdf.autotable){var A={dim:{w:K(c(r).first().get(0),"width","mm"),h:K(c(r).first().get(0),"height","mm")},pagesplit:!1},T=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);T.addHTML(c(r).first(),a.jspdf.margins.left,a.jspdf.margins.top,A,function(){M(T);});}else {var h=a.jspdf.autotable.tableExport;if("string"===typeof a.jspdf.format&&"bestfit"===a.jspdf.format.toLowerCase()){var F={a0:[2383.94,3370.39],a1:[1683.78,2383.94],a2:[1190.55,1683.78],a3:[841.89,1190.55],a4:[595.28,841.89]},I="",G="",U=0;c(r).filter(":visible").each(function(){if("none"!=c(this).css("display")){var a=K(c(this).get(0),"width","pt");if(a>U){a>F.a0[0]&&(I="a0",G="l");for(var f in F){F.hasOwnProperty(f)&&F[f][1]>a&&(I=f,G="l",F[f][0]>a&&(G="p"));}U=a;}}});a.jspdf.format=""==I?"a4":I;a.jspdf.orientation=""==G?"w":G;}h.doc=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);c(r).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display"));}).each(function(){var b,f=0;h.columns=[];h.rows=[];h.rowoptions={};if("function"===typeof h.onTable&&!1===h.onTable(c(this),a))return !0;a.jspdf.autotable.tableExport=null;var d=c.extend(!0,{},a.jspdf.autotable);a.jspdf.autotable.tableExport=h;d.margin={};c.extend(!0,d.margin,a.jspdf.margins);d.tableExport=h;"function"!==typeof d.beforePageContent&&(d.beforePageContent=function(a){1==a.pageCount&&a.table.rows.concat(a.table.headerRow).forEach(function(b){0<b.height&&(b.height+=(2-1.15)/2*b.styles.fontSize,a.table.height+=(2-1.15)/2*b.styles.fontSize);});});"function"!==typeof d.createdHeaderCell&&(d.createdHeaderCell=function(a,b){if("undefined"!=typeof h.columns[b.column.dataKey]){var c=h.columns[b.column.dataKey];a.styles.halign=c.style.align;"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor);"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color);"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle);}});"function"!==typeof d.createdCell&&(d.createdCell=function(a,b){var c=h.rowoptions[b.row.index+":"+b.column.dataKey];"undefined"!=typeof c&&"undefined"!=typeof c.style&&(a.styles.halign=c.style.align,"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor),"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color),"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle));});"function"!==typeof d.drawHeaderCell&&(d.drawHeaderCell=function(a,b){var c=h.columns[b.column.dataKey];return 1!=c.style.hasOwnProperty("hidden")||!0!==c.style.hidden?N(a,b,c):!1;});"function"!==typeof d.drawCell&&(d.drawCell=function(a,b){return N(a,b,h.rowoptions[b.row.index+":"+b.column.dataKey]);});q=c(this).find("thead").find(a.theadSelector);q.each(function(){b=0;y(this,"th,td",f,q.length,function(a,c,e){var d=P(a);d.title=v(a,c,e);d.key=b++;h.columns.push(d);});f++;});var e=0;n=c(this).find("tbody").find(a.tbodySelector);n.each(function(){var a=[];b=0;y(this,"td",f,q.length+n.length,function(d,f,g){if("undefined"===typeof h.columns[b]){var l={title:"",key:b,style:{hidden:!0}};h.columns.push(l);}null!==d?h.rowoptions[e+":"+b++]=P(d):(l=c.extend(!0,{},h.rowoptions[e+":"+(b-1)]),l.colspan=-1,h.rowoptions[e+":"+b++]=l);a.push(v(d,f,g));});a.length&&(h.rows.push(a),e++);f++;});if("function"===typeof h.onBeforeAutotable)h.onBeforeAutotable(c(this),h.columns,h.rows,d);h.doc.autoTable(h.columns,h.rows,d);if("function"===typeof h.onAfterAutotable)h.onAfterAutotable(c(this),d);a.jspdf.autotable.startY=h.doc.autoTableEndPosY()+d.margin.top;});M(h.doc);h.columns.length=0;h.rows.length=0;delete h.doc;h.doc=null;}return this;}});})(jQuery);
 
-},{}],19:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -14477,6 +16005,7 @@ var Vue = require('vue');
 var Dropzone = require("dropzone");
 var swal = require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
+Vue.use(require('vue-resource'));
 
 $(document).ready(function () {
 	// var dateFormat = require('dateformat');
@@ -14501,10 +16030,72 @@ $(document).ready(function () {
     VueJs code
     ========================================================================== */
 
+	Vue.directive('ajax', {
+		params: ['title', 'message'],
+
+		bind: function bind() {
+			$(this.el).on('submit', this.onSubmit.bind(this));
+		},
+		update: function update() {},
+		onSubmit: function onSubmit(e) {
+			e.preventDefault();
+			var requestType = this.getRequestType();
+
+			this.vm.$http[requestType](this.el.action, this.getFormData()).then(this.onComplete.bind(this)).catch(this.onError.bind(this));
+		},
+		onComplete: function onComplete() {
+			// console.log(this.params.title);
+			if (this.params.title && this.params.message) {
+				swal({
+					title: this.params.title,
+					text: this.params.message,
+					type: 'success',
+					timer: 2000,
+					showConfirmButton: false
+				});
+			}
+		},
+
+		onError: function onError(response) {
+			// first show validation errors
+			var errors = '';
+			$.each(response.data, function (key, value) {
+				errors += value + '\n';
+			});
+			swal("Oops...", errors, "error");
+		},
+		getRequestType: function getRequestType() {
+			var method = this.el.querySelector('input[name="_method"]');
+			return (method ? method.value : this.el.method).toLowerCase();
+		},
+		getFormData: function getFormData() {
+			// You can use $(this.el) in jQuery and you will get the same thing.
+			var serializedData = $(this.el).serializeArray();
+			var objectData = {};
+			$.each(serializedData, function () {
+				if (objectData[this.name] !== undefined) {
+					if (!objectData[this.name].push) {
+						objectData[this.name] = [objectData[this.name]];
+					}
+					objectData[this.name].push(this.value || '');
+				} else {
+					objectData[this.name] = this.value || '';
+				}
+			});
+			return objectData;
+		}
+
+	});
+
 	new Vue({
 		el: 'body',
-		data: {},
-		methods: {}
+		http: {
+			headers: {
+				// You could also store your token in a global object,
+				// and reference it here. APP.token
+				'X-CSRF-TOKEN': document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : ''
+			}
+		}
 	});
 
 	/* ==========================================================================
@@ -15615,8 +17206,8 @@ $(document).ready(function () {
 Taken from: https://gist.github.com/soufianeEL/3f8483f0f3dc9e3ec5d9
 Modified by Ferri Sutanto
 - use promise for verifyConfirm
-Examples : 
-<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}"> 
+Examples :
+<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}">
 - Or, request confirmation in the process -
 <a href="posts/2" data-method="delete" data-token="{{csrf_token()}}" data-confirm="Are you sure?">
 */
@@ -15696,6 +17287,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":14}]},{},[18,16,15,17,19]);
+},{"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":38,"vue-resource":27}]},{},[42,40,39,41,43]);
 
 //# sourceMappingURL=bundle.js.map

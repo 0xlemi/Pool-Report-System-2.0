@@ -14,7 +14,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password',
+        'company_name',
+        'website',
+        'facebook',
+        'twitter',
+        'language',
+        'timezone',
+
     ];
 
     /**
@@ -53,7 +62,7 @@ class User extends Authenticatable
 
     /**
      *  Get services associated with this user
-     * 
+     *
      */
     public function services(){
         return $this->hasMany('App\Service')->orderBy('seq_id');
@@ -61,7 +70,7 @@ class User extends Authenticatable
 
     /**
      * Get services accacited with this user and seq_id convination
-     * @param  int $seq_id 
+     * @param  int $seq_id
      */
     public function serviceBySeqId($seq_id){
         return $this->hasMany('App\Service')
@@ -72,14 +81,14 @@ class User extends Authenticatable
     public function clientsThroughServices(){
         $this->load('services.clients'); // eager load far relation
         $clients = new Collection; // Illuminate\Database\Eloquent\Collection
-         
+
         foreach ($this->services as $service)
         {
            $clients = $clients->merge($service->clients);
         }
-         
+
         $clients = $clients->unique()->sortBy('seq_id'); // remove the duplicates
-         
+
         return $clients; // all clients collection
     }
 
@@ -92,7 +101,7 @@ class User extends Authenticatable
 
     /**
      * Get clients accacited with this user and seq_id convination
-     * @param  int $seq_id 
+     * @param  int $seq_id
      */
     public function clientsBySeqId($seq_id){
         return Client::where('user_id', $this->id)
@@ -102,7 +111,7 @@ class User extends Authenticatable
 
     /**
      *  Get supervisors assaciated with this user
-     * 
+     *
      */
     public function supervisors(){
         return $this->hasMany('App\Supervisor')->orderBy('seq_id');
@@ -110,14 +119,14 @@ class User extends Authenticatable
 
     /**
      * Get supervisor accacited with this user and seq_id convination
-     * @param  int $seq_id 
+     * @param  int $seq_id
      */
     public function supervisorBySeqId($seq_id){
         return $this->hasMany('App\Supervisor')
                     ->where('supervisors.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
-    
+
     /**
      * Get technicians assaciated with this user
      */
@@ -127,7 +136,7 @@ class User extends Authenticatable
 
     /**
      * Get technicains associated with this user and seq_id convination
-     * @param  int $seq_id 
+     * @param  int $seq_id
      */
     public function technicianBySeqId($seq_id){
         return $this->hasManyThrough('App\Technician', 'App\Supervisor')
