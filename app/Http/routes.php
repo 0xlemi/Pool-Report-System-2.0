@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -15,7 +16,7 @@ Route::get('/', function () {
 	if(Auth::check()){
 		return view('home');
 	}
-    return view('welcome');
+    return view('landing.welcome');
 });
 
 Route::auth();
@@ -36,5 +37,11 @@ Route::get('settings', 'UserController@settings');
 Route::patch('settings/company', 'UserController@updateCompany');
 Route::patch('settings/email', 'UserController@updateEmail');
 Route::patch('settings/password', 'UserController@updatePassword');
+
+Route::group(['prefix' => 'api/v1'], function(){
+	Route::get('user', 'Api\UserApiController@information');
+
+});
+
 
 // Route::get('/home', 'HomeController@index');

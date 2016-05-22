@@ -33,6 +33,7 @@ class UserController extends Controller
       return view('user.settings', compact('user'));
     }
 
+
     public function updateCompany(Request $request){
       $this->validate($request, [
         'company_name' => 'required|between:2,30',
@@ -59,7 +60,7 @@ class UserController extends Controller
         'new_email' => 'required|email|max:255',
       ]);
       $user = User::findOrFail($request->id);
-      
+
 
       dd($request->all());
     }

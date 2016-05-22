@@ -40,25 +40,25 @@ class DatabaseSeeder extends Seeder
     		'name' => 'Luis Espinosa',
     		'email' => 'lem.espinosa.m@gmail.com',
     		'password' => bcrypt('password'),
-            'company_name' => 'Hidroequipos',
-            'website' => 'www.hidroequipos.com',
-            'facebook' => 'poolreportsystem',
-            'twitter' => 'poolreportsys',
+        'company_name' => 'Hidroequipos',
+        'website' => 'www.hidroequipos.com',
+        'facebook' => 'poolreportsystem',
+        'twitter' => 'poolreportsys',
     		'language' => 'en',
-    		'timezone' => 'America/Mazatlan'
-
+    		'timezone' => 'America/Mazatlan',
+				'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
     	]);
     	App\User::create([
     		'name' => 'Pepe Gonzales',
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
-            'company_name' => 'Hidroequipos',
-            'website' => 'www.google.com',
-            'facebook' => 'poolreportsystem',
-            'twitter' => 'poolreportsys',
+        'company_name' => 'Hidroequipos',
+        'website' => 'www.google.com',
+        'facebook' => 'poolreportsystem',
+        'twitter' => 'poolreportsys',
     		'language' => 'es',
-    		'timezone' => 'America/Mazatlan'
-
+    		'timezone' => 'America/Mazatlan',
+				'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
     	]);
     	$this->call(ServicesTableSeeder::class);
     	$this->call(SupervisorsTableSeeder::class);

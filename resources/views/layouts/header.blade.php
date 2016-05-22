@@ -194,9 +194,8 @@
                 </div><!--.site-header-shown-->
 
                 <div class="mobile-menu-right-overlay"></div>
-               
+
             </div><!--site-header-content-in-->
         </div><!--.site-header-content-->
     </div><!--.container-fluid-->
 </header><!--.site-header-->
-

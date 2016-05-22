@@ -23,7 +23,7 @@ class ReportsController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -94,7 +94,7 @@ class ReportsController extends Controller
         $image1 = $report->addImageFromForm($request->file('photo1'));
         $image2 = $report->addImageFromForm($request->file('photo2'));
         $image3 = $report->addImageFromForm($request->file('photo3'));
-        
+
         if($report && $image1 && $image2 && $image3){
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports/date/'.$completed_at->toDateString());

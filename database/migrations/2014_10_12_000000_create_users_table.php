@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('timezone');
             $table->softDeletes();
             $table->rememberToken();
+            $table->string('api_token', 60)->unique();
             $table->timestamps();
         });
     }
