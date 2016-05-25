@@ -19,7 +19,7 @@ class CreateSupervisorTable extends Migration
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->string('email')->index();
+            $table->string('email')->unique()->index();
             $table->string('password');
             $table->char('language', 2);
             $table->text('comments');
@@ -30,11 +30,10 @@ class CreateSupervisorTable extends Migration
         });
 
         Schema::table('supervisors', function(Blueprint $table){
-            $table->unique(array('user_id', 'email'), 'supervisors_email_unique');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
         });
     }
 
