@@ -38,7 +38,24 @@ class UserApiTest extends ApiTester
       ]);
 
     $this->assertResponseOk();
+  }
+
+  /** @test */
+  public function user_can_get_all_services_list()
+  {
+
+    $user = factory(User::class)->create();
+
+    $services = factory(App\Service::class, 3)->create();
+
+    $this->json('GET', '/api/v1/services', [
+      'api_token' => $user->api_token,
+    ]);
+
+    $this->assertResponseOk();
 
   }
+
+
 
 }
