@@ -75,6 +75,8 @@ $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
 		'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 		'user_id' => $user_id,
+        'remember_token' => str_random(10),
+        'api_token' => str_random(60),
 	];
 });
 
@@ -93,6 +95,8 @@ $factory->define(App\Technician::class, function (Faker\Generator $faker){
 		'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 		'supervisor_id' => $supervisor_id,
+        'remember_token' => str_random(10),
+        'api_token' => str_random(60),
 	];
 });
 
@@ -107,6 +111,8 @@ $factory->define(App\Client::class, function (Faker\Generator $faker){
 		'email_preferences' => $faker->numberBetween(1, 4),
 		'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+        'remember_token' => str_random(10),
+        'api_token' => str_random(60),
 	];
 });
 

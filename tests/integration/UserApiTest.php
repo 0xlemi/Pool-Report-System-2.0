@@ -25,35 +25,25 @@ class UserApiTest extends ApiTester
     $user = factory(User::class)->create();
 
     $this->json('GET','/api/v1/user', [
-        'api_token' => $user->api_token,
-      ])->seeJson([
-        'name' => $user->name,
-    		'email' => $user->email,
-        'company_name' => $user->company_name,
-        'website' => $user->website,
-        'facebook' => $user->facebook,
-        'twitter' => $user->twitter,
-    		'language' => $user->language,
-    		'timezone' => $user->timezone,
-      ]);
+            'api_token' => $user->api_token,
+         ])->seeJsonEquals([
+            'name' => $user->name,
+        	'email' => $user->email,
+            'company_name' => $user->company_name,
+            'website' => $user->website,
+            'facebook' => $user->facebook,
+            'twitter' => $user->twitter,
+        	'language' => $user->language,
+        	'timezone' => $user->timezone,
+         ])->dontSeeJson([
+            'api_token' => $user->api_token,
+            'remember_token' => $user->remember_token,
+            'deleted_at' => $user->deleted_at,
+            'created_at' => $user->created_at,
+            'password' => $user->password,
+         ]);
 
     $this->assertResponseOk();
-  }
-
-  /** @test */
-  public function user_can_get_all_services_list()
-  {
-
-    $user = factory(User::class)->create();
-
-    $services = factory(App\Service::class, 3)->create();
-
-    $this->json('GET', '/api/v1/services', [
-      'api_token' => $user->api_token,
-    ]);
-
-    $this->assertResponseOk();
-
   }
 
 

@@ -13,34 +13,35 @@ use Auth;
 class UserController extends Controller
 {
 
-  protected $userTransformer;
+    protected $userTransformer;
 
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct(UserTransformer $userTransformer)
-  {
-      $this->middleware(['api', 'auth:api']);
-      $this->userTransformer = $userTransformer;
-  }
+    /**
+    * Create a new controller instance.
+    *
+    * @return void
+    */
+    public function __construct(UserTransformer $userTransformer)
+    {
+        $this->middleware(['api', 'auth:api']);
+        $this->userTransformer = $userTransformer;
+    }
 
-  /**
-   * Get the information of the current user logged in
-   * @return [type] [description]
-   */
-  public function information()
-  {
-    return Auth::guard('api')->user();
-  }
+    /**
+    * Get the information of the current user logged in
+    * @return [type] [description]
+    */
+    public function information()
+    {
+        $user  = Auth::guard('api')->user();
+        return $this->userTransformer->transform($user);
+    }
 
 
-  public function services()
-  {
-    $user = Auth::user();
-    return $user->services;
-  }
+    public function services()
+    {
+        $user = Auth::user();
+        return $user->services;
+    }
 
 
 

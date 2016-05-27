@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\ServiceHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -85,19 +86,19 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Country</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" id="inputPassword" value="{{ get_country_by_code($service->country) }}">
+									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $helper->get_country_by_code($service->country) }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
-									{!! get_styled_type($service->type, false) !!}
+									{!! $helper->get_styled_type($service->type, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service days</label>
 								<div class="col-sm-10">
-									{!! get_styled_service_days($service->service_days) !!}
+									{!! $helper->get_styled_service_days($service->service_days) !!}
 								</div>
 							</div>
 							<div class="form-group row">
@@ -122,13 +123,13 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status</label>
 								<div class="col-sm-10">
-									{!! get_styled_status($service->status, false) !!}
+									{!! $helper->get_styled_status($service->status, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
-									<textarea rows="4" class="form-control" 
+									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this service."
 												name="comments" readonly>{{ $service->comments }}</textarea>
 								</div>
@@ -136,8 +137,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger" 
-							data-method="delete" data-token="{{ csrf_token() }}" 
+							<a class="btn btn-danger"
+							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/services/'.$service->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;

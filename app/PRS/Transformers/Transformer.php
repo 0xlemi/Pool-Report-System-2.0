@@ -9,11 +9,13 @@ abstract class Transformer{
     * @param   $items
     * @return array
     */
-   public function transformCollection(array $items)
+   public function transformCollection($items)
    {
-       return array_map(function($item){
-         return $this->transform($item);
-       }, $items);
+       $all_items = array();
+       foreach ($items as $item) {
+           $all_items[] = $this->transform($item);
+       }
+       return $all_items;
    }
 
 }

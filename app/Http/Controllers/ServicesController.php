@@ -8,22 +8,27 @@ use Auth;
 use JavaScript;
 
 use App\Service;
+use App\PRS\Helpers\ServiceHelpers;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateServiceRequest;
 
 class ServicesController extends Controller
 {
+
+    protected $serviceHelpers;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(serviceHelpers $serviceHelpers)
     {
+        $this->serviceHelpers = $serviceHelpers;
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -57,7 +62,7 @@ class ServicesController extends Controller
     public function store(CreateServiceRequest $request)
     {
         // get the service days number 0-127
-        $service_days = service_days_to_num(
+        $service_days = $this->serviceHelpers->service_days_to_num(
             $request->service_days_monday,
             $request->service_days_tuesday,
             $request->service_days_wednesday,
@@ -131,7 +136,7 @@ class ServicesController extends Controller
         $service = Auth::user()->serviceBySeqId($id_seq);
 
         // get the service days number 0-127
-        $service_days = service_days_to_num(
+        $service_days = $this->serviceHelpers->service_days_to_num(
             $request->service_days_monday,
             $request->service_days_tuesday,
             $request->service_days_wednesday,

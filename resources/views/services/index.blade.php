@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\ServiceHelpers')
 @section('content')
 	<header class="section-header">
 	<div class="tbl">
@@ -36,7 +37,7 @@
 					   data-response-handler="responseHandler"
 					   >
 					<thead>
-					    <tr>       
+					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
 					        <th data-field="address" data-sortable="true">Address</th>
@@ -51,8 +52,8 @@
 								<td>{{ $service->seq_id }}</td>
 								<td>{{ $service->name }}</td>
 								<td>{{ $service->address_line }}</td>
-								<td>{!! get_styled_type($service->type) !!}</td>
-								<td>{!! get_styled_service_days($service->service_days) !!}</td>
+								<td>{!! $helper->get_styled_type($service->type) !!}</td>
+								<td>{!! $helper->get_styled_service_days($service->service_days) !!}</td>
 								<td>{!! $service->amount.' <strong>'.$service->currency.'</strong>' !!}</td>
 							</tr>
 						@endforeach

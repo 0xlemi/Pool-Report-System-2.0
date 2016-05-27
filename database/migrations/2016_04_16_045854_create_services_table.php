@@ -27,7 +27,7 @@ class CreateServicesTable extends Migration
             $table->char('currency', 3);
             $table->time('start_time');
             $table->time('end_time');
-            $table->boolean('status');
+            $table->boolean('status')->default(1); // 1=active, 0=inactive
             $table->text('comments');
             $table->integer('user_id')->unsigned();
             $table->integer('seq_id')->index();
