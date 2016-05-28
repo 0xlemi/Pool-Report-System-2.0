@@ -15,13 +15,9 @@ class CreateTechnicianTable extends Migration
         Schema::create('technicians', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->string('username')->unique()->index();
-            $table->string('password');
-            $table->char('language', 2);
             $table->text('comments');
             $table->integer('supervisor_id')->unsigned();
             $table->integer('seq_id')->index();

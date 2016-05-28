@@ -15,13 +15,13 @@ class CreateImagesTable extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('user_id')->unsigned()->index()->nullable()->default(null);
+            $table->integer('admin_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('report_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('technician_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('service_id')->unsigned()->index()->nullable()->default(null);
-            $table->string('normal_path'); // full resolution 
+            $table->string('normal_path'); // full resolution
             $table->string('thumbnail_path');   // 300x* image
             $table->string('icon_path'); // 64x64 image
             $table->smallInteger('order')->default(1);
@@ -30,9 +30,9 @@ class CreateImagesTable extends Migration
         });
 
         Schema::table('images', function(Blueprint $table){
-            $table->foreign('user_id')
+            $table->foreign('admin_id')
                 ->references('id')
-                ->on('users')
+                ->on('administrators')
                 ->onDelete('cascade');
 
             $table->foreign('client_id')

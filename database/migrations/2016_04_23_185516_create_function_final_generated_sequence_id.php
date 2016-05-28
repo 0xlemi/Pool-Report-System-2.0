@@ -13,14 +13,14 @@ class CreateFunctionFinalGeneratedSequenceId extends Migration
     public function up()
     {
         DB::unprepared('
-            CREATE FUNCTION f_gen_seq(p_seq_name VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci, p_user_id INT) RETURNS INT
-            BEGIN
-             UPDATE seq
-             SET val = last_insert_id(val+1) 
-             WHERE `name` = p_seq_name AND
-                   `user_id` = p_user_id;
-             RETURN last_insert_id();
-            END
+        CREATE FUNCTION f_gen_seq(p_seq_name VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci, p_admin_id INT) RETURNS int(11)
+        BEGIN
+            UPDATE seq
+            SET val = last_insert_id(val+1)
+            WHERE `name` = p_seq_name AND
+                `admin_id` = p_admin_id;
+            RETURN last_insert_id();
+        END
         ');
     }
 

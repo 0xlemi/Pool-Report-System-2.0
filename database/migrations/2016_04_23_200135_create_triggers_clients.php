@@ -12,36 +12,13 @@ class CreateTriggersClients extends Migration
      */
     public function up()
     {
-      DB::unprepared("
-        CREATE TRIGGER trg_clients_ad_email
-        AFTER DELETE ON clients
-        FOR EACH ROW
-        BEGIN
-          DELETE FROM tmp_emails
-          WHERE email = OLD.email;
-        END
-      ");
 
       DB::unprepared("
-        CREATE TRIGGER trg_clients_bi_seq_and_email
+        CREATE TRIGGER trg_clients_bi_seq
         BEFORE INSERT ON clients
-        FOR EACH ROW
-        BEGIN
-          INSERT INTO tmp_emails
-          VALUES (NEW.email);
-          SET NEW.seq_id = (SELECT f_gen_seq('clients',NEW.user_id));
-        END
-      ");
-
-      DB::unprepared("
-        CREATE TRIGGER trg_clients_bu_email
-        BEFORE UPDATE ON clients
-        FOR EACH ROW
-        BEGIN
-          DELETE FROM tmp_emails
-          WHERE email = OLD.email;
-          INSERT INTO tmp_emails
-          VALUES (NEW.email);
+            FOR EACH ROW
+            BEGIN
+            SET NEW.seq_id = (SELECT f_gen_seq('clients',NEW.admin_id));
         END
       ");
 
@@ -54,8 +31,6 @@ class CreateTriggersClients extends Migration
      */
     public function down()
     {
-      DB::unprepared('DROP TRIGGER IF EXISTS trg_clients_ad_email');
-      DB::unprepared('DROP TRIGGER IF EXISTS trg_clients_bi_seq_and_email');
-      DB::unprepared('DROP TRIGGER IF EXISTS trg_clients_bu_email');
+      DB::unprepared('DROP TRIGGER IF EXISTS trg_clients_bi_seq');
     }
 }

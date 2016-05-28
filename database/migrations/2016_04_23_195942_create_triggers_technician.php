@@ -13,19 +13,16 @@ class CreateTriggersTechnician extends Migration
     public function up()
     {
         DB::unprepared("
-            CREATE TRIGGER trg_technicians_bi_seq
-            BEFORE INSERT ON technicians
-            FOR EACH ROW
-            BEGIN
-              DECLARE v_user INT;
-              
-              SELECT user_id INTO v_user
-              FROM supervisors
-              WHERE id = NEW.supervisor_id;
-
-              SET NEW.seq_id = (SELECT f_gen_seq('technicians',v_user));
-
-            END
+        CREATE TRIGGER trg_technicians_bi_seq
+        BEFORE INSERT ON technicians
+        FOR EACH ROW
+        BEGIN
+            DECLARE v_admin INT;
+            SELECT admin_id INTO v_admin
+            FROM supervisors
+            WHERE id = NEW.supervisor_id;
+            SET NEW.seq_id = (SELECT f_gen_seq('technicians',v_admin));
+        END
         ");
     }
 

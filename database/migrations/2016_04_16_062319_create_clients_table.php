@@ -15,26 +15,25 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
-            $table->string('email')->unique()->index();
-            $table->string('password');
             $table->tinyInteger('type'); // 1=owner, 2=house administrator
             $table->tinyInteger('email_preferences');
-            $table->char('language', 2);
             $table->text('comments');
             $table->integer('seq_id')->index();
-            $table->integer('user_id');
+            $table->integer('admin_id')->unsigned();
             $table->softDeletes();
             $table->rememberToken();
             $table->string('api_token', 60)->unique();
             $table->timestamps();
         });
 
-        // Schema::table('clients', function(Blueprint $table){
-        //     $table->unique(array('user_id', 'email'), 'clients_email_unique');
-        // });
+        Schema::table('clients', function(Blueprint $table){
+            $table->foreign('admin_id')
+                ->references('id')
+                ->on('administrators')
+                ->onDelete('cascade');
+        });
     }
 
     /**

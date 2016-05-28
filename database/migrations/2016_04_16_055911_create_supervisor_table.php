@@ -15,15 +15,11 @@ class CreateSupervisorTable extends Migration
         Schema::create('supervisors', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->string('email')->unique()->index();
-            $table->string('password');
-            $table->char('language', 2);
             $table->text('comments');
-            $table->integer('user_id')->unsigned();
+            $table->integer('admin_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->rememberToken();
@@ -32,9 +28,9 @@ class CreateSupervisorTable extends Migration
         });
 
         Schema::table('supervisors', function(Blueprint $table){
-            $table->foreign('user_id')
+            $table->foreign('admin_id')
                 ->references('id')
-                ->on('users')
+                ->on('administrators')
                 ->onDelete('cascade');
         });
     }

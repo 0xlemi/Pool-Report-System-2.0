@@ -17,13 +17,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'company_name',
-        'website',
-        'facebook',
-        'twitter',
         'language',
-        'timezone',
-
     ];
 
     /**

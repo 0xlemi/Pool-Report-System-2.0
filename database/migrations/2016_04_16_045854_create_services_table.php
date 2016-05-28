@@ -29,16 +29,16 @@ class CreateServicesTable extends Migration
             $table->time('end_time');
             $table->boolean('status')->default(1); // 1=active, 0=inactive
             $table->text('comments');
-            $table->integer('user_id')->unsigned();
+            $table->integer('admin_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->softDeletes();
             $table->timestamps();
         });
 
         Schema::table('services', function(Blueprint $table){
-            $table->foreign('user_id')
+            $table->foreign('admin_id')
                 ->references('id')
-                ->on('users')
+                ->on('administrators')
                 ->onDelete('cascade');
         });
 

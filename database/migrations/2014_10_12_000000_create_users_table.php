@@ -18,18 +18,24 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->string('company_username');
-            $table->string('company_name');
-            $table->string('website');
-            $table->string('facebook');
-            $table->string('twitter');
             $table->char('language', 2);
-            $table->string('timezone');
+            $table->string('userable_type');
+            $table->integer('userable_id')->unsigned();
             $table->softDeletes();
             $table->rememberToken();
             $table->string('api_token', 60)->unique();
             $table->timestamps();
         });
+
+        DB::unprepared("
+            ALTER TABLE `users`
+                ADD CHECK (userable_type IN (
+                    'Administrator',
+                    'Client',
+                    'Technician',
+                    'Supervisor'
+                ));
+        ");
     }
 
     /**
