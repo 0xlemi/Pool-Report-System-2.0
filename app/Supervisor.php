@@ -26,7 +26,7 @@ class Supervisor extends Model
 		'comments',
 		'user_id',
 	];
-    
+
     /**
      * hidden variables
      * @var array
@@ -38,15 +38,20 @@ class Supervisor extends Model
 
     /**
      *	Get the associated user to this supervisor
-     * 
+     *
      */
-	public function user(){
-		return $this->belongsTo('App\User');
+	public function admin(){
+		return $this->belongsTo('App\Administrator');
 	}
+
+	public function user()
+    {
+      return $this->morphOne(App\User::class, 'userable');
+    }
 
 	/**
 	 * Get the associated technicians to this supervisor
-	 * 
+	 *
 	 */
 	public function technicians(){
 		return $this->hasMany('App\Technician');

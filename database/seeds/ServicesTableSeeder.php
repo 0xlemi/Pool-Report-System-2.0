@@ -1,11 +1,18 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 class ServicesTableSeeder extends Seeder
 {
     // number of services to create
-    private $number_of_services = 120;
+    private $number_of_services = 40;
+    private $seederHelper;
+
+    public function __construct(SeederHelpers $seederHelper)
+    {
+        $this->seederHelper = $seederHelper;
+    }
 
     /**
      * Run the database seeds.
@@ -14,11 +21,16 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
-    	for ($i=0; $i < $this->number_of_services; $i++) { 
+    	for ($i=0; $i < $this->number_of_services; $i++) {
 		    // generate and save image and tn_image
-			$img = get_random_image('service', 'service', rand(1, 20));
+			$img = $this->seederHelper->get_random_image('service', 'service', rand(1, 20));
 
-    		$service_id = factory(App\Service::class)->create()->id;
+            // get a random admin_id that exists in database
+        	$admin_id = $this->seederHelper->get_random_id('administrators');
+
+    		$service_id = factory(App\Service::class)->create([
+        		'admin_id' => $admin_id,
+            ])->id;
 
     		// create images link it to service id
     		// normal image

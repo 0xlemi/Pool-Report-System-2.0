@@ -1,11 +1,18 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 class TechniciansTableSeeder extends Seeder
 {
     // number of technicians to create
-    private $number_of_technicians = 30;
+    private $number_of_technicians = 10;
+    private $seederHelper;
+
+    public function __construct(SeederHelpers $seederHelper)
+    {
+        $this->seederHelper = $seederHelper;
+    }
 
     /**
      * Run the database seeds.
@@ -14,11 +21,21 @@ class TechniciansTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i=0; $i < $this->number_of_technicians; $i++) { 
+        for ($i=0; $i < $this->number_of_technicians; $i++) {
         	// generate and save image and tn_image
-			$img = get_random_image('technician', 'technician', rand(1, 20));
+			$img = $this->seederHelper->get_random_image('technician', 'technician', rand(1, 20));
 
-    		$technician_id = factory(App\Technician::class)->create()->id;
+            // get a random admin_id that exists in database
+            $supervisor_id = $this->seederHelper->get_random_id('supervisors');
+
+    		$technician_id = factory(App\Technician::class)->create([
+                'supervisor_id' => $supervisor_id,
+            ])->id;
+
+            factory(App\User::class)->create([
+                'userable_id' => $technician_id,
+                'userable_type' => 'Technician',
+            ]);
 
     		// create images link it to technician
     		Image::create([

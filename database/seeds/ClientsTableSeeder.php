@@ -1,11 +1,18 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 class ClientsTableSeeder extends Seeder
 {
     // number of clients to create
     private $number_of_clients = 60;
+    private $seederHelper;
+
+    public function __construct(SeederHelpers $seederHelper)
+    {
+        $this->seederHelper = $seederHelper;
+    }
 
     /**
      * Run the database seeds.
@@ -15,24 +22,29 @@ class ClientsTableSeeder extends Seeder
     public function run()
     {
     	$faker = Faker\Factory::create();
-    	
-        for ($i=0; $i < $this->number_of_clients; $i++) { 
+
+        for ($i=0; $i < $this->number_of_clients; $i++) {
         	// woman or men
 			$gender = (rand(0,1)) ? 'male':'female';
 
         	// generate and save image and tn_image
-			$img = get_random_image('client', 'client/'.$gender, rand(1, 20));
+			$img = $this->seederHelper->get_random_image('client', 'client/'.$gender, rand(1, 20));
 
             // get the service id for the pivot table
-            $service_id = get_random_table_id('services');
+            $service_id = $this->seederHelper->get_random_id('services');
 
-            // find user_id congruent with the service
-            $user_id = App\Service::findOrFail($service_id)->user->id;
+            // find admin_id congruent with the service
+            $admin_id = App\Service::findOrFail($service_id)->admin->id;
 
     		$client_id = factory(App\Client::class)->create([
-    				'name' => $faker->firstName($gender),
-                    'user_id' => $user_id,
+                    'admin_id' => $admin_id,
     			])->id;
+
+            factory(App\User::class)->create([
+                'name' => $faker->firstName($gender),
+                'userable_id' => $client_id,
+                'userable_type' => 'Client',
+            ]);
 
             // fill the pivot table that connects with the service
              DB::table('client_service')->insert([

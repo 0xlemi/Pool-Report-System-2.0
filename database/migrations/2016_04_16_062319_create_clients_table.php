@@ -23,8 +23,6 @@ class CreateClientsTable extends Migration
             $table->integer('seq_id')->index();
             $table->integer('admin_id')->unsigned();
             $table->softDeletes();
-            $table->rememberToken();
-            $table->string('api_token', 60)->unique();
             $table->timestamps();
         });
 

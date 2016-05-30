@@ -33,37 +33,42 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
     	// cleaning up
-    	truncate_tables($this->toTruncate);
-    	delete_in_public_storage($this->foldersToDelete);
+    	$this->truncate_tables();
+    	$this->delete_in_public_storage();
 
-    	App\User::create([
-    		'name' => 'Luis Espinosa',
-    		'email' => 'lem.espinosa.m@gmail.com',
-    		'password' => bcrypt('password'),
-        'company_name' => 'Hidroequipos',
-        'website' => 'www.hidroequipos.com',
-        'facebook' => 'poolreportsystem',
-        'twitter' => 'poolreportsys',
-    		'language' => 'en',
-    		'timezone' => 'America/Mazatlan',
-				'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
-    	]);
-    	App\User::create([
-    		'name' => 'Pepe Gonzales',
-    		'email' => 'pepe@example.com',
-    		'password' => bcrypt('password'),
-        'company_name' => 'Hidroequipos',
-        'website' => 'www.google.com',
-        'facebook' => 'poolreportsystem',
-        'twitter' => 'poolreportsys',
-    		'language' => 'es',
-    		'timezone' => 'America/Mazatlan',
-				'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
-    	]);
+
+    	$this->call(AdministratorsSeeder::class);
     	$this->call(ServicesTableSeeder::class);
     	$this->call(SupervisorsTableSeeder::class);
     	$this->call(TechniciansTableSeeder::class);
     	$this->call(ClientsTableSeeder::class);
     	$this->call(ReportsTableSeeder::class);
     }
+
+
+
+	/**
+	 * Cleans the tables
+	 */
+	function truncate_tables(){
+		DB::unprepared('SET FOREIGN_KEY_CHECKS = 0;');
+		foreach($this->toTruncate as $table){
+			DB::table($table)->truncate();
+		}
+		DB::unprepared('SET FOREIGN_KEY_CHECKS = 1;');
+	}
+
+	/**
+	 * Cleans old photos by deleting the folder.
+	 */
+	function delete_in_public_storage(){
+		foreach ($this->foldersToDelete as $folder) {
+			$files = glob(public_path('storage/images/'.$folder.'/*')); // get all file names
+			foreach($files as $file){ // iterate files
+			  if(is_file($file))
+			    unlink($file); // delete file
+			}
+		}
+	}
+
 }

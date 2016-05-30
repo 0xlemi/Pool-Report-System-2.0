@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Technician extends Model
 {
-    
+
     /**
 	 * variables that can be mass assign
 	 * @var array
@@ -26,7 +26,7 @@ class Technician extends Model
         'language',
         'comments',
 	];
-    
+
     /**
      * hidden variables
      * @var array
@@ -34,6 +34,11 @@ class Technician extends Model
 	protected $hidden = [
 		'password',
 	];
+
+    public function user()
+    {
+      return $this->morphOne(App\User::class, 'userable');
+    }
 
 	/**
 	 * associated supervisor with this technician
@@ -50,11 +55,11 @@ class Technician extends Model
     }
 
     /**
-     * Associated reports with this technician
+     * Associated administrator with this technician
      */
-    public function user(){
-    	$user_id = Supervisor::findOrFail($this->supervisor_id)->user_id;
-    	return User::findOrFail($user_id);
+    public function admin(){
+    	$admin_id = Supervisor::findOrFail($this->supervisor_id)->admin_id;
+    	return User::findOrFail($admin_id);
     }
 
     /**
@@ -92,7 +97,7 @@ class Technician extends Model
     public function addImage(Image $image){
         return $this->images()->save($image);
     }
-    
+
     /**
      * associated services with this client
      */

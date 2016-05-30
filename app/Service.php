@@ -29,7 +29,7 @@ class Service extends Model
         'end_time',
         'status',
         'comments',
-        'user_id',
+        'admin_id',
     ];
 
 
@@ -38,7 +38,7 @@ class Service extends Model
      * @var array
      */
     protected $hidden = [
-        'user_id',
+        'admin_id',
     ];
 
     /**
@@ -117,10 +117,10 @@ class Service extends Model
 
 
 	/**
-	 * Get the associated user with this service
+	 * Get the associated Administrator with this service
 	 */
-    public function user(){
-    	return $this->belongsTo('App\User');
+    public function admin(){
+    	return $this->belongsTo('App\Administrator');
     }
 
     /**

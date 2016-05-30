@@ -22,8 +22,6 @@ class CreateTechnicianTable extends Migration
             $table->integer('supervisor_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->softDeletes();
-            $table->rememberToken();
-            $table->string('api_token', 60)->unique();
             $table->timestamps();
         });
 
