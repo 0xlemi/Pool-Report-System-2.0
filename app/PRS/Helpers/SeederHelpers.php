@@ -68,4 +68,20 @@ class SeederHelpers
         return $this->faker->randomElement($table_ids)->id;
     }
 
+    public function get_random_supervisor($admin_id)
+    {
+        $table_ids = DB::table('supervisors')->select('id')->where('admin_id', '=', $admin_id)->get();
+        return $this->faker->randomElement($table_ids)->id;
+    }
+
+    public function get_random_technician($admin_id)
+    {
+        $supervisor_id = $this->get_random_supervisor($admin_id);
+        $table_ids = DB::table('technicians')
+                        ->select('id')
+                        ->where('supervisor_id', '=', $supervisor_id)
+                        ->get();
+        $this->faker->randomElement($table_ids)->id;
+    }
+
 }

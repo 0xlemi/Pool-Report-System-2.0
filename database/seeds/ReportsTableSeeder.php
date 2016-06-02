@@ -34,7 +34,7 @@ class ReportsTableSeeder extends Seeder
 
         	// get a random service that shares the same admin_id
         	// as the technician
-        	$service_id = $this->seederHelper->get_random_service($admin_id); // function is broken
+        	$service_id = $this->seederHelper->get_random_service($admin_id);
 
     		$report_id = factory(App\Report::class)->create([
                 'service_id' => $service_id,

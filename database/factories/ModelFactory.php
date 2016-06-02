@@ -49,7 +49,7 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
         'country' => $faker->countryCode,
         'type' => $faker->numberBetween(1, 2), // not sure what types
         'service_days' => $faker->numberBetween(0, 127),
-        'amount' => $faker->numberBetween(75, 350),
+        'amount' => number_format($faker->numberBetween(75, 350), 2, '.', ''),
         'currency' => $faker->currencyCode,
         'start_time' => $faker->dateTimeBetween('today', 'now')->format('H:i:s'),
         'end_time' => $faker->dateTimeBetween('now', 'tomorrow')->format('H:i:s'), // between start and end of day
@@ -95,9 +95,9 @@ $factory->define(App\Report::class, function (Faker\Generator $faker){
         'temperature' => $faker->numberBetween(1, 5),
         'turbidity' => $faker->numberBetween(1, 4),
         'salt' => $faker->numberBetween(1, 5),
-        'latitude' => $faker->latitude(-90, 90),
-        'longitude' => $faker->longitude(-180, 180),
-        'altitude' => $faker->numberBetween(0, 500000)/100,
-        'accuracy' => $faker->numberBetween(0, 500000)/100,
+        'latitude' => number_format($faker->latitude(-90, 90),6,'.',''),
+        'longitude' => number_format($faker->longitude(-180, 180),6,'.',''),
+        'altitude' => number_format(($faker->numberBetween(0, 500000)/100),2,'.',''),
+        'accuracy' => number_format(($faker->numberBetween(0, 500000)/100),2,'.',''),
 	];
 });
