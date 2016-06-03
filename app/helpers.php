@@ -16,6 +16,34 @@ function flash($title = null, $message = null){
 }
 
 /**
+ * Makes Multidimentional arrays simple keeping the keys
+ * @param  array $array
+ * @param  string $prefix
+ * @return array          the flatten array 
+ */
+function array_flat($array, $prefix = '')
+{
+    $result = array();
+
+    foreach ($array as $key => $value)
+    {
+        $new_key = $prefix . (empty($prefix) ? '' : '.') . $key;
+
+        if (is_array($value))
+        {
+            $result = array_merge($result, array_flat($value, $new_key));
+        }
+        else
+        {
+            $result[$new_key] = $value;
+        }
+    }
+
+    return $result;
+}
+
+
+/**
  * Clients Functions
  */
 

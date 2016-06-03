@@ -142,7 +142,7 @@ class ModelTester extends TestCase
     protected function createClient($service_id)
     {
         // find admin_id congruent with the service
-        $admin_id = App\Service::findOrFail($service_id)->admin->id;
+        $admin_id = App\Service::findOrFail($service_id)->admin()->id;
 
         $client = factory(App\Client::class)->create([
                 'admin_id' => $admin_id,

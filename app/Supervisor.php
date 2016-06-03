@@ -8,6 +8,8 @@ use Intervention;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use App\User;
+
 class Supervisor extends Model
 {
 
@@ -38,23 +40,28 @@ class Supervisor extends Model
 
     /**
      *	Get the associated user to this supervisor
-     *
+     * tested
      */
 	public function admin(){
-		return $this->belongsTo('App\Administrator');
+		return $this->belongsTo('App\Administrator', 'admin_id')->first();
 	}
 
+	/**
+	 * Get user that this supervisor morphs to
+	 * @return $User
+	 * tested
+	 */
 	public function user()
     {
-      return $this->morphOne(App\User::class, 'userable');
+      return $this->morphOne('App\User', 'userable')->first();
     }
 
 	/**
 	 * Get the associated technicians to this supervisor
-	 *
+	 * tested
 	 */
 	public function technicians(){
-		return $this->hasMany('App\Technician');
+		return $this->hasMany('App\Technician')->get();
 	}
 
     /**
@@ -88,6 +95,7 @@ class Supervisor extends Model
 
      /**
      * Add a image to this supervisor
+     * tested
      */
     public function addImage(Image $image){
         return $this->images()->save($image);
@@ -95,6 +103,7 @@ class Supervisor extends Model
 
 	/**
      * associated images with this report
+     * tested
      */
     public function images(){
         return $this->hasMany('App\Image');
@@ -102,6 +111,7 @@ class Supervisor extends Model
 
      /**
      * get the number of images this service has
+     * tested
      */
     public function numImages(){
         return $this->hasMany('App\Image')->count();
@@ -109,6 +119,7 @@ class Supervisor extends Model
 
     /**
      * get full size image
+     * tested
      */
     public function image(){
         if($this->numImages() > 0){
@@ -120,6 +131,7 @@ class Supervisor extends Model
 
     /**
      * get thumbnail image
+     * tested
      */
     public function thumbnail(){
         if($this->numImages() > 0){
@@ -131,6 +143,7 @@ class Supervisor extends Model
 
     /**
      * Get the extra small image
+     * tested
      */
     public function icon(){
         if($this->numImages() > 0){

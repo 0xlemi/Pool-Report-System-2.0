@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Intervention;
 
+use App\PRS\Helpers\ServiceHelpers;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Service extends Model
@@ -42,48 +44,32 @@ class Service extends Model
     ];
 
     /**
-     * get the service days as a boolean for each day insted of the number
-     * @return array
-     */
-    public function service_days_by_day(){
-        $num = $this->service_days;
-        $sunday     = false;
-        $saturday   = false;
-        $friday     = false;
-        $thursday   = false;
-        $wednesday  = false;
-        $tuesday    = false;
-        $monday     = false;
-        if($num >= 64){
-            $sunday = true;
-            $num -= 64;
-        }if($num >= 32){
-            $saturday = true;
-            $num -= 32;
-        }if($num >= 16){
-            $friday = true;
-            $num -= 16;
-        }if($num >= 8){
-            $thursday = true;
-            $num -= 8;
-        }if($num >= 4){
-            $wednesday = true;
-            $num -= 4;
-        }if($num >= 2){
-            $tuesday = true;
-            $num -= 2;
-        }if($num >= 1){
-            $monday = true;
-            $num -= 1;
-        }
-        return compact('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday');
+	 * Get the associated Administrator with this service
+	 */
+    public function admin(){
+    	return $this->belongsTo('App\Administrator')->first();
     }
 
     /**
-     * Add a image to this service
+     * Get the associated clients with this service
      */
-    public function addImage(Image $image){
-        return $this->images()->save($image);
+    public function clients(){
+    	return $this->belongsToMany('App\Client')->get();
+    }
+
+    /**
+     * Get associated reports with this service
+     */
+    public function reports(){
+    	return $this->hasMany('App\Report');
+    }
+
+    /**
+     * get the service days as a boolean for each day insted of the number
+     * @return array
+     */
+    public function service_days_by_day(serviceHelpers $serviceHelpers){
+        return $serviceHelpers->service_days_to_num($this->service_days);
     }
 
     /**
@@ -115,26 +101,11 @@ class Service extends Model
         return $this->addImage($image);
     }
 
-
-	/**
-	 * Get the associated Administrator with this service
-	 */
-    public function admin(){
-    	return $this->belongsTo('App\Administrator');
-    }
-
     /**
-     * Get the associated clients with this service
+     * Add a image to this service
      */
-    public function clients(){
-    	return $this->belongsToMany('App\Client');
-    }
-
-    /**
-     * Get associated reports with this service
-     */
-    public function reports(){
-    	return $this->hasMany('App\Report');
+    public function addImage(Image $image){
+        return $this->images()->save($image);
     }
 
     /**

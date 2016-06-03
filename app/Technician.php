@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Intervention;
+use App\Administrator;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -35,31 +36,39 @@ class Technician extends Model
 		'password',
 	];
 
+    /**
+     * Get the user that this technician morphs to
+     * @return $User
+     * tested
+     */
     public function user()
     {
-      return $this->morphOne(App\User::class, 'userable');
+      return $this->morphOne('App\User', 'userable')->first();
     }
 
 	/**
 	 * associated supervisor with this technician
+	 * tested
 	 */
     public function supervisor(){
-    	return $this->belongsTo('App\Supervisor');
+    	return $this->belongsTo('App\Supervisor')->first();
     }
 
 	/**
 	 * assaciated reports with this technician
+	 * tested
 	 */
     public function reports(){
-    	return $this->hasMany('App\Report');
+    	return $this->hasMany('App\Report')->get();
     }
 
     /**
      * Associated administrator with this technician
+     * tested
      */
     public function admin(){
     	$admin_id = Supervisor::findOrFail($this->supervisor_id)->admin_id;
-    	return User::findOrFail($admin_id);
+    	return Administrator::findOrFail($admin_id);
     }
 
     /**
@@ -93,20 +102,15 @@ class Technician extends Model
 
      /**
      * Add a image to this client
+     * tested
      */
     public function addImage(Image $image){
         return $this->images()->save($image);
     }
 
     /**
-     * associated services with this client
-     */
-    public function services(){
-        return $this->belongsToMany('App\Service');
-    }
-
-    /**
      * associated images with this report
+     * tested
      */
     public function images(){
         return $this->hasMany('App\Image');
@@ -114,6 +118,7 @@ class Technician extends Model
 
      /**
      * get the number of images this service has
+     * tested
      */
     public function numImages(){
         return $this->hasMany('App\Image')->count();
@@ -121,6 +126,7 @@ class Technician extends Model
 
     /**
      * get full size image
+     * tested
      */
     public function image(){
         if($this->numImages() > 0){
@@ -132,6 +138,7 @@ class Technician extends Model
 
     /**
      * get thumbnail image
+     * tested
      */
     public function thumbnail(){
         if($this->numImages() > 0){
@@ -143,6 +150,7 @@ class Technician extends Model
 
     /**
      * Get the extra small image
+     * tested
      */
     public function icon(){
         if($this->numImages() > 0){

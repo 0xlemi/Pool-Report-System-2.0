@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class AdministratorTest extends ModelTester
 {
     /** @test */
-    public function it_gets_user_morphed_to()
+    public function it_gets_user()
     {
         // Given
         $admin = factory(Administrator::class)->create();
@@ -22,10 +22,10 @@ class AdministratorTest extends ModelTester
         ]);
 
         // When
-        $user_by_function = $admin->user();
+        $user = $admin->user();
 
         // Then
-        $this->assertSameObject($user_original, $user_by_function);
+        $this->assertSameObject($user_original, $user);
     }
 
     /** @test */
