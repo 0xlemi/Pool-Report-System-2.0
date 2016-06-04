@@ -45,6 +45,7 @@ class Service extends Model
 
     /**
 	 * Get the associated Administrator with this service
+	 * tested
 	 */
     public function admin(){
     	return $this->belongsTo('App\Administrator')->first();
@@ -52,6 +53,7 @@ class Service extends Model
 
     /**
      * Get the associated clients with this service
+     * tested
      */
     public function clients(){
     	return $this->belongsToMany('App\Client')->get();
@@ -59,17 +61,20 @@ class Service extends Model
 
     /**
      * Get associated reports with this service
+     * tested
      */
     public function reports(){
-    	return $this->hasMany('App\Report');
+    	return $this->hasMany('App\Report')->get();
     }
 
     /**
      * get the service days as a boolean for each day insted of the number
      * @return array
+     * tested
      */
-    public function service_days_by_day(serviceHelpers $serviceHelpers){
-        return $serviceHelpers->service_days_to_num($this->service_days);
+    public function service_days_by_day(){
+        $serviceHelpers = \App::make('App\PRS\Helpers\ServiceHelpers');
+        return $serviceHelpers->num_to_service_days($this->service_days);
     }
 
     /**
@@ -103,6 +108,7 @@ class Service extends Model
 
     /**
      * Add a image to this service
+     * tested
      */
     public function addImage(Image $image){
         return $this->images()->save($image);
@@ -110,6 +116,7 @@ class Service extends Model
 
     /**
      * Associated reports with this service
+     * tested
      */
     public function images(){
         return $this->hasMany('App\Image');
@@ -117,6 +124,7 @@ class Service extends Model
 
     /**
      * get the number of images this service has
+     * tested
      */
     public function numImages(){
         return $this->hasMany('App\Image')->count();
@@ -124,6 +132,7 @@ class Service extends Model
 
     /**
      * get full size image
+     * tested
      */
     public function image(){
         if($this->numImages() > 0){
@@ -135,6 +144,7 @@ class Service extends Model
 
     /**
      * get thumbnail image
+     * tested
      */
     public function thumbnail(){
         if($this->numImages() > 0){
@@ -145,7 +155,8 @@ class Service extends Model
     }
 
     /**
-     * Get the extra small image
+     * Get the extra small Image
+     * tested
      */
     public function icon(){
         if($this->numImages() > 0){

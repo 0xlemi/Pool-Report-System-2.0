@@ -100,7 +100,7 @@ class TechnicianTest extends ModelTester
 
     }
 
-        /** @test */
+    /** @test */
     public function it_adds_image()
     {
         // Given

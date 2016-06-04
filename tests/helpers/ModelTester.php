@@ -33,18 +33,30 @@ class ModelTester extends TestCase
         $this->artisan('migrate:refresh');
     }
 
-    protected function assertSameObject($object1, $object2)
+    protected function assertSameObject($object1, $object2, $associative = false)
     {
-        return $this->assertTrue(
-            empty(
-                array_diff(
-                    $object1->toArray(),
-                    $object2->toArray()
-                )
-            )
+        return $this->assertSameArray(
+            $object1->toArray(),
+            $object2->toArray(),
+            $associative
         );
     }
 
+    protected function assertSameArray($array1, $array2, $associative = false)
+    {
+        if($associative){
+            $difference = array_diff_assoc(
+                    $array1,
+                    $array2
+                );
+        }else{
+            $difference = array_diff(
+                    $array1,
+                    $array2
+                );
+        }
+        return $this->assertTrue(empty($difference));
+    }
 
     protected function createAdministrator()
     {
