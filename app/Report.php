@@ -33,12 +33,26 @@ class Report extends Model
         'accuracy',
     ];
 
-    public function addImage(Image $image){
-        return $this->images()->save($image);
+    /**
+     * associated service with this report
+     * tested
+     */
+    public function service(){
+    	return $this->belongsTo('App\Service')->first();
     }
 
-    public function addImageFromForm(UploadedFile $file){
+    /**
+     * associated technician with this report
+     * tested
+     */
+    public function technician(){
+    	return $this->belongsTo('App\Technician')->first();
+    }
 
+    /**
+     * Add image from form information
+     */
+    public function addImageFromForm(UploadedFile $file){
         //generate image names
         $name = get_random_name('normal_'.$this->id, $file->guessExtension());
         $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
@@ -54,28 +68,23 @@ class Report extends Model
         $image = new Image;
         $image->normal_path = env('FOLDER_IMG').'report/'.$name;
         $image->thumbnail_path = env('FOLDER_IMG').'report/'.$name_thumbnail;
-        $image->order = $this->num_images() + 1;
+        $image->order = $this->numImages() + 1;
 
         // presist image to the database
         return $this->addImage($image);
     }
-    
-    /**
-     * associated service with this report
-     */
-    public function service(){
-    	return $this->belongsTo('App\Service');
-    }
 
     /**
-     * associated technician with this report
+     * Add images to this report
+     * tested
      */
-    public function technician(){
-    	return $this->belongsTo('App\Technician');
+    public function addImage(Image $image){
+        return $this->images()->save($image);
     }
 
     /**
      * associated images with this report
+     * tested
      */
     public function images(){
         return $this->hasMany('App\Image');
@@ -83,6 +92,7 @@ class Report extends Model
 
     /**
      * Get the image by the order num
+     * tested
      */
     public function image($order){
         return $this->hasMany('App\Image')
@@ -90,7 +100,12 @@ class Report extends Model
             ->first();
     }
 
-    public function num_images(){
+    /**
+     * Get the number of images associated with this report
+     * @return integer
+     * tested
+     */
+    public function numImages(){
         return $this->hasMany('App\Image')->count();
     }
 

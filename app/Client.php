@@ -38,7 +38,14 @@ class Client extends Model
 
 	public function user()
     {
-      return $this->morphOne(App\User::class, 'userable');
+      return $this->morphOne('App\User', 'userable')->get();
+    }
+
+	/*
+	 * associated services with this client
+	 */
+    public function services(){
+    	return $this->belongsToMany('App\Service')->get();
     }
 
 	/**
@@ -75,13 +82,6 @@ class Client extends Model
      */
     public function addImage(Image $image){
         return $this->images()->save($image);
-    }
-
-	/**
-	 * associated services with this client
-	 */
-    public function services(){
-    	return $this->belongsToMany('App\Service');
     }
 
     /**

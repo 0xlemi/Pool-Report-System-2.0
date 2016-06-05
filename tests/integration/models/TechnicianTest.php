@@ -110,18 +110,14 @@ class TechnicianTest extends ModelTester
 
         $tech = $this->createTechnician($sup->id);
 
-		$image1 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path1',
-            'thumbnail_path' => 'thumbnail/image/path1',
-            'icon_path' => 'icon/image/path1',
-		]);
-        $image2 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path2',
-            'thumbnail_path' => 'thumbnail/image/path2',
-            'icon_path' => 'icon/image/path2',
-		]);
+		$image1 = new Image;
+        $image1->normal_path = 'normal/image/path1';
+        $image1->thumbnail_path = 'thumbnail/image/path1';
+        $image1->icon_path = 'icon/image/path1';
+		$image2 = new Image;
+        $image2->normal_path = 'normal/image/path2';
+        $image2->thumbnail_path = 'thumbnail/image/path2';
+        $image2->icon_path = 'icon/image/path2';
 
         // When
         $tech->addImage($image1);
@@ -145,18 +141,15 @@ class TechnicianTest extends ModelTester
 
         $tech = $this->createTechnician($sup->id);
 
-		$image1 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path1',
-            'thumbnail_path' => 'thumbnail/image/path1',
-            'icon_path' => 'icon/image/path1',
-		]);
-        $image2 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path2',
-            'thumbnail_path' => 'thumbnail/image/path2',
-            'icon_path' => 'icon/image/path2',
-		]);
+		$image1 = new Image;
+        $image1->normal_path = 'normal/image/path1';
+        $image1->thumbnail_path = 'thumbnail/image/path1';
+        $image1->icon_path = 'icon/image/path1';
+		$image2 = new Image;
+        $image2->normal_path = 'normal/image/path2';
+        $image2->thumbnail_path = 'thumbnail/image/path2';
+        $image2->icon_path = 'icon/image/path2';
+
         $tech->addImage($image1);
         $tech->addImage($image2);
 
@@ -179,18 +172,15 @@ class TechnicianTest extends ModelTester
 
         $tech = $this->createTechnician($sup->id);
 
-		$image1 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path1',
-            'thumbnail_path' => 'thumbnail/image/path1',
-            'icon_path' => 'icon/image/path1',
-		]);
-        $image2 = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path2',
-            'thumbnail_path' => 'thumbnail/image/path2',
-            'icon_path' => 'icon/image/path2',
-		]);
+		$image1 = new Image;
+        $image1->normal_path = 'normal/image/path1';
+        $image1->thumbnail_path = 'thumbnail/image/path1';
+        $image1->icon_path = 'icon/image/path1';
+		$image2 = new Image;
+        $image2->normal_path = 'normal/image/path2';
+        $image2->thumbnail_path = 'thumbnail/image/path2';
+        $image2->icon_path = 'icon/image/path2';
+
         $tech->addImage($image1);
         $tech->addImage($image2);
 
@@ -212,12 +202,11 @@ class TechnicianTest extends ModelTester
 
         $tech = $this->createTechnician($sup->id);
 
-		$image = Image::create([
-			'technician_id' => $tech->id,
-			'normal_path' => 'normal/image/path',
-            'thumbnail_path' => 'thumbnail/image/path',
-            'icon_path' => 'icon/image/path',
-		]);
+		$image = new Image;
+        $image->normal_path = 'normal/image/path';
+        $image->thumbnail_path = 'thumbnail/image/path';
+        $image->icon_path = 'icon/image/path';
+
         $tech->addImage($image);
 
         // When
