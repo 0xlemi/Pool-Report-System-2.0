@@ -151,10 +151,10 @@ class ModelTester extends TestCase
         return $technicians[rand(0,--$num_of_technicians)];
     }
 
-    protected function createClient($service_id)
+    protected function createClient(array $service_ids)
     {
         // find admin_id congruent with the service
-        $admin_id = App\Service::findOrFail($service_id)->admin()->id;
+        $admin_id = App\Service::findOrFail($service_ids[0])->admin()->id;
 
         $client = factory(App\Client::class)->create([
                 'admin_id' => $admin_id,
@@ -165,11 +165,14 @@ class ModelTester extends TestCase
             'userable_type' => 'Client',
         ]);
 
-        // fill the pivot table that connects with the service
-         DB::table('client_service')->insert([
-            'client_id' => $client->id,
-            'service_id' => $service_id,
-        ]);
+        foreach ($service_ids as $service_id) {
+            // fill the pivot table that connects with the service
+             DB::table('client_service')->insert([
+                'client_id' => $client->id,
+                'service_id' => $service_id,
+            ]);    # code...
+        }
+
 
         return $client;
     }

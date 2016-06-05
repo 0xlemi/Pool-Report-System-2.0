@@ -30,10 +30,10 @@ class CreateUsersTable extends Migration
         DB::unprepared("
             ALTER TABLE `users`
                 ADD CHECK (userable_type IN (
-                    'Administrator',
-                    'Client',
-                    'Technician',
-                    'Supervisor'
+                    'App\Administrator',
+                    'App\Client',
+                    'App\Technician',
+                    'App\Supervisor'
                 ));
         ");
     }

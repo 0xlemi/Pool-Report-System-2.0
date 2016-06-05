@@ -34,9 +34,9 @@ class ServiceTest extends ModelTester
         $service1 = $this->createService($admin->id);
         $service2 = $this->createService($admin->id);
 
-        $client1 = $this->createClient($service1->id);
-        $client2 = $this->createClient($service2->id);
-        $client3 = $this->createClient($service2->id);
+        $client1 = $this->createClient([$service1->id]);
+        $client2 = $this->createClient([$service2->id]);
+        $client3 = $this->createClient([$service2->id]);
 
         // When
         $clients = $service2->clients();

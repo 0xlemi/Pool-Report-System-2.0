@@ -36,13 +36,19 @@ class Client extends Model
 		'user_id',
 	];
 
+	/**
+	 * Gets client morphed user
+	 * @return $User
+	 * tested
+	 */
 	public function user()
     {
-      return $this->morphOne('App\User', 'userable')->get();
+      return $this->morphOne('App\User', 'userable')->first();
     }
 
 	/*
 	 * associated services with this client
+	 * tested
 	 */
     public function services(){
     	return $this->belongsToMany('App\Service')->get();
