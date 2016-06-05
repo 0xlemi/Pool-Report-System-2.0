@@ -35,6 +35,7 @@ class User extends Authenticatable
      * Get the element that this user morphs to
      * @return It could be any of:
      *         Administrator, Client, Supervisor, Technician
+     * tested
      */
     public function userable()
     {
