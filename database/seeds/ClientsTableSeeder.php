@@ -34,7 +34,7 @@ class ClientsTableSeeder extends Seeder
             $service_id = $this->seederHelper->get_random_id('services');
 
             // find admin_id congruent with the service
-            $admin_id = App\Service::findOrFail($service_id)->admin->id;
+            $admin_id = App\Service::findOrFail($service_id)->admin()->id;
 
     		$client_id = factory(App\Client::class)->create([
                     'admin_id' => $admin_id,
@@ -43,11 +43,11 @@ class ClientsTableSeeder extends Seeder
             factory(App\User::class)->create([
                 'name' => $faker->firstName($gender),
                 'userable_id' => $client_id,
-                'userable_type' => 'Client',
+                'userable_type' => 'App\Client',
             ]);
 
             // fill the pivot table that connects with the service
-             DB::table('client_service')->insert([
+            DB::table('client_service')->insert([
                 'client_id' => $client_id,
                 'service_id' => $service_id,
             ]);

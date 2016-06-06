@@ -63,4 +63,91 @@ class UserTest extends ModelTester
 
     }
 
+    /** @test */
+    public function it_tells_you_if_is_administrator()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create();
+        $user_admin = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        // When
+        $is_admin = $user_admin->isAdministrator();
+
+        // Then
+        $this->assertTrue($is_admin);
+
+    }
+
+    /** @test */
+    public function it_tells_you_if_is_client()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $cli = factory(Client::class)->create([
+            'admin_id' => $admin->id,
+        ]);
+        $user_client = factory(User::class)->create([
+            'userable_id' => $cli->id,
+            'userable_type' => 'App\Client',
+        ]);
+
+        // When
+        $is_client = $user_client->isClient();
+
+
+        // Then
+        $this->assertTrue($is_client);
+
+    }
+
+    /** @test */
+    public function it_tells_you_if_is_supervisor()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $sup = factory(Supervisor::class)->create([
+            'admin_id' => $admin->id,
+        ]);
+        $user_sup = factory(User::class)->create([
+            'userable_id' => $sup->id,
+            'userable_type' => 'App\Supervisor',
+        ]);
+
+        // When
+        $is_sup = $user_sup->isSupervisor();
+
+        // Then
+        $this->assertTrue($is_sup);
+
+    }
+
+    /** @test */
+    public function it_tells_you_if_is_technician()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = factory(Technician::class)->create([
+            'supervisor_id' => $sup->id,
+        ]);
+        $user_tech = factory(User::class)->create([
+            'userable_id' => $tech->id,
+            'userable_type' => 'App\Technician',
+        ]);
+
+        // When
+        $is_tech = $user_tech->isTechnician();
+
+        // Then
+        $this->assertTrue($is_tech);
+
+    }
+
 }

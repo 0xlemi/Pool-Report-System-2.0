@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-
 class AdministratorsSeeder extends Seeder
 {
 
@@ -39,7 +38,7 @@ class AdministratorsSeeder extends Seeder
             'language' => 'en',
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
             'userable_id' => $administrator_id,
-            'userable_type' => 'Administrator',
+            'userable_type' => 'App\Administrator',
         ]);
 
         $administrator_id = App\Administrator::create([
@@ -57,7 +56,7 @@ class AdministratorsSeeder extends Seeder
     		'language' => 'es',
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
             'userable_id' => $administrator_id,
-            'userable_type' => 'Administrator',
+            'userable_type' => 'App\Administrator',
     	]);
     }
 }

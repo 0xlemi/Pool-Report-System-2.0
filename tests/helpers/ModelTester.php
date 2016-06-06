@@ -18,7 +18,6 @@ use App\Report;
  */
 class ModelTester extends TestCase
 {
-    use DatabaseTransactions;
 
     protected $seederHelper;
 

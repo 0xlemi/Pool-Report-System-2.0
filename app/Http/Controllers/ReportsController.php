@@ -44,8 +44,12 @@ class ReportsController extends Controller
             return $this->index();
         }
 
-        $reports = Auth::user()->reportsByDate($date);
-
+        if(Auth::user()->cannot('index', Report::class)){
+            // abort(403);
+            return 'you should not pass';
+        }
+        $reports = Auth::user()->userable()->reportsByDate($date);
+        // dd($reports);
         JavaScript::put([
             'date_url' => url('reports/date').'/',
             'click_url' => url('reports').'/',

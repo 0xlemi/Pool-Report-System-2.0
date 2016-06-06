@@ -6,7 +6,7 @@ use App\Image;
 class TechniciansTableSeeder extends Seeder
 {
     // number of technicians to create
-    private $number_of_technicians = 10;
+    private $number_of_technicians = 20;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -34,7 +34,7 @@ class TechniciansTableSeeder extends Seeder
 
             factory(App\User::class)->create([
                 'userable_id' => $technician_id,
-                'userable_type' => 'Technician',
+                'userable_type' => 'App\Technician',
             ]);
 
     		// create images link it to technician

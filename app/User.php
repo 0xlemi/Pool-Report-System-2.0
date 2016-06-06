@@ -42,6 +42,46 @@ class User extends Authenticatable
         return $this->morphTo()->first();
     }
 
+    /**
+     * Is this user an administrator ?
+     * @return boolean
+     * tested
+     */
+    public function isAdministrator()
+    {
+        return $this->userable_type == "App\Administrator";
+    }
+
+    /**
+     * Is this user an client ?
+     * @return boolean
+     * tested
+     */
+    public function isClient()
+    {
+        return $this->userable_type == "App\Client";
+    }
+
+    /**
+     * Is this user an supervisor ?
+     * @return boolean
+     * tested
+     */
+    public function isSupervisor()
+    {
+        return $this->userable_type == "App\Supervisor";
+    }
+
+    /**
+     * Is this user an technician ?
+     * @return boolean
+     * tested
+     */
+    public function isTechnician()
+    {
+        return $this->userable_type == "App\Technician";
+    }
+
 
 
 }
