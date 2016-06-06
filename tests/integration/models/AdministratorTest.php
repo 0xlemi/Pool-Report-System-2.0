@@ -55,7 +55,7 @@ class AdministratorTest extends ModelTester
         ]);
 
         // When
-        $reports = $admin1->reports();
+        $reports = $admin1->reports()->get();
 
         // Then
         $this->assertSameObject($report1, $reports[0]);
@@ -85,7 +85,7 @@ class AdministratorTest extends ModelTester
 
         // When
         $date = Carbon::today()->toDateString();
-        $reports = $admin1->reportsByDate($date);
+        $reports = $admin1->reportsByDate($date)->get();
 
         // Then
         $this->assertEquals(1, sizeof($reports));
@@ -149,7 +149,7 @@ class AdministratorTest extends ModelTester
         $ser3 = $this->createService($admin2->id);
 
         // When
-        $services = $admin2->services();
+        $services = $admin2->services()->get();
 
         // Then
         $this->assertEquals(2,sizeof($services));
@@ -196,7 +196,7 @@ class AdministratorTest extends ModelTester
         $client3 = $this->createClient([$ser2->id]);
 
         // When
-        $clients = $admin2->clients();
+        $clients = $admin2->clients()->get();
 
         // Then
         $this->assertEquals(2, sizeof($clients));
@@ -243,7 +243,7 @@ class AdministratorTest extends ModelTester
         $super3 = $this->createSupervisor($admin2->id);
 
         // When
-        $supervisors = $admin2->supervisors();
+        $supervisors = $admin2->supervisors()->get();
 
         // Then
         $this->assertEquals(2, sizeof($supervisors));
@@ -290,7 +290,7 @@ class AdministratorTest extends ModelTester
         $tech3 = $this->createTechnician($super2->id);
 
         // When
-        $technicians = $admin2->technicians();
+        $technicians = $admin2->technicians()->get();
 
         // Then
         $this->assertEquals(2, sizeof($technicians));

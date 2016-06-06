@@ -61,7 +61,7 @@ class Supervisor extends Model
 	 * tested
 	 */
 	public function technicians(){
-		return $this->hasMany('App\Technician')->get();
+		return $this->hasMany('App\Technician');
 	}
 
     /**

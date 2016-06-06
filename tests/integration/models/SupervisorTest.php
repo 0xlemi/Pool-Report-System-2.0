@@ -64,7 +64,7 @@ class SupervisorTest extends ModelTester
         $tech3 = $this->createTechnician($sup2->id);
 
         // When
-        $tech = $sup2->technicians();
+        $tech = $sup2->technicians()->get();
 
         // Then
         $this->assertEquals(2, sizeof($tech));

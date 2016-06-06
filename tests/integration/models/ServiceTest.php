@@ -39,7 +39,7 @@ class ServiceTest extends ModelTester
         $client3 = $this->createClient([$service2->id]);
 
         // When
-        $clients = $service2->clients();
+        $clients = $service2->clients()->get();
 
         // Then
         $this->assertEquals(2, sizeof($clients));
@@ -72,7 +72,7 @@ class ServiceTest extends ModelTester
         $report3 = $this->createReport($service2->id, $tech->id);
 
         // When
-        $reports = $service2->reports();
+        $reports = $service2->reports()->get();
 
         // Then
         $this->assertEquals(2, sizeof($reports));

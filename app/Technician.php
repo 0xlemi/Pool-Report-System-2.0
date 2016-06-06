@@ -59,7 +59,7 @@ class Technician extends Model
 	 * tested
 	 */
     public function reports(){
-    	return $this->hasMany('App\Report')->get();
+    	return $this->hasMany('App\Report');
     }
 
     /**

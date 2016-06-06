@@ -51,7 +51,7 @@ class Client extends Model
 	 * tested
 	 */
     public function services(){
-    	return $this->belongsToMany('App\Service')->get();
+    	return $this->belongsToMany('App\Service');
     }
 
 	/**

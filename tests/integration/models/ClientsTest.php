@@ -59,7 +59,7 @@ class ClientsTest extends ModelTester
         ]);
 
         // When
-        $services = $client->services();
+        $services = $client->services()->get();
 
         // Then
         $this->assertSameArray(

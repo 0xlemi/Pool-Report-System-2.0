@@ -38,7 +38,7 @@ class Administrator extends Model
      */
     public function reports(){
         return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
-                    ->orderBy('seq_id')->get();
+                    ->orderBy('seq_id');
     }
 
     /**
@@ -50,8 +50,7 @@ class Administrator extends Model
         $date_carbon = (new Carbon($date))->toDateTimeString();
         return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
                     ->where(\DB::raw('DATEDIFF(completed, "'.$date_carbon.'")'), '=', '0')
-                    ->orderBy('seq_id')
-                    ->get();
+                    ->orderBy('seq_id');
     }
 
     /**
@@ -71,7 +70,7 @@ class Administrator extends Model
      * tested
      */
     public function services(){
-        return $this->hasMany('App\Service', 'admin_id')->orderBy('seq_id')->get();
+        return $this->hasMany('App\Service', 'admin_id')->orderBy('seq_id');
     }
 
     /**
@@ -104,7 +103,7 @@ class Administrator extends Model
      * tested
      */
     public function clients(){
-        return Client::where('admin_id', $this->id)->orderBy('seq_id')->get();
+        return Client::where('admin_id', $this->id)->orderBy('seq_id');
     }
 
     /**
@@ -124,7 +123,7 @@ class Administrator extends Model
      */
     public function supervisors(){
         return $this->hasMany('App\Supervisor', 'admin_id')
-                    ->orderBy('seq_id')->get();
+                    ->orderBy('seq_id');
     }
 
     /**
@@ -147,7 +146,7 @@ class Administrator extends Model
                         'App\Technician',
                         'App\Supervisor',
                         'admin_id')
-                    ->orderBy('seq_id')->get();
+                    ->orderBy('seq_id');
     }
 
     /**

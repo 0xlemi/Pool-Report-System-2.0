@@ -56,7 +56,7 @@ class Service extends Model
      * tested
      */
     public function clients(){
-    	return $this->belongsToMany('App\Client')->get();
+    	return $this->belongsToMany('App\Client');
     }
 
     /**
@@ -64,7 +64,7 @@ class Service extends Model
      * tested
      */
     public function reports(){
-    	return $this->hasMany('App\Report')->get();
+    	return $this->hasMany('App\Report');
     }
 
     /**

@@ -70,7 +70,7 @@ class TechnicianTest extends ModelTester
         $rep3 = $this->createReport($service->id, $tech->id);
 
         // When
-        $reports = $tech->reports();
+        $reports = $tech->reports()->get();
 
         // Then
         $this->assertEquals(3, sizeof($reports));
