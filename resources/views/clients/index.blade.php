@@ -36,7 +36,7 @@
 					   data-response-handler="responseHandler"
 					   >
 					<thead>
-					    <tr>       
+					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
 					        <th data-field="address" data-sortable="true">Email</th>

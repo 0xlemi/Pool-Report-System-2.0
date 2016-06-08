@@ -15,10 +15,12 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
             $table->tinyInteger('type'); // 1=owner, 2=house administrator
             $table->tinyInteger('email_preferences');
+            $table->char('language', 2);
             $table->text('comments');
             $table->integer('seq_id')->index();
             $table->integer('admin_id')->unsigned();

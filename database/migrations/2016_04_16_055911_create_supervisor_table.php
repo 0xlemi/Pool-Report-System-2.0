@@ -15,9 +15,11 @@ class CreateSupervisorTable extends Migration
         Schema::create('supervisors', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->string('name');
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
+            $table->char('language', 2);
             $table->text('comments');
             $table->integer('admin_id')->unsigned();
             $table->integer('seq_id')->index();

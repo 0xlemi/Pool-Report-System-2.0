@@ -17,10 +17,8 @@ use Carbon\Carbon;
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     // factory dosnt work unless userable_id and userable_type are added
     return [
-        'name' => $faker->name,
         'email' => $faker->safeEmail,
         'password' => bcrypt('password'),
-    	'language' => $faker->languageCode,
         'remember_token' => str_random(10),
         'api_token' => str_random(60),
     ];
@@ -28,10 +26,12 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Administrator::class, function (Faker\Generator $faker) {
     return [
+        'name' => $faker->name,
         'company_name' => $faker->company,
         'website' => $faker->url,
         'facebook' => $faker->word,
         'twitter' => $faker->word,
+    	'language' => $faker->languageCode,
 		'timezone' => 'America/Mazatlan',
     ];
 });
@@ -60,28 +60,34 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
 
 $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
 	return [
+        'name' => $faker->name,
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
         'address' => $faker->streetAddress,
+    	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
 });
 
 $factory->define(App\Technician::class, function (Faker\Generator $faker){
 	return [
+        'name' => $faker->name,
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
 		'address' => $faker->address,
+    	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
 });
 
 $factory->define(App\Client::class, function (Faker\Generator $faker){
 	return [
+        'name' => $faker->name,
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
 		'type' => $faker->numberBetween(1, 2),
 		'email_preferences' => $faker->numberBetween(1, 4),
+    	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
 });

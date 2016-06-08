@@ -45,7 +45,7 @@
 					   data-response-handler="responseHandler"
 					   >
 					<thead>
-					    <tr>       
+					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="service" data-sortable="true">Service</th>
 					        <th data-field="on_time" data-sortable="true">On time</th>
@@ -56,9 +56,9 @@
 						@foreach ($reports as $report)
 							<tr>
 								<td>{{ $report->seq_id }}</td>
-								<td>{{ $report->service->name }}</td>
+								<td>{{ $report->service()->name }}</td>
 								<td>{{ $report->on_time }}</td>
-								<td>{{ $report->technician->name }}</td>
+								<td>{{ $report->technician()->name }}</td>
 							</tr>
 						@endforeach
 					</tbody>

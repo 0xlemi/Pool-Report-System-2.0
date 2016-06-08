@@ -24,36 +24,36 @@ class AdministratorsSeeder extends Seeder
         //
         // }
         $administrator_id = App\Administrator::create([
+            'name' => 'Luis Espinosa',
             'company_name' => 'Hidroequipos',
             'website' => 'www.hidroequipos.com',
             'facebook' => 'poolreportsystem',
             'twitter' => 'poolreportsys',
+            'language' => 'en',
     		'timezone' => 'America/Mazatlan',
     	])->id;
 
         App\User::create([
-            'name' => 'Luis Espinosa',
             'email' => 'lem.espinosa.m@gmail.com',
             'password' => bcrypt('password'),
-            'language' => 'en',
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
             'userable_id' => $administrator_id,
             'userable_type' => 'App\Administrator',
         ]);
 
         $administrator_id = App\Administrator::create([
+    		'name' => 'Pepe Gonzales',
             'company_name' => 'Hidroequipos',
             'website' => 'www.google.com',
             'facebook' => 'poolreportsystem',
             'twitter' => 'poolreportsys',
+    		'language' => 'es',
     		'timezone' => 'America/Mazatlan',
     	])->id;
 
     	App\User::create([
-    		'name' => 'Pepe Gonzales',
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
-    		'language' => 'es',
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
             'userable_id' => $administrator_id,
             'userable_type' => 'App\Administrator',

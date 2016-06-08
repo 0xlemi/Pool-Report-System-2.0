@@ -43,13 +43,13 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Name</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->service->name }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->service()->name }}"></p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Technician Name</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->technician->name }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->technician()->name }}"></p>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -110,8 +110,8 @@
 						</div>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger" 
-							data-method="delete" data-token="{{ csrf_token() }}" 
+							<a class="btn btn-danger"
+							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/reports/'.$report->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;

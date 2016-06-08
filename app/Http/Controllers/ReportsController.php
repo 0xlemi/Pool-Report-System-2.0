@@ -39,17 +39,27 @@ class ReportsController extends Controller
      * @param  String $date yyyy-mm-dd format date
      * @return \Illuminate\Http\Response
      */
-    public function index_by_date($date){
-        if(!validateDate($date)){
+    public function index_by_date($date)
+    {
+        if(!validateDate($date))
+        {
             return $this->index();
         }
 
-        if(Auth::user()->cannot('index', Report::class)){
+        $user = Auth::user();
+        if($user->cannot('index', Report::class))
+        {
             // abort(403);
             return 'you should not pass';
         }
-        $reports = Auth::user()->userable()->reportsByDate($date);
-        // dd($reports);
+
+        if($user->isAdministrator())
+        {
+            $reports = $user->userable()->reportsByDate($date)->get();
+        }else{
+            $reports = $user->userable()->admin()->reportsByDate($date)->get();
+        }
+
         JavaScript::put([
             'date_url' => url('reports/date').'/',
             'click_url' => url('reports').'/',
@@ -66,8 +76,19 @@ class ReportsController extends Controller
      */
     public function create()
     {
-        $services = Auth::user()->services;
-        $technicians = Auth::user()->technicians;
+        $user = Auth::user();
+        if($user->cannot('create', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+        if($user->isAdministrator()){
+            $services = $user->userable()->services()->get();
+            $technicians = $user->userable()->technicians()->get();
+        }else{
+            $services = $user->userable()->user()->services()->get();
+            $technicians = $user->userable()->user()->technicians()->get();
+        }
         return view('reports.create', compact('services', 'technicians'));
     }
 
@@ -79,9 +100,22 @@ class ReportsController extends Controller
      */
     public function store(CreateReportRequest $request)
     {
-        $completed_at = (new Carbon($request->completed_at));
-        $service = Auth::user()->serviceBySeqId($request->service);
-        $technician = Auth::user()->technicianBySeqId($request->technician);
+        $user = Auth::user();
+        if($user->cannot('create', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $completed_at = (new Carbon($request->completed_at));
+            $service = $user->userable()->serviceBySeqId($request->service);
+            $technician = $user->userable()->technicianBySeqId($request->technician);
+        }else{
+            $completed_at = (new Carbon($request->completed_at));
+            $service = $user->userable()->user()->serviceBySeqId($request->service);
+            $technician = $user->userable()->user()->technicianBySeqId($request->technician);
+        }
 
         $report = Report::create([
             'service_id' => $service->id,
@@ -115,7 +149,21 @@ class ReportsController extends Controller
      */
     public function show($seq_id)
     {
-        $report = Auth::user()->reportsBySeqId($seq_id);
+        $user = Auth::user();
+        if($user->cannot('show', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $report = $user->userable()->reportsBySeqId($seq_id);
+        }else{
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
+        }
+        // dd($report->ph);
+
         return view('reports.show', compact('report'));
     }
 
@@ -127,9 +175,23 @@ class ReportsController extends Controller
      */
     public function edit($seq_id)
     {
-        $report = Auth::user()->reportsBySeqId($seq_id);
-        $services = Auth::user()->services;
-        $technicians = Auth::user()->technicians;
+        $user = Auth::user();
+        if($user->cannot('edit', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $report = $user->userable()->reportsBySeqId($seq_id);
+            $services = $user->userable()->services()->get();
+            $technicians = $user->userable()->technicians()->get();
+        }else{
+            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+            $services = $user->userable()->user()->services()->get();
+            $technicians = $user->userable()->user()->technicians()->get();
+        }
 
         $date = (new Carbon($report->completed))->format('m/d/Y h:i:s A');
         JavaScript::put([
@@ -139,20 +201,46 @@ class ReportsController extends Controller
     }
 
 
-    public function addPhoto(Request $request, $seq_id){
+    public function addPhoto(Request $request, $seq_id)
+    {
+        $user = Auth::user();
+        if($user->cannot('addPhoto', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        $report = Auth::user()->reportsBySeqId($seq_id);
-        $file = $request->file('photo');
+        if($user->isAdministrator()){
+            $report = $user->userable()->reportsBySeqId($seq_id);
+        }else{
+            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+        }
 
+        $file = $request->file('photo');
         $report->addImageFromForm($file);
 
     }
 
-    public function removePhoto($seq_id, $order){
-        $report = Auth::user()->reportsBySeqId($seq_id);
+    public function removePhoto($seq_id, $order)
+    {
+        $user = Auth::user();
+        if($user->cannot('removePhoto', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $report = $user->userable()->reportsBySeqId($seq_id);
+        }else{
+            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+        }
+
         $image = $report->image($order);
         if($image->delete()){
             return redirect()->back();
@@ -168,6 +256,13 @@ class ReportsController extends Controller
      */
     public function update(Request $request, $seq_id)
     {
+        $user = Auth::user();
+        if($user->cannot('edit', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
         $this->validate($request, [
             'service' => 'required|integer|min:1',
             'technician' => 'required|integer|min:1',
@@ -179,9 +274,15 @@ class ReportsController extends Controller
             'salt' => 'required|integer|min:1|max:5',
         ]);
 
-        $report = Auth::user()->reportsBySeqId($seq_id);
-        $service = Auth::user()->serviceBySeqId($request->service);
-        $technician = Auth::user()->technicianBySeqId($request->technician);
+        if($user->isAdministrator()){
+            $report = $user->userable()->reportsBySeqId($seq_id);
+            $service = $user->userable()->serviceBySeqId($request->service);
+            $technician = $user->userable()->technicianBySeqId($request->technician);
+        }else{
+            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+            $service = $user->userable()->user()->serviceBySeqId($request->service);
+            $technician = $user->userable()->user()->technicianBySeqId($request->technician);
+        }
 
         $report->service_id     = $service->id;
         $report->technician_id  = $technician->id;
@@ -210,7 +311,20 @@ class ReportsController extends Controller
      */
     public function destroy($seq_id)
     {
-        $report = Auth::user()->reportsBySeqId($seq_id);
+        $user = Auth::user();
+        if($user->cannot('destroy', Report::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $report = $user->userable()->reportsBySeqId($seq_id);
+        }else{
+            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+        }
+
         if($report->delete()){
             flash()->success('Deleted', 'The report was successfuly deleted');
             return redirect('reports');

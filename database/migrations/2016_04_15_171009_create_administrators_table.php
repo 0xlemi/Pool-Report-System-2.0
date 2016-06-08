@@ -14,10 +14,12 @@ class CreateAdministratorsTable extends Migration
     {
         Schema::create('administrators', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->string('company_name');
             $table->string('website');
             $table->string('facebook');
             $table->string('twitter');
+            $table->char('language', 2);
             $table->string('timezone');
             $table->softDeletes();
             $table->timestamps();

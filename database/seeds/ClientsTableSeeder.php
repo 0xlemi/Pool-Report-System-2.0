@@ -37,11 +37,11 @@ class ClientsTableSeeder extends Seeder
             $admin_id = App\Service::findOrFail($service_id)->admin()->id;
 
     		$client_id = factory(App\Client::class)->create([
+                    'name' => $faker->firstName($gender),
                     'admin_id' => $admin_id,
     			])->id;
 
             factory(App\User::class)->create([
-                'name' => $faker->firstName($gender),
                 'userable_id' => $client_id,
                 'userable_type' => 'App\Client',
             ]);

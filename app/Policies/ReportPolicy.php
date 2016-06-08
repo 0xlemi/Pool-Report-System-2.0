@@ -31,4 +31,90 @@ class ReportPolicy
         }
         return false;
     }
+
+    public function create($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+    public function show($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+    public function edit($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+    public function addPhoto($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+    public function removePhoto($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+    public function destroy($user)
+    {
+        if($user->isAdministrator()){
+            return true;
+        }elseif($user->isClient()){
+            return true;
+        }elseif($user->isSupervisor()){
+            return true;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
+
+
 }
