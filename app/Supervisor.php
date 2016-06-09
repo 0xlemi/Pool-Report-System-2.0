@@ -20,13 +20,11 @@ class Supervisor extends Model
 	protected $fillable = [
 		'name',
 		'last_name',
-		'email',
-		'password',
 		'cellphone',
 		'address',
 		'language',
 		'comments',
-		'user_id',
+		'admin_id',
 	];
 
     /**

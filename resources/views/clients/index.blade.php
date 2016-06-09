@@ -49,7 +49,7 @@
 							<tr>
 								<td>{{ $client->seq_id }}</td>
 								<td>{{ $client->name }}</td>
-								<td>{{ $client->email }}</td>
+								<td>{{ $client->user()->email }}</td>
 								<td>{!! clients_styled_type($client->type, true, false) !!}</td>
 								<td>{{ $client->cellphone }}</td>
 							</tr>

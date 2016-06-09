@@ -169,7 +169,7 @@ class ModelTester extends TestCase
              DB::table('client_service')->insert([
                 'client_id' => $client->id,
                 'service_id' => $service_id,
-            ]);    # code...
+            ]); 
         }
 
 

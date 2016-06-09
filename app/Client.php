@@ -24,7 +24,7 @@ class Client extends Model
 		'language',
 		'email_preferences',
 		'comments',
-		'user_id',
+		'admin_id',
 	];
 
     /**
@@ -33,7 +33,7 @@ class Client extends Model
      */
 	protected $hidden = [
 		'password',
-		'user_id',
+		'admin_id',
 	];
 
 	/**

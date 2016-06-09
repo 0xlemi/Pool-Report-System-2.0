@@ -44,7 +44,7 @@
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
 					                    <input type="file" name="photo" id="photo" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists" 
+					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>
@@ -77,7 +77,7 @@
 								<label class="col-sm-2 form-control-label">Email:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control"
-											name="email" value="{{ $client->email }}">
+											name="email" value="{{ $client->user()->email }}">
 									@if ($errors->has('email'))
 										<small class="text-muted">{{ $errors->first('email') }}</small>
 									@endif
@@ -132,7 +132,7 @@
 							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Comments:</label>
 								<div class="col-sm-10">
-									<textarea rows="5" class="form-control" 
+									<textarea rows="5" class="form-control"
 												placeholder="Any additional info about this client."
 												name="comments">{{ $client->comments }}</textarea>
 									@if ($errors->has('comments'))
@@ -140,7 +140,7 @@
 									@endif
 								</div>
 							</div>
-							
+
 							<hr>
 							<p style="float: left;">
 								<a  class="btn btn-danger"

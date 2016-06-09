@@ -67,7 +67,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->email }}">
+									<input type="text" readonly class="form-control" value="{{ $client->user()->email }}">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -91,7 +91,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
-									<textarea rows="4" class="form-control" 
+									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this client."
 												name="comments" readonly>{{ $client->comments }}</textarea>
 								</div>
@@ -99,8 +99,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger" 
-							data-method="delete" data-token="{{ csrf_token() }}" 
+							<a class="btn btn-danger"
+							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/clients/'.$client->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;
