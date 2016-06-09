@@ -26,7 +26,7 @@
 							{{ csrf_field() }}
 							{{ method_field('PATCH') }}
 							<input type="hidden" name="seq_id" value="{{ $technician->seq_id }}">
-							
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Photo:</label>
 								<div class="col-sm-10">
@@ -45,7 +45,7 @@
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
 					                    <input type="file" name="photo" id="photo" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists" 
+					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>
@@ -83,7 +83,7 @@
 															<img src="{{ url($supervisor->icon()) }}"/>
 															{{ $supervisor->seq_id.' '.$supervisor->name.' '.$supervisor->last_name}}
 															</span>' value="{{ $supervisor->seq_id }}"
-															{{ ($technician->supervisor->seq_id == $supervisor->seq_id) ? 'selected':'' }}>
+															{{ ($technician->supervisor()->seq_id == $supervisor->seq_id) ? 'selected':'' }}>
 															{{ $supervisor->name.' '.$supervisor->last_name }}</option>
 										@endforeach
 									</select>
@@ -97,7 +97,7 @@
 								<label class="col-sm-2 form-control-label">Username:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="username" maxlength="25" value="{{ $technician->username }}">
+											name="username" maxlength="25" value="{{ $technician->user()->email }}">
 									@if ($errors->has('username'))
 										<small class="text-muted">{{ $errors->first('username') }}</small>
 									@endif
@@ -108,7 +108,7 @@
 								<label class="col-sm-2 form-control-label">Password:</label>
 								<div class="col-sm-10">
 									<input type="password" class="form-control hide-show-password"
-											name="password" value="{{ $technician->password }}">
+											name="password" value="{{ $technician->user()->password }}">
 									@if ($errors->has('password'))
 										<small class="text-muted">{{ $errors->first('password') }}</small>
 									@endif
@@ -157,7 +157,7 @@
 							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Comments:</label>
 								<div class="col-sm-10">
-									<textarea rows="5" class="form-control" 
+									<textarea rows="5" class="form-control"
 												placeholder="Any additional info about this technician."
 												name="comments">{{ $technician->comments }}</textarea>
 									@if ($errors->has('comments'))
@@ -165,7 +165,7 @@
 									@endif
 								</div>
 							</div>
-							
+
 							<hr>
 							<p style="float: left;">
 								<a  class="btn btn-danger"

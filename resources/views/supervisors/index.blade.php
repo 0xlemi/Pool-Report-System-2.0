@@ -36,7 +36,7 @@
 					   data-response-handler="responseHandler"
 					   >
 					<thead>
-					    <tr>       
+					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
 					        <th data-field="address" data-sortable="true">Email</th>
@@ -48,7 +48,7 @@
 							<tr>
 								<td>{{ $supervisor->seq_id }}</td>
 								<td>{{ $supervisor->name.' '.$supervisor->last_name }}</td>
-								<td>{{ $supervisor->email }}</td>
+								<td>{{ $supervisor->user()->email }}</td>
 								<td>{{ $supervisor->cellphone }}</td>
 							</tr>
 						@endforeach

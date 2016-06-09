@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class SupervisorsPolicy
+class SupervisorPolicy
 {
     use HandlesAuthorization;
 

@@ -36,10 +36,23 @@ class ServicesController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        if($user->cannot('index', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $services = $user->userable()->services()->get();
+        }else{
+            $services = $user->userable()->user()->services()->get();
+        }
+
         JavaScript::put([
             'click_url' => url('services').'/',
         ]);
-        $services = Auth::user()->services;
+
         return view('services.index', compact('services'));
     }
 
@@ -50,6 +63,13 @@ class ServicesController extends Controller
      */
     public function create()
     {
+        $user = Auth::user();
+        if($user->cannot('creates', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
         return view('services.create');
     }
 
@@ -61,6 +81,21 @@ class ServicesController extends Controller
      */
     public function store(CreateServiceRequest $request)
     {
+
+        $user = Auth::user();
+        if($user->cannot('create', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $admin = $user->userable();
+        }else{
+            $admin = $user->userable()->admin();
+        }
+
         // get the service days number 0-127
         $service_days = $this->serviceHelpers->service_days_to_num(
             $request->service_days_monday,
@@ -86,7 +121,7 @@ class ServicesController extends Controller
             'end_time' => $request->end_time,
             'status' => ($request->status)? 1:0, // 0=inactive, 1=active
             'comments' => $request->comments,
-            'user_id' => Auth::user()->id,
+            'admin_id' => $admin->id,
         ]);
         $photo = true;
         if($request->photo){
@@ -106,9 +141,21 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id_seq)
+    public function show($seq_id)
     {
-        $service = Auth::user()->serviceBySeqId($id_seq);
+        $user = Auth::user();
+        if($user->cannot('create', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $service = $user->userable()->serviceBySeqId($seq_id);
+        }else{
+            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
+        }
         return view('services.show',compact('service'));
     }
 
@@ -118,9 +165,22 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id_seq)
+    public function edit($seq_id)
     {
-        $service = Auth::user()->serviceBySeqId($id_seq);
+        $user = Auth::user();
+        if($user->cannot('edit', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $service = $user->userable()->serviceBySeqId($seq_id);
+        }else{
+            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
+        }
+
         return view('services.edit',compact('service'));
     }
 
@@ -131,9 +191,21 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateServiceRequest $request, $id_seq)
+    public function update(CreateServiceRequest $request, $seq_id)
     {
-        $service = Auth::user()->serviceBySeqId($id_seq);
+        $user = Auth::user();
+        if($user->cannot('edit', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $service = $user->userable()->serviceBySeqId($seq_id);
+        }else{
+            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
+        }
 
         // get the service days number 0-127
         $service_days = $this->serviceHelpers->service_days_to_num(
@@ -169,7 +241,7 @@ class ServicesController extends Controller
 
         if($service->save() && $photo){
             flash()->success('Updated', 'New service successfully updated.');
-            return redirect('services/'.$id_seq);
+            return redirect('services/'.$seq_id);
         }
         flash()->error('Not Updated', 'Service was not updated, please try again later.');
         return redirect()->back();
@@ -184,7 +256,20 @@ class ServicesController extends Controller
      */
     public function destroy($seq_id)
     {
-        $service = Auth::user()->serviceBySeqId($seq_id);
+        $user = Auth::user();
+        if($user->cannot('destroy', Service::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator())
+        {
+            $service = $user->userable()->serviceBySeqId($seq_id);
+        }else{
+            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
+        }
+
         if($service->delete()){
             flash()->success('Deleted', 'The service was successfuly deleted');
             return redirect('services');

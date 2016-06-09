@@ -33,7 +33,7 @@ class CreateSupervisorRequest extends Request
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
-            'password' => 'required|string|between:6,40',
+            'password' => 'required|alpha_dash|between:6,40',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',

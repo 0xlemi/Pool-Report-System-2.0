@@ -69,23 +69,23 @@
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Technician Name</label>
+								<label class="col-sm-2 form-control-label">Supervisor Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->supervisor->name.' '.$technician->supervisor->last_name }}">
+									<input type="text" readonly class="form-control" value="{{ $technician->supervisor()->name.' '.$technician->supervisor()->last_name }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Username</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->username }}">
+									<input type="text" readonly class="form-control" value="{{ $technician->user()->email }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" readonly class="form-control hide-show-password" value="{{ $technician->password }}">
+									<input type="password" readonly class="form-control hide-show-password" value="{{ $technician->user()->password }}">
 								</div>
 							</div>
 
@@ -114,7 +114,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
-									<textarea rows="4" class="form-control" 
+									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this technician."
 												name="comments" readonly>{{ $technician->comments }}</textarea>
 								</div>
@@ -122,8 +122,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger" 
-							data-method="delete" data-token="{{ csrf_token() }}" 
+							<a class="btn btn-danger"
+							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/technicians/'.$technician->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;

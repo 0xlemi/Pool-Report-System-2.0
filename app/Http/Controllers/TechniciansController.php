@@ -8,6 +8,7 @@ use Auth;
 use JavaScript;
 
 use App\Technician;
+use App\User;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateTechnicianRequest;
@@ -23,7 +24,7 @@ class TechniciansController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -31,10 +32,23 @@ class TechniciansController extends Controller
      */
     public function index()
     {
-        $technicians = Auth::user()->technicians;
+        $user = Auth::user();
+        if($user->cannot('index', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $technicians = $user->userable()->technicians()->get();
+        }else{
+            $technicians = $user->userable()->admin()->technicians()->get();
+        }
+
         JavaScript::put([
             'click_url' => url('technicians').'/'
         ]);
+
         return view('technicians.index', compact('technicians'));
     }
 
@@ -45,7 +59,18 @@ class TechniciansController extends Controller
      */
     public function create()
     {
-        $supervisors = Auth::user()->supervisors;
+        $user = Auth::user();
+        if($user->cannot('create', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $supervisors = $user->userable()->supervisors()->get();
+        }else{
+            $supervisors = $user->userable()->admin()->supervisors()->get();
+        }
 
         return view('technicians.create', compact('supervisors'));
     }
@@ -58,24 +83,43 @@ class TechniciansController extends Controller
      */
     public function store(CreateTechnicianRequest $request)
     {
-        $supervisor = Auth::user()->supervisorBySeqId($request->supervisor);
+        $user = Auth::user();
+        if($user->cannot('create', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $supervisor = $user->userable()->supervisorBySeqId($request->supervisor);
+        }else{
+            $supervisor = $user->userable()->admin()->supervisorBySeqId($request->supervisor);
+        }
 
         $technician = Technician::create([
             'name'          => $request->name,
             'last_name'     => $request->last_name,
-            'supervisor_id' => $supervisor->id,
-            'username'      => $request->username,
-            'password'      => $request->password,
             'cellphone'     => $request->cellphone,
             'address'       => $request->address,
             'language'      => $request->language,
             'comments'      => $request->comments,
+            'supervisor_id' => $supervisor->id,
         ]);
+
+        $user = User::create([
+            'email' => $request->username,
+            'password' => $request->password,
+            'userable_id' => $technician->id,
+            'userable_type' => 'App\Technician',
+            'remember_token' => str_random(10),
+            'api_token' => str_random(60),
+        ]);
+
         $photo = true;
         if($request->photo){
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
-        if($technician && $photo){
+        if($user && $technician && $photo){
             flash()->success('Created', 'New technician successfully created.');
             return redirect('technicians');
         }
@@ -91,7 +135,19 @@ class TechniciansController extends Controller
      */
     public function show($seq_id)
     {
-        $technician = Auth::user()->technicianBySeqId($seq_id);
+        $user = Auth::user();
+        if($user->cannot('show', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $technician = $user->userable()->technicianBySeqId($seq_id);
+        }else{
+            $technician = $user->userable()->admin()->technicianBySeqId($seq_id);
+        }
+
         return view('technicians.show', compact('technician'));
     }
 
@@ -103,8 +159,20 @@ class TechniciansController extends Controller
      */
     public function edit($seq_id)
     {
-        $technician = Auth::user()->technicianBySeqId($seq_id);
-        $supervisors = Auth::user()->supervisors;
+        $user = Auth::user();
+        if($user->cannot('show', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $technician = $user->userable()->technicianBySeqId($seq_id);
+            $supervisors = $user->userable()->supervisors()->get();
+        }else{
+            $technician = $user->userable()->admin()->technicianBySeqId($seq_id);
+            $supervisors = $user->userable()->admin()->supervisors()->get();
+        }
 
         return view('technicians.edit', compact('technician','supervisors'));
     }
@@ -118,14 +186,28 @@ class TechniciansController extends Controller
      */
     public function update(CreateTechnicianRequest $request, $seq_id)
     {
-        $technician = Auth::user()->technicianBySeqId($seq_id);
-        $supervisor = Auth::user()->supervisorBySeqId($request->supervisor);
+        $logged_user = Auth::user();
+        if($logged_user->cannot('show', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($logged_user->isAdministrator()){
+            $technician = $logged_user->userable()->technicianBySeqId($seq_id);
+            $supervisor = $logged_user->userable()->supervisorBySeqId($request->supervisor);
+        }else{
+            $technician = $logged_user->userable()->admin()->technicianBySeqId($seq_id);
+            $supervisor = $logged_user->userable()->admin()->supervisorBySeqId($request->supervisor);
+        }
+        $user = $technician->user();
+
+        $user->email = $request->username;
+        $user->password = $request->password;
 
         $technician->name = $request->name;
         $technician->last_name = $request->last_name;
         $technician->supervisor_id = $supervisor->id;
-        $technician->username = $request->username;
-        $technician->password = $request->password;
         $technician->cellphone = $request->cellphone;
         $technician->address = $request->address;
         $technician->language = $request->language;
@@ -137,7 +219,7 @@ class TechniciansController extends Controller
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
 
-        if($technician->save() && $photo){
+        if($user->save() && $technician->save() && $photo){
             flash()->success('Updated', 'New technician successfully updated.');
             return redirect('technicians/'.$seq_id);
         }
@@ -153,7 +235,19 @@ class TechniciansController extends Controller
      */
     public function destroy($seq_id)
     {
-        $technician = Auth::user()->technicianBySeqId($seq_id);
+        $user = Auth::user();
+        if($user->cannot('show', Technician::class))
+        {
+            // abort(403);
+            return 'you should not pass';
+        }
+
+        if($user->isAdministrator()){
+            $technician = $user->userable()->technicianBySeqId($seq_id);
+        }else{
+            $technician = $user->userable()->admin()->technicianBySeqId($seq_id);
+        }
+
         if($technician->delete()){
             flash()->success('Deleted', 'The technician was successfuly deleted');
             return redirect('technicians');

@@ -34,6 +34,7 @@ class SupervisorsTableSeeder extends Seeder
             ])->id;
 
             factory(App\User::class)->create([
+                'password' => 'password',
                 'userable_id' => $supervisor_id,
                 'userable_type' => 'App\Supervisor',
             ]);

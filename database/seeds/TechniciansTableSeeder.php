@@ -33,6 +33,8 @@ class TechniciansTableSeeder extends Seeder
             ])->id;
 
             factory(App\User::class)->create([
+                'email' => 'username_'.rand(100000,999999),
+                'password' => 'password',
                 'userable_id' => $technician_id,
                 'userable_type' => 'App\Technician',
             ]);

@@ -71,14 +71,14 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $supervisor->email }}">
+									<input type="text" readonly class="form-control" value="{{ $supervisor->user()->email }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Password</label>
 								<div class="col-sm-10">
-									<input type="password" readonly class="form-control hide-show-password" value="{{ $supervisor->password }}">
+									<input type="password" readonly class="form-control hide-show-password" value="{{ $supervisor->user()->password }}">
 								</div>
 							</div>
 
@@ -107,7 +107,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
-									<textarea rows="4" class="form-control" 
+									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this supervisor."
 												name="comments" readonly>{{ $supervisor->comments }}</textarea>
 								</div>
@@ -115,8 +115,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger" 
-							data-method="delete" data-token="{{ csrf_token() }}" 
+							<a class="btn btn-danger"
+							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/supervisors/'.$supervisor->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
 							&nbsp;&nbsp;&nbsp;&nbsp;

@@ -49,9 +49,9 @@
 							<tr>
 								<td>{{ $technician->seq_id }}</td>
 								<td>{{ $technician->name.' '.$technician->last_name }}</td>
-								<td>{{ $technician->username }}</td>
+								<td>{{ $technician->user()->email }}</td>
 								<td>{{ $technician->cellphone }}</td>
-								<td>{{ $technician->supervisor->name.' '.$technician->supervisor->last_name }}</td>
+								<td>{{ $technician->supervisor()->name.' '.$technician->supervisor()->last_name }}</td>
 							</tr>
 						@endforeach
 					</tbody>
