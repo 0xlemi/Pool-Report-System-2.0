@@ -192,7 +192,7 @@ class TechniciansController extends Controller
             // abort(403);
             return 'you should not pass';
         }
-
+        
         if($logged_user->isAdministrator()){
             $technician = $logged_user->userable()->technicianBySeqId($seq_id);
             $supervisor = $logged_user->userable()->supervisorBySeqId($request->supervisor);

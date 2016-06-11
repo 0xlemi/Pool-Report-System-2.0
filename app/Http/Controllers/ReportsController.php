@@ -86,8 +86,8 @@ class ReportsController extends Controller
             $services = $user->userable()->services()->get();
             $technicians = $user->userable()->technicians()->get();
         }else{
-            $services = $user->userable()->user()->services()->get();
-            $technicians = $user->userable()->user()->technicians()->get();
+            $services = $user->userable()->admin()->services()->get();
+            $technicians = $user->userable()->admin()->technicians()->get();
         }
         return view('reports.create', compact('services', 'technicians'));
     }
@@ -113,8 +113,8 @@ class ReportsController extends Controller
             $technician = $user->userable()->technicianBySeqId($request->technician);
         }else{
             $completed_at = (new Carbon($request->completed_at));
-            $service = $user->userable()->user()->serviceBySeqId($request->service);
-            $technician = $user->userable()->user()->technicianBySeqId($request->technician);
+            $service = $user->userable()->admin()->serviceBySeqId($request->service);
+            $technician = $user->userable()->admin()->technicianBySeqId($request->technician);
         }
 
         $report = Report::create([
@@ -188,9 +188,9 @@ class ReportsController extends Controller
             $services = $user->userable()->services()->get();
             $technicians = $user->userable()->technicians()->get();
         }else{
-            $report = $user->userable()->user()->reportsBySeqId($seq_id);
-            $services = $user->userable()->user()->services()->get();
-            $technicians = $user->userable()->user()->technicians()->get();
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
+            $services = $user->userable()->admin()->services()->get();
+            $technicians = $user->userable()->admin()->technicians()->get();
         }
 
         $date = (new Carbon($report->completed))->format('m/d/Y h:i:s A');
@@ -217,7 +217,7 @@ class ReportsController extends Controller
         if($user->isAdministrator()){
             $report = $user->userable()->reportsBySeqId($seq_id);
         }else{
-            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
         }
 
         $file = $request->file('photo');
@@ -238,7 +238,7 @@ class ReportsController extends Controller
         {
             $report = $user->userable()->reportsBySeqId($seq_id);
         }else{
-            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
         }
 
         $image = $report->image($order);
@@ -279,9 +279,9 @@ class ReportsController extends Controller
             $service = $user->userable()->serviceBySeqId($request->service);
             $technician = $user->userable()->technicianBySeqId($request->technician);
         }else{
-            $report = $user->userable()->user()->reportsBySeqId($seq_id);
-            $service = $user->userable()->user()->serviceBySeqId($request->service);
-            $technician = $user->userable()->user()->technicianBySeqId($request->technician);
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
+            $service = $user->userable()->admin()->serviceBySeqId($request->service);
+            $technician = $user->userable()->admin()->technicianBySeqId($request->technician);
         }
 
         $report->service_id     = $service->id;
@@ -322,7 +322,7 @@ class ReportsController extends Controller
         {
             $report = $user->userable()->reportsBySeqId($seq_id);
         }else{
-            $report = $user->userable()->user()->reportsBySeqId($seq_id);
+            $report = $user->userable()->admin()->reportsBySeqId($seq_id);
         }
 
         if($report->delete()){

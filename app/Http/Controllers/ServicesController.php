@@ -46,7 +46,7 @@ class ServicesController extends Controller
         if($user->isAdministrator()){
             $services = $user->userable()->services()->get();
         }else{
-            $services = $user->userable()->user()->services()->get();
+            $services = $user->userable()->admin()->services()->get();
         }
 
         JavaScript::put([

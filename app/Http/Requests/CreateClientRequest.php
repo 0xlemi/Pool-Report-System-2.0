@@ -26,7 +26,12 @@ class CreateClientRequest extends Request
         // get the client id if is upadate request if not null
         $userable_id = NULL;
         if($this->seq_id){
-            $userable_id = \Auth::user()->userable()->clientsBySeqId($this->seq_id)->id;
+            $user = \Auth::user();
+            if($user->isAdministrator()){
+                $userable_id = $user->userable()->clientsBySeqId($this->seq_id)->id;
+            }else{
+                $userable_id = $user->userable()->admin()->clientsBySeqId($this->seq_id)->id;
+            }
         }
         return [
             'name' => 'required|string|max:25',
