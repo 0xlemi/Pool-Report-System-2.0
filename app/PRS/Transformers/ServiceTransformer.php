@@ -43,11 +43,11 @@ class ServiceTransformer extends Transformer
             'currency' => $service->currency,
             'start_time' => $service->start_time,
             'end_time' => $service->end_time,
-            'status' => $service->status,
+            'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
-            'icon_photo' => $service->icon(),
-            'thumbnail_photo' => $service->thumbnail(),
-            'normal_photo' => $service->image(),
+            'icon_photo' => env('APP_URL').'/'.$service->icon(),
+            'thumbnail_photo' => env('APP_URL').'/'.$service->thumbnail(),
+            'normal_photo' => env('APP_URL').'/'.$service->image(),
         ];
     }
 

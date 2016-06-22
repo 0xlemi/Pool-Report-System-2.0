@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Http\Requests;
 
 use App\PRS\Transformers\ServiceTransformer;
@@ -36,14 +38,13 @@ class ServicesController extends ApiController
 
     /**
     * Display a listing of the resource.
-    *
+    * tested
     * @return \Illuminate\Http\Response
     */
     public function index()
     {
-        $user = Auth::guard('api')->user();
+        $services = $this->loggedUserAdministrator()->services()->get();
 
-        $services = $user->services;
         return $this->respond([
             'data' => $this->serviceTransformer->transformCollection($services),
         ]);
@@ -52,7 +53,7 @@ class ServicesController extends ApiController
 
     /**
     * Store a newly created resource in storage.
-    *
+    * tested
     * @param  \Illuminate\Http\Request  $request
     * @return \Illuminate\Http\Response
     */
@@ -66,8 +67,6 @@ class ServicesController extends ApiController
             return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
         }
 
-        $user = Auth::guard('api')->user();
-
         // get the service days number 0-127
         $service_days = $this->serviceHelpers->service_days_to_num(
             $request->service_day_monday,
@@ -78,6 +77,8 @@ class ServicesController extends ApiController
             $request->service_day_saturday,
             $request->service_day_sunday
         );
+
+        $admin = $this->loggedUserAdministrator();
 
         $service = Service::create([
             'name' => $request->name,
@@ -93,13 +94,13 @@ class ServicesController extends ApiController
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'comments' => $request->comments,
-            'user_id' => $user->id,
+            'admin_id' => $admin->id,
         ]);
 
         if($service){
             return $this->respondPersisted(
                 'The service was successfuly created.',
-                $this->serviceTransformer->transform($service)
+                $this->serviceTransformer->transform($admin->services(true)->first())
             );
         }
 
@@ -109,15 +110,17 @@ class ServicesController extends ApiController
 
     /**
     * Display the specified resource.
-    *
+    * tested
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
     public function show($seq_id)
     {
-        $user = Auth::guard('api')->user();
-
-        $service = $user->serviceBySeqId($seq_id);
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         if($service){
             return $this->respond([
@@ -131,7 +134,7 @@ class ServicesController extends ApiController
 
     /**
     * Update the specified resource in storage.
-    *
+    * tested
     * @param  \Illuminate\Http\Request  $request
     * @param  int  $id
     * @return \Illuminate\Http\Response
@@ -149,9 +152,11 @@ class ServicesController extends ApiController
                 );
         }
 
-        $user = Auth::guard('api')->user();
-
-        $service = $this->updateService($request, $user->serviceBySeqId($seq_id));
+        try{
+            $service = $this->updateService($request, $this->loggedUserAdministrator()->serviceBySeqId($seq_id));
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         $photo = true;
         if($request->photo){
@@ -162,7 +167,7 @@ class ServicesController extends ApiController
         if($service->save() && $photo){
             return $this->respondPersisted(
                 'The service was successfully updated.',
-                $this->serviceTransformer->transform($service)
+                $this->serviceTransformer->transform($this->loggedUserAdministrator()->serviceBySeqId($seq_id))
             );
         }
         return $this->respondInternalError('The service could not be updated.');
@@ -171,13 +176,24 @@ class ServicesController extends ApiController
 
     /**
     * Remove the specified resource from storage.
-    *
+    * tested
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-      //
+        try{
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
+
+        if($service->delete()){
+            return $this->respondWithSuccess('Service was successfully deleted');
+        }
+
+        return $this->respondNotFound('Service with that id, does not exist.');
+
     }
 
     protected function updateService(Request $request, Service $service)

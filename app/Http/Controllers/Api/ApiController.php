@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 
 use Response;
+use Auth;
 
 class ApiController extends Controller
 {
@@ -42,6 +43,15 @@ class ApiController extends Controller
         return $this;
     }
 
+    public function respondWithSuccess($message)
+    {
+        return $this->respond([
+            'success' => [
+                'message' => $message,
+            ]
+        ]);
+    }
+
     public function respondNotFound($message = 'Not Found!'){
         return $this->setStatusCode(404)->respondWithError($message);
     }
@@ -70,4 +80,12 @@ class ApiController extends Controller
         return Response::json($data, $this->getStatusCode(), $headers);
     }
 
+    public function loggedUserAdministrator()
+    {
+        $user = Auth::guard('api')->user();
+        if($user->isAdministrator()){
+            return $user->userable();
+        }
+        return $user->userable()->admin();
+    }
 }

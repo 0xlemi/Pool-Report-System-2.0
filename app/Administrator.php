@@ -69,8 +69,9 @@ class Administrator extends Model
      *  Get services associated with this user
      * tested
      */
-    public function services(){
-        return $this->hasMany('App\Service', 'admin_id')->orderBy('seq_id');
+    public function services($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
+        return $this->hasMany('App\Service', 'admin_id')->orderBy('seq_id', $order);
     }
 
     /**
@@ -121,9 +122,10 @@ class Administrator extends Model
      * Get supervisors assaciated with this user
      * tested
      */
-    public function supervisors(){
+    public function supervisors($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
         return $this->hasMany('App\Supervisor', 'admin_id')
-                    ->orderBy('seq_id');
+                    ->orderBy('seq_id', $order);
     }
 
     /**
@@ -141,12 +143,13 @@ class Administrator extends Model
      * Get technicians assaciated with this user
      * tested
      */
-    public function technicians(){
+    public function technicians($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
         return $this->hasManyThrough(
                         'App\Technician',
                         'App\Supervisor',
                         'admin_id')
-                    ->orderBy('seq_id');
+                    ->orderBy('seq_id', $order);
     }
 
     /**

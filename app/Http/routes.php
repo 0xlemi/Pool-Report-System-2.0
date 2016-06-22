@@ -41,6 +41,8 @@ Route::patch('settings/password', 'UserController@updatePassword');
 Route::group(['prefix' => 'api/v1'], function(){
 	Route::get('user', 'Api\UserController@information');
 	Route::resource('services', 'Api\ServicesController');
+	Route::resource('supervisors', 'Api\SupervisorsController');
+	Route::resource('technicians', 'Api\TechniciansController');
 });
 
 
