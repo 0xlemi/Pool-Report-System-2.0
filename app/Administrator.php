@@ -103,8 +103,9 @@ class Administrator extends Model
      * Get clients associated with this user
      * tested
      */
-    public function clients(){
-        return Client::where('admin_id', $this->id)->orderBy('seq_id');
+    public function clients($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
+        return Client::where('admin_id', $this->id)->orderBy('seq_id', $order);
     }
 
     /**

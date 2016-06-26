@@ -115,10 +115,8 @@ trait FactoryTrait
         return $technicians[rand(0,--$num_of_technicians)];
     }
 
-    public function createClient(array $service_ids)
+    public function createClient($admin_id, array $service_ids = array())
     {
-        // find admin_id congruent with the service
-        $admin_id = App\Service::findOrFail($service_ids[0])->admin()->id;
 
         $client = factory(App\Client::class)->create([
                 'admin_id' => $admin_id,
