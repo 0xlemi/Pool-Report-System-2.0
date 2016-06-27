@@ -44,6 +44,7 @@ Route::group(['prefix' => 'api/v1'], function(){
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');
 	Route::resource('clients', 'Api\ClientsController');
+	Route::resource('reports', 'Api\ReportsController');
 });
 
 

@@ -36,9 +36,10 @@ class Administrator extends Model
      * Get reports associatod with this user
      * tested
      */
-    public function reports(){
+    public function reports($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
         return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
-                    ->orderBy('seq_id');
+                    ->orderBy('seq_id', $order);
     }
 
     /**

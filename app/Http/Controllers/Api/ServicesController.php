@@ -60,7 +60,7 @@ class ServicesController extends ApiController
     public function store(Request $request)
     {
 
-        $validator = $this->validateServiceRequestCreate($request);
+        $validator = $this->validateServiceRequest($request);
 
         if ($validator->fails()) {
             // return error responce
@@ -141,7 +141,7 @@ class ServicesController extends ApiController
     */
     public function update(Request $request, $seq_id)
     {
-        $validator = $this->validateServiceRequestUpdate($request);
+        $validator = $this->validateServiceRequest($request);
 
         if ($validator->fails()) {
             // return error responce
@@ -229,7 +229,7 @@ class ServicesController extends ApiController
         return $service;
     }
 
-    protected function validateServiceRequestCreate(Request $request)
+    protected function validateServiceRequest(Request $request)
     {
         return Validator::make($request->all(), [
             'name' => 'required|string|max:20',
@@ -252,33 +252,6 @@ class ServicesController extends ApiController
             'service_day_friday' => 'required|boolean',
             'service_day_saturday' => 'required|boolean',
             'service_day_sunday' => 'required|boolean',
-            'photo' => 'mimes:jpg,jpeg,png',
-        ]);
-    }
-
-    protected function validateServiceRequestUpdate(Request $request)
-    {
-        return Validator::make($request->all(), [
-            'name' => 'string|max:20',
-            'address_line' => 'string|max:50',
-            'city' => 'string|max:30',
-            'state' => 'string|max:30',
-            'postal_code' => 'string|max:15',
-            'country' => 'string|size:2',
-            'type' => 'numeric|between:1,2',
-            'start_time' => 'date_format:H:i',
-            'end_time' => 'date_format:H:i|after:start_time',
-            'status' => 'boolean',
-            'amount' => 'numeric|max:10000000',
-            'currency' => 'string|size:3',
-            'comments' => 'string|max:750',
-            'service_day_monday' => 'boolean',
-            'service_day_tuesday' => 'boolean',
-            'service_day_wednesday' => 'boolean',
-            'service_day_thursday' => 'boolean',
-            'service_day_friday' => 'boolean',
-            'service_day_saturday' => 'boolean',
-            'service_day_sunday' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
     }

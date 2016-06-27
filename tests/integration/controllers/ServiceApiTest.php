@@ -179,8 +179,6 @@ class ServiceApiTest extends ApiTester
     public function it_can_update_services()
     {
         // Given
-        $serviceTransformer = \App::make('App\PRS\Transformers\ServiceTransformer');
-
         $admin = $this->createAdministrator();
 
         $this->createService($admin->id);
@@ -249,8 +247,6 @@ class ServiceApiTest extends ApiTester
     public function it_can_destroy_service()
     {
         // Given
-        $serviceTransformer = \App::make('App\PRS\Transformers\ServiceTransformer');
-
         $admin = $this->createAdministrator();
 
         $this->createService($admin->id);
