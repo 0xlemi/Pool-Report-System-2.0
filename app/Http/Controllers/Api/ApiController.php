@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use Validator;
+
 use Response;
 use Auth;
 
@@ -88,4 +90,13 @@ class ApiController extends Controller
         }
         return $user->userable()->admin();
     }
+
+    // public function checkValidation($validator)
+    // {
+    //     if ($validator->fails()) {
+    //         // return error response
+    //         return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
+    //     }
+    // }
+
 }

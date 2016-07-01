@@ -104,7 +104,18 @@ public function it_can_show_list_clients_no_services()
 public function it_can_store_clients()
 {
     // Given
+    $serviceTransformer = \App::make('App\PRS\Transformers\ServiceTransformer');
+
     $admin = $this->createAdministrator();
+
+    $this->createService($admin->id);
+    $service1 = $admin->serviceBySeqId(1);
+
+    $this->createService($admin->id);
+    $service2 = $admin->serviceBySeqId(2);
+
+    $this->createService($admin->id);
+    $service3 = $admin->serviceBySeqId(3);
 
     // When
     // Then
@@ -117,6 +128,7 @@ public function it_can_store_clients()
         'language' => 'en',
         'comments' => 'This are the comments',
         'email' => 'clients123@example.com',
+        'service_ids' => [1, 2, 3],
     ])->seeJsonEquals([
         'message' => 'The client was successfuly created.',
         'object' => [
@@ -128,7 +140,11 @@ public function it_can_store_clients()
             'language' => 'en',
             'comments' => 'This are the comments',
             'email' => 'clients123@example.com',
-            'services' => [],
+            'services' => [
+                $serviceTransformer->transform($service1),
+                $serviceTransformer->transform($service2),
+                $serviceTransformer->transform($service3),
+            ],
         ]
     ]);
 
@@ -172,10 +188,19 @@ public function it_can_update_client()
 
     $admin = $this->createAdministrator();
 
-    $service = $this->createService($admin->id);
-    $service = $admin->serviceBySeqId(1);
+    $this->createService($admin->id);
+    $service1 = $admin->serviceBySeqId(1);
 
-    $this->createClient($admin->id,[$service->id]);
+    $this->createService($admin->id);
+    $service2 = $admin->serviceBySeqId(2);
+
+    $this->createService($admin->id);
+    $service3 = $admin->serviceBySeqId(3);
+
+    $this->createService($admin->id);
+    $service4 = $admin->serviceBySeqId(4);
+
+    $this->createClient($admin->id,[$service1->id, $service4->id]);
 
     // When
     // Then
@@ -188,6 +213,8 @@ public function it_can_update_client()
         'language' => 'en',
         'comments' => 'This are the comments',
         'email' => 'lem@example.com',
+        'add_service_ids' => [2, 3, 4],
+        'remove_service_ids' => [1],
     ])->seeJsonEquals([
         "message" => "The client was successfully updated.",
         "object" => [
@@ -200,7 +227,9 @@ public function it_can_update_client()
             'comments' => 'This are the comments',
             'email' => 'lem@example.com',
             'services' => [
-                $serviceTransformer->transform($service),
+                $serviceTransformer->transform($service2),
+                $serviceTransformer->transform($service3),
+                $serviceTransformer->transform($service4),
             ]
         ]
     ]);

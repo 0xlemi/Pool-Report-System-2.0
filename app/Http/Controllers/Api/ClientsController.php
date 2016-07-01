@@ -63,6 +63,10 @@ class ClientsController extends ApiController
 
         $admin = $this->loggedUserAdministrator();
 
+        // transform services_seq_id to service_id array and check
+        // that the services with those id exist
+        $service_ids = $this->getAddServicesIds($request->service_ids, $admin);
+
         $client = Client::create([
             'name' => $request->name,
             'last_name' => $request->last_name,
@@ -84,6 +88,8 @@ class ClientsController extends ApiController
         ]);
 
         if($client && $user){
+            $client->services()->attach($service_ids);
+
             return $this->respondPersisted(
                 'The client was successfuly created.',
                 $this->clientTransformer->transform($admin->clients(true)->first())
@@ -131,7 +137,12 @@ class ClientsController extends ApiController
             return $this->respondNotFound('Client with that id, does not exist.');
         }
 
-        $validator = $this->validateClientRequestUpdate($request, $client->user()->userable_id);
+        $admin = $this->loggedUserAdministrator();
+
+        $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
+        $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
+
+        $validator = $this->validateClientRequestUpdate($request, $client->user()->userable_id, $add_service_ids, $remove_service_ids);
 
         if ($validator->fails()) {
             // return error responce
@@ -142,7 +153,6 @@ class ClientsController extends ApiController
                 );
         }
 
-
         $objects = $this->updateClient($request, $client);
 
         // $photo = true;
@@ -152,6 +162,12 @@ class ClientsController extends ApiController
         // }
 
         if($objects['client']->save() && $objects['user']->save()){
+
+            $objects['client']->services()->attach($add_service_ids);
+            if(!empty($remove_service_ids)){
+                $objects['client']->services()->detach($remove_service_ids);
+            }
+
             return $this->respondPersisted(
                 'The client was successfully updated.',
                 $this->clientTransformer->transform($this->loggedUserAdministrator()->clientsBySeqId($seq_id))
@@ -162,7 +178,7 @@ class ClientsController extends ApiController
 
     /**
      * Remove the specified resource from storage.
-     *
+     * tested
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -196,7 +212,7 @@ class ClientsController extends ApiController
         ]);
     }
 
-    protected function validateClientRequestUpdate(Request $request, $userable_id)
+    protected function validateClientRequestUpdate(Request $request, $userable_id, $add_service_ids, $remove_service_ids)
     {
         return Validator::make($request->all(), [
             'name' => 'required|string|max:25',
@@ -208,6 +224,49 @@ class ClientsController extends ApiController
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
+    }
+
+    public function getServicesIds($services_seq_id, $admin, $message, $client = null)
+    {
+        $service_ids = array();
+        if(isset($services_seq_id)){
+            foreach ($services_seq_id as $service_seq_id) {
+                try{
+                    $service_id = $admin->serviceBySeqId($service_seq_id)->id;
+                    // check that dosn't have a connection already
+                    if(isset($client)){
+                        if(!$client->services()->get()->contains('id', $service_id)){
+                            $service_ids[] = $service_id;
+                        }
+                    }else{
+                        $service_ids[] = $service_id;
+                    }
+                }catch(ModelNotFoundException $e){
+                    return $this->respondNotFound($message);
+                }
+
+            }
+        }
+        return $service_ids;
+    }
+
+    protected function getAddServicesIds($add_service_seq_ids, $admin, $client = null)
+    {
+        return $this->getServicesIds(
+                $add_service_seq_ids,
+                $admin,
+                'Some services from the array add_service_ids, does not exist.',
+                $client
+            );
+    }
+
+    protected function getRemoveServicesIds($remove_service_seq_ids, $admin)
+    {
+        return $this->getServicesIds(
+                $remove_service_seq_ids,
+                $admin,
+                'Some services from the array remove_service_ids, does not exist.'
+            );
     }
 
     protected function updateClient(Request $request, Client $client)
