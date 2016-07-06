@@ -33,6 +33,11 @@ class TechniciansController extends ApiController
      */
     public function index()
     {
+        if($this->getUser()->cannot('index', Technician::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $technicians = $this->loggedUserAdministrator()->technicians()->get();
 
         return $this->respond([
@@ -48,6 +53,11 @@ class TechniciansController extends ApiController
      */
     public function store(Request $request)
     {
+        if($this->getUser()->cannot('create', Technician::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $validator = $this->validateTechnicianRequestCreate($request);
 
         if ($validator->fails()) {
@@ -101,6 +111,11 @@ class TechniciansController extends ApiController
      */
     public function show($seq_id)
     {
+        if($this->getUser()->cannot('show', Technician::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         try {
             $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
@@ -125,6 +140,11 @@ class TechniciansController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
+        if($this->getUser()->cannot('edit', Technician::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         try {
             $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
@@ -168,6 +188,11 @@ class TechniciansController extends ApiController
      */
     public function destroy($seq_id)
     {
+        if($this->getUser()->cannot('destroy', Technician::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         try {
             $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){

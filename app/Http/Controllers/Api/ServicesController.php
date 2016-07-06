@@ -43,6 +43,11 @@ class ServicesController extends ApiController
     */
     public function index()
     {
+        if($this->getUser()->cannot('index', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $services = $this->loggedUserAdministrator()->services()->get();
 
         return $this->respond([
@@ -59,6 +64,11 @@ class ServicesController extends ApiController
     */
     public function store(Request $request)
     {
+        if($this->getUser()->cannot('create', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
 
         $validator = $this->validateServiceRequest($request);
 
@@ -116,6 +126,11 @@ class ServicesController extends ApiController
     */
     public function show($seq_id)
     {
+        if($this->getUser()->cannot('show', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         try {
             $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
@@ -141,6 +156,11 @@ class ServicesController extends ApiController
     */
     public function update(Request $request, $seq_id)
     {
+        if($this->getUser()->cannot('edit', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $validator = $this->validateServiceRequest($request);
 
         if ($validator->fails()) {
@@ -182,6 +202,11 @@ class ServicesController extends ApiController
     */
     public function destroy($seq_id)
     {
+        if($this->getUser()->cannot('destroy', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         try{
             $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         }catch(ModelNotFoundException $e){

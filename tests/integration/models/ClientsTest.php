@@ -52,10 +52,12 @@ class ClientsTest extends ModelTester
         $service2 = $this->createService($admin->id);
         $service3 = $this->createService($admin->id);
 
-        $client = $this->createClient([
-            $service1->id,
-            $service2->id,
-            $service3->id
+        $client = $this->createClient(
+            $admin->id,
+            [
+                $service1->id,
+                $service2->id,
+                $service3->id
         ]);
 
         // When
@@ -85,7 +87,7 @@ class ClientsTest extends ModelTester
 
         $service = $this->createService($admin->id);
 
-        $client = $this->createClient([$service->id]);
+        $client = $this->createClient($admin->id, [$service->id]);
 
 		$image1 = new Image;
         $image1->normal_path = 'normal/image/path1';
@@ -116,7 +118,7 @@ class ClientsTest extends ModelTester
 
         $service = $this->createService($admin->id);
 
-        $client = $this->createClient([$service->id]);
+        $client = $this->createClient($admin->id, [$service->id]);
 
 		$image1 = new Image;
         $image1->normal_path = 'normal/image/path1';
@@ -147,7 +149,7 @@ class ClientsTest extends ModelTester
 
         $service = $this->createService($admin->id);
 
-        $client = $this->createClient([$service->id]);
+        $client = $this->createClient($admin->id, [$service->id]);
 
 		$image1 = new Image;
         $image1->normal_path = 'normal/image/path1';
@@ -177,7 +179,7 @@ class ClientsTest extends ModelTester
 
         $service = $this->createService($admin->id);
 
-        $client = $this->createClient([$service->id]);
+        $client = $this->createClient($admin->id, [$service->id]);
 
 		$image = new Image;
         $image->normal_path = 'normal/image/path';

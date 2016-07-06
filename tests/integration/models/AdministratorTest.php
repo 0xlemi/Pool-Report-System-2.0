@@ -191,9 +191,9 @@ class AdministratorTest extends ModelTester
         $ser1 = $this->createService($admin1->id);
         $ser2 = $this->createService($admin2->id);
 
-        $client1 = $this->createClient([$ser1->id]);
-        $client2 = $this->createClient([$ser2->id]);
-        $client3 = $this->createClient([$ser2->id]);
+        $client1 = $this->createClient($admin1->id, [$ser1->id]);
+        $client2 = $this->createClient($admin2->id, [$ser2->id]);
+        $client3 = $this->createClient($admin2->id, [$ser2->id]);
 
         // When
         $clients = $admin2->clients()->get();
@@ -215,9 +215,9 @@ class AdministratorTest extends ModelTester
         $ser1 = $this->createService($admin1->id);
         $ser2 = $this->createService($admin2->id);
 
-        $client1 = $this->createClient([$ser1->id]);
-        $client2 = $this->createClient([$ser2->id]);
-        $client3 = $this->createClient([$ser2->id]);
+        $client1 = $this->createClient($admin1->id, [$ser1->id]);
+        $client2 = $this->createClient($admin2->id, [$ser2->id]);
+        $client3 = $this->createClient($admin2->id, [$ser2->id]);
 
         // When
         $client_1 = $admin1->clientsBySeqId(1);

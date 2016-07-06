@@ -91,6 +91,11 @@ class ApiController extends Controller
         return $user->userable()->admin();
     }
 
+    public function getUser()
+    {
+        return Auth::guard('api')->user();
+    }
+
     // public function checkValidation($validator)
     // {
     //     if ($validator->fails()) {

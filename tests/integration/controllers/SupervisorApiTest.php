@@ -5,6 +5,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Supervisor;
+use App\Administrator;
+use App\User;
 
 class SupervisorApiTest extends ApiTester
 {
@@ -168,6 +170,237 @@ class SupervisorApiTest extends ApiTester
 
         // Then
         $this->assertEquals(0, Supervisor::all()->count());
+
+    }
+
+//***********************************************************************
+//    AUTHORIZATION TESTS
+//***********************************************************************
+
+    /** @test */
+    public function it_authorizes_index()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create([
+            'tech_supervisor_index' => 0,
+            'sup_supervisor_index' => 0,
+        ]);
+        $user = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        // When
+        // Then
+        $this->json('GET', 'api/v1/supervisors', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $this->json('GET', 'api/v1/supervisors', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $admin->tech_supervisor_index = 1;
+        $admin->sup_supervisor_index = 1;
+        $admin->save();
+
+        $this->json('GET', 'api/v1/supervisors', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
+
+        $this->json('GET', 'api/v1/supervisors', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
+
+    }
+
+    /** @test */
+    public function it_authorizes_store()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create([
+            'tech_supervisor_create' => 0,
+            'sup_supervisor_create' => 0,
+        ]);
+        $user = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        // When
+        // Then
+        $this->json('POST', 'api/v1/supervisors', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $this->json('POST', 'api/v1/supervisors', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $admin->tech_supervisor_create = 1;
+        $admin->sup_supervisor_create = 1;
+        $admin->save();
+
+        $this->json('POST', 'api/v1/supervisors', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(422);
+
+        $this->json('POST', 'api/v1/supervisors', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(422);
+
+    }
+
+    /** @test */
+    public function it_authorizes_show()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create([
+            'tech_supervisor_show' => 0,
+            'sup_supervisor_show' => 0,
+        ]);
+        $user = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        // When
+        // Then
+        $this->json('GET', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $this->json('GET', 'api/v1/supervisors/1', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $admin->tech_supervisor_show = 1;
+        $admin->sup_supervisor_show = 1;
+        $admin->save();
+
+        $this->json('GET', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
+
+        $this->json('GET', 'api/v1/supervisors/1', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
+
+    }
+
+    /** @test */
+    public function it_authorizes_update()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create([
+            'tech_supervisor_edit' => 0,
+            'sup_supervisor_edit' => 0,
+        ]);
+        $user = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        // When
+        // Then
+        $this->json('PATCH', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $this->json('PATCH', 'api/v1/supervisors/1', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $admin->tech_supervisor_edit = 1;
+        $admin->sup_supervisor_edit = 1;
+        $admin->save();
+
+        $this->json('PATCH', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(422);
+
+        $this->json('PATCH', 'api/v1/supervisors/1', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(422);
+
+    }
+
+    /** @test */
+    public function it_authorizes_delete()
+    {
+        // Given
+        $admin = factory(Administrator::class)->create([
+            'tech_supervisor_edit' => 0,
+            'sup_supervisor_edit' => 0,
+        ]);
+        $user = factory(User::class)->create([
+            'userable_id' => $admin->id,
+            'userable_type' => 'App\Administrator',
+        ]);
+
+        $this->createSupervisor($admin->id);
+        $this->createSupervisor($admin->id);
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        // When
+        // Then
+        $this->json('DELETE', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $this->json('DELETE', 'api/v1/supervisors/2', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(403);
+
+        $admin->tech_supervisor_destroy = 1;
+        $admin->sup_supervisor_destroy = 1;
+        $admin->save();
+
+        $this->json('DELETE', 'api/v1/supervisors/1', [
+            'api_token' => $sup->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
+
+        $this->json('DELETE', 'api/v1/supervisors/2', [
+            'api_token' => $tech->user()->api_token,
+        ]);
+        $this->assertResponseStatus(200);
 
     }
 

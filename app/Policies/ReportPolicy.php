@@ -23,79 +23,163 @@ class ReportPolicy
     /**
      * Administrator has all permissions
      */
-    public function before($user)
+    public function before($type)
     {
-        if($user->isAdministrator()){
+        if($type->isAdministrator()){
             return true;
         }
     }
 
-    public function index($user)
+    // tested (api)
+    public function index($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_index;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_index;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_index;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_index;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_index;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_index;
+            }
         }
         return false;
     }
 
-    public function create($user)
+    // tested (api)
+    public function create($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_create;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_create;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_create;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_create;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_create;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_create;
+            }
         }
         return false;
     }
 
-    public function show($user)
+    // tested (api)
+    public function show($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_show;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_show;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_show;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_show;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_show;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_show;
+            }
         }
         return false;
     }
 
-    public function edit($user)
+    // tested (api)
+    public function edit($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_edit;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_edit;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_edit;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_edit;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_edit;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_edit;
+            }
         }
         return false;
     }
 
-    public function addPhoto($user)
+    // tested (api)
+    public function addPhoto($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_addPhoto;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_addPhoto;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_addPhoto;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_addPhoto;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_addPhoto;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_addPhoto;
+            }
         }
         return false;
     }
 
-    public function removePhoto($user)
+    // tested (api)
+    public function removePhoto($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_removePhoto;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_removePhoto;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_removePhoto;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_removePhoto;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_removePhoto;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_removePhoto;
+            }
         }
         return false;
     }
 
-    public function destroy($user)
+    // tested (api)
+    public function destroy($type)
     {
-        if($user->isSupervisor()){
-            return Auth::user()->userable()->admin()->sup_report_destroy;
-        }elseif($user->isTechnician()){
-            return Auth::user()->userable()->admin()->tech_report_destroy;
+        $session_user = Auth::user();
+        $api_user = Auth::guard('api')->user();
+
+        if($type->isSupervisor()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->sup_report_destroy;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->sup_report_destroy;
+            }
+        }elseif($type->isTechnician()){
+            if(isset($session_user)){
+                return $session_user->userable()->admin()->tech_report_destroy;
+            }elseif(isset($api_user)){
+                return $api_user->userable()->admin()->tech_report_destroy;
+            }
         }
         return false;
     }
