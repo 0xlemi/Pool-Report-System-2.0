@@ -37,18 +37,20 @@ class ClientsController extends ApiController
      * tested
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if($this->getUser()->cannot('index', Client::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $clients = $this->loggedUserAdministrator()->clients()->get();
+        $limit = ($request->limit)?: 5;
+        $clients = $this->loggedUserAdministrator()->clients()->paginate($limit);
 
-        return $this->respond([
-            'data' => $this->clientTransformer->transformCollection($clients),
-        ]);
+        return $this->respondWithPagination(
+            $clients,
+            $this->clientTransformer->transformCollection($clients)
+        );
     }
 
     /**

@@ -31,18 +31,20 @@ class TechniciansController extends ApiController
      * tested
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if($this->getUser()->cannot('index', Technician::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $technicians = $this->loggedUserAdministrator()->technicians()->get();
+        $limit = ($request->limit)?: 5;
+        $technicians = $this->loggedUserAdministrator()->technicians()->paginate($limit);
 
-        return $this->respond([
-            'data' => $this->technicianTransformer->transformCollection($technicians),
-        ]);
+        return $this->respondWithPagination(
+            $technicians,
+            $this->technicianTransformer->transformCollection($technicians)
+        );
     }
 
     /**

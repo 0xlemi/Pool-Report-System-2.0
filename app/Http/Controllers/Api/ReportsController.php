@@ -50,11 +50,22 @@ class ReportsController extends ApiController
             return $this->indexByDate($request->date);
         }
 
-        $reports = $this->loggedUserAdministrator()->reports()->get();
-
-        return $this->respond([
-            'data' => $this->reportTransformer->transformCollection($reports),
+        $validator = Validator::make($request->all(), [
+            'limit' => 'numeric|between:0,25'
         ]);
+
+        if ($validator->fails()) {
+            // return error responce
+            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
+        }
+
+        $limit = ($request->limit)?: 5;
+        $reports = $this->loggedUserAdministrator()->reports()->paginate($limit);
+
+        return $this->respondWithPagination(
+            $reports,
+            $this->reportTransformer->transformCollection($reports)
+        );
     }
 
     /**
@@ -75,6 +86,7 @@ class ReportsController extends ApiController
             return $this->setStatusCode(422)->RespondWithError('The date is invalid');
         }
 
+        // Needs pagination
         $reports = $this->loggedUserAdministrator()->reportsByDate($date)->get();
 
         return $this->respond([

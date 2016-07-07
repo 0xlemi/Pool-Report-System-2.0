@@ -36,18 +36,21 @@ class SupervisorsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if($this->getUser()->cannot('index', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $supervisors = $this->loggedUserAdministrator()->supervisors()->get();
+        $limit = ($request->limit)?: 5;
+        $supervisors = $this->loggedUserAdministrator()->supervisors()->paginate($limit);
 
-        return $this->respond([
-            'data' => $this->supervisorTransformer->transformCollection($supervisors),
-        ]);
+        return $this->respondWithPagination(
+            $supervisors,
+            $this->supervisorTransformer->transformCollection($supervisors)
+        );
+
     }
 
     /**

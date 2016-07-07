@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 use Validator;
 
 use Response;
@@ -76,6 +78,24 @@ class ApiController extends Controller
                 'errors' => $errors,
             ]
         ]);
+    }
+
+    public function respondWithPagination(LengthAwarePaginator $objects, $data)
+    {
+        $data = array_merge(
+            [
+                'data' => $data
+            ],
+            [
+                'paginator' => [
+                    'total_count' => $objects->total(),
+                    'current_page' => $objects->currentPage(),
+                    'total_pages' => ceil($objects->total() / $objects->perPage()),
+                    'limit' => $objects->perPage(),
+                ]
+            ]
+        );
+        return $this->respond($data);
     }
 
     public function respond($data, $headers = []){

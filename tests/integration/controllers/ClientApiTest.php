@@ -69,6 +69,12 @@ public function it_can_show_list_clients()
                         ]
                     ]
                  ]
+            ],
+            'paginator' => [
+                'total_count',
+                'current_page',
+                'total_pages',
+                'limit',
             ]
         ]);
 

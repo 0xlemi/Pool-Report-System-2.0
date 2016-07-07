@@ -41,18 +41,20 @@ class ServicesController extends ApiController
     * tested
     * @return \Illuminate\Http\Response
     */
-    public function index()
+    public function index(Request $request)
     {
         if($this->getUser()->cannot('index', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $services = $this->loggedUserAdministrator()->services()->get();
+        $limit = ($request->limit)?: 5;
+        $services = $this->loggedUserAdministrator()->services()->paginate($limit);
 
-        return $this->respond([
-            'data' => $this->serviceTransformer->transformCollection($services),
-        ]);
+        return $this->respondWithPagination(
+            $services,
+            $this->serviceTransformer->transformCollection($services)
+        );
 
     }
 

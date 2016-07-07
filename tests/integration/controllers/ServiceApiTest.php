@@ -73,6 +73,12 @@ class ServiceApiTest extends ApiTester
                     'thumbnail_photo',
                     'normal_photo',
                 ]
+            ],
+            'paginator' => [
+                'total_count',
+                'current_page',
+                'total_pages',
+                'limit',
             ]
         ]);
 

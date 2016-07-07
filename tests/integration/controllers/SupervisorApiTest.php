@@ -37,6 +37,12 @@ class SupervisorApiTest extends ApiTester
                      'language',
                      'comments',
                  ]
+            ],
+            'paginator' => [
+                'total_count',
+                'current_page',
+                'total_pages',
+                'limit',
             ]
         ]);
 

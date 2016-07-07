@@ -34,6 +34,7 @@ class ReportsApiTest extends ApiTester
         // Then
         $this->json('GET', '/api/v1/reports', [
             'api_token' => $admin->user()->api_token,
+            'limit' => rand(1,25),
         ])->seeJsonStructure([
             'data' => [
                 '*' => [
@@ -52,6 +53,12 @@ class ReportsApiTest extends ApiTester
                     'service_id',
                     'technician_id',
                 ]
+            ],
+            'paginator' => [
+                'total_count',
+                'current_page',
+                'total_pages',
+                'limit',
             ]
         ]);
       $this->assertResponseOk();

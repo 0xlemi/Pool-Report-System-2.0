@@ -50,6 +50,12 @@ class TechnicianApiTest extends ApiTester
                         'comments',
                     ]
                  ]
+            ],
+            'paginator' => [
+                'total_count',
+                'current_page',
+                'total_pages',
+                'limit',
             ]
         ]);
     }
