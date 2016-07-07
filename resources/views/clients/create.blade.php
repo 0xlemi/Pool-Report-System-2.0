@@ -23,7 +23,7 @@
 				<div class="card-block">
 					<form method="POST" action="{{ url('clients') }}" enctype="multipart/form-data">
 						{{ csrf_field() }}
-						
+
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Client Photo:</label>
 							<div class="col-sm-10">
@@ -42,7 +42,7 @@
 				                    <span class="fileupload-new">Select image</span>
 				                    <span class="fileupload-exists">Change</span>
 				                    <input type="file" name="photo" id="photo" ></span>
-				                    <a href="#" class="btn btn-default fileupload-exists" 
+				                    <a href="#" class="btn btn-default fileupload-exists"
 				                    	data-dismiss="fileupload">Remove</a>
 				                  </div>
 				                </div>
@@ -127,10 +127,26 @@
 							</div>
 						</div>
 
+						<div class="form-group row {{($errors->has('services'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Services:</label>
+							<div class="col-sm-10">
+								<select class="select2" multiple="multiple" name="services[]">
+									@foreach($services as $service)
+										<option value={{ $service->seq_id }} >
+											{{ $service->seq_id.' '.$service->name }}
+										</option>
+									@endforeach
+								</select>
+								@if ($errors->has('services'))
+									<small class="text-muted">{{ $errors->first('services') }}</small>
+								@endif
+							</div>
+						</div>
+
 						<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Comments:</label>
 							<div class="col-sm-10">
-								<textarea rows="5" class="form-control" 
+								<textarea rows="5" class="form-control"
 											placeholder="Any additional info about this client."
 											name="comments">{{ old('comments') }}</textarea>
 								@if ($errors->has('comments'))
@@ -138,7 +154,7 @@
 								@endif
 							</div>
 						</div>
-						
+
 						<hr>
 						<p style="float: left;">
 							<a  class="btn btn-danger"

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 use Intervention;
 
+use App\Administrator;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Client extends Model
@@ -53,6 +55,31 @@ class Client extends Model
     public function services(){
     	return $this->belongsToMany('App\Service');
     }
+
+	/**
+	 * Checks if client has service with this $seq_id
+	 * @param  integer  $seq_id
+	 * @return boolean
+	 */
+	public function hasService($seq_id)
+	{
+		return $this->services()->get()->contains('seq_id', $seq_id);
+	}
+
+	public function setServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			$service_id = $this->admin()->serviceBySeqId($seq_id)->id;
+			if(!$this->hasService($seq_id)){
+				$this->services()->attach($service_id);
+			}
+	    }
+	}
+
+	public function admin()
+	{
+	    return Administrator::findOrFail($this->admin_id);
+	}
 
 	/**
      * add a image from form information

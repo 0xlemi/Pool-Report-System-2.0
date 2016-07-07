@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\ServiceHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -97,6 +98,43 @@
 								</div>
 							</div>
 						</form>
+						<hr>
+						<div id="toolbar">
+							<h3><strong>List of Client Services</strong></h3>
+						</div>
+						<div class="table-responsive">
+							<table id="reports_table"
+								   class="table"
+								   data-toolbar="#toolbar"
+								   data-search="true"
+								   data-show-export="true"
+								   data-export-types="['excel', 'pdf']"
+								   data-minimum-count-columns="2"
+								   data-pagination="true"
+								   data-show-footer="false"
+								   data-response-handler="responseHandler"
+								   >
+								<thead>
+								    <tr>
+								        <th data-field="id" data-sortable="true">#</th>
+								        <th data-field="name" data-sortable="true">Name</th>
+								        <th data-field="address" data-sortable="true">Address</th>
+								        <th data-field="price" data-sortable="true">Price</th>
+								    </tr>
+								</thead>
+								<tbody>
+									@foreach ($services as $service)
+										<tr>
+											<td>{{ $service->seq_id }}</td>
+											<td>{{ $service->name }}</td>
+											<td>{{ $service->address_line }}</td>
+											<td>{!! $service->amount.' <strong>'.$service->currency.'</strong>' !!}</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+
 						<hr>
 						<p style="float: right;">
 							<a class="btn btn-danger"

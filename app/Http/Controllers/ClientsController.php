@@ -14,7 +14,7 @@ use App\Http\Requests;
 
 use App\Http\Requests\CreateClientRequest;
 
-class ClientsController extends Controller
+class ClientsController extends PageController
 {
 
     /**
@@ -41,12 +41,7 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $clients = $user->userable()->clients()->get();
-        }else{
-            $clients = $user->userable()->admin()->clients()->get();
-        }
+        $clients = $this->loggedUserAdministrator()->clients()->get();
 
         JavaScript::put([
             'click_url' => url('clients').'/',
@@ -69,7 +64,9 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        return view('clients.create');
+        $services = $this->loggedUserAdministrator()->services()->get();
+
+        return view('clients.create', compact('services'));
     }
 
     /**
@@ -87,12 +84,7 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $admin = $user->userable();
-        }else{
-            $admin = $user->userable()->admin();
-        }
+        $admin = $this->loggedUserAdministrator();
 
         $client = Client::create([
             'name' => $request->name,
@@ -104,6 +96,9 @@ class ClientsController extends Controller
             'comments' => $request->comments,
             'admin_id' => $admin->id,
         ]);
+        $client->setServices($request->services);
+        $client->save();
+
         $user = User::create([
             'email' => $request->email,
             'password' => bcrypt(str_random(9)),
@@ -145,14 +140,14 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $client = $user->userable()->clientsBySeqId($seq_id);
-        }else{
-            $client = $user->userable()->admin()->clientsBySeqId($seq_id);
-        }
+        JavaScript::put([
+            'click_url' => url('services').'/',
+        ]);
 
-        return view('clients.show',compact('client'));
+        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        $services = $client->services()->get();
+
+        return view('clients.show',compact('client', 'services'));
     }
 
     /**
@@ -170,14 +165,12 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $client = $user->userable()->clientsBySeqId($seq_id);
-        }else{
-            $client = $user->userable()->admin()->clientsBySeqId($seq_id);
-        }
+        $admin = $this->loggedUserAdministrator();
 
-        return view('clients.edit',compact('client'));
+        $client = $admin->clientsBySeqId($seq_id);
+        $services = $admin->services()->get();
+
+        return view('clients.edit',compact('client', 'services'));
     }
 
     /**
@@ -196,14 +189,8 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $client = $user->userable()->clientsBySeqId($seq_id);
-            $user = $client->user();
-        }else{
-            $client = $user->userable()->admin()->clientsBySeqId($seq_id);
-            $user = $client->user();
-        }
+        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        $user  = $client->user();
 
         $user->email = $request->email;
 
@@ -213,6 +200,7 @@ class ClientsController extends Controller
         $client->type = $request->type;
         $client->language = $request->language;
         $client->comments = $request->comments;
+        $client->setServices($request->services);
 
         $photo = true;
         if($request->photo){
@@ -244,12 +232,8 @@ class ClientsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $client = $user->userable()->clientsBySeqId($seq_id);
-        }else{
-            $client = $user->userable()->admin()->clientsBySeqId($seq_id);
-        }
+        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+
 
         if($client->delete()){
             flash()->success('Deleted', 'The client was successfuly deleted');

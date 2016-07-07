@@ -129,6 +129,22 @@
 								</div>
 							</div>
 
+							<div class="form-group row {{($errors->has('services'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Services:</label>
+								<div class="col-sm-10">
+									<select class="select2" multiple="multiple" name="services[]">
+										@foreach($services as $service)
+											<option value={{ $service->seq_id }} {{ ($client->hasService($service->seq_id)) ? 'selected' : ''}}>
+												{{ $service->seq_id.' '.$service->name }}
+											</option>
+										@endforeach
+									</select>
+									@if ($errors->has('services'))
+										<small class="text-muted">{{ $errors->first('services') }}</small>
+									@endif
+								</div>
+							</div>
+
 							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Comments:</label>
 								<div class="col-sm-10">
