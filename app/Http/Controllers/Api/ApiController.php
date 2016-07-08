@@ -105,10 +105,7 @@ class ApiController extends Controller
     public function loggedUserAdministrator()
     {
         $user = Auth::guard('api')->user();
-        if($user->isAdministrator()){
-            return $user->userable();
-        }
-        return $user->userable()->admin();
+        return $user->admin();
     }
 
     public function getUser()

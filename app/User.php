@@ -85,6 +85,23 @@ class User extends Authenticatable
         return $this->userable_type == "App\Technician";
     }
 
+    public function getFullName()
+    {
+        $object = $this->userable();
+        if($this->isAdministrator()){
+            return $object->name;
+        }
+        return $object->name.' '.$object->last_name;
+    }
+
+    public function admin()
+    {
+        if($this->isAdministrator()){
+            return $this->userable();
+        }
+        return $this->userable()->admin();
+    }
+
 
 
 }

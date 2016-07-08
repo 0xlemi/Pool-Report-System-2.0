@@ -10,7 +10,7 @@ use App\User;
 
 use App\Http\Requests;
 
-class UserController extends Controller
+class SettingsController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -29,8 +29,16 @@ class UserController extends Controller
      */
     public function settings()
     {
-    	$user = Auth::user();
-      return view('user.settings', compact('user'));
+        $user = Auth::user();
+        $admin = $user->admin();
+
+        $company_info = (object) array(
+            'website' => $user->admin()->website,
+            'facebook' => $user->admin()->facebook,
+            'twitter' => $user->admin()->twitter,
+        );
+
+        return view('settings.settings', compact('user', 'admin', 'company_info'));
     }
 
 
