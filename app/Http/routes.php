@@ -33,10 +33,12 @@ Route::resource('technicians', 'TechniciansController');
 
 Route::get('chat', 'ChatController@home');
 
-Route::get('settings', 'SettingsController@settings');
-Route::patch('settings/company', 'SettingsController@updateCompany');
-Route::patch('settings/email', 'SettingsController@updateEmail');
-Route::patch('settings/password', 'SettingsController@updatePassword');
+Route::get('settings', 'SettingsController@index');
+Route::patch('settings/account', 'SettingsController@account');
+Route::patch('settings/company', 'SettingsController@company');
+Route::patch('settings/email', 'SettingsController@email');
+Route::patch('settings/password', 'SettingsController@password');
+Route::post('settings/permissions', 'SettingsController@permissions');
 
 Route::group(['prefix' => 'api/v1'], function(){
 	Route::get('user', 'Api\SettingsController@information');

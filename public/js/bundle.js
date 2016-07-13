@@ -3527,6 +3527,307 @@ if (typeof window !== 'undefined') {
 }
 module.exports = exports['default'];
 },{"./modules/default-params":5,"./modules/handle-click":6,"./modules/handle-dom":7,"./modules/handle-key":8,"./modules/handle-swal-dom":9,"./modules/set-params":11,"./modules/utils":12}],14:[function(require,module,exports){
+var Vue // late bind
+var map = Object.create(null)
+var shimmed = false
+var isBrowserify = false
+
+/**
+ * Determine compatibility and apply patch.
+ *
+ * @param {Function} vue
+ * @param {Boolean} browserify
+ */
+
+exports.install = function (vue, browserify) {
+  if (shimmed) return
+  shimmed = true
+
+  Vue = vue
+  isBrowserify = browserify
+
+  exports.compatible = !!Vue.internalDirectives
+  if (!exports.compatible) {
+    console.warn(
+      '[HMR] vue-loader hot reload is only compatible with ' +
+      'Vue.js 1.0.0+.'
+    )
+    return
+  }
+
+  // patch view directive
+  patchView(Vue.internalDirectives.component)
+  console.log('[HMR] Vue component hot reload shim applied.')
+  // shim router-view if present
+  var routerView = Vue.elementDirective('router-view')
+  if (routerView) {
+    patchView(routerView)
+    console.log('[HMR] vue-router <router-view> hot reload shim applied.')
+  }
+}
+
+/**
+ * Shim the view directive (component or router-view).
+ *
+ * @param {Object} View
+ */
+
+function patchView (View) {
+  var unbuild = View.unbuild
+  View.unbuild = function (defer) {
+    if (!this.hotUpdating) {
+      var prevComponent = this.childVM && this.childVM.constructor
+      removeView(prevComponent, this)
+      // defer = true means we are transitioning to a new
+      // Component. Register this new component to the list.
+      if (defer) {
+        addView(this.Component, this)
+      }
+    }
+    // call original
+    return unbuild.call(this, defer)
+  }
+}
+
+/**
+ * Add a component view to a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function addView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    if (!map[id]) {
+      map[id] = {
+        Component: Component,
+        views: [],
+        instances: []
+      }
+    }
+    map[id].views.push(view)
+  }
+}
+
+/**
+ * Remove a component view from a Component's hot list
+ *
+ * @param {Function} Component
+ * @param {Directive} view - view directive instance
+ */
+
+function removeView (Component, view) {
+  var id = Component && Component.options.hotID
+  if (id) {
+    map[id].views.$remove(view)
+  }
+}
+
+/**
+ * Create a record for a hot module, which keeps track of its construcotr,
+ * instnaces and views (component directives or router-views).
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+exports.createRecord = function (id, options) {
+  if (typeof options === 'function') {
+    options = options.options
+  }
+  if (typeof options.el !== 'string' && typeof options.data !== 'object') {
+    makeOptionsHot(id, options)
+    map[id] = {
+      Component: null,
+      views: [],
+      instances: []
+    }
+  }
+}
+
+/**
+ * Make a Component options object hot.
+ *
+ * @param {String} id
+ * @param {Object} options
+ */
+
+function makeOptionsHot (id, options) {
+  options.hotID = id
+  injectHook(options, 'created', function () {
+    var record = map[id]
+    if (!record.Component) {
+      record.Component = this.constructor
+    }
+    record.instances.push(this)
+  })
+  injectHook(options, 'beforeDestroy', function () {
+    map[id].instances.$remove(this)
+  })
+}
+
+/**
+ * Inject a hook to a hot reloadable component so that
+ * we can keep track of it.
+ *
+ * @param {Object} options
+ * @param {String} name
+ * @param {Function} hook
+ */
+
+function injectHook (options, name, hook) {
+  var existing = options[name]
+  options[name] = existing
+    ? Array.isArray(existing)
+      ? existing.concat(hook)
+      : [existing, hook]
+    : [hook]
+}
+
+/**
+ * Update a hot component.
+ *
+ * @param {String} id
+ * @param {Object|null} newOptions
+ * @param {String|null} newTemplate
+ */
+
+exports.update = function (id, newOptions, newTemplate) {
+  var record = map[id]
+  // force full-reload if an instance of the component is active but is not
+  // managed by a view
+  if (!record || (record.instances.length && !record.views.length)) {
+    console.log('[HMR] Root or manually-mounted instance modified. Full reload may be required.')
+    if (!isBrowserify) {
+      window.location.reload()
+    } else {
+      // browserify-hmr somehow sends incomplete bundle if we reload here
+      return
+    }
+  }
+  if (!isBrowserify) {
+    // browserify-hmr already logs this
+    console.log('[HMR] Updating component: ' + format(id))
+  }
+  var Component = record.Component
+  // update constructor
+  if (newOptions) {
+    // in case the user exports a constructor
+    Component = record.Component = typeof newOptions === 'function'
+      ? newOptions
+      : Vue.extend(newOptions)
+    makeOptionsHot(id, Component.options)
+  }
+  if (newTemplate) {
+    Component.options.template = newTemplate
+  }
+  // handle recursive lookup
+  if (Component.options.name) {
+    Component.options.components[Component.options.name] = Component
+  }
+  // reset constructor cached linker
+  Component.linker = null
+  // reload all views
+  record.views.forEach(function (view) {
+    updateView(view, Component)
+  })
+  // flush devtools
+  if (window.__VUE_DEVTOOLS_GLOBAL_HOOK__) {
+    window.__VUE_DEVTOOLS_GLOBAL_HOOK__.emit('flush')
+  }
+}
+
+/**
+ * Update a component view instance
+ *
+ * @param {Directive} view
+ * @param {Function} Component
+ */
+
+function updateView (view, Component) {
+  if (!view._bound) {
+    return
+  }
+  view.Component = Component
+  view.hotUpdating = true
+  // disable transitions
+  view.vm._isCompiled = false
+  // save state
+  var state = extractState(view.childVM)
+  // remount, make sure to disable keep-alive
+  var keepAlive = view.keepAlive
+  view.keepAlive = false
+  view.mountComponent()
+  view.keepAlive = keepAlive
+  // restore state
+  restoreState(view.childVM, state, true)
+  // re-eanble transitions
+  view.vm._isCompiled = true
+  view.hotUpdating = false
+}
+
+/**
+ * Extract state from a Vue instance.
+ *
+ * @param {Vue} vm
+ * @return {Object}
+ */
+
+function extractState (vm) {
+  return {
+    cid: vm.constructor.cid,
+    data: vm.$data,
+    children: vm.$children.map(extractState)
+  }
+}
+
+/**
+ * Restore state to a reloaded Vue instance.
+ *
+ * @param {Vue} vm
+ * @param {Object} state
+ */
+
+function restoreState (vm, state, isRoot) {
+  var oldAsyncConfig
+  if (isRoot) {
+    // set Vue into sync mode during state rehydration
+    oldAsyncConfig = Vue.config.async
+    Vue.config.async = false
+  }
+  // actual restore
+  if (isRoot || !vm._props) {
+    vm.$data = state.data
+  } else {
+    Object.keys(state.data).forEach(function (key) {
+      if (!vm._props[key]) {
+        // for non-root, only restore non-props fields
+        vm.$data[key] = state.data[key]
+      }
+    })
+  }
+  // verify child consistency
+  var hasSameChildren = vm.$children.every(function (c, i) {
+    return state.children[i] && state.children[i].cid === c.constructor.cid
+  })
+  if (hasSameChildren) {
+    // rehydrate children
+    vm.$children.forEach(function (c, i) {
+      restoreState(c, state.children[i])
+    })
+  }
+  if (isRoot) {
+    Vue.config.async = oldAsyncConfig
+  }
+}
+
+function format (id) {
+  var match = id.match(/[^\/]+\.vue$/)
+  return match ? match[0] : id
+}
+
+},{}],15:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -3546,7 +3847,7 @@ module.exports = {
 
 };
 
-},{"../util":37}],15:[function(require,module,exports){
+},{"../util":38}],16:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -3613,7 +3914,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":30,"../../util":37,"./xhr":18}],16:[function(require,module,exports){
+},{"../../promise":31,"../../util":38,"./xhr":19}],17:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -3663,7 +3964,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":30,"../../util":37}],17:[function(require,module,exports){
+},{"../../promise":31,"../../util":38}],18:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -3702,7 +4003,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":30,"../../util":37}],18:[function(require,module,exports){
+},{"../../promise":31,"../../util":38}],19:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -3754,7 +4055,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":30,"../../util":37}],19:[function(require,module,exports){
+},{"../../promise":31,"../../util":38}],20:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -3793,7 +4094,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":37,"./client/xdr":17}],20:[function(require,module,exports){
+},{"../util":38,"./client/xdr":18}],21:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -3821,7 +4122,7 @@ module.exports = {
 
 };
 
-},{"../util":37}],21:[function(require,module,exports){
+},{"../util":38}],22:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -3921,7 +4222,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":30,"../util":37,"./before":14,"./client":15,"./cors":19,"./header":20,"./interceptor":22,"./jsonp":23,"./method":24,"./mime":25,"./timeout":26}],22:[function(require,module,exports){
+},{"../promise":31,"../util":38,"./before":15,"./client":16,"./cors":20,"./header":21,"./interceptor":23,"./jsonp":24,"./method":25,"./mime":26,"./timeout":27}],23:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -3968,7 +4269,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":30,"../util":37}],23:[function(require,module,exports){
+},{"../promise":31,"../util":38}],24:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -3988,7 +4289,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":16}],24:[function(require,module,exports){
+},{"./client/jsonp":17}],25:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -4007,7 +4308,7 @@ module.exports = {
 
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -4045,7 +4346,7 @@ module.exports = {
 
 };
 
-},{"../util":37}],26:[function(require,module,exports){
+},{"../util":38}],27:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -4077,7 +4378,7 @@ module.exports = function () {
     };
 };
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -4132,7 +4433,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":21,"./promise":30,"./resource":31,"./url":32,"./util":37}],28:[function(require,module,exports){
+},{"./http":22,"./promise":31,"./resource":32,"./url":33,"./util":38}],29:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -4313,7 +4614,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":37}],29:[function(require,module,exports){
+},{"../util":38}],30:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -4465,7 +4766,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -4576,7 +4877,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":28,"./util":37}],31:[function(require,module,exports){
+},{"./lib/promise":29,"./util":38}],32:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -4688,7 +4989,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":37}],32:[function(require,module,exports){
+},{"./util":38}],33:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -4820,7 +5121,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":37,"./legacy":33,"./query":34,"./root":35,"./template":36}],33:[function(require,module,exports){
+},{"../util":38,"./legacy":34,"./query":35,"./root":36,"./template":37}],34:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -4868,7 +5169,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":37}],34:[function(require,module,exports){
+},{"../util":38}],35:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -4894,7 +5195,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":37}],35:[function(require,module,exports){
+},{"../util":38}],36:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -4912,7 +5213,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":37}],36:[function(require,module,exports){
+},{"../util":38}],37:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -4930,7 +5231,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":29}],37:[function(require,module,exports){
+},{"../lib/url-template":30}],38:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -5054,7 +5355,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.21
@@ -14980,7 +15281,27 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":4}],39:[function(require,module,exports){
+},{"_process":4}],40:[function(require,module,exports){
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],41:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -15161,7 +15482,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 }();
 
-},{}],40:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 /* ===========================================================
@@ -15330,7 +15651,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -15891,7 +16212,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],42:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;}; /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * version: 1.10.0
@@ -15997,11 +16318,193 @@ $(function(){$('[data-toggle="table"]').bootstrapTable();});}(jQuery); /*
  * Table export
  */(function(c){c.fn.extend({tableExport:function tableExport(p){function y(b,u,d,e,k){if(-1==c.inArray(d,a.ignoreRow)&&-1==c.inArray(d-e,a.ignoreRow)){var L=c(b).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display")||"always"==c(this).closest("table").data("tableexport-display"));}).find(u),f=0;L.each(function(b){if(("always"==c(this).data("tableexport-display")||"none"!=c(this).css("display")&&"hidden"!=c(this).css("visibility")&&"none"!=c(this).data("tableexport-display"))&&-1==c.inArray(b,a.ignoreColumn)&&-1==c.inArray(b-L.length,a.ignoreColumn)&&"function"===typeof k){var e,u=0,g,h=0;if("undefined"!=typeof B[d]&&0<B[d].length)for(e=0;e<=b;e++){"undefined"!=typeof B[d][e]&&(k(null,d,e),delete B[d][e],b++);}c(this).is("[colspan]")&&(u=parseInt(c(this).attr("colspan")),f+=0<u?u-1:0);c(this).is("[rowspan]")&&(h=parseInt(c(this).attr("rowspan")));k(this,d,b);for(e=0;e<u-1;e++){k(null,d,b+e);}if(h)for(g=1;g<h;g++){for("undefined"==typeof B[d+g]&&(B[d+g]=[]),B[d+g][b+f]="",e=1;e<u;e++){B[d+g][b+f-e]="";}}}});}}function M(b){!0===a.consoleLog&&console.log(b.output());if("string"===a.outputMode)return b.output();if("base64"===a.outputMode)return C(b.output());try{var u=b.output("blob");saveAs(u,a.fileName+".pdf");}catch(d){D(a.fileName+".pdf","data:application/pdf;base64,",b.output());}}function N(b,a,d){var e=0;"undefined"!=typeof d&&(e=d.colspan);if(0<=e){for(var k=b.width,c=b.textPos.x,f=a.table.columns.indexOf(a.column),g=1;g<e;g++){k+=a.table.columns[f+g].width;}1<e&&("right"===b.styles.halign?c=b.textPos.x+k-b.width:"center"===b.styles.halign&&(c=b.textPos.x+(k-b.width)/2));b.width=k;b.textPos.x=c;"undefined"!=typeof d&&1<d.rowspan&&("middle"===b.styles.valign?b.textPos.y+=b.height*(d.rowspan-1)/2:"bottom"===b.styles.valign&&(b.textPos.y+=(d.rowspan-1)*b.height),b.height*=d.rowspan);if("middle"===b.styles.valign||"bottom"===b.styles.valign)d=("string"===typeof b.text?b.text.split(/\r\n|\r|\n/g):b.text).length||1,2<d&&(b.textPos.y-=(2-1.15)/2*a.row.styles.fontSize*(d-2)/3);return !0;}return !1;}function J(b,a,d){return b.replace(new RegExp(a.replace(/([.*+?^=!:${}()|\[\]\/\\])/g,"\\$1"),"g"),d);}function V(b){b=J(b||"0",a.numbers.html.decimalMark,".");b=J(b,a.numbers.html.thousandsSeparator,"");return "number"===typeof b||!1!==jQuery.isNumeric(b)?b:!1;}function v(b,u,d){var e="";if(null!=b){b=c(b);var k=b.html();"function"===typeof a.onCellHtmlData&&(k=a.onCellHtmlData(b,u,d,k));if(!0===a.htmlContent)e=c.trim(k);else {var f=k.replace(/\n/g,'\u2028').replace(/<br\s*[\/]?>/gi,'⁠'),k=c("<div/>").html(f).contents(),f="";c.each(k.text().split('\u2028'),function(b,a){0<b&&(f+=" ");f+=c.trim(a);});c.each(f.split('⁠'),function(b,a){0<b&&(e+="\n");e+=c.trim(a).replace(/\u00AD/g,"");});if(a.numbers.html.decimalMark!=a.numbers.output.decimalMark||a.numbers.html.thousandsSeparator!=a.numbers.output.thousandsSeparator)if(k=V(e),!1!==k){var g=(""+k).split(".");1==g.length&&(g[1]="");var h=3<g[0].length?g[0].length%3:0,e=(0>k?"-":"")+(a.numbers.output.thousandsSeparator?(h?g[0].substr(0,h)+a.numbers.output.thousandsSeparator:"")+g[0].substr(h).replace(/(\d{3})(?=\d)/g,"$1"+a.numbers.output.thousandsSeparator):g[0])+(g[1].length?a.numbers.output.decimalMark+g[1]:"");}}!0===a.escape&&(e=escape(e));"function"===typeof a.onCellData&&(e=a.onCellData(b,u,d,e));}return e;}function W(b,a,d){return a+"-"+d.toLowerCase();}function O(b,a){var d=/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(b),e=a;d&&(e=[parseInt(d[1]),parseInt(d[2]),parseInt(d[3])]);return e;}function P(b){var a=E(b,"text-align"),d=E(b,"font-weight"),e=E(b,"font-style"),k="";"start"==a&&(a="rtl"==E(b,"direction")?"right":"left");700<=d&&(k="bold");"italic"==e&&(k+=e);""==k&&(k="normal");return {style:{align:a,bcolor:O(E(b,"background-color"),[255,255,255]),color:O(E(b,"color"),[0,0,0]),fstyle:k},colspan:parseInt(c(b).attr("colspan"))||0,rowspan:parseInt(c(b).attr("rowspan"))||0};}function E(b,a){try{return window.getComputedStyle?(a=a.replace(/([a-z])([A-Z])/,W),window.getComputedStyle(b,null).getPropertyValue(a)):b.currentStyle?b.currentStyle[a]:b.style[a];}catch(d){}return "";}function K(b,a,d){a=E(b,a).match(/\d+/);if(null!==a){a=a[0];var e=document.createElement("div");e.style.overflow="hidden";e.style.visibility="hidden";b.parentElement.appendChild(e);e.style.width=100+d;d=100/e.offsetWidth;b.parentElement.removeChild(e);return a*d;}return 0;}function D(a,c,d){var e=window.navigator.userAgent;if(0<e.indexOf("MSIE ")||e.match(/Trident.*rv\:11\./)){if(c=document.createElement("iframe"))document.body.appendChild(c),c.setAttribute("style","display:none"),c.contentDocument.open("txt/html","replace"),c.contentDocument.write(d),c.contentDocument.close(),c.focus(),c.contentDocument.execCommand("SaveAs",!0,a),document.body.removeChild(c);}else if(e=document.createElement("a")){e.style.display="none";e.download=a;0<=c.toLowerCase().indexOf("base64,")?e.href=c+C(d):e.href=c+encodeURIComponent(d);document.body.appendChild(e);if(document.createEvent)null==H&&(H=document.createEvent("MouseEvents")),H.initEvent("click",!0,!1),e.dispatchEvent(H);else if(document.createEventObject)e.fireEvent("onclick");else if("function"==typeof e.onclick)e.onclick();document.body.removeChild(e);}}function C(a){var c="",d,e,k,g,f,h,l=0;a=a.replace(/\x0d\x0a/g,"\n");e="";for(k=0;k<a.length;k++){g=a.charCodeAt(k),128>g?e+=String.fromCharCode(g):(127<g&&2048>g?e+=String.fromCharCode(g>>6|192):(e+=String.fromCharCode(g>>12|224),e+=String.fromCharCode(g>>6&63|128)),e+=String.fromCharCode(g&63|128));}for(a=e;l<a.length;){d=a.charCodeAt(l++),e=a.charCodeAt(l++),k=a.charCodeAt(l++),g=d>>2,d=(d&3)<<4|e>>4,f=(e&15)<<2|k>>6,h=k&63,isNaN(e)?f=h=64:isNaN(k)&&(h=64),c=c+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(g)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(f)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h);}return c;}var a={consoleLog:!1,csvEnclosure:'"',csvSeparator:",",csvUseBOM:!0,displayTableName:!1,escape:!1,excelstyles:["border-bottom","border-top","border-left","border-right"],fileName:"tableExport",htmlContent:!1,ignoreColumn:[],ignoreRow:[],jspdf:{orientation:"p",unit:"pt",format:"a4",margins:{left:20,right:10,top:10,bottom:10},autotable:{styles:{cellPadding:2,rowHeight:12,fontSize:8,fillColor:255,textColor:50,fontStyle:"normal",overflow:"ellipsize",halign:"left",valign:"middle"},headerStyles:{fillColor:[52,73,94],textColor:255,fontStyle:"bold",halign:"center"},alternateRowStyles:{fillColor:245},tableExport:{onAfterAutotable:null,onBeforeAutotable:null,onTable:null}}},numbers:{html:{decimalMark:".",thousandsSeparator:","},output:{decimalMark:".",thousandsSeparator:","}},onCellData:null,onCellHtmlData:null,outputMode:"file",tbodySelector:"tr",theadSelector:"tr",tableName:"myTableName",type:"csv",worksheetName:"xlsWorksheetName"},r=this,H=null,q=[],n=[],m=0,B=[],g="";c.extend(!0,a,p);if("csv"==a.type||"txt"==a.type){p=function p(b,f,d,e){n=c(r).find(b).first().find(f);n.each(function(){g="";y(this,d,m,e+n.length,function(b,e,d){var c=g,f="";if(null!=b)if(b=v(b,e,d),e=null===b||""==b?"":b.toString(),b instanceof Date)f=a.csvEnclosure+b.toLocaleString()+a.csvEnclosure;else if(f=J(e,a.csvEnclosure,a.csvEnclosure+a.csvEnclosure),0<=f.indexOf(a.csvSeparator)||/[\r\n ]/g.test(f))f=a.csvEnclosure+f+a.csvEnclosure;g=c+(f+a.csvSeparator);});g=c.trim(g).substring(0,g.length-1);0<g.length&&(0<w.length&&(w+="\n"),w+=g);m++;});return n.length;};var w="",z=0,m=0,z=z+p("thead",a.theadSelector,"th,td",z),z=z+p("tbody",a.tbodySelector,"td",z);p("tfoot",a.tbodySelector,"td",z);w+="\n";!0===a.consoleLog&&console.log(w);if("string"===a.outputMode)return w;if("base64"===a.outputMode)return C(w);try{var A=new Blob([w],{type:"text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8"});saveAs(A,a.fileName+"."+a.type,"csv"!=a.type||!1===a.csvUseBOM);}catch(b){D(a.fileName+"."+a.type,"data:text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8,"+("csv"==a.type&&a.csvUseBOM?'﻿':""),w);}}else if("sql"==a.type){var m=0,l="INSERT INTO `"+a.tableName+"` (",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,q.length,function(a,c,d){l+="'"+v(a,c,d)+"',";});m++;l=c.trim(l);l=c.trim(l).substring(0,l.length-1);});l+=") VALUES ";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(a,c,d){g+="'"+v(a,c,d)+"',";});3<g.length&&(l+="("+g,l=c.trim(l).substring(0,l.length-1),l+="),");m++;});l=c.trim(l).substring(0,l.length-1);l+=";";!0===a.consoleLog&&console.log(l);if("string"===a.outputMode)return l;if("base64"===a.outputMode)return C(l);try{A=new Blob([l],{type:"text/plain;charset=utf-8"}),saveAs(A,a.fileName+".sql");}catch(b){D(a.fileName+".sql","data:application/sql;charset=utf-8,",l);}}else if("json"==a.type){var Q=[],q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){var a=[];y(this,"th,td",m,q.length,function(c,d,e){a.push(v(c,d,e));});Q.push(a);});var R=[],n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=[];y(this,"td",m,q.length+n.length,function(c,d,e){a.push(v(c,d,e));});0<a.length&&(1!=a.length||""!=a[0])&&R.push(a);m++;});p=[];p.push({header:Q,data:R});p=JSON.stringify(p);!0===a.consoleLog&&console.log(p);if("string"===a.outputMode)return p;if("base64"===a.outputMode)return C(p);try{A=new Blob([p],{type:"application/json;charset=utf-8"}),saveAs(A,a.fileName+".json");}catch(b){D(a.fileName+".json","data:application/json;charset=utf-8;base64,",p);}}else if("xml"===a.type){var m=0,t='<?xml version="1.0" encoding="utf-8"?>',t=t+"<tabledata><fields>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,n.length,function(a,c,d){t+="<field>"+v(a,c,d)+"</field>";});m++;});var t=t+"</fields><data>",S=1,n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=1;g="";y(this,"td",m,q.length+n.length,function(c,d,e){g+="<column-"+a+">"+v(c,d,e)+"</column-"+a+">";a++;});0<g.length&&"<column-1></column-1>"!=g&&(t+='<row id="'+S+'">'+g+"</row>",S++);m++;});t+="</data></tabledata>";!0===a.consoleLog&&console.log(t);if("string"===a.outputMode)return t;if("base64"===a.outputMode)return C(t);try{A=new Blob([t],{type:"application/xml;charset=utf-8"}),saveAs(A,a.fileName+".xml");}catch(b){D(a.fileName+".xml","data:application/xml;charset=utf-8;base64,",t);}}else if("excel"==a.type||"xls"==a.type||"word"==a.type||"doc"==a.type){p="excel"==a.type||"xls"==a.type?"excel":"word";var z="excel"==p?"xls":"doc",f="xls"==z?'xmlns:x="urn:schemas-microsoft-com:office:excel"':'xmlns:w="urn:schemas-microsoft-com:office:word"',m=0,x="<table><thead>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){g="";y(this,"th,td",m,q.length,function(b,f,d){if(null!=b){g+='<th style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</th>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});x+="</thead><tbody>";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(b,f,d){if(null!=b){g+='<td style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</td>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});a.displayTableName&&(x+="<tr><td></td></tr><tr><td></td></tr><tr><td>"+v(c("<p>"+a.tableName+"</p>"))+"</td></tr>");x+="</tbody></table>";!0===a.consoleLog&&console.log(x);f='<html xmlns:o="urn:schemas-microsoft-com:office:office" '+f+' xmlns="http://www.w3.org/TR/REC-html40">'+('<meta http-equiv="content-type" content="application/vnd.ms-'+p+'; charset=UTF-8">');f+="<head>";"excel"===p&&(f+="\x3c!--[if gte mso 9]>",f+="<xml>",f+="<x:ExcelWorkbook>",f+="<x:ExcelWorksheets>",f+="<x:ExcelWorksheet>",f+="<x:Name>",f+=a.worksheetName,f+="</x:Name>",f+="<x:WorksheetOptions>",f+="<x:DisplayGridlines/>",f+="</x:WorksheetOptions>",f+="</x:ExcelWorksheet>",f+="</x:ExcelWorksheets>",f+="</x:ExcelWorkbook>",f+="</xml>",f+="<![endif]--\x3e");f+="</head>";f+="<body>";f+=x;f+="</body>";f+="</html>";!0===a.consoleLog&&console.log(f);if("string"===a.outputMode)return f;if("base64"===a.outputMode)return C(f);try{A=new Blob([f],{type:"application/vnd.ms-"+a.type}),saveAs(A,a.fileName+"."+z);}catch(b){D(a.fileName+"."+z,"data:application/vnd.ms-"+p+";base64,",f);}}else if("png"==a.type)html2canvas(c(r)[0],{allowTaint:!0,background:"#fff",onrendered:function onrendered(b){b=b.toDataURL();b=b.substring(22);for(var c=atob(b),d=new ArrayBuffer(c.length),e=new Uint8Array(d),f=0;f<c.length;f++){e[f]=c.charCodeAt(f);}!0===a.consoleLog&&console.log(c);if("string"===a.outputMode)return c;if("base64"===a.outputMode)return C(b);try{var g=new Blob([d],{type:"image/png"});saveAs(g,a.fileName+".png");}catch(h){D(a.fileName+".png","data:image/png;base64,",b);}}});else if("pdf"==a.type)if(!1===a.jspdf.autotable){var A={dim:{w:K(c(r).first().get(0),"width","mm"),h:K(c(r).first().get(0),"height","mm")},pagesplit:!1},T=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);T.addHTML(c(r).first(),a.jspdf.margins.left,a.jspdf.margins.top,A,function(){M(T);});}else {var h=a.jspdf.autotable.tableExport;if("string"===typeof a.jspdf.format&&"bestfit"===a.jspdf.format.toLowerCase()){var F={a0:[2383.94,3370.39],a1:[1683.78,2383.94],a2:[1190.55,1683.78],a3:[841.89,1190.55],a4:[595.28,841.89]},I="",G="",U=0;c(r).filter(":visible").each(function(){if("none"!=c(this).css("display")){var a=K(c(this).get(0),"width","pt");if(a>U){a>F.a0[0]&&(I="a0",G="l");for(var f in F){F.hasOwnProperty(f)&&F[f][1]>a&&(I=f,G="l",F[f][0]>a&&(G="p"));}U=a;}}});a.jspdf.format=""==I?"a4":I;a.jspdf.orientation=""==G?"w":G;}h.doc=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);c(r).filter(function(){return "none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display"));}).each(function(){var b,f=0;h.columns=[];h.rows=[];h.rowoptions={};if("function"===typeof h.onTable&&!1===h.onTable(c(this),a))return !0;a.jspdf.autotable.tableExport=null;var d=c.extend(!0,{},a.jspdf.autotable);a.jspdf.autotable.tableExport=h;d.margin={};c.extend(!0,d.margin,a.jspdf.margins);d.tableExport=h;"function"!==typeof d.beforePageContent&&(d.beforePageContent=function(a){1==a.pageCount&&a.table.rows.concat(a.table.headerRow).forEach(function(b){0<b.height&&(b.height+=(2-1.15)/2*b.styles.fontSize,a.table.height+=(2-1.15)/2*b.styles.fontSize);});});"function"!==typeof d.createdHeaderCell&&(d.createdHeaderCell=function(a,b){if("undefined"!=typeof h.columns[b.column.dataKey]){var c=h.columns[b.column.dataKey];a.styles.halign=c.style.align;"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor);"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color);"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle);}});"function"!==typeof d.createdCell&&(d.createdCell=function(a,b){var c=h.rowoptions[b.row.index+":"+b.column.dataKey];"undefined"!=typeof c&&"undefined"!=typeof c.style&&(a.styles.halign=c.style.align,"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor),"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color),"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle));});"function"!==typeof d.drawHeaderCell&&(d.drawHeaderCell=function(a,b){var c=h.columns[b.column.dataKey];return 1!=c.style.hasOwnProperty("hidden")||!0!==c.style.hidden?N(a,b,c):!1;});"function"!==typeof d.drawCell&&(d.drawCell=function(a,b){return N(a,b,h.rowoptions[b.row.index+":"+b.column.dataKey]);});q=c(this).find("thead").find(a.theadSelector);q.each(function(){b=0;y(this,"th,td",f,q.length,function(a,c,e){var d=P(a);d.title=v(a,c,e);d.key=b++;h.columns.push(d);});f++;});var e=0;n=c(this).find("tbody").find(a.tbodySelector);n.each(function(){var a=[];b=0;y(this,"td",f,q.length+n.length,function(d,f,g){if("undefined"===typeof h.columns[b]){var l={title:"",key:b,style:{hidden:!0}};h.columns.push(l);}null!==d?h.rowoptions[e+":"+b++]=P(d):(l=c.extend(!0,{},h.rowoptions[e+":"+(b-1)]),l.colspan=-1,h.rowoptions[e+":"+b++]=l);a.push(v(d,f,g));});a.length&&(h.rows.push(a),e++);f++;});if("function"===typeof h.onBeforeAutotable)h.onBeforeAutotable(c(this),h.columns,h.rows,d);h.doc.autoTable(h.columns,h.rows,d);if("function"===typeof h.onAfterAutotable)h.onAfterAutotable(c(this),d);a.jspdf.autotable.startY=h.doc.autoTableEndPosY()+d.margin.top;});M(h.doc);h.columns.length=0;h.rows.length=0;delete h.doc;h.doc=null;}return this;}});})(jQuery);
 
-},{}],43:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: red;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  props: ['admin', 'permissionType'],
+  data: function data() {
+    return {
+      permission_reports: [{ id: this.permissionType + "_report_index", name: "View List Reports", checked: this.admin[this.permissionType + '_report_index'] }, { id: this.permissionType + "_report_create", name: "Create New Report", checked: this.admin[this.permissionType + '_report_create'] }, { id: this.permissionType + "_report_show", name: "Show Report Details", checked: this.admin[this.permissionType + '_report_show'] }, { id: this.permissionType + "_report_edit", name: "Edit Reports", checked: this.admin[this.permissionType + '_report_edit'] }, { id: this.permissionType + "_report_addPhoto", name: "Add Photos from Reports", checked: this.admin[this.permissionType + '_report_addPhoto'] }, { id: this.permissionType + "_report_removePhoto", name: "Remove Photos from Reports", checked: this.admin[this.permissionType + '_report_removePhoto'] }, { id: this.permissionType + "_report_destroy", name: "Delete Report", checked: this.admin[this.permissionType + '_report_destroy'] }], permission_services: [{ id: this.permissionType + "_service_index", name: "View List Services", checked: this.admin[this.permissionType + '_service_index'] }, { id: this.permissionType + "_service_create", name: "Create New Service", checked: this.admin[this.permissionType + '_service_create'] }, { id: this.permissionType + "_service_show", name: "Show Service Details", checked: this.admin[this.permissionType + '_service_show'] }, { id: this.permissionType + "_service_edit", name: "Edit Services", checked: this.admin[this.permissionType + '_service_edit'] }, { id: this.permissionType + "_service_destroy", name: "Delete Service", checked: this.admin[this.permissionType + '_service_destroy'] }], permission_clients: [{ id: this.permissionType + "_client_index", name: "View List Clients", checked: this.admin[this.permissionType + '_client_index'] }, { id: this.permissionType + "_client_create", name: "Create New Client", checked: this.admin[this.permissionType + '_client_create'] }, { id: this.permissionType + "_client_show", name: "Show Client Details", checked: this.admin[this.permissionType + '_client_show'] }, { id: this.permissionType + "_client_edit", name: "Edit Clients", checked: this.admin[this.permissionType + '_client_edit'] }, { id: this.permissionType + "_client_destroy", name: "Delete Client", checked: this.admin[this.permissionType + '_client_destroy'] }], permission_supervisors: [{ id: this.permissionType + "_supervisor_index", name: "View List Supervisors", checked: this.admin[this.permissionType + '_supervisor_index'] }, { id: this.permissionType + "_supervisor_create", name: "Create New Supervisor", checked: this.admin[this.permissionType + '_supervisor_create'] }, { id: this.permissionType + "_supervisor_show", name: "Show Supervisor Details", checked: this.admin[this.permissionType + '_supervisor_show'] }, { id: this.permissionType + "_supervisor_edit", name: "Edit Supervisors", checked: this.admin[this.permissionType + '_supervisor_edit'] }, { id: this.permissionType + "_supervisor_destroy", name: "Delete Supervisor", checked: this.admin[this.permissionType + '_supervisor_destroy'] }], permission_technicians: [{ id: this.permissionType + "_technician_index", name: "View List Technicians", checked: this.admin[this.permissionType + '_technician_index'] }, { id: this.permissionType + "_technician_create", name: "Create New Technician", checked: this.admin[this.permissionType + '_technician_create'] }, { id: this.permissionType + "_technician_show", name: "Show Technician Details", checked: this.admin[this.permissionType + '_technician_show'] }, { id: this.permissionType + "_technician_edit", name: "Edit Technicians", checked: this.admin[this.permissionType + '_technician_edit'] }, { id: this.permissionType + "_technician_destroy", name: "Delete Technician", checked: this.admin[this.permissionType + '_technician_destroy'] }]
+    };
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :header=\"'Reports'\" :data=\"permission_reports\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Services'\" :data=\"permission_services\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Clients'\" :data=\"permission_clients\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Supervisors'\" :data=\"permission_supervisors\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Technicians'\" :data=\"permission_technicians\" _v-22ce5c3f=\"\"></checkbox-list>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nh1[_v-22ce5c3f] {\n  color: red;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-22ce5c3f", module.exports)
+  } else {
+    hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":39,"vue-hot-reload-api":14,"vueify/lib/insert-css":40}],46:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Vue = require('vue');
+
+exports.default = Vue.component('checkbox-list', {
+    props: ['header', 'data'],
+
+    data: function data() {
+        return {
+            debug: {}
+        };
+    },
+
+
+    methods: {
+        sendRequest: function sendRequest(permission) {
+            // HTTP Request or what ever to update the permission
+            $.ajax({
+                url: 'http://prs.dev/settings/permissions',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'id': permission.id,
+                    'checked': permission.checked,
+                    'name': permission.name
+                },
+                complete: function complete(xhr, textStatus) {
+                    //called when complete
+                    // console.log('complete');
+                },
+                success: function success(data, textStatus, xhr) {
+                    //called when successful
+                    // console.log('success');
+                },
+                error: function error(xhr, textStatus, errorThrown) {
+                    //called when there is an error
+                    // console.log('error');
+                }
+            });
+        }
+    }
+});
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<header class=\"box-typical-header-sm\">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:\n</header>\n\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-sm-1\">\n    </div>\n    <div class=\"col-sm-11\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;permission.id }}\" v-model=\"permission.checked\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;permission.id }}\">{{&nbsp;permission.name }}</label>\n\t\t</div>\n    </div>\n</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-0b82fa36", module.exports)
+  } else {
+    hotAPI.update("_v-0b82fa36", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":39,"vue-hot-reload-api":14}],47:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var Vue = require('vue');
+
+exports.default = Vue.directive('ajax', {
+    params: ['title', 'message'],
+    http: {
+        headers: {
+            // You could also store your token in a global object,
+            // and reference it here. APP.token
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : ''
+        }
+    },
+
+    bind: function bind() {
+        this.el.addEventListener('submit', this.onSubmit.bind(this));
+    },
+
+    onSubmit: function onSubmit(e) {
+        e.preventDefault();
+        var requestType = this.getRequestType();
+
+        this.vm.$http[requestType](this.el.action, this.getFormData()).then(this.onComplete.bind(this)).catch(this.onError.bind(this));
+    },
+
+    onComplete: function onComplete() {
+        if (this.params.title && this.params.message) {
+            swal({
+                title: this.params.title,
+                text: this.params.message,
+                type: 'success',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+    },
+
+    onError: function onError(response) {
+        // first show validation errors
+        var errors = '';
+        $.each(response.data, function (key, value) {
+            errors += value + '\n';
+        });
+        swal("Oops, there was an error", errors, "error");
+    },
+
+    getRequestType: function getRequestType() {
+        var method = this.el.querySelector('input[name="_method"]');
+
+        return (method ? method.value : this.el.method).toLowerCase();
+    },
+    getFormData: function getFormData() {
+        // You can use $(this.el) in jQuery and you will get the same thing.
+        var serializedData = $(this.el).serializeArray();
+        var objectData = {};
+        $.each(serializedData, function () {
+            if (objectData[this.name] !== undefined) {
+                if (!objectData[this.name].push) {
+                    objectData[this.name] = [objectData[this.name]];
+                }
+                objectData[this.name].push(this.value || '');
+            } else {
+                objectData[this.name] = this.value || '';
+            }
+        });
+        return objectData;
+    }
+});
+if (module.exports.__esModule) module.exports = module.exports.default
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-3eff3ff4", module.exports)
+  } else {
+    hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":39,"vue-hot-reload-api":14}],48:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
+
+// Vue imports
 var Vue = require('vue');
+var Permissions = require('./components/Permissions.vue');
+var FormToAjax = require('./directives/FormToAjax.vue');
+require('./components/checkboxList.vue');
+
 var Dropzone = require("dropzone");
 var swal = require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -16009,6 +16512,11 @@ Vue.use(require('vue-resource'));
 
 $(document).ready(function () {
 	// var dateFormat = require('dateformat');
+
+	// set th CSRF_TOKEN for ajax requests
+	$.ajaxSetup({
+		headers: { 'X-CSRF-TOKEN': document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '' }
+	});
 
 	/* ==========================================================================
     Custom functions
@@ -16030,72 +16538,11 @@ $(document).ready(function () {
     VueJs code
     ========================================================================== */
 
-	Vue.directive('ajax', {
-		params: ['title', 'message'],
-
-		bind: function bind() {
-			$(this.el).on('submit', this.onSubmit.bind(this));
-		},
-		update: function update() {},
-		onSubmit: function onSubmit(e) {
-			e.preventDefault();
-			var requestType = this.getRequestType();
-
-			this.vm.$http[requestType](this.el.action, this.getFormData()).then(this.onComplete.bind(this)).catch(this.onError.bind(this));
-		},
-		onComplete: function onComplete() {
-			// console.log(this.params.title);
-			if (this.params.title && this.params.message) {
-				swal({
-					title: this.params.title,
-					text: this.params.message,
-					type: 'success',
-					timer: 2000,
-					showConfirmButton: false
-				});
-			}
-		},
-
-		onError: function onError(response) {
-			// first show validation errors
-			var errors = '';
-			$.each(response.data, function (key, value) {
-				errors += value + '\n';
-			});
-			swal("Oops...", errors, "error");
-		},
-		getRequestType: function getRequestType() {
-			var method = this.el.querySelector('input[name="_method"]');
-			return (method ? method.value : this.el.method).toLowerCase();
-		},
-		getFormData: function getFormData() {
-			// You can use $(this.el) in jQuery and you will get the same thing.
-			var serializedData = $(this.el).serializeArray();
-			var objectData = {};
-			$.each(serializedData, function () {
-				if (objectData[this.name] !== undefined) {
-					if (!objectData[this.name].push) {
-						objectData[this.name] = [objectData[this.name]];
-					}
-					objectData[this.name].push(this.value || '');
-				} else {
-					objectData[this.name] = this.value || '';
-				}
-			});
-			return objectData;
-		}
-
-	});
-
 	new Vue({
 		el: 'body',
-		http: {
-			headers: {
-				// You could also store your token in a global object,
-				// and reference it here. APP.token
-				'X-CSRF-TOKEN': document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : ''
-			}
-		}
+		components: { Permissions: Permissions },
+		directives: { FormToAjax: FormToAjax }
+
 	});
 
 	/* ==========================================================================
@@ -17174,6 +17621,10 @@ $(document).ready(function () {
 	});
 
 	/* ==========================================================================
+     Settings Forms Events
+     ========================================================================== */
+
+	/* ==========================================================================
      Maxlenght and Hide Show Password
      ========================================================================== */
 
@@ -17287,6 +17738,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":38,"vue-resource":27}]},{},[42,40,39,41,43]);
+},{"./components/Permissions.vue":45,"./components/checkboxList.vue":46,"./directives/FormToAjax.vue":47,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"sweetalert":13,"vue":39,"vue-resource":28}]},{},[44,42,41,43,48]);
 
 //# sourceMappingURL=bundle.js.map

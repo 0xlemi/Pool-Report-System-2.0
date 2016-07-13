@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 
+use App\PRS\Traits\ControllerTrait;
+
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use Validator;
@@ -20,7 +22,7 @@ class ApiController extends Controller
      */
     protected $statusCode = 200;
 
-
+    use ControllerTrait;
 
 
     /**
@@ -100,17 +102,6 @@ class ApiController extends Controller
 
     public function respond($data, $headers = []){
         return Response::json($data, $this->getStatusCode(), $headers);
-    }
-
-    public function loggedUserAdministrator()
-    {
-        $user = Auth::guard('api')->user();
-        return $user->admin();
-    }
-
-    public function getUser()
-    {
-        return Auth::guard('api')->user();
     }
 
     // public function checkValidation($validator)

@@ -23,6 +23,14 @@ class Administrator extends Model
     ];
 
     /**
+     * hidden variables
+     * @var array
+     */
+	protected $hidden = [
+		  
+	];
+
+    /**
      * Get the user this administrator is morphed by
      * @return $user
      * tested

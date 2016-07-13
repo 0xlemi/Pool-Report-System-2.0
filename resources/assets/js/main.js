@@ -1,5 +1,11 @@
 var dateFormat 		= require('dateformat');
+
+// Vue imports
 var Vue 			= require('vue');
+var Permissions 	= require('./components/Permissions.vue');
+var FormToAjax   	= require('./directives/FormToAjax.vue');
+require('./components/checkboxList.vue');
+
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -7,6 +13,11 @@ Vue.use(require('vue-resource'));
 
 $(document).ready(function(){
 // var dateFormat = require('dateformat');
+
+// set th CSRF_TOKEN for ajax requests
+$.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': (document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '') }
+});
 
 
  /* ==========================================================================
@@ -29,77 +40,11 @@ function isset(strVariableName) {
     VueJs code
     ========================================================================== */
 
-    Vue.directive('ajax',{
-      params: ['title','message'],
-
-      bind: function(){
-        $(this.el).on('submit', this.onSubmit.bind(this));
-      },
-      update: function(){
-
-      },
-      onSubmit: function (e) {
-        e.preventDefault();
-        var requestType = this.getRequestType();
-
-        this.vm
-            .$http[requestType](this.el.action, this.getFormData())
-            .then(this.onComplete.bind(this))
-            .catch(this.onError.bind(this));
-      },
-      onComplete: function () {
-        // console.log(this.params.title);
-        if (this.params.title && this.params.message) {
-            swal({
-              title: this.params.title,
-              text: this.params.message,
-              type: 'success',
-              timer: 2000,
-              showConfirmButton: false
-            });
-        }
-      },
-
-      onError: function (response) {
-        // first show validation errors
-        var errors = '';
-        $.each(response.data, function(key, value){
-          errors += value+'\n'
-        });
-        swal("Oops...", errors, "error");
-      },
-      getRequestType: function(){
-        var method = this.el.querySelector('input[name="_method"]');
-        return (method ? method.value : this.el.method).toLowerCase();
-      },
-      getFormData: function() {
-        // You can use $(this.el) in jQuery and you will get the same thing.
-        var serializedData = $(this.el).serializeArray();
-        var objectData = {};
-        $.each(serializedData, function() {
-            if (objectData[this.name] !== undefined) {
-                if (!objectData[this.name].push) {
-                    objectData[this.name] = [objectData[this.name]];
-                }
-                objectData[this.name].push(this.value || '');
-            } else {
-                objectData[this.name] = this.value || '';
-            }
-        });
-        return objectData;
-    },
-
-  });
-
-  new Vue({
+new Vue({
     el: 'body',
-    http: {
-        headers: {
-            // You could also store your token in a global object,
-            // and reference it here. APP.token
-            'X-CSRF-TOKEN': (document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '')
-        }
-    }
+    components: { Permissions },
+    directives: { FormToAjax },
+
 });
 
 /* ==========================================================================
@@ -1304,6 +1249,12 @@ function isset(strVariableName) {
 	        'default': 'now'
 	    });
 	});
+
+/* ==========================================================================
+    Settings Forms Events
+    ========================================================================== */
+
+
 
 /* ==========================================================================
     Maxlenght and Hide Show Password

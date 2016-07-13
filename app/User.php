@@ -6,6 +6,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
+use Hash;
+
 class User extends Authenticatable
 {
     /**
@@ -83,6 +85,11 @@ class User extends Authenticatable
     public function isTechnician()
     {
         return $this->userable_type == "App\Technician";
+    }
+
+    public function checkPassword($password)
+    {
+        return (Hash::check($password, $this->password));
     }
 
     public function getFullName()

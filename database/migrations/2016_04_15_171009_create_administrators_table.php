@@ -14,13 +14,16 @@ class CreateAdministratorsTable extends Migration
     {
         Schema::create('administrators', function (Blueprint $table) {
             $table->increments('id');
-            // Administrator Profile information
-            $table->string('name');
+            // General Settings
+                $table->char('language', 2);
+                $table->string('timezone');
+                // Administrator Profile information
+                $table->string('name');
             // Company information
-            $table->string('company_name');
-            $table->string('website');
-            $table->string('facebook');
-            $table->string('twitter');
+                $table->string('company_name');
+                $table->string('website');
+                $table->string('facebook');
+                $table->string('twitter');
             // Permissions
                 // Report
                 $table->boolean('sup_report_index')->default(1);
@@ -81,9 +84,7 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_technician_show')->default(0);
                 $table->boolean('tech_technician_edit')->default(0);
                 $table->boolean('tech_technician_destroy')->default(0);
-            // General Settings
-            $table->char('language', 2);
-            $table->string('timezone');
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -1,9 +1,8 @@
 <h4>Change Email</h4>
 <br>
-<form method="POST" action="{{ url('settings/email') }}">
+<form method="POST" action="{{ url('settings/email') }}" v-ajax title="Email Changed" message="The email was changed successfully">
   {{ csrf_field() }}
   {{ method_field('PATCH') }}
-  <input type="hidden" name="id" value="{{ $user->id }}">
 
   <div class="form-group row {{($errors->has('old_password'))? 'form-group-error':''}}">
       <label class="col-sm-2 form-control-label">Old password:</label>

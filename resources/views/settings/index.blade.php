@@ -9,8 +9,8 @@
                 <div class="profile-card-photo">
                     <img src="img/photo-220-1.jpg" alt=""/>
                 </div>
-                <div class="profile-card-name">{{ $user->getFullName() }}</div>
-                <div class="profile-card-status">{{ $user->admin()->company_name }}</div>
+                <div class="profile-card-name">@{{ adminName }}</div>
+                <div class="profile-card-status">@{{ companyName }}</div>
                 <div class="profile-card-location">Business Plan</div>
 
             </div><!--.profile-card-->
@@ -35,15 +35,15 @@
                     </li>
                     <li class="nowrap">
                         <i class="font-icon font-icon-earth-bordered"></i>
-                        <a href="http://{{ $company_info->website }}">{{ $company_info->website }}</a>
+                        <a href="http://@{{ website }}">@{{ website }}</a>
                     </li>
                     <li class="nowrap">
                         <i class="font-icon font-icon-fb-fill"></i>
-                        <a href="http://www.facebook.com/{{ $company_info->facebook }}">facebook.com/{{ $company_info->facebook }}</a>
+                        <a href="http://www.facebook.com/@{{ facebook }}">facebook.com/@{{ facebook }}</a>
                     </li>
                     <li class="nowrap">
                         <i class="font-icon font-icon-tw-fill"></i>
-                        <a href="http://www.twitter.com/{{ $company_info->twitter }}">twitter.com/{{ $company_info->twitter }}</a>
+                        <a href="http://www.twitter.com/@{{ twitter }}">twitter.com/@{{ twitter }}</a>
                     </li>
                 </ul>
             @endif
@@ -106,35 +106,14 @@
                 <div class="tab-content">
 
                     <div role="tabpanel" class="tab-pane fade in active" id="tabs-1-tab-2">
-                      <br>
-                      <form method="POST" action="{{ url('settings/account') }}" enctype="multipart/form-data">
-                          {{ csrf_field() }}
-                          {{ method_field('PATCH') }}
-                          <input type="hidden" name="id" value="{{ $user->userable()->seq_id }}">
+                        <br>
+                        @include('settings.account')
 
-                          <div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
-                              <label class="col-sm-2 form-control-label">Name:</label>
-                              <div class="col-sm-10">
-                                  <input type="text" class="form-control maxlength-simple"
-                                          name="name" maxlength="25" value="{{ $user->getFullName() }}">
-                                  @if ($errors->has('name'))
-                                      <small class="text-muted">{{ $errors->first('name') }}</small>
-                                  @endif
-                              </div>
-                          </div>
-                          <br>
-                          <p style="float: right;">
-                              <button  class="btn btn-success"
-                              type='submit'>Save changes</button>
-                          </p>
-                          <br>
-                      </form>
+                        <hr />
+                        @include('settings.email')
 
-                      <hr />
-                      {{-- @include('settings.email') --}}
-
-                      <hr />
-                      {{-- @include('settings.password') --}}
+                        <hr />
+                        {{-- @include('settings.password') --}}
 
                       <br>
                       <br>
