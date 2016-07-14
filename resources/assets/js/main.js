@@ -1171,6 +1171,7 @@ new Vue({
     if(isset('date_selected')){
 	    $('#side-datetimepicker').datetimepicker({
 	        inline: true,
+            enabledDates: back.enabledDates,
 	        format: 'YYYY-MM-DD',
 	        defaultDate: back.date_selected,
 	    });

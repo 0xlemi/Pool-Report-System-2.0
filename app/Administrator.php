@@ -27,7 +27,7 @@ class Administrator extends Model
      * @var array
      */
 	protected $hidden = [
-		  
+
 	];
 
     /**
@@ -38,6 +38,22 @@ class Administrator extends Model
     public function user()
     {
         return $this->morphOne('App\User', 'userable')->first();
+    }
+
+    /**
+     * Get all dates that have at least one report in them
+     * @return Collertion
+     */
+    public function datesWithReport()
+    {
+        return $this->reports()
+                    ->get()
+                    ->pluck('completed')
+                    ->transform(function ($item) {
+                        return substr($item, 0 , 10);
+                    })
+                    ->unique()
+                    ->flatten();
     }
 
     /**

@@ -21,6 +21,10 @@
 				<a href="{{ url('services/create') }}" class="btn btn-primary">
 					<i class="font-icon font-icon-home"></i>&nbsp;&nbsp;&nbsp;New Service
 				</a>
+				<!-- <input type="checkbox" data-toggle="toggle"
+						data-on="Active" data-off="Not Active"
+						data-onstyle="success" data-offstyle="danger"
+						data-size="big" name="status" {{ (old('status')) ? 'checked':'' }}> -->
 			</div>
 			<div class="table-responsive">
 				<table id="reports_table"

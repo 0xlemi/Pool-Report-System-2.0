@@ -12,7 +12,7 @@ use App\Image;
 use Carbon\Carbon;
 use JavaScript;
 use Auth;
-class ReportsController extends Controller
+class ReportsController extends PageController
 {
     /**
      * Create a new controller instance.
@@ -64,6 +64,7 @@ class ReportsController extends Controller
             'date_url' => url('reports/date').'/',
             'click_url' => url('reports').'/',
             'date_selected' => $date,
+            'enabledDates' => $this->loggedUserAdministrator()->datesWithReport(),
         ]);
 
         return view('reports.index',compact('reports'));
