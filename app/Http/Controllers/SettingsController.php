@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 
-use Auth;
 use JavaScript;
 use Schema;
 
@@ -36,7 +35,7 @@ class SettingsController extends PageController
      */
     public function index()
     {
-        $user = Auth::user();
+        $user = $this->getUser();
         $admin = $user->admin();
 
         $timezones = $this->getTimezone();
@@ -57,56 +56,67 @@ class SettingsController extends PageController
         $admin->language = $request->language;
         $admin->timezone = $request->timezone;
 
-        $admin->save();
-    }
+        if($admin->save()){
+            return $this->respondWithSuccess('Account information was updated successfully.');
+        }
+        return $this->respondInternalError('Account information was not updated, Please try again later.');
+   }
 
 
     public function company(Request $request){
-      $this->validate($request, [
-        'company_name' => 'required|between:2,30',
-        'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-        'facebook' => 'string|max:50',
-        'twitter' => 'string|max:15',
-      ]);
-      $admin = $this->loggedUserAdministrator();
+        $this->validate($request, [
+            'company_name' => 'required|between:2,30',
+            'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
+            'facebook' => 'string|max:50',
+            'twitter' => 'string|max:15',
+        ]);
+        $admin = $this->loggedUserAdministrator();
 
-      $admin->company_name = $request->company_name;
-      $admin->website = $request->website;
-      $admin->facebook = $request->facebook;
-      $admin->twitter = $request->twitter;
+        $admin->company_name = $request->company_name;
+        $admin->website = $request->website;
+        $admin->facebook = $request->facebook;
+        $admin->twitter = $request->twitter;
 
-      $admin->save(); // render exceptions later
-
+        if($admin->save()){
+            return $this->respondWithSuccess('Company information was updated successfully.');
+        }
+        return $this->respondInternalError('Company information was not updated, Please try again later.');
 
     }
 
     public function email(Request $request){
-
         $this->validate($request, [
             'old_password' => 'required|string|max:255',
             'new_email' => 'required|email|max:255',
         ]);
 
-        $user = Auth::user();
+        $user = $this->getUser();
         if($user->checkPassword($request->old_password)){
             $user->email = $request->new_email;
             if($user->save()){
-                // needs flash message
                 return $this->respondWithSuccess('Email was updated');
             }
-            return $this->setStatusCode(422)->respondWithError('There was an error.');
+            return $this->respondInternalError('Email was not updated, there was an error.');
         }
-        return $this->setStatusCode(422)->respondWithError('The Information is wrong');
-
+        return $this->respondWithValidationError('Email was not updated, the information is wrong');
     }
 
     public function password(Request $request){
-      $this->validate($request, [
-        'old_password' => 'required|string|max:255',
-        'new_email' => 'required|email|max:255',
-      ]);
+        $this->validate($request, [
+          'old_password' => 'required|string|max:255',
+          'new_password' => 'required|string|between:6,255',
+          'confirm_password' => 'required|string|between:6,255|same:new_password',
+        ]);
 
-      dd($request->all());
+            $user = $this->getUser();
+            if($user->checkPassword($request->old_password)){
+                $user->password = bcrypt($request->new_password);
+                if($user->save()){
+                    return $this->respondWithSuccess('Password was updated');
+                }
+            return $this->respondInternalError('Password not updated, there was an error.');
+         }
+         return $this->respondWithValidationError('Password not updated , the information is wrong');
     }
 
     public function permissions(Request $request)
@@ -123,11 +133,10 @@ class SettingsController extends PageController
             $admin->$column_name = $checked;
             if($admin->save()){
                 return $this->respondWithSuccess('Permission has been saved.');
-            }else{
-                flash()->error('Permission not updated', 'There was an error no permisson was changed, Please try again later.');
             }
+            return $this->respondInternalError('Error while persisting the permission');
         }
-        flash()->error('Permission not updated', 'There was an error no permisson was changed, Please try again later.');
+        return $this->respondNotFound('There is no permission with that id');
     }
 
     private function getTimezone()

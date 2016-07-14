@@ -7,8 +7,8 @@
   <div class="form-group row {{($errors->has('old_password'))? 'form-group-error':''}}">
       <label class="col-sm-2 form-control-label">Old password:</label>
       <div class="col-sm-10">
-          <input type="text" class="form-control maxlength-simple"
-                  name="old_password" maxlength="25" value="">
+          <input type="password" class="form-control maxlength-simple"
+                  name="old_password" maxlength="40" value="">
           @if ($errors->has('old_password'))
               <small class="text-muted">{{ $errors->first('old_password') }}</small>
           @endif
@@ -19,7 +19,7 @@
       <label class="col-sm-2 form-control-label">New email:</label>
       <div class="col-sm-10">
           <input type="text" class="form-control maxlength-simple"
-                  name="new_email" maxlength="25" value="{{ $user->new_email }}">
+                  name="new_email" maxlength="40" value="{{ $user->new_email }}">
           @if ($errors->has('new_email'))
               <small class="text-muted">{{ $errors->first('new_email') }}</small>
           @endif

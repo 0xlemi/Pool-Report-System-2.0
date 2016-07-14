@@ -113,7 +113,7 @@
                         @include('settings.email')
 
                         <hr />
-                        {{-- @include('settings.password') --}}
+                        @include('settings.password')
 
                       <br>
                       <br>
