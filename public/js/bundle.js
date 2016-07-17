@@ -17431,7 +17431,7 @@ $(document).ready(function () {
 	var $table = $('#table'),
 	    $remove = $('#remove'),
 	    selections = [];
-	var reports_table = $('#reports_table');
+	var generic_table = $('#generic_table');
 
 	function totalTextFormatter(data) {
 		return 'Total';
@@ -17510,8 +17510,11 @@ $(document).ready(function () {
 		});
 	});
 
-	reports_table.bootstrapTable({
+	generic_table.bootstrapTable({
 		iconsPrefix: 'font-icon',
+		toggle: 'table',
+		sidePagination: 'client',
+		pagination: 'true',
 		icons: {
 			paginationSwitchDown: 'font-icon-arrow-square-down',
 			paginationSwitchUp: 'font-icon-arrow-square-down up',
@@ -17525,11 +17528,22 @@ $(document).ready(function () {
 
 	});
 
-	$('#reports_table').on('click-row.bs.table', function (e, row, $element) {
+	// $('#reports_table').bootstrapTable({
+	//     'pagination': "true",
+	//     'sidePagination': "server",
+	//     'queryParamsType': "",
+	//     'toggle': "table",
+	//     // 'search': "true",
+	//     // "processing": true,
+	//     // "serverSide": true,
+	//     "url": "http://prs.dev/datatables/reports"
+	// });
+
+	$('#generic_table').on('click-row.bs.table', function (e, row, $element) {
 		if ($element.hasClass('table_active')) {
 			$element.removeClass('table_active');
 		} else {
-			reports_table.find('tr.table_active').removeClass('table_active');
+			generic_table.find('tr.table_active').removeClass('table_active');
 			$element.addClass('table_active');
 		}
 		window.location.href = back.click_url + row.id;
@@ -17538,12 +17552,11 @@ $(document).ready(function () {
 	/* ==========================================================================
      Side datepicker
      ========================================================================== */
-	if (isset('date_selected')) {
+	if (isset('enabledDates')) {
 		$('#side-datetimepicker').datetimepicker({
 			inline: true,
 			enabledDates: back.enabledDates,
-			format: 'YYYY-MM-DD',
-			defaultDate: back.date_selected
+			format: 'YYYY-MM-DD'
 		});
 	}
 
@@ -17551,7 +17564,9 @@ $(document).ready(function () {
 		$("#side-datetimepicker").on("dp.change", function (e) {
 			var date = new Date(e.date._d);
 			var date_selected = dateFormat(date, "yyyy-mm-dd");
-			window.location.href = back.date_url + date_selected;
+			var new_url = back.datatable_url + date_selected;
+
+			generic_table.bootstrapTable('refresh', { url: new_url });
 		});
 	}
 	if (isset('default_date')) {

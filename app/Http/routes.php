@@ -22,7 +22,6 @@ Route::get('/', function () {
 Route::auth();
 
 Route::resource('reports', 'ReportsController');
-Route::get('reports/date/{date}', 'ReportsController@index_by_date');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
@@ -40,8 +39,13 @@ Route::patch('settings/email', 'SettingsController@email');
 Route::patch('settings/password', 'SettingsController@password');
 Route::post('settings/permissions', 'SettingsController@permissions');
 
+Route::get('datatables/reports', 'DataTableController@reports');
+Route::get('datatables/services', 'DataTableController@services');
+Route::get('datatables/clients', 'DataTableController@clients');
+
+
 Route::group(['prefix' => 'api/v1'], function(){
-	Route::get('user', 'Api\SettingsController@information');
+	// Route::get('user', 'Api\SettingsController@information');
 	Route::resource('services', 'Api\ServicesController');
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');

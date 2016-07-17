@@ -22,39 +22,25 @@
 				</a>
 			</div>
 			<div class="table-responsive">
-				<table id="reports_table"
-					   class="table"
+				<table id="generic_table"
 					   data-toolbar="#toolbar"
-					   data-search="true"
+					   data-url='{{ $default_table_url }}'
+					   data-page-list='[5, 10, 20, 50, 100, 200]'
+					   data-search='true'
 					   data-show-export="true"
 					   data-export-types="['excel', 'pdf']"
-					   data-detail-view="true"
-					   data-detail-formatter="detailFormatter"
 					   data-minimum-count-columns="2"
-					   data-pagination="true"
 					   data-show-footer="false"
-					   data-response-handler="responseHandler"
 					   >
 					<thead>
 					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
-					        <th data-field="address" data-sortable="true">Email</th>
+					        <th data-field="email" data-sortable="true">Email</th>
 					        <th data-field="type" data-sortable="true">Type</th>
-					        <th data-field="service_days" data-sortable="true">Cellphone</th>
+					        <th data-field="cellphone" data-sortable="true">Cellphone</th>
 					    </tr>
 					</thead>
-					<tbody>
-						@foreach ($clients as $client)
-							<tr>
-								<td>{{ $client->seq_id }}</td>
-								<td>{{ $client->name }}</td>
-								<td>{{ $client->user()->email }}</td>
-								<td>{!! clients_styled_type($client->type, true, false) !!}</td>
-								<td>{{ $client->cellphone }}</td>
-							</tr>
-						@endforeach
-					</tbody>
 				</table>
 			</div>
 		</section><!--.box-typical-->

@@ -41,13 +41,13 @@ class ClientsController extends PageController
             return 'you should not pass';
         }
 
-        $clients = $this->loggedUserAdministrator()->clients()->get();
+        $default_table_url = url('datatables/clients');
 
         JavaScript::put([
             'click_url' => url('clients').'/',
         ]);
 
-        return view('clients.index', compact('clients'));
+        return view('clients.index', compact('default_table_url'));
     }
 
     /**

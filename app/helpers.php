@@ -19,7 +19,7 @@ function flash($title = null, $message = null){
  * Makes Multidimentional arrays simple keeping the keys
  * @param  array $array
  * @param  string $prefix
- * @return array          the flatten array 
+ * @return array          the flatten array
  */
 function array_flat($array, $prefix = '')
 {
@@ -42,31 +42,6 @@ function array_flat($array, $prefix = '')
     return $result;
 }
 
-
-/**
- * Clients Functions
- */
-
-function clients_styled_type($type, $is_pill = true, $long_version = true){
-	$tag_type = '';
-	$extra_text = '';
-	if($is_pill){
-		$tag_type = 'label-pill';
-	}if($long_version){
-		$extra_text = 'House ';
-	}
-	switch ($type) {
-		case 1:
-			return '<span class="label '.$tag_type.' label-primary">'.$extra_text.'Owner</span>';
-			break;
-		case 2:
-			return '<span class="label '.$tag_type.' label-warning">'.$extra_text.'Administrator</span>';
-			break;
-		default:
-			return '<span class="label '.$tag_type.' label-default">Unknown</span>';
-			break;
-	}
-}
 
 function languageCode_to_text($code){
 	$languageCodes = array(
@@ -111,64 +86,7 @@ function validateDate($date){
     return $d && $d->format('Y-m-d') === $date;
 }
 
-function onTime_tag($on_time){
-	switch ($on_time) {
-		case '1':
-			return '<span class="label label-success">Done on Time</span>';
-			break;
-		case '2':
-			return '<span class="label label-danger">Done Late</span>';
-			break;
-		case '3':
-			return '<span class="label label-warning">Done Early</span>';
-			break;
-		default:
-			return '<span class="label label-default">Unknown</span>';
-			break;
-	}
-}
 
-function readings_tag($value, $is_turbidity = false){
-	if(!$is_turbidity){
-		switch ($value) {
-			case '1':
-				return '<span class="label label-info">Very Low</span>';
-				break;
-			case '2':
-				return '<span class="label label-primary">Low</span>';
-				break;
-			case '3':
-				return '<span class="label label-success">Perfect</span>';
-				break;
-			case '4':
-				return '<span class="label label-warning">High</span>';
-				break;
-			case '5':
-				return '<span class="label label-danger">Very High</span>';
-				break;
-			default:
-				return '<span class="label label-default">Unknown</span>';
-				break;
-		}
-	}
-	switch ($value) {
-		case '1':
-			return '<span class="label label-success">Perfect</span>';
-			break;
-		case '2':
-			return '<span class="label label-primary">Low</span>';
-			break;
-		case '3':
-			return '<span class="label label-warning">High</span>';
-			break;
-		case '4':
-			return '<span class="label label-danger">Very High</span>';
-			break;
-		default:
-			return '<span class="label label-default">Unknown</span>';
-			break;
-	}
-}
 
 function format_date($date){
 	//****** missing thing is to convert the time to client timezone before sendig *********

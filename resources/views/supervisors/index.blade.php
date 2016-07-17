@@ -22,7 +22,7 @@
 				</a>
 			</div>
 			<div class="table-responsive">
-				<table id="reports_table"
+				<table id="generic_table"
 					   class="table"
 					   data-toolbar="#toolbar"
 					   data-search="true"

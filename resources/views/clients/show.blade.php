@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@inject('helper', 'App\PRS\Helpers\ServiceHelpers')
+@inject('helper', 'App\PRS\Helpers\ClientHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -80,7 +80,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
-									{!! clients_styled_type($client->type, false) !!}
+									{!! $helper->styledType($client->type, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
@@ -103,7 +103,7 @@
 							<h3><strong>List of Client Services</strong></h3>
 						</div>
 						<div class="table-responsive">
-							<table id="reports_table"
+							<table id="generic_table"
 								   class="table"
 								   data-toolbar="#toolbar"
 								   data-search="true"

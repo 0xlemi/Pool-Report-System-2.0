@@ -43,17 +43,13 @@ class ServicesController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator()){
-            $services = $user->userable()->services()->get();
-        }else{
-            $services = $user->userable()->admin()->services()->get();
-        }
+        $default_table_url = url('datatables/services');
 
         JavaScript::put([
             'click_url' => url('services').'/',
         ]);
 
-        return view('services.index', compact('services'));
+        return view('services.index', compact('default_table_url'));
     }
 
     /**

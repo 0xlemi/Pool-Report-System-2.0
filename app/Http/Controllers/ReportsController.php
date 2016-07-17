@@ -31,21 +31,6 @@ class ReportsController extends PageController
      */
     public function index()
     {
-        return $this->index_by_date(Carbon::now()->toDateString());
-    }
-
-    /**
-     * Display the listing of all the reports by date
-     * @param  String $date yyyy-mm-dd format date
-     * @return \Illuminate\Http\Response
-     */
-    public function index_by_date($date)
-    {
-        if(!validateDate($date))
-        {
-            return $this->index();
-        }
-
         $user = Auth::user();
         if($user->cannot('index', Report::class))
         {
@@ -53,21 +38,16 @@ class ReportsController extends PageController
             return 'you should not pass';
         }
 
-        if($user->isAdministrator())
-        {
-            $reports = $user->userable()->reportsByDate($date)->get();
-        }else{
-            $reports = $user->userable()->admin()->reportsByDate($date)->get();
-        }
+        $default_table_url = url('datatables/reports').'?date='.Carbon::today()->toDateString();
 
         JavaScript::put([
             'date_url' => url('reports/date').'/',
+            'datatable_url' => url('datatables/reports').'?date=',
             'click_url' => url('reports').'/',
-            'date_selected' => $date,
             'enabledDates' => $this->loggedUserAdministrator()->datesWithReport(),
         ]);
 
-        return view('reports.index',compact('reports'));
+        return view('reports.index',compact('default_table_url'));
     }
 
     /**
