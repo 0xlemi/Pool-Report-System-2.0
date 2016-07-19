@@ -39,17 +39,13 @@ class SupervisorsController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator()){
-            $supervisors = $user->userable()->supervisors()->get();
-        }else{
-            $supervisors = $user->userable()->admin()->supervisors()->get();
-        }
+        $default_table_url = url('datatables/supervisors');    
 
         JavaScript::put([
             'click_url' => url('supervisors').'/',
         ]);
 
-        return view('supervisors.index', compact('supervisors'));
+        return view('supervisors.index', compact('default_table_url'));
     }
 
     /**

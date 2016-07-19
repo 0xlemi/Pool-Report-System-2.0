@@ -42,6 +42,8 @@ Route::post('settings/permissions', 'SettingsController@permissions');
 Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/services', 'DataTableController@services');
 Route::get('datatables/clients', 'DataTableController@clients');
+Route::get('datatables/supervisors', 'DataTableController@supervisors');
+Route::get('datatables/technicians', 'DataTableController@technicians');
 
 
 Route::group(['prefix' => 'api/v1'], function(){

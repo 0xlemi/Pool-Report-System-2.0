@@ -39,17 +39,13 @@ class TechniciansController extends Controller
             return 'you should not pass';
         }
 
-        if($user->isAdministrator()){
-            $technicians = $user->userable()->technicians()->get();
-        }else{
-            $technicians = $user->userable()->admin()->technicians()->get();
-        }
+        $default_table_url = url('datatables/technicians');
 
         JavaScript::put([
             'click_url' => url('technicians').'/'
         ]);
 
-        return view('technicians.index', compact('technicians'));
+        return view('technicians.index', compact('default_table_url'));
     }
 
     /**
@@ -192,7 +188,7 @@ class TechniciansController extends Controller
             // abort(403);
             return 'you should not pass';
         }
-        
+
         if($logged_user->isAdministrator()){
             $technician = $logged_user->userable()->technicianBySeqId($seq_id);
             $supervisor = $logged_user->userable()->supervisorBySeqId($request->supervisor);

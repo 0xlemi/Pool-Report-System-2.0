@@ -8,9 +8,6 @@ use Response;
 
 use Yajra\Datatables\Facades\Datatables;
 
-use App\Service;
-use App\Technician;
-
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\ClientHelpers;
@@ -48,8 +45,8 @@ class DataTableController extends PageController
                     ->reportsByDate($request->date)
                     ->get()
                     ->transform(function($item){
-                        $service = Service::find($item->service_id);
-                        $technician = Technician::find($item->technician_id);
+                        $service = $item->service();
+                        $technician = $item->technician();
                         return (object) array(
                             'id' => $item->seq_id,
                             'service' => $service->name,
@@ -95,6 +92,40 @@ class DataTableController extends PageController
                             );
                         });
         return Response::json($clients, 200);
+    }
+
+    public function supervisors()
+    {
+        $supervisors = $this->loggedUserAdministrator()
+                        ->supervisors()
+                        ->get()
+                        ->transform(function($item){
+                            return (object) array(
+                                'id' => $item->seq_id,
+                                'name' => $item->name.' '.$item->last_name,
+                                'email' => $item->user()->email,
+                                'cellphone' => $item->cellphone,
+                            );
+                        });
+        return Response::json($supervisors, 200);
+    }
+
+    public function technicians()
+    {
+        $technicians = $this->loggedUserAdministrator()
+                            ->technicians()
+                            ->get()
+                            ->transform(function($item){
+                                $supervisor = $item->supervisor();
+                                return (object) array(
+                                    'id' =>  $item->seq_id,
+                                    'name' => $item->name.' '.$item->last_name,
+                                    'username' => $item->user()->email,
+                                    'cellphone' => $item->cellphone,
+                                    'supervisor' => $supervisor->name.' '.$supervisor->last_name,
+                                );
+                            });
+        return Response::json($technicians, 200);
     }
 
 }

@@ -23,17 +23,14 @@
 			</div>
 			<div class="table-responsive">
 				<table id="generic_table"
-					   class="table"
 					   data-toolbar="#toolbar"
-					   data-search="true"
+					   data-url='{{ $default_table_url }}'
+					   data-page-list='[5, 10, 20, 50, 100, 200]'
+					   data-search='true'
 					   data-show-export="true"
 					   data-export-types="['excel', 'pdf']"
-					   data-detail-view="true"
-					   data-detail-formatter="detailFormatter"
 					   data-minimum-count-columns="2"
-					   data-pagination="true"
 					   data-show-footer="false"
-					   data-response-handler="responseHandler"
 					   >
 					<thead>
 					    <tr>
@@ -44,17 +41,6 @@
 					        <th data-field="supervisor" data-sortable="true">Supervisor</th>
 					    </tr>
 					</thead>
-					<tbody>
-						@foreach ($technicians as $technician)
-							<tr>
-								<td>{{ $technician->seq_id }}</td>
-								<td>{{ $technician->name.' '.$technician->last_name }}</td>
-								<td>{{ $technician->user()->email }}</td>
-								<td>{{ $technician->cellphone }}</td>
-								<td>{{ $technician->supervisor()->name.' '.$technician->supervisor()->last_name }}</td>
-							</tr>
-						@endforeach
-					</tbody>
 				</table>
 			</div>
 		</section><!--.box-typical-->
