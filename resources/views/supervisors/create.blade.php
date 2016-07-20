@@ -23,7 +23,7 @@
 				<div class="card-block">
 					<form method="POST" action="{{ url('supervisors') }}" enctype="multipart/form-data">
 						{{ csrf_field() }}
-						
+
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Photo:</label>
 							<div class="col-sm-10">
@@ -42,7 +42,7 @@
 				                    <span class="fileupload-new">Select image</span>
 				                    <span class="fileupload-exists">Change</span>
 				                    <input type="file" name="photo" id="photo" ></span>
-				                    <a href="#" class="btn btn-default fileupload-exists" 
+				                    <a href="#" class="btn btn-default fileupload-exists"
 				                    	data-dismiss="fileupload">Remove</a>
 				                  </div>
 				                </div>
@@ -78,17 +78,6 @@
 										name="email" value="{{ old('email') }}">
 								@if ($errors->has('email'))
 									<small class="text-muted">{{ $errors->first('email') }}</small>
-								@endif
-							</div>
-						</div>
-
-						<div class="form-group row {{($errors->has('password'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Password:</label>
-							<div class="col-sm-10">
-								<input type="password" class="form-control hide-show-password"
-										name="password" value="">
-								@if ($errors->has('password'))
-									<small class="text-muted">{{ $errors->first('password') }}</small>
 								@endif
 							</div>
 						</div>
@@ -135,7 +124,7 @@
 						<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Comments:</label>
 							<div class="col-sm-10">
-								<textarea rows="5" class="form-control" 
+								<textarea rows="5" class="form-control"
 											placeholder="Any additional info about this supervisor."
 											name="comments">{{ old('comments') }}</textarea>
 								@if ($errors->has('comments'))
@@ -143,7 +132,7 @@
 								@endif
 							</div>
 						</div>
-						
+
 						<hr>
 						<p style="float: left;">
 							<a  class="btn btn-danger"

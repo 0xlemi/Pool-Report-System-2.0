@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\ReportHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -37,7 +38,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Was made on time?</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! onTime_tag($report->on_time) !!}</p>
+									<p class="form-control-static">{!! $helper->styleOnTime($report->on_time) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -55,31 +56,31 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">PH</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! readings_tag($report->ph) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->ph) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Clorine</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! readings_tag($report->clorine) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->clorine) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Temperature</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! readings_tag($report->temperature) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->temperature) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Turbidity</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! readings_tag($report->turbidity, true) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->turbidity, true) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Salt</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! readings_tag($report->salt) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->salt) !!}</p>
 								</div>
 							</div>
 						</form>

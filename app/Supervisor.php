@@ -32,8 +32,6 @@ class Supervisor extends Model
      * @var array
      */
 	protected $hidden = [
-		'password',
-		'user_id',
 	];
 
     /**

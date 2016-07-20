@@ -104,7 +104,7 @@ class ClientPolicy
 
         if($type->isSupervisor()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_cliest_edit;
+                return $session_user->userable()->admin()->sup_client_edit;
             }elseif(isset($api_user)){
                 return $api_user->userable()->admin()->sup_client_edit;
             }

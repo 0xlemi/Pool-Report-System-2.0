@@ -34,12 +34,7 @@ class ClientsController extends PageController
      */
     public function index()
     {
-        $user = Auth::user();
-        if($user->cannot('index', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('index');
 
         $default_table_url = url('datatables/clients');
 
@@ -57,12 +52,7 @@ class ClientsController extends PageController
      */
     public function create()
     {
-        $user = Auth::user();
-        if($user->cannot('create', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('create');
 
         $services = $this->loggedUserAdministrator()->services()->get();
 
@@ -77,12 +67,7 @@ class ClientsController extends PageController
      */
     public function store(CreateClientRequest $request)
     {
-        $user = Auth::user();
-        if($user->cannot('create', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('create');
 
         $admin = $this->loggedUserAdministrator();
 
@@ -133,12 +118,7 @@ class ClientsController extends PageController
      */
     public function show($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('show', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('show');
 
         JavaScript::put([
             'click_url' => url('services').'/',
@@ -158,12 +138,7 @@ class ClientsController extends PageController
      */
     public function edit($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('edit', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
         $admin = $this->loggedUserAdministrator();
 
@@ -182,12 +157,7 @@ class ClientsController extends PageController
      */
     public function update(CreateClientRequest $request, $seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('edit', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
         $user  = $client->user();
@@ -225,12 +195,7 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('destroy', Client::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('destroy');
 
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
 
@@ -242,4 +207,14 @@ class ClientsController extends PageController
         flash()->error('Not Deleted', 'We could not delete the client, please try again later.');
         return redirect()->back();
     }
+
+    protected function checkPermissions($typePermission)
+    {
+        $user = Auth::user();
+        if($user->cannot($typePermission, Client::class))
+        {
+            abort(403, 'If you really need to see this. Ask system administrator for access.');
+        }
+    }
+
 }

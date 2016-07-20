@@ -31,7 +31,6 @@ class Technician extends Model
      * @var array
      */
 	protected $hidden = [
-		'password',
 	];
 
     /**

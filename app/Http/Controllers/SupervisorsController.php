@@ -12,8 +12,9 @@ use App\User;
 
 use App\Http\Requests\CreateSupervisorRequest;
 use App\Http\Requests;
+use App\Http\Controllers\PageController;
 
-class SupervisorsController extends Controller
+class SupervisorsController extends PageController
 {
     /**
      * Create a new controller instance.
@@ -32,14 +33,9 @@ class SupervisorsController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if($user->cannot('index', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('index');
 
-        $default_table_url = url('datatables/supervisors');    
+        $default_table_url = url('datatables/supervisors');
 
         JavaScript::put([
             'click_url' => url('supervisors').'/',
@@ -55,14 +51,9 @@ class SupervisorsController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
-        if($user->cannot('create', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('create');
 
-        return view('supervisors.create', compact('supervisors'));
+        return view('supervisors.create');
     }
 
     /**
@@ -73,19 +64,9 @@ class SupervisorsController extends Controller
      */
     public function store(CreateSupervisorRequest $request)
     {
-        $user = Auth::user();
-        if($user->cannot('create', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('create');
 
-        if($user->isAdministrator())
-        {
-            $admin = $user->userable();
-        }else{
-            $admin = $user->userable()->admin();
-        }
+        $admin = $this->loggedUserAdministrator();
 
         $supervisor = Supervisor::create([
             'name'      => $request->name,
@@ -125,18 +106,9 @@ class SupervisorsController extends Controller
      */
     public function show($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('show', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('show');
 
-        if($user->isAdministrator()){
-            $supervisor = $user->userable()->supervisorBySeqId($seq_id);
-        }else{
-            $supervisor = $user->userable()->admin()->supervisorBySeqId($seq_id);
-        }
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         return view('supervisors.show', compact('supervisor'));
     }
@@ -149,18 +121,9 @@ class SupervisorsController extends Controller
      */
     public function edit($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('edit', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
-        if($user->isAdministrator()){
-            $supervisor = $user->userable()->supervisorBySeqId($seq_id);
-        }else{
-            $supervisor = $user->userable()->admin()->supervisorBySeqId($seq_id);
-        }
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         return view('supervisors.edit', compact('supervisor'));
     }
@@ -174,22 +137,13 @@ class SupervisorsController extends Controller
      */
     public function update(CreateSupervisorRequest $request, $seq_id)
     {
-        $logged_user = Auth::user();
-        if($logged_user->cannot('edit', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
-        if($logged_user->isAdministrator()){
-            $supervisor = $logged_user->userable()->supervisorBySeqId($seq_id);
-        }else{
-            $supervisor = $logged_user->userable()->admin()->supervisorBySeqId($seq_id);
-        }
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+
         $user = $supervisor->user();
 
         $user->email = $request->email;
-        $user->password = $request->password;
 
         $supervisor->name = $request->name;
         $supervisor->last_name = $request->last_name;
@@ -220,18 +174,9 @@ class SupervisorsController extends Controller
      */
     public function destroy($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('destroy', Supervisor::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('destroy');
 
-        if($user->isAdministrator()){
-            $supervisor = $user->userable()->supervisorBySeqId($seq_id);
-        }else{
-            $supervisor = $user->userable()->admin()->supervisorBySeqId($seq_id);
-        }
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         if($supervisor->delete()){
             flash()->success('Deleted', 'The supervisor was successfuly deleted');
@@ -240,4 +185,14 @@ class SupervisorsController extends Controller
         flash()->error('Not Deleted', 'We could not delete the supervisor, please try again later.');
         return redirect()->back();
     }
+
+    protected function checkPermissions($typePermission)
+    {
+        $user = Auth::user();
+        if($user->cannot($typePermission, Supervisor::class))
+        {
+            abort(403, 'If you really need to see this. Ask system administrator for access.');
+        }
+    }
+
 }

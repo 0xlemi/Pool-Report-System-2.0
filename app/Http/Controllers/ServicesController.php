@@ -12,8 +12,9 @@ use App\PRS\Helpers\ServiceHelpers;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateServiceRequest;
+use App\Http\Controllers\PageController;
 
-class ServicesController extends Controller
+class ServicesController extends PageController
 {
 
     protected $serviceHelpers;
@@ -36,17 +37,12 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        if($user->cannot('index', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('index');
 
         $default_table_url = url('datatables/services?status=1');
 
         JavaScript::put([
-            'serviceTableUrl' => url('datatables/services?status='), 
+            'serviceTableUrl' => url('datatables/services?status='),
             'click_url' => url('services').'/',
         ]);
 
@@ -60,12 +56,7 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $user = Auth::user();
-        if($user->cannot('creates', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('create');
 
         return view('services.create');
     }
@@ -78,20 +69,9 @@ class ServicesController extends Controller
      */
     public function store(CreateServiceRequest $request)
     {
+        $this->checkPermissions('create');
 
-        $user = Auth::user();
-        if($user->cannot('create', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
-
-        if($user->isAdministrator())
-        {
-            $admin = $user->userable();
-        }else{
-            $admin = $user->userable()->admin();
-        }
+        $admin  = $this->loggedUserAdministrator();
 
         // get the service days number 0-127
         $service_days = $this->serviceHelpers->service_days_to_num(
@@ -140,19 +120,10 @@ class ServicesController extends Controller
      */
     public function show($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('create', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('show');
 
-        if($user->isAdministrator())
-        {
-            $service = $user->userable()->serviceBySeqId($seq_id);
-        }else{
-            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
-        }
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
         return view('services.show',compact('service'));
     }
 
@@ -164,19 +135,9 @@ class ServicesController extends Controller
      */
     public function edit($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('edit', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
-        if($user->isAdministrator())
-        {
-            $service = $user->userable()->serviceBySeqId($seq_id);
-        }else{
-            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
-        }
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         return view('services.edit',compact('service'));
     }
@@ -190,19 +151,9 @@ class ServicesController extends Controller
      */
     public function update(CreateServiceRequest $request, $seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('edit', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('edit');
 
-        if($user->isAdministrator())
-        {
-            $service = $user->userable()->serviceBySeqId($seq_id);
-        }else{
-            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
-        }
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         // get the service days number 0-127
         $service_days = $this->serviceHelpers->service_days_to_num(
@@ -253,19 +204,9 @@ class ServicesController extends Controller
      */
     public function destroy($seq_id)
     {
-        $user = Auth::user();
-        if($user->cannot('destroy', Service::class))
-        {
-            // abort(403);
-            return 'you should not pass';
-        }
+        $this->checkPermissions('destroy');
 
-        if($user->isAdministrator())
-        {
-            $service = $user->userable()->serviceBySeqId($seq_id);
-        }else{
-            $service = $user->userable()->admin()->serviceBySeqId($seq_id);
-        }
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         if($service->delete()){
             flash()->success('Deleted', 'The service was successfuly deleted');
@@ -274,4 +215,14 @@ class ServicesController extends Controller
         flash()->error('Not Deleted', 'We could not delete the service, please try again later.');
         return redirect()->back();
     }
+
+    protected function checkPermissions($typePermission)
+    {
+        $user = Auth::user();
+        if($user->cannot($typePermission, Service::class))
+        {
+            abort(403, 'If you really need to see this. Ask system administrator for access.');
+        }
+    }
+
 }

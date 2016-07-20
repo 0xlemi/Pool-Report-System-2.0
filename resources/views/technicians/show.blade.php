@@ -83,13 +83,6 @@
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Password</label>
-								<div class="col-sm-10">
-									<input type="password" readonly class="form-control hide-show-password" value="{{ $technician->user()->password }}">
-								</div>
-							</div>
-
-							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $technician->cellphone }}">
