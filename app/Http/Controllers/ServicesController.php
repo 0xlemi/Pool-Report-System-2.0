@@ -43,9 +43,10 @@ class ServicesController extends Controller
             return 'you should not pass';
         }
 
-        $default_table_url = url('datatables/services');
+        $default_table_url = url('datatables/services?status=1');
 
         JavaScript::put([
+            'serviceTableUrl' => url('datatables/services?status='), 
             'click_url' => url('services').'/',
         ]);
 

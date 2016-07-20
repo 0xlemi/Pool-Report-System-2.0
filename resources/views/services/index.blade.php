@@ -21,10 +21,11 @@
 				<a href="{{ url('services/create') }}" class="btn btn-primary">
 					<i class="font-icon font-icon-home"></i>&nbsp;&nbsp;&nbsp;New Service
 				</a>
-				<!-- <input type="checkbox" data-toggle="toggle"
-						data-on="Active" data-off="Not Active"
-						data-onstyle="success" data-offstyle="danger"
-						data-size="big" name="status" {{ (old('status')) ? 'checked':'' }}> -->
+				<div class="checkbox-toggle" style="display:inline;position:relative;left:30px;">
+					<input type="checkbox" id="statusSwitch" v-model="statusSwitch"
+							@click="changeServiceListStatus(statusSwitch)">
+					<label for="statusSwitch">Status</label>
+				</div>
 			</div>
 			<div class="table-responsive">
 				<table id="generic_table"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Response;
+use Validator;
 
 use Yajra\Datatables\Facades\Datatables;
 
@@ -58,11 +59,24 @@ class DataTableController extends PageController
         return Response::json($reports, 200);
     }
 
-    public function services()
+    public function services(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|boolean',
+        ]);
+        if ($validator->fails()) {
+            return Response::json([
+                    'message' => 'Paramenters failed validation.',
+                    'errors' => $validator->errors()->toArray(),
+                ],
+                422
+            );
+        }
+
         $services = $this->loggedUserAdministrator()
                         ->services()
                         ->get()
+                        ->where('status', (int) $request->status)
                         ->transform(function($item){
                             return (object) array(
                                 'id' => $item->seq_id,
@@ -73,7 +87,8 @@ class DataTableController extends PageController
                                                     ->get_styled_service_days($item->service_days),
                                 'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
                             );
-                        });
+                        })
+                        ->flatten(1);
         return Response::json($services, 200);
     }
 

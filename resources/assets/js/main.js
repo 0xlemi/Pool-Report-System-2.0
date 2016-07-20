@@ -36,16 +36,7 @@ function isset(strVariableName) {
 	return false
  }
 
- /* ==========================================================================
-    VueJs code
-    ========================================================================== */
 
-new Vue({
-    el: 'body',
-    components: { Permissions },
-    directives: { FormToAjax },
-
-});
 
 /* ==========================================================================
 	Scroll
@@ -1270,6 +1261,37 @@ new Vue({
     Settings Forms Events
     ========================================================================== */
 
+
+
+ /* ==========================================================================
+    VueJs code
+    ========================================================================== */
+
+    new Vue({
+        el: 'body',
+        components: { Permissions },
+        directives: { FormToAjax },
+        data:{
+            companyName: "",
+            website: "",
+            facebook: "",
+            twitter: "",
+            adminName: "",
+            statusSwitch: true,
+        },
+        methods:{
+            changeServiceListStatus(status){
+                var intStatus = (!status) ? 1 : 0;
+                if(typeof back !== 'undefined'){
+                    if(typeof back.serviceTableUrl !== 'undefined'){
+                        let new_url = back.serviceTableUrl+intStatus;
+                        generic_table.bootstrapTable('refresh', {url:new_url});
+                    }
+            	}
+            },
+        }
+
+    });
 
 
 /* ==========================================================================

@@ -16535,17 +16535,6 @@ $(document).ready(function () {
 	}
 
 	/* ==========================================================================
-    VueJs code
-    ========================================================================== */
-
-	new Vue({
-		el: 'body',
-		components: { Permissions: Permissions },
-		directives: { FormToAjax: FormToAjax }
-
-	});
-
-	/* ==========================================================================
  	Scroll
  	========================================================================== */
 
@@ -17639,6 +17628,36 @@ $(document).ready(function () {
 	/* ==========================================================================
      Settings Forms Events
      ========================================================================== */
+
+	/* ==========================================================================
+    VueJs code
+    ========================================================================== */
+
+	new Vue({
+		el: 'body',
+		components: { Permissions: Permissions },
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			companyName: "",
+			website: "",
+			facebook: "",
+			twitter: "",
+			adminName: "",
+			statusSwitch: true
+		},
+		methods: {
+			changeServiceListStatus: function changeServiceListStatus(status) {
+				var intStatus = !status ? 1 : 0;
+				if (typeof back !== 'undefined') {
+					if (typeof back.serviceTableUrl !== 'undefined') {
+						var new_url = back.serviceTableUrl + intStatus;
+						generic_table.bootstrapTable('refresh', { url: new_url });
+					}
+				}
+			}
+		}
+
+	});
 
 	/* ==========================================================================
      Maxlenght and Hide Show Password
