@@ -17545,7 +17545,8 @@ $(document).ready(function () {
 		$('#side-datetimepicker').datetimepicker({
 			inline: true,
 			enabledDates: back.enabledDates,
-			format: 'YYYY-MM-DD'
+			format: 'YYYY-MM-DD',
+			defaultDate: back.todayDate
 		});
 	}
 

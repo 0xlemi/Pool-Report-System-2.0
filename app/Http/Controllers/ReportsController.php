@@ -41,6 +41,7 @@ class ReportsController extends PageController
             'datatable_url' => url('datatables/reports').'?date=',
             'click_url' => url('reports').'/',
             'enabledDates' => $this->loggedUserAdministrator()->datesWithReport(),
+            'todayDate' => Carbon::today()->toDateString(),
         ]);
 
         return view('reports.index',compact('default_table_url'));

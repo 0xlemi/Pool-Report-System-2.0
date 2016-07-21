@@ -1178,6 +1178,7 @@ function isset(strVariableName) {
 	        inline: true,
             enabledDates: back.enabledDates,
 	        format: 'YYYY-MM-DD',
+            defaultDate: back.todayDate,
 	    });
 	}
 

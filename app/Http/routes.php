@@ -12,12 +12,7 @@
 |
 */
 
-Route::get('/', function () {
-	if(Auth::check()){
-		return view('home');
-	}
-    return view('landing.welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Route::auth();
 

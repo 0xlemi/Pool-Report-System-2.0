@@ -1,17 +1,15 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\UserHelpers')
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
-
-                <div class="panel-body">
-                    You are logged in!
-                </div>
-            </div>
-        </div>
+<div class="container-fluid">
+	<div class="box-typical box-typical-padding">
+		<h2>Welcome back </h2>
+        <h2><strong>{{ $user->getFullName() }}</strong></h2>
+        <br>
+        <h4><small class="text-muted">You are logged in as
+            &nbsp;{!! $helper->styledType($user->userable_type) !!}
+        </small></h4>
     </div>
 </div>
 @endsection
