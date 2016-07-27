@@ -44,9 +44,9 @@ class SupervisorPolicy
             }
         }elseif($type->isTechnician()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_index;
+                return $session_user->userable()->admin()->tech_supervisor_index;
             }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_index;
+                return $api_user->userable()->admin()->tech_supervisor_index;
             }
         }
         return false;
@@ -65,9 +65,9 @@ class SupervisorPolicy
             }
         }elseif($type->isTechnician()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_create;
+                return $session_user->userable()->admin()->tech_supervisor_create;
             }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_create;
+                return $api_user->userable()->admin()->tech_supervisor_create;
             }
         }
         return false;
@@ -86,9 +86,9 @@ class SupervisorPolicy
             }
         }elseif($type->isTechnician()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_show;
+                return $session_user->userable()->admin()->tech_supervisor_show;
             }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_show;
+                return $api_user->userable()->admin()->tech_supervisor_show;
             }
         }
         return false;
@@ -107,9 +107,9 @@ class SupervisorPolicy
             }
         }elseif($type->isTechnician()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_edit;
+                return $session_user->userable()->admin()->tech_supervisor_edit;
             }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_edit;
+                return $api_user->userable()->admin()->tech_supervisor_edit;
             }
         }
         return false;
@@ -128,9 +128,9 @@ class SupervisorPolicy
             }
         }elseif($type->isTechnician()){
             if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_destroy;
+                return $session_user->userable()->admin()->tech_supervisor_destroy;
             }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_destroy;
+                return $api_user->userable()->admin()->tech_supervisor_destroy;
             }
         }
         return false;

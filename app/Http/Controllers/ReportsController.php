@@ -31,7 +31,6 @@ class ReportsController extends PageController
      */
     public function index()
     {
-        $user = Auth::user();
         $this->checkPermissions('index');
 
         $default_table_url = url('datatables/reports').'?date='.Carbon::today()->toDateString();
@@ -54,7 +53,6 @@ class ReportsController extends PageController
      */
     public function create()
     {
-        $user = Auth::user();
         $this->checkPermissions('create');
 
         $services = $this->loggedUserAdministrator()->services()->get();
@@ -71,7 +69,6 @@ class ReportsController extends PageController
      */
     public function store(CreateReportRequest $request)
     {
-        $user = Auth::user();
         $this->checkPermissions('create');
 
         $completed_at = (new Carbon($request->completed_at));
@@ -110,7 +107,6 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $user = Auth::user();
         $this->checkPermissions('show');
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
@@ -126,7 +122,6 @@ class ReportsController extends PageController
      */
     public function edit($seq_id)
     {
-        $user = Auth::user();
         $this->checkPermissions('edit');
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
@@ -143,7 +138,6 @@ class ReportsController extends PageController
 
     public function addPhoto(Request $request, $seq_id)
     {
-        $user = Auth::user();
         $this->checkPermissions('addPhoto');
 
         $this->validate($request, [
@@ -159,7 +153,6 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $user = Auth::user();
         $this->checkPermissions('removePhoto');
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
@@ -179,7 +172,6 @@ class ReportsController extends PageController
      */
     public function update(Request $request, $seq_id)
     {
-        $user = Auth::user();
         $this->checkPermissions('edit');
 
         $this->validate($request, [
@@ -224,7 +216,6 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $user = Auth::user();
         $this->checkPermissions('destroy');
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
