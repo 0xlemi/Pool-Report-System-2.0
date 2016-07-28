@@ -162,6 +162,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
 
     ],
 
@@ -211,6 +212,8 @@ return [
 
         'Intervention' => Intervention\Image\Facades\Image::class,
         'JavaScript' => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'ImageHTML' => Barryvdh\Snappy\Facades\SnappyImage::class,
     ],
 
 ];

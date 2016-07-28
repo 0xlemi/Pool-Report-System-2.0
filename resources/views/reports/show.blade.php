@@ -110,7 +110,13 @@
                             @endforeach
 						</div>
 						<hr>
-						<p style="float: right;">
+						<p style="float: left;display:inline;">
+							<button  class="btn btn-info"
+							 data-toggle="modal" data-target="#emailPreview">
+							<i class="font-icon font-icon-mail"></i>&nbsp;&nbsp;Preview email</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+						</p>
+						<p style="float: right;display:inline;">
 							<a class="btn btn-danger"
 							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/reports/'.$report->seq_id) }}">
@@ -128,5 +134,26 @@
 	</div>
 	<div class="row">
 	</div>
+	<!-- Modal for email preview -->
+		<div class="modal fade" id="emailPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog modal-lg" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Preview email</h4>
+		      </div>
+		      <div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+		        			<img style="width:100%;" src="{{ $emailPreview }}" alt="Preview of the email for this report" />
+						</div>
+					</div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
 @endsection

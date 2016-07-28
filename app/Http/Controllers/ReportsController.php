@@ -111,7 +111,9 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
-        return view('reports.show', compact('report'));
+        $emailPreview = $report->getEmailImage();
+
+        return view('reports.show', compact('report','emailPreview'));
     }
 
     /**

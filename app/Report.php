@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Intervention;
 
 use Carbon\Carbon;
+use App\Client;
 use App\Image;
 class Report extends Model
 {
@@ -47,6 +48,45 @@ class Report extends Model
      */
     public function technician(){
     	return $this->belongsTo('App\Technician')->first();
+    }
+
+    public function getEmailImage(Client $client = null)
+    {
+        $template_path = base_path('resources/views/templates/email.blade.php');
+
+        // delete email preview photos
+        array_map('unlink', glob(public_path('storage/images/emails/*')));
+
+        // get the html of the design email and put it on the template
+        $content = file_get_contents(resource_path('emails/report_email.html'));
+        file_put_contents($template_path, $content);
+
+        $fileName = 'email_'.str_random(25).'.jpg';
+        $img_path = public_path('storage/images/emails/'.$fileName);
+
+        // info needed by the template
+        $name = "client_name";
+        if($client){
+            $name = $client->name;
+        }
+        $address = $this->service()->address_line;
+        $time = (new Carbon($this->completed))->toDayDateTimeString();
+        $photo1 = url($this->image(1)->normal_path);
+        $photo2 = url($this->image(2)->normal_path);
+        $photo3 = url($this->image(3)->normal_path);
+
+        //convert template with info to image
+        $result = \ImageHTML::loadHTML(
+                    view(
+                        'templates.email',
+                        compact('name','address','time','photo1','photo2','photo3')
+                    )
+                )->save($img_path);
+
+        if($result){
+            return url('storage/images/emails/'.$fileName);
+        }
+        return false;
     }
 
     /**
