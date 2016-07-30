@@ -112,7 +112,7 @@
 						<hr>
 						<p style="float: left;display:inline;">
 							<button  class="btn btn-info"
-							 data-toggle="modal" data-target="#emailPreview">
+							 data-toggle="modal" @click="" data-target="#emailPreview">
 							<i class="font-icon font-icon-mail"></i>&nbsp;&nbsp;Preview email</button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 						</p>

@@ -1290,6 +1290,29 @@ function isset(strVariableName) {
                     }
             	}
             },
+            previewEmailReport(){
+                // HTTP Request or what ever to update the permission
+                $.ajax({
+                    url:      'http://prs.dev/reports/emailPreview',
+                    type:     'POST',
+                    dataType: 'json',
+                    data: {
+                            'id': permission.id
+                        },
+                    complete: function(xhr, textStatus) {
+                        //called when complete
+                        // console.log('complete');
+                    },
+                    success: function(data, textStatus, xhr) {
+                        //called when successful
+                        console.log(data);
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        //called when there is an error
+                        // console.log('error');
+                    }
+                });
+            }
         }
 
     });

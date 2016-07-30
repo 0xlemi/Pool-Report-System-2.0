@@ -113,7 +113,15 @@ class ReportsController extends PageController
 
         $emailPreview = $report->getEmailImage();
 
-        return view('reports.show', compact('report','emailPreview'));
+        return view('reports.show', compact('report', 'emailPreview'));
+    }
+
+    public function emailPreview(Request $request)
+    {
+        $report = $this->loggedUserAdministrator()->reportsBySeqId($request->id);
+
+        return $report->getEmailImage();
+
     }
 
     /**
