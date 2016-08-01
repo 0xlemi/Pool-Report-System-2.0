@@ -112,7 +112,7 @@
 						<hr>
 						<p style="float: left;display:inline;">
 							<button  class="btn btn-info"
-							 data-toggle="modal" @click="" data-target="#emailPreview">
+							 data-toggle="modal" @click="previewEmailReport({{ $report->seq_id }})" >
 							<i class="font-icon font-icon-mail"></i>&nbsp;&nbsp;Preview email</button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 						</p>
@@ -145,7 +145,7 @@
 		      <div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
-		        			<img style="width:100%;" src="{{ $emailPreview }}" alt="Preview of the email for this report" />
+		        			<img style="width:100%;" v-bind:src="reportEmailPreview" alt="Preview of the email for this report" />
 						</div>
 					</div>
 		      </div>

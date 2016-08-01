@@ -11,6 +11,7 @@ use App\Photo;
 use App\Image;
 use Carbon\Carbon;
 use JavaScript;
+use Response;
 use Auth;
 class ReportsController extends PageController
 {
@@ -111,17 +112,24 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
-        $emailPreview = $report->getEmailImage();
-
-        return view('reports.show', compact('report', 'emailPreview'));
+        return view('reports.show', compact('report'));
     }
 
     public function emailPreview(Request $request)
     {
         $report = $this->loggedUserAdministrator()->reportsBySeqId($request->id);
 
-        return $report->getEmailImage();
+        $url = $report->getEmailImage();
 
+        if($report){
+            return Response::json([
+                'data' => [
+                    'url' => $url,
+                ]
+            ], 200);
+        }
+
+        return $this->respondInternalError();
     }
 
     /**

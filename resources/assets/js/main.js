@@ -6,6 +6,7 @@ var Permissions 	= require('./components/Permissions.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
 require('./components/checkboxList.vue');
 
+var Spinner         = require("spin");
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -16,7 +17,7 @@ $(document).ready(function(){
 
 // set th CSRF_TOKEN for ajax requests
 $.ajaxSetup({
-    headers: { 'X-CSRF-TOKEN': (document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '') }
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
 });
 
 
@@ -1278,6 +1279,7 @@ function isset(strVariableName) {
             facebook: "",
             twitter: "",
             adminName: "",
+            reportEmailPreview: "http://prs.dev/img/no_image.png",
             statusSwitch: true,
         },
         methods:{
@@ -1290,26 +1292,36 @@ function isset(strVariableName) {
                     }
             	}
             },
-            previewEmailReport(){
+            previewEmailReport(id){
+                // prevent the user from clicking more than once
+                event.target.disabled = true;
+                event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
+                new Spinner({
+                    left: "90%",
+                    radius: 5,
+                    length: 4,
+                    width: 1,
+                }).spin(event.target);
                 // HTTP Request or what ever to update the permission
                 $.ajax({
+                    vue: this,
+                    target: event.target,
                     url:      'http://prs.dev/reports/emailPreview',
-                    type:     'POST',
+                    type:     'GET',
                     dataType: 'json',
                     data: {
-                            'id': permission.id
+                            'id': id
                         },
                     complete: function(xhr, textStatus) {
-                        //called when complete
-                        // console.log('complete');
+                        this.target.disabled = false;
+                        this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
                     },
                     success: function(data, textStatus, xhr) {
-                        //called when successful
-                        console.log(data);
+                        $('#emailPreview').modal('show');
+                        this.vue.reportEmailPreview = data.data.url;
                     },
                     error: function(xhr, textStatus, errorThrown) {
-                        //called when there is an error
-                        // console.log('error');
+                        console.log('error');
                     }
                 });
             }

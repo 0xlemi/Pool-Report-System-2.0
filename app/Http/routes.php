@@ -16,10 +16,11 @@ Route::get('/', 'HomeController@index');
 
 Route::auth();
 
-Route::resource('reports', 'ReportsController');
+Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
+Route::resource('reports', 'ReportsController');
 Route::resource('services', 'ServicesController');
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
