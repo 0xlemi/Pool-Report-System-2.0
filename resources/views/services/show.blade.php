@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
-@inject('helper', 'App\PRS\Helpers\ServiceHelpers')
+@inject('serviceHelpers', 'App\PRS\Helpers\ServiceHelpers')
+@inject('clientHelpers', 'App\PRS\Helpers\ClientHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -86,19 +87,19 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Country</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $helper->get_country_by_code($service->country) }}">
+									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $serviceHelpers->get_country_by_code($service->country) }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
-									{!! $helper->get_styled_type($service->type, false) !!}
+									{!! $serviceHelpers->get_styled_type($service->type, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service days</label>
 								<div class="col-sm-10">
-									{!! $helper->get_styled_service_days($service->service_days) !!}
+									{!! $serviceHelpers->get_styled_service_days($service->service_days) !!}
 								</div>
 							</div>
 							<div class="form-group row">
@@ -123,7 +124,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status</label>
 								<div class="col-sm-10">
-									{!! $helper->get_styled_status($service->status, false) !!}
+									{!! $serviceHelpers->get_styled_status($service->status, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
@@ -136,6 +137,42 @@
 							</div>
 						</form>
 						<hr>
+						<div id="toolbar">
+							<h3><strong>List of Clients</strong></h3>
+						</div>
+						<div class="table-responsive">
+							<table id="generic_table"
+								   class="table"
+								   data-toolbar="#toolbar"
+								   data-search="true"
+								   data-show-export="true"
+								   data-export-types="['excel', 'pdf']"
+								   data-minimum-count-columns="2"
+								   data-pagination="true"
+								   data-show-footer="false"
+								   data-response-handler="responseHandler"
+								   >
+								<thead>
+								    <tr>
+								        <th data-field="id" data-sortable="true">#</th>
+								        <th data-field="name" data-sortable="true">Name</th>
+								        <th data-field="email" data-sortable="true">Email</th>
+								        <th data-field="type" data-sortable="true">Type</th>
+								    </tr>
+								</thead>
+								<tbody>
+									@foreach ($clients as $client)
+										<tr>
+											<td>{{ $client->seq_id }}</td>
+											<td>{{ $client->name.' '.$client->last_name }}</td>
+											<td>{{ $client->user()->email }}</td>
+											<td>{!! $clientHelpers->styledType($client->type, true, false) !!}</td>
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
+
 						<p style="float: right;">
 							<a class="btn btn-danger"
 							data-method="delete" data-token="{{ csrf_token() }}"

@@ -151,6 +151,9 @@ class ReportsController extends ApiController
         ]);
 
         if($report){
+            //send email
+            $report->sendEmailAllClients();
+
             return $this->respondPersisted(
                 'The report was successfuly created.',
                 $this->reportTransformer->transform($admin->reports(true)->first())

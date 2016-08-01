@@ -100,7 +100,7 @@
 						</form>
 						<hr>
 						<div id="toolbar">
-							<h3><strong>List of Client Services</strong></h3>
+							<h3><strong>List of Services</strong></h3>
 						</div>
 						<div class="table-responsive">
 							<table id="generic_table"

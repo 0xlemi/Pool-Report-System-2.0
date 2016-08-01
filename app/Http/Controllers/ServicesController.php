@@ -124,7 +124,9 @@ class ServicesController extends PageController
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
-        return view('services.show',compact('service'));
+        $clients = $service->clients()->get();
+
+        return view('services.show', compact('service', 'clients'));
     }
 
     /**

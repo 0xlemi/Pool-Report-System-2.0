@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Intervention;
+use Mail;
 
 use Carbon\Carbon;
 use App\Client;
@@ -40,6 +41,10 @@ class Report extends Model
      */
     public function service(){
     	return $this->belongsTo('App\Service')->first();
+    }
+
+    public function clients(){
+        return $this->service()->clients();
     }
 
     /**
@@ -87,6 +92,39 @@ class Report extends Model
             return url('storage/images/emails/'.$fileName);
         }
         return false;
+    }
+
+    public function sendEmailAllClients()
+    {
+        $clients = $this->clients()->get();
+            foreach ($clients as $client) {
+                $this->sendEmail($client);
+        }
+    }
+
+    public function sendEmail(Client $client)
+    {
+        $template_path = base_path('resources/views/templates/email.blade.php');
+
+        // get the html of the design email and put it on the template
+        $content = file_get_contents(resource_path('emails/report_email.html'));
+        file_put_contents($template_path, $content);
+
+        // info needed by the template
+        $data = array(
+            'name' => $client->name,
+            'address' => $this->service()->address_line,
+            'time' => (new Carbon($this->completed))->toDayDateTimeString(),
+            'photo1' => url($this->image(1)->normal_path),
+            'photo2' => url($this->image(2)->normal_path),
+            'photo3' => url($this->image(3)->normal_path),
+        );
+
+        return  Mail::send('templates.email', $data, function ($message) use ($client){
+            $message->from('service@poolreportsystem.com', 'Pool Report System');
+            $message->subject('Your pool is clean '.$client->name);
+            $message->to($client->user()->email);
+        });
     }
 
     /**

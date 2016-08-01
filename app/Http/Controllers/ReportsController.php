@@ -13,16 +13,20 @@ use Carbon\Carbon;
 use JavaScript;
 use Response;
 use Auth;
+use App\PRS\Helpers\ReportHelpers;
 class ReportsController extends PageController
 {
+    protected $reportHelpers;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ReportHelpers $reportHelpers)
     {
         $this->middleware('auth');
+        $this->reportHelpers = $reportHelpers;
     }
 
     /**
@@ -73,13 +77,20 @@ class ReportsController extends PageController
         $this->checkPermissions('create');
 
         $completed_at = (new Carbon($request->completed_at));
-        $service = $this->loggedUserAdministrator->serviceBySeqId($request->service);
-        $technician = $this->loggedUserAdministrator->technicianBySeqId($request->technician);
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
+        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
+
+        $on_time = $this->reportHelpers->checkOnTime(
+                $request->completed_at,
+                $service->start_time,
+                $service->end_time
+            );
 
         $report = Report::create([
             'service_id' => $service->id,
             'technician_id' => $technician->id,
             'completed' => $completed_at,
+            'on_time' => $on_time,
             'ph' => $request->ph,
             'clorine' => $request->clorine,
             'temperature' => $request->temperature,
@@ -93,8 +104,11 @@ class ReportsController extends PageController
         $image3 = $report->addImageFromForm($request->file('photo3'));
 
         if($report && $image1 && $image2 && $image3){
+            //send email
+            $report->sendEmailAllClients();
+
             flash()->success('Created', 'Report was created successfuly.');
-            return redirect('reports/date/'.$completed_at->toDateString());
+            return redirect('reports');
         }
         flash()->error('Not created', 'Report was not created, please try again later.');
         return redirect()->back();
