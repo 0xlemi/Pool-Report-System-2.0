@@ -17948,7 +17948,8 @@ $(document).ready(function () {
 			website: "",
 			facebook: "",
 			twitter: "",
-			adminName: "",
+			objectName: "",
+			objectLastName: "",
 			reportEmailPreview: "http://prs.dev/img/no_image.png",
 			statusSwitch: true
 		},

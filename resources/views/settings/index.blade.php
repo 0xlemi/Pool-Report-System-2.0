@@ -9,7 +9,7 @@
                 <div class="profile-card-photo">
                     <img src="img/photo-220-1.jpg" alt=""/>
                 </div>
-                <div class="profile-card-name">@{{ adminName }}</div>
+                <div class="profile-card-name">@{{ objectName+' '+objectLastName }}</div>
                 <div class="profile-card-status">@{{ companyName }}</div>
                 <div class="profile-card-location">Business Plan</div>
 
@@ -27,7 +27,6 @@
                     </div>
                 </div>
             </div>
-            @if($user->isAdministrator())
                 <ul class="profile-links-list">
                     <li class="nowrap">
                         <i class="font-icon font-icon-mail"></i>
@@ -46,7 +45,6 @@
                         <a href="http://www.twitter.com/@{{ twitter }}">twitter.com/@{{ twitter }}</a>
                     </li>
                 </ul>
-            @endif
         </section><!--.box-typical-->
     </div><!--.col- -->
 
@@ -59,6 +57,7 @@
                 <div class="tabs-section-nav tabs-section-nav-icons">
                     <div class="tbl">
                         <ul class="nav" role="tablist">
+                            @can('account', $setting)
                             <li class="nav-item">
                                 <a class="nav-link active" href="#tabs-1-tab-2" role="tab" data-toggle="tab">
                                     <span class="nav-link-in">
@@ -67,6 +66,8 @@
                                     </span>
                                 </a>
                             </li>
+                            @endcan
+                            @can('company', $setting)
                             <li class="nav-item">
                                 <a class="nav-link" href="#tabs-1-tab-1" role="tab" data-toggle="tab">
                                     <span class="nav-link-in">
@@ -75,6 +76,8 @@
                                     </span>
                                 </a>
                             </li>
+                            @endcan
+                            @can('email', $setting)
                             <li class="nav-item">
                                 <a class="nav-link" href="#tabs-1-tab-4" role="tab" data-toggle="tab">
                                     <span class="nav-link-in">
@@ -83,6 +86,8 @@
                                     </span>
                                 </a>
                             </li>
+                            @endcan
+                            @can('billing', $setting)
                             <li class="nav-item">
                                 <a class="nav-link" href="#tabs-1-tab-5" role="tab" data-toggle="tab">
                                     <span class="nav-link-in">
@@ -91,6 +96,8 @@
                                     </span>
                                 </a>
                             </li>
+                            @endcan
+                            @can('permissions', $setting)
                             <li class="nav-item">
                                 <a class="nav-link" href="#tabs-1-tab-6" role="tab" data-toggle="tab">
                                     <span class="nav-link-in">
@@ -99,12 +106,15 @@
                                     </span>
                                 </a>
                             </li>
+                            @endcan
                         </ul>
                     </div>
                 </div><!--.tabs-section-nav-->
 
                 <div class="tab-content">
 
+
+                    @can('account', $setting)
                     <div role="tabpanel" class="tab-pane fade in active" id="tabs-1-tab-2">
                         <br>
                         @include('settings.account')
@@ -119,24 +129,31 @@
                       <br>
 
                     </div><!--.tab-pane-->
+                    @endcan
 
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-1">
                         <br>
                         @include('settings.company')
                     </div><!--.tab-pane-->
 
-                    <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
-
-                    </div><!--.tab-pane-->
+                    @can('email', $setting)
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-4">
 
                     </div><!--.tab-pane-->
+                    @endcan
+
+                    @can('billing', $setting)
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
 
                     </div><!--.tab-pane-->
+                    @endcan
+
+                    @can('permissions', $setting)
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-6">
                         @include('settings.permissions')
                     </div><!--.tab-pane-->
+                    @endcan
+
                 </div><!--.tab-content-->
             </section><!--.tabs-section-->
 

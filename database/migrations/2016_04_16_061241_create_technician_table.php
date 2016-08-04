@@ -21,6 +21,7 @@ class CreateTechnicianTable extends Migration
             $table->string('address');
             $table->char('language', 2);
             $table->text('comments');
+            $table->integer('email_preferences');
             $table->integer('supervisor_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->softDeletes();

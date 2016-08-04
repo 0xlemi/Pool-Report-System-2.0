@@ -13,6 +13,7 @@ use DateTime;
 
 use App\User;
 use App\Administrator;
+use App\Setting;
 
 use App\Http\Requests;
 
@@ -37,33 +38,118 @@ class SettingsController extends PageController
     {
         $user = $this->getUser();
         $admin = $user->admin();
+        $setting = Setting::class;
 
         $timezones = $this->getTimezone();
 
-        return view('settings.index', compact('user', 'admin', 'timezones'));
+        return view('settings.index', compact('user', 'admin', 'timezones', 'setting'));
     }
 
     public function account(Request $request)
     {
+
+        if($this->getUser()->cannot('account', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
+        // needs refactor
+        $user = $this->getUser();
+        if($user->isAdministrator())
+        {
+            $this->validate($request, [
+                'timezone' => 'required|string|between:3,255',
+            ]);
+            $object = $user->userable();
+            $object->timezone = $request->timezone;
+
+        }elseif($user->isSupervisor())
+        {
+            $this->validate($request, [
+                'last_name' => 'required|string|between:2,45',
+            ]);
+            $object = $user->userable();
+            $object->last_name = $request->last_name;
+
+        }elseif($user->isTechnician())
+        {
+            $this->validate($request, [
+                'last_name' => 'required|string|between:2,45',
+            ]);
+            $object = $user->userable();
+            $object->last_name = $request->last_name;
+
+        }
+
         $this->validate($request, [
             'name' => 'required|between:2,45',
             'language' => 'required|string|size:2',
-            'timezone' => 'required|string|between:3,255',
         ]);
-        $admin = $this->loggedUserAdministrator();
 
-        $admin->name = $request->name;
-        $admin->language = $request->language;
-        $admin->timezone = $request->timezone;
 
-        if($admin->save()){
+        $object->name = $request->name;
+        $object->language = $request->language;
+
+        if($object->save()){
             return $this->respondWithSuccess('Account information was updated successfully.');
         }
         return $this->respondInternalError('Account information was not updated, Please try again later.');
    }
 
+    public function changeEmail(Request $request){
+
+        if($this->getUser()->cannot('changeEmail', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
+        $user = $this->getUser();
+        $this->validate($request, [
+            'old_password' => 'required|string|max:255',
+            'new_email' => 'required|email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
+        ]);
+
+        if($user->checkPassword($request->old_password)){
+            $user->email = $request->new_email;
+            if($user->save()){
+                return $this->respondWithSuccess('Email was updated');
+            }
+            return $this->respondInternalError('Email was not updated, there was an error.');
+        }
+        return $this->respondWithValidationError('Email was not updated, the information is wrong');
+    }
+
+    public function changePassword(Request $request){
+
+        if($this->getUser()->cannot('changePassword', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
+        $this->validate($request, [
+          'old_password' => 'required|string|max:255',
+          'new_password' => 'required|string|between:6,255',
+          'confirm_password' => 'required|string|between:6,255|same:new_password',
+        ]);
+
+            $user = $this->getUser();
+            if($user->checkPassword($request->old_password)){
+                $user->password = bcrypt($request->new_password);
+                if($user->save()){
+                    return $this->respondWithSuccess('Password was updated');
+                }
+            return $this->respondInternalError('Password not updated, there was an error.');
+         }
+         return $this->respondWithValidationError('Password not updated , the information is wrong');
+    }
 
     public function company(Request $request){
+
+        if($this->getUser()->cannot('company', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
         $this->validate($request, [
             'company_name' => 'required|between:2,30',
             'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
@@ -84,43 +170,26 @@ class SettingsController extends PageController
 
     }
 
-    public function email(Request $request){
-        $this->validate($request, [
-            'old_password' => 'required|string|max:255',
-            'new_email' => 'required|email|max:255',
-        ]);
+    public function email(Request $request)
+    {
 
-        $user = $this->getUser();
-        if($user->checkPassword($request->old_password)){
-            $user->email = $request->new_email;
-            if($user->save()){
-                return $this->respondWithSuccess('Email was updated');
-            }
-            return $this->respondInternalError('Email was not updated, there was an error.');
-        }
-        return $this->respondWithValidationError('Email was not updated, the information is wrong');
     }
 
-    public function password(Request $request){
-        $this->validate($request, [
-          'old_password' => 'required|string|max:255',
-          'new_password' => 'required|string|between:6,255',
-          'confirm_password' => 'required|string|between:6,255|same:new_password',
-        ]);
+    public function billing(Request $request)
+    {
 
-            $user = $this->getUser();
-            if($user->checkPassword($request->old_password)){
-                $user->password = bcrypt($request->new_password);
-                if($user->save()){
-                    return $this->respondWithSuccess('Password was updated');
-                }
-            return $this->respondInternalError('Password not updated, there was an error.');
-         }
-         return $this->respondWithValidationError('Password not updated , the information is wrong');
     }
+
+
 
     public function permissions(Request $request)
     {
+
+        if($this->getUser()->cannot('permissions', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
         $permission = $request->all();
         $column_name = $permission['id'];
         $checked_value = strtolower($permission['checked']);

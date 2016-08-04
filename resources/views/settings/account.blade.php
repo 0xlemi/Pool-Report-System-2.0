@@ -2,18 +2,25 @@
   {{ csrf_field() }}
   {{ method_field('PATCH') }}
 
-  <div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
+  <div class="form-group row">
       <label class="col-sm-2 form-control-label">Name:</label>
       <div class="col-sm-10">
           <input type="text" class="form-control maxlength-simple"
-                  name="name" maxlength="25" v-model="adminName" value="{{ $user->getFullName() }}">
-          @if ($errors->has('name'))
-              <small class="text-muted">{{ $errors->first('name') }}</small>
-          @endif
+                  name="name" maxlength="25" v-model="objectName" value="{{ $user->userable()->name }}">
       </div>
   </div>
 
-  <div class="form-group row {{($errors->has('language'))? 'form-group-error':''}}">
+@if($user->isTechnician() || $user->isSupervisor())
+  <div class="form-group row">
+      <label class="col-sm-2 form-control-label">Last Name:</label>
+      <div class="col-sm-10">
+          <input type="text" class="form-control maxlength-simple"
+                  name="last_name" maxlength="25" v-model="objectLastName" value="{{ $user->userable()->last_name }}">
+      </div>
+  </div>
+@endif
+
+  <div class="form-group row ">
       <label class="col-sm-2 form-control-label">Language:</label>
       <div class="col-sm-10">
             <select class="bootstrap-select bootstrap-select-arrow" name="language">
@@ -24,13 +31,11 @@
 					Español
 				</option>
 			</select>
-          @if ($errors->has('language'))
-              <small class="text-muted">{{ $errors->first('language') }}</small>
-          @endif
       </div>
   </div>
 
-  <div class="form-group row {{($errors->has('timezone'))? 'form-group-error':''}}">
+@if($user->isAdministrator())
+  <div class="form-group row">
       <label class="col-sm-2 form-control-label">Timezone:</label>
       <div class="col-sm-10">
             <select class="bootstrap-select bootstrap-select-arrow" name="timezone" data-live-search="true">
@@ -45,11 +50,9 @@
                     </optgroup>
                 @endforeach
             </select>
-          @if ($errors->has('timezone'))
-              <small class="text-muted">{{ $errors->first('timezone') }}</small>
-          @endif
       </div>
   </div>
+@endif
   <br>
   <p style="float: right;">
       <button  class="btn btn-success"

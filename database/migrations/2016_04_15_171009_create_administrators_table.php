@@ -24,6 +24,8 @@ class CreateAdministratorsTable extends Migration
                 $table->string('website');
                 $table->string('facebook');
                 $table->string('twitter');
+            // Email Preferences
+                $table->integer('email_preferences');
             // Permissions
                 // Report
                 $table->boolean('sup_report_index')->default(1);

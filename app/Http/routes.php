@@ -30,9 +30,11 @@ Route::get('chat', 'ChatController@home');
 
 Route::get('settings', 'SettingsController@index');
 Route::patch('settings/account', 'SettingsController@account');
+Route::patch('settings/changeEmail', 'SettingsController@changeEmail');
+Route::patch('settings/changePassword', 'SettingsController@changePassword');
 Route::patch('settings/company', 'SettingsController@company');
 Route::patch('settings/email', 'SettingsController@email');
-Route::patch('settings/password', 'SettingsController@password');
+Route::patch('settings/billing', 'SettingsController@billing');
 Route::post('settings/permissions', 'SettingsController@permissions');
 
 Route::get('datatables/reports', 'DataTableController@reports');
