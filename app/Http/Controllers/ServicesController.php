@@ -122,6 +122,10 @@ class ServicesController extends PageController
     {
         $this->checkPermissions('show');
 
+        JavaScript::put([
+            'click_url' => url('clients').'/',
+        ]);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         $clients = $service->clients()->get();

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('helper', 'App\PRS\Helpers\SupervisorHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -89,6 +90,12 @@
 								</div>
 							</div>
 
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Receives email</label>
+								<div class="col-sm-10">
+									{!! $helper->styleEmailPermissions($supervisor) !!}
+								</div>
+							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Language</label>

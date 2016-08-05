@@ -2,12 +2,15 @@
 
 namespace App\PRS\Helpers;
 
+use App\PRS\Traits\HelperTrait;
+
 /**
  * Helpers for client elements
  */
 class ClientHelpers
 {
 
+use HelperTrait;
 
     function styledType($type, $is_pill = true, $long_version = true){
     	$tag_type = '';

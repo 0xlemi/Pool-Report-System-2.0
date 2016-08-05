@@ -84,6 +84,12 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Receives email</label>
+								<div class="col-sm-10">
+									{!! $helper->styleEmailPermissions($client) !!}
+								</div>
+							</div>
+							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Language</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($client->language) }}">

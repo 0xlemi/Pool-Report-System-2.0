@@ -106,6 +106,7 @@ class ReportsController extends PageController
         if($report && $image1 && $image2 && $image3){
             //send email
             $report->sendEmailAllClients();
+            $report->sendEmailSupervisor();
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');

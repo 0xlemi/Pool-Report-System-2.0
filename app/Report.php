@@ -97,12 +97,23 @@ class Report extends Model
     public function sendEmailAllClients()
     {
         $clients = $this->clients()->get();
-            foreach ($clients as $client) {
-                $this->sendEmail($client);
+        foreach ($clients as $client) {
+            // check if the email preference
+            if($client->get_reports_emails){
+                $this->sendEmail($client->name, $client->user()->email);
+            }
         }
     }
 
-    public function sendEmail(Client $client)
+    public function sendEmailSupervisor()
+    {
+        $supervisor = $this->technician()->supervisor();
+        if($supervisor->get_reports_emails){
+            $this->sendEmail($supervisor->name, $supervisor->user()->email);
+        }
+    }
+
+    public function sendEmail(string $name, string $email)
     {
         $template_path = base_path('resources/views/templates/email.blade.php');
 
@@ -112,7 +123,7 @@ class Report extends Model
 
         // info needed by the template
         $data = array(
-            'name' => $client->name,
+            'name' => $name,
             'address' => $this->service()->address_line,
             'time' => (new Carbon($this->completed))->toDayDateTimeString(),
             'photo1' => url($this->image(1)->normal_path),
@@ -120,10 +131,10 @@ class Report extends Model
             'photo3' => url($this->image(3)->normal_path),
         );
 
-        return  Mail::send('templates.email', $data, function ($message) use ($client){
+        return  Mail::send('templates.email', $data, function ($message) use ($name, $email){
             $message->from('service@poolreportsystem.com', 'Pool Report System');
-            $message->subject('Your pool is clean '.$client->name);
-            $message->to($client->user()->email);
+            $message->subject('Your pool is clean '.$name);
+            $message->to($email);
         });
     }
 
