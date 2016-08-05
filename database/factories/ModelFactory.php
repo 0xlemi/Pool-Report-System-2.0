@@ -31,6 +31,7 @@ $factory->define(App\Administrator::class, function (Faker\Generator $faker) {
         'website' => $faker->url,
         'facebook' => $faker->word,
         'twitter' => $faker->word,
+		'get_reports_emails' => $faker->boolean,
     	'language' => $faker->languageCode,
 		'timezone' => 'America/Mazatlan',
     ];
@@ -64,6 +65,7 @@ $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
         'address' => $faker->streetAddress,
+		'get_reports_emails' => $faker->boolean,
     	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
@@ -75,6 +77,7 @@ $factory->define(App\Technician::class, function (Faker\Generator $faker){
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
 		'address' => $faker->address,
+		'get_reports_emails' => $faker->boolean,
     	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
@@ -86,7 +89,7 @@ $factory->define(App\Client::class, function (Faker\Generator $faker){
 		'last_name' => $faker->lastName,
 		'cellphone' => $faker->phoneNumber,
 		'type' => $faker->numberBetween(1, 2),
-		'email_preferences' => $faker->numberBetween(1, 4),
+		'get_reports_emails' => $faker->boolean,
     	'language' => $faker->languageCode,
 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];

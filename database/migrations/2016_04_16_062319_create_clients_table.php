@@ -21,7 +21,10 @@ class CreateClientsTable extends Migration
             $table->tinyInteger('type'); // 1=owner, 2=house administrator
             $table->char('language', 2);
             $table->text('comments');
-            $table->integer('email_preferences');
+
+            // Email Preferences
+            $table->boolean('get_reports_emails');
+            
             $table->integer('seq_id')->index();
             $table->integer('admin_id')->unsigned();
             $table->softDeletes();

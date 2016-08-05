@@ -3,6 +3,7 @@ var dateFormat 		= require('dateformat');
 // Vue imports
 var Vue 			= require('vue');
 var Permissions 	= require('./components/Permissions.vue');
+var emailPreference = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
 require('./components/checkboxList.vue');
 
@@ -1271,7 +1272,11 @@ function isset(strVariableName) {
 
     new Vue({
         el: 'body',
-        components: { Permissions },
+
+        components: {
+            Permissions,
+            emailPreference
+        },
         directives: { FormToAjax },
         data:{
             companyName: "",

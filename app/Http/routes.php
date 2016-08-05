@@ -35,7 +35,7 @@ Route::patch('settings/changePassword', 'SettingsController@changePassword');
 Route::patch('settings/company', 'SettingsController@company');
 Route::patch('settings/email', 'SettingsController@email');
 Route::patch('settings/billing', 'SettingsController@billing');
-Route::post('settings/permissions', 'SettingsController@permissions');
+Route::patch('settings/permissions', 'SettingsController@permissions');
 
 Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/services', 'DataTableController@services');

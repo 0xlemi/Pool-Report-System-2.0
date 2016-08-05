@@ -1,16 +1,16 @@
 <template>
 
-  <checkbox-list :header="'Reports'" :data="permission_reports"></checkbox-list>
-  <checkbox-list :header="'Services'" :data="permission_services"></checkbox-list>
-  <checkbox-list :header="'Clients'" :data="permission_clients"></checkbox-list>
-  <checkbox-list :header="'Supervisors'" :data="permission_supervisors"></checkbox-list>
-  <checkbox-list :header="'Technicians'" :data="permission_technicians"></checkbox-list>
+  <checkbox-list :header="'Reports'" :data="permission_reports" :url="url"></checkbox-list>
+  <checkbox-list :header="'Services'" :data="permission_services" :url="url"></checkbox-list>
+  <checkbox-list :header="'Clients'" :data="permission_clients" :url="url"></checkbox-list>
+  <checkbox-list :header="'Supervisors'" :data="permission_supervisors" :url="url"></checkbox-list>
+  <checkbox-list :header="'Technicians'" :data="permission_technicians" :url="url"></checkbox-list>
 
 </template>
 
 <script>
   export default {
-    props: ['admin', 'permissionType'],
+    props: ['admin', 'permissionType', 'url'],
     data () {
       return {
         permission_reports: [

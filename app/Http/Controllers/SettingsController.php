@@ -37,12 +37,17 @@ class SettingsController extends PageController
     public function index()
     {
         $user = $this->getUser();
+        // SECURITY BUG, YOU SHOULD NOT SEND ALL THE ADMIN INFORMATION
         $admin = $user->admin();
         $setting = Setting::class;
 
         $timezones = $this->getTimezone();
+        $url = (object) array(
+            'permissions' => url('settings/permissions'),
+            'email' => url('settings/email'),
+        );
 
-        return view('settings.index', compact('user', 'admin', 'timezones', 'setting'));
+        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url'));
     }
 
     public function account(Request $request)
@@ -172,6 +177,37 @@ class SettingsController extends PageController
 
     public function email(Request $request)
     {
+        if($this->getUser()->cannot('email', Setting::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
+        $this->validate($request, [
+            'id' => [
+                'required',
+                'max:255',
+                'regex:/\w+\_\w+\_\w+/',
+                ],
+        ]);
+
+        $person = $this->getUser()->userable();
+        $attributes = $person->getAttributes();
+
+        $column_name = $request->id;
+        $checked_value = strtolower($request->checked);
+        $checked = ($checked_value  == 'true' || $checked_value  == '1') ? false : true;
+
+        //check whether the id they are sending us is a real email preference
+        if(isset($attributes[$column_name]))
+        {
+            $person->$column_name = $checked;
+            if($person->save()){
+                return $this->respondWithSuccess('Permission has been saved.');
+            }
+            return $this->respondInternalError('Error while persisting the permission');
+        }
+        return $this->respondNotFound('There is no permission with that id');
+
 
     }
 
@@ -190,15 +226,24 @@ class SettingsController extends PageController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
         }
 
-        $permission = $request->all();
-        $column_name = $permission['id'];
-        $checked_value = strtolower($permission['checked']);
+        $this->validate($request, [
+            'id' => [
+                'required',
+                'max:255',
+                'regex:/\w+\_\w+\_\w+/',
+                ],
+        ]);
+
+        $admin = $this->loggedUserAdministrator();
+        $attributes = $admin->getAttributes();
+
+        $column_name = $request->id;
+        $checked_value = strtolower($request->checked);
         $checked = ($checked_value  == 'true' || $checked_value  == '1') ? false : true;
 
         //check whether the id they are sending us is a real permission
-        if(Schema::hasColumn('administrators', $column_name))
+        if(isset($attributes[$column_name]))
         {
-            $admin = $this->loggedUserAdministrator();
             $admin->$column_name = $checked;
             if($admin->save()){
                 return $this->respondWithSuccess('Permission has been saved.');

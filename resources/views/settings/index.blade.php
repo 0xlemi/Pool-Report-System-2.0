@@ -120,10 +120,10 @@
                         @include('settings.account')
 
                         <hr />
-                        @include('settings.email')
+                        @include('settings.changeEmail')
 
                         <hr />
-                        @include('settings.password')
+                        @include('settings.changePassword')
 
                       <br>
                       <br>
@@ -138,7 +138,7 @@
 
                     @can('email', $setting)
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-4">
-
+                        @include('settings.email')
                     </div><!--.tab-pane-->
                     @endcan
 

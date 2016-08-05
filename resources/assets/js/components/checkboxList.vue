@@ -1,6 +1,6 @@
 <template>
 
-    <header class="box-typical-header-sm">
+    <header class="box-typical-header-sm" v-if="header">
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:
     </header>
 
@@ -22,7 +22,7 @@
   var Vue = require('vue');
 
   export default Vue.component('checkbox-list', {
-    props: ['header', 'data'],
+    props: ['header', 'data', 'url'],
 
     data() {
       return {
@@ -34,8 +34,8 @@
       sendRequest(permission) {
         // HTTP Request or what ever to update the permission
         $.ajax({
-            url:      'http://prs.dev/settings/permissions',
-            type:     'POST',
+            url:      this.url,
+            type:     'PATCH',
             dataType: 'json',
             data: {
                     'id': permission.id,

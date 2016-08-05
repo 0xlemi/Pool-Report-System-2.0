@@ -16631,7 +16631,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = {
-  props: ['admin', 'permissionType'],
+  props: ['admin', 'permissionType', 'url'],
   data: function data() {
     return {
       permission_reports: [{ id: this.permissionType + "_report_index", name: "View List Reports", checked: this.admin[this.permissionType + '_report_index'] }, { id: this.permissionType + "_report_create", name: "Create New Report", checked: this.admin[this.permissionType + '_report_create'] }, { id: this.permissionType + "_report_show", name: "Show Report Details", checked: this.admin[this.permissionType + '_report_show'] }, { id: this.permissionType + "_report_edit", name: "Edit Reports", checked: this.admin[this.permissionType + '_report_edit'] }, { id: this.permissionType + "_report_addPhoto", name: "Add Photos from Reports", checked: this.admin[this.permissionType + '_report_addPhoto'] }, { id: this.permissionType + "_report_removePhoto", name: "Remove Photos from Reports", checked: this.admin[this.permissionType + '_report_removePhoto'] }, { id: this.permissionType + "_report_destroy", name: "Delete Report", checked: this.admin[this.permissionType + '_report_destroy'] }], permission_services: [{ id: this.permissionType + "_service_index", name: "View List Services", checked: this.admin[this.permissionType + '_service_index'] }, { id: this.permissionType + "_service_create", name: "Create New Service", checked: this.admin[this.permissionType + '_service_create'] }, { id: this.permissionType + "_service_show", name: "Show Service Details", checked: this.admin[this.permissionType + '_service_show'] }, { id: this.permissionType + "_service_edit", name: "Edit Services", checked: this.admin[this.permissionType + '_service_edit'] }, { id: this.permissionType + "_service_destroy", name: "Delete Service", checked: this.admin[this.permissionType + '_service_destroy'] }], permission_clients: [{ id: this.permissionType + "_client_index", name: "View List Clients", checked: this.admin[this.permissionType + '_client_index'] }, { id: this.permissionType + "_client_create", name: "Create New Client", checked: this.admin[this.permissionType + '_client_create'] }, { id: this.permissionType + "_client_show", name: "Show Client Details", checked: this.admin[this.permissionType + '_client_show'] }, { id: this.permissionType + "_client_edit", name: "Edit Clients", checked: this.admin[this.permissionType + '_client_edit'] }, { id: this.permissionType + "_client_destroy", name: "Delete Client", checked: this.admin[this.permissionType + '_client_destroy'] }], permission_supervisors: [{ id: this.permissionType + "_supervisor_index", name: "View List Supervisors", checked: this.admin[this.permissionType + '_supervisor_index'] }, { id: this.permissionType + "_supervisor_create", name: "Create New Supervisor", checked: this.admin[this.permissionType + '_supervisor_create'] }, { id: this.permissionType + "_supervisor_show", name: "Show Supervisor Details", checked: this.admin[this.permissionType + '_supervisor_show'] }, { id: this.permissionType + "_supervisor_edit", name: "Edit Supervisors", checked: this.admin[this.permissionType + '_supervisor_edit'] }, { id: this.permissionType + "_supervisor_destroy", name: "Delete Supervisor", checked: this.admin[this.permissionType + '_supervisor_destroy'] }], permission_technicians: [{ id: this.permissionType + "_technician_index", name: "View List Technicians", checked: this.admin[this.permissionType + '_technician_index'] }, { id: this.permissionType + "_technician_create", name: "Create New Technician", checked: this.admin[this.permissionType + '_technician_create'] }, { id: this.permissionType + "_technician_show", name: "Show Technician Details", checked: this.admin[this.permissionType + '_technician_show'] }, { id: this.permissionType + "_technician_edit", name: "Edit Technicians", checked: this.admin[this.permissionType + '_technician_edit'] }, { id: this.permissionType + "_technician_destroy", name: "Delete Technician", checked: this.admin[this.permissionType + '_technician_destroy'] }]
@@ -16639,7 +16639,7 @@ exports.default = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :header=\"'Reports'\" :data=\"permission_reports\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Services'\" :data=\"permission_services\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Clients'\" :data=\"permission_clients\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Supervisors'\" :data=\"permission_supervisors\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Technicians'\" :data=\"permission_technicians\" _v-22ce5c3f=\"\"></checkbox-list>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :header=\"'Reports'\" :data=\"permission_reports\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Services'\" :data=\"permission_services\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Clients'\" :data=\"permission_clients\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Supervisors'\" :data=\"permission_supervisors\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Technicians'\" :data=\"permission_technicians\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -16665,7 +16665,7 @@ Object.defineProperty(exports, "__esModule", {
 var Vue = require('vue');
 
 exports.default = Vue.component('checkbox-list', {
-    props: ['header', 'data'],
+    props: ['header', 'data', 'url'],
 
     data: function data() {
         return {
@@ -16678,8 +16678,8 @@ exports.default = Vue.component('checkbox-list', {
         sendRequest: function sendRequest(permission) {
             // HTTP Request or what ever to update the permission
             $.ajax({
-                url: 'http://prs.dev/settings/permissions',
-                type: 'POST',
+                url: this.url,
+                type: 'PATCH',
                 dataType: 'json',
                 data: {
                     'id': permission.id,
@@ -16703,7 +16703,7 @@ exports.default = Vue.component('checkbox-list', {
     }
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<header class=\"box-typical-header-sm\">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:\n</header>\n\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-sm-1\">\n    </div>\n    <div class=\"col-sm-11\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;permission.id }}\" v-model=\"permission.checked\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;permission.id }}\">{{&nbsp;permission.name }}</label>\n\t\t</div>\n    </div>\n</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<header class=\"box-typical-header-sm\" v-if=\"header\">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:\n</header>\n\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-sm-1\">\n    </div>\n    <div class=\"col-sm-11\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;permission.id }}\" v-model=\"permission.checked\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;permission.id }}\">{{&nbsp;permission.name }}</label>\n\t\t</div>\n    </div>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -16715,6 +16715,38 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":40,"vue-hot-reload-api":15}],48:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  props: ['person', 'url'],
+  data: function data() {
+    return {
+      permission_reports: [{ id: "get_reports_emails", name: "Send email when new report is created", checked: this.person['get_reports_emails'] }]
+    };
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :data=\"permission_reports\" :url=\"url\" _v-7b51c492=\"\"></checkbox-list>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nh1[_v-7b51c492] {\n  color: red;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7b51c492", module.exports)
+  } else {
+    hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":40,"vue-hot-reload-api":15,"vueify/lib/insert-css":41}],49:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -16798,7 +16830,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":40,"vue-hot-reload-api":15}],49:[function(require,module,exports){
+},{"vue":40,"vue-hot-reload-api":15}],50:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -16806,6 +16838,7 @@ var dateFormat = require('dateformat');
 // Vue imports
 var Vue = require('vue');
 var Permissions = require('./components/Permissions.vue');
+var emailPreference = require('./components/email.vue');
 var FormToAjax = require('./directives/FormToAjax.vue');
 require('./components/checkboxList.vue');
 
@@ -17941,7 +17974,11 @@ $(document).ready(function () {
 
 	new Vue({
 		el: 'body',
-		components: { Permissions: Permissions },
+
+		components: {
+			Permissions: Permissions,
+			emailPreference: emailPreference
+		},
 		directives: { FormToAjax: FormToAjax },
 		data: {
 			companyName: "",
@@ -18114,6 +18151,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":46,"./components/checkboxList.vue":47,"./directives/FormToAjax.vue":48,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"spin":5,"sweetalert":14,"vue":40,"vue-resource":29}]},{},[45,43,42,44,49]);
+},{"./components/Permissions.vue":46,"./components/checkboxList.vue":47,"./components/email.vue":48,"./directives/FormToAjax.vue":49,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"spin":5,"sweetalert":14,"vue":40,"vue-resource":29}]},{},[45,43,42,44,50]);
 
 //# sourceMappingURL=bundle.js.map
