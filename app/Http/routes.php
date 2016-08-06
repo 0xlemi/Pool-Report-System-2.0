@@ -46,6 +46,7 @@ Route::get('datatables/technicians', 'DataTableController@technicians');
 
 Route::group(['prefix' => 'api/v1'], function(){
 	// Route::get('user', 'Api\SettingsController@information');
+	Route::post('login', 'Api\UserController@login');
 	Route::resource('services', 'Api\ServicesController');
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');

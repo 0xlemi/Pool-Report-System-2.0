@@ -19,14 +19,7 @@ class UserTransformer extends Transformer
     public function transform(User $user)
     {
         return [
-            'name' => $user->name,
-            'email' => $user->email,
-            'company_name' => $user->company_name,
-            'website' => $user->website,
-            'facebook' => $user->facebook,
-            'twitter' => $user->twitter,
-            'language' => $user->language,
-            'timezone' => $user->timezone,
+            
         ];
     }
 
