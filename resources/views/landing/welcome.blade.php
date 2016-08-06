@@ -17,7 +17,7 @@
             </div><!-- /End Container -->
             <!-- Dashboard Image on Right -->
             <div class="dashboard-box dashboard-right">
-                <img src="img/uploads/site.jpg" style="width: 600px; border-radius: 0px; border: 1px none rgb(105, 105, 110);" alt="">
+                <img src="img/uploads/screenshot.png" style="width: 600px; border-radius: 0px; border: 1px none rgb(105, 105, 110);" alt="">
             </div>
 
         </section><!-- =========================

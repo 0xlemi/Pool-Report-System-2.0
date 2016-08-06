@@ -12,9 +12,11 @@ use App\Service;
 use App\User;
 
 use Validator;
+use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Administrator;
 
 class ClientsController extends ApiController
 {
@@ -61,13 +63,14 @@ class ClientsController extends ApiController
      */
     public function store(Request $request)
     {
+        // Check if user has permission
         if($this->getUser()->cannot('create', Client::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        // validate the request
         $validator = $this->validateClientRequestCreate($request);
-
         if ($validator->fails()) {
             // return error responce
             return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
@@ -75,40 +78,48 @@ class ClientsController extends ApiController
 
         $admin = $this->loggedUserAdministrator();
 
-        // transform services_seq_id to service_id array and check
-        // that the services with those id exist
-        $service_ids = $this->getAddServicesIds($request->service_ids, $admin);
+        //Persist to database
+        $transaction = DB::transaction(function () use($request, $admin) {
 
-        $client = Client::create([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'cellphone' => $request->cellphone,
-            'language' => $request->language,
-            'type' => $request->type, // 1 owner, 2 house administrator
-            'comments' => $request->comments,
-            'admin_id' => $admin->id,
-        ]);
+            // Create Client
+                // Transform services_seq_id to service_id array and check
+                // that the services with those id exist
+            $service_ids = $this->getAddServicesIds($request->service_ids, $admin);
+            $client = Client::create([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'cellphone' => $request->cellphone,
+                'language' => $request->language,
+                'type' => $request->type, // 1 owner, 2 house administrator
+                'comments' => $request->comments,
+                'admin_id' => $admin->id,
+            ]);
 
-        $client_id = $admin->clients(true)->first()->id;
+            // Crete the User
+            $client_id = $admin->clients(true)->first()->id;
+            $user = User::create([
+                'email' => $request->email,
+                'password' => bcrypt(str_random(20)),
+                'api_token' => str_random(60),
+                'userable_type' => 'App\Client',
+                'userable_id' => $client_id,
+            ]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' => bcrypt(str_random(20)),
-            'api_token' => str_random(60),
-            'userable_type' => 'App\Client',
-            'userable_id' => $client_id,
-        ]);
+            // Add Photo to Client
+            if($request->photo){
+                $photo = $client->addImageFromForm($request->file('photo'));
+            }
 
-        if($client && $user){
             $client->services()->attach($service_ids);
 
-            return $this->respondPersisted(
-                'The client was successfuly created.',
-                $this->clientTransformer->transform($admin->clients(true)->first())
-            );
-        }
+        });
 
-        return $this->respondInternalError();
+        // throw a success message
+        return $this->respondPersisted(
+            'The client was successfuly created.',
+            $this->clientTransformer->transform($admin->clients(true)->first())
+        );
+
     }
 
     /**
@@ -148,54 +159,87 @@ class ClientsController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
+        // checks that the user has permission
         if($this->getUser()->cannot('edit', Client::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        try {
-            $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Client with that id, does not exist.');
-        }
-
         $admin = $this->loggedUserAdministrator();
 
-        $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
-        $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
+        // ***** Validation *****
+            // validation for the $seq_id
+            try {
+                $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+            }catch(ModelNotFoundException $e){
+                return $this->respondNotFound('Client with that id, does not exist.');
+            }
+            // validate core values
+            $userable_id = $client->user()->userable_id;
+            $validator =  Validator::make($request->all(), [
+                'name' => 'required|string|max:25',
+                'last_name' => 'required|string|max:40',
+                'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
+                'cellphone' => 'required|string|max:20',
+                'type' => 'required|numeric|between:1,2',
+                'language' => 'required|string|max:2',
+                'comments' => 'string|max:1000',
+                'photo' => 'mimes:jpg,jpeg,png',
+            ]);
+            // get real ids, because we were sent seq_ids arrays
+            $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
+            $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
+            // show error validation errors
+            if ($validator->fails()) {
+                // return error responce
+                return $this->setStatusCode(422)
+                    ->RespondWithError(
+                        'Paramenters failed validation.',
+                        $validator->errors()->toArray()
+                    );
+            }
+        // end validation
 
-        $validator = $this->validateClientRequestUpdate($request, $client->user()->userable_id, $add_service_ids, $remove_service_ids);
+        // ***** Persiting to the database *****
+        $transaction = DB::transaction(function () use($request, $client, $add_service_ids, $remove_service_ids) {
 
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)
-                ->RespondWithError(
-                    'Paramenters failed validation.',
-                    $validator->errors()->toArray()
-                );
-        }
+            // set client values
+            if(isset($request->name)){ $client->name = $request->name; }
+            if(isset($request->last_name)){ $client->last_name = $request->last_name; }
+            if(isset($request->cellphone)){ $client->cellphone = $request->cellphone; }
+            if(isset($request->type)){ $client->type = $request->type; }
+            if(isset($request->language)){ $client->language = $request->language; }
+            if(isset($request->comments)){ $client->comments = $request->comments; }
 
-        $objects = $this->updateClient($request, $client);
+            // set user values
+            $user = $client->user();
+            if(isset($request->email)){ $user->email = $request->email; }
+            if(isset($request->password)){ $user->password = $request->password; }
 
-        // $photo = true;
-        // if($request->photo){
-        //     $supervisor->images()->delete();
-        //     $photo = $supervisor->addImageFromForm($request->file('photo'));
-        // }
-
-        if($objects['client']->save() && $objects['user']->save()){
-
-            $objects['client']->services()->attach($add_service_ids);
-            if(!empty($remove_service_ids)){
-                $objects['client']->services()->detach($remove_service_ids);
+            // set photo
+            if($request->photo){
+                $client->images()->delete();
+                $photo = $client->addImageFromForm($request->file('photo'));
             }
 
-            return $this->respondPersisted(
-                'The client was successfully updated.',
-                $this->clientTransformer->transform($this->loggedUserAdministrator()->clientsBySeqId($seq_id))
-            );
-        }
-        return $this->respondInternalError('The client could not be updated.');
+            // presint
+            $client->save();
+            $user->save();
+
+            // attach or remove services from client based on service_ids arrays
+            $client->services()->attach($add_service_ids);
+            if(!empty($remove_service_ids)){
+                $client->services()->detach($remove_service_ids);
+            }
+
+        });
+        // end persistance
+
+        // success message
+        return $this->respondPersisted(
+            'The client was successfully updated.',
+            $this->clientTransformer->transform($this->loggedUserAdministrator()->clientsBySeqId($seq_id))
+        );
     }
 
     /**
@@ -236,32 +280,31 @@ class ClientsController extends ApiController
             'language' => 'required|string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
-        ]);
-    }
-
-    protected function validateClientRequestUpdate(Request $request, $userable_id, $add_service_ids, $remove_service_ids)
-    {
-        return Validator::make($request->all(), [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
-            'cellphone' => 'required|string|max:20',
-            'type' => 'required|numeric|between:1,2',
-            'language' => 'required|string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
         ]);
     }
 
+
+    // transform array of services seq_ids to array of service ids (primary key)
+    /**
+     * t
+     * @param  array $services_seq_id   array of seq_id for the services
+     * @param  App\Administrator $admin
+     * @param  string $message        error message if a seq_id in array doen't exist
+     * @param  App\Client $client         client in question
+     * @return array                  array of id (primary key) coresponding to the services
+     */
     public function getServicesIds($services_seq_id, $admin, $message, $client = null)
     {
         $service_ids = array();
         if(isset($services_seq_id)){
             foreach ($services_seq_id as $service_seq_id) {
                 try{
+                    // get the real id
                     $service_id = $admin->serviceBySeqId($service_seq_id)->id;
-                    // check that dosn't have a connection already
+                    // check if client they sended a client
                     if(isset($client)){
+                        // check that this service dosn't have a connection already with client in question
                         if(!$client->services()->get()->contains('id', $service_id)){
                             $service_ids[] = $service_id;
                         }
@@ -277,6 +320,13 @@ class ClientsController extends ApiController
         return $service_ids;
     }
 
+    /**
+     * get service_ids array where message error is for add_services_ids array
+     * @param  array $add_service_seq_ids array of the seq_id for the services to be added
+     * @param  \App\Administrator $admin
+     * @param  \App\Client $client       client in question
+     * @return array                       array of the id (primary key) for the services to be added
+     */
     protected function getAddServicesIds($add_service_seq_ids, $admin, $client = null)
     {
         return $this->getServicesIds(
@@ -287,6 +337,13 @@ class ClientsController extends ApiController
             );
     }
 
+
+    /**
+     * get service_ids array where message error is for remove_service_ids array
+     * @param  array $remove_service_seq_ids    array of the seq_id for the services to be removed
+     * @param  \App\Administrator $admin
+     * @return  array                       array of the id (primary key) for the services to be removed
+     */
     protected function getRemoveServicesIds($remove_service_seq_ids, $admin)
     {
         return $this->getServicesIds(
@@ -294,28 +351,6 @@ class ClientsController extends ApiController
                 $admin,
                 'Some services from the array remove_service_ids, does not exist.'
             );
-    }
-
-    protected function updateClient(Request $request, Client $client)
-    {
-
-        if(isset($request->name)){ $client->name = $request->name; }
-        if(isset($request->last_name)){ $client->last_name = $request->last_name; }
-        if(isset($request->cellphone)){ $client->cellphone = $request->cellphone; }
-        if(isset($request->type)){ $client->type = $request->type; }
-        if(isset($request->language)){ $client->language = $request->language; }
-        if(isset($request->comments)){ $client->comments = $request->comments; }
-
-
-        $user = $client->user();
-        if(isset($request->email)){ $user->email = $request->email; }
-        if(isset($request->password)){ $user->password = $request->password; }
-
-
-        return array(
-            'client' => $client,
-            'user' => $user
-        );
     }
 
 

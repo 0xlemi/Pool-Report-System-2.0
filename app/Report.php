@@ -70,6 +70,8 @@ class Report extends Model
         $img_path = public_path('storage/images/emails/'.$fileName);
 
         // info needed by the template
+        $logo = url('img/logo-2.png');
+        $headerImage = url('img/uploads/email_header.png');
         $name = "client_name";
         if($client){
             $name = $client->name;
@@ -84,7 +86,7 @@ class Report extends Model
         $result = \ImageHTML::loadHTML(
                     view(
                         'templates.email',
-                        compact('name','address','time','photo1','photo2','photo3')
+                        compact('logo', 'headerImage', 'name','address','time','photo1','photo2','photo3')
                     )
                 )->save($img_path);
 
