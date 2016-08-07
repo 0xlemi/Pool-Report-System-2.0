@@ -125,6 +125,12 @@ class ReportsController extends PageController
     {
         $this->checkPermissions('show');
 
+        // set the generate email url
+        JavaScript::put([
+            'emailPreview' => url('reports/emailPreview'),
+            'emailPreviewNoImage' => url('img/no_image.png'),
+        ]);
+
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
         return view('reports.show', compact('report'));

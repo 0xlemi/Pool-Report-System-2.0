@@ -17987,7 +17987,7 @@ $(document).ready(function () {
 			twitter: "",
 			objectName: "",
 			objectLastName: "",
-			reportEmailPreview: "http://prs.dev/img/no_image.png",
+			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
 			statusSwitch: true
 		},
 		methods: {
@@ -18014,7 +18014,7 @@ $(document).ready(function () {
 				$.ajax({
 					vue: this,
 					target: event.target,
-					url: 'http://prs.dev/reports/emailPreview',
+					url: isset('emailPreview') ? back.emailPreview : '',
 					type: 'GET',
 					dataType: 'json',
 					data: {
