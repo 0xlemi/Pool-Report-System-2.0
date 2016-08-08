@@ -5,6 +5,7 @@ namespace App\PRS\Transformers;
 use App\Service;
 
 use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Transformers\ImageTransformer;
 
 /**
  * Transformer for the service class
@@ -13,10 +14,14 @@ class ServiceTransformer extends Transformer
 {
 
     private $serviceHelpers;
+    private $imageTransformer;
 
-    public function __construct(ServiceHelpers $serviceHelpers)
+    public function __construct(
+                        ServiceHelpers $serviceHelpers,
+                        ImageTransformer $imageTransformer)
     {
         $this->serviceHelpers = $serviceHelpers;
+        $this->imageTransformer = $imageTransformer;
     }
 
 
@@ -45,9 +50,8 @@ class ServiceTransformer extends Transformer
             'end_time' => $service->end_time,
             'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
-            'icon_photo' => env('APP_URL').'/'.$service->icon(),
-            'thumbnail_photo' => env('APP_URL').'/'.$service->thumbnail(),
-            'normal_photo' => env('APP_URL').'/'.$service->image(),
+            'photo' => $this->imageTransformer->transform($service->image(1, false)),
+
         ];
     }
 

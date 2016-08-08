@@ -6,6 +6,7 @@ use App\Report;
 
 use App\PRS\Transformers\ServiceTransformer;
 use App\PRS\Transformers\TechnicianTransformer;
+use App\PRS\Transformers\ImageTransformer;
 
 
 /**
@@ -14,15 +15,18 @@ use App\PRS\Transformers\TechnicianTransformer;
 class ReportTransformer extends Transformer
 {
 
-    protected $serviceTransformer;
-    protected $technicianTransformer;
+    private $serviceTransformer;
+    private $technicianTransformer;
+    private $imageTransformer;
 
     public function __construct(
             ServiceTransformer $serviceTransformer,
-            TechnicianTransformer $technicianTransformer)
+            TechnicianTransformer $technicianTransformer,
+            ImageTransformer $imageTransformer)
     {
         $this->serviceTransformer = $serviceTransformer;
         $this->technicianTransformer = $technicianTransformer;
+        $this->imageTransformer = $imageTransformer;
     }
 
     public function transform(Report $report)
@@ -40,6 +44,9 @@ class ReportTransformer extends Transformer
             'longitude' => $report->longitude,
             'altitude' => $report->altitude,
             'accuracy' => $report->accuracy,
+            'photo1' => $this->imageTransformer->transform($report->image(1, false)),
+            'photo2' => $this->imageTransformer->transform($report->image(2, false)),
+            'photo3' => $this->imageTransformer->transform($report->image(3, false)),
             'service_id' => $report->service()->id,
             'technician_id' => $report->technician()->id,
         ];

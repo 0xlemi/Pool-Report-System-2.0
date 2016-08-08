@@ -6,6 +6,7 @@ use App\Technician;
 use App\Supervisor;
 
 use App\PRS\Transformers\SupervisorTransformer;
+use App\PRS\Transformers\ImageTransformer;
 
 use Auth;
 
@@ -16,10 +17,14 @@ class TechnicianTransformer extends Transformer
 {
 
     private $supervisorTransformer;
+    private $imageTransformer;
 
-    public function __construct(SupervisorTransformer $supervisorTransformer)
+    public function __construct(
+                    SupervisorTransformer $supervisorTransformer,
+                    ImageTransformer $imageTransformer)
     {
         $this->supervisorTransformer = $supervisorTransformer;
+        $this->imageTransformer = $imageTransformer;
     }
 
 
@@ -35,6 +40,7 @@ class TechnicianTransformer extends Transformer
             'address' => $technician->address,
             'language' => $technician->language,
             'comments' => $technician->comments,
+            'photo' => $this->imageTransformer->transform($technician->image(1, false)),
             'supervisor' => $this->supervisorTransformer->transform($technician->supervisor()),
         ];
     }

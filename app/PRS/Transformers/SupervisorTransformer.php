@@ -4,6 +4,8 @@ namespace App\PRS\Transformers;
 
 use App\Supervisor;
 
+use App\PRS\Transformers\ImageTransformer;
+
 
 /**
  * Transformer for the supervisor class
@@ -11,6 +13,12 @@ use App\Supervisor;
 class SupervisorTransformer extends Transformer
 {
 
+    private $imageTransformer;
+
+    public function __construct(ImageTransformer $imageTransformer)
+    {
+        $this->imageTransformer = $imageTransformer;
+    }
 
     public function transform(Supervisor $supervisor)
     {
@@ -23,6 +31,7 @@ class SupervisorTransformer extends Transformer
             'address' => $supervisor->address,
             'language' => $supervisor->language,
             'comments' => $supervisor->comments,
+            'photo' => $this->imageTransformer->transform($supervisor->image(1, false)),
         ];
     }
 

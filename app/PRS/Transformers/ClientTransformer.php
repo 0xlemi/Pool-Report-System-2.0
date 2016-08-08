@@ -6,6 +6,7 @@ use App\Client;
 use App\Service;
 
 use App\PRS\Transformers\SupervisorTransformer;
+use App\PRS\Transformers\ImageTransformer;
 
 use Auth;
 
@@ -16,10 +17,12 @@ class ClientTransformer extends Transformer
 {
 
     private $serviceTransformer;
+    private $imageTransformer;
 
-    public function __construct(ServiceTransformer $serviceTransformer)
+    public function __construct(ServiceTransformer $serviceTransformer, ImageTransformer $imageTransformer)
     {
         $this->serviceTransformer = $serviceTransformer;
+        $this->imageTransformer = $imageTransformer;
     }
 
 
@@ -40,7 +43,7 @@ class ClientTransformer extends Transformer
             'type' => ($client->type == 1) ? 'Owner' : 'House Admin',
             'language' => $client->language,
             'comments' => $client->comments,
-            'photo' => $client->image(),
+            'photo' => $this->imageTransformer->transform($client->image(1, false)),
             'services' =>
                 $all_services
                 // $this->$serviceTransformer->transformCollection($client->services()->get())

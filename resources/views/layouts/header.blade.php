@@ -1,6 +1,6 @@
 <header class="site-header">
     <div class="container-fluid">
-        <a href="#" class="site-logo">
+        <a href="{{ url('') }}" class="site-logo">
             <img class="hidden-md-down" src="{{ url('img/logo-2.png') }}" alt="">
             <img class="hidden-lg-up" src="{{ url('img/logo-2-mob.png') }}" alt="">
         </a>

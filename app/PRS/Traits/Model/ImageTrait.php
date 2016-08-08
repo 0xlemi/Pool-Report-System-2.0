@@ -79,7 +79,23 @@ trait ImageTrait{
     /**
      * get full size image
      */
-    public function image($order = 1){
+    public function image($order = 1, $getUrl = true){
+        $image = $this->hasMany('App\Image')
+            ->where('order', '=', $order)
+            ->firstOrFail();
+        if($getUrl){
+            if(!$image){
+                return 'img/no_image.png';
+            }
+            return $image->normal_path;
+        }
+        return $image;
+    }
+
+    /**
+     * get full size image
+     */
+    public function normalImage($order = 1){
         $image = $this->hasMany('App\Image')
             ->where('order', '=', $order)
             ->firstOrFail();
