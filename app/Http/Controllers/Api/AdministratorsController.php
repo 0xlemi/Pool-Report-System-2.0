@@ -19,7 +19,7 @@ class AdministratorsController extends ApiController
     */
     public function __construct()
     {
-        $this->middleware(['api', 'auth:api']);
+        
     }
 
     /**

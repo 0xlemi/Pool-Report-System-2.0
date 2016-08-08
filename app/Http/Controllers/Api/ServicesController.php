@@ -35,7 +35,6 @@ class ServicesController extends ApiController
     {
         $this->serviceTransformer = $serviceTransformer;
         $this->serviceHelpers = $serviceHelpers;
-        $this->middleware(['api', 'auth:api']);
     }
 
     /**

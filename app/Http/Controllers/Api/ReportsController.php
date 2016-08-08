@@ -32,7 +32,6 @@ class ReportsController extends ApiController
     {
         $this->reportTransformer = $reportTransformer;
         $this->reportHelpers = $reportHelpers;
-        $this->middleware(['api', 'auth:api']);
     }
 
     /**

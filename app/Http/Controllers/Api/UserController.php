@@ -24,7 +24,6 @@ class UserController extends ApiController
     */
     public function __construct(UserTransformer $userTransformer)
     {
-        $this->middleware(['api', 'throttle:10']);
         $this->userTransformer = $userTransformer;
     }
 
@@ -63,7 +62,20 @@ class UserController extends ApiController
             'message' => 'Email or/and Password are incorrect'
         ]);
 
+    }
 
+    public function resetToken()
+    {
+        $user = $this->getUser();
+
+        $user->api_token = str_random(60);
+        if($user->save()){
+            return $this->respond([
+                'message' => 'Token reset successfull.',
+                'api_token' => $user->api_token,
+            ]);
+        }
+        return $this->respondInternalError();
     }
 
 

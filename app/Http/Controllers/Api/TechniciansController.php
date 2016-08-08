@@ -25,7 +25,6 @@ class TechniciansController extends ApiController
     public function __construct(TechnicianTransformer $technicianTransformer)
     {
         $this->technicianTransformer = $technicianTransformer;
-        $this->middleware(['api', 'auth:api']);
     }
     /**
      * Display a listing of the resource.

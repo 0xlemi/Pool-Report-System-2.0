@@ -31,7 +31,6 @@ class ClientsController extends ApiController
     public function __construct(ClientTransformer $clientTransformer)
     {
         $this->clientTransformer = $clientTransformer;
-        $this->middleware(['api', 'auth:api']);
     }
 
     /**

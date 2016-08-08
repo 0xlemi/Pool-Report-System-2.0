@@ -43,10 +43,14 @@ Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');
 
-
-Route::group(['prefix' => 'api/v1'], function(){
-	// Route::get('user', 'Api\SettingsController@information');
+Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'throttle:10'] ], function (){
 	Route::post('login', 'Api\UserController@login');
+});
+
+Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'auth:api'] ], function(){
+	// Route::get('user', 'Api\SettingsController@information');
+	Route::post('resetToken', 'Api\UserController@resetToken');
+	
 	Route::resource('services', 'Api\ServicesController');
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');

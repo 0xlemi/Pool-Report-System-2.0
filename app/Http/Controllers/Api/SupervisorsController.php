@@ -29,7 +29,6 @@ class SupervisorsController extends ApiController
     public function __construct(SupervisorTransformer $supervisorTransformer)
     {
         $this->supervisorTransformer = $supervisorTransformer;
-        $this->middleware(['api', 'auth:api']);
     }
 
     /**
