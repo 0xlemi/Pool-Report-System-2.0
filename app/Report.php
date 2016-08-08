@@ -80,9 +80,9 @@ class Report extends Model
         }
         $address = $this->service()->address_line;
         $time = (new Carbon($this->completed))->toDayDateTimeString();
-        $photo1 = url($this->image(1)->normal_path);
-        $photo2 = url($this->image(2)->normal_path);
-        $photo3 = url($this->image(3)->normal_path);
+        $photo1 = url($this->image(1));
+        $photo2 = url($this->image(2));
+        $photo3 = url($this->image(3));
 
         //convert template with info to image
         $result = \ImageHTML::loadHTML(
@@ -132,9 +132,9 @@ class Report extends Model
             'name' => $name,
             'address' => $this->service()->address_line,
             'time' => (new Carbon($this->completed))->toDayDateTimeString(),
-            'photo1' => url($this->image(1)->normal_path),
-            'photo2' => url($this->image(2)->normal_path),
-            'photo3' => url($this->image(3)->normal_path),
+            'photo1' => url($this->image(1)),
+            'photo2' => url($this->image(2)),
+            'photo3' => url($this->image(3)),
         );
 
         return  Mail::send('templates.email', $data, function ($message) use ($name, $email){

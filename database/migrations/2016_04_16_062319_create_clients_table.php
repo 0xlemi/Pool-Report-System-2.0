@@ -23,8 +23,8 @@ class CreateClientsTable extends Migration
             $table->text('comments');
 
             // Email Preferences
-            $table->boolean('get_reports_emails');
-            
+            $table->boolean('get_reports_emails')->default(1);
+
             $table->integer('seq_id')->index();
             $table->integer('admin_id')->unsigned();
             $table->softDeletes();

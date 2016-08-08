@@ -21,9 +21,9 @@ class CreateTechnicianTable extends Migration
             $table->string('address');
             $table->char('language', 2);
             $table->text('comments');
-    
+
             // Email Preferences
-            $table->boolean('get_reports_emails');
+            $table->boolean('get_reports_emails')->default(0);
 
             $table->integer('supervisor_id')->unsigned();
             $table->integer('seq_id')->index();

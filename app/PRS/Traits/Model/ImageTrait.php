@@ -2,7 +2,11 @@
 
 namespace App\PRS\Traits\Model;
 
-use Auth;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
+use Intervention;
+
+use App\Image;
 
 trait ImageTrait{
 
@@ -30,6 +34,7 @@ trait ImageTrait{
         $image->normal_path = env('FOLDER_IMG').'client/'.$name;
         $image->thumbnail_path = env('FOLDER_IMG').'client/'.$name_thumbnail;
         $image->icon_path = env('FOLDER_IMG').'client/'.$name_icon;
+        $image->order = $this->numImages() + 1;
 
         // presist image to the database
         return $this->addImage($image);
@@ -74,12 +79,14 @@ trait ImageTrait{
     /**
      * get full size image
      */
-    public function image(){
-        if($this->numImages() > 0){
-            return $this->hasMany('App\Image')
-                ->first()->normal_path;
+    public function image($order = 1){
+        $image = $this->hasMany('App\Image')
+            ->where('order', '=', $order)
+            ->firstOrFail();
+        if(!$image){
+            return 'img/no_image.png';
         }
-        return 'img/no_image.png';
+        return $image->normal_path;
     }
 
     /**

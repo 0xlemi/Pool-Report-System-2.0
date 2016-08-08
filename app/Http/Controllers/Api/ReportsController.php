@@ -138,7 +138,7 @@ class ReportsController extends ApiController
             );
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $service, $technician_id, $on_time) {
+        $report = DB::transaction(function () use($request, $service, $technician_id, $on_time) {
 
             // create report
             $report = Report::create([
@@ -162,11 +162,13 @@ class ReportsController extends ApiController
             $report->addImageFromForm($request->file('photo2'));
             $report->addImageFromForm($request->file('photo3'));
 
-            //send email
-            $report->sendEmailAllClients();
-            $report->sendEmailSupervisor();
+            return $report;
 
         });
+
+        //send email
+        $report->sendEmailAllClients();
+        $report->sendEmailSupervisor();
 
         return $this->respondPersisted(
             'The report was successfuly created.',
