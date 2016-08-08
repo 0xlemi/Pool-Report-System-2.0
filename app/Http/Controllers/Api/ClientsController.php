@@ -70,7 +70,7 @@ class ClientsController extends ApiController
         }
 
         // validate the request
-        $validator = $this->validateClientRequestCreate($request);
+        $validator = $this->validateClientCreate($request);
         if ($validator->fails()) {
             // return error responce
             return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
@@ -124,7 +124,6 @@ class ClientsController extends ApiController
 
     /**
      * Display the specified resource.
-     * tested
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -152,7 +151,6 @@ class ClientsController extends ApiController
 
     /**
      * Update the specified resource in storage.
-     * tested
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -176,16 +174,7 @@ class ClientsController extends ApiController
             }
             // validate core values
             $userable_id = $client->user()->userable_id;
-            $validator =  Validator::make($request->all(), [
-                'name' => 'required|string|max:25',
-                'last_name' => 'required|string|max:40',
-                'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
-                'cellphone' => 'required|string|max:20',
-                'type' => 'required|numeric|between:1,2',
-                'language' => 'required|string|max:2',
-                'comments' => 'string|max:1000',
-                'photo' => 'mimes:jpg,jpeg,png',
-            ]);
+            $validator = $this->validateClientUpdate($request, $userable_id);
             // get real ids, because we were sent seq_ids arrays
             $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
             $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
@@ -269,7 +258,7 @@ class ClientsController extends ApiController
     }
 
 
-    protected function validateClientRequestCreate(Request $request)
+    protected function validateClientCreate(Request $request)
     {
         return Validator::make($request->all(), [
             'name' => 'required|string|max:25',
@@ -278,7 +267,20 @@ class ClientsController extends ApiController
             'cellphone' => 'required|string|max:20',
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
+            'comments' => 'string|max:1000',
             'photo' => 'mimes:jpg,jpeg,png',
+        ]);
+    }
+
+    protected function validateClientUpdate(Request $request, $userable_id)
+    {
+        return Validator::make($request->all(), [
+            'name' => 'string|max:25',
+            'last_name' => 'string|max:40',
+            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'cellphone' => 'string|max:20',
+            'type' => 'numeric|between:1,2',
+            'language' => 'string|max:2',
             'comments' => 'string|max:1000',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);

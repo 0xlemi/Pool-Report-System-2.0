@@ -453,12 +453,12 @@ public function it_can_update_client()
         $this->json('PATCH', 'api/v1/clients/1', [
             'api_token' => $sup->user()->api_token,
         ]);
-        $this->assertResponseStatus(422);
+        $this->assertResponseStatus(200);
 
         $this->json('PATCH', 'api/v1/clients/1', [
             'api_token' => $tech->user()->api_token,
         ]);
-        $this->assertResponseStatus(422);
+        $this->assertResponseStatus(200);
 
     }
 

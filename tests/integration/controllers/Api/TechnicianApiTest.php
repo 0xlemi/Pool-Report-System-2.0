@@ -371,12 +371,12 @@ class TechnicianApiTest extends ApiTester
         $this->json('PATCH', 'api/v1/technicians/1', [
             'api_token' => $sup->user()->api_token,
         ]);
-        $this->assertResponseStatus(422);
+        $this->assertResponseStatus(200);
 
         $this->json('PATCH', 'api/v1/technicians/1', [
             'api_token' => $tech->user()->api_token,
         ]);
-        $this->assertResponseStatus(422);
+        $this->assertResponseStatus(200);
 
     }
 

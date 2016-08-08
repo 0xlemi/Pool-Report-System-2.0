@@ -9,6 +9,7 @@ use App\Supervisor;
 use App\User;
 
 use Validator;
+use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -61,13 +62,14 @@ class SupervisorsController extends ApiController
      */
     public function store(Request $request)
     {
+        // check that the user has permission
         if($this->getUser()->cannot('create', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        // Validation
         $validator = $this->validateSupervisorRequestCreate($request);
-
         if ($validator->fails()) {
             // return error responce
             return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
@@ -75,39 +77,43 @@ class SupervisorsController extends ApiController
 
         $admin = $this->loggedUserAdministrator();
 
-        $supervisor = Supervisor::create([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'cellphone' => $request->cellphone,
-            'address' => $request->address,
-            'language' => $request->language,
-            'comments' => $request->comments,
-            'admin_id' => $admin->id,
-        ]);
-        $supervisor_id = $admin->supervisors(true)->first()->id;
+        // ***** Persiting *****
+        $transaction = DB::transaction(function () use($request, $admin) {
+            // create Supervisor
+            $supervisor = Supervisor::create([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'cellphone' => $request->cellphone,
+                'address' => $request->address,
+                'language' => $request->language,
+                'comments' => $request->comments,
+                'admin_id' => $admin->id,
+            ]);
 
-        $user = User::create([
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            // add salt
-            'api_token' => str_random(60),
-            'userable_type' => 'App\Supervisor',
-            'userable_id' => $supervisor_id,
-        ]);
+            // create User
+            $supervisor_id = $admin->supervisors(true)->first()->id;
+            $user = User::create([
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'api_token' => str_random(60),
+                'userable_type' => 'App\Supervisor',
+                'userable_id' => $supervisor_id,
+            ]);
 
-        if($supervisor){
-            return $this->respondPersisted(
-                'The supervisor was successfuly created.',
-                $this->supervisorTransformer->transform($admin->supervisors(true)->first())
-            );
-        }
+            // add photo
+            if($request->photo){
+                $photo = $supervisor->addImageFromForm($request->file('photo'));
+            }
+        });
 
-        return $this->respondInternalError();
+        return $this->respondPersisted(
+            'The supervisor was successfuly created.',
+            $this->supervisorTransformer->transform($admin->supervisors(true)->first())
+        );
     }
 
     /**
      * Display the specified resource.
-     * tested
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -135,51 +141,66 @@ class SupervisorsController extends ApiController
 
     /**
      * Update the specified resource in storage.
-     *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $seq_id)
     {
+        // check that user has permission
         if($this->getUser()->cannot('edit', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        try{
-            $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Supervisor with that id, does not exist.');
-        }
+        // Validation
+            // validate the $seq_id
+            try{
+                $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+            }catch(ModelNotFoundException $e){
+                return $this->respondNotFound('Supervisor with that id, does not exist.');
+            }
+            // validate the core attributes
+            $validator = $this->validateSupervisorRequestUpdate($request, $supervisor->user()->userable_id);
+            if ($validator->fails()) {
+                // return error responce
+                return $this->setStatusCode(422)
+                    ->RespondWithError(
+                        'Paramenters failed validation.',
+                        $validator->errors()->toArray()
+                    );
+            }
 
-        $validator = $this->validateSupervisorRequestUpdate($request, $supervisor->user()->userable_id);
 
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)
-                ->RespondWithError(
-                    'Paramenters failed validation.',
-                    $validator->errors()->toArray()
-                );
-        }
+        // ***** Persiting *****
+        $transaction = DB::transaction(function () use($request, $supervisor) {
+            // update supervisor
+            if(isset($request->name)){ $supervisor->name = $request->name; }
+            if(isset($request->last_name)){ $supervisor->last_name = $request->last_name; }
+            if(isset($request->cellphone)){ $supervisor->cellphone = $request->cellphone; }
+            if(isset($request->address)){ $supervisor->address = $request->address; }
+            if(isset($request->language)){ $supervisor->language = $request->language; }
+            if(isset($request->comments)){ $supervisor->comments = $request->comments; }
 
+            // update the user
+            $user = $supervisor->user();
+            if(isset($request->email)){ $user->email = $request->email; }
+            if(isset($request->password)){ $user->password = $request->password; }
 
-        $objects = $this->updateSupervisor($request, $supervisor);
+            $supervisor->save();
+            $user->save();
 
-        // $photo = true;
-        // if($request->photo){
-        //     $supervisor->images()->delete();
-        //     $photo = $supervisor->addImageFromForm($request->file('photo'));
-        // }
+            // add photo
+            if($request->photo){
+                $supervisor->images()->delete();
+                $photo = $supervisor->addImageFromForm($request->file('photo'));
+            }
+        });
 
-        if($objects['supervisor']->save() && $objects['user']->save()){
-            return $this->respondPersisted(
-                'The supervisor was successfully updated.',
-                $this->supervisorTransformer->transform($this->loggedUserAdministrator()->supervisorBySeqId($seq_id))
-            );
-        }
-        return $this->respondInternalError('The supervisor could not be updated.');
+        return $this->respondPersisted(
+            'The supervisor was successfully updated.',
+            $this->supervisorTransformer->transform($this->loggedUserAdministrator()->supervisorBySeqId($seq_id))
+        );
     }
 
     /**
@@ -226,37 +247,17 @@ protected function validateSupervisorRequestCreate(Request $request)
     protected function validateSupervisorRequestUpdate(Request $request, $userable_id)
     {
         return Validator::make($request->all(), [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
-            'password' => 'required|alpha_dash|between:6,40',
-            'cellphone' => 'required|string|max:20',
+            'name' => 'string|max:25',
+            'last_name' => 'string|max:40',
+            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'password' => 'alpha_dash|between:6,40',
+            'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
-            'language' => 'required|string|max:2',
+            'language' => 'string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
     }
 
-    protected function updateSupervisor(Request $request, Supervisor $supervisor)
-    {
-
-        if(isset($request->name)){ $supervisor->name = $request->name; }
-        if(isset($request->last_name)){ $supervisor->last_name = $request->last_name; }
-        if(isset($request->cellphone)){ $supervisor->cellphone = $request->cellphone; }
-        if(isset($request->address)){ $supervisor->address = $request->address; }
-        if(isset($request->language)){ $supervisor->language = $request->language; }
-        if(isset($request->comments)){ $supervisor->comments = $request->comments; }
-
-        $user = $supervisor->user();
-        if(isset($request->email)){ $user->email = $request->email; }
-        if(isset($request->password)){ $user->password = $request->password; }
-
-
-        return array(
-            'supervisor' => $supervisor,
-            'user' => $user
-        );
-    }
 
 }

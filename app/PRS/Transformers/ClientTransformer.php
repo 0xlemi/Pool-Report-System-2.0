@@ -40,6 +40,7 @@ class ClientTransformer extends Transformer
             'type' => ($client->type == 1) ? 'Owner' : 'House Admin',
             'language' => $client->language,
             'comments' => $client->comments,
+            'photo' => $client->image(),
             'services' =>
                 $all_services
                 // $this->$serviceTransformer->transformCollection($client->services()->get())

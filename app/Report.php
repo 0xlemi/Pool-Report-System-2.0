@@ -10,10 +10,12 @@ use Intervention;
 use Mail;
 
 use Carbon\Carbon;
+use App\PRS\Traits\Model\ImageTrait;
 use App\Client;
 use App\Image;
 class Report extends Model
 {
+    use ImageTrait;
 
     /**
      * variables that can be mass assigned
@@ -125,6 +127,8 @@ class Report extends Model
 
         // info needed by the template
         $data = array(
+            'logo' => url('img/logo-2.png'),
+            'headerImage' => url('img/uploads/email_header.png'),
             'name' => $name,
             'address' => $this->service()->address_line,
             'time' => (new Carbon($this->completed))->toDayDateTimeString(),
@@ -138,66 +142,6 @@ class Report extends Model
             $message->subject('Your pool is clean '.$name);
             $message->to($email);
         });
-    }
-
-    /**
-     * Add image from form information
-     */
-    public function addImageFromForm(UploadedFile $file){
-        //generate image names
-        $name = get_random_name('normal_'.$this->id, $file->guessExtension());
-        $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
-
-        // save normal image in folder
-        $file->move(public_path( env('FOLDER_IMG').'report/' ), $name);
-
-        // make and save thumbnail
-        $img = Intervention::make(public_path( env('FOLDER_IMG').'report/'.$name));
-        $img->fit(300)->save(public_path( env('FOLDER_IMG').'report/'.$name_thumbnail));
-
-        // add image
-        $image = new Image;
-        $image->normal_path = env('FOLDER_IMG').'report/'.$name;
-        $image->thumbnail_path = env('FOLDER_IMG').'report/'.$name_thumbnail;
-        $image->order = $this->numImages() + 1;
-
-        // presist image to the database
-        return $this->addImage($image);
-    }
-
-    /**
-     * Add images to this report
-     * tested
-     */
-    public function addImage(Image $image){
-        return $this->images()->save($image);
-    }
-
-    /**
-     * associated images with this report
-     * tested
-     */
-    public function images(){
-        return $this->hasMany('App\Image');
-    }
-
-    /**
-     * Get the image by the order num
-     * tested
-     */
-    public function image($order){
-        return $this->hasMany('App\Image')
-            ->where('order', '=', $order)
-            ->first();
-    }
-
-    /**
-     * Get the number of images associated with this report
-     * @return integer
-     * tested
-     */
-    public function numImages(){
-        return $this->hasMany('App\Image')->count();
     }
 
 }

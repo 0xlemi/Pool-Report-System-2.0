@@ -14,7 +14,9 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\Service;
 
 use Auth;
+use DB;
 use Validator;
+use Illuminate\View\View;
 use App\Http\Requests\CreateServiceRequest;
 
 class ServicesController extends ApiController
@@ -66,20 +68,23 @@ class ServicesController extends ApiController
     */
     public function store(Request $request)
     {
+        // check that the user has permissions
         if($this->getUser()->cannot('create', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-
-        $validator = $this->validateServiceRequest($request);
-
+        // validation
+        $validator = $this->validateServiceCreate($request);
         if ($validator->fails()) {
             // return error responce
             return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
         }
 
-        // get the service days number 0-127
+
+        $admin = $this->loggedUserAdministrator();
+
+        // get the service days number 0-127 from request
         $service_days = $this->serviceHelpers->service_days_to_num(
             $request->service_day_monday,
             $request->service_day_tuesday,
@@ -90,39 +95,42 @@ class ServicesController extends ApiController
             $request->service_day_sunday
         );
 
-        $admin = $this->loggedUserAdministrator();
+        // Create service
+        $transaction = DB::transaction(function () use($request, $admin, $service_days) {
 
-        $service = Service::create([
-            'name' => $request->name,
-            'address_line' => $request->address_line,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postal_code' => $request->postal_code,
-            'country' => strtoupper($request->country),
-            'type' => $request->type,
-            'service_days' => $service_days,
-            'amount' => $request->amount,
-            'currency' => strtoupper($request->currency),
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'comments' => $request->comments,
-            'admin_id' => $admin->id,
-        ]);
+            $service = Service::create([
+                'name' => $request->name,
+                'address_line' => $request->address_line,
+                'city' => $request->city,
+                'state' => $request->state,
+                'postal_code' => $request->postal_code,
+                'country' => strtoupper($request->country),
+                'type' => $request->type,
+                'service_days' => $service_days,
+                'amount' => $request->amount,
+                'currency' => strtoupper($request->currency),
+                'start_time' => $request->start_time,
+                'end_time' => $request->end_time,
+                'comments' => $request->comments,
+                'admin_id' => $admin->id,
+            ]);
 
-        if($service){
-            return $this->respondPersisted(
-                'The service was successfuly created.',
-                $this->serviceTransformer->transform($admin->services(true)->first())
-            );
-        }
+            // Add Photo
+            if($request->photo){
+                $photo = $service->addImageFromForm($request->file('photo'));
+            }
 
-        return $this->respondInternalError();
+        });
+
+        return $this->respondPersisted(
+            'The service was successfuly created.',
+            $this->serviceTransformer->transform($admin->services(true)->first())
+        );
 
     }
 
     /**
     * Display the specified resource.
-    * tested
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
@@ -151,48 +159,67 @@ class ServicesController extends ApiController
 
     /**
     * Update the specified resource in storage.
-    * tested
     * @param  \Illuminate\Http\Request  $request
     * @param  int  $id
     * @return \Illuminate\Http\Response
     */
     public function update(Request $request, $seq_id)
     {
+        // check that user has permission
         if($this->getUser()->cannot('edit', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $validator = $this->validateServiceRequest($request);
+        // Validate
+            $validator = $this->validateServiceUpdate($request);
+            if ($validator->fails()) {
+                // return error responce
+                return $this->setStatusCode(422)
+                    ->RespondWithError(
+                        'Paramenters failed validation.',
+                        $validator->errors()->toArray()
+                    );
+            }
+            // getting and validating service
+            try{
+                $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+            }catch(ModelNotFoundException $e){
+                return $this->respondNotFound('Service with that id, does not exist.');
+            }
 
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)
-                ->RespondWithError(
-                    'Paramenters failed validation.',
-                    $validator->errors()->toArray()
-                );
-        }
+        $service_days = $this->getServiceDaysNumberFromRequest($service->service_days, $request);
+        // ***** Persist *****
+        $transaction = DB::transaction(function () use($request, $service, $service_days) {
 
-        try{
-            $service = $this->updateService($request, $this->loggedUserAdministrator()->serviceBySeqId($seq_id));
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Service with that id, does not exist.');
-        }
+            $service->service_days = $service_days;
+            if(isset($request->name)){ $service->name = $request->name; }
+            if(isset($request->address_line)){ $service->address_line = $request->address_line; }
+            if(isset($request->city)){ $service->city = $request->city; }
+            if(isset($request->state)){ $service->state = $request->state; }
+            if(isset($request->postal_code)){ $service->postal_code = $request->postal_code; }
+            if(isset($request->country)){ $service->country = strtoupper($request->country); }
+            if(isset($request->type)){ $service->type = $request->type; }
+            if(isset($request->amount)){ $service->amount = $request->amount; }
+            if(isset($request->currency)){ $service->currency = strtoupper($request->currency); }
+            if(isset($request->start_time)){ $service->start_time = $request->start_time; }
+            if(isset($request->end_time)){ $service->end_time = $request->end_time; }
+            if(isset($request->status)){ $service->status = $request->status; }
+            if(isset($request->comments)){ $service->comments = $request->comments; }
 
-        $photo = true;
-        if($request->photo){
-            $service->images()->delete();
-            $photo = $service->addImageFromForm($request->file('photo'));
-        }
+            $service->save();
 
-        if($service->save() && $photo){
-            return $this->respondPersisted(
-                'The service was successfully updated.',
-                $this->serviceTransformer->transform($this->loggedUserAdministrator()->serviceBySeqId($seq_id))
-            );
-        }
-        return $this->respondInternalError('The service could not be updated.');
+            if($request->photo){
+                $service->images()->delete();
+                $photo = $service->addImageFromForm($request->file('photo'));
+            }
+
+        });
+
+        return $this->respondPersisted(
+            'The service was successfully updated.',
+            $this->serviceTransformer->transform($this->loggedUserAdministrator()->serviceBySeqId($seq_id))
+        );
 
     }
 
@@ -223,12 +250,18 @@ class ServicesController extends ApiController
 
     }
 
-    protected function updateService(Request $request, Service $service)
+    /**
+     * Get the service_days number from the request arguments not changing the dates that where not sent as arguments
+     * @param  int      $originalNum     service_days num that the unchanged service has
+     * @param  Request  $request
+     * @return  int                      final service_days num for persisting
+     */
+    protected function getServiceDaysNumberFromRequest($originalNum, $request)
     {
-        $days = $this->serviceHelpers->num_to_service_days($service->service_days);
-
-        // get the service days number 0-127
-        $service_days = $this->serviceHelpers->service_days_to_num(
+        // get days from the number
+        $days = $this->serviceHelpers->num_to_service_days($originalNum);
+        // get the get number from the service days ignoring the unset ones
+        return $this->serviceHelpers->service_days_to_num(
             (isset($request->service_day_monday)) ? $request->service_day_monday : $days['monday'],
             (isset($request->service_day_tuesday)) ? $request->service_day_tuesday : $days['tuesday'],
             (isset($request->service_day_wednesday)) ? $request->service_day_wednesday : $days['wednesday'],
@@ -237,26 +270,9 @@ class ServicesController extends ApiController
             (isset($request->service_day_saturday)) ? $request->service_day_saturday : $days['saturday'],
             (isset($request->service_day_sunday)) ? $request->service_day_sunday : $days['sunday']
         );
-        $service->service_days = $service_days;
-
-        if(isset($request->name)){ $service->name = $request->name; }
-        if(isset($request->address_line)){ $service->address_line = $request->address_line; }
-        if(isset($request->city)){ $service->city = $request->city; }
-        if(isset($request->state)){ $service->state = $request->state; }
-        if(isset($request->postal_code)){ $service->postal_code = $request->postal_code; }
-        if(isset($request->country)){ $service->country = strtoupper($request->country); }
-        if(isset($request->type)){ $service->type = $request->type; }
-        if(isset($request->amount)){ $service->amount = $request->amount; }
-        if(isset($request->currency)){ $service->currency = strtoupper($request->currency); }
-        if(isset($request->start_time)){ $service->start_time = $request->start_time; }
-        if(isset($request->end_time)){ $service->end_time = $request->end_time; }
-        if(isset($request->status)){ $service->status = $request->status; }
-        if(isset($request->comments)){ $service->comments = $request->comments; }
-
-        return $service;
     }
 
-    protected function validateServiceRequest(Request $request)
+    protected function validateServiceCreate(Request $request)
     {
         return Validator::make($request->all(), [
             'name' => 'required|string|max:20',
@@ -279,6 +295,33 @@ class ServicesController extends ApiController
             'service_day_friday' => 'required|boolean',
             'service_day_saturday' => 'required|boolean',
             'service_day_sunday' => 'required|boolean',
+            'photo' => 'mimes:jpg,jpeg,png',
+        ]);
+    }
+
+    protected function validateServiceUpdate(Request $request)
+    {
+        return Validator::make($request->all(), [
+            'name' => 'string|max:20',
+            'address_line' => 'string|max:50',
+            'city' => 'string|max:30',
+            'state' => 'string|max:30',
+            'postal_code' => 'string|max:15',
+            'country' => 'string|size:2',
+            'type' => 'numeric|between:1,2',
+            'start_time' => 'date_format:H:i',
+            'end_time' => 'date_format:H:i|after:start_time',
+            'status' => 'boolean',
+            'amount' => 'numeric|max:10000000',
+            'currency' => 'string|size:3',
+            'comments' => 'string|max:750',
+            'service_day_monday' => 'boolean',
+            'service_day_tuesday' => 'boolean',
+            'service_day_wednesday' => 'boolean',
+            'service_day_thursday' => 'boolean',
+            'service_day_friday' => 'boolean',
+            'service_day_saturday' => 'boolean',
+            'service_day_sunday' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
     }
