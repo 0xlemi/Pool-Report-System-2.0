@@ -50,12 +50,15 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'throttle:10'] ], fu
 Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'auth:api'] ], function(){
 	// Route::get('user', 'Api\SettingsController@information');
 	Route::post('resetToken', 'Api\UserController@resetToken');
-	
+
 	Route::resource('services', 'Api\ServicesController');
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');
 	Route::resource('clients', 'Api\ClientsController');
 	Route::resource('reports', 'Api\ReportsController');
+
+	Route::post('settings/account', 'Api\SettingsController@account');
+	Route::post('settings/permissions', 'Api\SettingsController@permissions');
 });
 
 

@@ -39,7 +39,7 @@
             dataType: 'json',
             data: {
                     'id': permission.id,
-                    'checked': permission.checked,
+                    'checked': (!permission.checked) ? true : false,
                     'name': permission.name,
                 },
             complete: function(xhr, textStatus) {

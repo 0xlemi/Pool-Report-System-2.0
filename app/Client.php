@@ -26,7 +26,7 @@ class Client extends Model
 		'cellphone',
 		'type',
 		'language',
-		'email_preferences',
+		'get_reports_emails',
 		'comments',
 		'admin_id',
 	];

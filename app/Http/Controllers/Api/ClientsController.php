@@ -89,6 +89,7 @@ class ClientsController extends ApiController
                 'last_name' => $request->last_name,
                 'cellphone' => $request->cellphone,
                 'language' => $request->language,
+                'get_reports_emails' => $request->getReportsEmails,
                 'type' => $request->type, // 1 owner, 2 house administrator
                 'comments' => $request->comments,
                 'admin_id' => $admin->id,
@@ -197,12 +198,13 @@ class ClientsController extends ApiController
             if(isset($request->cellphone)){ $client->cellphone = $request->cellphone; }
             if(isset($request->type)){ $client->type = $request->type; }
             if(isset($request->language)){ $client->language = $request->language; }
+            if(isset($request->getReportsEmails)){ $client->get_reports_emails = $request->getReportsEmails; }
             if(isset($request->comments)){ $client->comments = $request->comments; }
 
             // set user values
             $user = $client->user();
             if(isset($request->email)){ $user->email = $request->email; }
-            if(isset($request->password)){ $user->password = $request->password; }
+            if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             // set photo
             if($request->photo){
@@ -266,6 +268,7 @@ class ClientsController extends ApiController
             'cellphone' => 'required|string|max:20',
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
+            'getReportsEmails' => 'boolean',
             'comments' => 'string|max:1000',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
@@ -280,6 +283,7 @@ class ClientsController extends ApiController
             'cellphone' => 'string|max:20',
             'type' => 'numeric|between:1,2',
             'language' => 'string|max:2',
+            'getReportsEmails' => 'boolean',
             'comments' => 'string|max:1000',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);

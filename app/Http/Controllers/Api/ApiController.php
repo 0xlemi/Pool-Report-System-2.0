@@ -69,7 +69,7 @@ class ApiController extends Controller
     public function respondPersisted($message, $object){
         return $this->respond([
             'message' => $message,
-            'object' => $object,
+            'data' => $object,
         ]);
     }
 

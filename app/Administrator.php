@@ -20,6 +20,7 @@ class Administrator extends Model
         'facebook',
         'twitter',
         'timezone',
+		'get_reports_emails',
     ];
 
     /**

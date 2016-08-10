@@ -16683,7 +16683,7 @@ exports.default = Vue.component('checkbox-list', {
                 dataType: 'json',
                 data: {
                     'id': permission.id,
-                    'checked': permission.checked,
+                    'checked': !permission.checked ? true : false,
                     'name': permission.name
                 },
                 complete: function complete(xhr, textStatus) {

@@ -85,6 +85,7 @@ class TechniciansController extends ApiController
                 'cellphone' => $request->cellphone,
                 'address' => $request->address,
                 'language' => $request->language,
+                'get_reports_emails' => $request->getReportsEmails,
                 'comments' => $request->comments,
                 'supervisor_id' => $supervisor_id,
                 'admin_id' => $admin->id,
@@ -146,10 +147,10 @@ class TechniciansController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id)
+    public function update(Request $request, $seq_id, $checkPermission = true)
     {
         // check that the user has permissions
-        if($this->getUser()->cannot('edit', Technician::class))
+        if($checkPermission && $this->getUser()->cannot('edit', Technician::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -168,8 +169,11 @@ class TechniciansController extends ApiController
                         );
             // checking the supervisor_seqid and getting the real id
             try {
-                $supervisor_id = $this->loggedUserAdministrator()
-                    ->supervisorBySeqId($request->supervisor)->id;
+                $supervisor_id = $technician->supervisor_id;
+                if(isset($request->supervisor)){
+                    $supervisor_id = $this->loggedUserAdministrator()
+                        ->supervisorBySeqId($request->supervisor)->id;
+                }
             }catch(ModelNotFoundException $e){
                 return $this->respondNotFound('There is no supervisor with that supervisor_id.');
             }
@@ -192,13 +196,14 @@ class TechniciansController extends ApiController
             if(isset($request->cellphone)){ $technician->cellphone = $request->cellphone; }
             if(isset($request->address)){ $technician->address = $request->address; }
             if(isset($request->language)){ $technician->language = $request->language; }
+            if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
             if(isset($request->comments)){ $technician->comments = $request->comments; }
             if(isset($request->supervisor)){$technician->supervisor_id = $supervisor_id; }
 
             // update user
             $user = $technician->user();
             if(isset($request->username)){ $user->email = $request->username; }
-            if(isset($request->password)){ $user->password = $request->password; }
+            if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             // persist
             $technician->save();
@@ -211,8 +216,12 @@ class TechniciansController extends ApiController
             }
         });
 
+        $message = 'The technician was successfully updated.';
+        if($request->password){
+            $message = 'The technician and its password were successfully updated.';
+        }
         return $this->respondPersisted(
-            'The technician was successfully updated.',
+            $message,
             $this->technicianTransformer->transform($this->loggedUserAdministrator()->technicianBySeqId($seq_id))
         );
     }
@@ -254,6 +263,7 @@ class TechniciansController extends ApiController
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
+            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
@@ -270,6 +280,7 @@ class TechniciansController extends ApiController
             'cellphone' => 'string|max:20',
             'address'   => 'max:100',
             'language' => 'string|max:2',
+            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);

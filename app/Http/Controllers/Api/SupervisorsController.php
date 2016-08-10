@@ -85,6 +85,7 @@ class SupervisorsController extends ApiController
                 'cellphone' => $request->cellphone,
                 'address' => $request->address,
                 'language' => $request->language,
+                'get_reports_emails' => $request->getReportsEmails,
                 'comments' => $request->comments,
                 'admin_id' => $admin->id,
             ]);
@@ -144,10 +145,10 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id)
+    public function update(Request $request, $seq_id, $checkPermission = true)
     {
         // check that user has permission
-        if($this->getUser()->cannot('edit', Supervisor::class))
+        if($checkPermission && $this->getUser()->cannot('edit', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -179,12 +180,13 @@ class SupervisorsController extends ApiController
             if(isset($request->cellphone)){ $supervisor->cellphone = $request->cellphone; }
             if(isset($request->address)){ $supervisor->address = $request->address; }
             if(isset($request->language)){ $supervisor->language = $request->language; }
+            if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
             if(isset($request->comments)){ $supervisor->comments = $request->comments; }
 
             // update the user
             $user = $supervisor->user();
             if(isset($request->email)){ $user->email = $request->email; }
-            if(isset($request->password)){ $user->password = $request->password; }
+            if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             $supervisor->save();
             $user->save();
@@ -196,8 +198,12 @@ class SupervisorsController extends ApiController
             }
         });
 
+        $message = 'The supervisor was successfully updated.';
+        if($request->password){
+            $message = 'The supervisor and its password were successfully updated.';
+        }
         return $this->respondPersisted(
-            'The supervisor was successfully updated.',
+            $message,
             $this->supervisorTransformer->transform($this->loggedUserAdministrator()->supervisorBySeqId($seq_id))
         );
     }
@@ -238,6 +244,7 @@ protected function validateSupervisorRequestCreate(Request $request)
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
+            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
@@ -253,6 +260,7 @@ protected function validateSupervisorRequestCreate(Request $request)
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
             'language' => 'string|max:2',
+            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);

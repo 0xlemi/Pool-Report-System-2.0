@@ -30,6 +30,7 @@ class SupervisorTransformer extends Transformer
             'cellphone' => $supervisor->cellphone,
             'address' => $supervisor->address,
             'language' => $supervisor->language,
+            'getReportsEmails' => $supervisor->get_reports_emails,
             'comments' => $supervisor->comments,
             'photo' => $this->imageTransformer->transform($supervisor->image(1, false)),
         ];

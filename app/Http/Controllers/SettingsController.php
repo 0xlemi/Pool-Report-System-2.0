@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 
+use App\PRS\Traits\Controller\SettingsControllerTrait;
+
 use JavaScript;
 use Schema;
 
@@ -19,6 +21,9 @@ use App\Http\Requests;
 
 class SettingsController extends PageController
 {
+
+    use SettingsControllerTrait;
+
     /**
      * Create a new controller instance.
      *
@@ -214,43 +219,6 @@ class SettingsController extends PageController
     public function billing(Request $request)
     {
 
-    }
-
-
-
-    public function permissions(Request $request)
-    {
-
-        if($this->getUser()->cannot('permissions', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
-
-        $this->validate($request, [
-            'id' => [
-                'required',
-                'max:255',
-                'regex:/\w+\_\w+\_\w+/',
-                ],
-        ]);
-
-        $admin = $this->loggedUserAdministrator();
-        $attributes = $admin->getAttributes();
-
-        $column_name = $request->id;
-        $checked_value = strtolower($request->checked);
-        $checked = ($checked_value  == 'true' || $checked_value  == '1') ? false : true;
-
-        //check whether the id they are sending us is a real permission
-        if(isset($attributes[$column_name]))
-        {
-            $admin->$column_name = $checked;
-            if($admin->save()){
-                return $this->respondWithSuccess('Permission has been saved.');
-            }
-            return $this->respondInternalError('Error while persisting the permission');
-        }
-        return $this->respondNotFound('There is no permission with that id');
     }
 
     private function getTimezone()
