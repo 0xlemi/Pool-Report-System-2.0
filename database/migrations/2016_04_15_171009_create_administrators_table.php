@@ -15,15 +15,15 @@ class CreateAdministratorsTable extends Migration
         Schema::create('administrators', function (Blueprint $table) {
             $table->increments('id');
             // General Settings
-                $table->char('language', 2);
+                $table->char('language', 2)->default('en');
                 $table->string('timezone');
                 // Administrator Profile information
                 $table->string('name');
             // Company information
                 $table->string('company_name');
-                $table->string('website');
-                $table->string('facebook');
-                $table->string('twitter');
+                $table->string('website')->nullable();
+                $table->string('facebook')->nullable();
+                $table->string('twitter')->nullable();
             // Email Preferences
                 $table->boolean('get_reports_emails')->default(0);
             // Permissions

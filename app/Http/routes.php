@@ -45,6 +45,7 @@ Route::get('datatables/technicians', 'DataTableController@technicians');
 
 Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'throttle:10'] ], function (){
 	Route::post('login', 'Api\UserController@login');
+	Route::post('signUp', 'Api\AdministratorsController@store');
 });
 
 Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'auth:api'] ], function(){

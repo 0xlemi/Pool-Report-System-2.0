@@ -19,7 +19,7 @@ class CreateClientsTable extends Migration
             $table->string('last_name');
             $table->string('cellphone');
             $table->tinyInteger('type'); // 1=owner, 2=house administrator
-            $table->char('language', 2);
+            $table->char('language', 2)->default('en');
             $table->text('comments');
 
             // Email Preferences

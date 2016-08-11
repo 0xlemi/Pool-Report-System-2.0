@@ -90,6 +90,10 @@ class SupervisorsController extends ApiController
                 'admin_id' => $admin->id,
             ]);
 
+            // Optional values
+            if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
+            $supervisor->save();
+
             // create User
             $supervisor_id = $admin->supervisors(true)->first()->id;
             $user = User::create([

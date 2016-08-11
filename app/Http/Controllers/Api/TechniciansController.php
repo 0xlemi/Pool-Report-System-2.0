@@ -91,6 +91,10 @@ class TechniciansController extends ApiController
                 'admin_id' => $admin->id,
             ]);
 
+            // Optional values
+            if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
+            $technician->save();
+
             // create User
             $technician_id = $admin->technicians(true)->first()->id;
             $user = User::create([

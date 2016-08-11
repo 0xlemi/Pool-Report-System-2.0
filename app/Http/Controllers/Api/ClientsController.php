@@ -89,11 +89,14 @@ class ClientsController extends ApiController
                 'last_name' => $request->last_name,
                 'cellphone' => $request->cellphone,
                 'language' => $request->language,
-                'get_reports_emails' => $request->getReportsEmails,
                 'type' => $request->type, // 1 owner, 2 house administrator
                 'comments' => $request->comments,
                 'admin_id' => $admin->id,
             ]);
+
+            // Optional values
+            if(isset($request->getReportsEmails)){ $client->get_reports_emails = $request->getReportsEmails; }
+            $client->save();
 
             // Crete the User
             $client_id = $admin->clients(true)->first()->id;

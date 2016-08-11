@@ -4,11 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use App\PRS\Traits\Model\ImageTrait;
 
 use Carbon\Carbon;
 
 class Administrator extends Model
 {
+
+    use ImageTrait;
+
     /**
      * The attributes that are mass assignable.
      *

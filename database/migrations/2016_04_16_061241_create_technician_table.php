@@ -19,7 +19,7 @@ class CreateTechnicianTable extends Migration
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->char('language', 2);
+            $table->char('language', 2)->default('en');
             $table->text('comments');
 
             // Email Preferences
