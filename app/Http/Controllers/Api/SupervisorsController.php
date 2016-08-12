@@ -85,7 +85,6 @@ class SupervisorsController extends ApiController
                 'cellphone' => $request->cellphone,
                 'address' => $request->address,
                 'language' => $request->language,
-                'get_reports_emails' => $request->getReportsEmails,
                 'comments' => $request->comments,
                 'admin_id' => $admin->id,
             ]);

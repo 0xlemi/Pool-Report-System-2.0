@@ -34,6 +34,11 @@ class ClientTransformer extends Transformer
             $all_services[] = $this->serviceTransformer->transform($service);
         }
 
+        $photo = 'no image';
+        if($client->imageExists()){
+            $photo = $this->imageTransformer->transform($client->image(1, false));
+        }
+
         return [
             'id' => $client->seq_id,
             'name' => $client->name,
@@ -44,7 +49,7 @@ class ClientTransformer extends Transformer
             'language' => $client->language,
             'getReportsEmails' => $client->get_reports_emails,
             'comments' => $client->comments,
-            'photo' => $this->imageTransformer->transform($client->image(1, false)),
+            'photo' => $photo,
             'services' =>
                 $all_services
                 // $this->$serviceTransformer->transformCollection($client->services()->get())

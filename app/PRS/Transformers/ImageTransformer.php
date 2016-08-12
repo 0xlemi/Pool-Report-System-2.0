@@ -13,9 +13,9 @@ class ImageTransformer extends Transformer
     public function transform(Image $image)
     {
         return [
-            'full_size' => $image->normal_path,
-            'thumbnail' => $image->thumbnail_path,
-            'icon' => $image->icon_path,            
+            'full_size' => url($image->normal_path),
+            'thumbnail' => url($image->thumbnail_path),
+            'icon' => url($image->icon_path),            
         ];
     }
 

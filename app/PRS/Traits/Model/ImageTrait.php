@@ -76,13 +76,23 @@ trait ImageTrait{
         return $this->hasMany('App\Image')->count();
     }
 
+    public function imageExists($order = 1)
+    {
+        if($this->hasMany('App\Image')
+                    ->where('order', '=', $order)
+                    ->count() < 1){
+            return false;
+        }
+        return true;
+    }
+
     /**
      * get full size image
      */
     public function image($order = 1, $getUrl = true){
         $image = $this->hasMany('App\Image')
             ->where('order', '=', $order)
-            ->firstOrFail();
+            ->first();
         if($getUrl){
             if(!$image){
                 return 'img/no_image.png';

@@ -31,6 +31,18 @@ class ReportTransformer extends Transformer
 
     public function transform(Report $report)
     {
+        $photo1 = 'no image';
+        if($report->imageExists()){
+            $photo1 = $this->imageTransformer->transform($report->image(1, false));
+        }
+        $photo2 = 'no image';
+        if($report->imageExists()){
+            $photo2 = $this->imageTransformer->transform($report->image(2, false));
+        }
+        $photo3 = 'no image';
+        if($report->imageExists()){
+            $photo3 = $this->imageTransformer->transform($report->image(3, false));
+        }
         return [
             'id' => $report->seq_id,
             'completed' => $report->completed,
@@ -44,9 +56,9 @@ class ReportTransformer extends Transformer
             'longitude' => $report->longitude,
             'altitude' => $report->altitude,
             'accuracy' => $report->accuracy,
-            'photo1' => $this->imageTransformer->transform($report->image(1, false)),
-            'photo2' => $this->imageTransformer->transform($report->image(2, false)),
-            'photo3' => $this->imageTransformer->transform($report->image(3, false)),
+            'photo1' => $photo1,
+            'photo2' => $photo2,
+            'photo3' => $photo3,
             'service_id' => $report->service()->id,
             'technician_id' => $report->technician()->id,
         ];

@@ -31,6 +31,11 @@ class TechnicianTransformer extends Transformer
     public function transform(Technician $technician)
     {
 
+        $photo = 'no image';
+        if($technician->imageExists()){
+            $photo = $this->imageTransformer->transform($technician->image(1, false));
+        }
+
         return [
             'id' => $technician->seq_id,
             'name' => $technician->name,
@@ -41,7 +46,7 @@ class TechnicianTransformer extends Transformer
             'language' => $technician->language,
             'getReportsEmails' => $technician->get_reports_emails,
             'comments' => $technician->comments,
-            'photo' => $this->imageTransformer->transform($technician->image(1, false)),
+            'photo' => $photo,
             'supervisor' => $this->supervisorTransformer->transform($technician->supervisor()),
         ];
     }

@@ -49,7 +49,7 @@ Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'throttle:10'] ], fu
 });
 
 Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'auth:api'] ], function(){
-	// Route::get('user', 'Api\SettingsController@information');
+	Route::get('account', 'Api\UserController@information');
 	Route::post('resetToken', 'Api\UserController@resetToken');
 
 	Route::resource('services', 'Api\ServicesController');

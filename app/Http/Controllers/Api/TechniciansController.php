@@ -85,7 +85,6 @@ class TechniciansController extends ApiController
                 'cellphone' => $request->cellphone,
                 'address' => $request->address,
                 'language' => $request->language,
-                'get_reports_emails' => $request->getReportsEmails,
                 'comments' => $request->comments,
                 'supervisor_id' => $supervisor_id,
                 'admin_id' => $admin->id,

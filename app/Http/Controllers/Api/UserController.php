@@ -27,15 +27,27 @@ class UserController extends ApiController
         $this->userTransformer = $userTransformer;
     }
 
-    // /**
-    // * Get the information of the current user logged in
-    // * @return [type] [description]
-    // */
-    // public function information()
-    // {
-    //     $user  = Auth::guard('api')->user();
-    //     return $this->userTransformer->transform($user);
-    // }
+    /**
+    * Get the information of the current user logged in
+    * @return [type] [description]
+    */
+    public function information()
+    {
+        $user = $this->getUser();
+
+        if($user->isAdministrator()){
+
+        }elseif($user->isSupervisor()){
+                
+        }elseif($user->isTechnician()){
+
+        }else{
+            return $this->respondInternalError();
+        }
+
+
+
+    }
 
 
     public function login(Request $request)

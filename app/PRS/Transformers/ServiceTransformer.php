@@ -28,6 +28,12 @@ class ServiceTransformer extends Transformer
     public function transform(Service $service)
     {
         $service_days = $this->serviceHelpers->num_to_service_days($service->service_days);
+
+        $photo = 'no image';
+        if($service->imageExists()){
+            $photo = $this->imageTransformer->transform($service->image(1, false));
+        }
+
         return [
             'id' => $service->seq_id,
             'name' => $service->name,
@@ -50,7 +56,7 @@ class ServiceTransformer extends Transformer
             'end_time' => $service->end_time,
             'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
-            'photo' => $this->imageTransformer->transform($service->image(1, false)),
+            'photo' => $photo,
 
         ];
     }

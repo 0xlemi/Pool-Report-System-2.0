@@ -22,6 +22,11 @@ class SupervisorTransformer extends Transformer
 
     public function transform(Supervisor $supervisor)
     {
+
+        $photo = 'no image';
+        if($supervisor->imageExists()){
+            $photo = $this->imageTransformer->transform($supervisor->image(1, false));
+        }
         return [
             'id' => $supervisor->seq_id,
             'name' => $supervisor->name,
@@ -32,7 +37,7 @@ class SupervisorTransformer extends Transformer
             'language' => $supervisor->language,
             'getReportsEmails' => $supervisor->get_reports_emails,
             'comments' => $supervisor->comments,
-            'photo' => $this->imageTransformer->transform($supervisor->image(1, false)),
+            'photo' => $photo,
         ];
     }
 
