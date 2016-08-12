@@ -74,12 +74,7 @@ class ServicesController extends ApiController
         }
 
         // validation
-        $validator = $this->validateServiceCreate($request);
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-        }
-
+        $this->validateServiceCreate($request);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -171,15 +166,7 @@ class ServicesController extends ApiController
         }
 
         // Validate
-            $validator = $this->validateServiceUpdate($request);
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
+            $this->validateServiceUpdate($request);
             // getting and validating service
             try{
                 $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
@@ -273,7 +260,7 @@ class ServicesController extends ApiController
 
     protected function validateServiceCreate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'required|string|max:20',
             'address_line' => 'required|string|max:50',
             'city' => 'required|string|max:30',
@@ -300,7 +287,7 @@ class ServicesController extends ApiController
 
     protected function validateServiceUpdate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'string|max:20',
             'address_line' => 'string|max:50',
             'city' => 'string|max:30',

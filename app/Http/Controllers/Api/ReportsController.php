@@ -111,11 +111,7 @@ class ReportsController extends ApiController
         $admin = $this->loggedUserAdministrator();
 
         // Validate
-            $validator = $this->validateReportCreate($request);
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-            }
+            $this->validateReportCreate($request);
             // validate and get the service
             try {
                 $service = $admin->serviceBySeqId($request->service_id);
@@ -221,15 +217,7 @@ class ReportsController extends ApiController
 
         // Validate
             // validate core attributes
-            $validator = $this->validateReportUpdate($request);
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
+            $this->validateReportUpdate($request);
             // validate and get the Report
             try {
                 $report = $admin->reportsBySeqId($seq_id);
@@ -340,7 +328,7 @@ class ReportsController extends ApiController
 
     protected function validateReportCreate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'service_id' => 'required|integer|min:1',
             'technician_id' => 'required|integer|min:1',
             'completed' => 'required|date',
@@ -361,7 +349,7 @@ class ReportsController extends ApiController
 
     protected function validateReportUpdate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'service_id' => 'integer|min:1',
             'technician_id' => 'integer|min:1',
             'completed' => 'date',

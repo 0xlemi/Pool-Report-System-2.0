@@ -39,7 +39,7 @@ class AdministratorsController extends ApiController
     {
 
             // Validation
-            $validator = Validator::make($request->all(), [
+            $this->validate($request, [
                     'name' => 'required|between:2,45',
                     'email' => 'required|email|max:255|unique:users,email',
                     'password' => 'required|string|between:6,255',
@@ -52,14 +52,6 @@ class AdministratorsController extends ApiController
                     'getReportsEmails' => 'boolean',
                     'photo' => 'mimes:jpg,jpeg,png',
                 ]);
-            if($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
 
         // ***** Persiting *****
         $user = DB::transaction(function () use($request) {
@@ -129,7 +121,7 @@ class AdministratorsController extends ApiController
         }
 
         // Validation
-            $validator = Validator::make($request->all(), [
+            $this->validate($request, [
                 'name' => 'between:2,45',
                 'email' => 'email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
                 'password' => 'string|between:6,255',
@@ -142,14 +134,6 @@ class AdministratorsController extends ApiController
                 'getReportsEmails' => 'boolean',
                 'photo' => 'mimes:jpg,jpeg,png',
             ]);
-            if($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
 
             $admin = $user->userable();
 

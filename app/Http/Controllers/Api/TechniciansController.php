@@ -64,11 +64,7 @@ class TechniciansController extends ApiController
         $admin = $this->loggedUserAdministrator();
 
         // Validation
-            $validator = $this->validateTechnicianRequestCreate($request);
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-            }
+            $this->validateTechnicianRequestCreate($request);
             try {
                 $supervisor_id = $admin->supervisorBySeqId($request->supervisor)->id;
             }catch(ModelNotFoundException $e){
@@ -166,7 +162,7 @@ class TechniciansController extends ApiController
                 return $this->respondNotFound('Technician with that id, does not exist.');
             }
             // checking core attributes
-            $validator = $this->validateTechnicianRequestUpdate(
+            $this->validateTechnicianRequestUpdate(
                             $request,
                             $technician->user()->userable_id
                         );
@@ -179,15 +175,6 @@ class TechniciansController extends ApiController
                 }
             }catch(ModelNotFoundException $e){
                 return $this->respondNotFound('There is no supervisor with that supervisor_id.');
-            }
-            // throw validation message
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
             }
 
         // ***** Persisting *****
@@ -257,7 +244,7 @@ class TechniciansController extends ApiController
 
     protected function validateTechnicianRequestCreate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'supervisor' => 'required|integer|min:1',
@@ -274,7 +261,7 @@ class TechniciansController extends ApiController
 
     protected function validateTechnicianRequestUpdate(Request $request, $userable_id)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'supervisor' => 'integer|min:1',

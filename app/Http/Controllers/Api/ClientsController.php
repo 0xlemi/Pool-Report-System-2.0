@@ -69,11 +69,7 @@ class ClientsController extends ApiController
         }
 
         // validate the request
-        $validator = $this->validateClientCreate($request);
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-        }
+        $this->validateClientCreate($request);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -177,19 +173,10 @@ class ClientsController extends ApiController
             }
             // validate core values
             $userable_id = $client->user()->userable_id;
-            $validator = $this->validateClientUpdate($request, $userable_id);
+            $this->validateClientUpdate($request, $userable_id);
             // get real ids, because we were sent seq_ids arrays
             $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
             $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
-            // show error validation errors
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
         // end validation
 
         // ***** Persiting to the database *****
@@ -264,7 +251,7 @@ class ClientsController extends ApiController
 
     protected function validateClientCreate(Request $request)
     {
-        return Validator::make($request->all(), [
+        $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'email' => 'required|email|unique:users,email',
@@ -279,7 +266,7 @@ class ClientsController extends ApiController
 
     protected function validateClientUpdate(Request $request, $userable_id)
     {
-        return Validator::make($request->all(), [
+        $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'email' => 'email|unique:users,email,'.$userable_id.',userable_id',

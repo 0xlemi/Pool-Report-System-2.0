@@ -38,7 +38,7 @@ class UserController extends ApiController
         if($user->isAdministrator()){
 
         }elseif($user->isSupervisor()){
-                
+
         }elseif($user->isTechnician()){
 
         }else{
@@ -52,15 +52,10 @@ class UserController extends ApiController
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'email' => 'required|string|max:255',
             'password' => 'required|string|max:255',
         ]);
-
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-        }
 
         $user = User::where('email', $request->email)->first();
 

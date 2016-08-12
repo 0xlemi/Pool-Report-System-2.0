@@ -68,11 +68,7 @@ class SupervisorsController extends ApiController
         }
 
         // Validation
-        $validator = $this->validateSupervisorRequestCreate($request);
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-        }
+        $this->validateSupervisorRequestCreate($request);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -164,15 +160,7 @@ class SupervisorsController extends ApiController
                 return $this->respondNotFound('Supervisor with that id, does not exist.');
             }
             // validate the core attributes
-            $validator = $this->validateSupervisorRequestUpdate($request, $supervisor->user()->userable_id);
-            if ($validator->fails()) {
-                // return error responce
-                return $this->setStatusCode(422)
-                    ->RespondWithError(
-                        'Paramenters failed validation.',
-                        $validator->errors()->toArray()
-                    );
-            }
+            $this->validateSupervisorRequestUpdate($request, $supervisor->user()->userable_id);
 
 
         // ***** Persiting *****
@@ -239,7 +227,7 @@ class SupervisorsController extends ApiController
 
 protected function validateSupervisorRequestCreate(Request $request)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'email' => 'required|email|unique:users,email',
@@ -255,7 +243,7 @@ protected function validateSupervisorRequestCreate(Request $request)
 
     protected function validateSupervisorRequestUpdate(Request $request, $userable_id)
     {
-        return Validator::make($request->all(), [
+        return $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
