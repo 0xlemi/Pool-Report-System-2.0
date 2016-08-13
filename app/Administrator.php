@@ -72,6 +72,65 @@ class Administrator extends Model
     }
 
     /**
+     * Total number of services that need to be done today
+     * @return int 
+     */
+    public function numberServicesDoToday()
+    {
+        return $this->NumberServicesDoIn(Carbon::today());
+    }
+
+    /**
+     * Total number of services that need to be done in a date
+     * @param  Carbon $date
+     * @return  int
+     */
+    public function numberServicesDoIn(Carbon $date)
+    {
+        return $this->servicesDoIn($date, true)->count();
+    }
+
+    /**
+     * get the services that need to be done today
+     * @param  boolean $AddCompletedReports add or remove services that where already done today
+     * @return Collection
+     */
+    public function servicesDoToday($AddCompletedReports = false)
+    {
+        $date = Carbon::today();
+        return $this->servicesDoIn($date , $AddCompletedReports);
+    }
+
+    /**
+     * get the services that need to be done in certain date
+     * @param  Carbon  $date
+     * @param  boolean $AddCompletedReports   add or remove the services that where already done
+     * @return Collection
+     */
+    public function servicesDoIn(Carbon $date, $AddCompletedReports = false)
+    {
+        return $this->services()
+            ->get()
+            ->map(function($service) use ($date, $AddCompletedReports){
+                // check that the service is do in this date
+                if($service->checkIfIsDo($date)){
+                    // what to add all the reports or only the ones that are missing for $date
+                    if($AddCompletedReports){
+                        // add all reports that are do
+                        return $service;
+                    }else{
+                        // check that the report is missing in the $date
+                        if(!$service->checkIfIsDone($date)){
+                            return $service;
+                        }
+                    }
+                }
+            })->reject(function($service){
+                return is_null($service);
+            });
+    }
+
+    /**
      * Get the reports in this date
      * @param  String $date  YYYY-MM-DD format date
      * tested

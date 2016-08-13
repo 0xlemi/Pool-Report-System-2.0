@@ -9,11 +9,13 @@ use Intervention;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
 
+use Carbon\Carbon;
+
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Service extends Model
 {
-    use ImageTrait;    
+    use ImageTrait;
 
     /**
      * variables that can be mass assign
@@ -78,6 +80,34 @@ class Service extends Model
     public function service_days_by_day(){
         $serviceHelpers = \App::make('App\PRS\Helpers\ServiceHelpers');
         return $serviceHelpers->num_to_service_days($this->service_days);
+    }
+
+    /**
+     * check if this service is scheduled for a date
+     * @param  Carbon $date
+     * @return boolean
+     */
+    public function checkIfIsDo(Carbon $date)
+    {
+        $dayToCheck = strtolower($date->format('l'));
+        return $this->service_days_by_day()[$dayToCheck];
+    }
+
+    /**
+     * check if there is a report for this service in a date
+     * @param  Carbon $date
+     * @return boolean       
+     */
+    public function checkIfIsDone(Carbon $date)
+    {
+        $strDate = $date->toDateTimeString();
+        $count = $this->reports()
+                ->where(\DB::raw('DATEDIFF(completed, "'.$strDate.'")'), '=', '0')
+                ->count();
+        if($count > 0){
+            return true;
+        }
+        return false;
     }
 
 }

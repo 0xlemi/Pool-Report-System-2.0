@@ -172,8 +172,7 @@ class ClientsController extends ApiController
                 return $this->respondNotFound('Client with that id, does not exist.');
             }
             // validate core values
-            $userable_id = $client->user()->userable_id;
-            $this->validateClientUpdate($request, $userable_id);
+            $this->validateClientUpdate($request, $client->user()->userable_id);
             // get real ids, because we were sent seq_ids arrays
             $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
             $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);

@@ -8,23 +8,28 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\PRS\Transformers\UserTransformer;
+use App\PRS\Transformers\ServiceTransformer;
 use App\User;
 use Auth;
 use Validator;
+use Carbon\Carbon;
 
 class UserController extends ApiController
 {
 
     protected $userTransformer;
+    private $serviceTransformer;
 
     /**
     * Create a new controller instance.
     *
     * @return void
     */
-    public function __construct(UserTransformer $userTransformer)
+    public function __construct(UserTransformer $userTransformer,
+                                ServiceTransformer $serviceTransformer)
     {
         $this->userTransformer = $userTransformer;
+        $this->serviceTransformer = $serviceTransformer;
     }
 
     /**
@@ -47,6 +52,29 @@ class UserController extends ApiController
 
 
 
+    }
+
+    public function todaysRoute()
+    {
+        $user = $this->getUser();
+        if(!($user->isAdministrator() || $user->isTechnician() || $user->isSupervisor())){
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        }
+
+        $admin = $this->loggedUserAdministrator();
+
+        $todayServices = $admin->servicesDoToday();
+        $numberTotalServices = $admin->numberServicesDoToday();
+        $numberMissingServices = $todayServices->count();
+        return $this->respond(
+            [
+                'data' => [
+                    'numberTotalServicesToday' => $numberTotalServices,
+                    'numberServicesDoneToday' => $numberTotalServices - $numberMissingServices,
+                    'missingServicesToday' => $this->serviceTransformer->transformCollection($todayServices),
+                ]
+            ]
+        );
     }
 
 

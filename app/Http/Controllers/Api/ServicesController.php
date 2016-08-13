@@ -109,6 +109,10 @@ class ServicesController extends ApiController
                 'admin_id' => $admin->id,
             ]);
 
+            // Optional values
+            if(isset($request->status)){ $service->status = $request->status; }
+            $service->save();
+
             // Add Photo
             if($request->photo){
                 $photo = $service->addImageFromForm($request->file('photo'));
