@@ -19,6 +19,9 @@ class UserController extends ApiController
 
     protected $userTransformer;
     private $serviceTransformer;
+    private $administratorsController;
+    private $supervisorsController;
+    private $techniciansController;
 
     /**
     * Create a new controller instance.
@@ -26,32 +29,51 @@ class UserController extends ApiController
     * @return void
     */
     public function __construct(UserTransformer $userTransformer,
-                                ServiceTransformer $serviceTransformer)
+                                ServiceTransformer $serviceTransformer,
+                                AdministratorsController $administratorsController,
+                                SupervisorsController $supervisorsController,
+                                TechniciansController $techniciansController)
     {
         $this->userTransformer = $userTransformer;
         $this->serviceTransformer = $serviceTransformer;
+        $this->administratorsController = $administratorsController;
+        $this->supervisorsController = $supervisorsController;
+        $this->techniciansController = $techniciansController;
     }
 
     /**
     * Get the information of the current user logged in
     * @return [type] [description]
     */
-    public function information()
+    public function show()
     {
         $user = $this->getUser();
-
         if($user->isAdministrator()){
-
+            return $this->administratorsController->show();
         }elseif($user->isSupervisor()){
-
+            return $this->supervisorsController->show($user->userable()->seq_id, false);
         }elseif($user->isTechnician()){
-
-        }else{
-            return $this->respondInternalError();
+            return $this->techniciansController->show($user->userable()->seq_id, false);
         }
 
+        return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+    }
 
+    public function update(Request $request){
 
+        $user = $this->getUser();
+        if($user->isAdministrator())
+        {
+            return $this->administratorsController->update($request);
+        }elseif($user->isSupervisor())
+        {
+            return $this->supervisorsController->update($request, $user->userable()->seq_id, false);
+        }elseif($user->isTechnician())
+        {
+            return $this->techniciansController->update($request, $user->userable()->seq_id, false);
+        }
+
+        return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
     }
 
     public function todaysRoute()

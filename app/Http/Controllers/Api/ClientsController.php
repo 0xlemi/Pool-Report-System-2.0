@@ -172,7 +172,7 @@ class ClientsController extends ApiController
                 return $this->respondNotFound('Client with that id, does not exist.');
             }
             // validate core values
-            $this->validateClientUpdate($request, $client->user()->userable_id);
+            $this->validateClientUpdate($request, $client->user()->id);
             // get real ids, because we were sent seq_ids arrays
             $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
             $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
@@ -263,12 +263,12 @@ class ClientsController extends ApiController
         ]);
     }
 
-    protected function validateClientUpdate(Request $request, $userable_id)
+    protected function validateClientUpdate(Request $request, $id)
     {
         $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
-            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'email' => 'email|unique:users,email,'.$id.',id',
             'cellphone' => 'string|max:20',
             'type' => 'numeric|between:1,2',
             'language' => 'string|max:2',

@@ -116,9 +116,9 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($seq_id)
+    public function show($seq_id, $checkPermission = true)
     {
-        if($this->getUser()->cannot('show', Supervisor::class))
+        if($checkPermission && $this->getUser()->cannot('show', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -160,7 +160,7 @@ class SupervisorsController extends ApiController
                 return $this->respondNotFound('Supervisor with that id, does not exist.');
             }
             // validate the core attributes
-            $this->validateSupervisorRequestUpdate($request, $supervisor->user()->userable_id);
+            $this->validateSupervisorRequestUpdate($request, $supervisor->user()->id);
 
 
         // ***** Persiting *****
@@ -241,12 +241,12 @@ protected function validateSupervisorRequestCreate(Request $request)
         ]);
     }
 
-    protected function validateSupervisorRequestUpdate(Request $request, $userable_id)
+    protected function validateSupervisorRequestUpdate(Request $request, $id)
     {
         return $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
-            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'email' => 'email|unique:users,email,'.$id.',id',
             'password' => 'alpha_dash|between:6,40',
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',

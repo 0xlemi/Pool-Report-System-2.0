@@ -10,11 +10,14 @@ use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\AdministratorTransformer;
+use App\PRS\Traits\Controller\SettingsControllerTrait;
 use App\Administrator;
 use App\User;
 
 class AdministratorsController extends ApiController
 {
+
+    use SettingsControllerTrait;
 
     private $adminTransformer;
 
@@ -102,6 +105,17 @@ class AdministratorsController extends ApiController
      */
     public function show()
     {
+        // check if is administrator
+        $user = $this->getUser();
+        if(!$user->isAdministrator()){
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. Only system administrators');
+        }
+
+        $admin = $user->userable();
+        return $this->respond([
+                'data' => $this->adminTransformer->transform($admin),
+            ]);
+
 
     }
 
@@ -123,7 +137,7 @@ class AdministratorsController extends ApiController
         // Validation
             $this->validate($request, [
                 'name' => 'between:2,45',
-                'email' => 'email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
+                'email' => 'email|max:255|unique:users,email,'.$user->id.',id',
                 'password' => 'string|between:6,255',
                 'timezone' => 'string|between:3,255',
                 'companyName' => 'between:2,30',

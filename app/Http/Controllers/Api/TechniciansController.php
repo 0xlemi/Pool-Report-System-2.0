@@ -118,9 +118,9 @@ class TechniciansController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($seq_id)
+    public function show($seq_id, $checkPermission = true)
     {
-        if($this->getUser()->cannot('show', Technician::class))
+        if($checkPermission && $this->getUser()->cannot('show', Technician::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -164,7 +164,7 @@ class TechniciansController extends ApiController
             // checking core attributes
             $this->validateTechnicianRequestUpdate(
                             $request,
-                            $technician->user()->userable_id
+                            $technician->user()->id
                         );
             // checking the supervisor_seqid and getting the real id
             try {
@@ -259,13 +259,13 @@ class TechniciansController extends ApiController
         ]);
     }
 
-    protected function validateTechnicianRequestUpdate(Request $request, $userable_id)
+    protected function validateTechnicianRequestUpdate(Request $request, $id)
     {
         return $this->validate($request, [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'supervisor' => 'integer|min:1',
-            'username' => 'alpha_dash|between:4,25|unique:users,email,'.$userable_id.',userable_id',
+            'username' => 'alpha_dash|between:4,25|unique:users,email,'.$id.',id',
             'password' => 'alpha_dash|between:6,40',
             'cellphone' => 'string|max:20',
             'address'   => 'max:100',
