@@ -1320,6 +1320,14 @@ function isset(strVariableName) {
             // Services
             statusSwitch: true,
         },
+        computed: {
+                missingServicesTag: function () {
+                    if(this.numServicesMissing < 1){
+                        return 'All Services Done';
+                    }
+                    return 'Missing Services: '+this.numServicesMissing;
+                }
+            },
         methods:{
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;

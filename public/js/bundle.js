@@ -18021,6 +18021,14 @@ $(document).ready(function () {
 			// Services
 			statusSwitch: true
 		},
+		computed: {
+			missingServicesTag: function missingServicesTag() {
+				if (this.numServicesMissing < 1) {
+					return 'All Services Done';
+				}
+				return 'Missing Services: ' + this.numServicesMissing;
+			}
+		},
 		methods: {
 			changeServiceListStatus: function changeServiceListStatus(status) {
 				var intStatus = !status ? 1 : 0;

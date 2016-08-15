@@ -30,8 +30,12 @@
 					<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;New Report
 				</a>
 				&nbsp;&nbsp;
-				<button class="btn btn-warning" data-toggle="modal" data-target="#missingServicesModal">
-					<i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp; Missing Services: @{{ numServicesMissing }}
+				<button class="btn btn-warning" data-toggle="modal"
+							data-target="#missingServicesModal"
+							:class="( numServicesMissing < 1 ) ? 'btn-success' : 'btn-warning'"
+							:disabled="( numServicesMissing < 1 )">
+					<i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;
+					@{{ missingServicesTag }}
 				</button>
 			</div>
 			<div class="table-responsive">
