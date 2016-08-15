@@ -21,7 +21,7 @@ class CreateServicesTable extends Migration
             $table->string('state');
             $table->string('postal_code');
             $table->char('country', 2);
-            $table->tinyInteger('type'); // 1=clorine, 2=salt
+            $table->tinyInteger('type'); // 1=chlorine, 2=salt
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);
             $table->char('currency', 3);

@@ -60,9 +60,9 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Clorine</label>
+								<label class="col-sm-2 form-control-label">Chlorine</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->clorine) !!}</p>
+									<p class="form-control-static">{!! $helper->styleReadings($report->chlorine) !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">

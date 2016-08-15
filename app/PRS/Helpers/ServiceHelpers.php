@@ -132,7 +132,7 @@ class ServiceHelpers
     	}
     	switch ($type) {
     		case 1:
-    			return '<span class="label '.$tag_type.' label-info">Clorine</span>';
+    			return '<span class="label '.$tag_type.' label-info">chlorine</span>';
     			break;
     		case 2:
     			return '<span class="label '.$tag_type.' label-primary">Salt</span>';

@@ -27,7 +27,7 @@ class Report extends Model
         'completed',
         'on_time',
         'ph',
-        'clorine',
+        'chlorine',
         'temperature',
         'turbidity',
         'salt',

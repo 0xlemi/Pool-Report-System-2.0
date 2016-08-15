@@ -142,7 +142,7 @@ class ReportsController extends ApiController
                 'completed' => $request->completed,
                 'on_time' => $on_time,
                 'ph' => $request->ph,
-                'clorine' => $request->clorine,
+                'chlorine' => $request->chlorine,
                 'temperature' => $request->temperature,
                 'turbidity' => $request->turbidity,
                 'salt' => $request->salt,
@@ -266,7 +266,7 @@ class ReportsController extends ApiController
 
             // if(isset($request->completed)){ $report->completed = $request->completed; }
             // if(isset($request->ph)){ $report->ph = $request->ph; }
-            // if(isset($request->clorine)){ $report->clorine = $request->clorine; }
+            // if(isset($request->chlorine)){ $report->chlorine = $request->chlorine; }
             // if(isset($request->temperature)){ $report->temperature = $request->temperature; }
             // if(isset($request->turbidity)){ $report->turbidity = $request->turbidity; }
             // if(isset($request->salt)){ $report->salt = $request->salt; }
@@ -333,7 +333,7 @@ class ReportsController extends ApiController
             'technician_id' => 'required|integer|min:1',
             'completed' => 'required|date',
             'ph' => 'required|integer|between:1,5',
-            'clorine' => 'required|integer|between:1,5',
+            'chlorine' => 'required|integer|between:1,5',
             'temperature' => 'required|integer|between:1,5',
             'turbidity' => 'required|integer|between:1,4',
             'salt' => 'required|integer|between:1,5',
@@ -354,7 +354,7 @@ class ReportsController extends ApiController
             'technician_id' => 'integer|min:1',
             'completed' => 'date',
             'ph' => 'integer|between:1,5',
-            'clorine' => 'integer|between:1,5',
+            'chlorine' => 'integer|between:1,5',
             'temperature' => 'integer|between:1,5',
             'turbidity' => 'integer|between:1,4',
             'salt' => 'integer|between:1,5',

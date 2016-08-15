@@ -48,7 +48,7 @@ class ReportTransformer extends Transformer
             'completed' => $report->completed,
             'on_time' => $report->on_time,
             'ph' => $report->ph,
-            'clorine' => $report->clorine,
+            'chlorine' => $report->chlorine,
             'temperature' => $report->temperature,
             'turbidity' => $report->turbidity,
             'salt' => $report->salt,

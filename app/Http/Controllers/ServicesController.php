@@ -90,7 +90,7 @@ class ServicesController extends PageController
             'state' => $request->state,
             'postal_code' => $request->postal_code,
             'country' => $request->country,
-            'type' => ($request->type)? 1:2, // 1=clorine, 2=salt
+            'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
             'service_days' => $service_days,
             'amount' => $request->amount,
             'currency' => $request->currency,
@@ -178,7 +178,7 @@ class ServicesController extends PageController
         $service->state = $request->state;
         $service->postal_code = $request->postal_code;
         $service->country = $request->country;
-        $service->type = ($request->type)? 1:2; // 1=clorine, 2=salt
+        $service->type = ($request->type)? 1:2; // 1=chlorine, 2=salt
         $service->service_days = $service_days;
         $service->amount = $request->amount;
         $service->currency = $request->currency;

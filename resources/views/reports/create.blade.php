@@ -28,7 +28,7 @@
 								<div class="col-sm-10">
 									<div class='input-group date' id="new_report_datepicker">
 										<input type='text' name='completed_at' class="form-control"
-												id="new_report_datepicker_input" 
+												id="new_report_datepicker_input"
 												value="{{ old('completed_at') }}"/>
 										@if ($errors->has('completed_at'))
 											<small class="text-muted">{{ $errors->first('completed_at') }}</small>
@@ -43,7 +43,7 @@
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
 									<select class="bootstrap-select bootstrap-select-arrow" name="service" data-live-search="true">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose a service'
 																value="0" >Choose a service
@@ -65,7 +65,7 @@
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
 									<select class="bootstrap-select bootstrap-select-arrow" name="technician" data-live-search="true">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose a technician'
 																value="0" >Choose a technician
@@ -88,45 +88,45 @@
 								<label class="col-sm-2 form-control-label">PH</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
 									<select class="bootstrap-select bootstrap-select-arrow" name="ph">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose an option'
 																value="0"
 																{{ (old('ph') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
 																value="5"
 																{{ (old('ph') == 5) ? 'selected':'' }}
 																>Very High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																value="4" 
+																value="4"
 																{{ (old('ph') == 4) ? 'selected':'' }}
 																>High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																value="3" 
+																value="3"
 																{{ (old('ph') == 3) ? 'selected':'' }}
 																>Perfect
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																value="2" 
+																value="2"
 																{{ (old('ph') == 2) ? 'selected':'' }}
 																>Low
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																value="1" 
+																value="1"
 																{{ (old('ph') == 1) ? 'selected':'' }}
 																>Very Low
 										</option>
@@ -136,55 +136,55 @@
 									@endif
 								</div>
 							</div>
-							<div class="form-group row {{($errors->has('clorine'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Clorine</label>
+							<div class="form-group row {{($errors->has('chlorine'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Chlorine</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow" name="clorine">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+									<select class="bootstrap-select bootstrap-select-arrow" name="chlorine">
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose an option'
-																value="0" 
-																{{ (old('clorine') == 0) ? 'selected':'' }}
+																value="0"
+																{{ (old('chlorine') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																value="5" 
-																{{ (old('clorine') == 5) ? 'selected':'' }}
+																value="5"
+																{{ (old('chlorine') == 5) ? 'selected':'' }}
 																>Very High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																value="4" 
-																{{ (old('clorine') == 4) ? 'selected':'' }}
+																value="4"
+																{{ (old('chlorine') == 4) ? 'selected':'' }}
 																>High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																value="3" 
-																{{ (old('clorine') == 3) ? 'selected':'' }}
+																value="3"
+																{{ (old('chlorine') == 3) ? 'selected':'' }}
 																>Perfect
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																value="2" 
-																{{ (old('clorine') == 2) ? 'selected':'' }}
+																value="2"
+																{{ (old('chlorine') == 2) ? 'selected':'' }}
 																>Low
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																value="1" 
-																{{ (old('clorine') == 1) ? 'selected':'' }}
+																value="1"
+																{{ (old('chlorine') == 1) ? 'selected':'' }}
 																>Very Low
 										</option>
 									</select>
-									@if ($errors->has('clorine'))
-										<small class="text-muted">{{ $errors->first('clorine') }}</small>
+									@if ($errors->has('chlorine'))
+										<small class="text-muted">{{ $errors->first('chlorine') }}</small>
 									@endif
 								</div>
 							</div>
@@ -192,45 +192,45 @@
 								<label class="col-sm-2 form-control-label">Temperature</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
 									<select class="bootstrap-select bootstrap-select-arrow" name="temperature">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose an option'
-																value="0" 
+																value="0"
 																{{ (old('temperature') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																value="5" 
+																value="5"
 																{{ (old('temperature') == 5) ? 'selected':'' }}
 																>Very High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																value="4" 
+																value="4"
 																{{ (old('temperature') == 4) ? 'selected':'' }}
 																>High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																value="3" 
+																value="3"
 																{{ (old('temperature') == 3) ? 'selected':'' }}
 																>Perfect
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																value="2" 
+																value="2"
 																{{ (old('temperature') == 2) ? 'selected':'' }}
 																>Low
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																value="1" 
+																value="1"
 																{{ (old('temperature') == 1) ? 'selected':'' }}
 																>Very Low
 										</option>
@@ -244,38 +244,38 @@
 								<label class="col-sm-2 form-control-label">Turbidity</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
 									<select class="bootstrap-select bootstrap-select-arrow" name="turbidity">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose an option'
-																value="0" 
+																value="0"
 																{{ (old('turbidity') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																value="4" 
+																value="4"
 																{{ (old('turbidity') == 4) ? 'selected':'' }}
 																>Very High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																value="3" 
+																value="3"
 																{{ (old('turbidity') == 3) ? 'selected':'' }}
 																>High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																value="2" 
+																value="2"
 																{{ (old('turbidity') == 2) ? 'selected':'' }}
 																>Low
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																value="1" 
+																value="1"
 																{{ (old('turbidity') == 1) ? 'selected':'' }}
 																>Perfect
 										</option>
@@ -289,45 +289,45 @@
 								<label class="col-sm-2 form-control-label">Salt</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
 									<select class="bootstrap-select bootstrap-select-arrow" name="salt">
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #000;">
 																</span>&nbsp;&nbsp;Choose an option'
-																value="0" 
+																value="0"
 																{{ (old('salt') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																value="5" 
+																value="5"
 																{{ (old('salt') == 5) ? 'selected':'' }}
 																>Very High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																value="5" 
+																value="5"
 																{{ (old('salt') == 4) ? 'selected':'' }}
 																>High
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																value="3" 
+																value="3"
 																{{ (old('salt') == 3) ? 'selected':'' }}
 																>Perfect
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																value="2" 
+																value="2"
 																{{ (old('salt') == 2) ? 'selected':'' }}
 																>Low
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk" 
+										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																value="1" 
+																value="1"
 																{{ (old('salt') == 1) ? 'selected':'' }}
 																>Very Low
 										</option>
@@ -356,7 +356,7 @@
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
 					                    <input type="file" name="photo1" id="photo1" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists" 
+					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>
@@ -380,7 +380,7 @@
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
 					                    <input type="file" name="photo2" id="photo2" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists" 
+					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>
@@ -404,7 +404,7 @@
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
 					                    <input type="file" name="photo3" id="photo3" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists" 
+					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>

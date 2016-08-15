@@ -343,7 +343,7 @@
 								<label class="col-sm-2 form-control-label">Type:</label>
 								<div class="col-sm-10">
 									<input type="checkbox" data-toggle="toggle" 
-										data-on="Clorine" data-off="Salt" 
+										data-on="chlorine" data-off="Salt" 
 										data-onstyle="info" data-offstyle="primary"
 										data-size="small" name="type" {{ (old('type')) ? 'checked':'' }}>
 								</div>

@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->dateTime('completed');
             $table->tinyInteger('on_time'); // 1=onTime, 2=late, 3=early
             $table->integer('ph');
-            $table->integer('clorine');
+            $table->integer('chlorine');
             $table->integer('temperature');
             $table->integer('turbidity');
             $table->integer('salt')->nullable();

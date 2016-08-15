@@ -106,37 +106,37 @@
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Clorine</label>
+								<label class="col-sm-2 form-control-label">Chlorine</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow" name="clorine">
+									<select class="bootstrap-select bootstrap-select-arrow" name="chlorine">
 										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FA424A;">
 																</span>&nbsp;&nbsp;Very High'
-																{{ ($report->clorine == 5) ? 'selected':''}}
+																{{ ($report->chlorine == 5) ? 'selected':''}}
 																value="5" >Very High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #FDAD2A;">
 																</span>&nbsp;&nbsp;High'
-																{{ ($report->clorine == 4) ? 'selected':''}}
+																{{ ($report->chlorine == 4) ? 'selected':''}}
 																value="4" >High
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #46C35F;">
 																</span>&nbsp;&nbsp;Perfect'
-																{{ ($report->clorine == 3) ? 'selected':''}}
+																{{ ($report->chlorine == 3) ? 'selected':''}}
 																value="3" >Perfect
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #00A8FF;">
 																</span>&nbsp;&nbsp;Low'
-																{{ ($report->clorine == 2) ? 'selected':''}}
+																{{ ($report->chlorine == 2) ? 'selected':''}}
 																value="2" >Low
 										</option>
 										<option data-content='<span class="glyphicon glyphicon-asterisk"
 																style="color: #AC6BEC;">
 																</span>&nbsp;&nbsp;Very Low'
-																{{ ($report->clorine == 1) ? 'selected':''}}
+																{{ ($report->chlorine == 1) ? 'selected':''}}
 																value="1" >Very Low
 										</option>
 									</select>

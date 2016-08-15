@@ -112,7 +112,7 @@ class ReportsController extends PageController
             'completed' => $completed_at,
             'on_time' => $on_time,
             'ph' => $request->ph,
-            'clorine' => $request->clorine,
+            'chlorine' => $request->chlorine,
             'temperature' => $request->temperature,
             'turbidity' => $request->turbidity,
             'salt' => $request->salt,
@@ -238,7 +238,7 @@ class ReportsController extends PageController
             'technician' => 'required|integer|min:1',
             'completed_at' => 'required|date',
             'ph' => 'required|integer|min:1|max:5',
-            'clorine' => 'required|integer|min:1|max:5',
+            'chlorine' => 'required|integer|min:1|max:5',
             'temperature' => 'required|integer|min:1|max:5',
             'turbidity' => 'required|integer|min:1|max:4',
             'salt' => 'required|integer|min:1|max:5',
@@ -252,7 +252,7 @@ class ReportsController extends PageController
         $report->technician_id  = $technician->id;
         $report->completed      = (new Carbon($request->completed_at));
         $report->ph             = $request->ph;
-        $report->clorine        = $request->clorine;
+        $report->chlorine        = $request->chlorine;
         $report->temperature    = $request->temperature;
         $report->turbidity      = $request->turbidity;
         $report->salt           = $request->salt;

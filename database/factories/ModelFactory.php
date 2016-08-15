@@ -93,10 +93,10 @@ $factory->define(App\Client::class, function (Faker\Generator $faker){
 
 $factory->define(App\Report::class, function (Faker\Generator $faker){
 	return [
-		'completed' => Carbon::now(),
+		'completed' => $faker->dateTimeThisMonth(),
 		'on_time' => $faker->numberBetween(1, 3),
         'ph' => $faker->numberBetween(1, 5),
-        'clorine' => $faker->numberBetween(1, 5),
+        'chlorine' => $faker->numberBetween(1, 5),
         'temperature' => $faker->numberBetween(1, 5),
         'turbidity' => $faker->numberBetween(1, 4),
         'salt' => $faker->numberBetween(1, 5),
