@@ -131,6 +131,7 @@ class SupervisorsController extends ApiController
 
         if($supervisor){
             return $this->respond([
+                'type' => 'Supervisor',
                 'data' => $this->supervisorTransformer->transform($supervisor),
             ]);
         }

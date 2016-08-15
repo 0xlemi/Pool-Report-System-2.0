@@ -133,6 +133,7 @@ class TechniciansController extends ApiController
 
         if($technician){
             return $this->respond([
+                'type' => 'Technician',
                 'data' => $this->technicianTransformer->transform($technician),
             ]);
         }

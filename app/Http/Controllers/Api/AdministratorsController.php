@@ -113,6 +113,7 @@ class AdministratorsController extends ApiController
 
         $admin = $user->userable();
         return $this->respond([
+                'type' => 'System Administrator',
                 'data' => $this->adminTransformer->transform($admin),
             ]);
 

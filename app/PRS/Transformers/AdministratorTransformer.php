@@ -13,6 +13,12 @@ class AdministratorTransformer extends Transformer
 
     public function transform(Administrator $admin, $withPermissions = false)
     {
+
+        $photo = 'no image';
+        if($admin->imageExists()){
+            // $photo = $this->imageTransformer->transform($admin->image(1, false));
+        }
+
         $adminInfo = [
             'name' => $admin->name,
             'email' => $admin->user()->email,
@@ -21,6 +27,7 @@ class AdministratorTransformer extends Transformer
             'facebook' => $admin->facebook,
             'twitter' => $admin->twitter,
             'getReportsEmails' => $admin->get_reports_emails,
+            'photo' => $photo,
         ];
         $permissions = [
                 'permissions' => [

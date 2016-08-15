@@ -73,12 +73,12 @@ trait ImageTrait{
      * get the number of images this service has
      */
     public function numImages(){
-        return $this->hasMany('App\Image')->count();
+        return $this->images()->count();
     }
 
     public function imageExists($order = 1)
     {
-        if($this->hasMany('App\Image')
+        if($this->images()
                     ->where('order', '=', $order)
                     ->count() < 1){
             return false;
@@ -90,7 +90,7 @@ trait ImageTrait{
      * get full size image
      */
     public function image($order = 1, $getUrl = true){
-        $image = $this->hasMany('App\Image')
+        $image = $this->images()
             ->where('order', '=', $order)
             ->first();
         if($getUrl){
@@ -106,7 +106,7 @@ trait ImageTrait{
      * get full size image
      */
     public function normalImage($order = 1){
-        $image = $this->hasMany('App\Image')
+        $image = $this->images()
             ->where('order', '=', $order)
             ->firstOrFail();
         if(!$image){
@@ -120,7 +120,7 @@ trait ImageTrait{
      */
     public function thumbnail(){
         if($this->numImages() > 0){
-            return $this->hasMany('App\Image')
+            return $this->images()
                 ->first()->thumbnail_path;
         }
         return 'img/no_image.png';
@@ -131,7 +131,7 @@ trait ImageTrait{
      */
     public function icon(){
         if($this->numImages() > 0){
-            return $this->hasMany('App\Image')
+            return $this->images()
                 ->first()->icon_path;
         }
         return 'img/avatar-2-48.png';

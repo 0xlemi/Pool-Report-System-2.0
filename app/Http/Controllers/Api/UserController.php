@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\PRS\Transformers\UserTransformer;
 use App\PRS\Transformers\ServiceTransformer;
+use App\PRS\Helpers\UserHelpers;
 use App\User;
 use Auth;
 use Validator;
@@ -22,6 +23,7 @@ class UserController extends ApiController
     private $administratorsController;
     private $supervisorsController;
     private $techniciansController;
+    private $userHelpers;
 
     /**
     * Create a new controller instance.
@@ -32,13 +34,15 @@ class UserController extends ApiController
                                 ServiceTransformer $serviceTransformer,
                                 AdministratorsController $administratorsController,
                                 SupervisorsController $supervisorsController,
-                                TechniciansController $techniciansController)
+                                TechniciansController $techniciansController,
+                                UserHelpers $userHelpers)
     {
         $this->userTransformer = $userTransformer;
         $this->serviceTransformer = $serviceTransformer;
         $this->administratorsController = $administratorsController;
         $this->supervisorsController = $supervisorsController;
         $this->techniciansController = $techniciansController;
+        $this->userHelpers = $userHelpers;
     }
 
     /**
@@ -112,6 +116,7 @@ class UserController extends ApiController
         if($user && $user->checkPassword($request->password)){
             return $this->respond([
                 'message' => 'logged in successfull.',
+                'type' => $this->userHelpers->styledType($user->userable_type, true),
                 'api_token' => $user->api_token,
             ]);
         }
