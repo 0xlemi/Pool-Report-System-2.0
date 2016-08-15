@@ -17758,7 +17758,8 @@ $(document).ready(function () {
 	var $table = $('#table'),
 	    $remove = $('#remove'),
 	    selections = [];
-	var generic_table = $('#generic_table');
+	var generic_table = $('.generic_table');
+	var missingServices = $('#missingServices');
 
 	function totalTextFormatter(data) {
 		return 'Total';
@@ -17837,7 +17838,7 @@ $(document).ready(function () {
 		});
 	});
 
-	generic_table.bootstrapTable({
+	var tableOptions = {
 		iconsPrefix: 'font-icon',
 		toggle: 'table',
 		sidePagination: 'client',
@@ -17852,21 +17853,12 @@ $(document).ready(function () {
 		},
 		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
 		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
+	};
 
-	});
+	generic_table.bootstrapTable(tableOptions);
+	missingServices.bootstrapTable(tableOptions);
 
-	// $('#reports_table').bootstrapTable({
-	//     'pagination': "true",
-	//     'sidePagination': "server",
-	//     'queryParamsType': "",
-	//     'toggle': "table",
-	//     // 'search': "true",
-	//     // "processing": true,
-	//     // "serverSide": true,
-	//     "url": "http://prs.dev/datatables/reports"
-	// });
-
-	$('#generic_table').on('click-row.bs.table', function (e, row, $element) {
+	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
 		if ($element.hasClass('table_active')) {
 			$element.removeClass('table_active');
 		} else {
@@ -17874,6 +17866,16 @@ $(document).ready(function () {
 			$element.addClass('table_active');
 		}
 		window.location.href = back.click_url + row.id;
+	});
+
+	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
+		if ($element.hasClass('table_active')) {
+			$element.removeClass('table_active');
+		} else {
+			missingServices.find('tr.table_active').removeClass('table_active');
+			$element.addClass('table_active');
+		}
+		window.location.href = back.click_missingServices_url + row.id;
 	});
 
 	/* ==========================================================================
@@ -17893,8 +17895,31 @@ $(document).ready(function () {
 			var date = new Date(e.date._d);
 			var date_selected = dateFormat(date, "yyyy-mm-dd");
 			var new_url = back.datatable_url + date_selected;
+			var new_missingServices_url = back.missingServices_url + date_selected;
 
 			generic_table.bootstrapTable('refresh', { url: new_url });
+			missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
+			if (isset('missingServicesInfo_url')) {
+				$.ajax({
+					vue: mainVue,
+					url: back.missingServicesInfo_url,
+					type: 'GET',
+					dataType: 'json',
+					data: {
+						'date': date_selected
+					},
+					success: function success(data, textStatus, xhr) {
+						//called when successful
+						this.vue.numServicesDone = data.numServicesDone;
+						this.vue.numServicesMissing = data.numServicesMissing;
+						this.vue.numServicesToDo = data.numServicesToDo;
+					},
+					error: function error(xhr, textStatus, errorThrown) {
+						//called when there is an error
+						// console.log('error');
+					}
+				});
+			}
 		});
 	}
 	if (isset('default_date')) {
@@ -17972,7 +17997,7 @@ $(document).ready(function () {
     VueJs code
     ========================================================================== */
 
-	new Vue({
+	var mainVue = new Vue({
 		el: 'body',
 
 		components: {
@@ -17981,13 +18006,19 @@ $(document).ready(function () {
 		},
 		directives: { FormToAjax: FormToAjax },
 		data: {
+			// Administrator
 			companyName: "",
 			website: "",
 			facebook: "",
 			twitter: "",
 			objectName: "",
 			objectLastName: "",
+			// Reports
+			numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
+			numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
+			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
 			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
+			// Services
 			statusSwitch: true
 		},
 		methods: {

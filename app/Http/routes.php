@@ -38,6 +38,8 @@ Route::patch('settings/billing', 'SettingsController@billing');
 Route::patch('settings/permissions', 'SettingsController@permissions');
 
 Route::get('datatables/reports', 'DataTableController@reports');
+Route::get('datatables/missingServices', 'DataTableController@missingServices');
+Route::get('datatables/missingServicesInfo', 'DataTableController@missingServicesInfo');
 Route::get('datatables/services', 'DataTableController@services');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');

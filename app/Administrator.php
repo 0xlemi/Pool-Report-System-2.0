@@ -73,7 +73,7 @@ class Administrator extends Model
 
     /**
      * Total number of services that need to be done today
-     * @return int 
+     * @return int
      */
     public function numberServicesDoToday()
     {
@@ -88,6 +88,16 @@ class Administrator extends Model
     public function numberServicesDoIn(Carbon $date)
     {
         return $this->servicesDoIn($date, true)->count();
+    }
+
+    /**
+     * Number of services that are missing in a date
+     * @param  Carbon $date
+     * @return  int
+     */
+    public function numberServicesMissing(Carbon $date)
+    {
+        return $this->servicesDoIn($date)->count();
     }
 
     /**

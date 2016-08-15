@@ -141,7 +141,7 @@
 							<h3><strong>List of Clients</strong></h3>
 						</div>
 						<div class="table-responsive">
-							<table id="generic_table"
+							<table class="generic_table"
 								   class="table"
 								   data-toolbar="#toolbar"
 								   data-search="true"
