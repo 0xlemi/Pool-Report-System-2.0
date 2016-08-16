@@ -43,8 +43,12 @@ class DataTableController extends PageController
             return Response::json('Date is not valid', 422);
         }
 
-        $reports = $this->loggedUserAdministrator()
-                    ->reportsByDate($request->date)
+        $admin = $this->loggedUserAdministrator();
+
+        $date = (new Carbon($request->date, $admin->timezone));
+
+        $reports =  $admin
+                    ->reportsByDate($date)
                     ->get()
                     ->transform(function($item){
                         $service = $item->service();

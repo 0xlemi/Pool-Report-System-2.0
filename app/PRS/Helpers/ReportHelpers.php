@@ -3,17 +3,31 @@
 namespace App\PRS\Helpers;
 
 use Carbon\Carbon;
+use App\PRS\Traits\ControllerTrait;
 
 class ReportHelpers
 {
+    use ControllerTrait;
 
+    // dates are NOT sent in UTC
+    function format_date(string $date){
+        $admin = $this->loggedUserAdministrator();
+    	return (new Carbon($date, 'UTC'))
+                ->setTimezone($admin->timezone)
+                ->format('l jS \\of F Y h:i:s A');
+    }
+
+    // dates are NOT sent in UTC
+    // start_time and end_time are note in UTC, thats why we dont convernt $completed_date
     public function checkOnTime($completed_date, $start_time, $end_time)
     {
-        $carbon_time = new Carbon($completed_date);
+        $admin = $this->loggedUserAdministrator();
+
+        $carbon_time = new Carbon($completed_date, $admin->timezone);
         $completed_date_string = $carbon_time->toDateString();
 
-        $carbon_start = new Carbon( $completed_date_string.' '.$start_time);
-        $carbon_end = new Carbon( $completed_date_string.' '.$end_time);
+        $carbon_start = new Carbon( $completed_date_string.' '.$start_time, $admin->timezone);
+        $carbon_end = new Carbon( $completed_date_string.' '.$end_time, $admin->timezone);
 
         $on_time = 0;
         if($carbon_time->between($carbon_start, $carbon_end)){

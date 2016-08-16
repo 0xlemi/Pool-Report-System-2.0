@@ -85,10 +85,3 @@ function validateDate($date){
     $d = DateTime::createFromFormat('Y-m-d', $date);
     return $d && $d->format('Y-m-d') === $date;
 }
-
-
-
-function format_date($date){
-	//****** missing thing is to convert the time to client timezone before sendig *********
-	return (new Carbon($date))->format('l jS \\of F Y h:i:s A');
-}

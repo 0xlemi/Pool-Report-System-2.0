@@ -39,13 +39,14 @@ class ReportsController extends PageController
         $this->checkPermissions('index');
 
         $admin = $this->loggedUserAdministrator();
-        $today = Carbon::today();
+        $today = Carbon::today($admin->timezone);
+        $today_utc = Carbon::today('UTC');
 
         $default_table_url = url('datatables/reports').'?date='.$today->toDateString();
         $default_missing_table_url = url('datatables/missingServices').'?date='.$today->toDateString();
 
-        $numServicesMissing = $admin->numberServicesMissing($today);
-        $numServicesToDo = $admin->numberServicesDoIn($today);
+        $numServicesMissing = $admin->numberServicesMissing($today_utc);
+        $numServicesToDo = $admin->numberServicesDoIn($today_utc);
         $numServicesDone = $numServicesToDo - $numServicesMissing;
 
         JavaScript::put([
@@ -62,7 +63,7 @@ class ReportsController extends PageController
             'numServicesDone' => $numServicesDone,
 
             'enabledDates' => $admin->datesWithReport(),
-            'todayDate' => Carbon::today()->toDateString(),
+            'todayDate' => $today->toDateString(),
         ]);
 
         return view('reports.index',compact(
@@ -96,11 +97,15 @@ class ReportsController extends PageController
     {
         $this->checkPermissions('create');
 
-        $completed_at = (new Carbon($request->completed_at));
+        $admin = $this->loggedUserAdministrator();
+
+        $completed_at = (new Carbon($request->completed_at, $admin->timezone))
+                            ->setTimezone('UTC');
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
         $on_time = $this->reportHelpers->checkOnTime(
+// ****** check the timezoen for check on time
                 $request->completed_at,
                 $service->start_time,
                 $service->end_time
@@ -183,11 +188,15 @@ class ReportsController extends PageController
     {
         $this->checkPermissions('edit');
 
+        $admin = $this->loggedUserAdministrator();
+
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         $services = $this->loggedUserAdministrator()->services()->get();
         $technicians = $this->loggedUserAdministrator()->technicians()->get();
 
-        $date = (new Carbon($report->completed))->format('m/d/Y h:i:s A');
+        $date = (new Carbon($report->completed, 'UTC'))
+                    ->setTimezone($admin->timezone)
+                    ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'default_date' => $date,
         ]);
@@ -244,13 +253,17 @@ class ReportsController extends PageController
             'salt' => 'required|integer|min:1|max:5',
         ]);
 
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
+        $admin = $this->loggedUserAdministrator();
+        $report = $admin->reportsBySeqId($seq_id);
+        $service = $admin->serviceBySeqId($request->service);
+        $technician = $admin->technicianBySeqId($request->technician);
+
+        $completed_at = (new Carbon($request->completed_at, $admin->timezone))
+                            ->setTimezone('UTC');
 
         $report->service_id     = $service->id;
         $report->technician_id  = $technician->id;
-        $report->completed      = (new Carbon($request->completed_at));
+        $report->completed      = $completed_at;
         $report->ph             = $request->ph;
         $report->chlorine        = $request->chlorine;
         $report->temperature    = $request->temperature;

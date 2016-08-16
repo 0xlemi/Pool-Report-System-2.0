@@ -47,6 +47,7 @@ class Administrator extends Model
 
     /**
      * Get all dates that have at least one report in them
+     * tested
      * @return Collertion
      */
     public function datesWithReport()
@@ -77,12 +78,12 @@ class Administrator extends Model
      */
     public function numberServicesDoToday()
     {
-        return $this->NumberServicesDoIn(Carbon::today());
+        return $this->numberServicesDoIn(Carbon::today('UTC'));
     }
 
     /**
      * Total number of services that need to be done in a date
-     * @param  Carbon $date
+     * @param  Carbon $date  in UTC
      * @return  int
      */
     public function numberServicesDoIn(Carbon $date)
@@ -92,7 +93,7 @@ class Administrator extends Model
 
     /**
      * Number of services that are missing in a date
-     * @param  Carbon $date
+     * @param  Carbon $date  in UTC
      * @return  int
      */
     public function numberServicesMissing(Carbon $date)
@@ -107,18 +108,21 @@ class Administrator extends Model
      */
     public function servicesDoToday($AddCompletedReports = false)
     {
-        $date = Carbon::today();
-        return $this->servicesDoIn($date , $AddCompletedReports);
+        return $this->servicesDoIn(Carbon::today('UTC') , $AddCompletedReports);
     }
 
     /**
      * get the services that need to be done in certain date
-     * @param  Carbon  $date
+     * @param  Carbon  $date in UTC
      * @param  boolean $AddCompletedReports   add or remove the services that where already done
      * @return Collection
      */
     public function servicesDoIn(Carbon $date, $AddCompletedReports = false)
     {
+        // check that the date is in UTC
+        if(!$date->utc){
+            $date = $date->setTimezone('UTC');
+        }
         return $this->services()
             ->get()
             ->map(function($service) use ($date, $AddCompletedReports){
@@ -142,13 +146,13 @@ class Administrator extends Model
 
     /**
      * Get the reports in this date
-     * @param  String $date  YYYY-MM-DD format date
-     * tested
+     * @param  Carbon $date
+     *
      */
-    public function reportsByDate($date){
-        $date_carbon = (new Carbon($date))->toDateTimeString();
+    public function reportsByDate(Carbon $date){
+        $date_str = $date->toDateTimeString();
         return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
-                    ->where(\DB::raw('DATEDIFF(completed, "'.$date_carbon.'")'), '=', '0')
+                    ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
                     ->orderBy('seq_id');
     }
 
@@ -184,6 +188,7 @@ class Administrator extends Model
                     ->firstOrFail();
     }
 
+    // not on use
     public function clientsThroughServices(){
         $this->load('services.clients'); // eager load far relation
         $clients = new Collection; // Illuminate\Database\Eloquent\Collection

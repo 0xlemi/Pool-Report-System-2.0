@@ -93,7 +93,7 @@ $factory->define(App\Client::class, function (Faker\Generator $faker){
 
 $factory->define(App\Report::class, function (Faker\Generator $faker){
 	return [
-		'completed' => $faker->dateTimeThisMonth(),
+		'completed' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
 		'on_time' => $faker->numberBetween(1, 3),
         'ph' => $faker->numberBetween(1, 5),
         'chlorine' => $faker->numberBetween(1, 5),

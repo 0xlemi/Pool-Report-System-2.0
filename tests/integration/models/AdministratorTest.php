@@ -29,6 +29,45 @@ class AdministratorTest extends ModelTester
     }
 
     /** @test */
+    public function get_all_dates_that_have_at_least_one_report()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+        $super = $this->createSupervisor($admin->id);
+        $tech = $this->createTechnician($super->id);
+        $ser = $this->createService($admin->id);
+        $report1 = factory(App\Report::class)->create([
+            'service_id' => $ser->id,
+            'technician_id' => $tech->id,
+            'completed' => Carbon::tomorrow(),
+        ]);
+        $report2 = factory(App\Report::class)->create([
+            'service_id' => $ser->id,
+            'technician_id' => $tech->id,
+            'completed' => Carbon::today(),
+        ]);
+        $report3 = factory(App\Report::class)->create([
+            'service_id' => $ser->id,
+            'technician_id' => $tech->id,
+            'completed' => Carbon::yesterday(),
+        ]);
+
+        // When
+        $datesWithReport = $admin->datesWithReport();
+
+        // Then
+        $this->assertSameArray(
+            $datesWithReport->toArray(),
+            array(
+                Carbon::tomorrow()->toDateString(),
+                Carbon::today()->toDateString(),
+                Carbon::yesterday()->toDateString(),
+            )
+        );
+
+    }
+
+    /** @test */
     public function it_gets_all_reports()
     {
         // Given
@@ -61,6 +100,39 @@ class AdministratorTest extends ModelTester
         $this->assertSameObject($report1, $reports[0]);
         $this->assertSameObject($report3, $reports[2]);
     }
+
+    // /** @test */
+    // public function number_of_services_to_do_today()
+    // {
+    //     // Given
+    //     $admin = $this->createAdministrator();
+    //     $super = $this->createSupervisor($admin->id);
+    //     $tech = $this->createTechnician($super->id);
+    //     $ser = $this->createService($admin->id);
+    //     $report1 = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => Carbon::today(),
+    //     ]);
+    //     $report2 = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => Carbon::today(),
+    //     ]);
+    //     $report3 = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => Carbon::today(),
+    //     ]);
+    //
+    //     // When
+    //     $num = $admin->numberServicesDoToday();
+    //     dd($num);
+    //
+    //     // Then
+    //     $this->assertEquals($num, 2);
+    //
+    // }
 
     /** @test */
     public function it_gets_reports_by_date()

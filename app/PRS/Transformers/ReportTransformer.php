@@ -7,6 +7,7 @@ use App\Report;
 use App\PRS\Transformers\ServiceTransformer;
 use App\PRS\Transformers\TechnicianTransformer;
 use App\PRS\Transformers\ImageTransformer;
+use Carbon\Carbon;
 
 
 /**
@@ -43,9 +44,14 @@ class ReportTransformer extends Transformer
         if($report->imageExists()){
             $photo3 = $this->imageTransformer->transform($report->image(3, false));
         }
+
+        $admin = $report->admin();
+        $completed_at = (new Carbon($report->completed, 'UTC'))
+                            ->setTimezone($admin->timezone);
+
         return [
             'id' => $report->seq_id,
-            'completed' => $report->completed,
+            'completed' => $completed_at,
             'on_time' => $report->on_time,
             'ph' => $report->ph,
             'chlorine' => $report->chlorine,

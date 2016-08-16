@@ -49,6 +49,11 @@ class Report extends Model
         return $this->service()->clients();
     }
 
+    public function admin()
+    {
+        return $this->service()->admin();
+    }
+
     /**
      * associated technician with this report
      * tested
@@ -78,8 +83,11 @@ class Report extends Model
         if($client){
             $name = $client->name;
         }
+
         $address = $this->service()->address_line;
-        $time = (new Carbon($this->completed))->toDayDateTimeString();
+        $time = (new Carbon($this->completed, 'UTC'))
+                    ->setTimezone($this->admin()->timezone)
+                    ->toDayDateTimeString();
         $photo1 = url($this->image(1));
         $photo2 = url($this->image(2));
         $photo3 = url($this->image(3));
@@ -125,13 +133,17 @@ class Report extends Model
         $content = file_get_contents(resource_path('emails/report_email.html'));
         file_put_contents($template_path, $content);
 
+        $time = (new Carbon($this->completed, 'UTC'))
+                    ->setTimezone($this->admin()->timezone)
+                    ->toDayDateTimeString();
+
         // info needed by the template
         $data = array(
             'logo' => url('img/logo-2.png'),
             'headerImage' => url('img/uploads/email_header.png'),
             'name' => $name,
             'address' => $this->service()->address_line,
-            'time' => (new Carbon($this->completed))->toDayDateTimeString(),
+            'time' => $time,
             'photo1' => url($this->image(1)),
             'photo2' => url($this->image(2)),
             'photo3' => url($this->image(3)),

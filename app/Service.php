@@ -84,22 +84,24 @@ class Service extends Model
 
     /**
      * check if this service is scheduled for a date
-     * @param  Carbon $date
+     * @param  Carbon $date in UTC
      * @return boolean
      */
     public function checkIfIsDo(Carbon $date)
     {
-        $dayToCheck = strtolower($date->format('l'));
+        $admin = $this->admin();
+        $dayToCheck = strtolower($date->setTimezone($admin->timezone)->format('l'));
         return $this->service_days_by_day()[$dayToCheck];
     }
 
     /**
      * check if there is a report for this service in a date
-     * @param  Carbon $date
-     * @return boolean       
+     * @param  Carbon $date in UTC
+     * @return boolean
      */
     public function checkIfIsDone(Carbon $date)
     {
+        $admin = $this->admin();
         $strDate = $date->toDateTimeString();
         $count = $this->reports()
                 ->where(\DB::raw('DATEDIFF(completed, "'.$strDate.'")'), '=', '0')

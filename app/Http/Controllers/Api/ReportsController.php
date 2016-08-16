@@ -71,20 +71,22 @@ class ReportsController extends ApiController
     /**
      * Get the reports by date
      * tested
-     * @param  String $date format YYYY-MM-DD
+     * @param  String $date format YYYY-MM-DD the timezone may not be UTC
      * @return $reports
      */
-    public function indexByDate(String $date)
+    public function indexByDate(String $date_str)
     {
         if($this->getUser()->cannot('index', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        if(!validateDate($date))
+        if(!validateDate($date_str))
         {
             return $this->setStatusCode(422)->RespondWithError('The date is invalid');
         }
+
+        $date = (new Carbon($date_str, $admin->timezone))->setTimezone('UTC');
 
         // Needs pagination
         $reports = $this->loggedUserAdministrator()->reportsByDate($date)->get();

@@ -187,8 +187,8 @@ class ReportTest extends ModelTester
         $report->addImage($image2);
 
         // When
-        $image_1 = $report->image(1);
-        $image_2 = $report->image(2);
+        $image_1 = $report->image(1, false);
+        $image_2 = $report->image(2, false);
 
         // Then
         $this->assertSameObject($image1, $image_1);
