@@ -75,15 +75,12 @@ class SupervisorsController extends ApiController
         // ***** Persiting *****
         $transaction = DB::transaction(function () use($request, $admin) {
             // create Supervisor
-            $supervisor = Supervisor::create([
-                'name' => $request->name,
-                'last_name' => $request->last_name,
-                'cellphone' => $request->cellphone,
-                'address' => $request->address,
-                'language' => $request->language,
-                'comments' => $request->comments,
-                'admin_id' => $admin->id,
-            ]);
+            $supervisor = Supervisor::create(
+                        array_merge(
+                            array_map('htmlentities', $request->all()),
+                            [ 'admin_id' => $admin->id ]
+                        )
+            );
 
             // Optional values
             if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
@@ -92,7 +89,7 @@ class SupervisorsController extends ApiController
             // create User
             $supervisor_id = $admin->supervisors(true)->first()->id;
             $user = User::create([
-                'email' => $request->email,
+                'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
                 'userable_type' => 'App\Supervisor',
@@ -167,17 +164,14 @@ class SupervisorsController extends ApiController
         // ***** Persiting *****
         $transaction = DB::transaction(function () use($request, $supervisor) {
             // update supervisor
-            if(isset($request->name)){ $supervisor->name = $request->name; }
-            if(isset($request->last_name)){ $supervisor->last_name = $request->last_name; }
-            if(isset($request->cellphone)){ $supervisor->cellphone = $request->cellphone; }
-            if(isset($request->address)){ $supervisor->address = $request->address; }
-            if(isset($request->language)){ $supervisor->language = $request->language; }
+
+            $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
+
             if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
-            if(isset($request->comments)){ $supervisor->comments = $request->comments; }
 
             // update the user
             $user = $supervisor->user();
-            if(isset($request->email)){ $user->email = $request->email; }
+            if(isset($request->email)){ $user->email = htmlentities($request->email); }
             if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             $supervisor->save();

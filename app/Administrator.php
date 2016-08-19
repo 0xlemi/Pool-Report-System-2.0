@@ -19,12 +19,13 @@ class Administrator extends Model
      * @var array
      */
     protected $fillable = [
+        'name',
         'company_name',
         'website',
         'facebook',
         'twitter',
         'timezone',
-		'get_reports_emails',
+        'language',
     ];
 
     /**

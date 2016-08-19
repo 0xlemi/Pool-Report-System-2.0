@@ -59,15 +59,12 @@ class AdministratorsController extends ApiController
         // ***** Persiting *****
         $user = DB::transaction(function () use($request) {
             // create Supervisor
-            $admin = Administrator::create([
-                'name' => $request->name,
-                'timezone' => $request->timezone,
-                'company_name' => $request->companyName,
-                'website' => $request->website,
-                'facebook' => $request->facebook,
-                'twitter' => $request->twitter,
-                'language' => $request->language,
-            ]);
+            $admin = Administrator::create(
+                    array_merge(
+                        array_map('htmlentities', $request->all()),
+                        [ 'company_name' => $request->companyName ]
+                    )
+            );
 
             // Optional values
             if(isset($request->getReportsEmails)){ $admin->get_reports_emails = $request->getReportsEmails; }
@@ -75,7 +72,7 @@ class AdministratorsController extends ApiController
 
             // create User
             $user = User::create([
-                'email' => $request->email,
+                'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
                 'userable_type' => 'App\Administrator',
@@ -155,16 +152,13 @@ class AdministratorsController extends ApiController
             // ***** Persisting *****
             $report = DB::transaction(function () use($request, $admin, $user) {
 
-                if(isset($request->timezone)){ $admin->timezone = $request->timezone; }
-                if(isset($request->company)){ $admin->company_name = $request->company; }
-                if(isset($request->website)){ $admin->website = $request->website; }
-                if(isset($request->facebook)){ $admin->facebook = $request->facebook; }
-                if(isset($request->twitter)){ $admin->twitter = $request->twitter; }
-                if(isset($request->name)){ $admin->name = $request->name; }
-                if(isset($request->language)){ $admin->language = $request->language; }
+                $admin->fill(array_merge(
+                                array_map('htmlentities', $request->all()),
+                                [ 'company_name' => $request->company ]
+                            ));
                 if(isset($request->getReportsEmails)){ $admin->get_reports_emails = $request->getReportsEmails; }
 
-                if(isset($request->email)){ $user->email = $request->email; }
+                if(isset($request->email)){ $user->email = htmlentities($request->email); }
                 if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
                 $admin->save();

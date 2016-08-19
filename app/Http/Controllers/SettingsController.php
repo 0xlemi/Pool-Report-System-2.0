@@ -71,7 +71,7 @@ class SettingsController extends PageController
                 'timezone' => 'required|string|between:3,255',
             ]);
             $object = $user->userable();
-            $object->timezone = $request->timezone;
+            $object->timezone = htmlentities($request->timezone);
 
         }elseif($user->isSupervisor())
         {
@@ -79,7 +79,7 @@ class SettingsController extends PageController
                 'last_name' => 'required|string|between:2,45',
             ]);
             $object = $user->userable();
-            $object->last_name = $request->last_name;
+            $object->last_name = htmlentities($request->last_name);
 
         }elseif($user->isTechnician())
         {
@@ -87,7 +87,7 @@ class SettingsController extends PageController
                 'last_name' => 'required|string|between:2,45',
             ]);
             $object = $user->userable();
-            $object->last_name = $request->last_name;
+            $object->last_name = htmlentities($request->last_name);
 
         }
 
@@ -97,8 +97,8 @@ class SettingsController extends PageController
         ]);
 
 
-        $object->name = $request->name;
-        $object->language = $request->language;
+        $object->name = htmlentities($request->name);
+        $object->language = htmlentities($request->language);
 
         if($object->save()){
             return $this->respondWithSuccess('Account information was updated successfully.');
@@ -120,7 +120,7 @@ class SettingsController extends PageController
         ]);
 
         if($user->checkPassword($request->old_password)){
-            $user->email = $request->new_email;
+            $user->email = htmlentities($request->new_email);
             if($user->save()){
                 return $this->respondWithSuccess('Email was updated');
             }
@@ -168,10 +168,7 @@ class SettingsController extends PageController
         ]);
         $admin = $this->loggedUserAdministrator();
 
-        $admin->company_name = $request->company_name;
-        $admin->website = $request->website;
-        $admin->facebook = $request->facebook;
-        $admin->twitter = $request->twitter;
+        $admin->fill(array_map('htmlentities', $request->except('timezone')));
 
         if($admin->save()){
             return $this->respondWithSuccess('Company information was updated successfully.');

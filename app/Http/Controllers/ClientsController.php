@@ -73,12 +73,8 @@ class ClientsController extends PageController
 
         $client = Client::create(
                             array_merge(
-                                array_map('htmlentities', $request->except([
-                                    'email_preferences',
-                                    'admin_id',
-                                ])),
+                                array_map('htmlentities', $request->all()),
                                 [
-		                            'email_preferences' => 4,
                                     'admin_id' => $admin->id,
                                 ]
                             )
@@ -167,7 +163,7 @@ class ClientsController extends PageController
         $user->email = htmlentities($request->email);
 
         $client->fill(array_map('htmlentities', $request->except('admin_id')));
-        
+
         $client->setServices($request->services);
 
         $photo = true;

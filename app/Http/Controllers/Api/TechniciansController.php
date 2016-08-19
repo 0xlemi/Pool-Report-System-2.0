@@ -75,16 +75,12 @@ class TechniciansController extends ApiController
         $transaction = DB::transaction(function () use($request, $admin, $supervisor_id) {
 
             // create Technician
-            $technician = Technician::create([
-                'name' => $request->name,
-                'last_name' => $request->last_name,
-                'cellphone' => $request->cellphone,
-                'address' => $request->address,
-                'language' => $request->language,
-                'comments' => $request->comments,
-                'supervisor_id' => $supervisor_id,
-                'admin_id' => $admin->id,
-            ]);
+            $technician = Technician::create(
+                    array_merge(
+                        array_map('htmlentities', $request->all()),
+                        [ 'supervisor_id' => $supervisor_id ]
+                    )
+            );
 
             // Optional values
             if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
@@ -93,7 +89,7 @@ class TechniciansController extends ApiController
             // create User
             $technician_id = $admin->technicians(true)->first()->id;
             $user = User::create([
-                'email' => $request->username,
+                'email' => htmlentities($request->username),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
                 'userable_type' => 'App\Technician',
@@ -182,18 +178,15 @@ class TechniciansController extends ApiController
         $transaction = DB::transaction(function () use($request, $technician, $supervisor_id) {
 
             // update technician
-            if(isset($request->name)){ $technician->name = $request->name; }
-            if(isset($request->last_name)){ $technician->last_name = $request->last_name; }
-            if(isset($request->cellphone)){ $technician->cellphone = $request->cellphone; }
-            if(isset($request->address)){ $technician->address = $request->address; }
-            if(isset($request->language)){ $technician->language = $request->language; }
+            $technician->fill(array_merge(
+                                array_map('htmlentities', $request->all()),
+                                [ 'supervisor_id' => $supervisor_id ]
+                            ));
             if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
-            if(isset($request->comments)){ $technician->comments = $request->comments; }
-            if(isset($request->supervisor)){$technician->supervisor_id = $supervisor_id; }
 
             // update user
             $user = $technician->user();
-            if(isset($request->username)){ $user->email = $request->username; }
+            if(isset($request->username)){ $user->email = htmlentities($request->username); }
             if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             // persist

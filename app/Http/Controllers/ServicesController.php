@@ -89,12 +89,7 @@ class ServicesController extends PageController
 
         $service = Service::create(
                             array_merge(
-                                array_map('htmlentities', $request->except([
-                                    'type',
-                                    'service_days',
-                                    'status',
-                                    'admin_id',
-                                ])),
+                                array_map('htmlentities', $request->all()),
                                 [
                                     'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
                                     'service_days' => $service_days,
@@ -178,12 +173,7 @@ class ServicesController extends PageController
 
         $service->fill(
                 array_merge(
-                    array_map('htmlentities', $request->except([
-                        'type',
-                        'service_days',
-                        'status',
-                        'admin_id',
-                    ])),
+                    array_map('htmlentities', $request->except('admin_id')),
                     [
                         'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
                         'service_days' => $service_days,

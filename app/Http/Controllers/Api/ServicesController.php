@@ -92,25 +92,18 @@ class ServicesController extends ApiController
         // Create service
         $transaction = DB::transaction(function () use($request, $admin, $service_days) {
 
-            $service = Service::create([
-                'name' => $request->name,
-                'address_line' => $request->address_line,
-                'city' => $request->city,
-                'state' => $request->state,
-                'postal_code' => $request->postal_code,
-                'country' => strtoupper($request->country),
-                'type' => $request->type,
-                'service_days' => $service_days,
-                'amount' => $request->amount,
-                'currency' => strtoupper($request->currency),
-                'start_time' => $request->start_time,
-                'end_time' => $request->end_time,
-                'comments' => $request->comments,
-                'admin_id' => $admin->id,
-            ]);
+            $service = Service::create(
+                array_merge(
+                    array_map('htmlentities', $request->all()),
+                    [
+                        'service_days' => $service_days,
+                        'currency' => strtoupper(htmlentities($request->currency)),
+                        'country' => strtoupper(htmlentities($request->country)),
+                        'admin_id' => $admin->id,
+                    ]
+                )
+            );
 
-            // Optional values
-            if(isset($request->status)){ $service->status = $request->status; }
             $service->save();
 
             // Add Photo
@@ -182,21 +175,16 @@ class ServicesController extends ApiController
         // ***** Persist *****
         $transaction = DB::transaction(function () use($request, $service, $service_days) {
 
-            $service->service_days = $service_days;
-            if(isset($request->name)){ $service->name = $request->name; }
-            if(isset($request->address_line)){ $service->address_line = $request->address_line; }
-            if(isset($request->city)){ $service->city = $request->city; }
-            if(isset($request->state)){ $service->state = $request->state; }
-            if(isset($request->postal_code)){ $service->postal_code = $request->postal_code; }
-            if(isset($request->country)){ $service->country = strtoupper($request->country); }
-            if(isset($request->type)){ $service->type = $request->type; }
-            if(isset($request->amount)){ $service->amount = $request->amount; }
-            if(isset($request->currency)){ $service->currency = strtoupper($request->currency); }
-            if(isset($request->start_time)){ $service->start_time = $request->start_time; }
-            if(isset($request->end_time)){ $service->end_time = $request->end_time; }
-            if(isset($request->status)){ $service->status = $request->status; }
-            if(isset($request->comments)){ $service->comments = $request->comments; }
-
+            $service->fill(
+                array_merge(
+                    array_map('htmlentities', $request->except('admin_id')),
+                    [
+                        'currency' => strtoupper(htmlentities($request->currency)),
+                        'country' => strtoupper(htmlentities($request->country)),
+                        'service_days' => $service_days,
+                    ]
+                ));
+            
             $service->save();
 
             if($request->photo){

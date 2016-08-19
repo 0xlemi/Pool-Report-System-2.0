@@ -72,13 +72,13 @@ class TechniciansController extends PageController
 
         $technician =   Technician::create(
                                 array_merge(
-                                    array_map('htmlentities', $request->except('supervisor_id')),
+                                    array_map('htmlentities', $request->all()),
                                     [ 'supervisor_id' => $supervisor->id ]
                                 )
                         );
 
         $user = User::create([
-            'email' => $request->username,
+            'email' => htmlentities($request->username),
             'password' => bcrypt(str_random(9)),
             'userable_id' => $technician->id,
             'userable_type' => 'App\Technician',
@@ -146,12 +146,12 @@ class TechniciansController extends PageController
         $user = $technician->user();
 
         $user->email = htmlentities($request->username);
-        $user->password = htmlentities($request->password);
+        $user->password = bcrypt($request->password);
 
 
 
         $technician->fill(array_merge(
-                                array_map('htmlentities', $request->except('supervisor_id')),
+                                array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor->id ]
                             ));
 

@@ -70,12 +70,12 @@ class SupervisorsController extends PageController
 
         $supervisor = Supervisor::create(
                         array_merge(
-                            array_map('htmlentities', $request->except('admin_id')),
+                            array_map('htmlentities', $request->all()),
                             [ 'admin_id' => $admin->id ]
                         )
                     );
         $user = User::create([
-            'email' => $request->email,
+            'email' => htmlentities($request->email),
             'password' => bcrypt(str_random(9)),
             'userable_id' => $supervisor->id,
             'userable_type' => 'App\Supervisor',

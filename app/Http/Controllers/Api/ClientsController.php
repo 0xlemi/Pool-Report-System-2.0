@@ -80,15 +80,14 @@ class ClientsController extends ApiController
                 // Transform services_seq_id to service_id array and check
                 // that the services with those id exist
             $service_ids = $this->getAddServicesIds($request->service_ids, $admin);
-            $client = Client::create([
-                'name' => $request->name,
-                'last_name' => $request->last_name,
-                'cellphone' => $request->cellphone,
-                'language' => $request->language,
-                'type' => $request->type, // 1 owner, 2 house administrator
-                'comments' => $request->comments,
-                'admin_id' => $admin->id,
-            ]);
+            $client = Client::create(
+                    array_merge(
+                        array_map('htmlentities', $request->all()),
+                        [
+                            'admin_id' => $admin->id,
+                        ]
+                    )
+            );
 
             // Optional values
             if(isset($request->getReportsEmails)){ $client->get_reports_emails = $request->getReportsEmails; }
@@ -97,7 +96,7 @@ class ClientsController extends ApiController
             // Crete the User
             $client_id = $admin->clients(true)->first()->id;
             $user = User::create([
-                'email' => $request->email,
+                'email' => htmlentities($request->email),
                 'password' => bcrypt(str_random(20)),
                 'api_token' => str_random(60),
                 'userable_type' => 'App\Client',
@@ -182,17 +181,13 @@ class ClientsController extends ApiController
         $transaction = DB::transaction(function () use($request, $client, $add_service_ids, $remove_service_ids) {
 
             // set client values
-            if(isset($request->name)){ $client->name = $request->name; }
-            if(isset($request->last_name)){ $client->last_name = $request->last_name; }
-            if(isset($request->cellphone)){ $client->cellphone = $request->cellphone; }
-            if(isset($request->type)){ $client->type = $request->type; }
-            if(isset($request->language)){ $client->language = $request->language; }
+            $client->fill(array_map('htmlentities', $request->except('admin_id')));
+            
             if(isset($request->getReportsEmails)){ $client->get_reports_emails = $request->getReportsEmails; }
-            if(isset($request->comments)){ $client->comments = $request->comments; }
 
             // set user values
             $user = $client->user();
-            if(isset($request->email)){ $user->email = $request->email; }
+            if(isset($request->email)){ $user->email = htmlentities($request->email); }
             if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             // set photo
