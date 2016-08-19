@@ -129,7 +129,7 @@ class ReportsController extends ApiController
 
         // check if the report was made on time
         $on_time = $this->reportHelpers->checkOnTime(
-                $request->completed,
+                (new Carbon($request->completed, $admin->timezone)),
                 $service->start_time,
                 $service->end_time
             );
@@ -248,34 +248,11 @@ class ReportsController extends ApiController
             }
         // end validation
 
-        // If they are changing the completed time, check that the report was made on time
-        if(isset($request->completed)){
-            $on_time = $this->reportHelpers->checkOnTime(
-                    $request->completed,
-                    $service->start_time,
-                    $service->end_time
-                );
-        }else{
-            $on_time = $report->on_time;
-        }
-
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $report, $service, $technician_id, $on_time) {
+        $transaction = DB::transaction(function () use($request, $report, $service, $technician_id) {
             // $service and $technician_id were checked allready
             $report->service_id = $service->id;
             $report->technician_id = $technician_id;
-            $report->on_time = $on_time;
-
-            // if(isset($request->completed)){ $report->completed = $request->completed; }
-            // if(isset($request->ph)){ $report->ph = $request->ph; }
-            // if(isset($request->chlorine)){ $report->chlorine = $request->chlorine; }
-            // if(isset($request->temperature)){ $report->temperature = $request->temperature; }
-            // if(isset($request->turbidity)){ $report->turbidity = $request->turbidity; }
-            // if(isset($request->salt)){ $report->salt = $request->salt; }
-            // if(isset($request->latitude)){ $report->latitude = $request->latitude; }
-            // if(isset($request->longitude)){ $report->longitude = $request->longitude; }
-            // if(isset($request->altitude)){ $report->altitude = $request->altitude; }
-            // if(isset($request->accuracy)){ $report->accuracy = $request->accuracy; }
 
             $report->fill($request->all());
 

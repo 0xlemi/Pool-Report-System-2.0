@@ -58,6 +58,8 @@ class ServicesController extends PageController
     {
         $this->checkPermissions('create');
 
+        $countrysArray;
+
         return view('services.create');
     }
 
@@ -83,23 +85,25 @@ class ServicesController extends PageController
             $request->service_days_saturday,
             $request->service_days_sunday
         );
-        $service = Service::create([
-            'name' => $request->name,
-            'address_line' => $request->address_line,
-            'city' => $request->city,
-            'state' => $request->state,
-            'postal_code' => $request->postal_code,
-            'country' => $request->country,
-            'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
-            'service_days' => $service_days,
-            'amount' => $request->amount,
-            'currency' => $request->currency,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
-            'status' => ($request->status)? 1:0, // 0=inactive, 1=active
-            'comments' => $request->comments,
-            'admin_id' => $admin->id,
-        ]);
+
+
+        $service = Service::create(
+                            array_merge(
+                                array_map('htmlentities', $request->except([
+                                    'type',
+                                    'service_days',
+                                    'status',
+                                    'admin_id',
+                                ])),
+                                [
+                                    'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
+                                    'service_days' => $service_days,
+                                    'status' => ($request->status)? 1:0, // 0=inactive, 1=active
+                                    'admin_id' => $admin->id,
+                                ]
+                            )
+                    );
+
         $photo = true;
         if($request->photo){
             $photo = $service->addImageFromForm($request->file('photo'));
@@ -172,20 +176,20 @@ class ServicesController extends PageController
             $request->service_days_sunday
         );
 
-        $service->name = $request->name;
-        $service->address_line = $request->address_line;
-        $service->city = $request->city;
-        $service->state = $request->state;
-        $service->postal_code = $request->postal_code;
-        $service->country = $request->country;
-        $service->type = ($request->type)? 1:2; // 1=chlorine, 2=salt
-        $service->service_days = $service_days;
-        $service->amount = $request->amount;
-        $service->currency = $request->currency;
-        $service->start_time = $request->start_time;
-        $service->end_time = $request->end_time;
-        $service->status = ($request->status)? 1:0; // 0=inactive, 1=active
-        $service->comments = $request->comments;
+        $service->fill(
+                array_merge(
+                    array_map('htmlentities', $request->except([
+                        'type',
+                        'service_days',
+                        'status',
+                        'admin_id',
+                    ])),
+                    [
+                        'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
+                        'service_days' => $service_days,
+                        'status' => ($request->status)? 1:0, // 0=inactive, 1=active
+                    ]
+                ));
 
         $photo = true;
         if($request->photo){

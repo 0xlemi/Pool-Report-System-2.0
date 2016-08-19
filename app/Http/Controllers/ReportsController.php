@@ -99,14 +99,15 @@ class ReportsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $completed_at = (new Carbon($request->completed_at, $admin->timezone))
-                            ->setTimezone('UTC');
+        $completed_at = (new Carbon($request->completed_at, $admin->timezone));
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
+
+        $carbon_time = new Carbon($completed_date, $admin->timezone);
         $on_time = $this->reportHelpers->checkOnTime(
 // ****** check the timezoen for check on time
-                $request->completed_at,
+                $completed_at,
                 $service->start_time,
                 $service->end_time
             );
@@ -114,7 +115,7 @@ class ReportsController extends PageController
         $report = Report::create([
             'service_id' => $service->id,
             'technician_id' => $technician->id,
-            'completed' => $completed_at,
+            'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
             'ph' => $request->ph,
             'chlorine' => $request->chlorine,

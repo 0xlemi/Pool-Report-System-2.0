@@ -22,11 +22,9 @@ class Client extends Model
 	protected $fillable = [
 		'name',
 		'last_name',
-		'email',
 		'cellphone',
 		'type',
 		'language',
-		'get_reports_emails',
 		'comments',
 		'admin_id',
 	];

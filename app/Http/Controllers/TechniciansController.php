@@ -70,15 +70,12 @@ class TechniciansController extends PageController
 
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
-        $technician = Technician::create([
-            'name'          => $request->name,
-            'last_name'     => $request->last_name,
-            'cellphone'     => $request->cellphone,
-            'address'       => $request->address,
-            'language'      => $request->language,
-            'comments'      => $request->comments,
-            'supervisor_id' => $supervisor->id,
-        ]);
+        $technician =   Technician::create(
+                                array_merge(
+                                    array_map('htmlentities', $request->except('supervisor_id')),
+                                    [ 'supervisor_id' => $supervisor->id ]
+                                )
+                        );
 
         $user = User::create([
             'email' => $request->username,
@@ -148,16 +145,15 @@ class TechniciansController extends PageController
 
         $user = $technician->user();
 
-        $user->email = $request->username;
-        $user->password = $request->password;
+        $user->email = htmlentities($request->username);
+        $user->password = htmlentities($request->password);
 
-        $technician->name = $request->name;
-        $technician->last_name = $request->last_name;
-        $technician->supervisor_id = $supervisor->id;
-        $technician->cellphone = $request->cellphone;
-        $technician->address = $request->address;
-        $technician->language = $request->language;
-        $technician->comments = $request->comments;
+
+
+        $technician->fill(array_merge(
+                                array_map('htmlentities', $request->except('supervisor_id')),
+                                [ 'supervisor_id' => $supervisor->id ]
+                            ));
 
         $photo = true;
         if($request->photo){

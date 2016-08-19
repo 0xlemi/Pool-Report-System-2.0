@@ -68,15 +68,12 @@ class SupervisorsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $supervisor = Supervisor::create([
-            'name'      => $request->name,
-            'last_name' => $request->last_name,
-            'cellphone' => $request->cellphone,
-            'address'   => $request->address,
-            'language'  => $request->language,
-            'comments'  => $request->comments,
-            'admin_id'   => $admin->id,
-        ]);
+        $supervisor = Supervisor::create(
+                        array_merge(
+                            array_map('htmlentities', $request->except('admin_id')),
+                            [ 'admin_id' => $admin->id ]
+                        )
+                    );
         $user = User::create([
             'email' => $request->email,
             'password' => bcrypt(str_random(9)),
@@ -143,14 +140,9 @@ class SupervisorsController extends PageController
 
         $user = $supervisor->user();
 
-        $user->email = $request->email;
+        $user->email = htmlentities($request->email);
 
-        $supervisor->name = $request->name;
-        $supervisor->last_name = $request->last_name;
-        $supervisor->cellphone = $request->cellphone;
-        $supervisor->address = $request->address;
-        $supervisor->language = $request->language;
-        $supervisor->comments = $request->comments;
+        $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
 
         $photo = true;
         if($request->photo){

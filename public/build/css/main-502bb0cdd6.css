@@ -1503,4 +1503,10 @@ body.stop-scrolling {
 	background-color: #337ab7;
 	color: #FFF;
 }
+
+/**
+ * location picke
+ */
+ .pac-container{z-index:2000 !important;}
+
 /*# sourceMappingURL=main.css.map */

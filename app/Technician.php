@@ -25,7 +25,6 @@ class Technician extends Model
         'cellphone',
         'address',
         'language',
-		'get_reports_emails',
         'comments',
         'supervisor_id',
 	];

@@ -71,21 +71,23 @@ class ClientsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $client = Client::create([
-            'name' => $request->name,
-            'last_name' => $request->last_name,
-            'cellphone' => $request->cellphone,
-            'type' => $request->type,
-            'language' => $request->language,
-		    'email_preferences' => 4,
-            'comments' => $request->comments,
-            'admin_id' => $admin->id,
-        ]);
+        $client = Client::create(
+                            array_merge(
+                                array_map('htmlentities', $request->except([
+                                    'email_preferences',
+                                    'admin_id',
+                                ])),
+                                [
+		                            'email_preferences' => 4,
+                                    'admin_id' => $admin->id,
+                                ]
+                            )
+                    );
         $client->setServices($request->services);
         $client->save();
 
         $user = User::create([
-            'email' => $request->email,
+            'email' => htmlentities($request->email),
             'password' => bcrypt(str_random(9)),
             'userable_id' => $client->id,
             'userable_type' => 'App\Client',
@@ -162,14 +164,10 @@ class ClientsController extends PageController
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
         $user  = $client->user();
 
-        $user->email = $request->email;
+        $user->email = htmlentities($request->email);
 
-        $client->name = $request->name;
-        $client->last_name = $request->last_name;
-        $client->cellphone = $request->cellphone;
-        $client->type = $request->type;
-        $client->language = $request->language;
-        $client->comments = $request->comments;
+        $client->fill(array_map('htmlentities', $request->except('admin_id')));
+        
         $client->setServices($request->services);
 
         $photo = true;

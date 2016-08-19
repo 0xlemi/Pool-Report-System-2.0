@@ -18,13 +18,12 @@ class ReportHelpers
     }
 
     // dates are NOT sent in UTC
-    // start_time and end_time are note in UTC, thats why we dont convernt $completed_date
-    public function checkOnTime($completed_date, $start_time, $end_time)
+    // start_time and end_time are not in UTC, thats why we dont convernt $completed_date
+    public function checkOnTime(Carbon $completed_date, $start_time, $end_time)
     {
         $admin = $this->loggedUserAdministrator();
 
-        $carbon_time = new Carbon($completed_date, $admin->timezone);
-        $completed_date_string = $carbon_time->toDateString();
+        $completed_date_string = $completed_date->toDateString();
 
         $carbon_start = new Carbon( $completed_date_string.' '.$start_time, $admin->timezone);
         $carbon_end = new Carbon( $completed_date_string.' '.$end_time, $admin->timezone);

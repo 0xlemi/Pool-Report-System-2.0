@@ -2,15 +2,18 @@ var dateFormat 		= require('dateformat');
 
 // Vue imports
 var Vue 			= require('vue');
+var VueSelect       = require('vue-select');
 var Permissions 	= require('./components/Permissions.vue');
 var emailPreference = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
+require('./components/countries.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
+var locationPicker  = require("jquery-locationpicker");
 Vue.use(require('vue-resource'));
 
 $(document).ready(function(){
@@ -1301,7 +1304,8 @@ function isset(strVariableName) {
 
         components: {
             Permissions,
-            emailPreference
+            emailPreference,
+            countries,
         },
         directives: { FormToAjax },
         data:{
@@ -1318,6 +1322,17 @@ function isset(strVariableName) {
             numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
             reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
             // Services
+
+            pickerServiceAddressLine1: '',
+            pickerServiceCity: '',
+            pickerServiceState: '',
+            pickerServicePostalCode: '',
+            pickerServiceCountry: '',
+            serviceAddressLine1: '',
+            serviceCity: '',
+            serviceState: '',
+            servicePostalCode: '',
+            serviceCountry: '',
             statusSwitch: true,
         },
         computed: {
@@ -1329,6 +1344,16 @@ function isset(strVariableName) {
                 }
             },
         methods:{
+            populateAddressFields(page){
+                if(page == 'create'){
+                    this.serviceAddressLine1 = this.pickerServiceAddressLine1;
+                    this.serviceCity = this.pickerServiceCity;
+                    this.servicePostalCode = this.pickerServicePostalCode;
+                    this.serviceState = this.pickerServiceState;
+                    this.serviceCountry = this.pickerServiceCountry;
+                }
+
+            },
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;
                 if(typeof back !== 'undefined'){
@@ -1373,6 +1398,37 @@ function isset(strVariableName) {
             }
         }
 
+    });
+
+
+/* ==========================================================================
+    Location Picker
+    ========================================================================== */
+
+    let locPicker = $('#locationPicker').locationpicker({
+        vue: mainVue,
+        location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
+        radius: 0,
+        inputBinding: {
+        	latitudeInput: $('#serviceLatitude'),
+        	longitudeInput: $('#serviceLongitude'),
+        	locationNameInput: $('#serviceAddress')
+        },
+        enableAutocomplete: true,
+        onchanged: function (currentLocation, radius, isMarkerDropped) {
+            let addressComponents = $(this).locationpicker('map').location.addressComponents;
+            let vue = $(this).data("locationpicker").settings.vue;
+
+            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+            vue.pickerServiceCity         = addressComponents.city;
+            vue.pickerServiceState        = addressComponents.stateOrProvince;
+            vue.pickerServicePostalCode   = addressComponents.postalCode;
+            vue.pickerServiceCountry      = addressComponents.country;
+        }
+    });
+
+    $('#locationPickerModal').on('shown.bs.modal', function () {
+        $('#locationPicker').locationpicker('autosize');
     });
 
 

@@ -26,7 +26,6 @@ class Supervisor extends Model
 		'cellphone',
 		'address',
 		'language',
-		'get_reports_emails',
 		'comments',
 		'admin_id',
 	];
