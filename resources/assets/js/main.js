@@ -2,11 +2,10 @@ var dateFormat 		= require('dateformat');
 
 // Vue imports
 var Vue 			= require('vue');
-var VueSelect       = require('vue-select');
 var Permissions 	= require('./components/Permissions.vue');
 var emailPreference = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
-require('./components/countries.vue');
+var countries       = require('./components/countries.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1328,11 +1327,15 @@ function isset(strVariableName) {
             pickerServiceState: '',
             pickerServicePostalCode: '',
             pickerServiceCountry: '',
+            pickerServiceLatitude: '',
+            pickerServiceLongitude: '',
+
             serviceAddressLine1: '',
             serviceCity: '',
             serviceState: '',
             servicePostalCode: '',
-            serviceCountry: '',
+            serviceLatitude: '',
+            serviceLongitude: '',
             statusSwitch: true,
         },
         computed: {
@@ -1350,7 +1353,9 @@ function isset(strVariableName) {
                     this.serviceCity = this.pickerServiceCity;
                     this.servicePostalCode = this.pickerServicePostalCode;
                     this.serviceState = this.pickerServiceState;
-                    this.serviceCountry = this.pickerServiceCountry;
+                    this.$broadcast('changeSelected', this.pickerServiceCountry);
+                    this.serviceLongitude = this.pickerServiceLongitude;
+                    this.serviceLatitude = this.pickerServiceLatitude;
                 }
 
             },
@@ -1424,6 +1429,8 @@ function isset(strVariableName) {
             vue.pickerServiceState        = addressComponents.stateOrProvince;
             vue.pickerServicePostalCode   = addressComponents.postalCode;
             vue.pickerServiceCountry      = addressComponents.country;
+            vue.pickerServiceLongitude      = currentLocation.longitude;
+            vue.pickerServiceLatitude      = currentLocation.latitude;
         }
     });
 

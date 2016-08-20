@@ -90,12 +90,7 @@
 							<div class="form-group row {{($errors->has('country'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Country:</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select" data-live-search="true"
-											name="country" v-model="serviceCountry">
-											@foreach($helper->getCountries() as $code => $country)
-												<option value="{{$code}}" >{{$country}}</option>
-											@endforeach
-									</select>
+										<countries></countries>	
 									@if ($errors->has('country'))
 										<small class="text-muted">{{ $errors->first('country') }}</small>
 									@endif

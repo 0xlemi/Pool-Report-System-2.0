@@ -73,6 +73,8 @@ class ServicesController extends PageController
     {
         $this->checkPermissions('create');
 
+        dd($request->all());
+
         $admin  = $this->loggedUserAdministrator();
 
         // get the service days number 0-127
