@@ -1321,7 +1321,7 @@ function isset(strVariableName) {
             numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
             reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
             // Services
-
+            //temporal values
             pickerServiceAddressLine1: '',
             pickerServiceCity: '',
             pickerServiceState: '',
@@ -1329,13 +1329,14 @@ function isset(strVariableName) {
             pickerServiceCountry: '',
             pickerServiceLatitude: '',
             pickerServiceLongitude: '',
-
-            serviceAddressLine1: '',
-            serviceCity: '',
-            serviceState: '',
-            servicePostalCode: '',
-            serviceLatitude: '',
-            serviceLongitude: '',
+            // form values
+            serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
+            serviceCity: (isset('city')) ? back.city : '',
+            serviceState: (isset('state')) ? back.state : '',
+            servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
+            serviceCountry: (isset('country')) ? back.country : '',
+            serviceLatitude: (isset('latitude')) ? back.latitude : '',
+            serviceLongitude: (isset('longitude')) ? back.longitude : '',
             statusSwitch: true,
         },
         computed: {
@@ -1344,20 +1345,50 @@ function isset(strVariableName) {
                         return 'All Services Done';
                     }
                     return 'Missing Services: '+this.numServicesMissing;
+                },
+                locationPickerTag(){
+                    if(this.serviceLatitude == null ){
+                        return {
+                            'icon': 'font-icon font-icon-pin-2',
+                            'text': 'Choose Location',
+                            'class': 'btn-primary'
+                        };
+                    }
+                    return {
+                        'icon': 'font-icon font-icon-ok',
+                        'text': 'Location Selected',
+                        'class': 'btn-success'
+                    };
                 }
             },
+        watch:{
+            serviceCountry: function(val, oldVal){
+                this.$broadcast('changeSelected', val);
+            }
+        },
+        events: {
+            countryChanged(countrySelected){
+                this.serviceCountry = countrySelected.key;
+            }
+        },
         methods:{
             populateAddressFields(page){
+
+                this.setLocation(page);
                 if(page == 'create'){
                     this.serviceAddressLine1 = this.pickerServiceAddressLine1;
                     this.serviceCity = this.pickerServiceCity;
                     this.servicePostalCode = this.pickerServicePostalCode;
                     this.serviceState = this.pickerServiceState;
-                    this.$broadcast('changeSelected', this.pickerServiceCountry);
+                    this.serviceCountry = this.pickerServiceCountry;
+                }
+
+            },
+            setLocation(page){
+                if(page == 'create'){
                     this.serviceLongitude = this.pickerServiceLongitude;
                     this.serviceLatitude = this.pickerServiceLatitude;
                 }
-
             },
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;
@@ -1410,6 +1441,7 @@ function isset(strVariableName) {
     Location Picker
     ========================================================================== */
 
+
     let locPicker = $('#locationPicker').locationpicker({
         vue: mainVue,
         location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
@@ -1431,6 +1463,19 @@ function isset(strVariableName) {
             vue.pickerServiceCountry      = addressComponents.country;
             vue.pickerServiceLongitude      = currentLocation.longitude;
             vue.pickerServiceLatitude      = currentLocation.latitude;
+        },
+        oninitialized: function(component) {
+            let addressComponents = $(component).locationpicker('map').location.addressComponents;
+            let startLocation = $(component).data("locationpicker").settings.location;
+            let vue = $(component).data("locationpicker").settings.vue;
+
+            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+            vue.pickerServiceCity         = addressComponents.city;
+            vue.pickerServiceState        = addressComponents.stateOrProvince;
+            vue.pickerServicePostalCode   = addressComponents.postalCode;
+            vue.pickerServiceCountry      = addressComponents.country;
+            vue.pickerServiceLongitude      = startLocation.longitude;
+            vue.pickerServiceLatitude      = startLocation.latitude;
         }
     });
 

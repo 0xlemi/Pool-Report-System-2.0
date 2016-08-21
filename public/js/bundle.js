@@ -17610,9 +17610,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     components: { Multiselect: _vueMultiselect2.default },
+    props: ['country'],
     data: function data() {
+        var _this = this;
+
         return {
-            selected: null,
+            selected: typeof this.country != 'undefined' ? countries.find(function (country) {
+                return country.key === _this.country;
+            }) : null,
             options: countries
         };
     },
@@ -17620,11 +17625,14 @@ exports.default = {
     methods: {
         updateSelected: function updateSelected(newSelected) {
             this.selected = newSelected;
+            this.$dispatch('countryChanged', newSelected);
         }
     },
     events: {
-        'changeSelected': function changeSelected(selected) {
-            this.selected = selected;
+        changeSelected: function changeSelected(countryKey) {
+            this.selected = this.options.find(function (country) {
+                return country.key === countryKey;
+            });
         }
     }
 };
@@ -17632,7 +17640,7 @@ exports.default = {
 
 var countries = [{ 'key': 'AF', 'label': 'Afghanistan' }, { 'key': 'AX', 'label': 'Aland Islands' }, { 'key': 'AL', 'label': 'Albania' }, { 'key': 'DZ', 'label': 'Algeria' }, { 'key': 'AS', 'label': 'American Samoa' }, { 'key': 'AD', 'label': 'Andorra' }, { 'key': 'AO', 'label': 'Angola' }, { 'key': 'AI', 'label': 'Anguilla' }, { 'key': 'AQ', 'label': 'Antarctica' }, { 'key': 'AG', 'label': 'Antigua And Barbuda' }, { 'key': 'AR', 'label': 'Argentina' }, { 'key': 'AM', 'label': 'Armenia' }, { 'key': 'AW', 'label': 'Aruba' }, { 'key': 'AU', 'label': 'Australia' }, { 'key': 'AT', 'label': 'Austria' }, { 'key': 'AZ', 'label': 'Azerbaijan' }, { 'key': 'BS', 'label': 'Bahamas' }, { 'key': 'BH', 'label': 'Bahrain' }, { 'key': 'BD', 'label': 'Bangladesh' }, { 'key': 'BB', 'label': 'Barbados' }, { 'key': 'BY', 'label': 'Belarus' }, { 'key': 'BE', 'label': 'Belgium' }, { 'key': 'BZ', 'label': 'Belize' }, { 'key': 'BJ', 'label': 'Benin' }, { 'key': 'BM', 'label': 'Bermuda' }, { 'key': 'BT', 'label': 'Bhutan' }, { 'key': 'BO', 'label': 'Bolivia' }, { 'key': 'BA', 'label': 'Bosnia And Herzegovina' }, { 'key': 'BW', 'label': 'Botswana' }, { 'key': 'BV', 'label': 'Bouvet Island' }, { 'key': 'BR', 'label': 'Brazil' }, { 'key': 'IO', 'label': 'British Indian Ocean Territory' }, { 'key': 'BN', 'label': 'Brunei Darussalam' }, { 'key': 'BG', 'label': 'Bulgaria' }, { 'key': 'BF', 'label': 'Burkina Faso' }, { 'key': 'BI', 'label': 'Burundi' }, { 'key': 'KH', 'label': 'Cambodia' }, { 'key': 'CM', 'label': 'Cameroon' }, { 'key': 'CA', 'label': 'Canada' }, { 'key': 'CV', 'label': 'Cape Verde' }, { 'key': 'KY', 'label': 'Cayman Islands' }, { 'key': 'CF', 'label': 'Central African Republic' }, { 'key': 'TD', 'label': 'Chad' }, { 'key': 'CL', 'label': 'Chile' }, { 'key': 'CN', 'label': 'China' }, { 'key': 'CX', 'label': 'Christmas Island' }, { 'key': 'CC', 'label': 'Cocos (Keeling) Islands' }, { 'key': 'CO', 'label': 'Colombia' }, { 'key': 'KM', 'label': 'Comoros' }, { 'key': 'CG', 'label': 'Congo' }, { 'key': 'CD', 'label': 'Congo, Democratic Republic' }, { 'key': 'CK', 'label': 'Cook Islands' }, { 'key': 'CR', 'label': 'Costa Rica' }, { 'key': 'CI', 'label': 'Cote D\'Ivoire' }, { 'key': 'HR', 'label': 'Croatia' }, { 'key': 'CU', 'label': 'Cuba' }, { 'key': 'CY', 'label': 'Cyprus' }, { 'key': 'CZ', 'label': 'Czech Republic' }, { 'key': 'DK', 'label': 'Denmark' }, { 'key': 'DJ', 'label': 'Djibouti' }, { 'key': 'DM', 'label': 'Dominica' }, { 'key': 'DO', 'label': 'Dominican Republic' }, { 'key': 'EC', 'label': 'Ecuador' }, { 'key': 'EG', 'label': 'Egypt' }, { 'key': 'SV', 'label': 'El Salvador' }, { 'key': 'GQ', 'label': 'Equatorial Guinea' }, { 'key': 'ER', 'label': 'Eritrea' }, { 'key': 'EE', 'label': 'Estonia' }, { 'key': 'ET', 'label': 'Ethiopia' }, { 'key': 'FK', 'label': 'Falkland Islands (Malvinas)' }, { 'key': 'FO', 'label': 'Faroe Islands' }, { 'key': 'FJ', 'label': 'Fiji' }, { 'key': 'FI', 'label': 'Finland' }, { 'key': 'FR', 'label': 'France' }, { 'key': 'GF', 'label': 'French Guiana' }, { 'key': 'PF', 'label': 'French Polynesia' }, { 'key': 'TF', 'label': 'French Southern Territories' }, { 'key': 'GA', 'label': 'Gabon' }, { 'key': 'GM', 'label': 'Gambia' }, { 'key': 'GE', 'label': 'Georgia' }, { 'key': 'DE', 'label': 'Germany' }, { 'key': 'GH', 'label': 'Ghana' }, { 'key': 'GI', 'label': 'Gibraltar' }, { 'key': 'GR', 'label': 'Greece' }, { 'key': 'GL', 'label': 'Greenland' }, { 'key': 'GD', 'label': 'Grenada' }, { 'key': 'GP', 'label': 'Guadeloupe' }, { 'key': 'GU', 'label': 'Guam' }, { 'key': 'GT', 'label': 'Guatemala' }, { 'key': 'GG', 'label': 'Guernsey' }, { 'key': 'GN', 'label': 'Guinea' }, { 'key': 'GW', 'label': 'Guinea-Bissau' }, { 'key': 'GY', 'label': 'Guyana' }, { 'key': 'HT', 'label': 'Haiti' }, { 'key': 'HM', 'label': 'Heard Island & Mcdonald Islands' }, { 'key': 'VA', 'label': 'Holy See (Vatican City State)' }, { 'key': 'HN', 'label': 'Honduras' }, { 'key': 'HK', 'label': 'Hong Kong' }, { 'key': 'HU', 'label': 'Hungary' }, { 'key': 'IS', 'label': 'Iceland' }, { 'key': 'IN', 'label': 'India' }, { 'key': 'ID', 'label': 'Indonesia' }, { 'key': 'IR', 'label': 'Iran, Islamic Republic Of' }, { 'key': 'IQ', 'label': 'Iraq' }, { 'key': 'IE', 'label': 'Ireland' }, { 'key': 'IM', 'label': 'Isle Of Man' }, { 'key': 'IL', 'label': 'Israel' }, { 'key': 'IT', 'label': 'Italy' }, { 'key': 'JM', 'label': 'Jamaica' }, { 'key': 'JP', 'label': 'Japan' }, { 'key': 'JE', 'label': 'Jersey' }, { 'key': 'JO', 'label': 'Jordan' }, { 'key': 'KZ', 'label': 'Kazakhstan' }, { 'key': 'KE', 'label': 'Kenya' }, { 'key': 'KI', 'label': 'Kiribati' }, { 'key': 'KR', 'label': 'Korea' }, { 'key': 'KW', 'label': 'Kuwait' }, { 'key': 'KG', 'label': 'Kyrgyzstan' }, { 'key': 'LA', 'label': 'Lao People\'s Democratic Republic' }, { 'key': 'LV', 'label': 'Latvia' }, { 'key': 'LB', 'label': 'Lebanon' }, { 'key': 'LS', 'label': 'Lesotho' }, { 'key': 'LR', 'label': 'Liberia' }, { 'key': 'LY', 'label': 'Libyan Arab Jamahiriya' }, { 'key': 'LI', 'label': 'Liechtenstein' }, { 'key': 'LT', 'label': 'Lithuania' }, { 'key': 'LU', 'label': 'Luxembourg' }, { 'key': 'MO', 'label': 'Macao' }, { 'key': 'MK', 'label': 'Macedonia' }, { 'key': 'MG', 'label': 'Madagascar' }, { 'key': 'MW', 'label': 'Malawi' }, { 'key': 'MY', 'label': 'Malaysia' }, { 'key': 'MV', 'label': 'Maldives' }, { 'key': 'ML', 'label': 'Mali' }, { 'key': 'MT', 'label': 'Malta' }, { 'key': 'MH', 'label': 'Marshall Islands' }, { 'key': 'MQ', 'label': 'Martinique' }, { 'key': 'MR', 'label': 'Mauritania' }, { 'key': 'MU', 'label': 'Mauritius' }, { 'key': 'YT', 'label': 'Mayotte' }, { 'key': 'MX', 'label': 'Mexico' }, { 'key': 'FM', 'label': 'Micronesia, Federated States Of' }, { 'key': 'MD', 'label': 'Moldova' }, { 'key': 'MC', 'label': 'Monaco' }, { 'key': 'MN', 'label': 'Mongolia' }, { 'key': 'ME', 'label': 'Montenegro' }, { 'key': 'MS', 'label': 'Montserrat' }, { 'key': 'MA', 'label': 'Morocco' }, { 'key': 'MZ', 'label': 'Mozambique' }, { 'key': 'MM', 'label': 'Myanmar' }, { 'key': 'NA', 'label': 'Namibia' }, { 'key': 'NR', 'label': 'Nauru' }, { 'key': 'NP', 'label': 'Nepal' }, { 'key': 'NL', 'label': 'Netherlands' }, { 'key': 'AN', 'label': 'Netherlands Antilles' }, { 'key': 'NC', 'label': 'New Caledonia' }, { 'key': 'NZ', 'label': 'New Zealand' }, { 'key': 'NI', 'label': 'Nicaragua' }, { 'key': 'NE', 'label': 'Niger' }, { 'key': 'NG', 'label': 'Nigeria' }, { 'key': 'NU', 'label': 'Niue' }, { 'key': 'NF', 'label': 'Norfolk Island' }, { 'key': 'MP', 'label': 'Northern Mariana Islands' }, { 'key': 'NO', 'label': 'Norway' }, { 'key': 'OM', 'label': 'Oman' }, { 'key': 'PK', 'label': 'Pakistan' }, { 'key': 'PW', 'label': 'Palau' }, { 'key': 'PS', 'label': 'Palestinian Territory, Occupied' }, { 'key': 'PA', 'label': 'Panama' }, { 'key': 'PG', 'label': 'Papua New Guinea' }, { 'key': 'PY', 'label': 'Paraguay' }, { 'key': 'PE', 'label': 'Peru' }, { 'key': 'PH', 'label': 'Philippines' }, { 'key': 'PN', 'label': 'Pitcairn' }, { 'key': 'PL', 'label': 'Poland' }, { 'key': 'PT', 'label': 'Portugal' }, { 'key': 'PR', 'label': 'Puerto Rico' }, { 'key': 'QA', 'label': 'Qatar' }, { 'key': 'RE', 'label': 'Reunion' }, { 'key': 'RO', 'label': 'Romania' }, { 'key': 'RU', 'label': 'Russian Federation' }, { 'key': 'RW', 'label': 'Rwanda' }, { 'key': 'BL', 'label': 'Saint Barthelemy' }, { 'key': 'SH', 'label': 'Saint Helena' }, { 'key': 'KN', 'label': 'Saint Kitts And Nevis' }, { 'key': 'LC', 'label': 'Saint Lucia' }, { 'key': 'MF', 'label': 'Saint Martin' }, { 'key': 'PM', 'label': 'Saint Pierre And Miquelon' }, { 'key': 'VC', 'label': 'Saint Vincent And Grenadines' }, { 'key': 'WS', 'label': 'Samoa' }, { 'key': 'SM', 'label': 'San Marino' }, { 'key': 'ST', 'label': 'Sao Tome And Principe' }, { 'key': 'SA', 'label': 'Saudi Arabia' }, { 'key': 'SN', 'label': 'Senegal' }, { 'key': 'RS', 'label': 'Serbia' }, { 'key': 'SC', 'label': 'Seychelles' }, { 'key': 'SL', 'label': 'Sierra Leone' }, { 'key': 'SG', 'label': 'Singapore' }, { 'key': 'SK', 'label': 'Slovakia' }, { 'key': 'SI', 'label': 'Slovenia' }, { 'key': 'SB', 'label': 'Solomon Islands' }, { 'key': 'SO', 'label': 'Somalia' }, { 'key': 'ZA', 'label': 'South Africa' }, { 'key': 'GS', 'label': 'South Georgia And Sandwich Isl.' }, { 'key': 'ES', 'label': 'Spain' }, { 'key': 'LK', 'label': 'Sri Lanka' }, { 'key': 'SD', 'label': 'Sudan' }, { 'key': 'SR', 'label': 'Suriname' }, { 'key': 'SJ', 'label': 'Svalbard And Jan Mayen' }, { 'key': 'SZ', 'label': 'Swaziland' }, { 'key': 'SE', 'label': 'Sweden' }, { 'key': 'CH', 'label': 'Switzerland' }, { 'key': 'SY', 'label': 'Syrian Arab Republic' }, { 'key': 'TW', 'label': 'Taiwan' }, { 'key': 'TJ', 'label': 'Tajikistan' }, { 'key': 'TZ', 'label': 'Tanzania' }, { 'key': 'TH', 'label': 'Thailand' }, { 'key': 'TL', 'label': 'Timor-Leste' }, { 'key': 'TG', 'label': 'Togo' }, { 'key': 'TK', 'label': 'Tokelau' }, { 'key': 'TO', 'label': 'Tonga' }, { 'key': 'TT', 'label': 'Trinidad And Tobago' }, { 'key': 'TN', 'label': 'Tunisia' }, { 'key': 'TR', 'label': 'Turkey' }, { 'key': 'TM', 'label': 'Turkmenistan' }, { 'key': 'TC', 'label': 'Turks And Caicos Islands' }, { 'key': 'TV', 'label': 'Tuvalu' }, { 'key': 'UG', 'label': 'Uganda' }, { 'key': 'UA', 'label': 'Ukraine' }, { 'key': 'AE', 'label': 'United Arab Emirates' }, { 'key': 'GB', 'label': 'United Kingdom' }, { 'key': 'US', 'label': 'United States' }, { 'key': 'UM', 'label': 'United States Outlying Islands' }, { 'key': 'UY', 'label': 'Uruguay' }, { 'key': 'UZ', 'label': 'Uzbekistan' }, { 'key': 'VU', 'label': 'Vanuatu' }, { 'key': 'VE', 'label': 'Venezuela' }, { 'key': 'VN', 'label': 'Viet Nam' }, { 'key': 'VG', 'label': 'Virgin Islands, British' }, { 'key': 'VI', 'label': 'Virgin Islands, U.S.' }, { 'key': 'WF', 'label': 'Wallis And Futuna' }, { 'key': 'EH', 'label': 'Western Sahara' }, { 'key': 'YE', 'label': 'Yemen' }, { 'key': 'ZM', 'label': 'Zambia' }, { 'key': 'ZW', 'label': 'Zimbabwe' }];
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected.sync=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Select Country\">\n\n    </multiselect>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Select Country\">\n\n    </multiselect>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -18951,7 +18959,7 @@ $(document).ready(function () {
 			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
 			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
 			// Services
-
+			//temporal values
 			pickerServiceAddressLine1: '',
 			pickerServiceCity: '',
 			pickerServiceState: '',
@@ -18959,13 +18967,14 @@ $(document).ready(function () {
 			pickerServiceCountry: '',
 			pickerServiceLatitude: '',
 			pickerServiceLongitude: '',
-
-			serviceAddressLine1: '',
-			serviceCity: '',
-			serviceState: '',
-			servicePostalCode: '',
-			serviceLatitude: '',
-			serviceLongitude: '',
+			// form values
+			serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
+			serviceCity: isset('city') ? back.city : '',
+			serviceState: isset('state') ? back.state : '',
+			servicePostalCode: isset('postalCode') ? back.postalCode : '',
+			serviceCountry: isset('country') ? back.country : '',
+			serviceLatitude: isset('latitude') ? back.latitude : '',
+			serviceLongitude: isset('longitude') ? back.longitude : '',
 			statusSwitch: true
 		},
 		computed: {
@@ -18974,16 +18983,46 @@ $(document).ready(function () {
 					return 'All Services Done';
 				}
 				return 'Missing Services: ' + this.numServicesMissing;
+			},
+			locationPickerTag: function locationPickerTag() {
+				if (this.serviceLatitude == null) {
+					return {
+						'icon': 'font-icon font-icon-pin-2',
+						'text': 'Choose Location',
+						'class': 'btn-primary'
+					};
+				}
+				return {
+					'icon': 'font-icon font-icon-ok',
+					'text': 'Location Selected',
+					'class': 'btn-success'
+				};
+			}
+		},
+		watch: {
+			serviceCountry: function serviceCountry(val, oldVal) {
+				this.$broadcast('changeSelected', val);
+			}
+		},
+		events: {
+			countryChanged: function countryChanged(countrySelected) {
+				this.serviceCountry = countrySelected.key;
 			}
 		},
 		methods: {
 			populateAddressFields: function populateAddressFields(page) {
+
+				this.setLocation(page);
 				if (page == 'create') {
 					this.serviceAddressLine1 = this.pickerServiceAddressLine1;
 					this.serviceCity = this.pickerServiceCity;
 					this.servicePostalCode = this.pickerServicePostalCode;
 					this.serviceState = this.pickerServiceState;
-					this.$broadcast('changeSelected', this.pickerServiceCountry);
+					this.serviceCountry = this.pickerServiceCountry;
+				}
+			},
+			setLocation: function setLocation(page) {
+				if (page == 'create') {
 					this.serviceLongitude = this.pickerServiceLongitude;
 					this.serviceLatitude = this.pickerServiceLatitude;
 				}
@@ -19059,6 +19098,19 @@ $(document).ready(function () {
 			vue.pickerServiceCountry = addressComponents.country;
 			vue.pickerServiceLongitude = currentLocation.longitude;
 			vue.pickerServiceLatitude = currentLocation.latitude;
+		},
+		oninitialized: function oninitialized(component) {
+			var addressComponents = $(component).locationpicker('map').location.addressComponents;
+			var startLocation = $(component).data("locationpicker").settings.location;
+			var vue = $(component).data("locationpicker").settings.vue;
+
+			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+			vue.pickerServiceCity = addressComponents.city;
+			vue.pickerServiceState = addressComponents.stateOrProvince;
+			vue.pickerServicePostalCode = addressComponents.postalCode;
+			vue.pickerServiceCountry = addressComponents.country;
+			vue.pickerServiceLongitude = startLocation.longitude;
+			vue.pickerServiceLatitude = startLocation.latitude;
 		}
 	});
 

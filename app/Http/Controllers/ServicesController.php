@@ -54,11 +54,19 @@ class ServicesController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->checkPermissions('create');
 
-        $countrysArray;
+        JavaScript::put([
+            'latitude' => $request->old('latitude'),
+            'longitude' => $request->old('longitude'),
+            'addressLine' => $request->old('address_line'),
+            'city' => $request->old('city'),
+            'state' => $request->old('state'),
+            'postalCode' => $request->old('postal_code'),
+            'country' => $request->old('country'),
+        ]);
 
         return view('services.create');
     }
@@ -72,8 +80,6 @@ class ServicesController extends PageController
     public function store(CreateServiceRequest $request)
     {
         $this->checkPermissions('create');
-
-        dd($request->all());
 
         $admin  = $this->loggedUserAdministrator();
 

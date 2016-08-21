@@ -16,6 +16,8 @@ class CreateServiceRequest extends Request
         return true;
     }
 
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,6 +27,8 @@ class CreateServiceRequest extends Request
     {
         return [
             'name' => 'required|string|max:20',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address_line' => 'required|string|max:50',
             'city' => 'required|string|max:30',
             'state' => 'required|string|max:30',

@@ -35,11 +35,21 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
+							<div class="form-group row {{($errors->has('longitude') || $errors->has('latitude'))? 'form-group-error':''}}">
+
 								<div class="col-sm-2">Location:</div>
 								<div class="col-sm-10">
-									<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#locationPickerModal">
-									<i class="font-icon font-icon-pin-2"></i>&nbsp;&nbsp;Choose Location</button>
+									<button type="button" class="btn btn-primary" data-toggle="modal"
+										:class="locationPickerTag.class"
+										data-target="#locationPickerModal">
+										<i class="@{{ locationPickerTag.icon }}"></i>&nbsp;&nbsp;&nbsp;
+										@{{ locationPickerTag.text }}
+									</button>
+									<input type="hidden" name="latitude" :value="serviceLatitude">
+									<input type="hidden" name="longitude" :value="serviceLongitude">
+									@if ($errors->has('latitude') || $errors->has('longitude'))
+										<small class="text-muted">Location is required</small>
+									@endif
 								</div>
 							</div>
 
@@ -47,7 +57,7 @@
 								<label class="col-sm-2 form-control-label">Street and number:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="address_line" maxlength="50" :value="serviceAddressLine1" value="{{ old('address_line') }}">
+											name="address_line" maxlength="50" :value="serviceAddressLine1" >
 									@if ($errors->has('address_line'))
 										<small class="text-muted">{{ $errors->first('address_line') }}</small>
 									@endif
@@ -58,7 +68,7 @@
 								<label class="col-sm-2 form-control-label">City:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="city" maxlength="30" :value="serviceCity" value="{{ old('city') }}">
+											name="city" maxlength="30" :value="serviceCity" >
 									@if ($errors->has('city'))
 										<small class="text-muted">{{ $errors->first('city') }}</small>
 									@endif
@@ -69,7 +79,7 @@
 								<label class="col-sm-2 form-control-label">State:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="state" maxlength="30" :value="serviceState" value="{{ old('state') }}">
+											name="state" maxlength="30" :value="serviceState" >
 									@if ($errors->has('state'))
 										<small class="text-muted">{{ $errors->first('state') }}</small>
 									@endif
@@ -80,7 +90,7 @@
 								<label class="col-sm-2 form-control-label">Postal Code:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="postal_code" maxlength="15" :value="servicePostalCode" value="{{ old('postal_code') }}">
+											name="postal_code" maxlength="15" :value="servicePostalCode" >
 									@if ($errors->has('postal_code'))
 										<small class="text-muted">{{ $errors->first('postal_code') }}</small>
 									@endif
@@ -90,7 +100,8 @@
 							<div class="form-group row {{($errors->has('country'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Country:</label>
 								<div class="col-sm-10">
-										<countries></countries>	
+										<countries country="{{ old('country') }}" ></countries>
+										<input type="hidden" name="country" :value="serviceCountry">
 									@if ($errors->has('country'))
 										<small class="text-muted">{{ $errors->first('country') }}</small>
 									@endif
@@ -261,47 +272,7 @@
 			</section>
 		</div>
 	</div>
-	<!-- Modal for email preview -->
-	<div class="modal fade" id="locationPickerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Choose Service Location</h4>
-	      </div>
-	      <div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<label class="col-sm-2 form-control-label">Search:</label>
-							<input type="text" class="form-control"
-												id="serviceAddress"
-												name="serviceAddress">
-					</div>
-					<br>
-					<br>
-					<br>
-					<div class="col-md-12">
-						<div id="locationPicker" style="width: 650px; height: 450px;"></div>
-					</div>
-					<br>
-					<div class="col-md-12">
-						<label class="col-sm-2 form-control-label">Latitude</label>
-						<input type="text" class="form-control maxlength-simple"
-											id="serviceLatitude"
-											name="latitude" maxlength="30">
-						<label class="col-sm-2 form-control-label">Longitude</label>
-						<input type="text" class="form-control maxlength-simple"
-											id="serviceLongitude"
-											name="longitude" maxlength="30">
-					</div>
-				</div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-info" @click="populateAddressFields('create')" data-dismiss="modal"><i class="font-icon font-icon-map"></i>&nbsp;&nbsp;Populate Address Fields</button>
-	        <button type="button" class="btn btn-success" data-dismiss="modal"><i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;Set Location</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+
+	@include('services.locationPicker')
+
 @endsection

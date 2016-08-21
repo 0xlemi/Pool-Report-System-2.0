@@ -1,7 +1,7 @@
 <template>
     <div>
         <multiselect
-            :selected.sync="selected"
+            :selected="selected"
             :options="options"
             @update="updateSelected"
             :searchable="true",
@@ -10,7 +10,8 @@
             deselect-label="Can't remove this value"
             key="key"
             label="label"
-            placeholder="Select Country">
+            placeholder="Select Country"
+            >
 
         </multiselect>
     </div>
@@ -20,20 +21,22 @@
 import Multiselect from 'vue-multiselect'
 export default {
     components: { Multiselect },
+    props :[ 'country'],
     data () {
         return {
-          selected: null,
+          selected: (typeof this.country != 'undefined') ? countries.find(country => country.key === this.country) : null,
           options: countries
         }
     },
     methods: {
         updateSelected (newSelected) {
-          this.selected = newSelected
+          this.selected = newSelected;
+          this.$dispatch('countryChanged', newSelected);
         }
     },
     events: {
-        'changeSelected': function (selected) {
-          this.selected = selected;
+        changeSelected: function(countryKey){
+            this.selected = this.options.find(country => country.key === countryKey);
         }
     }
 }
