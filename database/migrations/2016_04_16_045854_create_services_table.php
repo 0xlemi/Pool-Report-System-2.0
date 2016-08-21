@@ -16,6 +16,8 @@ class CreateServicesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('name');
+            $table->decimal('latitude', 9, 6);
+            $table->decimal('longitude', 9, 6);
             $table->string('address_line');
             $table->string('city');
             $table->string('state');

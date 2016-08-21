@@ -42,6 +42,8 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
 	// dateTimeBetween('today', 'now');
 	return [
 		'name' => $faker->words($nb = 2, $asText = true),
+        'latitude' => number_format($faker->latitude(-90, 90),6,'.',''),
+        'longitude' => number_format($faker->longitude(-180, 180),6,'.',''),
 		'address_line' => $faker->streetAddress,
 		'city' => $faker->city,
         'state' => $faker->state,

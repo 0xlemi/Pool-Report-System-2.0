@@ -23,6 +23,8 @@ class Service extends Model
      */
     protected $fillable = [
         'name',
+        'latitude',
+        'longitude',
         'address_line',
         'city',
         'state',
