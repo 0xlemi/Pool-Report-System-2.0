@@ -129,11 +129,13 @@ class ServicesController extends PageController
     {
         $this->checkPermissions('show');
 
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
         JavaScript::put([
+            'showLatitude' => $service->latitude,
+            'showLongitude' => $service->longitude,
             'click_url' => url('clients').'/',
         ]);
-
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         $clients = $service->clients()->get();
 

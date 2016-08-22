@@ -137,6 +137,9 @@
 							</div>
 						</form>
 						<hr>
+						<h4>Map:</h4>
+						<div id='serviceMap' style="margin: auto;width: 90%; height: 400px;"></div>
+						<hr>
 						<div id="toolbar">
 							<h3><strong>List of Clients</strong></h3>
 						</div>

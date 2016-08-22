@@ -36,7 +36,6 @@
 							</div>
 
 							<div class="form-group row {{($errors->has('longitude') || $errors->has('latitude'))? 'form-group-error':''}}">
-
 								<div class="col-sm-2">Location:</div>
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-primary" data-toggle="modal"

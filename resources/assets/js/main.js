@@ -9,6 +9,8 @@ var countries       = require('./components/countries.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
+var Gmaps           = require("gmaps.core");
+require("gmaps.markers");
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -1435,6 +1437,23 @@ function isset(strVariableName) {
         }
 
     });
+
+
+/* ==========================================================================
+    GMaps
+    ========================================================================== */
+    if(isset('showLatitude') && isset('showLongitude')){
+        let map = new Gmaps({
+            el: '#serviceMap',
+            lat: back.showLatitude,
+            lng: back.showLongitude,
+        });
+
+        map.addMarker({
+            lat: back.showLatitude,
+            lng: back.showLongitude
+        });
+    }
 
 
 /* ==========================================================================
