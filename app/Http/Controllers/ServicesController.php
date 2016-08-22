@@ -154,6 +154,16 @@ class ServicesController extends PageController
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
+        JavaScript::put([
+            'latitude' => $service->latitude,
+            'longitude' => $service->longitude,
+            'addressLine' => $service->address_line,
+            'city' => $service->city,
+            'state' => $service->state,
+            'postalCode' => $service->postal_code,
+            'country' => $service->country,
+        ]);
+
         return view('services.edit',compact('service'));
     }
 

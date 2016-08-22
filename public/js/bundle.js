@@ -22349,8 +22349,8 @@ $(document).ready(function () {
 			serviceState: isset('state') ? back.state : '',
 			servicePostalCode: isset('postalCode') ? back.postalCode : '',
 			serviceCountry: isset('country') ? back.country : '',
-			serviceLatitude: isset('latitude') ? back.latitude : '',
-			serviceLongitude: isset('longitude') ? back.longitude : '',
+			serviceLatitude: isset('latitude') ? back.latitude : null,
+			serviceLongitude: isset('longitude') ? back.longitude : null,
 			statusSwitch: true
 		},
 		computed: {
