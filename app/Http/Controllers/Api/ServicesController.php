@@ -184,7 +184,7 @@ class ServicesController extends ApiController
                         'service_days' => $service_days,
                     ]
                 ));
-            
+
             $service->save();
 
             if($request->photo){
@@ -254,6 +254,8 @@ class ServicesController extends ApiController
     {
         return $this->validate($request, [
             'name' => 'required|string|max:20',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
             'address_line' => 'required|string|max:50',
             'city' => 'required|string|max:30',
             'state' => 'required|string|max:30',
@@ -281,6 +283,8 @@ class ServicesController extends ApiController
     {
         return $this->validate($request, [
             'name' => 'string|max:20',
+            'latitude' => 'numeric|between:-90,90',
+            'longitude' => 'numeric|between:-180,180',
             'address_line' => 'string|max:50',
             'city' => 'string|max:30',
             'state' => 'string|max:30',
