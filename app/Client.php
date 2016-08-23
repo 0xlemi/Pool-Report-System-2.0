@@ -39,6 +39,16 @@ class Client extends Model
 	];
 
 	/**
+	 * Get the admin
+	 * tested
+	 * @return Administartor
+	 */
+	public function admin()
+	{
+	    return Administrator::findOrFail($this->admin_id);
+	}
+
+	/**
 	 * Gets client morphed user
 	 * @return $User
 	 * tested
@@ -58,6 +68,7 @@ class Client extends Model
 
 	/**
 	 * Checks if client has service with this $seq_id
+	 * tested
 	 * @param  integer  $seq_id
 	 * @return boolean
 	 */
@@ -66,6 +77,11 @@ class Client extends Model
 		return $this->services()->get()->contains('seq_id', $seq_id);
 	}
 
+	/**
+	 * set services with an array of seq_ids
+	 * tested
+	 * @param array $seq_ids
+	 */
 	public function setServices(array $seq_ids)
 	{
 	    foreach ($seq_ids as $seq_id) {
@@ -76,10 +92,7 @@ class Client extends Model
 	    }
 	}
 
-	public function admin()
-	{
-	    return Administrator::findOrFail($this->admin_id);
-	}
+
 
 
 }
