@@ -42,6 +42,13 @@ trait ImageTrait{
 
 	 /**
      * Add a image to this client
+     * tested for
+     * Administrator: yes
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function addImage(Image $image){
         return $this->images()->save($image);
@@ -52,6 +59,13 @@ trait ImageTrait{
      * @param  int    $order
      * @return boolean
      * credits to pisio
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function deleteImage(int $order)
     {
@@ -64,6 +78,13 @@ trait ImageTrait{
 
     /**
      * associated images with this report
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function images(){
         return $this->hasMany('App\Image');
@@ -71,11 +92,28 @@ trait ImageTrait{
 
      /**
      * get the number of images this service has
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function numImages(){
         return $this->images()->count();
     }
 
+    /**
+     * Check if image with that order num exists
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
+     */
     public function imageExists($order = 1)
     {
         if($this->images()
@@ -88,6 +126,13 @@ trait ImageTrait{
 
     /**
      * get full size image
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function image($order = 1, $getUrl = true){
         $image = $this->images()
@@ -104,6 +149,13 @@ trait ImageTrait{
 
     /**
      * get full size image
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function normalImage($order = 1){
         $image = $this->images()
@@ -117,6 +169,13 @@ trait ImageTrait{
 
     /**
      * get thumbnail image
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function thumbnail(){
         if($this->numImages() > 0){
@@ -128,6 +187,13 @@ trait ImageTrait{
 
     /**
      * Get the extra small image
+     * tested for
+     * Administrator:
+     * Supervisor:
+     * Technician:
+     * Service:
+     * Client:
+     * Report:
      */
     public function icon(){
         if($this->numImages() > 0){

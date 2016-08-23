@@ -19,23 +19,27 @@ class CreateTriggersImage extends Migration
             BEGIN
               DECLARE msg VARCHAR(255);
               IF CASE
-                   WHEN NEW.technician_id IS NULL THEN 0 
-                   ELSE 1
-                 END + 
-                 CASE
-                   WHEN NEW.supervisor_id IS NULL THEN 0 
+                   WHEN NEW.admin_id IS NULL THEN 0 
                    ELSE 1
                  END +
                  CASE
-                   WHEN NEW.client_id IS NULL THEN 0 
+                   WHEN NEW.technician_id IS NULL THEN 0
                    ELSE 1
                  END +
                  CASE
-                   WHEN NEW.service_id IS NULL THEN 0 
+                   WHEN NEW.supervisor_id IS NULL THEN 0
                    ELSE 1
                  END +
                  CASE
-                   WHEN NEW.report_id IS NULL THEN 0 
+                   WHEN NEW.client_id IS NULL THEN 0
+                   ELSE 1
+                 END +
+                 CASE
+                   WHEN NEW.service_id IS NULL THEN 0
+                   ELSE 1
+                 END +
+                 CASE
+                   WHEN NEW.report_id IS NULL THEN 0
                    ELSE 1
                  END <> 1 THEN
                 set msg = concat('ImageSourceError: Just one Client/Technician/Supervisor/Service/Report must be filled');

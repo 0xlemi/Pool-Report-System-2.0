@@ -53,11 +53,13 @@ class Administrator extends Model
      */
     public function datesWithReport()
     {
+        $admin = $this;
         return $this->reports()
                     ->get()
                     ->pluck('completed')
-                    ->transform(function ($item) {
-                        return substr($item, 0 , 10);
+                    ->transform(function ($item) use ($admin){
+                        $date = (new Carbon($item, 'UTC'))->setTimezone($admin->timezone);
+                        return $date->toDateString();
                     })
                     ->unique()
                     ->flatten();
@@ -79,12 +81,12 @@ class Administrator extends Model
      */
     public function numberServicesDoToday()
     {
-        return $this->numberServicesDoIn(Carbon::today('UTC'));
+        return $this->numberServicesDoIn(Carbon::today($this->timezone));
     }
 
     /**
      * Total number of services that need to be done in a date
-     * @param  Carbon $date  in UTC
+     * @param  Carbon $date in Administrator set Timezone
      * @return  int
      */
     public function numberServicesDoIn(Carbon $date)
@@ -94,7 +96,7 @@ class Administrator extends Model
 
     /**
      * Number of services that are missing in a date
-     * @param  Carbon $date  in UTC
+     * @param  Carbon $date in Administrator set Timezone
      * @return  int
      */
     public function numberServicesMissing(Carbon $date)
@@ -109,21 +111,22 @@ class Administrator extends Model
      */
     public function servicesDoToday($AddCompletedReports = false)
     {
-        return $this->servicesDoIn(Carbon::today('UTC') , $AddCompletedReports);
+        return $this->servicesDoIn(Carbon::today($this->timezone) , $AddCompletedReports);
     }
 
     /**
      * get the services that need to be done in certain date
-     * @param  Carbon  $date in UTC
+     * tested
+     * @param  Carbon  $date in Administrator timezone
      * @param  boolean $AddCompletedReports   add or remove the services that where already done
      * @return Collection
      */
     public function servicesDoIn(Carbon $date, $AddCompletedReports = false)
     {
-        // check that the date is in UTC
-        if(!$date->utc){
-            $date = $date->setTimezone('UTC');
+        if($date->timezone != (new \DateTimeZone($this->timezone))){
+            $date = $date->setTimezone($this->timezone);
         }
+
         return $this->services()
             ->get()
             ->map(function($service) use ($date, $AddCompletedReports){
@@ -147,7 +150,8 @@ class Administrator extends Model
 
     /**
      * Get the reports in this date
-     * @param  Carbon $date
+     * tested
+     * @param  Carbon $date date is not in utc
      *
      */
     public function reportsByDate(Carbon $date){
@@ -275,6 +279,7 @@ class Administrator extends Model
     /**
      * Overwrite this from trait,
      * because foreign key is 'admin_id' not 'administrator_id'
+     * tested
      */
     public function images(){
         return $this->hasMany('App\Image', 'admin_id');

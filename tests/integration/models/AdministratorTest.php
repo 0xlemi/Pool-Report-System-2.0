@@ -7,6 +7,8 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Administrator;
 use App\User;
 
+use App\Image;
+
 use Carbon\Carbon;
 
 class AdministratorTest extends ModelTester
@@ -39,17 +41,17 @@ class AdministratorTest extends ModelTester
         $report1 = factory(App\Report::class)->create([
             'service_id' => $ser->id,
             'technician_id' => $tech->id,
-            'completed' => Carbon::tomorrow(),
+            'completed' => Carbon::tomorrow('UTC'),
         ]);
         $report2 = factory(App\Report::class)->create([
             'service_id' => $ser->id,
             'technician_id' => $tech->id,
-            'completed' => Carbon::today(),
+            'completed' => Carbon::today('UTC'),
         ]);
         $report3 = factory(App\Report::class)->create([
             'service_id' => $ser->id,
             'technician_id' => $tech->id,
-            'completed' => Carbon::yesterday(),
+            'completed' => Carbon::yesterday('UTC'),
         ]);
 
         // When
@@ -59,9 +61,9 @@ class AdministratorTest extends ModelTester
         $this->assertSameArray(
             $datesWithReport->toArray(),
             array(
-                Carbon::tomorrow()->toDateString(),
-                Carbon::today()->toDateString(),
-                Carbon::yesterday()->toDateString(),
+                Carbon::tomorrow('UTC')->setTimezone($admin->timezone)->toDateString(),
+                Carbon::today('UTC')->setTimezone($admin->timezone)->toDateString(),
+                Carbon::yesterday('UTC')->setTimezone($admin->timezone)->toDateString(),
             )
         );
 
@@ -132,7 +134,75 @@ class AdministratorTest extends ModelTester
     //     // Then
     //     $this->assertEquals($num, 2);
     //
+    // $reportMon = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last monday')),
+    //     ]);
+    //     $reportTue = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last tuesday')),
+    //     ]);
+    //     $reportWed = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last wednesday')),
+    //     ]);
+    //     $reportThu = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last thursday')),
+    //     ]);
+    //     $reportFri = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last friday')),
+    //     ]);
+    //     $reportSat = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last saturday')),
+    //     ]);
+    //     $reportSun = factory(App\Report::class)->create([
+    //         'service_id' => $ser->id,
+    //         'technician_id' => $tech->id,
+    //         'completed' => (new Carbon('last sunday')),
+    //     ]);
+    //
     // }
+
+    /** @test */
+    public function get_services_that_need_to_be_done_in_date()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+        $super = $this->createSupervisor($admin->id);
+        $tech = $this->createTechnician($super->id);
+        $ser1 = factory(App\Service::class)->create([
+            // 21 represtents: Monday, Wednesday, Friday
+            'service_days' => 21,
+            'admin_id' => $admin->id,
+        ]);
+        $ser2 = factory(App\Service::class)->create([
+            // 21 represtents: Monday, Tuesday
+            'service_days' => 3,
+            'admin_id' => $admin->id,
+        ]);
+
+        // When
+        $servicesMon = $admin->servicesDoIn(new Carbon('last monday', $admin->timezone));
+        $servicesWed = $admin->servicesDoIn(new Carbon('last wednesday', $admin->timezone));
+        $servicesSat = $admin->servicesDoIn(new Carbon('last saturday', $admin->timezone));
+
+        // Then
+        $this->assertSameObject($ser1, $servicesMon->shift());
+        $this->assertSameObject($ser2, $servicesMon->shift());
+        $this->assertSameObject($ser1, $servicesWed[0]);
+        $this->assertEmpty($servicesSat);
+
+    }
+
 
     /** @test */
     public function it_gets_reports_by_date()
@@ -147,21 +217,26 @@ class AdministratorTest extends ModelTester
         $report1 = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech1->id,
-            'completed' => Carbon::tomorrow(),
+            // tomorrow at 00:00 in UTC is today 6:00PM
+            // Report1 should be returnd as the report of the day.
+            'completed' => Carbon::tomorrow('UTC')->toDateTimeString(),
         ]);
         $report2 = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
-            'technician_id' => $tech1->id,
-            'completed' => Carbon::now(),
+            'technician_id' => $tech2->id,
+            // today at 00:00 in UTC was yesterday 6:00PM
+            // Report2 was really done yesterday if you take timezones into account.
+            'completed' => Carbon::today('UTC')->toDateTimeString(),
         ]);
 
         // When
-        $date = Carbon::today()->toDateString();
+        $date = Carbon::today($admin1->timezone);
         $reports = $admin1->reportsByDate($date)->get();
 
         // Then
         $this->assertEquals(1, sizeof($reports));
-        $this->assertSameObject($report2, $reports[0]);
+        $this->assertSameObject($report1, $reports[0]);
+
 
     }
 
@@ -394,6 +469,60 @@ class AdministratorTest extends ModelTester
         $this->assertSameObject($tech1, $tech_1);
         $this->assertSameObject($tech2, $tech_2);
         $this->assertSameObject($tech3, $tech_3);
+
+    }
+
+    /** @test */
+    public function it_adds_image()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+		$image1 = new Image;
+        $image1->normal_path = 'normal/image/path1';
+        $image1->thumbnail_path = 'thumbnail/image/path1';
+        $image1->icon_path = 'icon/image/path1';
+		$image2 = new Image;
+        $image2->normal_path = 'normal/image/path2';
+        $image2->thumbnail_path = 'thumbnail/image/path2';
+        $image2->icon_path = 'icon/image/path2';
+
+        // When
+        $admin->addImage($image1);
+        $admin->addImage($image2);
+
+        $images = $admin->hasMany('App\Image', 'admin_id')->get();
+
+        // Then
+        $this->assertEquals(2, sizeof($images));
+        $this->assertSameObject($image1, $images[0]);
+
+    }
+
+    /** @test */
+    public function it_gets_images()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $image1 = new Image;
+        $image1->normal_path = 'normal/image/path1';
+        $image1->thumbnail_path = 'thumbnail/image/path1';
+        $image1->icon_path = 'icon/image/path1';
+		$image2 = new Image;
+        $image2->normal_path = 'normal/image/path2';
+        $image2->thumbnail_path = 'thumbnail/image/path2';
+        $image2->icon_path = 'icon/image/path2';
+
+        $admin->addImage($image1);
+        $admin->addImage($image2);
+
+        // When
+        $images = $admin->images()->get();
+
+        // Then
+        $this->assertEquals(2, sizeof($images));
+        $this->assertSameObject($image1, $images[0]);
 
     }
 

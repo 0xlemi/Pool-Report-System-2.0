@@ -86,19 +86,19 @@ class Service extends Model
 
     /**
      * check if this service is scheduled for a date
-     * @param  Carbon $date in UTC
+     * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
     public function checkIfIsDo(Carbon $date)
     {
         $admin = $this->admin();
-        $dayToCheck = strtolower($date->setTimezone($admin->timezone)->format('l'));
+        $dayToCheck = strtolower($date->format('l'));
         return $this->service_days_by_day()[$dayToCheck];
     }
 
     /**
-     * check if there is a report for this service in a date
-     * @param  Carbon $date in UTC
+     * check if there is a report for this service already done in a date
+     * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
     public function checkIfIsDone(Carbon $date)
@@ -106,7 +106,7 @@ class Service extends Model
         $admin = $this->admin();
         $strDate = $date->toDateTimeString();
         $count = $this->reports()
-                ->where(\DB::raw('DATEDIFF(completed, "'.$strDate.'")'), '=', '0')
+                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$strDate.'")'), '=', '0')
                 ->count();
         if($count > 0){
             return true;
