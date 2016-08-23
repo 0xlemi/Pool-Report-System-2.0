@@ -45,10 +45,18 @@ class Report extends Model
     	return $this->belongsTo('App\Service')->first();
     }
 
+    /**
+     * associated clients with this report
+     * tested
+     */
     public function clients(){
         return $this->service()->clients();
     }
 
+    /**
+     * associated clients with this report
+     * tested
+     */
     public function admin()
     {
         return $this->service()->admin();

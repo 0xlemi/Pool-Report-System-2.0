@@ -32,6 +32,58 @@ class ReportTest extends ModelTester
     }
 
     /** @test */
+    public function it_gets_clients()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $ser = $this->createService($admin->id);
+
+        $client1 = $this->createClient(
+                $admin->id,
+                [ $ser->id ]
+        );
+
+        $client2 = $this->createClient(
+                $admin->id,
+                [ $ser->id ]
+        );
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech= $this->createTechnician($sup->id);
+
+        $report = $this->createReport($ser->id, $tech->id);
+
+        // When
+        $clients = $report->clients()->get();
+
+        // Then
+        $this->assertSameObject($client1, $clients->shift(), true);
+        $this->assertSameObject($client2, $clients->shift(), true);
+
+    }
+
+    /** @test */
+    public function it_gets_admin()
+    {
+        $admin = $this->createAdministrator();
+
+        $ser = $this->createService($admin->id);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech= $this->createTechnician($sup->id);
+
+        $report = $this->createReport($ser->id, $tech->id);
+
+        // When
+        // Then
+        $this->assertSameObject($admin, $report->admin());
+
+    }
+
+    /** @test */
     public function it_gets_technician()
     {
         // Given

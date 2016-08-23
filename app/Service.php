@@ -86,6 +86,7 @@ class Service extends Model
 
     /**
      * check if this service is scheduled for a date
+     * tested
      * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
@@ -97,7 +98,8 @@ class Service extends Model
     }
 
     /**
-     * check if there is a report for this service already done in a date
+     * check if there is a single report for this service already done in a date
+     * tested
      * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
@@ -106,7 +108,7 @@ class Service extends Model
         $admin = $this->admin();
         $strDate = $date->toDateTimeString();
         $count = $this->reports()
-                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$strDate.'")'), '=', '0')
+                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$admin->timezone.'\'), "'.$strDate.'")'), '=', '0')
                 ->count();
         if($count > 0){
             return true;

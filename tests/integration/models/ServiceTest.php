@@ -5,6 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Image;
+use Carbon\Carbon;
 
 class ServiceTest extends ModelTester
 {
@@ -132,6 +133,71 @@ class ServiceTest extends ModelTester
                     array_map('json_encode', $service_days_2),
                     true
                 );
+
+    }
+
+    /** @test */
+    public function if_is_scheduled_for_date()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $service1 = factory(App\Service::class)->create([
+            'admin_id' => $admin->id,
+            // 42 is tuesday, thursday, saturday
+            'service_days' => 42,
+        ]);
+        $service2 = factory(App\Service::class)->create([
+            'admin_id' => $admin->id,
+            // 89 is monday, thursday, friday, sunday
+            'service_days' => 89,
+        ]);
+
+        // When
+        // Then
+        $this->assertTrue($service1->checkIfIsDo(new Carbon('last saturday', $admin->timezone)));
+        $this->assertTrue($service1->checkIfIsDo(new Carbon('last tuesday', $admin->timezone)));
+        $this->assertFalse($service1->checkIfIsDo(new Carbon('last sunday', $admin->timezone)));
+        $this->assertTrue($service2->checkIfIsDo(new Carbon('last friday', $admin->timezone)));
+        $this->assertTrue($service2->checkIfIsDo(new Carbon('last sunday', $admin->timezone)));
+        $this->assertFalse($service2->checkIfIsDo(new Carbon('last tuesday', $admin->timezone)));
+
+    }
+
+    /** @test */
+    public function if_a_report_was_done_for_this_service_in_this_date()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $service = $this->createService($admin->id);
+
+        $sup = $this->createSupervisor($admin->id);
+
+        $tech = $this->createTechnician($sup->id);
+
+        $report1 = factory(App\Report::class)->create([
+            'service_id' => $service->id,
+            'technician_id' => $tech->id,
+            'completed' => (new Carbon('last saturday', $admin->timezone))->setTimezone('UTC')->toDateTimeString(),
+        ]);
+        $report2 = factory(App\Report::class)->create([
+            'service_id' => $service->id,
+            'technician_id' => $tech->id,
+            'completed' => (new Carbon('last tuesday', $admin->timezone))->setTimezone('UTC')->toDateTimeString(),
+        ]);
+        $report3 = factory(App\Report::class)->create([
+            'service_id' => $service->id,
+            'technician_id' => $tech->id,
+            'completed' => (new Carbon('last sunday', $admin->timezone))->setTimezone('UTC')->toDateTimeString(),
+        ]);
+
+        // When
+        // Then
+        $this->assertTrue($service->checkIfIsDone(new Carbon('last saturday', $admin->timezone)));
+        $this->assertTrue($service->checkIfIsDone(new Carbon('last tuesday', $admin->timezone)));
+        $this->assertTrue($service->checkIfIsDone(new Carbon('last sunday', $admin->timezone)));
+        $this->assertFalse($service->checkIfIsDone(new Carbon('last monday', $admin->timezone)));
 
     }
 
