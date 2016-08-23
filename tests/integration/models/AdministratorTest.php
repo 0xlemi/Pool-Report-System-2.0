@@ -103,74 +103,6 @@ class AdministratorTest extends ModelTester
         $this->assertSameObject($report3, $reports[2]);
     }
 
-    // /** @test */
-    // public function number_of_services_to_do_today()
-    // {
-    //     // Given
-    //     $admin = $this->createAdministrator();
-    //     $super = $this->createSupervisor($admin->id);
-    //     $tech = $this->createTechnician($super->id);
-    //     $ser = $this->createService($admin->id);
-    //     $report1 = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => Carbon::today(),
-    //     ]);
-    //     $report2 = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => Carbon::today(),
-    //     ]);
-    //     $report3 = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => Carbon::today(),
-    //     ]);
-    //
-    //     // When
-    //     $num = $admin->numberServicesDoToday();
-    //     dd($num);
-    //
-    //     // Then
-    //     $this->assertEquals($num, 2);
-    //
-    // $reportMon = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last monday')),
-    //     ]);
-    //     $reportTue = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last tuesday')),
-    //     ]);
-    //     $reportWed = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last wednesday')),
-    //     ]);
-    //     $reportThu = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last thursday')),
-    //     ]);
-    //     $reportFri = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last friday')),
-    //     ]);
-    //     $reportSat = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last saturday')),
-    //     ]);
-    //     $reportSun = factory(App\Report::class)->create([
-    //         'service_id' => $ser->id,
-    //         'technician_id' => $tech->id,
-    //         'completed' => (new Carbon('last sunday')),
-    //     ]);
-    //
-    // }
 
     /** @test */
     public function get_services_that_need_to_be_done_in_date()
@@ -208,30 +140,25 @@ class AdministratorTest extends ModelTester
     public function it_gets_reports_by_date()
     {
         // Given
-        $admin1 = $this->createAdministrator();
-        $admin2 = $this->createAdministrator();
-        $super1 = $this->createSupervisor($admin1->id);
+        $admin = $this->createAdministrator();
+        $super1 = $this->createSupervisor($admin->id);
         $tech1 = $this->createTechnician($super1->id);
         $tech2 = $this->createTechnician($super1->id);
-        $ser1 = $this->createService($admin1->id);
+        $ser1 = $this->createService($admin->id);
         $report1 = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech1->id,
-            // tomorrow at 00:00 in UTC is today 6:00PM
-            // Report1 should be returnd as the report of the day.
-            'completed' => Carbon::tomorrow('UTC')->toDateTimeString(),
+            'completed' => Carbon::tomorrow($admin->timezone),
         ]);
         $report2 = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech2->id,
-            // today at 00:00 in UTC was yesterday 6:00PM
-            // Report2 was really done yesterday if you take timezones into account.
-            'completed' => Carbon::today('UTC')->toDateTimeString(),
+            'completed' => Carbon::today($admin->timezone),
         ]);
 
         // When
-        $date = Carbon::today($admin1->timezone);
-        $reports = $admin1->reportsByDate($date)->get();
+        $date = Carbon::today($admin->timezone);
+        $reports = $admin->reportsByDate($date)->get();
 
         // Then
         $this->assertEquals(1, sizeof($reports));

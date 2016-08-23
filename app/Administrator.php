@@ -151,7 +151,7 @@ class Administrator extends Model
     /**
      * Get the reports in this date
      * tested
-     * @param  Carbon $date date is not in utc
+     * @param  Carbon $date date is Administrator timzone
      *
      */
     public function reportsByDate(Carbon $date){
