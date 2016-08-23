@@ -63,9 +63,8 @@ public function it_can_show_list_clients()
                             'end_time',
                             'status',
                             'comments',
-                            'icon_photo',
-                            'thumbnail_photo',
-                            'normal_photo',
+                            'photo',
+
                         ]
                     ]
                  ]
@@ -147,8 +146,10 @@ public function it_can_store_clients()
             'cellphone' => '123456789',
             'type' => 'Owner',
             'language' => 'en',
+            'getReportsEmails' => 0,
             'comments' => 'This are the comments',
             'email' => 'clients123@example.com',
+            'photo' => 'no image',
             'services' => [
                 $serviceTransformer->transform($service1),
                 $serviceTransformer->transform($service2),

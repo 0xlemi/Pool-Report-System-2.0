@@ -82,7 +82,7 @@ class ClientsController extends ApiController
             $service_ids = $this->getAddServicesIds($request->service_ids, $admin);
             $client = Client::create(
                     array_merge(
-                        array_map('htmlentities', $request->all()),
+                        array_map('htmlentities', $request->except('service_ids')),
                         [
                             'admin_id' => $admin->id,
                         ]
@@ -181,8 +181,8 @@ class ClientsController extends ApiController
         $transaction = DB::transaction(function () use($request, $client, $add_service_ids, $remove_service_ids) {
 
             // set client values
-            $client->fill(array_map('htmlentities', $request->except('admin_id')));
-            
+            $client->fill(array_map('htmlentities', $request->except('admin_id','add_service_ids', 'remove_service_ids')));
+
             if(isset($request->getReportsEmails)){ $client->get_reports_emails = $request->getReportsEmails; }
 
             // set user values
