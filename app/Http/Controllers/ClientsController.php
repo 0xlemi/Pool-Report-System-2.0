@@ -157,22 +157,22 @@ class ClientsController extends PageController
 
         $user->email = htmlentities($request->email);
 
-        $client->fill(array_map('htmlentities', $request->except('admin_id')));
+        $client->fill(array_map('htmlentities', $request->except(['admin_id', 'services'])));
 
         $client->setServices($request->services);
 
-        $photo = true;
+        $photo = false;
         if($request->photo){
             $client->images()->delete();
             $photo = $client->addImageFromForm($request->file('photo'));
         }
 
-        if($user->save() && $client->save() && $photo){
-            flash()->success('Updated', 'New client successfully updated.');
-            return redirect('clients/'.$seq_id);
+        if(!$user->save() && !$client->save() && !$photo){
+            flash()->overlay("You did not change anything", 'You did not make changes in client information.', 'info');
+            return redirect()->back();
         }
-        flash()->error('Not Updated', 'Client was not updated, please try again later.');
-        return redirect()->back();
+        flash()->success('Updated', 'Client successfully updated.');
+        return redirect('clients/'.$seq_id);
 
     }
 

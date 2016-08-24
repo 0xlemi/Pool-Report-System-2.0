@@ -144,18 +144,18 @@ class SupervisorsController extends PageController
 
         $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
 
-        $photo = true;
+        $photo = false;
         if($request->photo){
             $supervisor->images()->delete();
             $photo = $supervisor->addImageFromForm($request->file('photo'));
         }
 
-        if($user->save() && $supervisor->save() && $photo){
-            flash()->success('Updated', 'New supervisor successfully updated.');
-            return redirect('supervisors/'.$seq_id);
+        if(!$user->save() && !$supervisor->save() && !$photo){
+            flash()->overlay("You did not change anything", 'You did not make changes in supervisor information.', 'info');
+            return redirect()->back();
         }
-        flash()->error('Not Updated', 'Supervisor was not updated, please try again later.');
-        return redirect()->back();
+        flash()->success('Updated', 'Supervisor successfully updated.');
+        return redirect('supervisors/'.$seq_id);
     }
 
     /**

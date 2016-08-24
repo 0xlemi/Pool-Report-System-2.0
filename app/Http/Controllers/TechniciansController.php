@@ -146,8 +146,6 @@ class TechniciansController extends PageController
         $user = $technician->user();
 
         $user->email = htmlentities($request->username);
-        $user->password = bcrypt($request->password);
-
 
 
         $technician->fill(array_merge(
@@ -155,18 +153,18 @@ class TechniciansController extends PageController
                                 [ 'supervisor_id' => $supervisor->id ]
                             ));
 
-        $photo = true;
+        $photo = false;
         if($request->photo){
             $technician->images()->delete();
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
 
-        if($user->save() && $technician->save() && $photo){
-            flash()->success('Updated', 'New technician successfully updated.');
-            return redirect('technicians/'.$seq_id);
+        if(!$user->save() && !$technician->save() && !$photo){
+            flash()->overlay("You did not change anything", 'You did not make changes in technician information.', 'info');
+            return redirect()->back();
         }
-        flash()->error('Not Updated', 'Technician was not updated, please try again later.');
-        return redirect()->back();
+        flash()->success('Updated', 'Technician successfully updated.');
+        return redirect('technicians/'.$seq_id);
     }
 
     /**
