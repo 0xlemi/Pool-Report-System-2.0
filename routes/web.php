@@ -1,20 +1,25 @@
 <?php
 
-
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
+| This file is where you may define all of the routes that are handled
+| by your application. Just tell Laravel the URIs it should respond
+| to using a Closure or controller method. Build something great!
 |
 */
 
+Auth::routes();
+
 Route::get('/', 'HomeController@index');
 
+// not sure about this one
 Route::auth();
+
+// remove this eventually
+Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
@@ -44,26 +49,3 @@ Route::get('datatables/services', 'DataTableController@services');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');
-
-Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'throttle:10'] ], function (){
-	Route::post('login', 'Api\UserController@login');
-	Route::post('signUp', 'Api\AdministratorsController@store');
-});
-
-Route::group(['prefix' => 'api/v1', 'middleware' => ['api', 'auth:api'] ], function(){
-	Route::get('todaysRoute', 'Api\UserController@todaysRoute');
-	Route::post('resetToken', 'Api\UserController@resetToken');
-	Route::get('account', 'Api\UserController@show');
-	Route::post('account', 'Api\UserController@update');
-
-	Route::post('permissions', 'Api\AdministratorsController@permissions');
-
-	Route::resource('services', 'Api\ServicesController');
-	Route::resource('supervisors', 'Api\SupervisorsController');
-	Route::resource('technicians', 'Api\TechniciansController');
-	Route::resource('clients', 'Api\ClientsController');
-	Route::resource('reports', 'Api\ReportsController');
-});
-
-
-// Route::get('/home', 'HomeController@index');

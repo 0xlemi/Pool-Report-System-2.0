@@ -54,7 +54,7 @@ class SeederHelpers
      * @return integer        id of the random row
      */
     public function get_random_id($table){
-    	$table_ids = DB::table($table)->select('id')->get();
+    	$table_ids = DB::table($table)->select('id')->get()->all();
         return $this->faker->randomElement($table_ids)->id;
     }
 
@@ -64,13 +64,13 @@ class SeederHelpers
      * @return integer            id of the random service
      */
     public function get_random_service($admin_id){
-    	$table_ids = DB::table('services')->select('id')->where('admin_id', '=', $admin_id)->get();
+    	$table_ids = DB::table('services')->select('id')->where('admin_id', '=', $admin_id)->get()->all();
         return $this->faker->randomElement($table_ids)->id;
     }
 
     public function get_random_supervisor($admin_id)
     {
-        $table_ids = DB::table('supervisors')->select('id')->where('admin_id', '=', $admin_id)->get();
+        $table_ids = DB::table('supervisors')->select('id')->where('admin_id', '=', $admin_id)->get()->all();
         return $this->faker->randomElement($table_ids)->id;
     }
 
@@ -80,7 +80,7 @@ class SeederHelpers
         $table_ids = DB::table('technicians')
                         ->select('id')
                         ->where('supervisor_id', '=', $supervisor_id)
-                        ->get();
+                        ->get()->all();
         $this->faker->randomElement($table_ids)->id;
     }
 

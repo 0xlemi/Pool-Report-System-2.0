@@ -8,7 +8,6 @@ use Response;
 use Validator;
 use Carbon\Carbon;
 
-use Yajra\Datatables\Facades\Datatables;
 
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\ServiceHelpers;

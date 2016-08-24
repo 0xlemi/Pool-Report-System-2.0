@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 
@@ -10,6 +11,9 @@ use Hash;
 
 class User extends Authenticatable
 {
+
+    use Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *

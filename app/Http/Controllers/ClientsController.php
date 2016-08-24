@@ -91,11 +91,6 @@ class ClientsController extends PageController
             'api_token' => str_random(60),
         ]);
 
-        // DB::table('client_service')->insert([
-        //         'client_id' => $client_id,
-        //         'service_id' => $service_id,
-        //     ]);
-
         $photo = true;
         if($request->photo){
             $photo = $client->addImageFromForm($request->file('photo'));
