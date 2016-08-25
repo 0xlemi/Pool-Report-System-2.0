@@ -21036,7 +21036,15 @@ var _vueMultiselect = require('vue-multiselect');
 
 var _vueMultiselect2 = _interopRequireDefault(_vueMultiselect);
 
+var _basicNameIconOptionPartial = require('./partials/basicNameIconOptionPartial.html');
+
+var _basicNameIconOptionPartial2 = _interopRequireDefault(_basicNameIconOptionPartial);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Vue = require('vue');
+
+Vue.partial('basicNameIconOptionPartial', _basicNameIconOptionPartial2.default);
 
 exports.default = {
     components: { Multiselect: _vueMultiselect2.default },
@@ -21048,6 +21056,12 @@ exports.default = {
     },
 
     methods: {
+        styleLabel: function styleLabel(_ref) {
+            var key = _ref.key;
+            var label = _ref.label;
+
+            return key + ' ' + label;
+        },
         updateSelected: function updateSelected(newSelected) {
             this.selected = newSelected;
             this.key = newSelected.key;
@@ -21063,7 +21077,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Choose a option\">\n\n    </multiselect>\n</div>\n<input type=\"hidden\" name=\"{{name}}\" value=\"{{key}}\">\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" :close-on-select=\"true\" :allow-empty=\"false\" :custom-label=\"styleLabel\" option-partial=\"basicNameIconOptionPartial\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\">\n    </multiselect>\n</div>\n<input type=\"hidden\" name=\"{{name}}\" value=\"{{key}}\">\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -21074,7 +21088,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":121,"vue-hot-reload-api":95,"vue-multiselect":96}],131:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":132,"vue":121,"vue-hot-reload-api":95,"vue-multiselect":96}],131:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21107,6 +21121,8 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":121,"vue-hot-reload-api":95,"vueify/lib/insert-css":122}],132:[function(require,module,exports){
+module.exports = '<span>\n    <img class="iconOption" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOption {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
+},{}],133:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21190,7 +21206,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":121,"vue-hot-reload-api":95}],133:[function(require,module,exports){
+},{"vue":121,"vue-hot-reload-api":95}],134:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -22680,6 +22696,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./directives/FormToAjax.vue":132,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,133]);
+},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./directives/FormToAjax.vue":133,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,134]);
 
 //# sourceMappingURL=bundle.js.map

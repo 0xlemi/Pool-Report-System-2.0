@@ -59,7 +59,8 @@ class TechniciansController extends PageController
                         ->transform(function($item){
                             return (object) array(
                                 'key' => $item->seq_id,
-                                'label' => $item->name.' '.$item->name,
+                                'label' => $item->name.' '.$item->last_name,
+                                'icon' => url($item->icon()),
                             );
                         });
 

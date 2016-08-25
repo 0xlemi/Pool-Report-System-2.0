@@ -74,17 +74,13 @@
 						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Supervisor</label>
 							<div class="col-sm-10">
-								<dropdown :key.sync="dropdownKey" :options="{{ $supervisors }}" :name="'supervisor'"></dropdown>
+								<dropdown :key.sync="dropdownKey"
+											:options="{{ $supervisors }}"
+											:name="'supervisor'">
+								</dropdown>
 								@if ($errors->has('supervisor'))
 									<small class="text-muted">{{ $errors->first('supervisor') }}</small>
 								@endif
-							</div>
-						</div>
-
-						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Supervisor</label>
-							<div class="col-sm-10">
-								<button type="button" class="btn btn-primary" @click="changeKey(2)">hello</button>	
 							</div>
 						</div>
 
