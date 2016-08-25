@@ -2,25 +2,22 @@
 
 namespace App\PRS\Helpers;
 
-use App\PRS\Traits\HelperTrait;
 use Illuminate\Support\Collection;
 
 /**
- * Helpers for supervisor elements
+ * Helpers for technician elements
  */
-class SupervisorHelpers
+class TechnicianHelpers
 {
-    use HelperTrait;
-
 
     /**
-     * Transform collection of supervisors to generate dropdown options
-     * @param  Collection $supervisors
+     * Transform collection of technician to generate dropdown options
+     * @param  Collection $technician
      * @return Collection
      */
-    public function transformForDropdown(Collection $supervisors)
+    public function transformForDropdown(Collection $technician)
     {
-        return $supervisors
+        return $technician
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,

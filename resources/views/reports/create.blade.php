@@ -42,20 +42,10 @@
 							<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" name="service" data-live-search="true">
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #000;">
-																</span>&nbsp;&nbsp;Choose a service'
-																value="0" >Choose a service
-										</option>
-										@foreach($services as $service)
-											<option data-content='<span class="user-item"><img src="{{ url($service->icon()) }}"/>
-														{{ $service->seq_id.' '.$service->name.' '.$service->last_name}}
-														</span>' value="{{ $service->seq_id }}"
-														{{ (old('service') == $service->seq_id) ? 'selected':'' }}>
-														{{ $service->name.' '.$service->last_name }}</option>
-										@endforeach
-									</select>
+									<dropdown :key.sync="dropdownKey"
+												:options="{{ $services }}"
+												:name="'service'">
+									</dropdown>
 									@if ($errors->has('service'))
 										<small class="text-muted">{{ $errors->first('service') }}</small>
 									@endif
@@ -64,21 +54,10 @@
 							<div class="form-group row {{($errors->has('technician'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" name="technician" data-live-search="true">
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #000;">
-																</span>&nbsp;&nbsp;Choose a technician'
-																value="0" >Choose a technician
-										</option>
-										@foreach($technicians as $technician)
-											<option data-content='<span class="user-item">
-														<img src="{{ url($technician->icon()) }}"/>
-														{{ $technician->seq_id.' '.$technician->name.' '.$technician->last_name}}
-														</span>' value="{{ $technician->seq_id }}"
-														{{ (old('technician') == $technician->seq_id) ? 'selected':'' }}>
-														{{ $technician->name.' '.$technician->last_name }}</option>
-										@endforeach
-									</select>
+									<dropdown :key.sync="dropdownKey2"
+												:options="{{ $technicians }}"
+												:name="'technician'">
+									</dropdown>
 									@if ($errors->has('technician'))
 										<small class="text-muted">{{ $errors->first('technician') }}</small>
 									@endif

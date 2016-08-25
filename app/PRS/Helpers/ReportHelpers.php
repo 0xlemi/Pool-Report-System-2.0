@@ -29,13 +29,13 @@ class ReportHelpers
         $carbon_end = new Carbon( $completed_date_string.' '.$end_time, $admin->timezone);
 
         $on_time = 0;
-        if($carbon_time->between($carbon_start, $carbon_end)){
+        if($completed_date->between($carbon_start, $carbon_end)){
             // onTime
             $on_time = 1;
-        }elseif($carbon_time->gt($carbon_start)){
+        }elseif($completed_date->gt($carbon_start)){
             // late
             $on_time = 2;
-        }elseif($carbon_time->lt($carbon_end)){
+        }elseif($completed_date->lt($carbon_end)){
             // early
             $on_time = 3;
         }

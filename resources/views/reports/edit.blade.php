@@ -42,30 +42,19 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" name="service" data-live-search="true">
-										@foreach($services as $service)
-											<option data-content='<span class="user-item"><img src="{{ url($service->icon()) }}"/>
-														{{ $service->seq_id.' '.$service->name.' '.$service->last_name}}
-														</span>' {{ ($report->service()->id == $service->id) ? 'selected':''}}
-														value="{{ $service->seq_id }}">
-														{{ $service->name.' '.$service->last_name }}</option>
-										@endforeach
-									</select>
+									<dropdown :key.sync="dropdownKey"
+												:options="{{ $services }}"
+												:name="'service'">
+									</dropdown>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" name="technician" data-live-search="true">
-										@foreach($technicians as $technician)
-											<option data-content='<span class="user-item">
-														<img src="{{ url($technician->icon()) }}"/>
-														{{ $technician->seq_id.' '.$technician->name.' '.$technician->last_name}}
-													</span>' {{ ($report->technician()->id == $technician->id) ? 'selected':''}}
-														value="{{ $technician->seq_id }}">
-														{{ $technician->name.' '.$technician->last_name }}</option>
-										@endforeach
-									</select>
+									<dropdown :key.sync="dropdownKey2"
+												:options="{{ $technicians }}"
+												:name="'technician'">
+									</dropdown>
 								</div>
 							</div>
 							<div class="form-group row">

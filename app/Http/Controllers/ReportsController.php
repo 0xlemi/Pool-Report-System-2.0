@@ -14,6 +14,9 @@ use JavaScript;
 use Response;
 use Auth;
 use App\PRS\Helpers\ReportHelpers;
+use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Helpers\TechnicianHelpers;
+use App\Service;
 class ReportsController extends PageController
 {
     protected $reportHelpers;
@@ -23,10 +26,14 @@ class ReportsController extends PageController
      *
      * @return void
      */
-    public function __construct(ReportHelpers $reportHelpers)
+    public function __construct(ReportHelpers $reportHelpers,
+                                ServiceHelpers $serviceHelpers,
+                                TechnicianHelpers $technicianHelpers)
     {
         $this->middleware('auth');
         $this->reportHelpers = $reportHelpers;
+        $this->serviceHelpers = $serviceHelpers;
+        $this->technicianHelpers = $technicianHelpers;
     }
 
     /**
@@ -77,12 +84,19 @@ class ReportsController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->checkPermissions('create');
 
-        $services = $this->loggedUserAdministrator()->services()->get();
-        $technicians = $this->loggedUserAdministrator()->technicians()->get();
+        $admin = $this->loggedUserAdministrator();
+
+        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $technicians = $this->serviceHelpers->transformForDropdown($admin->technicians()->get());
+
+        JavaScript::put([
+            'dropdownKey' => $request->old('service'),
+            'dropdownKey2' => $request->old('technician'),
+        ]);
 
         return view('reports.create', compact('services', 'technicians'));
     }
@@ -103,8 +117,6 @@ class ReportsController extends PageController
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
-
-        $carbon_time = new Carbon($completed_date, $admin->timezone);
         $on_time = $this->reportHelpers->checkOnTime(
 // ****** check the timezoen for check on time
                 $completed_at,
@@ -192,14 +204,16 @@ class ReportsController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
-        $services = $this->loggedUserAdministrator()->services()->get();
-        $technicians = $this->loggedUserAdministrator()->technicians()->get();
+        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $technicians = $this->serviceHelpers->transformForDropdown($admin->technicians()->get());
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'default_date' => $date,
+            'dropdownKey' => $report->service()->seq_id,
+            'dropdownKey2' => $report->technician()->seq_id,
         ]);
         return view('reports.edit', compact('report', 'services', 'technicians'));
     }

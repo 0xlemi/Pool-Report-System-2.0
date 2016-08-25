@@ -55,7 +55,7 @@ class TechniciansController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->checkPermissions('create');
 
@@ -64,6 +64,9 @@ class TechniciansController extends PageController
                     ->supervisors()
                     ->get()
                 );
+        JavaScript::put([
+            'dropdownKey' => $request->old('supervisor'),
+        ]);
 
         return view('technicians.create', compact('supervisors'));
     }

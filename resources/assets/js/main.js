@@ -1343,7 +1343,8 @@ function isset(strVariableName) {
                 serviceLongitude: (isset('longitude')) ? back.longitude : null,
                 statusSwitch: true,
             // Generic
-            dropdownKey: (isset('dropdownKey')) ? back.dropdownKey : 0,
+                dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
+                dropdownKey2: (isset('dropdownKey2')) ? Number(back.dropdownKey2) : 0,
         },
         computed: {
                 missingServicesTag: function () {

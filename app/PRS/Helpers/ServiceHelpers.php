@@ -1,6 +1,7 @@
 <?php
 
 namespace App\PRS\Helpers;
+use Illuminate\Support\Collection;
 
 /**
  * Helpers for service elements
@@ -254,6 +255,23 @@ class ServiceHelpers
     		'ZM' => 'Zambia',
     		'ZW' => 'Zimbabwe',
     	);
+
+    /**
+     * Transform collection of services to generate dropdown options
+     * @param  Collection $services
+     * @return Collection
+     */
+    public function transformForDropdown(Collection $services)
+    {
+        return $services
+            ->transform(function($item){
+                return (object) array(
+                    'key' => $item->seq_id,
+                    'label' => $item->name,
+                    'icon' => url($item->icon()),
+                );
+            });
+    }
 
     /**
      * Get the binary number between 0,127 that represents de days of the week
