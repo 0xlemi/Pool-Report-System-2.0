@@ -21050,8 +21050,12 @@ exports.default = {
     components: { Multiselect: _vueMultiselect2.default },
     props: ['key', 'options', 'name'],
     data: function data() {
+        var _this = this;
+
         return {
-            selected: null
+            selected: this.options.find(function (options) {
+                return options.key === _this.key;
+            })
         };
     },
 
@@ -22420,7 +22424,7 @@ $(document).ready(function () {
 			serviceLongitude: isset('longitude') ? back.longitude : null,
 			statusSwitch: true,
 			// Generic
-			dropdownKey: 0
+			dropdownKey: isset('dropdownKey') ? back.dropdownKey : 0
 		},
 		computed: {
 			missingServicesTag: function missingServicesTag() {

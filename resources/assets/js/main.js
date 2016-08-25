@@ -1343,7 +1343,7 @@ function isset(strVariableName) {
                 serviceLongitude: (isset('longitude')) ? back.longitude : null,
                 statusSwitch: true,
             // Generic
-            dropdownKey: 0,
+            dropdownKey: (isset('dropdownKey')) ? back.dropdownKey : 0,
         },
         computed: {
                 missingServicesTag: function () {
@@ -1379,7 +1379,7 @@ function isset(strVariableName) {
         },
         methods:{
             changeKey(num){
-                this.dropdownKey = num;    
+                this.dropdownKey = num;
             },
             populateAddressFields(page){
 

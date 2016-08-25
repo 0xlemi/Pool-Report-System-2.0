@@ -29,7 +29,7 @@ export default {
     props :[ 'key', 'options', 'name'],
     data () {
         return {
-            selected: null,
+            selected: this.options.find(options => options.key === this.key),
         }
     },
     methods: {

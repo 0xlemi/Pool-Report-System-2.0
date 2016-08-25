@@ -77,16 +77,10 @@
 							<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Supervisor</label>
 								<div class="col-sm-10">
-									<select class="bootstrap-select bootstrap-select-arrow" name="supervisor" data-live-search="true">
-										@foreach($supervisors as $supervisor)
-											<option data-content='<span class="user-item">
-															<img src="{{ url($supervisor->icon()) }}"/>
-															{{ $supervisor->seq_id.' '.$supervisor->name.' '.$supervisor->last_name}}
-															</span>' value="{{ $supervisor->seq_id }}"
-															{{ ($technician->supervisor()->seq_id == $supervisor->seq_id) ? 'selected':'' }}>
-															{{ $supervisor->name.' '.$supervisor->last_name }}</option>
-										@endforeach
-									</select>
+										<dropdown :key.sync="dropdownKey"
+											:options="{{ $supervisors }}"
+											:name="'supervisor'">
+										</dropdown>
 									@if ($errors->has('supervisor'))
 										<small class="text-muted">{{ $errors->first('supervisor') }}</small>
 									@endif

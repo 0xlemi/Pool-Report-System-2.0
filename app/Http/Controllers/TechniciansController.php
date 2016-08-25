@@ -8,22 +8,28 @@ use Auth;
 use JavaScript;
 
 use App\Technician;
+use App\Supervisor;
 use App\User;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateTechnicianRequest;
 use App\Http\Controllers\PageController;
+use App\PRS\Helpers\SupervisorHelpers;
 
 class TechniciansController extends PageController
 {
+
+    private $supervisorHelpers;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(SupervisorHelpers $supervisorHelpers)
     {
         $this->middleware('auth');
+        $this->supervisorHelpers = $supervisorHelpers;
     }
 
     /**
@@ -53,17 +59,11 @@ class TechniciansController extends PageController
     {
         $this->checkPermissions('create');
 
-        $supervisors = $this->loggedUserAdministrator()
-                        ->supervisors()
-                        ->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                'key' => $item->seq_id,
-                                'label' => $item->name.' '.$item->last_name,
-                                'icon' => url($item->icon()),
-                            );
-                        });
-
+        $supervisors = $this->supervisorHelpers->transformForDropdown(
+                    $this->loggedUserAdministrator()
+                    ->supervisors()
+                    ->get()
+                );
 
         return view('technicians.create', compact('supervisors'));
     }
@@ -133,8 +133,14 @@ class TechniciansController extends PageController
     {
         $this->checkPermissions('edit');
 
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
-        $supervisors = $this->loggedUserAdministrator()->supervisors()->get();
+        $admin = $this->loggedUserAdministrator();
+
+        $technician = $admin->technicianBySeqId($seq_id);
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+        $supervisorSelected = Supervisor::find($technician->supervisor_id);
+        JavaScript::put([
+            'dropdownKey' => $supervisorSelected->seq_id,
+        ]);
 
         return view('technicians.edit', compact('technician','supervisors'));
     }
