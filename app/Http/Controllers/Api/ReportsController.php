@@ -86,10 +86,12 @@ class ReportsController extends ApiController
             return $this->setStatusCode(422)->RespondWithError('The date is invalid');
         }
 
+        $admin = $this->loggedUserAdministrator();
+
         $date = (new Carbon($date_str, $admin->timezone))->setTimezone('UTC');
 
         // Needs pagination
-        $reports = $this->loggedUserAdministrator()->reportsByDate($date)->get();
+        $reports = $admin->reportsByDate($date)->get();
 
         return $this->respond([
             'data' => $this->reportTransformer->transformCollection($reports),

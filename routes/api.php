@@ -17,12 +17,12 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // })->middleware('auth:api');
 
-Route::group(['prefix' => 'api/v1', 'middleware' => ['throttle:10'] ], function (){
+Route::group(['middleware' => ['throttle:10'] ], function (){
 	Route::post('login', 'Api\UserController@login');
 	Route::post('signUp', 'Api\AdministratorsController@store');
 });
 
-Route::group(['prefix' => 'api/v1', 'middleware' => ['auth:api'] ], function(){
+Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::get('todaysRoute', 'Api\UserController@todaysRoute');
 	Route::post('resetToken', 'Api\UserController@resetToken');
 	Route::get('account', 'Api\UserController@show');
