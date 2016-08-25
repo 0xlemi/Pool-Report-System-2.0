@@ -21003,7 +21003,7 @@ exports.default = {
         }
     },
     events: {
-        changeSelected: function changeSelected(countryKey) {
+        changeSelectedCountry: function changeSelectedCountry(countryKey) {
             this.selected = this.options.find(function (country) {
                 return country.key === countryKey;
             });
@@ -21026,6 +21026,55 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":121,"vue-hot-reload-api":95,"vue-multiselect":96}],130:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vueMultiselect = require('vue-multiselect');
+
+var _vueMultiselect2 = _interopRequireDefault(_vueMultiselect);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: { Multiselect: _vueMultiselect2.default },
+    props: ['key', 'options', 'name'],
+    data: function data() {
+        return {
+            selected: null
+        };
+    },
+
+    methods: {
+        updateSelected: function updateSelected(newSelected) {
+            this.selected = newSelected;
+            this.key = newSelected.key;
+        }
+    },
+    watch: {
+        // if the key is changed change the selected
+        key: function key(val) {
+            this.selected = this.options.find(function (options) {
+                return options.key === val;
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Choose a option\">\n\n    </multiselect>\n</div>\n<input type=\"hidden\" name=\"{{name}}\" value=\"{{key}}\">\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-131aa5c6", module.exports)
+  } else {
+    hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":121,"vue-hot-reload-api":95,"vue-multiselect":96}],131:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21057,7 +21106,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":121,"vue-hot-reload-api":95,"vueify/lib/insert-css":122}],131:[function(require,module,exports){
+},{"vue":121,"vue-hot-reload-api":95,"vueify/lib/insert-css":122}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21141,7 +21190,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":121,"vue-hot-reload-api":95}],132:[function(require,module,exports){
+},{"vue":121,"vue-hot-reload-api":95}],133:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21152,6 +21201,7 @@ var Permissions = require('./components/Permissions.vue');
 var emailPreference = require('./components/email.vue');
 var FormToAjax = require('./directives/FormToAjax.vue');
 var countries = require('./components/countries.vue');
+var dropdown = require('./components/dropdown.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -22318,7 +22368,8 @@ $(document).ready(function () {
 		components: {
 			Permissions: Permissions,
 			emailPreference: emailPreference,
-			countries: countries
+			countries: countries,
+			dropdown: dropdown
 		},
 		directives: { FormToAjax: FormToAjax },
 		data: {
@@ -22351,7 +22402,9 @@ $(document).ready(function () {
 			serviceCountry: isset('country') ? back.country : '',
 			serviceLatitude: isset('latitude') ? back.latitude : null,
 			serviceLongitude: isset('longitude') ? back.longitude : null,
-			statusSwitch: true
+			statusSwitch: true,
+			// Generic
+			dropdownKey: 0
 		},
 		computed: {
 			missingServicesTag: function missingServicesTag() {
@@ -22377,7 +22430,7 @@ $(document).ready(function () {
 		},
 		watch: {
 			serviceCountry: function serviceCountry(val, oldVal) {
-				this.$broadcast('changeSelected', val);
+				this.$broadcast('changeSelectedCountry', val);
 			}
 		},
 		events: {
@@ -22386,6 +22439,9 @@ $(document).ready(function () {
 			}
 		},
 		methods: {
+			changeKey: function changeKey(num) {
+				this.dropdownKey = num;
+			},
 			populateAddressFields: function populateAddressFields(page) {
 
 				this.setLocation(page);
@@ -22624,6 +22680,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/email.vue":130,"./directives/FormToAjax.vue":131,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,132]);
+},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./directives/FormToAjax.vue":132,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,133]);
 
 //# sourceMappingURL=bundle.js.map

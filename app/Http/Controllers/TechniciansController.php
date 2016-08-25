@@ -53,7 +53,16 @@ class TechniciansController extends PageController
     {
         $this->checkPermissions('create');
 
-        $supervisors = $this->loggedUserAdministrator()->supervisors()->get();
+        $supervisors = $this->loggedUserAdministrator()
+                        ->supervisors()
+                        ->get()
+                        ->transform(function($item){
+                            return (object) array(
+                                'key' => $item->seq_id,
+                                'label' => $item->name.' '.$item->name,
+                            );
+                        });
+
 
         return view('technicians.create', compact('supervisors'));
     }

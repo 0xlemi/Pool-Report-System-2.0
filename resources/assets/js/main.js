@@ -6,6 +6,7 @@ var Permissions 	= require('./components/Permissions.vue');
 var emailPreference = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
 var countries       = require('./components/countries.vue');
+var dropdown       = require('./components/dropdown.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1307,39 +1308,42 @@ function isset(strVariableName) {
             Permissions,
             emailPreference,
             countries,
+            dropdown,
         },
         directives: { FormToAjax },
         data:{
             // Administrator
-            companyName: "",
-            website: "",
-            facebook: "",
-            twitter: "",
-            objectName: "",
-            objectLastName: "",
+                companyName: "",
+                website: "",
+                facebook: "",
+                twitter: "",
+                objectName: "",
+                objectLastName: "",
             // Reports
-            numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
-            numServicesToDo: (isset('numServicesToDo')) ? back.numServicesToDo : '',
-            numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
-            reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
+                numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
+                numServicesToDo: (isset('numServicesToDo')) ? back.numServicesToDo : '',
+                numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
+                reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
             // Services
-            //temporal values
-            pickerServiceAddressLine1: '',
-            pickerServiceCity: '',
-            pickerServiceState: '',
-            pickerServicePostalCode: '',
-            pickerServiceCountry: '',
-            pickerServiceLatitude: '',
-            pickerServiceLongitude: '',
-            // form values
-            serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
-            serviceCity: (isset('city')) ? back.city : '',
-            serviceState: (isset('state')) ? back.state : '',
-            servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
-            serviceCountry: (isset('country')) ? back.country : '',
-            serviceLatitude: (isset('latitude')) ? back.latitude : null,
-            serviceLongitude: (isset('longitude')) ? back.longitude : null,
-            statusSwitch: true,
+                //temporal values
+                pickerServiceAddressLine1: '',
+                pickerServiceCity: '',
+                pickerServiceState: '',
+                pickerServicePostalCode: '',
+                pickerServiceCountry: '',
+                pickerServiceLatitude: '',
+                pickerServiceLongitude: '',
+                // form values
+                serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
+                serviceCity: (isset('city')) ? back.city : '',
+                serviceState: (isset('state')) ? back.state : '',
+                servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
+                serviceCountry: (isset('country')) ? back.country : '',
+                serviceLatitude: (isset('latitude')) ? back.latitude : null,
+                serviceLongitude: (isset('longitude')) ? back.longitude : null,
+                statusSwitch: true,
+            // Generic
+            dropdownKey: 0,
         },
         computed: {
                 missingServicesTag: function () {
@@ -1365,7 +1369,7 @@ function isset(strVariableName) {
             },
         watch:{
             serviceCountry: function(val, oldVal){
-                this.$broadcast('changeSelected', val);
+                this.$broadcast('changeSelectedCountry', val);
             }
         },
         events: {
@@ -1374,6 +1378,9 @@ function isset(strVariableName) {
             }
         },
         methods:{
+            changeKey(num){
+                this.dropdownKey = num;    
+            },
             populateAddressFields(page){
 
                 this.setLocation(page);

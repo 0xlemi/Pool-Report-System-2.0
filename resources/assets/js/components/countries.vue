@@ -35,7 +35,7 @@ export default {
         }
     },
     events: {
-        changeSelected: function(countryKey){
+        changeSelectedCountry: function(countryKey){
             this.selected = this.options.find(country => country.key === countryKey);
         }
     }

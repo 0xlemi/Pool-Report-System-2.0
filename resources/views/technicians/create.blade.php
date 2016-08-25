@@ -74,24 +74,17 @@
 						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Supervisor</label>
 							<div class="col-sm-10">
-								<select class="bootstrap-select bootstrap-select-arrow" name="supervisor" data-live-search="true">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose a supervisor'
-															value="0" >Choose a supervisor
-									</option>
-									@foreach($supervisors as $supervisor)
-										<option data-content='<span class="user-item">
-														<img src="{{ url($supervisor->icon()) }}"/>
-														{{ $supervisor->seq_id.' '.$supervisor->name.' '.$supervisor->last_name}}
-														</span>' value="{{ $supervisor->seq_id }}"
-														{{ (old('supervisor') == $supervisor->seq_id) ? 'selected':'' }}>
-														{{ $supervisor->name.' '.$supervisor->last_name }}</option>
-									@endforeach
-								</select>
+								<dropdown :key.sync="dropdownKey" :options="{{ $supervisors }}" :name="'supervisor'"></dropdown>
 								@if ($errors->has('supervisor'))
 									<small class="text-muted">{{ $errors->first('supervisor') }}</small>
 								@endif
+							</div>
+						</div>
+
+						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Supervisor</label>
+							<div class="col-sm-10">
+								<button type="button" class="btn btn-primary" @click="changeKey(2)">hello</button>	
 							</div>
 						</div>
 
