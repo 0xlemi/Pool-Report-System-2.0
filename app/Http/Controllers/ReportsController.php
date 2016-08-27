@@ -17,6 +17,7 @@ use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
 use App\Service;
+use App\Notifications\ReportCreatedNotification;
 class ReportsController extends PageController
 {
     protected $reportHelpers;
@@ -143,8 +144,8 @@ class ReportsController extends PageController
 
         if($report && $image1 && $image2 && $image3){
             //send email
-            $report->sendEmailAllClients();
-            $report->sendEmailSupervisor();
+            // $report->sendEmailAllClients();
+            // $report->sendEmailSupervisor();
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');
@@ -170,6 +171,8 @@ class ReportsController extends PageController
         ]);
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
 
         return view('reports.show', compact('report'));
     }
