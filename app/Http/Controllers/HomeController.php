@@ -25,4 +25,9 @@ class HomeController extends PageController
         return view('home', compact('user'));
     }
 
+    public function unsubscribeEmail()
+    {
+        return view('extras.unsubscriptionEmail');    
+    }
+
 }

@@ -34,7 +34,7 @@ class AdministratorsSeeder extends Seeder
     	])->id;
 
         App\User::create([
-            'email' => 'lem.espinosa.m@gmail.com',
+            'email' => 'lem@example.com',
             'password' => bcrypt('password'),
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
             'userable_id' => $administrator_id,
