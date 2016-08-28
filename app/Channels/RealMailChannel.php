@@ -16,7 +16,10 @@ class RealMailChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $message = Mail::to($notifiable)->send($notification->toRealMail($notifiable));
+        if($notifiable->userable()->get_reports_emails){
+            // Has permission to send email
+            $message = Mail::to($notifiable)->send($notification->toRealMail($notifiable));
+        }
         // Send notification to the $notifiable instance...
     }
 }

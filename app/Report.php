@@ -117,23 +117,4 @@ class Report extends Model
         return false;
     }
 
-    public function sendEmailAllClients()
-    {
-        $clients = $this->clients()->get();
-        foreach ($clients as $client) {
-            // check if the email preference
-            if($client->get_reports_emails){
-                return Mail::to($client->user())->send(new ServiceReportMail($this, $client->name));
-            }
-        }
-    }
-
-    public function sendEmailSupervisor()
-    {
-        $supervisor = $this->technician()->supervisor();
-        if($supervisor->get_reports_emails){
-            return Mail::to($supervisor->user())->send(new ServiceReportMail($this, $supervisor->name));
-        }
-    }
-
 }

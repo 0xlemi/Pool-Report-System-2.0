@@ -165,9 +165,13 @@ class ReportsController extends ApiController
 
         });
 
-        //send email
-        $report->sendEmailAllClients();
-        $report->sendEmailSupervisor();
+        // notify report was made
+            // notify the clients
+            foreach ($service->clients()->get() as $client) {
+                $client->user()->notify(new ReportCreatedNotification($report));
+            }
+            // notify the supervisor
+            $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
 
         return $this->respondPersisted(
             'The report was successfuly created.',

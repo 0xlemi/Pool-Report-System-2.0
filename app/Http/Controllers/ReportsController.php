@@ -143,9 +143,13 @@ class ReportsController extends PageController
         $image3 = $report->addImageFromForm($request->file('photo3'));
 
         if($report && $image1 && $image2 && $image3){
-            //send email
-            // $report->sendEmailAllClients();
-            // $report->sendEmailSupervisor();
+            // notify report was made
+                // notify the clients
+                foreach ($service->clients()->get() as $client) {
+                    $client->user()->notify(new ReportCreatedNotification($report));
+                }
+                // notify the supervisor
+                $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');
@@ -172,7 +176,6 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
-        $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
 
         return view('reports.show', compact('report'));
     }
