@@ -7,9 +7,20 @@ use App\Http\Controllers\PageController;
 use Illuminate\Http\Request;
 
 use Auth;
+use DB;
+use Carbon\Carbon;
+use App\User;
+use App\PRS\Classes\UrlSigner;
 
 class HomeController extends PageController
 {
+
+    private $urlSigner;
+
+    public function __construct(UrlSigner $urlSigner)
+    {
+        $this->urlSigner = $urlSigner;
+    }
 
     /**
      * Show the application dashboard.
@@ -25,9 +36,23 @@ class HomeController extends PageController
         return view('home', compact('user'));
     }
 
-    public function unsubscribeEmail()
+    public function unsubscribeEmail(string $token)
     {
-        return view('extras.unsubscriptionEmail');    
+        if($object = $this->urlSigner->validateToken($token)){
+            $user = User::where('email', $object->email)->get()->first();
+
+            $emailSettings = (object) array(
+                'get_reports_emails' => $user->userable()->get_reports_emails,
+            );
+            return view('extras.unsubscriptionEmail', compact('emailSettings'));
+        }
+        return redirect('/login');
+    }
+
+    public function makeLink()
+    {
+        $user = User::find(1);
+        $this->urlSigner->create($user, 2);
     }
 
 }

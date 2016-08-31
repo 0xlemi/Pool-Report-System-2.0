@@ -21,28 +21,28 @@ software, pool service business management software">
        STYLESHEETS
     ============================== -->
     <!-- BOOTSTRAP CSS -->
-    <link rel="stylesheet" href="css/landing/plugins/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/bootstrap.min.css') }}">
 
     <!-- FONT ICONS -->
-    <link rel="stylesheet" href="css/landing/icons/iconfont.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ url('css/landing/icons/iconfont.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
     <!-- GOOGLE FONTS -->
-    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
 
     <!-- PLUGINS STYLESHEET -->
-    <link rel="stylesheet" href="css/landing/plugins/magnific-popup.css">
-    <link rel="stylesheet" href="css/landing/plugins/owl.carousel.css">
-    <link rel="stylesheet" href="css/landing/plugins/loaders.css">
-    <link rel="stylesheet" href="css/landing/plugins/animate.css">
-    <link rel="stylesheet" href="css/landing/plugins/pickadate-default.css">
-    <link rel="stylesheet" href="css/landing/plugins/pickadate-default.date.css">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/magnific-popup.css') }}">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/owl.carousel.css') }}">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/loaders.css') }}">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/animate.css') }}">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/pickadate-default.css') }}">
+    <link rel="stylesheet" href="{{ url('css/landing/plugins/pickadate-default.date.css') }}">
 
     <!-- CUSTOM STYLESHEET -->
-    <link rel="stylesheet" href="css/landing/style.css">
+    <link rel="stylesheet" href="{{ url('css/landing/style.css') }}">
 
     <!-- RESPONSIVE FIXES -->
-    <link rel="stylesheet" href="css/landing/responsive.css">
+    <link rel="stylesheet" href="{{ url('css/landing/responsive.css') }}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
