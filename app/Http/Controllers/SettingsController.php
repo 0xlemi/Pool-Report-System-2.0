@@ -195,16 +195,17 @@ class SettingsController extends PageController
         $person = $this->getUser()->userable();
         $attributes = $person->getAttributes();
 
-        $column_name = $request->id;
+        $columnName = $request->id;
         $checked_value = strtolower($request->checked);
-        $checked = ($checked_value  == 'true' || $checked_value  == '1') ? false : true;
+        $checked = ($checked_value  == 'true' || $checked_value  == '1') ? true : false;
 
         //check whether the id they are sending us is a real email preference
-        if(isset($attributes[$column_name]))
+        if(isset($attributes[$columnName]))
         {
-            $person->$column_name = $checked;
+            $person->$columnName = $checked;
             if($person->save()){
-                return $this->respondWithSuccess('Permission has been saved.');
+                $checkedAfter = ($person->$columnName) ? 'active' : 'inactive';
+                return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
             }
             return $this->respondInternalError('Error while persisting the permission');
         }

@@ -41,10 +41,9 @@ class HomeController extends PageController
         if($object = $this->urlSigner->validateToken($token)){
             $user = User::where('email', $object->email)->get()->first();
 
-            $emailSettings = (object) array(
-                'get_reports_emails' => $user->userable()->get_reports_emails,
-            );
-            return view('extras.unsubscriptionEmail', compact('emailSettings'));
+            $getReportsEmails = $user->userable()->get_reports_emails;
+            
+            return view('extras.unsubscriptionEmail', compact('getReportsEmails'));
         }
         return redirect('/login');
     }

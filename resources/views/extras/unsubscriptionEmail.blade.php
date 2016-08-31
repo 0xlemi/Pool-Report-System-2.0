@@ -59,7 +59,10 @@
                         <li class="list-group-item">
                             <label>when my pool is cleaned</label>
                             <div class="material-switch pull-right">
-                                <input id="someSwitchOptionSuccess" name="get_reports_emails" type="checkbox"/>
+                                <input id="someSwitchOptionSuccess"
+                                        name="get_reports_emails"
+                                        type="checkbox"
+                                        {{ (true) ? 'checked' : '' }}>
                                 <label for="someSwitchOptionSuccess" class="label-success"></label>
                             </div>
                         </li>
