@@ -53,7 +53,9 @@
             <div class="col-xs-12 col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
                 <h4 class="text-center m-b-md">When do you what to recive emails?</h4>
                 <br>
-                <form method="POST" action="url()">
+                <form method="POST" action="{{ url('/unsubscribe') }}">
+					{{ csrf_field() }}
+                    <input type="hidden" name='token' value={{ $token }} >
                     <!-- List group -->
                     <ul class="list-group">
                         <li class="list-group-item">
@@ -62,7 +64,7 @@
                                 <input id="someSwitchOptionSuccess"
                                         name="get_reports_emails"
                                         type="checkbox"
-                                        {{ (true) ? 'checked' : '' }}>
+                                        {{ ($getReportsEmails) ? 'checked' : '' }}>
                                 <label for="someSwitchOptionSuccess" class="label-success"></label>
                             </div>
                         </li>

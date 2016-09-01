@@ -36,16 +36,33 @@ class HomeController extends PageController
         return view('home', compact('user'));
     }
 
-    public function unsubscribeEmail(string $token)
+    public function emailOptions(string $token)
     {
         if($object = $this->urlSigner->validateToken($token)){
             $user = User::where('email', $object->email)->get()->first();
 
             $getReportsEmails = $user->userable()->get_reports_emails;
-            
-            return view('extras.unsubscriptionEmail', compact('getReportsEmails'));
+
+            return view('extras.emailSettings', compact('getReportsEmails', 'token'));
         }
         return redirect('/login');
+    }
+
+    public function changeEmailOptions(Request $request)
+    {
+        if($object = $this->urlSigner->validateToken($request->token)){
+            $person = User::where('email', $object->email)->get()->first()->userable();
+
+            $person->get_reports_emails = ($request->get_reports_emails) ? true : false;
+            if($person->save()){
+                $title = 'Email Settings Changed!';
+                $isSuccess = true;
+                return view('extras.showMessage', compact('title', 'isSuccess'));
+            }
+            $title = 'Email Settings Where Not Changed!';
+            $isSuccess = false;
+            return view('extras.showMessage', compact('title', 'isSuccess'));
+        }
     }
 
     public function makeLink()
