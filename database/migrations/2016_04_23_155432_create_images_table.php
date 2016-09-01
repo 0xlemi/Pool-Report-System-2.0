@@ -21,6 +21,7 @@ class CreateImagesTable extends Migration
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('service_id')->unsigned()->index()->nullable()->default(null);
+            $table->integer('equipment_id')->unsigned()->index()->nullable()->default(null);
             $table->string('normal_path'); // full resolution
             $table->string('thumbnail_path');   // 300x* image
             $table->string('icon_path'); // 64x64 image
@@ -58,6 +59,11 @@ class CreateImagesTable extends Migration
             $table->foreign('technician_id')
                 ->references('id')
                 ->on('technicians')
+                ->onDelete('cascade');
+
+            $table->foreign('equipment_id')
+                ->references('id')
+                ->on('equipment')
                 ->onDelete('cascade');
         });
     }

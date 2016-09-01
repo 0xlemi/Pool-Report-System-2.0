@@ -19,7 +19,7 @@ class CreateTriggersImage extends Migration
             BEGIN
               DECLARE msg VARCHAR(255);
               IF CASE
-                   WHEN NEW.admin_id IS NULL THEN 0 
+                   WHEN NEW.admin_id IS NULL THEN 0
                    ELSE 1
                  END +
                  CASE
@@ -36,6 +36,10 @@ class CreateTriggersImage extends Migration
                  END +
                  CASE
                    WHEN NEW.service_id IS NULL THEN 0
+                   ELSE 1
+                 END +
+                 CASE
+                   WHEN NEW.equipment_id IS NULL THEN 0
                    ELSE 1
                  END +
                  CASE
