@@ -23,7 +23,6 @@ class UrlSigner{
     }
 
     public function create(User $user, int $daysUntilExpiration){
-        $token = str_random(60);
 
         $this->email = $user->email;
         $this->token = str_random(60);
@@ -34,7 +33,7 @@ class UrlSigner{
             'token' => $this->token,
             'expire' =>  $this->expire,
         ])){
-            return $token;
+            return $this->token;
         }
         return null;
     }

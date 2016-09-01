@@ -39,7 +39,13 @@ class HomeController extends PageController
     public function emailOptions(string $token)
     {
         if($object = $this->urlSigner->validateToken($token)){
+
             $user = User::where('email', $object->email)->get()->first();
+
+            // if the user is allready logged in send him to his settings
+            if($user == Auth::user()){
+                return redirect('/settings');
+            }
 
             $getReportsEmails = $user->userable()->get_reports_emails;
 
@@ -63,12 +69,6 @@ class HomeController extends PageController
             $isSuccess = false;
             return view('extras.showMessage', compact('title', 'isSuccess'));
         }
-    }
-
-    public function makeLink()
-    {
-        $user = User::find(1);
-        $this->urlSigner->create($user, 2);
     }
 
 }

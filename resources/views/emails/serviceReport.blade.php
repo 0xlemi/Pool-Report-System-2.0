@@ -163,7 +163,7 @@
       <![endif]--><div aria-labelledby="mj-column-per-100" class="mj-column-per-100" style="vertical-align:middle;display:inline-block;font-size:13px;text-align:left;width:100%;"><table cellpadding="0" cellspacing="0" style="vertical-align:middle;" width="100%" border="0"><tbody><tr><td style="word-break:break-word;font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;padding-right:25px;padding-left:25px;" align="center"><div style="cursor:auto;color:#000000;font-family:ubuntu, helvetica, arial, sans-serif;font-size:11px;line-height:22px;">
             <p style="font-size: 11px">Copyright © 2016 Pool Report System. All rights reserved.
             <br>
-            If you do not want to recieve emails from us, you can unsubscribe.</p>
+            If you do not want to recieve emails from us, you can <a href="{{ $unsubscribeLink }}">UNSUBSCRIBE</a>.</p>
           </div></td></tr></tbody></table></div><!--[if mso | IE]>
       </td></tr></table>
       <![endif]--></td></tr></tbody></table></div></td></tr></tbody></table><!--[if mso | IE]>

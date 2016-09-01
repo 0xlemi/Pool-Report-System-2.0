@@ -45,7 +45,7 @@ class ReportCreatedNotification extends Notification
      */
     public function toRealMail($notifiable)
     {
-        return (new ServiceReportMail($this->report, $notifiable->userable()->name));
+        return (new ServiceReportMail($this->report, $notifiable));
     }
 
 

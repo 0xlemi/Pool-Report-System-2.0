@@ -16,6 +16,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 
+// change email settings from link
 Route::group(['middleware' => ['throttle:100'] ], function (){
     Route::get('/unsubscribe/{token}', 'HomeController@emailOptions');
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
