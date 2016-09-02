@@ -60,6 +60,35 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
 	];
 });
 
+$factory->define(App\Equipment::class, function (Faker\Generator $faker){
+    $kinds = [
+        'Filter',
+        'Pump',
+        'Jet Pump',
+        'ComPool',
+        'Heater',
+        'Heat Pump',
+        'Solar',
+        'Ligth',
+    ];
+    $brands = [
+        'Jandy',
+        'Polaris',
+        'Hayward',
+        'Pentair',
+        'Savi',
+        'Paramount',
+    ];
+	return [
+        'kind' => $faker->randomElement($kinds),
+        'type' => $faker->word,
+        'brand' => $faker->randomElement($brands),
+        'model' => $faker->word.'-'.rand(1000,9999),
+        'capacity' => rand(100,1000000)/100,
+        'capacity_units' => 'units',
+	];
+});
+
 $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
 	return [
         'name' => $faker->name,
