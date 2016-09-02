@@ -138,8 +138,9 @@ class ServicesController extends PageController
         ]);
 
         $clients = $service->clients()->get();
+        $equipment = $service->equipment()->get();
 
-        return view('services.show', compact('service', 'clients'));
+        return view('services.show', compact('service', 'clients', 'equipment'));
     }
 
     /**

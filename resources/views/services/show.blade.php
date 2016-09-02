@@ -121,12 +121,44 @@
 									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->amount.' '.$service->currency }}">
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status</label>
 								<div class="col-sm-10">
 									{!! $serviceHelpers->get_styled_status($service->status, false) !!}
 								</div>
 							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Location</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-primary"
+										data-toggle="modal"
+										data-target="#mapModal">
+										<i class="font-icon font-icon-earth-bordered"></i>&nbsp;&nbsp;&nbsp;Show Map</button>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Clients</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-warning"
+										data-toggle="modal"
+										data-target="#clientsModal">
+										<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Equipment</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-info"
+										data-toggle="modal"
+										data-target="#equipmentTableModal">
+										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Check Equipment</button>
+								</div>
+							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
@@ -137,44 +169,6 @@
 							</div>
 						</form>
 						<hr>
-						<h4>Map:</h4>
-						<div id='serviceMap' style="margin: auto;width: 90%; height: 400px;"></div>
-						<hr>
-						<div id="toolbar">
-							<h3><strong>List of Clients</strong></h3>
-						</div>
-						<div class="table-responsive">
-							<table class="generic_table"
-								   class="table"
-								   data-toolbar="#toolbar"
-								   data-search="true"
-								   data-show-export="true"
-								   data-export-types="['excel', 'pdf']"
-								   data-minimum-count-columns="2"
-								   data-pagination="true"
-								   data-show-footer="false"
-								   data-response-handler="responseHandler"
-								   >
-								<thead>
-								    <tr>
-								        <th data-field="id" data-sortable="true">#</th>
-								        <th data-field="name" data-sortable="true">Name</th>
-								        <th data-field="email" data-sortable="true">Email</th>
-								        <th data-field="type" data-sortable="true">Type</th>
-								    </tr>
-								</thead>
-								<tbody>
-									@foreach ($clients as $client)
-										<tr>
-											<td>{{ $client->seq_id }}</td>
-											<td>{{ $client->name.' '.$client->last_name }}</td>
-											<td>{{ $client->user()->email }}</td>
-											<td>{!! $clientHelpers->styledType($client->type, true, false) !!}</td>
-										</tr>
-									@endforeach
-								</tbody>
-							</table>
-						</div>
 
 						<p style="float: right;">
 							<a class="btn btn-danger"
@@ -194,5 +188,10 @@
 	</div>
 	<div class="row">
 	</div>
+
+	@include('services.showEquipmentTable')
+	@include('services.showEquipment')
+	@include('services.showMap')
+	@include('services.listClients')
 
 @endsection

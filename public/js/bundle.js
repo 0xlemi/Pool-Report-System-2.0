@@ -22144,6 +22144,7 @@ $(document).ready(function () {
 	    $remove = $('#remove'),
 	    selections = [];
 	var generic_table = $('.generic_table');
+	var equipmentTable = $('#equipmentTable');
 	var missingServices = $('#missingServices');
 
 	function totalTextFormatter(data) {
@@ -22241,6 +22242,7 @@ $(document).ready(function () {
 	};
 
 	generic_table.bootstrapTable(tableOptions);
+	equipmentTable.bootstrapTable(tableOptions);
 	missingServices.bootstrapTable(tableOptions);
 
 	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
@@ -22251,6 +22253,20 @@ $(document).ready(function () {
 			$element.addClass('table_active');
 		}
 		window.location.href = back.click_url + row.id;
+	});
+
+	$('#equipmentTable').on('click-row.bs.table', function (e, row, $element) {
+		if ($element.hasClass('table_active')) {
+			$element.removeClass('table_active');
+		} else {
+			equipmentTable.find('tr.table_active').removeClass('table_active');
+			$element.addClass('table_active');
+		}
+		// window.location.href = back.click_url+row.id;
+		console.log(row.id);
+		// mainVue.equipmentKind =
+		// $('#equipmentTableModal').modal('hide');
+		// $('#equipmentObjectModal').modal('show');
 	});
 
 	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
@@ -22423,6 +22439,13 @@ $(document).ready(function () {
 			serviceLatitude: isset('latitude') ? back.latitude : null,
 			serviceLongitude: isset('longitude') ? back.longitude : null,
 			statusSwitch: true,
+			// equipment
+			equipmentPhoto: '',
+			equipmentKind: '',
+			equipmentType: '',
+			equipmentBrand: '',
+			equipmentModel: '',
+			equipmentCapacity: '',
 			// Generic
 			dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0,
 			dropdownKey2: isset('dropdownKey2') ? Number(back.dropdownKey2) : 0
@@ -22529,18 +22552,20 @@ $(document).ready(function () {
 	/* ==========================================================================
      GMaps
      ========================================================================== */
-	if (isset('showLatitude') && isset('showLongitude')) {
-		var map = new Gmaps({
-			el: '#serviceMap',
-			lat: back.showLatitude,
-			lng: back.showLongitude
-		});
+	$('#mapModal').on('shown.bs.modal', function (e) {
+		if (isset('showLatitude') && isset('showLongitude')) {
+			var map = new Gmaps({
+				el: '#serviceMap',
+				lat: back.showLatitude,
+				lng: back.showLongitude
+			});
 
-		map.addMarker({
-			lat: back.showLatitude,
-			lng: back.showLongitude
-		});
-	}
+			map.addMarker({
+				lat: back.showLatitude,
+				lng: back.showLongitude
+			});
+		}
+	});
 
 	/* ==========================================================================
      Location Picker
