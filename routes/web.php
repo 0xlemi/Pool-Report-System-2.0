@@ -34,6 +34,7 @@ Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto'
 
 Route::resource('reports', 'ReportsController');
 Route::resource('services', 'ServicesController');
+Route::resource('equipment', 'EquipmentController');
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
@@ -53,6 +54,7 @@ Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/missingServices', 'DataTableController@missingServices');
 Route::get('datatables/missingServicesInfo', 'DataTableController@missingServicesInfo');
 Route::get('datatables/services', 'DataTableController@services');
+Route::get('datatables/equipment/{service_seq_id}', 'DataTableController@equipment');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');

@@ -1180,11 +1180,28 @@ function isset(strVariableName) {
             equipmentTable.find('tr.table_active').removeClass('table_active');
             $element.addClass('table_active');
         }
-        // window.location.href = back.click_url+row.id;
-        console.log(row.id);
+        if(isset('equipmentShowUrl')){
+            $.ajax({
+                vue: mainVue,
+                url:      back.equipmentShowUrl+row.id,
+                type:     'GET',
+                success: function(data, textStatus, xhr) {
+                    //called when successful
+                    this.vue.equipmentKind = data.kind;
+                    this.vue.equipmentType = data.type;
+                    this.vue.equipmentBrand = data.brand;
+                    this.vue.equipmentModel = data.model;
+                    this.vue.equipmentCapacity = data.capacity+' '+data.units;
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    //called when there is an error
+                    console.log('error');
+                }
+            });
+        }
         // mainVue.equipmentKind =
-        // $('#equipmentTableModal').modal('hide');
-        // $('#equipmentObjectModal').modal('show');
+        $('#equipmentTableModal').modal('hide');
+        $('#equipmentObjectModal').modal('show');
     });
 
     $('#missingServices').on( 'click-row.bs.table', function (e, row, $element) {

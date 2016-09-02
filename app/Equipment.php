@@ -19,6 +19,15 @@ class Equipment extends Model
         'units'
 	];
 
+
+    /**
+     * hidden variables
+     * @var array
+     */
+	protected $hidden = [
+        'service_id'    
+	];
+
     public function service()
     {
 		return $this->belongsTo('App\Service')->first();

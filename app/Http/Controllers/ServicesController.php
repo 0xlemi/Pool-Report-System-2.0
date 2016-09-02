@@ -134,13 +134,14 @@ class ServicesController extends PageController
         JavaScript::put([
             'showLatitude' => $service->latitude,
             'showLongitude' => $service->longitude,
+            'equipmentShowUrl' => url('/equipment').'/',
             'click_url' => url('clients').'/',
         ]);
 
         $clients = $service->clients()->get();
-        $equipment = $service->equipment()->get();
+        $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;
 
-        return view('services.show', compact('service', 'clients', 'equipment'));
+        return view('services.show', compact('service', 'clients', 'default_table_url' ));
     }
 
     /**

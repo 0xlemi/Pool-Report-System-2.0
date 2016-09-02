@@ -15,6 +15,7 @@
 							<div class="table-responsive">
 							<table id="equipmentTable"
 								   class="table"
+								   data-url='{{ $default_table_url }}'
 								   data-toolbar="#equipmentToolbar"
 								   data-search="true"
 								   data-show-export="true"
@@ -22,7 +23,6 @@
 								   data-minimum-count-columns="2"
 								   data-pagination="true"
 								   data-show-footer="false"
-								   data-response-handler="responseHandler"
 								   >
 								<thead>
 								    <tr>
@@ -34,18 +34,6 @@
 								        <th data-field="capacity" data-sortable="true">Capacity</th>
 								    </tr>
 								</thead>
-								<tbody>
-									@foreach ($equipment as $equipment)
-										<tr>
-											<td>{{ $equipment->id }}</td>
-											<td>{{ $equipment->kind }}</td>
-											<td>{{ $equipment->type }}</td>
-											<td>{{ $equipment->brand }}</td>
-											<td>{{ $equipment->model }}</td>
-											<td>{{ $equipment->capacity.' '.$equipment->units }}</td>
-										</tr>
-									@endforeach
-								</tbody>
 							</table>
 						</div>
 					</div>
