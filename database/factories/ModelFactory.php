@@ -85,7 +85,7 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
         'brand' => $faker->randomElement($brands),
         'model' => $faker->word.'-'.rand(1000,9999),
         'capacity' => rand(100,1000000)/100,
-        'capacity_units' => 'units',
+        'units' => 'units',
 	];
 });
 

@@ -75,6 +75,13 @@ class Service extends Model
     }
 
     /**
+     * Get associated reports with this service
+     */
+    public function equipment(){
+    	return $this->hasMany('App\Equipment');
+    }
+
+    /**
      * get the service days as a boolean for each day insted of the number
      * @return array
      * tested

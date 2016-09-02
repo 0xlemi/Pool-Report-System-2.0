@@ -20,7 +20,7 @@ class CreateEquipmentTable extends Migration
             $table->string('brand');
             $table->string('model');
             $table->decimal('capacity', 9, 2);
-            $table->string('capacity_units');
+            $table->string('units');
             $table->integer('service_id')->unsigned();
             $table->timestamps();
         });
