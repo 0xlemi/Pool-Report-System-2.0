@@ -32,7 +32,20 @@ class EquipmentController extends PageController
     {
         $equipment = Equipment::findOrFail($id);
 
-        return Response::json($equipment, 200);
+        $photo = array(
+            'photos' => $equipment->images()->get()
+                        ->transform(function($item){
+                            return (object) array(
+                                    'normal' => $item->normal_path,
+                                    'thumbnail' => $item->thumbnail_path,
+                                    'order' => $item->order,
+                                    'title' => 'Photo title',
+                                );
+                        })
+                        ->toArray()
+        );
+
+        return Response::json(array_merge($equipment->toArray(), $photo), 200);
     }
 
     /**

@@ -2,8 +2,9 @@ var dateFormat 		= require('dateformat');
 
 // Vue imports
 var Vue 			= require('vue');
-var Permissions 	= require('./components/Permissions.vue');
-var emailPreference = require('./components/email.vue');
+var Permissions 	 = require('./components/Permissions.vue');
+var PhotoList 	     = require('./components/photoList.vue');
+var emailPreference  = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
 var countries       = require('./components/countries.vue');
 var dropdown       = require('./components/dropdown.vue');
@@ -1183,6 +1184,7 @@ function isset(strVariableName) {
         if(isset('equipmentShowUrl')){
             $.ajax({
                 vue: mainVue,
+                equipmentTable: equipmentTable,
                 url:      back.equipmentShowUrl+row.id,
                 type:     'GET',
                 success: function(data, textStatus, xhr) {
@@ -1192,6 +1194,9 @@ function isset(strVariableName) {
                     this.vue.equipmentBrand = data.brand;
                     this.vue.equipmentModel = data.model;
                     this.vue.equipmentCapacity = data.capacity+' '+data.units;
+                    this.vue.equipmentPhotos = data.photos;
+                    // remove the selected color from the row
+                    this.equipmentTable.find('tr.table_active').removeClass('table_active');
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -1344,6 +1349,7 @@ function isset(strVariableName) {
             emailPreference,
             countries,
             dropdown,
+            PhotoList,
         },
         directives: { FormToAjax },
         data:{
@@ -1378,7 +1384,14 @@ function isset(strVariableName) {
                 serviceLongitude: (isset('longitude')) ? back.longitude : null,
                 statusSwitch: true,
                 // equipment
-                equipmentPhoto: '',
+                equipmentPhotos: [
+                                    {
+                                        normal: 'http://prs.dev/img/no_image.png',
+                                        thumbnail: 'http://prs.dev/img/no_image.png',
+                                        title: 'no image',
+                                        order: 0
+                                    }
+                                ],
                 equipmentKind: '',
                 equipmentType: '',
                 equipmentBrand: '',
@@ -1421,6 +1434,11 @@ function isset(strVariableName) {
             }
         },
         methods:{
+            // service show
+            openEquimentList(){
+                $('#equipmentObjectModal').modal('hide');
+                $('#equipmentTableModal').modal('show');
+            },
             changeKey(num){
                 this.dropdownKey = num;
             },

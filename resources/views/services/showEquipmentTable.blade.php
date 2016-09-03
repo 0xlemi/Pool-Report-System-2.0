@@ -19,6 +19,7 @@
 								   data-toolbar="#equipmentToolbar"
 								   data-search="true"
 								   data-show-export="true"
+								   data-page-size="5"
 								   data-export-types="['excel', 'pdf']"
 								   data-minimum-count-columns="2"
 								   data-pagination="true"

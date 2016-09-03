@@ -21132,6 +21132,32 @@ module.exports = '<span>\n    <img class="iconOption" :src="option.icon">\n    &
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = {
+    props: ['data'],
+    data: function data() {
+        return {
+            debug: {}
+        };
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n    <div class=\"gallery-col\">\n    \t<article class=\"gallery-item\">\n    \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n    \t\t<div class=\"gallery-hover-layout\">\n    \t\t\t<div class=\"gallery-hover-layout-in\">\n    \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n    \t\t\t\t<div class=\"btn-group\">\n    \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.normal }}\" title=\"{{ image.title }}\">\n    \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n    \t\t\t\t\t</a>\n    \t\t\t\t</div>\n    \t\t\t\t<p>Photo number {{ image.order }}</p>\n    \t\t\t</div>\n    \t\t</div>\n    \t</article>\n    </div><!--.gallery-col-->\n</div><!--.col-->\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5566088b", module.exports)
+  } else {
+    hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":121,"vue-hot-reload-api":95}],134:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var Vue = require('vue');
 
@@ -21210,7 +21236,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":121,"vue-hot-reload-api":95}],134:[function(require,module,exports){
+},{"vue":121,"vue-hot-reload-api":95}],135:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21218,6 +21244,7 @@ var dateFormat = require('dateformat');
 // Vue imports
 var Vue = require('vue');
 var Permissions = require('./components/Permissions.vue');
+var PhotoList = require('./components/photoList.vue');
 var emailPreference = require('./components/email.vue');
 var FormToAjax = require('./directives/FormToAjax.vue');
 var countries = require('./components/countries.vue');
@@ -22262,21 +22289,21 @@ $(document).ready(function () {
 			equipmentTable.find('tr.table_active').removeClass('table_active');
 			$element.addClass('table_active');
 		}
-		// window.location.href = back.click_url+row.id;
-		// console.log(row.id);
 		if (isset('equipmentShowUrl')) {
 			$.ajax({
 				vue: mainVue,
+				equipmentTable: equipmentTable,
 				url: back.equipmentShowUrl + row.id,
 				type: 'GET',
 				success: function success(data, textStatus, xhr) {
 					//called when successful
-					// console.log(data);
 					this.vue.equipmentKind = data.kind;
 					this.vue.equipmentType = data.type;
 					this.vue.equipmentBrand = data.brand;
 					this.vue.equipmentModel = data.model;
-					this.vue.equipmentCapacity = data.capacity;
+					this.vue.equipmentCapacity = data.capacity + ' ' + data.units;
+					// remove the selected color from the row
+					this.equipmentTable.find('tr.table_active').removeClass('table_active');
 				},
 				error: function error(xhr, textStatus, errorThrown) {
 					//called when there is an error
@@ -22425,7 +22452,8 @@ $(document).ready(function () {
 			Permissions: Permissions,
 			emailPreference: emailPreference,
 			countries: countries,
-			dropdown: dropdown
+			dropdown: dropdown,
+			PhotoList: PhotoList
 		},
 		directives: { FormToAjax: FormToAjax },
 		data: {
@@ -22460,7 +22488,12 @@ $(document).ready(function () {
 			serviceLongitude: isset('longitude') ? back.longitude : null,
 			statusSwitch: true,
 			// equipment
-			equipmentPhoto: '',
+			equipmentPhotos: [{
+				normal: 'http://prs.dev/img/no_image.png',
+				thumbnail: 'http://prs.dev/img/no_image.png',
+				title: 'no image',
+				order: 0
+			}],
 			equipmentKind: '',
 			equipmentType: '',
 			equipmentBrand: '',
@@ -22503,6 +22536,12 @@ $(document).ready(function () {
 			}
 		},
 		methods: {
+			// service show
+
+			openEquimentList: function openEquimentList() {
+				$('#equipmentObjectModal').modal('hide');
+				$('#equipmentTableModal').modal('show');
+			},
 			changeKey: function changeKey(num) {
 				this.dropdownKey = num;
 			},
@@ -22746,6 +22785,6 @@ Examples :
 	Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./directives/FormToAjax.vue":133,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,134]);
+},{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./components/photoList.vue":133,"./directives/FormToAjax.vue":134,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,135]);
 
 //# sourceMappingURL=bundle.js.map

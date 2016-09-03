@@ -153,8 +153,7 @@
 								<label class="col-sm-2 form-control-label">Equipment</label>
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-info"
-										data-toggle="modal"
-										data-target="#equipmentTableModal">
+										@click="openEquimentList()">
 										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Check Equipment</button>
 								</div>
 							</div>

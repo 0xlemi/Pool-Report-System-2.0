@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\PRS\Traits\Model\ImageTrait;
 
 class Equipment extends Model
 {
+
+    use ImageTrait;
+
     /**
 	 * variables that can be mass assign
 	 * @var array
@@ -25,7 +29,7 @@ class Equipment extends Model
      * @var array
      */
 	protected $hidden = [
-        'service_id'    
+        'service_id'
 	];
 
     public function service()
