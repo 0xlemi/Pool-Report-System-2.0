@@ -64,12 +64,11 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
     $kinds = [
         'Filter',
         'Pump',
-        'Jet Pump',
         'ComPool',
         'Heater',
         'Heat Pump',
-        'Solar',
-        'Ligth',
+        'Solar Panels',
+        'Light',
     ];
     $brands = [
         'Jandy',
