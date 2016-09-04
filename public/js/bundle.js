@@ -22302,6 +22302,7 @@ $(document).ready(function () {
 					this.vue.equipmentBrand = data.brand;
 					this.vue.equipmentModel = data.model;
 					this.vue.equipmentCapacity = data.capacity + ' ' + data.units;
+					this.vue.equipmentPhotos = data.photos;
 					// remove the selected color from the row
 					this.equipmentTable.find('tr.table_active').removeClass('table_active');
 				},

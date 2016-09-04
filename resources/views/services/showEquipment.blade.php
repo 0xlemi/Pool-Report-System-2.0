@@ -33,9 +33,9 @@
 								<input type="text" readonly class="form-control" value="@{{ equipmentCapacity }}">
 							</div>
 						</div>
-						<h4>Pool Photos</h4>
+						<h4>Equipment Photos</h4>
 						<hr>
-						<photo-list :data="equipmentPhotos"></photo-list>	
+						<photo-list :data="equipmentPhotos"></photo-list>
 					</div>
 				</div>
 	      </div>

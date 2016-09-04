@@ -36,8 +36,8 @@ class EquipmentController extends PageController
             'photos' => $equipment->images()->get()
                         ->transform(function($item){
                             return (object) array(
-                                    'normal' => $item->normal_path,
-                                    'thumbnail' => $item->thumbnail_path,
+                                    'normal' => url($item->normal_path),
+                                    'thumbnail' => url($item->thumbnail_path),
                                     'order' => $item->order,
                                     'title' => 'Photo title',
                                 );
