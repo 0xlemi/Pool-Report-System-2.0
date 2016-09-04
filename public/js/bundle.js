@@ -22305,6 +22305,7 @@ $(document).ready(function () {
 					this.vue.equipmentPhotos = data.photos;
 					// remove the selected color from the row
 					this.equipmentTable.find('tr.table_active').removeClass('table_active');
+					this.vue.equipmentTableFocus = false;
 				},
 				error: function error(xhr, textStatus, errorThrown) {
 					//called when there is an error
@@ -22312,9 +22313,6 @@ $(document).ready(function () {
 				}
 			});
 		}
-		// mainVue.equipmentKind =
-		$('#equipmentTableModal').modal('hide');
-		$('#equipmentObjectModal').modal('show');
 	});
 
 	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
@@ -22489,6 +22487,7 @@ $(document).ready(function () {
 			serviceLongitude: isset('longitude') ? back.longitude : null,
 			statusSwitch: true,
 			// equipment
+			equipmentTableFocus: true,
 			equipmentPhotos: [{
 				normal: 'http://prs.dev/img/no_image.png',
 				thumbnail: 'http://prs.dev/img/no_image.png',
@@ -22540,8 +22539,8 @@ $(document).ready(function () {
 			// service show
 
 			openEquimentList: function openEquimentList() {
-				$('#equipmentObjectModal').modal('hide');
-				$('#equipmentTableModal').modal('show');
+				this.equipmentTableFocus = true;
+				$('#equipmentModal').modal('show');
 			},
 			changeKey: function changeKey(num) {
 				this.dropdownKey = num;

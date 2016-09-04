@@ -1197,6 +1197,7 @@ function isset(strVariableName) {
                     this.vue.equipmentPhotos = data.photos;
                     // remove the selected color from the row
                     this.equipmentTable.find('tr.table_active').removeClass('table_active');
+                    this.vue.equipmentTableFocus = false;
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -1204,9 +1205,6 @@ function isset(strVariableName) {
                 }
             });
         }
-        // mainVue.equipmentKind =
-        $('#equipmentTableModal').modal('hide');
-        $('#equipmentObjectModal').modal('show');
     });
 
     $('#missingServices').on( 'click-row.bs.table', function (e, row, $element) {
@@ -1384,6 +1382,7 @@ function isset(strVariableName) {
                 serviceLongitude: (isset('longitude')) ? back.longitude : null,
                 statusSwitch: true,
                 // equipment
+                equipmentTableFocus: true,
                 equipmentPhotos: [
                                     {
                                         normal: 'http://prs.dev/img/no_image.png',
@@ -1436,8 +1435,8 @@ function isset(strVariableName) {
         methods:{
             // service show
             openEquimentList(){
-                $('#equipmentObjectModal').modal('hide');
-                $('#equipmentTableModal').modal('show');
+                this.equipmentTableFocus = true;
+                $('#equipmentModal').modal('show');
             },
             changeKey(num){
                 this.dropdownKey = num;

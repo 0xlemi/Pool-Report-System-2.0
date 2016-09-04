@@ -188,7 +188,6 @@
 	<div class="row">
 	</div>
 
-	@include('services.showEquipmentTable')
 	@include('services.showEquipment')
 	@include('services.showMap')
 	@include('services.listClients')
