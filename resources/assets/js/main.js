@@ -1181,23 +1181,26 @@ function isset(strVariableName) {
             equipmentTable.find('tr.table_active').removeClass('table_active');
             $element.addClass('table_active');
         }
-        if(isset('equipmentShowUrl')){
+        if(isset('equipmentUrl')){
             $.ajax({
                 vue: mainVue,
                 equipmentTable: equipmentTable,
-                url:      back.equipmentShowUrl+row.id,
+                url:      back.equipmentUrl+row.id,
                 type:     'GET',
                 success: function(data, textStatus, xhr) {
                     //called when successful
+                    this.vue.equipmentId = data.id;
                     this.vue.equipmentKind = data.kind;
                     this.vue.equipmentType = data.type;
                     this.vue.equipmentBrand = data.brand;
                     this.vue.equipmentModel = data.model;
-                    this.vue.equipmentCapacity = data.capacity+' '+data.units;
+                    this.vue.equipmentCapacity = data.capacity;
+                    this.vue.equipmentUnits = data.units;
                     this.vue.equipmentPhotos = data.photos;
                     // remove the selected color from the row
                     this.equipmentTable.find('tr.table_active').removeClass('table_active');
                     this.vue.equipmentTableFocus = false;
+                    this.vue.equipmentFocus = 4;
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     //called when there is an error
@@ -1383,24 +1386,48 @@ function isset(strVariableName) {
                 statusSwitch: true,
                 // equipment
                 equipmentTableFocus: true,
+                // 1=table, 2=new, 3=show, 4=edit
+                equipmentFocus: 1,
+                equipmentId: 0,
+                equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
                 equipmentPhotos: [
-                                    {
-                                        normal: 'http://prs.dev/img/no_image.png',
-                                        thumbnail: 'http://prs.dev/img/no_image.png',
-                                        title: 'no image',
-                                        order: 0
-                                    }
-                                ],
+                    {
+                        normal: 'http://prs.dev/img/no_image.png',
+                        thumbnail: 'http://prs.dev/img/no_image.png',
+                        title: 'no image',
+                        order: 0
+                    }
+                ],
                 equipmentKind: '',
                 equipmentType: '',
                 equipmentBrand: '',
                 equipmentModel: '',
                 equipmentCapacity: '',
-            // Generic
+                equipmentUnits: '',
+                // Generic
                 dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
                 dropdownKey2: (isset('dropdownKey2')) ? Number(back.dropdownKey2) : 0,
-        },
-        computed: {
+            },
+            computed: {
+                equipmentModalTitle: function(){
+                    switch (this.equipmentFocus) {
+                        case 1:
+                        return 'Equipment List';
+                        break;
+                        case 2:
+                        return 'Add Equipment';
+                        break;
+                        case 3:
+                        return this.equipmentKind;
+                        break;
+                        case 4:
+                        return 'Edit Equipment';
+                        break;
+                        default:
+                        return 'Equipment';
+
+                    }
+                },
                 missingServicesTag: function () {
                     if(this.numServicesMissing < 1){
                         return 'All Services Done';
@@ -1422,22 +1449,78 @@ function isset(strVariableName) {
                     };
                 }
             },
-        watch:{
-            serviceCountry: function(val, oldVal){
-                this.$broadcast('changeSelectedCountry', val);
-            }
-        },
-        events: {
-            countryChanged(countrySelected){
-                this.serviceCountry = countrySelected.key;
-            }
-        },
-        methods:{
-            // service show
-            openEquimentList(){
-                this.equipmentTableFocus = true;
-                $('#equipmentModal').modal('show');
+            watch:{
+                serviceCountry: function(val, oldVal){
+                    this.$broadcast('changeSelectedCountry', val);
+                }
             },
+            events: {
+                countryChanged(countrySelected){
+                    this.serviceCountry = countrySelected.key;
+                }
+            },
+            methods:{
+                // Equipment
+                sendEquipment(type){
+                    let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
+                    let requestType = 'POST';
+
+                    if(type == 'edit'){
+                        url += this.equipmentId;
+                        requestType = 'PATCH';
+                    }
+
+                    if(url != ''){
+                        $.ajax({
+                            vue: this,
+                            url: url,
+                            type: requestType,
+                            dataType: 'json',
+                            data: {
+                                'kind': this.equipmentKind,
+                                'type': this.equipmentType,
+                                'brand': this.equipmentBrand,
+                                'model': this.equipmentModel,
+                                'capacity': this.equipmentCapacity,
+                                'units': this.equipmentUnits,
+                                'serviceId': this.equipmentServiceId,
+                            },
+                            success: function(data, textStatus, xhr) {
+                                console.log(data);
+                                // refresh equipment list
+                                equipmentTable.bootstrapTable('refresh');
+                                // send back to list
+                                this.vue.openEquimentList();
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                console.log('error creating equipment');
+                            }
+                        });
+                    }
+                },
+                clearEquipment(){
+                    this.equipmentKind = '';
+                    this.equipmentType = '';
+                    this.equipmentBrand = '';
+                    this.equipmentModel = '';
+                    this.equipmentCapacity = '';
+                    this.equipmentUnits = '';
+                },
+                setEquipmentFocus($num){
+                    this.equipmentFocus = $num;
+                },
+                checkEquipmentFocusIs($num){
+                    return (this.equipmentFocus == $num);
+                },
+                // service show
+                openEquimentList(clearEquipment = true){
+                    this.equipmentTableFocus = true;
+                    this.equipmentFocus = 1;
+                    if(clearEquipment){
+                        this.clearEquipment();
+                    }
+                    $('#equipmentModal').modal('show');
+                },
             changeKey(num){
                 this.dropdownKey = num;
             },

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\CreateEquipmentRequest;
 use App\Equipment;
 use Response;
 
@@ -17,9 +18,26 @@ class EquipmentController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateEquipmentRequest $request)
     {
-        //
+        $equipment = Equipment::create([
+            'kind' => $request->kind,
+            'type' => $request->type,
+            'brand' => $request->brand,
+            'model' => $request->model,
+            'capacity' => $request->capacity,
+            'units' => $request->units,
+            'service_id' => $request->serviceId,
+        ]);
+        if($equipment){
+            return Response::json([
+                'message' => 'Equipment was successfully created'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'Equipment was not created created'
+            ], 500);
+
     }
 
     /**
@@ -57,7 +75,7 @@ class EquipmentController extends PageController
      */
     public function update(Request $request, $id)
     {
-        //
+        return 'update';    
     }
 
     /**

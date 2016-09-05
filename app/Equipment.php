@@ -20,7 +20,8 @@ class Equipment extends Model
         'brand',
         'model',
         'capacity',
-        'units'
+        'units',
+        'service_id'
 	];
 
 

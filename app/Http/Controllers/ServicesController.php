@@ -134,7 +134,7 @@ class ServicesController extends PageController
         JavaScript::put([
             'showLatitude' => $service->latitude,
             'showLongitude' => $service->longitude,
-            'equipmentShowUrl' => url('/equipment').'/',
+            'equipmentUrl' => url('/equipment').'/',
             'click_url' => url('clients').'/',
         ]);
 
@@ -164,9 +164,13 @@ class ServicesController extends PageController
             'state' => $service->state,
             'postalCode' => $service->postal_code,
             'country' => $service->country,
+            'equipmentUrl' => url('/equipment').'/',
+            'serviceId' => $service->id,
         ]);
 
-        return view('services.edit',compact('service'));
+        $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;
+
+        return view('services.edit',compact('service', 'default_table_url'));
     }
 
     /**
