@@ -283,7 +283,7 @@
                             <div class="col-sm-12">
                                 <div class="box-typical-upload box-typical-upload-in">
                                     <div class="drop-zone">
-	                                    <form id="addPhotosReport" action="{{ url('reports/photos/'.$report->seq_id)}}" method="POST" class="dropzone">
+	                                    <form id="genericDropzone" action="{{ url('reports/photos/'.$report->seq_id)}}" method="POST" class="dropzone">
 	                                    	{{ csrf_field() }}
 	                                    	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
 	                                        <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>

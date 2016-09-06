@@ -20,15 +20,7 @@ class EquipmentController extends PageController
      */
     public function store(CreateEquipmentRequest $request)
     {
-        $equipment = Equipment::create([
-            'kind' => $request->kind,
-            'type' => $request->type,
-            'brand' => $request->brand,
-            'model' => $request->model,
-            'capacity' => $request->capacity,
-            'units' => $request->units,
-            'service_id' => $request->serviceId,
-        ]);
+        $equipment = Equipment::create(array_map('htmlentities', $request->all()));
         if($equipment){
             return Response::json([
                 'message' => 'Equipment was successfully created'
@@ -37,7 +29,6 @@ class EquipmentController extends PageController
         return Response::json([
                 'error' => 'Equipment was not created created'
             ], 500);
-
     }
 
     /**
@@ -48,7 +39,11 @@ class EquipmentController extends PageController
      */
     public function show($id)
     {
-        $equipment = Equipment::findOrFail($id);
+        try {
+            $equipment = Equipment::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Equipment with that id, does not exist.');
+        }
 
         $photo = array(
             'photos' => $equipment->images()->get()
@@ -73,9 +68,72 @@ class EquipmentController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateEquipmentRequest $request, $id)
     {
-        return 'update';    
+        try {
+            $equipment = Equipment::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Equipment with that id, does not exist.');
+        }
+
+        $equipment->fill(array_map('htmlentities', $request->except('service_id')));
+
+        if($equipment->save()){
+            return Response::json([
+                'message' => 'Equipment was successfully updated'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'Equipment was not updated'
+            ], 500);
+
+    }
+
+
+    public function addPhoto(Request $request, $id)
+    {
+
+        $this->validate($request, [
+            'photo' => 'required|mimes:jpg,jpeg,png'
+        ]);
+
+        try {
+            $equipment = Equipment::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Equipment with that id, does not exist.');
+        }
+
+        $file = $request->file('photo');
+        if($equipment->addImageFromForm($file)){
+            return Response::json([
+                'message' => 'The photo was added to the equipment'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not added to the equipment'
+            ], 500);
+
+    }
+
+    public function removePhoto($id, $order)
+    {
+
+        try {
+            $equipment = Equipment::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Equipment with that id, does not exist.');
+        }
+
+        $image = $equipment->image($order);
+
+        if($image->delete()){
+                return Response::json([
+                'message' => 'The photo was deleted from the equipment'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not deleted from the equipment'
+            ], 500);
     }
 
     /**

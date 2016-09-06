@@ -165,6 +165,7 @@ class ServicesController extends PageController
             'postalCode' => $service->postal_code,
             'country' => $service->country,
             'equipmentUrl' => url('/equipment').'/',
+            'equipmentAddPhotoUrl' => url('/equipment/photos').'/',
             'serviceId' => $service->id,
         ]);
 

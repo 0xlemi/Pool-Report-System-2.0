@@ -116,12 +116,14 @@
 						</div>
 						<br>
 
-						<div v-if="equipmentPhotos[0].order != 0">
+						<div v-if="equipmentPhotos == []">
 							<h4>Equipment Photos</h4>
 							<hr>
 							<photo-list :data="equipmentPhotos"></photo-list>
 						</div>
 					</div>
+
+					<!-- Edit Equipment -->
                     <div class="col-md-12" v-show="checkEquipmentFocusIs(4)">
 
                         <div class="form-group row">
@@ -165,12 +167,27 @@
 								<input type="text" name="units" class="form-control" v-model="equipmentUnits">
 							</div>
 						</div>
-
-                        <br>
-                        <h4>Equipment Photos</h4>
 						<hr>
-                        <!-- Dropzone -->
-                    </div>
+
+						<div class="col-md-12">
+							<photo-list :data="equipmentPhotos"></photo-list>
+						</div>
+
+						<div class="col-md-12">
+	                        <!-- Dropzone -->
+							<div class="box-typical-upload box-typical-upload-in">
+		                        <div class="drop-zone">
+		                            <form id="equipmentDropzone" action="{{ url('/') }}" method="POST" class="dropzone">
+		                            	{{ csrf_field() }}
+		                            	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
+		                                <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
+		                            </form>
+		                        </div>
+		                    </div><!-- End Dropzone -->
+						</div>
+
+                    </div><!-- End Edit Equipment -->
+
 				</div>
 	      </div>
 	      <div class="modal-footer">

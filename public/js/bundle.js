@@ -22305,6 +22305,22 @@ $(document).ready(function () {
 					this.vue.equipmentCapacity = data.capacity;
 					this.vue.equipmentUnits = data.units;
 					this.vue.equipmentPhotos = data.photos;
+					// remove dropzone instance
+					Dropzone.forElement("#equipmentDropzone").destroy();
+
+					if (isset('equipmentAddPhotoUrl')) {
+						// generating the dropzone dinamicly
+						// in order to change the url
+						$("#equipmentDropzone").dropzone({
+							url: back.equipmentAddPhotoUrl + data.id,
+							method: 'post',
+							paramName: 'photo',
+							maxFilesize: 8,
+							acceptedFiles: '.jpg, .jpeg, .png'
+						});
+						// set the dropzone class for styling
+						$("#equipmentDropzone").addClass("dropzone");
+					}
 					// remove the selected color from the row
 					this.equipmentTable.find('tr.table_active').removeClass('table_active');
 					this.vue.equipmentTableFocus = false;
@@ -22394,7 +22410,7 @@ $(document).ready(function () {
      Dropzone
      ========================================================================== */
 
-	Dropzone.options.addPhotosReport = {
+	Dropzone.options.genericDropzone = {
 		paramName: 'photo',
 		maxFilesize: 8,
 		acceptedFiles: '.jpg, .jpeg, .png'
@@ -22495,12 +22511,7 @@ $(document).ready(function () {
 			equipmentFocus: 1,
 			equipmentId: 0,
 			equipmentServiceId: isset('serviceId') ? Number(back.serviceId) : 0,
-			equipmentPhotos: [{
-				normal: 'http://prs.dev/img/no_image.png',
-				thumbnail: 'http://prs.dev/img/no_image.png',
-				title: 'no image',
-				order: 0
-			}],
+			equipmentPhotos: [],
 			equipmentKind: '',
 			equipmentType: '',
 			equipmentBrand: '',
@@ -22574,7 +22585,6 @@ $(document).ready(function () {
 					requestType = 'PATCH';
 				}
 
-				console.log(url);
 				if (url != '') {
 					$.ajax({
 						vue: this,
@@ -22588,7 +22598,7 @@ $(document).ready(function () {
 							'model': this.equipmentModel,
 							'capacity': this.equipmentCapacity,
 							'units': this.equipmentUnits,
-							'serviceId': this.equipmentServiceId
+							'service_id': this.equipmentServiceId
 						},
 						success: function success(data, textStatus, xhr) {
 							console.log(data);

@@ -9,3 +9,8 @@
  * location picke
  */
  .pac-container{z-index:2000 !important;}
+
+
+ .box-typical-upload {
+    height: 100%;
+}

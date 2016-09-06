@@ -32,6 +32,10 @@ Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
+
+Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
+Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
+
 Route::resource('reports', 'ReportsController');
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController');
