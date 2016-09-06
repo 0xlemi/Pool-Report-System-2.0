@@ -78,14 +78,10 @@ class EquipmentController extends PageController
 
         $equipment->fill(array_map('htmlentities', $request->except('service_id')));
 
-        if($equipment->save()){
-            return Response::json([
+        $equipment->save();
+        return Response::json([
                 'message' => 'Equipment was successfully updated'
             ], 200);
-        }
-        return Response::json([
-                'error' => 'Equipment was not updated'
-            ], 500);
 
     }
 
@@ -117,14 +113,13 @@ class EquipmentController extends PageController
 
     public function removePhoto($id, $order)
     {
-
         try {
             $equipment = Equipment::findOrFail($id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Equipment with that id, does not exist.');
         }
 
-        $image = $equipment->image($order);
+        $image = $equipment->image($order, false);
 
         if($image->delete()){
                 return Response::json([

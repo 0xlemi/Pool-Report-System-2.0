@@ -1204,11 +1204,17 @@ function isset(strVariableName) {
                         // generating the dropzone dinamicly
                         // in order to change the url
                         $("#equipmentDropzone").dropzone({
+                                vue: this.vue,
                                 url: back.equipmentAddPhotoUrl+data.id,
                                 method: 'post',
                                 paramName: 'photo',
                                 maxFilesize: 8,
-                                acceptedFiles: '.jpg, .jpeg, .png'
+                                acceptedFiles: '.jpg, .jpeg, .png',
+                                init: function() {
+                                    this.on("success", function(file) {
+                                        this.options.vue.$emit('equipmentChanged');
+                                    });
+                                }
                         });
                         // set the dropzone class for styling
                         $( "#equipmentDropzone" ).addClass("dropzone");
@@ -1303,10 +1309,22 @@ function isset(strVariableName) {
     Dropzone
     ========================================================================== */
 
+    // Dropzone.autoDiscover = false;
     Dropzone.options.genericDropzone = {
         paramName: 'photo',
     	maxFilesize: 8,
     	acceptedFiles: '.jpg, .jpeg, .png'
+    }
+    Dropzone.options.equipmentDropzone = {
+        paramName: 'photo',
+    	maxFilesize: 8,
+    	acceptedFiles: '.jpg, .jpeg, .png',
+
+        init: function() {
+            this.on("addedfile", function(file) {
+                mainVue.getEquipment();
+            });
+        }
     }
 
 /* ==========================================================================
@@ -1466,10 +1484,38 @@ function isset(strVariableName) {
             events: {
                 countryChanged(countrySelected){
                     this.serviceCountry = countrySelected.key;
+                },
+                // when a photo is deleted from the equipment photo edit
+                equipmentChanged(){
+                    this.getEquipment();
                 }
             },
             methods:{
                 // Equipment
+                getEquipment(){
+                    if(isset('equipmentUrl')){
+                        $.ajax({
+                            vue: mainVue,
+                            url:      back.equipmentUrl+this.equipmentId,
+                            type:     'GET',
+                            success: function(data, textStatus, xhr) {
+                                //called when successful
+                                this.vue.equipmentId = data.id;
+                                this.vue.equipmentKind = data.kind;
+                                this.vue.equipmentType = data.type;
+                                this.vue.equipmentBrand = data.brand;
+                                this.vue.equipmentModel = data.model;
+                                this.vue.equipmentCapacity = data.capacity;
+                                this.vue.equipmentUnits = data.units;
+                                this.vue.equipmentPhotos = data.photos;
+                            },
+                            error: function(xhr, textStatus, errorThrown) {
+                                //called when there is an error
+                                console.log('error');
+                            }
+                        });
+                    }
+                },
                 sendEquipment(type){
                     let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
                     let requestType = 'POST';

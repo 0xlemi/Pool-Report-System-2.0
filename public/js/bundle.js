@@ -21133,15 +21133,37 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['data'],
+    props: ['data', 'objectId', 'canDelete', 'photosUrl'],
     data: function data() {
         return {
             debug: {}
         };
+    },
+
+    computed: {
+        deleteUrl: function deleteUrl() {
+            return this.photosUrl + '/' + this.objectId + '/';
+        }
+    },
+    methods: {
+        deletePhoto: function deletePhoto(order) {
+            $.ajax({
+                vue: this,
+                url: this.deleteUrl + order,
+                type: 'DELETE',
+                success: function success(data, textStatus, xhr) {
+                    console.log('image deleted');
+                    this.vue.$dispatch('equipmentChanged');
+                },
+                error: function error(xhr, textStatus, errorThrown) {
+                    console.log('image was not deleted');
+                }
+            });
+        }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n    <div class=\"gallery-col\">\n    \t<article class=\"gallery-item\">\n    \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n    \t\t<div class=\"gallery-hover-layout\">\n    \t\t\t<div class=\"gallery-hover-layout-in\">\n    \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n    \t\t\t\t<div class=\"btn-group\">\n    \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.normal }}\" title=\"{{ image.title }}\">\n    \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n    \t\t\t\t\t</a>\n    \t\t\t\t</div>\n    \t\t\t\t<p>Photo number {{ image.order }}</p>\n    \t\t\t</div>\n    \t\t</div>\n    \t</article>\n    </div><!--.gallery-col-->\n</div><!--.col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n        <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.normal }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n    </div><!--.col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -22312,11 +22334,17 @@ $(document).ready(function () {
 						// generating the dropzone dinamicly
 						// in order to change the url
 						$("#equipmentDropzone").dropzone({
+							vue: this.vue,
 							url: back.equipmentAddPhotoUrl + data.id,
 							method: 'post',
 							paramName: 'photo',
 							maxFilesize: 8,
-							acceptedFiles: '.jpg, .jpeg, .png'
+							acceptedFiles: '.jpg, .jpeg, .png',
+							init: function init() {
+								this.on("success", function (file) {
+									this.options.vue.$emit('equipmentChanged');
+								});
+							}
 						});
 						// set the dropzone class for styling
 						$("#equipmentDropzone").addClass("dropzone");
@@ -22410,10 +22438,22 @@ $(document).ready(function () {
      Dropzone
      ========================================================================== */
 
+	// Dropzone.autoDiscover = false;
 	Dropzone.options.genericDropzone = {
 		paramName: 'photo',
 		maxFilesize: 8,
 		acceptedFiles: '.jpg, .jpeg, .png'
+	};
+	Dropzone.options.equipmentDropzone = {
+		paramName: 'photo',
+		maxFilesize: 8,
+		acceptedFiles: '.jpg, .jpeg, .png',
+
+		init: function init() {
+			this.on("addedfile", function (file) {
+				mainVue.getEquipment();
+			});
+		}
 	};
 
 	/* ==========================================================================
@@ -22571,11 +22611,40 @@ $(document).ready(function () {
 		events: {
 			countryChanged: function countryChanged(countrySelected) {
 				this.serviceCountry = countrySelected.key;
+			},
+
+			// when a photo is deleted from the equipment photo edit
+			equipmentChanged: function equipmentChanged() {
+				this.getEquipment();
 			}
 		},
 		methods: {
 			// Equipment
 
+			getEquipment: function getEquipment() {
+				if (isset('equipmentUrl')) {
+					$.ajax({
+						vue: mainVue,
+						url: back.equipmentUrl + this.equipmentId,
+						type: 'GET',
+						success: function success(data, textStatus, xhr) {
+							//called when successful
+							this.vue.equipmentId = data.id;
+							this.vue.equipmentKind = data.kind;
+							this.vue.equipmentType = data.type;
+							this.vue.equipmentBrand = data.brand;
+							this.vue.equipmentModel = data.model;
+							this.vue.equipmentCapacity = data.capacity;
+							this.vue.equipmentUnits = data.units;
+							this.vue.equipmentPhotos = data.photos;
+						},
+						error: function error(xhr, textStatus, errorThrown) {
+							//called when there is an error
+							console.log('error');
+						}
+					});
+				}
+			},
 			sendEquipment: function sendEquipment(type) {
 				var url = isset('equipmentUrl') ? back.equipmentUrl : '';
 				var requestType = 'POST';
@@ -22601,7 +22670,6 @@ $(document).ready(function () {
 							'service_id': this.equipmentServiceId
 						},
 						success: function success(data, textStatus, xhr) {
-							console.log(data);
 							// refresh equipment list
 							equipmentTable.bootstrapTable('refresh');
 							// send back to list

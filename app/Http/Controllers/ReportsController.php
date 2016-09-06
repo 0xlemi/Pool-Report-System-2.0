@@ -246,7 +246,7 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
-        $image = $report->image($order);
+        $image = $report->image($order, false);
         if($image->delete()){
             return redirect()->back();
         }

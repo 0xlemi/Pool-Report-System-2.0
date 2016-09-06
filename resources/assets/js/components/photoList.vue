@@ -11,6 +11,9 @@
         					<a class="fancybox btn" href="{{ image.normal }}" title="{{ image.title }}">
         						<i class="font-icon font-icon-eye"></i>
         					</a>
+                            <a v-if="canDelete" @click="deletePhoto(image.order)" class="btn">
+								<i class="font-icon font-icon-trash"></i>
+							</a>
         				</div>
         				<p>Photo number {{ image.order }}</p>
         			</div>
@@ -23,10 +26,31 @@
 <script>
 
 export default {
-    props :['data'],
+    props :['data', 'objectId', 'canDelete', 'photosUrl'],
     data () {
         return {
             debug: {}
+        }
+    },
+    computed:{
+        deleteUrl: function(){
+            return this.photosUrl+'/'+this.objectId+'/'
+        }
+    },
+    methods:{
+        deletePhoto(order){
+            $.ajax({
+                vue: this,
+                url: this.deleteUrl+order,
+                type: 'DELETE',
+                success: function(data, textStatus, xhr) {
+                    console.log('image deleted');
+                    this.vue.$dispatch('equipmentChanged')
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('image was not deleted');
+                }
+            });
         }
     },
 }

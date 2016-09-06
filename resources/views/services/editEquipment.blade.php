@@ -170,14 +170,14 @@
 						<hr>
 
 						<div class="col-md-12">
-							<photo-list :data="equipmentPhotos"></photo-list>
+							<photo-list :data="equipmentPhotos" :object-id="equipmentId" :can-delete="true" :photos-url="'{{ url('equipment/photos') }}'" ></photo-list>
 						</div>
 
 						<div class="col-md-12">
 	                        <!-- Dropzone -->
 							<div class="box-typical-upload box-typical-upload-in">
 		                        <div class="drop-zone">
-		                            <form id="equipmentDropzone" action="{{ url('/') }}" method="POST" class="dropzone">
+		                            <form id="equipmentDropzone" action="{{ url('/') }}" class="dropzone">
 		                            	{{ csrf_field() }}
 		                            	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
 		                                <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
