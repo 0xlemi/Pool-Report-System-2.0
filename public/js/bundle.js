@@ -22552,6 +22552,7 @@ $(document).ready(function () {
 			equipmentId: 0,
 			equipmentServiceId: isset('serviceId') ? Number(back.serviceId) : 0,
 			equipmentPhotos: [],
+			equipmentPhoto: '',
 			equipmentKind: '',
 			equipmentType: '',
 			equipmentBrand: '',
@@ -22661,6 +22662,7 @@ $(document).ready(function () {
 						type: requestType,
 						dataType: 'json',
 						data: {
+							'photo': this.equipmentPhoto,
 							'kind': this.equipmentKind,
 							'type': this.equipmentType,
 							'brand': this.equipmentBrand,

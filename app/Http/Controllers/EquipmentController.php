@@ -20,6 +20,7 @@ class EquipmentController extends PageController
      */
     public function store(CreateEquipmentRequest $request)
     {
+        dd($request->all());
         $equipment = Equipment::create(array_map('htmlentities', $request->all()));
         if($equipment){
             return Response::json([

@@ -45,6 +45,31 @@
                     <!-- Create new Equipment -->
 					<div class="col-md-12" v-show="checkEquipmentFocusIs(2)">
 
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Equipment Photo</label>
+							<div class="col-sm-10">
+				                <div class="fileupload fileupload-new" data-provides="fileupload">
+				                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+				                  <img src="{{ url('img/no_image.png') }}" alt="Placeholder" /></div>
+				                  <div class="fileupload-preview fileupload-exists thumbnail"
+				                  	style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+				                  @if ($errors->has('photo'))
+				                  	<br>
+									<span class="label label-danger">{{ $errors->first('photo') }}</span>
+									<br><br>
+								  @endif
+				                  <div>
+				                    <span class="btn btn-default btn-file">
+				                    <span class="fileupload-new">Select image</span>
+				                    <span class="fileupload-exists">Change</span>
+				                    <input type="file" v-model="equipmentPhoto" name="photo" ></span>
+				                    <a href="#" class="btn btn-default fileupload-exists"
+				                    	data-dismiss="fileupload">Remove</a>
+				                  </div>
+				                </div>
+			            	</div>
+						</div>
+
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Kind</label>
 							<div class="col-sm-10">
