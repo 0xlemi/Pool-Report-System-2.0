@@ -1183,7 +1183,7 @@ function isset(strVariableName) {
         }
         if(isset('equipmentUrl')){
             $.ajax({
-                vue: mainVue,
+                vue: serviceVue,
                 equipmentTable: equipmentTable,
                 url:      back.equipmentUrl+row.id,
                 type:     'GET',
@@ -1266,7 +1266,7 @@ function isset(strVariableName) {
             missingServices.bootstrapTable('refresh', {url: new_missingServices_url});
             if(isset('missingServicesInfo_url')){
                 $.ajax({
-                    vue: mainVue,
+                    vue: reportVue,
                     url:      back.missingServicesInfo_url,
                     type:     'GET',
                     dataType: 'json',
@@ -1319,12 +1319,6 @@ function isset(strVariableName) {
         paramName: 'photo',
     	maxFilesize: 8,
     	acceptedFiles: '.jpg, .jpeg, .png',
-
-        init: function() {
-            this.on("addedfile", function(file) {
-                mainVue.getEquipment();
-            });
-        }
     }
 
 /* ==========================================================================
@@ -1376,237 +1370,28 @@ function isset(strVariableName) {
     VueJs code
     ========================================================================== */
 
-    let mainVue = new Vue({
-        el: 'body',
-
-        components: {
-            Permissions,
-            emailPreference,
-            countries,
-            dropdown,
-            PhotoList,
-        },
+    // report Vue instance
+    let reportVue = new Vue({
+        el:'.reportVue',
+        components: { dropdown },
         directives: { FormToAjax },
         data:{
-            // Administrator
-                companyName: "",
-                website: "",
-                facebook: "",
-                twitter: "",
-                objectName: "",
-                objectLastName: "",
-            // Reports
-                numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
-                numServicesToDo: (isset('numServicesToDo')) ? back.numServicesToDo : '',
-                numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
-                reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
-            // Services
-                //temporal values
-                pickerServiceAddressLine1: '',
-                pickerServiceCity: '',
-                pickerServiceState: '',
-                pickerServicePostalCode: '',
-                pickerServiceCountry: '',
-                pickerServiceLatitude: '',
-                pickerServiceLongitude: '',
-                // form values
-                serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
-                serviceCity: (isset('city')) ? back.city : '',
-                serviceState: (isset('state')) ? back.state : '',
-                servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
-                serviceCountry: (isset('country')) ? back.country : '',
-                serviceLatitude: (isset('latitude')) ? back.latitude : null,
-                serviceLongitude: (isset('longitude')) ? back.longitude : null,
-                statusSwitch: true,
-                // equipment
-                equipmentTableFocus: true,
-                // 1=table, 2=new, 3=show, 4=edit
-                equipmentFocus: 1,
-                equipmentId: 0,
-                equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-                equipmentPhotos: [],
-                equipmentPhoto: '',
-                equipmentKind: '',
-                equipmentType: '',
-                equipmentBrand: '',
-                equipmentModel: '',
-                equipmentCapacity: '',
-                equipmentUnits: '',
-                // Generic
-                dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
-                dropdownKey2: (isset('dropdownKey2')) ? Number(back.dropdownKey2) : 0,
-            },
-            computed: {
-                equipmentModalTitle: function(){
-                    switch (this.equipmentFocus) {
-                        case 1:
-                        return 'Equipment List';
-                        break;
-                        case 2:
-                        return 'Add Equipment';
-                        break;
-                        case 3:
-                        return this.equipmentKind;
-                        break;
-                        case 4:
-                        return 'Edit Equipment';
-                        break;
-                        default:
-                        return 'Equipment';
-
-                    }
-                },
-                missingServicesTag: function () {
+            numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
+            numServicesToDo:    (isset('numServicesToDo')) ? back.numServicesToDo : '',
+            numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
+            reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
+            serviceKey:         (isset('serviceKey')) ? Number(back.serviceKey) : 0,
+            technicianKey:      (isset('technicianKey')) ? Number(back.technicianKey) : 0,
+        },
+        computed:{
+            missingServicesTag: function () {
                     if(this.numServicesMissing < 1){
                         return 'All Services Done';
                     }
                     return 'Missing Services: '+this.numServicesMissing;
                 },
-                locationPickerTag(){
-                    if(this.serviceLatitude == null ){
-                        return {
-                            'icon': 'font-icon font-icon-pin-2',
-                            'text': 'Choose Location',
-                            'class': 'btn-primary'
-                        };
-                    }
-                    return {
-                        'icon': 'font-icon font-icon-ok',
-                        'text': 'Location Selected',
-                        'class': 'btn-success'
-                    };
-                }
-            },
-            watch:{
-                serviceCountry: function(val, oldVal){
-                    this.$broadcast('changeSelectedCountry', val);
-                }
-            },
-            events: {
-                countryChanged(countrySelected){
-                    this.serviceCountry = countrySelected.key;
-                },
-                // when a photo is deleted from the equipment photo edit
-                equipmentChanged(){
-                    this.getEquipment();
-                }
-            },
-            methods:{
-                // Equipment
-                getEquipment(){
-                    if(isset('equipmentUrl')){
-                        $.ajax({
-                            vue: mainVue,
-                            url:      back.equipmentUrl+this.equipmentId,
-                            type:     'GET',
-                            success: function(data, textStatus, xhr) {
-                                //called when successful
-                                this.vue.equipmentId = data.id;
-                                this.vue.equipmentKind = data.kind;
-                                this.vue.equipmentType = data.type;
-                                this.vue.equipmentBrand = data.brand;
-                                this.vue.equipmentModel = data.model;
-                                this.vue.equipmentCapacity = data.capacity;
-                                this.vue.equipmentUnits = data.units;
-                                this.vue.equipmentPhotos = data.photos;
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                //called when there is an error
-                                console.log('error');
-                            }
-                        });
-                    }
-                },
-                sendEquipment(type){
-                    let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
-                    let requestType = 'POST';
-
-                    if(type == 'edit'){
-                        url += this.equipmentId;
-                        requestType = 'PATCH';
-                    }
-
-                    if(url != ''){
-                        $.ajax({
-                            vue: this,
-                            url: url,
-                            type: requestType,
-                            dataType: 'json',
-                            data: {
-                                'photo': this.equipmentPhoto,
-                                'kind': this.equipmentKind,
-                                'type': this.equipmentType,
-                                'brand': this.equipmentBrand,
-                                'model': this.equipmentModel,
-                                'capacity': this.equipmentCapacity,
-                                'units': this.equipmentUnits,
-                                'service_id': this.equipmentServiceId,
-                            },
-                            success: function(data, textStatus, xhr) {
-                                // refresh equipment list
-                                equipmentTable.bootstrapTable('refresh');
-                                // send back to list
-                                this.vue.openEquimentList();
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                console.log('error creating equipment');
-                            }
-                        });
-                    }
-                },
-                clearEquipment(){
-                    this.equipmentKind = '';
-                    this.equipmentType = '';
-                    this.equipmentBrand = '';
-                    this.equipmentModel = '';
-                    this.equipmentCapacity = '';
-                    this.equipmentUnits = '';
-                },
-                setEquipmentFocus($num){
-                    this.equipmentFocus = $num;
-                },
-                checkEquipmentFocusIs($num){
-                    return (this.equipmentFocus == $num);
-                },
-                // service show
-                openEquimentList(clearEquipment = true){
-                    this.equipmentTableFocus = true;
-                    this.equipmentFocus = 1;
-                    if(clearEquipment){
-                        this.clearEquipment();
-                    }
-                    $('#equipmentModal').modal('show');
-                },
-            changeKey(num){
-                this.dropdownKey = num;
-            },
-            populateAddressFields(page){
-
-                this.setLocation(page);
-                if(page == 'create'){
-                    this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-                    this.serviceCity = this.pickerServiceCity;
-                    this.servicePostalCode = this.pickerServicePostalCode;
-                    this.serviceState = this.pickerServiceState;
-                    this.serviceCountry = this.pickerServiceCountry;
-                }
-
-            },
-            setLocation(page){
-                if(page == 'create'){
-                    this.serviceLongitude = this.pickerServiceLongitude;
-                    this.serviceLatitude = this.pickerServiceLatitude;
-                }
-            },
-            changeServiceListStatus(status){
-                var intStatus = (!status) ? 1 : 0;
-                if(typeof back !== 'undefined'){
-                    if(typeof back.serviceTableUrl !== 'undefined'){
-                        let new_url = back.serviceTableUrl+intStatus;
-                        generic_table.bootstrapTable('refresh', {url:new_url});
-                    }
-            	}
-            },
+        },
+        methods:{
             previewEmailReport(id){
                 // prevent the user from clicking more than once
                 event.target.disabled = true;
@@ -1640,9 +1425,222 @@ function isset(strVariableName) {
                     }
                 });
             }
-        }
+        },
+    });
+
+    let settingsVue = new Vue({
+        el: '.settingsVue',
+        components:{
+            Permissions,
+            emailPreference,
+        },
+        directives: { FormToAjax },
+        data:{
+            companyName: "",
+            website: "",
+            facebook: "",
+            twitter: "",
+            objectName: "",
+            objectLastName: "",
+        },
+    });
+
+    let serviceVue = new Vue({
+        el: '.serviceVue',
+        components: {
+            PhotoList,
+            countries
+        },
+        directives: { FormToAjax },
+        data: {
+            statusSwitch: true,
+            // Location picker values
+            pickerServiceAddressLine1: '',
+            pickerServiceCity: '',
+            pickerServiceState: '',
+            pickerServicePostalCode: '',
+            pickerServiceCountry: '',
+            pickerServiceLatitude: '',
+            pickerServiceLongitude: '',
+            // form values
+            serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
+            serviceCity: (isset('city')) ? back.city : '',
+            serviceState: (isset('state')) ? back.state : '',
+            servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
+            serviceCountry: (isset('country')) ? back.country : '',
+            serviceLatitude: (isset('latitude')) ? back.latitude : null,
+            serviceLongitude: (isset('longitude')) ? back.longitude : null,
+            // Equipment
+            equipmentTableFocus: true,
+            equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+            equipmentId: 0,
+            equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
+            equipmentPhotos: [],
+            equipmentPhoto: '',
+            equipmentKind: '',
+            equipmentType: '',
+            equipmentBrand: '',
+            equipmentModel: '',
+            equipmentCapacity: '',
+            equipmentUnits: '',
+        },
+        computed: {
+            equipmentModalTitle: function(){
+                switch (this.equipmentFocus){
+                    case 1:
+                    return 'Equipment List';
+                    break;
+                    case 2:
+                    return 'Add Equipment';
+                    break;
+                    case 3:
+                    return this.equipmentKind;
+                    break;
+                    case 4:
+                    return 'Edit Equipment';
+                    break;
+                    default:
+                    return 'Equipment';
+                }
+            },
+            locationPickerTag(){
+                let attributes = {
+                        'icon': 'font-icon font-icon-ok',
+                        'text': 'Location Selected',
+                        'class': 'btn-success'
+                    };
+                if(this.serviceLatitude == null ){
+                    attributes = {
+                        'icon': 'font-icon font-icon-pin-2',
+                        'text': 'Choose Location',
+                        'class': 'btn-primary'
+                    };
+                }
+                return attributes;
+            },
+        },
+        events: {
+            // when a photo is deleted from the equipment photo edit
+            equipmentChanged(){
+                this.getEquipment();
+            }
+        },
+        methods: {
+            // Equipment
+            getEquipment(){
+                if(isset('equipmentUrl')){
+                    $.ajax({
+                        vue: this,
+                        url:      back.equipmentUrl+this.equipmentId,
+                        type:     'GET',
+                        success: function(data, textStatus, xhr) {
+                            //called when successful
+                            this.vue.equipmentId = data.id;
+                            this.vue.equipmentKind = data.kind;
+                            this.vue.equipmentType = data.type;
+                            this.vue.equipmentBrand = data.brand;
+                            this.vue.equipmentModel = data.model;
+                            this.vue.equipmentCapacity = data.capacity;
+                            this.vue.equipmentUnits = data.units;
+                            this.vue.equipmentPhotos = data.photos;
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            //called when there is an error
+                            console.log('error');
+                        }
+                    });
+                }
+            },
+            sendEquipment(type){
+                let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
+                let requestType = 'POST';
+
+                if(type == 'edit'){
+                    url += this.equipmentId;
+                    requestType = 'PATCH';
+                }
+
+                if(url != ''){
+                    $.ajax({
+                        vue: this,
+                        url: url,
+                        type: requestType,
+                        dataType: 'json',
+                        data: {
+                            'photo': this.equipmentPhoto,
+                            'kind': this.equipmentKind,
+                            'type': this.equipmentType,
+                            'brand': this.equipmentBrand,
+                            'model': this.equipmentModel,
+                            'capacity': this.equipmentCapacity,
+                            'units': this.equipmentUnits,
+                            'service_id': this.equipmentServiceId,
+                        },
+                        success: function(data, textStatus, xhr) {
+                            // refresh equipment list
+                            equipmentTable.bootstrapTable('refresh');
+                            // send back to list
+                            this.vue.openEquimentList();
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            console.log('error creating equipment');
+                        }
+                    });
+                }
+            },
+            clearEquipment(){
+                this.equipmentKind = '';
+                this.equipmentType = '';
+                this.equipmentBrand = '';
+                this.equipmentModel = '';
+                this.equipmentCapacity = '';
+                this.equipmentUnits = '';
+            },
+            setEquipmentFocus($num){
+                this.equipmentFocus = $num;
+            },
+            checkEquipmentFocusIs($num){
+                return (this.equipmentFocus == $num);
+            },
+            openEquimentList(clearEquipment = true){
+                this.equipmentTableFocus = true;
+                this.equipmentFocus = 1;
+                if(clearEquipment){
+                    this.clearEquipment();
+                }
+                $('#equipmentModal').modal('show');
+            },
+            populateAddressFields(page){
+                this.setLocation(page);
+                if(page == 'create'){
+                    this.serviceAddressLine1 = this.pickerServiceAddressLine1;
+                    this.serviceCity = this.pickerServiceCity;
+                    this.servicePostalCode = this.pickerServicePostalCode;
+                    this.serviceState = this.pickerServiceState;
+                    this.serviceCountry = this.pickerServiceCountry;
+                }
+
+            },
+            setLocation(page){
+                if(page == 'create'){
+                    this.serviceLongitude = this.pickerServiceLongitude;
+                    this.serviceLatitude = this.pickerServiceLatitude;
+                }
+            },
+            changeServiceListStatus(status){
+                var intStatus = (!status) ? 1 : 0;
+                if(typeof back !== 'undefined'){
+                    if(typeof back.serviceTableUrl !== 'undefined'){
+                        let new_url = back.serviceTableUrl+intStatus;
+                        generic_table.bootstrapTable('refresh', {url:new_url});
+                    }
+            	}
+            },
+        },
 
     });
+
+
 
 
 /* ==========================================================================
@@ -1670,7 +1668,7 @@ function isset(strVariableName) {
 
 
     let locPicker = $('#locationPicker').locationpicker({
-        vue: mainVue,
+        vue: serviceVue,
         location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
         radius: 0,
         inputBinding: {

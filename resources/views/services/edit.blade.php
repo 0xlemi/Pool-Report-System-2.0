@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="serviceVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -100,8 +101,7 @@
 							<div class="form-group row {{($errors->has('country'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Country:</label>
 								<div class="col-sm-10">
-										<countries country="{{ $service->country }}" ></countries>
-										<input type="hidden" name="country" :value="serviceCountry">
+										<countries :code.sync="serviceCountry" ></countries>
 									@if ($errors->has('country'))
 										<small class="text-muted">{{ $errors->first('country') }}</small>
 									@endif
@@ -284,5 +284,5 @@
 
 	@include('services.locationPicker')
 	@include('services.editEquipment')
-
+</div>
 @endsection

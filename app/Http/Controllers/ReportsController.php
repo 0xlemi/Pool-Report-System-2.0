@@ -218,8 +218,8 @@ class ReportsController extends PageController
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'default_date' => $date,
-            'dropdownKey' => $report->service()->seq_id,
-            'dropdownKey2' => $report->technician()->seq_id,
+            'serviceKey' => $report->service()->seq_id,
+            'technicianKey' => $report->technician()->seq_id,
         ]);
         return view('reports.edit', compact('report', 'services', 'technicians'));
     }

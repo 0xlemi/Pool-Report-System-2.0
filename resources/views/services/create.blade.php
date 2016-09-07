@@ -2,7 +2,8 @@
 
 @inject('helper', 'App\PRS\Helpers\ServiceHelpers')
 @section('content')
-<header class="section-header">
+<div class="serviceVue">
+	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
 				<div class="tbl-cell">
@@ -273,5 +274,5 @@
 	</div>
 
 	@include('services.locationPicker')
-
+</div>
 @endsection

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="reportVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -42,7 +43,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
-									<dropdown :key.sync="dropdownKey"
+									<dropdown :key.sync="serviceKey"
 												:options="{{ $services }}"
 												:name="'service'">
 									</dropdown>
@@ -51,7 +52,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
-									<dropdown :key.sync="dropdownKey2"
+									<dropdown :key.sync="technicianKey"
 												:options="{{ $technicians }}"
 												:name="'technician'">
 									</dropdown>
@@ -296,4 +297,5 @@
 			</section>
 		</div>
 	</div>
+</div>
 @endsection

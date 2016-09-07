@@ -3,6 +3,7 @@
 @inject('serviceHelpers', 'App\PRS\Helpers\ServiceHelpers')
 @inject('clientHelpers', 'App\PRS\Helpers\ClientHelpers')
 @section('content')
+<div class="serviceVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -185,11 +186,9 @@
 			</section>
 		</div>
 	</div>
-	<div class="row">
-	</div>
 
 	@include('services.showEquipment')
 	@include('services.showMap')
 	@include('services.listClients')
-
+</div>
 @endsection

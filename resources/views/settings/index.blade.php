@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="row">
+<div class="row settingsVue">
 
     <div class="col-lg-3 col-md-6 col-sm-12">
         <section class="box-typical">

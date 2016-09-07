@@ -10,33 +10,33 @@
             deselect-label="Can't remove this value"
             key="key"
             label="label"
-            placeholder="Select Country"
-            >
-
+            placeholder="Select Country">
         </multiselect>
     </div>
+	<input type="hidden" name="country" value="{{code}}">
 </template>
 
 <script>
 import Multiselect from 'vue-multiselect'
 export default {
     components: { Multiselect },
-    props :[ 'country'],
+    props :[ 'code'],
     data () {
         return {
-          selected: (typeof this.country != 'undefined') ? countries.find(country => country.key === this.country) : null,
+          selected: (typeof this.code != 'undefined') ? countries.find(selected => selected.key === this.code) : null,
           options: countries
         }
     },
-    methods: {
+    methods:{
         updateSelected (newSelected) {
           this.selected = newSelected;
-          this.$dispatch('countryChanged', newSelected);
+          this.code = newSelected.key;
         }
     },
-    events: {
-        changeSelectedCountry: function(countryKey){
-            this.selected = this.options.find(country => country.key === countryKey);
+    watch: {
+        // if the key is changed change the selected
+        code: function(val){
+            this.selected = this.options.find(options => options.key === val);
         }
     }
 }

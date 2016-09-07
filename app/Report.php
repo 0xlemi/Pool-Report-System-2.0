@@ -99,6 +99,8 @@ class Report extends Model
         $time = (new Carbon($this->completed, 'UTC'))
                     ->setTimezone($this->admin()->timezone)
                     ->toDayDateTimeString();
+
+        $unsubscribeLink = '#';
         $photo1 = url($this->image(1));
         $photo2 = url($this->image(2));
         $photo3 = url($this->image(3));
@@ -107,7 +109,7 @@ class Report extends Model
         $result = \ImageHTML::loadHTML(
                     view(
                         'emails.serviceReport',
-                        compact('logo', 'headerImage', 'name','address','time','photo1','photo2','photo3')
+                        compact('logo', 'headerImage', 'name','address','time', 'unsubscribeLink', 'photo1','photo2','photo3')
                     )
                 )->save($img_path);
 

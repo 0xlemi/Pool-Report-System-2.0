@@ -20984,13 +20984,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = {
     components: { Multiselect: _vueMultiselect2.default },
-    props: ['country'],
+    props: ['code'],
     data: function data() {
         var _this = this;
 
         return {
-            selected: typeof this.country != 'undefined' ? countries.find(function (country) {
-                return country.key === _this.country;
+            selected: typeof this.code != 'undefined' ? countries.find(function (selected) {
+                return selected.key === _this.code;
             }) : null,
             options: countries
         };
@@ -20999,13 +20999,14 @@ exports.default = {
     methods: {
         updateSelected: function updateSelected(newSelected) {
             this.selected = newSelected;
-            this.$dispatch('countryChanged', newSelected);
+            this.code = newSelected.key;
         }
     },
-    events: {
-        changeSelectedCountry: function changeSelectedCountry(countryKey) {
-            this.selected = this.options.find(function (country) {
-                return country.key === countryKey;
+    watch: {
+        // if the key is changed change the selected
+        code: function code(val) {
+            this.selected = this.options.find(function (options) {
+                return options.key === val;
             });
         }
     }
@@ -21014,7 +21015,7 @@ exports.default = {
 
 var countries = [{ 'key': 'AF', 'label': 'Afghanistan' }, { 'key': 'AX', 'label': 'Aland Islands' }, { 'key': 'AL', 'label': 'Albania' }, { 'key': 'DZ', 'label': 'Algeria' }, { 'key': 'AS', 'label': 'American Samoa' }, { 'key': 'AD', 'label': 'Andorra' }, { 'key': 'AO', 'label': 'Angola' }, { 'key': 'AI', 'label': 'Anguilla' }, { 'key': 'AQ', 'label': 'Antarctica' }, { 'key': 'AG', 'label': 'Antigua And Barbuda' }, { 'key': 'AR', 'label': 'Argentina' }, { 'key': 'AM', 'label': 'Armenia' }, { 'key': 'AW', 'label': 'Aruba' }, { 'key': 'AU', 'label': 'Australia' }, { 'key': 'AT', 'label': 'Austria' }, { 'key': 'AZ', 'label': 'Azerbaijan' }, { 'key': 'BS', 'label': 'Bahamas' }, { 'key': 'BH', 'label': 'Bahrain' }, { 'key': 'BD', 'label': 'Bangladesh' }, { 'key': 'BB', 'label': 'Barbados' }, { 'key': 'BY', 'label': 'Belarus' }, { 'key': 'BE', 'label': 'Belgium' }, { 'key': 'BZ', 'label': 'Belize' }, { 'key': 'BJ', 'label': 'Benin' }, { 'key': 'BM', 'label': 'Bermuda' }, { 'key': 'BT', 'label': 'Bhutan' }, { 'key': 'BO', 'label': 'Bolivia' }, { 'key': 'BA', 'label': 'Bosnia And Herzegovina' }, { 'key': 'BW', 'label': 'Botswana' }, { 'key': 'BV', 'label': 'Bouvet Island' }, { 'key': 'BR', 'label': 'Brazil' }, { 'key': 'IO', 'label': 'British Indian Ocean Territory' }, { 'key': 'BN', 'label': 'Brunei Darussalam' }, { 'key': 'BG', 'label': 'Bulgaria' }, { 'key': 'BF', 'label': 'Burkina Faso' }, { 'key': 'BI', 'label': 'Burundi' }, { 'key': 'KH', 'label': 'Cambodia' }, { 'key': 'CM', 'label': 'Cameroon' }, { 'key': 'CA', 'label': 'Canada' }, { 'key': 'CV', 'label': 'Cape Verde' }, { 'key': 'KY', 'label': 'Cayman Islands' }, { 'key': 'CF', 'label': 'Central African Republic' }, { 'key': 'TD', 'label': 'Chad' }, { 'key': 'CL', 'label': 'Chile' }, { 'key': 'CN', 'label': 'China' }, { 'key': 'CX', 'label': 'Christmas Island' }, { 'key': 'CC', 'label': 'Cocos (Keeling) Islands' }, { 'key': 'CO', 'label': 'Colombia' }, { 'key': 'KM', 'label': 'Comoros' }, { 'key': 'CG', 'label': 'Congo' }, { 'key': 'CD', 'label': 'Congo, Democratic Republic' }, { 'key': 'CK', 'label': 'Cook Islands' }, { 'key': 'CR', 'label': 'Costa Rica' }, { 'key': 'CI', 'label': 'Cote D\'Ivoire' }, { 'key': 'HR', 'label': 'Croatia' }, { 'key': 'CU', 'label': 'Cuba' }, { 'key': 'CY', 'label': 'Cyprus' }, { 'key': 'CZ', 'label': 'Czech Republic' }, { 'key': 'DK', 'label': 'Denmark' }, { 'key': 'DJ', 'label': 'Djibouti' }, { 'key': 'DM', 'label': 'Dominica' }, { 'key': 'DO', 'label': 'Dominican Republic' }, { 'key': 'EC', 'label': 'Ecuador' }, { 'key': 'EG', 'label': 'Egypt' }, { 'key': 'SV', 'label': 'El Salvador' }, { 'key': 'GQ', 'label': 'Equatorial Guinea' }, { 'key': 'ER', 'label': 'Eritrea' }, { 'key': 'EE', 'label': 'Estonia' }, { 'key': 'ET', 'label': 'Ethiopia' }, { 'key': 'FK', 'label': 'Falkland Islands (Malvinas)' }, { 'key': 'FO', 'label': 'Faroe Islands' }, { 'key': 'FJ', 'label': 'Fiji' }, { 'key': 'FI', 'label': 'Finland' }, { 'key': 'FR', 'label': 'France' }, { 'key': 'GF', 'label': 'French Guiana' }, { 'key': 'PF', 'label': 'French Polynesia' }, { 'key': 'TF', 'label': 'French Southern Territories' }, { 'key': 'GA', 'label': 'Gabon' }, { 'key': 'GM', 'label': 'Gambia' }, { 'key': 'GE', 'label': 'Georgia' }, { 'key': 'DE', 'label': 'Germany' }, { 'key': 'GH', 'label': 'Ghana' }, { 'key': 'GI', 'label': 'Gibraltar' }, { 'key': 'GR', 'label': 'Greece' }, { 'key': 'GL', 'label': 'Greenland' }, { 'key': 'GD', 'label': 'Grenada' }, { 'key': 'GP', 'label': 'Guadeloupe' }, { 'key': 'GU', 'label': 'Guam' }, { 'key': 'GT', 'label': 'Guatemala' }, { 'key': 'GG', 'label': 'Guernsey' }, { 'key': 'GN', 'label': 'Guinea' }, { 'key': 'GW', 'label': 'Guinea-Bissau' }, { 'key': 'GY', 'label': 'Guyana' }, { 'key': 'HT', 'label': 'Haiti' }, { 'key': 'HM', 'label': 'Heard Island & Mcdonald Islands' }, { 'key': 'VA', 'label': 'Holy See (Vatican City State)' }, { 'key': 'HN', 'label': 'Honduras' }, { 'key': 'HK', 'label': 'Hong Kong' }, { 'key': 'HU', 'label': 'Hungary' }, { 'key': 'IS', 'label': 'Iceland' }, { 'key': 'IN', 'label': 'India' }, { 'key': 'ID', 'label': 'Indonesia' }, { 'key': 'IR', 'label': 'Iran, Islamic Republic Of' }, { 'key': 'IQ', 'label': 'Iraq' }, { 'key': 'IE', 'label': 'Ireland' }, { 'key': 'IM', 'label': 'Isle Of Man' }, { 'key': 'IL', 'label': 'Israel' }, { 'key': 'IT', 'label': 'Italy' }, { 'key': 'JM', 'label': 'Jamaica' }, { 'key': 'JP', 'label': 'Japan' }, { 'key': 'JE', 'label': 'Jersey' }, { 'key': 'JO', 'label': 'Jordan' }, { 'key': 'KZ', 'label': 'Kazakhstan' }, { 'key': 'KE', 'label': 'Kenya' }, { 'key': 'KI', 'label': 'Kiribati' }, { 'key': 'KR', 'label': 'Korea' }, { 'key': 'KW', 'label': 'Kuwait' }, { 'key': 'KG', 'label': 'Kyrgyzstan' }, { 'key': 'LA', 'label': 'Lao People\'s Democratic Republic' }, { 'key': 'LV', 'label': 'Latvia' }, { 'key': 'LB', 'label': 'Lebanon' }, { 'key': 'LS', 'label': 'Lesotho' }, { 'key': 'LR', 'label': 'Liberia' }, { 'key': 'LY', 'label': 'Libyan Arab Jamahiriya' }, { 'key': 'LI', 'label': 'Liechtenstein' }, { 'key': 'LT', 'label': 'Lithuania' }, { 'key': 'LU', 'label': 'Luxembourg' }, { 'key': 'MO', 'label': 'Macao' }, { 'key': 'MK', 'label': 'Macedonia' }, { 'key': 'MG', 'label': 'Madagascar' }, { 'key': 'MW', 'label': 'Malawi' }, { 'key': 'MY', 'label': 'Malaysia' }, { 'key': 'MV', 'label': 'Maldives' }, { 'key': 'ML', 'label': 'Mali' }, { 'key': 'MT', 'label': 'Malta' }, { 'key': 'MH', 'label': 'Marshall Islands' }, { 'key': 'MQ', 'label': 'Martinique' }, { 'key': 'MR', 'label': 'Mauritania' }, { 'key': 'MU', 'label': 'Mauritius' }, { 'key': 'YT', 'label': 'Mayotte' }, { 'key': 'MX', 'label': 'Mexico' }, { 'key': 'FM', 'label': 'Micronesia, Federated States Of' }, { 'key': 'MD', 'label': 'Moldova' }, { 'key': 'MC', 'label': 'Monaco' }, { 'key': 'MN', 'label': 'Mongolia' }, { 'key': 'ME', 'label': 'Montenegro' }, { 'key': 'MS', 'label': 'Montserrat' }, { 'key': 'MA', 'label': 'Morocco' }, { 'key': 'MZ', 'label': 'Mozambique' }, { 'key': 'MM', 'label': 'Myanmar' }, { 'key': 'NA', 'label': 'Namibia' }, { 'key': 'NR', 'label': 'Nauru' }, { 'key': 'NP', 'label': 'Nepal' }, { 'key': 'NL', 'label': 'Netherlands' }, { 'key': 'AN', 'label': 'Netherlands Antilles' }, { 'key': 'NC', 'label': 'New Caledonia' }, { 'key': 'NZ', 'label': 'New Zealand' }, { 'key': 'NI', 'label': 'Nicaragua' }, { 'key': 'NE', 'label': 'Niger' }, { 'key': 'NG', 'label': 'Nigeria' }, { 'key': 'NU', 'label': 'Niue' }, { 'key': 'NF', 'label': 'Norfolk Island' }, { 'key': 'MP', 'label': 'Northern Mariana Islands' }, { 'key': 'NO', 'label': 'Norway' }, { 'key': 'OM', 'label': 'Oman' }, { 'key': 'PK', 'label': 'Pakistan' }, { 'key': 'PW', 'label': 'Palau' }, { 'key': 'PS', 'label': 'Palestinian Territory, Occupied' }, { 'key': 'PA', 'label': 'Panama' }, { 'key': 'PG', 'label': 'Papua New Guinea' }, { 'key': 'PY', 'label': 'Paraguay' }, { 'key': 'PE', 'label': 'Peru' }, { 'key': 'PH', 'label': 'Philippines' }, { 'key': 'PN', 'label': 'Pitcairn' }, { 'key': 'PL', 'label': 'Poland' }, { 'key': 'PT', 'label': 'Portugal' }, { 'key': 'PR', 'label': 'Puerto Rico' }, { 'key': 'QA', 'label': 'Qatar' }, { 'key': 'RE', 'label': 'Reunion' }, { 'key': 'RO', 'label': 'Romania' }, { 'key': 'RU', 'label': 'Russian Federation' }, { 'key': 'RW', 'label': 'Rwanda' }, { 'key': 'BL', 'label': 'Saint Barthelemy' }, { 'key': 'SH', 'label': 'Saint Helena' }, { 'key': 'KN', 'label': 'Saint Kitts And Nevis' }, { 'key': 'LC', 'label': 'Saint Lucia' }, { 'key': 'MF', 'label': 'Saint Martin' }, { 'key': 'PM', 'label': 'Saint Pierre And Miquelon' }, { 'key': 'VC', 'label': 'Saint Vincent And Grenadines' }, { 'key': 'WS', 'label': 'Samoa' }, { 'key': 'SM', 'label': 'San Marino' }, { 'key': 'ST', 'label': 'Sao Tome And Principe' }, { 'key': 'SA', 'label': 'Saudi Arabia' }, { 'key': 'SN', 'label': 'Senegal' }, { 'key': 'RS', 'label': 'Serbia' }, { 'key': 'SC', 'label': 'Seychelles' }, { 'key': 'SL', 'label': 'Sierra Leone' }, { 'key': 'SG', 'label': 'Singapore' }, { 'key': 'SK', 'label': 'Slovakia' }, { 'key': 'SI', 'label': 'Slovenia' }, { 'key': 'SB', 'label': 'Solomon Islands' }, { 'key': 'SO', 'label': 'Somalia' }, { 'key': 'ZA', 'label': 'South Africa' }, { 'key': 'GS', 'label': 'South Georgia And Sandwich Isl.' }, { 'key': 'ES', 'label': 'Spain' }, { 'key': 'LK', 'label': 'Sri Lanka' }, { 'key': 'SD', 'label': 'Sudan' }, { 'key': 'SR', 'label': 'Suriname' }, { 'key': 'SJ', 'label': 'Svalbard And Jan Mayen' }, { 'key': 'SZ', 'label': 'Swaziland' }, { 'key': 'SE', 'label': 'Sweden' }, { 'key': 'CH', 'label': 'Switzerland' }, { 'key': 'SY', 'label': 'Syrian Arab Republic' }, { 'key': 'TW', 'label': 'Taiwan' }, { 'key': 'TJ', 'label': 'Tajikistan' }, { 'key': 'TZ', 'label': 'Tanzania' }, { 'key': 'TH', 'label': 'Thailand' }, { 'key': 'TL', 'label': 'Timor-Leste' }, { 'key': 'TG', 'label': 'Togo' }, { 'key': 'TK', 'label': 'Tokelau' }, { 'key': 'TO', 'label': 'Tonga' }, { 'key': 'TT', 'label': 'Trinidad And Tobago' }, { 'key': 'TN', 'label': 'Tunisia' }, { 'key': 'TR', 'label': 'Turkey' }, { 'key': 'TM', 'label': 'Turkmenistan' }, { 'key': 'TC', 'label': 'Turks And Caicos Islands' }, { 'key': 'TV', 'label': 'Tuvalu' }, { 'key': 'UG', 'label': 'Uganda' }, { 'key': 'UA', 'label': 'Ukraine' }, { 'key': 'AE', 'label': 'United Arab Emirates' }, { 'key': 'GB', 'label': 'United Kingdom' }, { 'key': 'US', 'label': 'United States' }, { 'key': 'UM', 'label': 'United States Outlying Islands' }, { 'key': 'UY', 'label': 'Uruguay' }, { 'key': 'UZ', 'label': 'Uzbekistan' }, { 'key': 'VU', 'label': 'Vanuatu' }, { 'key': 'VE', 'label': 'Venezuela' }, { 'key': 'VN', 'label': 'Viet Nam' }, { 'key': 'VG', 'label': 'Virgin Islands, British' }, { 'key': 'VI', 'label': 'Virgin Islands, U.S.' }, { 'key': 'WF', 'label': 'Wallis And Futuna' }, { 'key': 'EH', 'label': 'Western Sahara' }, { 'key': 'YE', 'label': 'Yemen' }, { 'key': 'ZM', 'label': 'Zambia' }, { 'key': 'ZW', 'label': 'Zimbabwe' }];
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n    <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Select Country\">\n\n    </multiselect>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div>\n        <multiselect :selected=\"selected\" :options=\"options\" @update=\"updateSelected\" :searchable=\"true\" ,=\"\" :close-on-select=\"true\" :allow-empty=\"false\" deselect-label=\"Can't remove this value\" key=\"key\" label=\"label\" placeholder=\"Select Country\">\n        </multiselect>\n    </div>\n\t<input type=\"hidden\" name=\"country\" value=\"{{code}}\">\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -22313,7 +22314,7 @@ $(document).ready(function () {
 		}
 		if (isset('equipmentUrl')) {
 			$.ajax({
-				vue: mainVue,
+				vue: serviceVue,
 				equipmentTable: equipmentTable,
 				url: back.equipmentUrl + row.id,
 				type: 'GET',
@@ -22395,7 +22396,7 @@ $(document).ready(function () {
 			missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
 			if (isset('missingServicesInfo_url')) {
 				$.ajax({
-					vue: mainVue,
+					vue: reportVue,
 					url: back.missingServicesInfo_url,
 					type: 'GET',
 					dataType: 'json',
@@ -22447,13 +22448,7 @@ $(document).ready(function () {
 	Dropzone.options.equipmentDropzone = {
 		paramName: 'photo',
 		maxFilesize: 8,
-		acceptedFiles: '.jpg, .jpeg, .png',
-
-		init: function init() {
-			this.on("addedfile", function (file) {
-				mainVue.getEquipment();
-			});
-		}
+		acceptedFiles: '.jpg, .jpeg, .png'
 	};
 
 	/* ==========================================================================
@@ -22503,32 +22498,74 @@ $(document).ready(function () {
     VueJs code
     ========================================================================== */
 
-	var mainVue = new Vue({
-		el: 'body',
-
-		components: {
-			Permissions: Permissions,
-			emailPreference: emailPreference,
-			countries: countries,
-			dropdown: dropdown,
-			PhotoList: PhotoList
-		},
+	// report Vue instance
+	var reportVue = new Vue({
+		el: '.reportVue',
+		components: { dropdown: dropdown },
 		directives: { FormToAjax: FormToAjax },
 		data: {
-			// Administrator
-			companyName: "",
-			website: "",
-			facebook: "",
-			twitter: "",
-			objectName: "",
-			objectLastName: "",
-			// Reports
 			numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
 			numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
 			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
 			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
-			// Services
-			//temporal values
+			serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
+			technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
+		},
+		computed: {
+			missingServicesTag: function missingServicesTag() {
+				if (this.numServicesMissing < 1) {
+					return 'All Services Done';
+				}
+				return 'Missing Services: ' + this.numServicesMissing;
+			}
+		},
+		methods: {
+			previewEmailReport: function previewEmailReport(id) {
+				// prevent the user from clicking more than once
+				event.target.disabled = true;
+				event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
+				new Spinner({
+					left: "90%",
+					radius: 5,
+					length: 4,
+					width: 1
+				}).spin(event.target);
+				// HTTP Request or what ever to update the permission
+				$.ajax({
+					vue: this,
+					target: event.target,
+					url: isset('emailPreview') ? back.emailPreview : '',
+					type: 'GET',
+					dataType: 'json',
+					data: {
+						'id': id
+					},
+					complete: function complete(xhr, textStatus) {
+						this.target.disabled = false;
+						this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
+					},
+					success: function success(data, textStatus, xhr) {
+						$('#emailPreview').modal('show');
+						this.vue.reportEmailPreview = data.data.url;
+					},
+					error: function error(xhr, textStatus, errorThrown) {
+						console.log('error');
+					}
+				});
+			}
+		}
+	});
+
+	var serviceVue = new Vue({
+		el: '.serviceVue',
+		components: {
+			PhotoList: PhotoList,
+			countries: countries
+		},
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			statusSwitch: true,
+			// Location picker values
 			pickerServiceAddressLine1: '',
 			pickerServiceCity: '',
 			pickerServiceState: '',
@@ -22544,11 +22581,9 @@ $(document).ready(function () {
 			serviceCountry: isset('country') ? back.country : '',
 			serviceLatitude: isset('latitude') ? back.latitude : null,
 			serviceLongitude: isset('longitude') ? back.longitude : null,
-			statusSwitch: true,
-			// equipment
+			// Equipment
 			equipmentTableFocus: true,
-			// 1=table, 2=new, 3=show, 4=edit
-			equipmentFocus: 1,
+			equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
 			equipmentId: 0,
 			equipmentServiceId: isset('serviceId') ? Number(back.serviceId) : 0,
 			equipmentPhotos: [],
@@ -22558,10 +22593,7 @@ $(document).ready(function () {
 			equipmentBrand: '',
 			equipmentModel: '',
 			equipmentCapacity: '',
-			equipmentUnits: '',
-			// Generic
-			dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0,
-			dropdownKey2: isset('dropdownKey2') ? Number(back.dropdownKey2) : 0
+			equipmentUnits: ''
 		},
 		computed: {
 			equipmentModalTitle: function equipmentModalTitle() {
@@ -22580,41 +22612,27 @@ $(document).ready(function () {
 						break;
 					default:
 						return 'Equipment';
-
 				}
-			},
-			missingServicesTag: function missingServicesTag() {
-				if (this.numServicesMissing < 1) {
-					return 'All Services Done';
-				}
-				return 'Missing Services: ' + this.numServicesMissing;
 			},
 			locationPickerTag: function locationPickerTag() {
+				var attributes = {
+					'icon': 'font-icon font-icon-ok',
+					'text': 'Location Selected',
+					'class': 'btn-success'
+				};
 				if (this.serviceLatitude == null) {
-					return {
+					attributes = {
 						'icon': 'font-icon font-icon-pin-2',
 						'text': 'Choose Location',
 						'class': 'btn-primary'
 					};
 				}
-				return {
-					'icon': 'font-icon font-icon-ok',
-					'text': 'Location Selected',
-					'class': 'btn-success'
-				};
-			}
-		},
-		watch: {
-			serviceCountry: function serviceCountry(val, oldVal) {
-				this.$broadcast('changeSelectedCountry', val);
+				return attributes;
 			}
 		},
 		events: {
-			countryChanged: function countryChanged(countrySelected) {
-				this.serviceCountry = countrySelected.key;
-			},
-
 			// when a photo is deleted from the equipment photo edit
+
 			equipmentChanged: function equipmentChanged() {
 				this.getEquipment();
 			}
@@ -22625,7 +22643,7 @@ $(document).ready(function () {
 			getEquipment: function getEquipment() {
 				if (isset('equipmentUrl')) {
 					$.ajax({
-						vue: mainVue,
+						vue: this,
 						url: back.equipmentUrl + this.equipmentId,
 						type: 'GET',
 						success: function success(data, textStatus, xhr) {
@@ -22697,8 +22715,6 @@ $(document).ready(function () {
 			checkEquipmentFocusIs: function checkEquipmentFocusIs($num) {
 				return this.equipmentFocus == $num;
 			},
-
-			// service show
 			openEquimentList: function openEquimentList() {
 				var clearEquipment = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
@@ -22709,11 +22725,7 @@ $(document).ready(function () {
 				}
 				$('#equipmentModal').modal('show');
 			},
-			changeKey: function changeKey(num) {
-				this.dropdownKey = num;
-			},
 			populateAddressFields: function populateAddressFields(page) {
-
 				this.setLocation(page);
 				if (page == 'create') {
 					this.serviceAddressLine1 = this.pickerServiceAddressLine1;
@@ -22737,39 +22749,230 @@ $(document).ready(function () {
 						generic_table.bootstrapTable('refresh', { url: new_url });
 					}
 				}
-			},
-			previewEmailReport: function previewEmailReport(id) {
-				// prevent the user from clicking more than once
-				event.target.disabled = true;
-				event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-				new Spinner({
-					left: "90%",
-					radius: 5,
-					length: 4,
-					width: 1
-				}).spin(event.target);
-				// HTTP Request or what ever to update the permission
-				$.ajax({
-					vue: this,
-					target: event.target,
-					url: isset('emailPreview') ? back.emailPreview : '',
-					type: 'GET',
-					dataType: 'json',
-					data: {
-						'id': id
-					},
-					complete: function complete(xhr, textStatus) {
-						this.target.disabled = false;
-						this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-					},
-					success: function success(data, textStatus, xhr) {
-						$('#emailPreview').modal('show');
-						this.vue.reportEmailPreview = data.data.url;
-					},
-					error: function error(xhr, textStatus, errorThrown) {
-						console.log('error');
-					}
-				});
+			}
+		}
+
+	});
+
+	var settingsVue = new Vue({
+		el: '.settingsVue',
+		components: {
+			Permissions: Permissions,
+			emailPreference: emailPreference
+		},
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			companyName: "",
+			website: "",
+			facebook: "",
+			twitter: "",
+			objectName: "",
+			objectLastName: ""
+		}
+	});
+	var mainVue = new Vue({
+		// el: 'body',
+
+		components: {
+			Permissions: Permissions,
+			emailPreference: emailPreference,
+			countries: countries,
+			dropdown: dropdown,
+			PhotoList: PhotoList
+		},
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			// Administrator
+			companyName: "",
+			website: "",
+			facebook: "",
+			twitter: "",
+			objectName: "",
+			objectLastName: ""
+		},
+		// Reports
+		// numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
+		// numServicesToDo: (isset('numServicesToDo')) ? back.numServicesToDo : '',
+		// numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
+		// reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
+		// Services
+		// //temporal values
+		// pickerServiceAddressLine1: '',
+		// pickerServiceCity: '',
+		// pickerServiceState: '',
+		// pickerServicePostalCode: '',
+		// pickerServiceCountry: '',
+		// pickerServiceLatitude: '',
+		// pickerServiceLongitude: '',
+		// // form values
+		// serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
+		// serviceCity: (isset('city')) ? back.city : '',
+		// serviceState: (isset('state')) ? back.state : '',
+		// servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
+		// serviceCountry: (isset('country')) ? back.country : '',
+		// serviceLatitude: (isset('latitude')) ? back.latitude : null,
+		// serviceLongitude: (isset('longitude')) ? back.longitude : null,
+		// statusSwitch: true,
+		// // equipment
+		// equipmentTableFocus: true,
+		// // 1=table, 2=new, 3=show, 4=edit
+		// equipmentFocus: 1,
+		// equipmentId: 0,
+		// equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
+		// equipmentPhotos: [],
+		// equipmentPhoto: '',
+		// equipmentKind: '',
+		// equipmentType: '',
+		// equipmentBrand: '',
+		// equipmentModel: '',
+		// equipmentCapacity: '',
+		// equipmentUnits: '',
+		// Generic
+		computed: {
+			// equipmentModalTitle: function(){
+			//     switch (this.equipmentFocus) {
+			//         case 1:
+			//         return 'Equipment List';
+			//         break;
+			//         case 2:
+			//         return 'Add Equipment';
+			//         break;
+			//         case 3:
+			//         return this.equipmentKind;
+			//         break;
+			//         case 4:
+			//         return 'Edit Equipment';
+			//         break;
+			//         default:
+			//         return 'Equipment';
+			//
+			//     }
+			// },
+			// missingServicesTag: function () {
+			//     if(this.numServicesMissing < 1){
+			//         return 'All Services Done';
+			//     }
+			//     return 'Missing Services: '+this.numServicesMissing;
+			// },
+			// locationPickerTag(){
+			//     if(this.serviceLatitude == null ){
+			//         return {
+			//             'icon': 'font-icon font-icon-pin-2',
+			//             'text': 'Choose Location',
+			//             'class': 'btn-primary'
+			//         };
+			//     }
+			//     return {
+			//         'icon': 'font-icon font-icon-ok',
+			//         'text': 'Location Selected',
+			//         'class': 'btn-success'
+			//     };
+			// }
+		},
+		watch: {
+			serviceCountry: function serviceCountry(val, oldVal) {
+				this.$broadcast('changeSelectedCountry', val);
+			}
+		},
+		events: {
+			countryChanged: function countryChanged(countrySelected) {
+				this.serviceCountry = countrySelected.key;
+			}
+		},
+
+		// // when a photo is deleted from the equipment photo edit
+		// equipmentChanged(){
+		//     this.getEquipment();
+		// }
+		methods: {
+			// // Equipment
+			// getEquipment(){
+			//     if(isset('equipmentUrl')){
+			//         $.ajax({
+			//             vue: mainVue,
+			//             url:      back.equipmentUrl+this.equipmentId,
+			//             type:     'GET',
+			//             success: function(data, textStatus, xhr) {
+			//                 //called when successful
+			//                 this.vue.equipmentId = data.id;
+			//                 this.vue.equipmentKind = data.kind;
+			//                 this.vue.equipmentType = data.type;
+			//                 this.vue.equipmentBrand = data.brand;
+			//                 this.vue.equipmentModel = data.model;
+			//                 this.vue.equipmentCapacity = data.capacity;
+			//                 this.vue.equipmentUnits = data.units;
+			//                 this.vue.equipmentPhotos = data.photos;
+			//             },
+			//             error: function(xhr, textStatus, errorThrown) {
+			//                 //called when there is an error
+			//                 console.log('error');
+			//             }
+			//         });
+			//     }
+			// },
+			// sendEquipment(type){
+			//     let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
+			//     let requestType = 'POST';
+			//
+			//     if(type == 'edit'){
+			//         url += this.equipmentId;
+			//         requestType = 'PATCH';
+			//     }
+			//
+			//     if(url != ''){
+			//         $.ajax({
+			//             vue: this,
+			//             url: url,
+			//             type: requestType,
+			//             dataType: 'json',
+			//             data: {
+			//                 'photo': this.equipmentPhoto,
+			//                 'kind': this.equipmentKind,
+			//                 'type': this.equipmentType,
+			//                 'brand': this.equipmentBrand,
+			//                 'model': this.equipmentModel,
+			//                 'capacity': this.equipmentCapacity,
+			//                 'units': this.equipmentUnits,
+			//                 'service_id': this.equipmentServiceId,
+			//             },
+			//             success: function(data, textStatus, xhr) {
+			//                 // refresh equipment list
+			//                 equipmentTable.bootstrapTable('refresh');
+			//                 // send back to list
+			//                 this.vue.openEquimentList();
+			//             },
+			//             error: function(xhr, textStatus, errorThrown) {
+			//                 console.log('error creating equipment');
+			//             }
+			//         });
+			//     }
+			// },
+			// clearEquipment(){
+			//     this.equipmentKind = '';
+			//     this.equipmentType = '';
+			//     this.equipmentBrand = '';
+			//     this.equipmentModel = '';
+			//     this.equipmentCapacity = '';
+			//     this.equipmentUnits = '';
+			// },
+			// setEquipmentFocus($num){
+			//     this.equipmentFocus = $num;
+			// },
+			// checkEquipmentFocusIs($num){
+			//     return (this.equipmentFocus == $num);
+			// },
+			// // service show
+			// openEquimentList(clearEquipment = true){
+			//     this.equipmentTableFocus = true;
+			//     this.equipmentFocus = 1;
+			//     if(clearEquipment){
+			//         this.clearEquipment();
+			//     }
+			//     $('#equipmentModal').modal('show');
+			// },
+
+			changeKey: function changeKey(num) {
+				this.dropdownKey = num;
 			}
 		}
 
@@ -22778,6 +22981,67 @@ $(document).ready(function () {
 	/* ==========================================================================
      GMaps
      ========================================================================== */
+
+	// populateAddressFields(page){
+	//
+	//     this.setLocation(page);
+	//     if(page == 'create'){
+	//         this.serviceAddressLine1 = this.pickerServiceAddressLine1;
+	//         this.serviceCity = this.pickerServiceCity;
+	//         this.servicePostalCode = this.pickerServicePostalCode;
+	//         this.serviceState = this.pickerServiceState;
+	//         this.serviceCountry = this.pickerServiceCountry;
+	//     }
+	//
+	// },
+	// setLocation(page){
+	//     if(page == 'create'){
+	//         this.serviceLongitude = this.pickerServiceLongitude;
+	//         this.serviceLatitude = this.pickerServiceLatitude;
+	//     }
+	// },
+	// changeServiceListStatus(status){
+	//     var intStatus = (!status) ? 1 : 0;
+	//     if(typeof back !== 'undefined'){
+	//         if(typeof back.serviceTableUrl !== 'undefined'){
+	//             let new_url = back.serviceTableUrl+intStatus;
+	//             generic_table.bootstrapTable('refresh', {url:new_url});
+	//         }
+	// 	}
+	// },
+	// previewEmailReport(id){
+	//     // prevent the user from clicking more than once
+	//     event.target.disabled = true;
+	//     event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
+	//     new Spinner({
+	//         left: "90%",
+	//         radius: 5,
+	//         length: 4,
+	//         width: 1,
+	//     }).spin(event.target);
+	//     // HTTP Request or what ever to update the permission
+	//     $.ajax({
+	//         vue: this,
+	//         target: event.target,
+	//         url:      (isset('emailPreview')) ? back.emailPreview : '',
+	//         type:     'GET',
+	//         dataType: 'json',
+	//         data: {
+	//                 'id': id
+	//             },
+	//         complete: function(xhr, textStatus) {
+	//             this.target.disabled = false;
+	//             this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
+	//         },
+	//         success: function(data, textStatus, xhr) {
+	//             $('#emailPreview').modal('show');
+	//             this.vue.reportEmailPreview = data.data.url;
+	//         },
+	//         error: function(xhr, textStatus, errorThrown) {
+	//             console.log('error');
+	//         }
+	//     });
+	// }
 	$('#mapModal').on('shown.bs.modal', function (e) {
 		if (isset('showLatitude') && isset('showLongitude')) {
 			var map = new Gmaps({
@@ -22798,7 +23062,7 @@ $(document).ready(function () {
      ========================================================================== */
 
 	var locPicker = $('#locationPicker').locationpicker({
-		vue: mainVue,
+		vue: serviceVue,
 		location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
 		radius: 0,
 		inputBinding: {
