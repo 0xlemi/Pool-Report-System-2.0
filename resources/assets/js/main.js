@@ -274,24 +274,7 @@ function isset(strVariableName) {
 		});
 	});
 
-/* ==========================================================================
-    Circle progress bar
-    ========================================================================== */
 
-	$(".circle-progress-bar").asPieProgress({
-		namespace: 'asPieProgress',
-		speed: 500
-	});
-
-	$(".circle-progress-bar").asPieProgress("start");
-
-
-	$(".circle-progress-bar-typical").asPieProgress({
-		namespace: 'asPieProgress',
-		speed: 25
-	});
-
-	$(".circle-progress-bar-typical").asPieProgress("start");
 
 /* ==========================================================================
 	Select
@@ -343,44 +326,6 @@ function isset(strVariableName) {
 		templateResult: select2Photos
 	});
 
-/* ==========================================================================
-	Search
-	========================================================================== */
-
-	$.typeahead({
-		input: "#typeahead-search",
-		order: "asc",
-		minLength: 1,
-		source: {
-			data: [
-				"Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-				"Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh",
-				"Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
-				"Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burma",
-				"Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad",
-				"Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic", "Congo, Republic of the",
-				"Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti",
-				"Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador",
-				"Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon",
-				"Gambia", "Georgia", "Germany", "Ghana", "Greece", "Greenland", "Grenada", "Guatemala", "Guinea",
-				"Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India",
-				"Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
-				"Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos",
-				"Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
-				"Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands",
-				"Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Mongolia", "Morocco", "Monaco",
-				"Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger",
-				"Nigeria", "Norway", "Oman", "Pakistan", "Panama", "Papua New Guinea", "Paraguay", "Peru",
-				"Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Samoa", "San Marino",
-				"Sao Tome", "Saudi Arabia", "Senegal", "Serbia and Montenegro", "Seychelles", "Sierra Leone",
-				"Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "Spain",
-				"Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan",
-				"Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
-				"Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States",
-				"Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
-			]
-		}
-	});
 
 /* ==========================================================================
 	Datepicker
@@ -672,126 +617,6 @@ function isset(strVariableName) {
 		closeEffect	: 'none'
 	});
 
-/* ==========================================================================
-	Profile slider
-	========================================================================== */
-
-	$(".profile-card-slider").slick({
-		slidesToShow: 1,
-		adaptiveHeight: true,
-		prevArrow: '<i class="slick-arrow font-icon-arrow-left"></i>',
-		nextArrow: '<i class="slick-arrow font-icon-arrow-right"></i>'
-	});
-
-/* ==========================================================================
-	Posts slider
-	========================================================================== */
-
-	var postsSlider = $(".posts-slider");
-
-	postsSlider.slick({
-		slidesToShow: 4,
-		adaptiveHeight: true,
-		arrows: false,
-		responsive: [
-			{
-				breakpoint: 1700,
-				settings: {
-					slidesToShow: 3
-				}
-			},
-			{
-				breakpoint: 1350,
-				settings: {
-					slidesToShow: 2
-				}
-			},
-			{
-				breakpoint: 992,
-				settings: {
-					slidesToShow: 3
-				}
-			},
-			{
-				breakpoint: 768,
-				settings: {
-					slidesToShow: 2
-				}
-			},
-			{
-				breakpoint: 500,
-				settings: {
-					slidesToShow: 1
-				}
-			}
-		]
-	});
-
-	$('.posts-slider-prev').click(function(){
-		postsSlider.slick('slickPrev');
-	});
-
-	$('.posts-slider-next').click(function(){
-		postsSlider.slick('slickNext');
-	});
-
-/* ==========================================================================
-	Recomendations slider
-	========================================================================== */
-
-	var recomendationsSlider = $(".recomendations-slider");
-
-	recomendationsSlider.slick({
-		slidesToShow: 4,
-		adaptiveHeight: true,
-		arrows: false,
-		responsive: [
-			{
-				breakpoint: 1700,
-				settings: {
-					slidesToShow: 3
-				}
-			},
-			{
-				breakpoint: 1350,
-				settings: {
-					slidesToShow: 2
-				}
-			},
-			{
-				breakpoint: 992,
-				settings: {
-					slidesToShow: 3
-				}
-			},
-			{
-				breakpoint: 768,
-				settings: {
-					slidesToShow: 2
-				}
-			},
-			{
-				breakpoint: 500,
-				settings: {
-					slidesToShow: 1
-				}
-			}
-		]
-	});
-
-	$('.recomendations-slider-prev').click(function(){
-		recomendationsSlider.slick('slickPrev');
-	});
-
-	$('.recomendations-slider-next').click(function(){
-		recomendationsSlider.slick('slickNext');
-	});
-
-/* ==========================================================================
-	Pnotify
-	========================================================================== */
-
-	PNotify.prototype.options.styling = "bootstrap3";
 
 
 /* ==========================================================================
@@ -828,112 +653,6 @@ function isset(strVariableName) {
 		target: $('.gallery-item .gallery-picture')
 	});
 
-/* ==========================================================================
-	File manager
-	========================================================================== */
-
-	function fileManagerHeight() {
-		$('.files-manager').each(function(){
-			var box = $(this),
-				boxColLeft = box.find('.files-manager-side'),
-				boxSubHeader = box.find('.files-manager-header'),
-				boxCont = box.find('.files-manager-content-in'),
-				boxColRight = box.find('.files-manager-aside');
-
-			var paddings = parseInt($('.page-content').css('padding-top')) +
-							parseInt($('.page-content').css('padding-bottom')) +
-							parseInt(box.css('margin-bottom')) + 2;
-
-			boxColLeft.height('auto');
-			boxCont.height('auto');
-			boxColRight.height('auto');
-
-			if ( boxColLeft.height() <= ($(window).height() - paddings) ) {
-				boxColLeft.height(
-					$(window).height() - paddings
-				);
-			}
-
-			if ( boxColRight.height() <= ($(window).height() - paddings - boxSubHeader.outerHeight()) ) {
-				boxColRight.height(
-					$(window).height() -
-					paddings -
-					boxSubHeader.outerHeight()
-				);
-			}
-
-			boxCont.height(
-				boxColRight.height()
-			);
-		});
-	}
-
-	fileManagerHeight();
-
-	$(window).resize(function(){
-		fileManagerHeight();
-	});
-
-/* ==========================================================================
-	Mail
-	========================================================================== */
-
-	function mailBoxHeight() {
-		$('.mail-box').each(function(){
-			var box = $(this),
-				boxHeader = box.find('.mail-box-header'),
-				boxColLeft = box.find('.mail-box-list'),
-				boxSubHeader = box.find('.mail-box-work-area-header'),
-				boxColRight = box.find('.mail-box-work-area-cont');
-
-			boxColLeft.height(
-				$(window).height() -
-				parseInt($('.page-content').css('padding-top')) -
-				parseInt($('.page-content').css('padding-bottom')) -
-				parseInt(box.css('margin-bottom')) - 2 -
-				boxHeader.outerHeight()
-			);
-
-			boxColRight.height(
-				$(window).height() -
-				parseInt($('.page-content').css('padding-top')) -
-				parseInt($('.page-content').css('padding-bottom')) -
-				parseInt(box.css('margin-bottom')) - 2 -
-				boxHeader.outerHeight() -
-				boxSubHeader.outerHeight()
-			);
-		});
-	}
-
-	mailBoxHeight();
-
-	$(window).resize(function(){
-		mailBoxHeight();
-	});
-
-/* ==========================================================================
-	Nestable
-	========================================================================== */
-
-	$('.dd-handle').hover(function(){
-		$(this).prev('button').addClass('hover');
-		$(this).prev('button').prev('button').addClass('hover');
-	}, function(){
-		$(this).prev('button').removeClass('hover');
-		$(this).prev('button').prev('button').removeClass('hover');
-	});
-
-/* ==========================================================================
-	Widget weather slider
-	========================================================================== */
-
-	$('.widget-weather-slider').slick({
-		arrows: false,
-		dots: true,
-		infinite: false,
-		slidesToShow: 4,
-		slidesToScroll: 4
-	});
 
 /* ==========================================================================
 	Addl side menu
@@ -945,200 +664,16 @@ function isset(strVariableName) {
 		}
 	},1000);
 
-/* ==========================================================================
-	Widget chart combo
-	========================================================================== */
 
-	$('.widget-chart-combo-content-in, .widget-chart-combo-side').matchHeight();
-
-
-/* ==========================================================================
-	Header notifications
-	========================================================================== */
-
-	// Tabs hack
-	$('.dropdown-menu-messages a[data-toggle="tab"]').click(function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-		$(this).tab('show');
-
-		// Scroll
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif = $('.dropdown-notification.messages .tab-pane.active').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	// Scroll
-	var jspMessNotif,
-		jspNotif;
-
-	$('.dropdown-notification.messages').on('show.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif = $('.dropdown-notification.messages .tab-pane.active').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	$('.dropdown-notification.messages').on('hide.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif.destroy();
-		}
-	});
-
-	$('.dropdown-notification.notif').on('show.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspNotif = $('.dropdown-notification.notif .dropdown-menu-notif-list').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	$('.dropdown-notification.notif').on('hide.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspNotif.destroy();
-		}
-	});
-
-/* ==========================================================================
-	Steps progress
-	========================================================================== */
-
-	function stepsProgresMarkup() {
-		$('.steps-icon-progress').each(function(){
-			var parent = $(this),
-				cont = parent.find('ul'),
-				padding = 0,
-				padLeft = (parent.find('li:first-child').width() - parent.find('li:first-child .caption').width())/2,
-				padRight = (parent.find('li:last-child').width() - parent.find('li:last-child .caption').width())/2;
-
-			padding = padLeft;
-
-			if (padLeft > padRight) padding = padRight;
-
-			cont.css({
-				marginLeft: -padding,
-				marginRight: -padding
-			});
-
-			console.log(padLeft);
-			console.log(padRight);
-			console.log(padding);
-		});
-	}
-
-	stepsProgresMarkup();
-
-	$(window).resize(function(){
-		stepsProgresMarkup();
-	});
 
 /* ==========================================================================
 	Tables
 	========================================================================== */
 
-	var $table = $('#table'),
-		$remove = $('#remove'),
-		selections = [];
 	var generic_table = $('.generic_table');
 	var equipmentTable = $('#equipmentTable');
 	var missingServices = $('#missingServices');
 
-	function totalTextFormatter(data) {
-		return 'Total';
-	}
-
-	function totalNameFormatter(data) {
-		return data.length;
-	}
-
-	function totalPriceFormatter(data) {
-		var total = 0;
-		$.each(data, function (i, row) {
-			total += +(row.price.substring(1));
-		});
-		return '$' + total;
-	}
-
-	function statusFormatter(data, rowData, index) {
-		var classBtn = '',
-			classDropup = '',
-			pageSize = 10;
-
-		if (data === 'Draft') classBtn = 'btn-danger';
-		if (data === 'Pending') classBtn = 'btn-primary';
-		if (data === 'Moderation') classBtn = 'btn-warning';
-		if (data === 'Published') classBtn = 'btn-success';
-
-		if (index >= pageSize / 2) {
-			classDropup = 'dropup';
-		}
-
-		return	'<div class="dropdown dropdown-status ' +
-				classDropup +
-				' ">' +
-				'<button class="btn ' +
-				classBtn +
-				' dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-				data +
-				'</button>' +
-				'<div class="dropdown-menu">' +
-				'<a class="dropdown-item" href="#">Draft</a>' +
-				'<a class="dropdown-item" href="#">Pending</a>' +
-				'<a class="dropdown-item" href="#">Moderation</a>' +
-				'<a class="dropdown-item" href="#">Published</a>' +
-				'<div class="dropdown-divider"></div>' +
-				'<a class="dropdown-item" href="#">Move to Trash</a>' +
-				'</div></div>';
-	}
-
-	window.operateEvents = {
-		'click .like': function (e, value, row, index) {
-			alert('You click like action, row: ' + JSON.stringify(row));
-		},
-		'click .remove': function (e, value, row, index) {
-			$table.bootstrapTable('remove', {
-				field: 'id',
-				values: [row.id]
-			});
-		}
-	};
-
-	function operateFormatter(value, row, index) {
-		return [
-			'<a class="like" href="javascript:void(0)" title="Like">',
-			'<i class="glyphicon glyphicon-heart"></i>',
-			'</a>  ',
-			'<a class="remove" href="javascript:void(0)" title="Remove">',
-			'<i class="glyphicon glyphicon-remove"></i>',
-			'</a>'
-		].join('');
-	}
-
-	function getIdSelections() {
-		return $.map($table.bootstrapTable('getSelections'), function (row) {
-			return row.id
-		});
-	}
-
-	$table.on('check.bs.table uncheck.bs.table ' +
-		'check-all.bs.table uncheck-all.bs.table', function () {
-		$remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-		// save your data, here just save the current page
-		selections = getIdSelections();
-		// push or splice the selections if you want to save all data selections
-	});
-
-	$remove.click(function () {
-		var ids = getIdSelections();
-		$table.bootstrapTable('remove', {
-			field: 'id',
-			values: ids
-		});
-		$remove.prop('disabled', true);
-	});
-
-	$('#toolbar').find('select').change(function () {
-		$table.bootstrapTable('refreshOptions', {
-			exportDataType: $(this).val()
-		});
-	});
 
     let tableOptions = {
 		iconsPrefix: 'font-icon',
@@ -1333,20 +868,6 @@ function isset(strVariableName) {
 		focusOnSelect: true
 	});
 
-/* ==========================================================================
-    Input Masks
-    ========================================================================== */
-
-	// $('.date-mask-input').mask("00/00/0000", {placeholder: "__/__/____"});
- //    $('.time-mask-input').mask('00:00:00', {placeholder: "__:__:__"});
- //    $('.date-and-time-mask-input').mask('00/00/0000 00:00:00', {placeholder: "__/__/____ __:__:__"});
- //    $('.zip-code-mask-input').mask('00000-000', {placeholder: "_____-___"});
- //    $('.money-mask-input').mask('000.000.000.000.000,00', {reverse: true});
- //    $('.phone-mask-input').mask('0000-0000', {placeholder: "____-____"});
- //    $('.phone-with-code-area-mask-input').mask('(00) 0000-0000', {placeholder: "(__) ____-____"});
- //    $('.us-phone-mask-input').mask('(000) 000-0000', {placeholder: "(___) ___-____"});
- //    $('.ip-address-mask-input').mask('099.099.099.099');
- //    $('.mixed-mask-input').mask('AAA 000-S0S');
 
 /* ==========================================================================
     Clockpicker
@@ -1359,10 +880,6 @@ function isset(strVariableName) {
 	        'default': 'now'
 	    });
 	});
-
-/* ==========================================================================
-    Settings Forms Events
-    ========================================================================== */
 
 
 

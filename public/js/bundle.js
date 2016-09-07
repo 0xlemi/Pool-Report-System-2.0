@@ -21284,1851 +21284,1182 @@ var locationPicker = require("jquery-locationpicker");
 Vue.use(require('vue-resource'));
 
 $(document).ready(function () {
-	// var dateFormat = require('dateformat');
+  // var dateFormat = require('dateformat');
 
-	// set th CSRF_TOKEN for ajax requests
-	$.ajaxSetup({
-		headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-	});
+  // set th CSRF_TOKEN for ajax requests
+  $.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+  });
 
-	/* ==========================================================================
-    Custom functions
-    ========================================================================== */
-
-	/**
-  * Check if variable is instanciated
-  * @param  {string} strVariableName name of the variable to pass
-  * @return {boolean}
-  */
-	function isset(strVariableName) {
-		if (typeof back !== 'undefined') {
-			return typeof back[strVariableName] !== 'undefined';
-		}
-		return false;
-	}
-
-	/* ==========================================================================
- 	Scroll
- 	========================================================================== */
-
-	if (!("ontouchstart" in document.documentElement)) {
-
-		document.documentElement.className += " no-touch";
-
-		var jScrollOptions = {
-			autoReinitialise: true,
-			autoReinitialiseDelay: 100
-		};
-
-		$('.box-typical-body').jScrollPane(jScrollOptions);
-		$('.side-menu').jScrollPane(jScrollOptions);
-		//$('.side-menu-addl').jScrollPane(jScrollOptions);
-		$('.scrollable-block').jScrollPane(jScrollOptions);
-	}
-
-	/* ==========================================================================
-     Header search
+  /* ==========================================================================
+     Custom functions
      ========================================================================== */
 
-	$('.site-header .site-header-search').each(function () {
-		var parent = $(this),
-		    overlay = parent.find('.overlay');
+  /**
+   * Check if variable is instanciated
+   * @param  {string} strVariableName name of the variable to pass
+   * @return {boolean}
+   */
+  function isset(strVariableName) {
+    if (typeof back !== 'undefined') {
+      return typeof back[strVariableName] !== 'undefined';
+    }
+    return false;
+  }
 
-		overlay.click(function () {
-			parent.removeClass('closed');
-		});
+  /* ==========================================================================
+  	Scroll
+  	========================================================================== */
 
-		parent.clickoutside(function () {
-			if (!parent.hasClass('closed')) {
-				parent.addClass('closed');
-			}
-		});
-	});
+  if (!("ontouchstart" in document.documentElement)) {
 
-	/* ==========================================================================
-     Header mobile menu
+    document.documentElement.className += " no-touch";
+
+    var jScrollOptions = {
+      autoReinitialise: true,
+      autoReinitialiseDelay: 100
+    };
+
+    $('.box-typical-body').jScrollPane(jScrollOptions);
+    $('.side-menu').jScrollPane(jScrollOptions);
+    //$('.side-menu-addl').jScrollPane(jScrollOptions);
+    $('.scrollable-block').jScrollPane(jScrollOptions);
+  }
+
+  /* ==========================================================================
+      Header search
+      ========================================================================== */
+
+  $('.site-header .site-header-search').each(function () {
+    var parent = $(this),
+        overlay = parent.find('.overlay');
+
+    overlay.click(function () {
+      parent.removeClass('closed');
+    });
+
+    parent.clickoutside(function () {
+      if (!parent.hasClass('closed')) {
+        parent.addClass('closed');
+      }
+    });
+  });
+
+  /* ==========================================================================
+      Header mobile menu
+      ========================================================================== */
+
+  // Dropdowns
+  $('.site-header-collapsed .dropdown').each(function () {
+    var parent = $(this),
+        btn = parent.find('.dropdown-toggle');
+
+    btn.click(function () {
+      if (parent.hasClass('mobile-opened')) {
+        parent.removeClass('mobile-opened');
+      } else {
+        parent.addClass('mobile-opened');
+      }
+    });
+  });
+
+  $('.dropdown-more').each(function () {
+    var parent = $(this),
+        more = parent.find('.dropdown-more-caption'),
+        classOpen = 'opened';
+
+    more.click(function () {
+      if (parent.hasClass(classOpen)) {
+        parent.removeClass(classOpen);
+      } else {
+        parent.addClass(classOpen);
+      }
+    });
+  });
+
+  // Left mobile menu
+  $('.hamburger').click(function () {
+    if ($('body').hasClass('menu-left-opened')) {
+      $(this).removeClass('is-active');
+      $('body').removeClass('menu-left-opened');
+      $('html').css('overflow', 'auto');
+    } else {
+      $(this).addClass('is-active');
+      $('body').addClass('menu-left-opened');
+      $('html').css('overflow', 'hidden');
+    }
+  });
+
+  $('.mobile-menu-left-overlay').click(function () {
+    $('.hamburger').removeClass('is-active');
+    $('body').removeClass('menu-left-opened');
+    $('html').css('overflow', 'auto');
+  });
+
+  // Right mobile menu
+  $('.site-header .burger-right').click(function () {
+    if ($('body').hasClass('menu-right-opened')) {
+      $('body').removeClass('menu-right-opened');
+      $('html').css('overflow', 'auto');
+    } else {
+      $('.hamburger').removeClass('is-active');
+      $('body').removeClass('menu-left-opened');
+      $('body').addClass('menu-right-opened');
+      $('html').css('overflow', 'hidden');
+    }
+  });
+
+  $('.mobile-menu-right-overlay').click(function () {
+    $('body').removeClass('menu-right-opened');
+    $('html').css('overflow', 'auto');
+  });
+
+  /* ==========================================================================
+      Header help
+      ========================================================================== */
+
+  $('.help-dropdown').each(function () {
+    var parent = $(this),
+        btn = parent.find('>button'),
+        popup = parent.find('.help-dropdown-popup'),
+        jscroll;
+
+    btn.click(function () {
+      if (parent.hasClass('opened')) {
+        parent.removeClass('opened');
+        jscroll.destroy();
+      } else {
+        parent.addClass('opened');
+
+        $('.help-dropdown-popup-cont, .help-dropdown-popup-side').matchHeight();
+
+        if (!("ontouchstart" in document.documentElement)) {
+          setTimeout(function () {
+            jscroll = parent.find('.jscroll').jScrollPane(jScrollOptions).data().jsp;
+            //jscroll.reinitialise();
+          }, 0);
+        }
+      }
+    });
+
+    $('html').click(function (event) {
+      if (!$(event.target).closest('.help-dropdown-popup').length && !$(event.target).closest('.help-dropdown>button').length && !$(event.target).is('.help-dropdown-popup') && !$(event.target).is('.help-dropdown>button')) {
+        if (parent.hasClass('opened')) {
+          parent.removeClass('opened');
+          jscroll.destroy();
+        }
+      }
+    });
+  });
+
+  /* ==========================================================================
+      Side menu list
+      ========================================================================== */
+
+  $('.side-menu-list li.with-sub').each(function () {
+    var parent = $(this),
+        clickLink = parent.find('>span'),
+        subMenu = parent.find('ul');
+
+    clickLink.click(function () {
+      if (parent.hasClass('opened')) {
+        parent.removeClass('opened');
+        subMenu.slideUp();
+      } else {
+        $('.side-menu-list li.with-sub').not(this).removeClass('opened').find('ul').slideUp();
+        parent.addClass('opened');
+        subMenu.slideDown();
+      }
+    });
+  });
+
+  /* ==========================================================================
+      Dashboard
+      ========================================================================== */
+
+  // Calculate height
+  function dashboardBoxHeight() {
+    $('.box-typical-dashboard').each(function () {
+      var parent = $(this),
+          header = parent.find('.box-typical-header'),
+          body = parent.find('.box-typical-body');
+      body.height(parent.outerHeight() - header.outerHeight());
+    });
+  }
+
+  dashboardBoxHeight();
+
+  $(window).resize(function () {
+    dashboardBoxHeight();
+  });
+
+  // Collapse box
+  $('.box-typical-dashboard').each(function () {
+    var parent = $(this),
+        btnCollapse = parent.find('.action-btn-collapse');
+
+    btnCollapse.click(function () {
+      if (parent.hasClass('box-typical-collapsed')) {
+        parent.removeClass('box-typical-collapsed');
+      } else {
+        parent.addClass('box-typical-collapsed');
+      }
+    });
+  });
+
+  // Full screen box
+  $('.box-typical-dashboard').each(function () {
+    var parent = $(this),
+        btnExpand = parent.find('.action-btn-expand'),
+        classExpand = 'box-typical-full-screen';
+
+    btnExpand.click(function () {
+      if (parent.hasClass(classExpand)) {
+        parent.removeClass(classExpand);
+        $('html').css('overflow', 'auto');
+      } else {
+        parent.addClass(classExpand);
+        $('html').css('overflow', 'hidden');
+      }
+      dashboardBoxHeight();
+    });
+  });
+
+  /* ==========================================================================
+  	Select
+  	========================================================================== */
+
+  // Bootstrap-select
+  $('.bootstrap-select').selectpicker({
+    style: '',
+    width: '100%',
+    size: 8
+  });
+
+  // Select2
+  $.fn.select2.defaults.set("minimumResultsForSearch", "Infinity");
+
+  $('.select2').select2();
+
+  function select2Icons(state) {
+    if (!state.id) {
+      return state.text;
+    }
+    var $state = $('<span class="font-icon ' + state.element.getAttribute('data-icon') + '"></span><span>' + state.text + '</span>');
+    return $state;
+  }
+
+  $(".select2-icon").select2({
+    templateSelection: select2Icons,
+    templateResult: select2Icons
+  });
+
+  $(".select2-arrow").select2({
+    theme: "arrow"
+  });
+
+  $(".select2-white").select2({
+    theme: "white"
+  });
+
+  function select2Photos(state) {
+    if (!state.id) {
+      return state.text;
+    }
+    var $state = $('<span class="user-item"><img src="' + state.element.getAttribute('data-photo') + '"/>' + state.text + '</span>');
+    return $state;
+  }
+
+  $(".select2-photo").select2({
+    templateSelection: select2Photos,
+    templateResult: select2Photos
+  });
+
+  /* ==========================================================================
+  	Datepicker
+  	========================================================================== */
+
+  $('.datetimepicker-1').datetimepicker({
+    widgetPositioning: {
+      horizontal: 'right'
+    },
+    debug: false
+  });
+
+  $('.datetimepicker-2').datetimepicker({
+    widgetPositioning: {
+      horizontal: 'right'
+    },
+    format: 'LT',
+    debug: false
+  });
+
+  /* ==========================================================================
+  	Tooltips
+  	========================================================================== */
+
+  // Tooltip
+  $('[data-toggle="tooltip"]').tooltip({
+    html: true
+  });
+
+  // Popovers
+  $('[data-toggle="popover"]').popover({
+    trigger: 'focus'
+  });
+
+  /* ==========================================================================
+  	Validation
+  	========================================================================== */
+
+  $('#form-signin_v1').validate({
+    submit: {
+      settings: {
+        inputContainer: '.form-group'
+      }
+    }
+  });
+
+  $('#form-signin_v2').validate({
+    submit: {
+      settings: {
+        inputContainer: '.form-group',
+        errorListClass: 'form-error-text-block',
+        display: 'block',
+        insertion: 'prepend'
+      }
+    }
+  });
+
+  $('#form-signup_v1').validate({
+    submit: {
+      settings: {
+        inputContainer: '.form-group',
+        errorListClass: 'form-tooltip-error'
+      }
+    }
+  });
+
+  $('#form-signup_v2').validate({
+    submit: {
+      settings: {
+        inputContainer: '.form-group',
+        errorListClass: 'form-tooltip-error'
+      }
+    }
+  });
+
+  /* ==========================================================================
+  	Sweet alerts
+  	========================================================================== */
+
+  $('.swal-btn-basic').click(function (e) {
+    // e.preventDefault();
+    swal("Here's a message!");
+  });
+
+  $('.swal-btn-text').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Here's a message!",
+      text: "It's pretty, isn't it?"
+    });
+  });
+
+  $('.swal-btn-success').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Good job!",
+      text: "You clicked the button!",
+      type: "success",
+      confirmButtonClass: "btn-success",
+      confirmButtonText: "Success"
+    });
+  });
+
+  $('.swal-btn-warning').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Are you sure?",
+      text: "Your will not be able to recover this imaginary file!",
+      type: "warning",
+      showCancelButton: true,
+      cancelButtonClass: "btn-default",
+      confirmButtonClass: "btn-warning",
+      confirmButtonText: "Warning",
+      closeOnConfirm: false
+    }, function () {
+      swal({
+        title: "Deleted!",
+        text: "Your imaginary file has been deleted.",
+        type: "success",
+        confirmButtonClass: "btn-success"
+      });
+    });
+  });
+
+  $('.swal-btn-cancel').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this imaginary file!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn-danger",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel plx!",
+      closeOnConfirm: false,
+      closeOnCancel: false
+    }, function (isConfirm) {
+      if (isConfirm) {
+        swal({
+          title: "Deleted!",
+          text: "Your imaginary file has been deleted.",
+          type: "success",
+          confirmButtonClass: "btn-success"
+        });
+      } else {
+        swal({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          type: "error",
+          confirmButtonClass: "btn-danger"
+        });
+      }
+    });
+  });
+
+  $('.swal-btn-custom-img').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Sweet!",
+      text: "Here's a custom image.",
+      confirmButtonClass: "btn-success",
+      imageUrl: 'img/smile.png'
+    });
+  });
+
+  $('.swal-btn-info').click(function (e) {
+    e.preventDefault();
+    swal({
+      title: "Are you sure?",
+      text: "Your will not be able to recover this imaginary file!",
+      type: "info",
+      showCancelButton: true,
+      cancelButtonClass: "btn-default",
+      confirmButtonText: "Info",
+      confirmButtonClass: "btn-primary"
+    });
+  });
+
+  /* ==========================================================================
+  	Bar chart
+  	========================================================================== */
+
+  $(".bar-chart").peity("bar", {
+    delimiter: ",",
+    fill: ["#919fa9"],
+    height: 16,
+    max: null,
+    min: 0,
+    padding: 0.1,
+    width: 384
+  });
+
+  /* ==========================================================================
+  	Full height box
+  	========================================================================== */
+
+  function boxFullHeight() {
+    var sectionHeader = $('.section-header');
+    var sectionHeaderHeight = 0;
+
+    if (sectionHeader.size()) {
+      sectionHeaderHeight = parseInt(sectionHeader.height()) + parseInt(sectionHeader.css('padding-bottom'));
+    }
+
+    $('.box-typical-full-height').css('min-height', $(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - sectionHeaderHeight - parseInt($('.box-typical-full-height').css('margin-bottom')) - 2);
+    $('.box-typical-full-height>.tbl, .box-typical-full-height>.box-typical-center').height(parseInt($('.box-typical-full-height').css('min-height')));
+  }
+
+  boxFullHeight();
+
+  $(window).resize(function () {
+    boxFullHeight();
+  });
+
+  /* ==========================================================================
+  	Chat
+  	========================================================================== */
+
+  function chatHeights() {
+    $('.chat-dialog-area').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight() - $('.chat-area-bottom').outerHeight());
+    $('.chat-list-in').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight()).css('min-height', parseInt($('.chat-dialog-area').css('min-height')) + $('.chat-area-bottom').outerHeight());
+  }
+
+  chatHeights();
+
+  $(window).resize(function () {
+    chatHeights();
+  });
+
+  /* ==========================================================================
+  	Auto size for textarea
+  	========================================================================== */
+
+  autosize($('textarea[data-autosize]'));
+
+  /* ==========================================================================
+  	Pages center
+  	========================================================================== */
+
+  $('.page-center').matchHeight({
+    target: $('html')
+  });
+
+  $(window).resize(function () {
+    setTimeout(function () {
+      $('.page-center').matchHeight({ remove: true });
+      $('.page-center').matchHeight({
+        target: $('html')
+      });
+    }, 100);
+  });
+
+  /* ==========================================================================
+  	Cards user
+  	========================================================================== */
+
+  $('.card-user').matchHeight();
+
+  /* ==========================================================================
+  	Fancybox
+  	========================================================================== */
+
+  $(".fancybox").fancybox({
+    padding: 0,
+    openEffect: 'none',
+    closeEffect: 'none'
+  });
+
+  /* ==========================================================================
+  	Box typical full height with header
+  	========================================================================== */
+
+  function boxWithHeaderFullHeight() {
+    $('.box-typical-full-height-with-header').each(function () {
+      var box = $(this),
+          boxHeader = box.find('.box-typical-header'),
+          boxBody = box.find('.box-typical-body');
+
+      boxBody.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight());
+    });
+  }
+
+  boxWithHeaderFullHeight();
+
+  $(window).resize(function () {
+    boxWithHeaderFullHeight();
+  });
+
+  /* ==========================================================================
+  	Gallery
+  	========================================================================== */
+
+  $('.gallery-item').matchHeight({
+    target: $('.gallery-item .gallery-picture')
+  });
+
+  /* ==========================================================================
+  	Addl side menu
+  	========================================================================== */
+
+  setTimeout(function () {
+    if (!("ontouchstart" in document.documentElement)) {
+      $('.side-menu-addl').jScrollPane(jScrollOptions);
+    }
+  }, 1000);
+
+  /* ==========================================================================
+  	Tables
+  	========================================================================== */
+
+  var generic_table = $('.generic_table');
+  var equipmentTable = $('#equipmentTable');
+  var missingServices = $('#missingServices');
+
+  var tableOptions = {
+    iconsPrefix: 'font-icon',
+    toggle: 'table',
+    sidePagination: 'client',
+    pagination: 'true',
+    icons: {
+      paginationSwitchDown: 'font-icon-arrow-square-down',
+      paginationSwitchUp: 'font-icon-arrow-square-down up',
+      refresh: 'font-icon-refresh',
+      toggle: 'font-icon-list-square',
+      columns: 'font-icon-list-rotate',
+      export: 'font-icon-download'
+    },
+    paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+    paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
+  };
+
+  generic_table.bootstrapTable(tableOptions);
+  equipmentTable.bootstrapTable(tableOptions);
+  missingServices.bootstrapTable(tableOptions);
+
+  $('.generic_table').on('click-row.bs.table', function (e, row, $element) {
+    if ($element.hasClass('table_active')) {
+      $element.removeClass('table_active');
+    } else {
+      generic_table.find('tr.table_active').removeClass('table_active');
+      $element.addClass('table_active');
+    }
+    window.location.href = back.click_url + row.id;
+  });
+
+  $('#equipmentTable').on('click-row.bs.table', function (e, row, $element) {
+    if ($element.hasClass('table_active')) {
+      $element.removeClass('table_active');
+    } else {
+      equipmentTable.find('tr.table_active').removeClass('table_active');
+      $element.addClass('table_active');
+    }
+    if (isset('equipmentUrl')) {
+      $.ajax({
+        vue: serviceVue,
+        equipmentTable: equipmentTable,
+        url: back.equipmentUrl + row.id,
+        type: 'GET',
+        success: function success(data, textStatus, xhr) {
+          //called when successful
+          this.vue.equipmentId = data.id;
+          this.vue.equipmentKind = data.kind;
+          this.vue.equipmentType = data.type;
+          this.vue.equipmentBrand = data.brand;
+          this.vue.equipmentModel = data.model;
+          this.vue.equipmentCapacity = data.capacity;
+          this.vue.equipmentUnits = data.units;
+          this.vue.equipmentPhotos = data.photos;
+          // remove dropzone instance
+          Dropzone.forElement("#equipmentDropzone").destroy();
+
+          if (isset('equipmentAddPhotoUrl')) {
+            // generating the dropzone dinamicly
+            // in order to change the url
+            $("#equipmentDropzone").dropzone({
+              vue: this.vue,
+              url: back.equipmentAddPhotoUrl + data.id,
+              method: 'post',
+              paramName: 'photo',
+              maxFilesize: 8,
+              acceptedFiles: '.jpg, .jpeg, .png',
+              init: function init() {
+                this.on("success", function (file) {
+                  this.options.vue.$emit('equipmentChanged');
+                });
+              }
+            });
+            // set the dropzone class for styling
+            $("#equipmentDropzone").addClass("dropzone");
+          }
+          // remove the selected color from the row
+          this.equipmentTable.find('tr.table_active').removeClass('table_active');
+          this.vue.equipmentTableFocus = false;
+          this.vue.equipmentFocus = 4;
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          //called when there is an error
+          console.log('error');
+        }
+      });
+    }
+  });
+
+  $('#missingServices').on('click-row.bs.table', function (e, row, $element) {
+    if ($element.hasClass('table_active')) {
+      $element.removeClass('table_active');
+    } else {
+      missingServices.find('tr.table_active').removeClass('table_active');
+      $element.addClass('table_active');
+    }
+    window.location.href = back.click_missingServices_url + row.id;
+  });
+
+  /* ==========================================================================
+      Side datepicker
+      ========================================================================== */
+  if (isset('enabledDates')) {
+    $('#side-datetimepicker').datetimepicker({
+      inline: true,
+      enabledDates: back.enabledDates,
+      format: 'YYYY-MM-DD',
+      defaultDate: back.todayDate
+    });
+  }
+
+  if (isset('date_url')) {
+    $("#side-datetimepicker").on("dp.change", function (e) {
+      var date = new Date(e.date._d);
+      var date_selected = dateFormat(date, "yyyy-mm-dd");
+      var new_url = back.datatable_url + date_selected;
+      var new_missingServices_url = back.missingServices_url + date_selected;
+
+      generic_table.bootstrapTable('refresh', { url: new_url });
+      missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
+      if (isset('missingServicesInfo_url')) {
+        $.ajax({
+          vue: reportVue,
+          url: back.missingServicesInfo_url,
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            'date': date_selected
+          },
+          success: function success(data, textStatus, xhr) {
+            //called when successful
+            this.vue.numServicesDone = data.numServicesDone;
+            this.vue.numServicesMissing = data.numServicesMissing;
+            this.vue.numServicesToDo = data.numServicesToDo;
+          },
+          error: function error(xhr, textStatus, errorThrown) {
+            //called when there is an error
+            // console.log('error');
+          }
+        });
+      }
+    });
+  }
+  if (isset('default_date')) {
+    $('#edit_report_datepicker').datetimepicker({
+      widgetPositioning: {
+        horizontal: 'right'
+      },
+      debug: false,
+      defaultDate: back.default_date
+    });
+  }
+
+  $('#new_report_datepicker').datetimepicker({
+    widgetPositioning: {
+      horizontal: 'right'
+    },
+    debug: false,
+    useCurrent: true
+  });
+
+  /* ==========================================================================
+      Dropzone
+      ========================================================================== */
+
+  // Dropzone.autoDiscover = false;
+  Dropzone.options.genericDropzone = {
+    paramName: 'photo',
+    maxFilesize: 8,
+    acceptedFiles: '.jpg, .jpeg, .png'
+  };
+  Dropzone.options.equipmentDropzone = {
+    paramName: 'photo',
+    maxFilesize: 8,
+    acceptedFiles: '.jpg, .jpeg, .png'
+  };
+
+  /* ==========================================================================
+      Custom Slick Carousel
+      ========================================================================== */
+
+  $(".reports_slider").slick({
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    dots: true,
+    centerMode: true,
+    focusOnSelect: true
+  });
+
+  /* ==========================================================================
+      Clockpicker
+      ========================================================================== */
+
+  $(document).ready(function () {
+    $('.clockpicker').clockpicker({
+      autoclose: true,
+      donetext: 'Done',
+      'default': 'now'
+    });
+  });
+
+  /* ==========================================================================
+      Settings Forms Events
+      ========================================================================== */
+
+  /* ==========================================================================
+     VueJs code
      ========================================================================== */
 
-	// Dropdowns
-	$('.site-header-collapsed .dropdown').each(function () {
-		var parent = $(this),
-		    btn = parent.find('.dropdown-toggle');
-
-		btn.click(function () {
-			if (parent.hasClass('mobile-opened')) {
-				parent.removeClass('mobile-opened');
-			} else {
-				parent.addClass('mobile-opened');
-			}
-		});
-	});
-
-	$('.dropdown-more').each(function () {
-		var parent = $(this),
-		    more = parent.find('.dropdown-more-caption'),
-		    classOpen = 'opened';
-
-		more.click(function () {
-			if (parent.hasClass(classOpen)) {
-				parent.removeClass(classOpen);
-			} else {
-				parent.addClass(classOpen);
-			}
-		});
-	});
-
-	// Left mobile menu
-	$('.hamburger').click(function () {
-		if ($('body').hasClass('menu-left-opened')) {
-			$(this).removeClass('is-active');
-			$('body').removeClass('menu-left-opened');
-			$('html').css('overflow', 'auto');
-		} else {
-			$(this).addClass('is-active');
-			$('body').addClass('menu-left-opened');
-			$('html').css('overflow', 'hidden');
-		}
-	});
-
-	$('.mobile-menu-left-overlay').click(function () {
-		$('.hamburger').removeClass('is-active');
-		$('body').removeClass('menu-left-opened');
-		$('html').css('overflow', 'auto');
-	});
-
-	// Right mobile menu
-	$('.site-header .burger-right').click(function () {
-		if ($('body').hasClass('menu-right-opened')) {
-			$('body').removeClass('menu-right-opened');
-			$('html').css('overflow', 'auto');
-		} else {
-			$('.hamburger').removeClass('is-active');
-			$('body').removeClass('menu-left-opened');
-			$('body').addClass('menu-right-opened');
-			$('html').css('overflow', 'hidden');
-		}
-	});
-
-	$('.mobile-menu-right-overlay').click(function () {
-		$('body').removeClass('menu-right-opened');
-		$('html').css('overflow', 'auto');
-	});
-
-	/* ==========================================================================
-     Header help
-     ========================================================================== */
-
-	$('.help-dropdown').each(function () {
-		var parent = $(this),
-		    btn = parent.find('>button'),
-		    popup = parent.find('.help-dropdown-popup'),
-		    jscroll;
-
-		btn.click(function () {
-			if (parent.hasClass('opened')) {
-				parent.removeClass('opened');
-				jscroll.destroy();
-			} else {
-				parent.addClass('opened');
-
-				$('.help-dropdown-popup-cont, .help-dropdown-popup-side').matchHeight();
-
-				if (!("ontouchstart" in document.documentElement)) {
-					setTimeout(function () {
-						jscroll = parent.find('.jscroll').jScrollPane(jScrollOptions).data().jsp;
-						//jscroll.reinitialise();
-					}, 0);
-				}
-			}
-		});
-
-		$('html').click(function (event) {
-			if (!$(event.target).closest('.help-dropdown-popup').length && !$(event.target).closest('.help-dropdown>button').length && !$(event.target).is('.help-dropdown-popup') && !$(event.target).is('.help-dropdown>button')) {
-				if (parent.hasClass('opened')) {
-					parent.removeClass('opened');
-					jscroll.destroy();
-				}
-			}
-		});
-	});
-
-	/* ==========================================================================
-     Side menu list
-     ========================================================================== */
-
-	$('.side-menu-list li.with-sub').each(function () {
-		var parent = $(this),
-		    clickLink = parent.find('>span'),
-		    subMenu = parent.find('ul');
-
-		clickLink.click(function () {
-			if (parent.hasClass('opened')) {
-				parent.removeClass('opened');
-				subMenu.slideUp();
-			} else {
-				$('.side-menu-list li.with-sub').not(this).removeClass('opened').find('ul').slideUp();
-				parent.addClass('opened');
-				subMenu.slideDown();
-			}
-		});
-	});
-
-	/* ==========================================================================
-     Dashboard
-     ========================================================================== */
-
-	// Calculate height
-	function dashboardBoxHeight() {
-		$('.box-typical-dashboard').each(function () {
-			var parent = $(this),
-			    header = parent.find('.box-typical-header'),
-			    body = parent.find('.box-typical-body');
-			body.height(parent.outerHeight() - header.outerHeight());
-		});
-	}
-
-	dashboardBoxHeight();
-
-	$(window).resize(function () {
-		dashboardBoxHeight();
-	});
-
-	// Collapse box
-	$('.box-typical-dashboard').each(function () {
-		var parent = $(this),
-		    btnCollapse = parent.find('.action-btn-collapse');
-
-		btnCollapse.click(function () {
-			if (parent.hasClass('box-typical-collapsed')) {
-				parent.removeClass('box-typical-collapsed');
-			} else {
-				parent.addClass('box-typical-collapsed');
-			}
-		});
-	});
-
-	// Full screen box
-	$('.box-typical-dashboard').each(function () {
-		var parent = $(this),
-		    btnExpand = parent.find('.action-btn-expand'),
-		    classExpand = 'box-typical-full-screen';
-
-		btnExpand.click(function () {
-			if (parent.hasClass(classExpand)) {
-				parent.removeClass(classExpand);
-				$('html').css('overflow', 'auto');
-			} else {
-				parent.addClass(classExpand);
-				$('html').css('overflow', 'hidden');
-			}
-			dashboardBoxHeight();
-		});
-	});
-
-	/* ==========================================================================
-     Circle progress bar
-     ========================================================================== */
-
-	$(".circle-progress-bar").asPieProgress({
-		namespace: 'asPieProgress',
-		speed: 500
-	});
-
-	$(".circle-progress-bar").asPieProgress("start");
-
-	$(".circle-progress-bar-typical").asPieProgress({
-		namespace: 'asPieProgress',
-		speed: 25
-	});
-
-	$(".circle-progress-bar-typical").asPieProgress("start");
-
-	/* ==========================================================================
- 	Select
- 	========================================================================== */
-
-	// Bootstrap-select
-	$('.bootstrap-select').selectpicker({
-		style: '',
-		width: '100%',
-		size: 8
-	});
-
-	// Select2
-	$.fn.select2.defaults.set("minimumResultsForSearch", "Infinity");
-
-	$('.select2').select2();
-
-	function select2Icons(state) {
-		if (!state.id) {
-			return state.text;
-		}
-		var $state = $('<span class="font-icon ' + state.element.getAttribute('data-icon') + '"></span><span>' + state.text + '</span>');
-		return $state;
-	}
-
-	$(".select2-icon").select2({
-		templateSelection: select2Icons,
-		templateResult: select2Icons
-	});
-
-	$(".select2-arrow").select2({
-		theme: "arrow"
-	});
-
-	$(".select2-white").select2({
-		theme: "white"
-	});
-
-	function select2Photos(state) {
-		if (!state.id) {
-			return state.text;
-		}
-		var $state = $('<span class="user-item"><img src="' + state.element.getAttribute('data-photo') + '"/>' + state.text + '</span>');
-		return $state;
-	}
-
-	$(".select2-photo").select2({
-		templateSelection: select2Photos,
-		templateResult: select2Photos
-	});
-
-	/* ==========================================================================
- 	Search
- 	========================================================================== */
-
-	$.typeahead({
-		input: "#typeahead-search",
-		order: "asc",
-		minLength: 1,
-		source: {
-			data: ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burma", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo, Democratic Republic", "Congo, Republic of the", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "East Timor", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Greenland", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Korea, North", "Korea, South", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Mongolia", "Morocco", "Monaco", "Mozambique", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Samoa", "San Marino", "Sao Tome", "Saudi Arabia", "Senegal", "Serbia and Montenegro", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "Spain", "Sri Lanka", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"]
-		}
-	});
-
-	/* ==========================================================================
- 	Datepicker
- 	========================================================================== */
-
-	$('.datetimepicker-1').datetimepicker({
-		widgetPositioning: {
-			horizontal: 'right'
-		},
-		debug: false
-	});
-
-	$('.datetimepicker-2').datetimepicker({
-		widgetPositioning: {
-			horizontal: 'right'
-		},
-		format: 'LT',
-		debug: false
-	});
-
-	/* ==========================================================================
- 	Tooltips
- 	========================================================================== */
-
-	// Tooltip
-	$('[data-toggle="tooltip"]').tooltip({
-		html: true
-	});
-
-	// Popovers
-	$('[data-toggle="popover"]').popover({
-		trigger: 'focus'
-	});
-
-	/* ==========================================================================
- 	Validation
- 	========================================================================== */
-
-	$('#form-signin_v1').validate({
-		submit: {
-			settings: {
-				inputContainer: '.form-group'
-			}
-		}
-	});
-
-	$('#form-signin_v2').validate({
-		submit: {
-			settings: {
-				inputContainer: '.form-group',
-				errorListClass: 'form-error-text-block',
-				display: 'block',
-				insertion: 'prepend'
-			}
-		}
-	});
-
-	$('#form-signup_v1').validate({
-		submit: {
-			settings: {
-				inputContainer: '.form-group',
-				errorListClass: 'form-tooltip-error'
-			}
-		}
-	});
-
-	$('#form-signup_v2').validate({
-		submit: {
-			settings: {
-				inputContainer: '.form-group',
-				errorListClass: 'form-tooltip-error'
-			}
-		}
-	});
-
-	/* ==========================================================================
- 	Sweet alerts
- 	========================================================================== */
-
-	$('.swal-btn-basic').click(function (e) {
-		// e.preventDefault();
-		swal("Here's a message!");
-	});
-
-	$('.swal-btn-text').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Here's a message!",
-			text: "It's pretty, isn't it?"
-		});
-	});
-
-	$('.swal-btn-success').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Good job!",
-			text: "You clicked the button!",
-			type: "success",
-			confirmButtonClass: "btn-success",
-			confirmButtonText: "Success"
-		});
-	});
-
-	$('.swal-btn-warning').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Are you sure?",
-			text: "Your will not be able to recover this imaginary file!",
-			type: "warning",
-			showCancelButton: true,
-			cancelButtonClass: "btn-default",
-			confirmButtonClass: "btn-warning",
-			confirmButtonText: "Warning",
-			closeOnConfirm: false
-		}, function () {
-			swal({
-				title: "Deleted!",
-				text: "Your imaginary file has been deleted.",
-				type: "success",
-				confirmButtonClass: "btn-success"
-			});
-		});
-	});
-
-	$('.swal-btn-cancel').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Are you sure?",
-			text: "You will not be able to recover this imaginary file!",
-			type: "warning",
-			showCancelButton: true,
-			confirmButtonClass: "btn-danger",
-			confirmButtonText: "Yes, delete it!",
-			cancelButtonText: "No, cancel plx!",
-			closeOnConfirm: false,
-			closeOnCancel: false
-		}, function (isConfirm) {
-			if (isConfirm) {
-				swal({
-					title: "Deleted!",
-					text: "Your imaginary file has been deleted.",
-					type: "success",
-					confirmButtonClass: "btn-success"
-				});
-			} else {
-				swal({
-					title: "Cancelled",
-					text: "Your imaginary file is safe :)",
-					type: "error",
-					confirmButtonClass: "btn-danger"
-				});
-			}
-		});
-	});
-
-	$('.swal-btn-custom-img').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Sweet!",
-			text: "Here's a custom image.",
-			confirmButtonClass: "btn-success",
-			imageUrl: 'img/smile.png'
-		});
-	});
-
-	$('.swal-btn-info').click(function (e) {
-		e.preventDefault();
-		swal({
-			title: "Are you sure?",
-			text: "Your will not be able to recover this imaginary file!",
-			type: "info",
-			showCancelButton: true,
-			cancelButtonClass: "btn-default",
-			confirmButtonText: "Info",
-			confirmButtonClass: "btn-primary"
-		});
-	});
-
-	/* ==========================================================================
- 	Bar chart
- 	========================================================================== */
-
-	$(".bar-chart").peity("bar", {
-		delimiter: ",",
-		fill: ["#919fa9"],
-		height: 16,
-		max: null,
-		min: 0,
-		padding: 0.1,
-		width: 384
-	});
-
-	/* ==========================================================================
- 	Full height box
- 	========================================================================== */
-
-	function boxFullHeight() {
-		var sectionHeader = $('.section-header');
-		var sectionHeaderHeight = 0;
-
-		if (sectionHeader.size()) {
-			sectionHeaderHeight = parseInt(sectionHeader.height()) + parseInt(sectionHeader.css('padding-bottom'));
-		}
-
-		$('.box-typical-full-height').css('min-height', $(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - sectionHeaderHeight - parseInt($('.box-typical-full-height').css('margin-bottom')) - 2);
-		$('.box-typical-full-height>.tbl, .box-typical-full-height>.box-typical-center').height(parseInt($('.box-typical-full-height').css('min-height')));
-	}
-
-	boxFullHeight();
-
-	$(window).resize(function () {
-		boxFullHeight();
-	});
-
-	/* ==========================================================================
- 	Chat
- 	========================================================================== */
-
-	function chatHeights() {
-		$('.chat-dialog-area').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight() - $('.chat-area-bottom').outerHeight());
-		$('.chat-list-in').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight()).css('min-height', parseInt($('.chat-dialog-area').css('min-height')) + $('.chat-area-bottom').outerHeight());
-	}
-
-	chatHeights();
-
-	$(window).resize(function () {
-		chatHeights();
-	});
-
-	/* ==========================================================================
- 	Auto size for textarea
- 	========================================================================== */
-
-	autosize($('textarea[data-autosize]'));
-
-	/* ==========================================================================
- 	Pages center
- 	========================================================================== */
-
-	$('.page-center').matchHeight({
-		target: $('html')
-	});
-
-	$(window).resize(function () {
-		setTimeout(function () {
-			$('.page-center').matchHeight({ remove: true });
-			$('.page-center').matchHeight({
-				target: $('html')
-			});
-		}, 100);
-	});
-
-	/* ==========================================================================
- 	Cards user
- 	========================================================================== */
-
-	$('.card-user').matchHeight();
-
-	/* ==========================================================================
- 	Fancybox
- 	========================================================================== */
-
-	$(".fancybox").fancybox({
-		padding: 0,
-		openEffect: 'none',
-		closeEffect: 'none'
-	});
-
-	/* ==========================================================================
- 	Profile slider
- 	========================================================================== */
-
-	$(".profile-card-slider").slick({
-		slidesToShow: 1,
-		adaptiveHeight: true,
-		prevArrow: '<i class="slick-arrow font-icon-arrow-left"></i>',
-		nextArrow: '<i class="slick-arrow font-icon-arrow-right"></i>'
-	});
-
-	/* ==========================================================================
- 	Posts slider
- 	========================================================================== */
-
-	var postsSlider = $(".posts-slider");
-
-	postsSlider.slick({
-		slidesToShow: 4,
-		adaptiveHeight: true,
-		arrows: false,
-		responsive: [{
-			breakpoint: 1700,
-			settings: {
-				slidesToShow: 3
-			}
-		}, {
-			breakpoint: 1350,
-			settings: {
-				slidesToShow: 2
-			}
-		}, {
-			breakpoint: 992,
-			settings: {
-				slidesToShow: 3
-			}
-		}, {
-			breakpoint: 768,
-			settings: {
-				slidesToShow: 2
-			}
-		}, {
-			breakpoint: 500,
-			settings: {
-				slidesToShow: 1
-			}
-		}]
-	});
-
-	$('.posts-slider-prev').click(function () {
-		postsSlider.slick('slickPrev');
-	});
-
-	$('.posts-slider-next').click(function () {
-		postsSlider.slick('slickNext');
-	});
-
-	/* ==========================================================================
- 	Recomendations slider
- 	========================================================================== */
-
-	var recomendationsSlider = $(".recomendations-slider");
-
-	recomendationsSlider.slick({
-		slidesToShow: 4,
-		adaptiveHeight: true,
-		arrows: false,
-		responsive: [{
-			breakpoint: 1700,
-			settings: {
-				slidesToShow: 3
-			}
-		}, {
-			breakpoint: 1350,
-			settings: {
-				slidesToShow: 2
-			}
-		}, {
-			breakpoint: 992,
-			settings: {
-				slidesToShow: 3
-			}
-		}, {
-			breakpoint: 768,
-			settings: {
-				slidesToShow: 2
-			}
-		}, {
-			breakpoint: 500,
-			settings: {
-				slidesToShow: 1
-			}
-		}]
-	});
-
-	$('.recomendations-slider-prev').click(function () {
-		recomendationsSlider.slick('slickPrev');
-	});
-
-	$('.recomendations-slider-next').click(function () {
-		recomendationsSlider.slick('slickNext');
-	});
-
-	/* ==========================================================================
- 	Pnotify
- 	========================================================================== */
-
-	PNotify.prototype.options.styling = "bootstrap3";
-
-	/* ==========================================================================
- 	Box typical full height with header
- 	========================================================================== */
-
-	function boxWithHeaderFullHeight() {
-		$('.box-typical-full-height-with-header').each(function () {
-			var box = $(this),
-			    boxHeader = box.find('.box-typical-header'),
-			    boxBody = box.find('.box-typical-body');
-
-			boxBody.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight());
-		});
-	}
-
-	boxWithHeaderFullHeight();
-
-	$(window).resize(function () {
-		boxWithHeaderFullHeight();
-	});
-
-	/* ==========================================================================
- 	Gallery
- 	========================================================================== */
-
-	$('.gallery-item').matchHeight({
-		target: $('.gallery-item .gallery-picture')
-	});
-
-	/* ==========================================================================
- 	File manager
- 	========================================================================== */
-
-	function fileManagerHeight() {
-		$('.files-manager').each(function () {
-			var box = $(this),
-			    boxColLeft = box.find('.files-manager-side'),
-			    boxSubHeader = box.find('.files-manager-header'),
-			    boxCont = box.find('.files-manager-content-in'),
-			    boxColRight = box.find('.files-manager-aside');
-
-			var paddings = parseInt($('.page-content').css('padding-top')) + parseInt($('.page-content').css('padding-bottom')) + parseInt(box.css('margin-bottom')) + 2;
-
-			boxColLeft.height('auto');
-			boxCont.height('auto');
-			boxColRight.height('auto');
-
-			if (boxColLeft.height() <= $(window).height() - paddings) {
-				boxColLeft.height($(window).height() - paddings);
-			}
-
-			if (boxColRight.height() <= $(window).height() - paddings - boxSubHeader.outerHeight()) {
-				boxColRight.height($(window).height() - paddings - boxSubHeader.outerHeight());
-			}
-
-			boxCont.height(boxColRight.height());
-		});
-	}
-
-	fileManagerHeight();
-
-	$(window).resize(function () {
-		fileManagerHeight();
-	});
-
-	/* ==========================================================================
- 	Mail
- 	========================================================================== */
-
-	function mailBoxHeight() {
-		$('.mail-box').each(function () {
-			var box = $(this),
-			    boxHeader = box.find('.mail-box-header'),
-			    boxColLeft = box.find('.mail-box-list'),
-			    boxSubHeader = box.find('.mail-box-work-area-header'),
-			    boxColRight = box.find('.mail-box-work-area-cont');
-
-			boxColLeft.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight());
-
-			boxColRight.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight() - boxSubHeader.outerHeight());
-		});
-	}
-
-	mailBoxHeight();
-
-	$(window).resize(function () {
-		mailBoxHeight();
-	});
-
-	/* ==========================================================================
- 	Nestable
- 	========================================================================== */
-
-	$('.dd-handle').hover(function () {
-		$(this).prev('button').addClass('hover');
-		$(this).prev('button').prev('button').addClass('hover');
-	}, function () {
-		$(this).prev('button').removeClass('hover');
-		$(this).prev('button').prev('button').removeClass('hover');
-	});
-
-	/* ==========================================================================
- 	Widget weather slider
- 	========================================================================== */
-
-	$('.widget-weather-slider').slick({
-		arrows: false,
-		dots: true,
-		infinite: false,
-		slidesToShow: 4,
-		slidesToScroll: 4
-	});
-
-	/* ==========================================================================
- 	Addl side menu
- 	========================================================================== */
-
-	setTimeout(function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			$('.side-menu-addl').jScrollPane(jScrollOptions);
-		}
-	}, 1000);
-
-	/* ==========================================================================
- 	Widget chart combo
- 	========================================================================== */
-
-	$('.widget-chart-combo-content-in, .widget-chart-combo-side').matchHeight();
-
-	/* ==========================================================================
- 	Header notifications
- 	========================================================================== */
-
-	// Tabs hack
-	$('.dropdown-menu-messages a[data-toggle="tab"]').click(function (e) {
-		e.stopPropagation();
-		e.preventDefault();
-		$(this).tab('show');
-
-		// Scroll
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif = $('.dropdown-notification.messages .tab-pane.active').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	// Scroll
-	var jspMessNotif, jspNotif;
-
-	$('.dropdown-notification.messages').on('show.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif = $('.dropdown-notification.messages .tab-pane.active').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	$('.dropdown-notification.messages').on('hide.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspMessNotif.destroy();
-		}
-	});
-
-	$('.dropdown-notification.notif').on('show.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspNotif = $('.dropdown-notification.notif .dropdown-menu-notif-list').jScrollPane(jScrollOptions).data().jsp;
-		}
-	});
-
-	$('.dropdown-notification.notif').on('hide.bs.dropdown', function () {
-		if (!("ontouchstart" in document.documentElement)) {
-			jspNotif.destroy();
-		}
-	});
-
-	/* ==========================================================================
- 	Steps progress
- 	========================================================================== */
-
-	function stepsProgresMarkup() {
-		$('.steps-icon-progress').each(function () {
-			var parent = $(this),
-			    cont = parent.find('ul'),
-			    padding = 0,
-			    padLeft = (parent.find('li:first-child').width() - parent.find('li:first-child .caption').width()) / 2,
-			    padRight = (parent.find('li:last-child').width() - parent.find('li:last-child .caption').width()) / 2;
-
-			padding = padLeft;
-
-			if (padLeft > padRight) padding = padRight;
-
-			cont.css({
-				marginLeft: -padding,
-				marginRight: -padding
-			});
-
-			console.log(padLeft);
-			console.log(padRight);
-			console.log(padding);
-		});
-	}
-
-	stepsProgresMarkup();
-
-	$(window).resize(function () {
-		stepsProgresMarkup();
-	});
-
-	/* ==========================================================================
- 	Tables
- 	========================================================================== */
-
-	var $table = $('#table'),
-	    $remove = $('#remove'),
-	    selections = [];
-	var generic_table = $('.generic_table');
-	var equipmentTable = $('#equipmentTable');
-	var missingServices = $('#missingServices');
-
-	function totalTextFormatter(data) {
-		return 'Total';
-	}
-
-	function totalNameFormatter(data) {
-		return data.length;
-	}
-
-	function totalPriceFormatter(data) {
-		var total = 0;
-		$.each(data, function (i, row) {
-			total += +row.price.substring(1);
-		});
-		return '$' + total;
-	}
-
-	function statusFormatter(data, rowData, index) {
-		var classBtn = '',
-		    classDropup = '',
-		    pageSize = 10;
-
-		if (data === 'Draft') classBtn = 'btn-danger';
-		if (data === 'Pending') classBtn = 'btn-primary';
-		if (data === 'Moderation') classBtn = 'btn-warning';
-		if (data === 'Published') classBtn = 'btn-success';
-
-		if (index >= pageSize / 2) {
-			classDropup = 'dropup';
-		}
-
-		return '<div class="dropdown dropdown-status ' + classDropup + ' ">' + '<button class="btn ' + classBtn + ' dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + data + '</button>' + '<div class="dropdown-menu">' + '<a class="dropdown-item" href="#">Draft</a>' + '<a class="dropdown-item" href="#">Pending</a>' + '<a class="dropdown-item" href="#">Moderation</a>' + '<a class="dropdown-item" href="#">Published</a>' + '<div class="dropdown-divider"></div>' + '<a class="dropdown-item" href="#">Move to Trash</a>' + '</div></div>';
-	}
-
-	window.operateEvents = {
-		'click .like': function clickLike(e, value, row, index) {
-			alert('You click like action, row: ' + JSON.stringify(row));
-		},
-		'click .remove': function clickRemove(e, value, row, index) {
-			$table.bootstrapTable('remove', {
-				field: 'id',
-				values: [row.id]
-			});
-		}
-	};
-
-	function operateFormatter(value, row, index) {
-		return ['<a class="like" href="javascript:void(0)" title="Like">', '<i class="glyphicon glyphicon-heart"></i>', '</a>  ', '<a class="remove" href="javascript:void(0)" title="Remove">', '<i class="glyphicon glyphicon-remove"></i>', '</a>'].join('');
-	}
-
-	function getIdSelections() {
-		return $.map($table.bootstrapTable('getSelections'), function (row) {
-			return row.id;
-		});
-	}
-
-	$table.on('check.bs.table uncheck.bs.table ' + 'check-all.bs.table uncheck-all.bs.table', function () {
-		$remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-		// save your data, here just save the current page
-		selections = getIdSelections();
-		// push or splice the selections if you want to save all data selections
-	});
-
-	$remove.click(function () {
-		var ids = getIdSelections();
-		$table.bootstrapTable('remove', {
-			field: 'id',
-			values: ids
-		});
-		$remove.prop('disabled', true);
-	});
-
-	$('#toolbar').find('select').change(function () {
-		$table.bootstrapTable('refreshOptions', {
-			exportDataType: $(this).val()
-		});
-	});
-
-	var tableOptions = {
-		iconsPrefix: 'font-icon',
-		toggle: 'table',
-		sidePagination: 'client',
-		pagination: 'true',
-		icons: {
-			paginationSwitchDown: 'font-icon-arrow-square-down',
-			paginationSwitchUp: 'font-icon-arrow-square-down up',
-			refresh: 'font-icon-refresh',
-			toggle: 'font-icon-list-square',
-			columns: 'font-icon-list-rotate',
-			export: 'font-icon-download'
-		},
-		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
-	};
-
-	generic_table.bootstrapTable(tableOptions);
-	equipmentTable.bootstrapTable(tableOptions);
-	missingServices.bootstrapTable(tableOptions);
-
-	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
-		if ($element.hasClass('table_active')) {
-			$element.removeClass('table_active');
-		} else {
-			generic_table.find('tr.table_active').removeClass('table_active');
-			$element.addClass('table_active');
-		}
-		window.location.href = back.click_url + row.id;
-	});
-
-	$('#equipmentTable').on('click-row.bs.table', function (e, row, $element) {
-		if ($element.hasClass('table_active')) {
-			$element.removeClass('table_active');
-		} else {
-			equipmentTable.find('tr.table_active').removeClass('table_active');
-			$element.addClass('table_active');
-		}
-		if (isset('equipmentUrl')) {
-			$.ajax({
-				vue: serviceVue,
-				equipmentTable: equipmentTable,
-				url: back.equipmentUrl + row.id,
-				type: 'GET',
-				success: function success(data, textStatus, xhr) {
-					//called when successful
-					this.vue.equipmentId = data.id;
-					this.vue.equipmentKind = data.kind;
-					this.vue.equipmentType = data.type;
-					this.vue.equipmentBrand = data.brand;
-					this.vue.equipmentModel = data.model;
-					this.vue.equipmentCapacity = data.capacity;
-					this.vue.equipmentUnits = data.units;
-					this.vue.equipmentPhotos = data.photos;
-					// remove dropzone instance
-					Dropzone.forElement("#equipmentDropzone").destroy();
-
-					if (isset('equipmentAddPhotoUrl')) {
-						// generating the dropzone dinamicly
-						// in order to change the url
-						$("#equipmentDropzone").dropzone({
-							vue: this.vue,
-							url: back.equipmentAddPhotoUrl + data.id,
-							method: 'post',
-							paramName: 'photo',
-							maxFilesize: 8,
-							acceptedFiles: '.jpg, .jpeg, .png',
-							init: function init() {
-								this.on("success", function (file) {
-									this.options.vue.$emit('equipmentChanged');
-								});
-							}
-						});
-						// set the dropzone class for styling
-						$("#equipmentDropzone").addClass("dropzone");
-					}
-					// remove the selected color from the row
-					this.equipmentTable.find('tr.table_active').removeClass('table_active');
-					this.vue.equipmentTableFocus = false;
-					this.vue.equipmentFocus = 4;
-				},
-				error: function error(xhr, textStatus, errorThrown) {
-					//called when there is an error
-					console.log('error');
-				}
-			});
-		}
-	});
-
-	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
-		if ($element.hasClass('table_active')) {
-			$element.removeClass('table_active');
-		} else {
-			missingServices.find('tr.table_active').removeClass('table_active');
-			$element.addClass('table_active');
-		}
-		window.location.href = back.click_missingServices_url + row.id;
-	});
-
-	/* ==========================================================================
-     Side datepicker
-     ========================================================================== */
-	if (isset('enabledDates')) {
-		$('#side-datetimepicker').datetimepicker({
-			inline: true,
-			enabledDates: back.enabledDates,
-			format: 'YYYY-MM-DD',
-			defaultDate: back.todayDate
-		});
-	}
-
-	if (isset('date_url')) {
-		$("#side-datetimepicker").on("dp.change", function (e) {
-			var date = new Date(e.date._d);
-			var date_selected = dateFormat(date, "yyyy-mm-dd");
-			var new_url = back.datatable_url + date_selected;
-			var new_missingServices_url = back.missingServices_url + date_selected;
-
-			generic_table.bootstrapTable('refresh', { url: new_url });
-			missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
-			if (isset('missingServicesInfo_url')) {
-				$.ajax({
-					vue: reportVue,
-					url: back.missingServicesInfo_url,
-					type: 'GET',
-					dataType: 'json',
-					data: {
-						'date': date_selected
-					},
-					success: function success(data, textStatus, xhr) {
-						//called when successful
-						this.vue.numServicesDone = data.numServicesDone;
-						this.vue.numServicesMissing = data.numServicesMissing;
-						this.vue.numServicesToDo = data.numServicesToDo;
-					},
-					error: function error(xhr, textStatus, errorThrown) {
-						//called when there is an error
-						// console.log('error');
-					}
-				});
-			}
-		});
-	}
-	if (isset('default_date')) {
-		$('#edit_report_datepicker').datetimepicker({
-			widgetPositioning: {
-				horizontal: 'right'
-			},
-			debug: false,
-			defaultDate: back.default_date
-		});
-	}
-
-	$('#new_report_datepicker').datetimepicker({
-		widgetPositioning: {
-			horizontal: 'right'
-		},
-		debug: false,
-		useCurrent: true
-	});
-
-	/* ==========================================================================
-     Dropzone
-     ========================================================================== */
-
-	// Dropzone.autoDiscover = false;
-	Dropzone.options.genericDropzone = {
-		paramName: 'photo',
-		maxFilesize: 8,
-		acceptedFiles: '.jpg, .jpeg, .png'
-	};
-	Dropzone.options.equipmentDropzone = {
-		paramName: 'photo',
-		maxFilesize: 8,
-		acceptedFiles: '.jpg, .jpeg, .png'
-	};
-
-	/* ==========================================================================
-     Custom Slick Carousel
-     ========================================================================== */
-
-	$(".reports_slider").slick({
-		slidesToShow: 3,
-		slidesToScroll: 1,
-		dots: true,
-		centerMode: true,
-		focusOnSelect: true
-	});
-
-	/* ==========================================================================
-     Input Masks
-     ========================================================================== */
-
-	// $('.date-mask-input').mask("00/00/0000", {placeholder: "__/__/____"});
-	//    $('.time-mask-input').mask('00:00:00', {placeholder: "__:__:__"});
-	//    $('.date-and-time-mask-input').mask('00/00/0000 00:00:00', {placeholder: "__/__/____ __:__:__"});
-	//    $('.zip-code-mask-input').mask('00000-000', {placeholder: "_____-___"});
-	//    $('.money-mask-input').mask('000.000.000.000.000,00', {reverse: true});
-	//    $('.phone-mask-input').mask('0000-0000', {placeholder: "____-____"});
-	//    $('.phone-with-code-area-mask-input').mask('(00) 0000-0000', {placeholder: "(__) ____-____"});
-	//    $('.us-phone-mask-input').mask('(000) 000-0000', {placeholder: "(___) ___-____"});
-	//    $('.ip-address-mask-input').mask('099.099.099.099');
-	//    $('.mixed-mask-input').mask('AAA 000-S0S');
-
-	/* ==========================================================================
-     Clockpicker
-     ========================================================================== */
-
-	$(document).ready(function () {
-		$('.clockpicker').clockpicker({
-			autoclose: true,
-			donetext: 'Done',
-			'default': 'now'
-		});
-	});
-
-	/* ==========================================================================
-     Settings Forms Events
-     ========================================================================== */
-
-	/* ==========================================================================
-    VueJs code
-    ========================================================================== */
-
-	// report Vue instance
-	var reportVue = new Vue({
-		el: '.reportVue',
-		components: { dropdown: dropdown },
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
-			numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
-			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
-			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
-			serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
-			technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
-		},
-		computed: {
-			missingServicesTag: function missingServicesTag() {
-				if (this.numServicesMissing < 1) {
-					return 'All Services Done';
-				}
-				return 'Missing Services: ' + this.numServicesMissing;
-			}
-		},
-		methods: {
-			previewEmailReport: function previewEmailReport(id) {
-				// prevent the user from clicking more than once
-				event.target.disabled = true;
-				event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-				new Spinner({
-					left: "90%",
-					radius: 5,
-					length: 4,
-					width: 1
-				}).spin(event.target);
-				// HTTP Request or what ever to update the permission
-				$.ajax({
-					vue: this,
-					target: event.target,
-					url: isset('emailPreview') ? back.emailPreview : '',
-					type: 'GET',
-					dataType: 'json',
-					data: {
-						'id': id
-					},
-					complete: function complete(xhr, textStatus) {
-						this.target.disabled = false;
-						this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-					},
-					success: function success(data, textStatus, xhr) {
-						$('#emailPreview').modal('show');
-						this.vue.reportEmailPreview = data.data.url;
-					},
-					error: function error(xhr, textStatus, errorThrown) {
-						console.log('error');
-					}
-				});
-			}
-		}
-	});
-
-	var serviceVue = new Vue({
-		el: '.serviceVue',
-		components: {
-			PhotoList: PhotoList,
-			countries: countries
-		},
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			statusSwitch: true,
-			// Location picker values
-			pickerServiceAddressLine1: '',
-			pickerServiceCity: '',
-			pickerServiceState: '',
-			pickerServicePostalCode: '',
-			pickerServiceCountry: '',
-			pickerServiceLatitude: '',
-			pickerServiceLongitude: '',
-			// form values
-			serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
-			serviceCity: isset('city') ? back.city : '',
-			serviceState: isset('state') ? back.state : '',
-			servicePostalCode: isset('postalCode') ? back.postalCode : '',
-			serviceCountry: isset('country') ? back.country : '',
-			serviceLatitude: isset('latitude') ? back.latitude : null,
-			serviceLongitude: isset('longitude') ? back.longitude : null,
-			// Equipment
-			equipmentTableFocus: true,
-			equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-			equipmentId: 0,
-			equipmentServiceId: isset('serviceId') ? Number(back.serviceId) : 0,
-			equipmentPhotos: [],
-			equipmentPhoto: '',
-			equipmentKind: '',
-			equipmentType: '',
-			equipmentBrand: '',
-			equipmentModel: '',
-			equipmentCapacity: '',
-			equipmentUnits: ''
-		},
-		computed: {
-			equipmentModalTitle: function equipmentModalTitle() {
-				switch (this.equipmentFocus) {
-					case 1:
-						return 'Equipment List';
-						break;
-					case 2:
-						return 'Add Equipment';
-						break;
-					case 3:
-						return this.equipmentKind;
-						break;
-					case 4:
-						return 'Edit Equipment';
-						break;
-					default:
-						return 'Equipment';
-				}
-			},
-			locationPickerTag: function locationPickerTag() {
-				var attributes = {
-					'icon': 'font-icon font-icon-ok',
-					'text': 'Location Selected',
-					'class': 'btn-success'
-				};
-				if (this.serviceLatitude == null) {
-					attributes = {
-						'icon': 'font-icon font-icon-pin-2',
-						'text': 'Choose Location',
-						'class': 'btn-primary'
-					};
-				}
-				return attributes;
-			}
-		},
-		events: {
-			// when a photo is deleted from the equipment photo edit
-
-			equipmentChanged: function equipmentChanged() {
-				this.getEquipment();
-			}
-		},
-		methods: {
-			// Equipment
-
-			getEquipment: function getEquipment() {
-				if (isset('equipmentUrl')) {
-					$.ajax({
-						vue: this,
-						url: back.equipmentUrl + this.equipmentId,
-						type: 'GET',
-						success: function success(data, textStatus, xhr) {
-							//called when successful
-							this.vue.equipmentId = data.id;
-							this.vue.equipmentKind = data.kind;
-							this.vue.equipmentType = data.type;
-							this.vue.equipmentBrand = data.brand;
-							this.vue.equipmentModel = data.model;
-							this.vue.equipmentCapacity = data.capacity;
-							this.vue.equipmentUnits = data.units;
-							this.vue.equipmentPhotos = data.photos;
-						},
-						error: function error(xhr, textStatus, errorThrown) {
-							//called when there is an error
-							console.log('error');
-						}
-					});
-				}
-			},
-			sendEquipment: function sendEquipment(type) {
-				var url = isset('equipmentUrl') ? back.equipmentUrl : '';
-				var requestType = 'POST';
-
-				if (type == 'edit') {
-					url += this.equipmentId;
-					requestType = 'PATCH';
-				}
-
-				if (url != '') {
-					$.ajax({
-						vue: this,
-						url: url,
-						type: requestType,
-						dataType: 'json',
-						data: {
-							'photo': this.equipmentPhoto,
-							'kind': this.equipmentKind,
-							'type': this.equipmentType,
-							'brand': this.equipmentBrand,
-							'model': this.equipmentModel,
-							'capacity': this.equipmentCapacity,
-							'units': this.equipmentUnits,
-							'service_id': this.equipmentServiceId
-						},
-						success: function success(data, textStatus, xhr) {
-							// refresh equipment list
-							equipmentTable.bootstrapTable('refresh');
-							// send back to list
-							this.vue.openEquimentList();
-						},
-						error: function error(xhr, textStatus, errorThrown) {
-							console.log('error creating equipment');
-						}
-					});
-				}
-			},
-			clearEquipment: function clearEquipment() {
-				this.equipmentKind = '';
-				this.equipmentType = '';
-				this.equipmentBrand = '';
-				this.equipmentModel = '';
-				this.equipmentCapacity = '';
-				this.equipmentUnits = '';
-			},
-			setEquipmentFocus: function setEquipmentFocus($num) {
-				this.equipmentFocus = $num;
-			},
-			checkEquipmentFocusIs: function checkEquipmentFocusIs($num) {
-				return this.equipmentFocus == $num;
-			},
-			openEquimentList: function openEquimentList() {
-				var clearEquipment = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-
-				this.equipmentTableFocus = true;
-				this.equipmentFocus = 1;
-				if (clearEquipment) {
-					this.clearEquipment();
-				}
-				$('#equipmentModal').modal('show');
-			},
-			populateAddressFields: function populateAddressFields(page) {
-				this.setLocation(page);
-				if (page == 'create') {
-					this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-					this.serviceCity = this.pickerServiceCity;
-					this.servicePostalCode = this.pickerServicePostalCode;
-					this.serviceState = this.pickerServiceState;
-					this.serviceCountry = this.pickerServiceCountry;
-				}
-			},
-			setLocation: function setLocation(page) {
-				if (page == 'create') {
-					this.serviceLongitude = this.pickerServiceLongitude;
-					this.serviceLatitude = this.pickerServiceLatitude;
-				}
-			},
-			changeServiceListStatus: function changeServiceListStatus(status) {
-				var intStatus = !status ? 1 : 0;
-				if (typeof back !== 'undefined') {
-					if (typeof back.serviceTableUrl !== 'undefined') {
-						var new_url = back.serviceTableUrl + intStatus;
-						generic_table.bootstrapTable('refresh', { url: new_url });
-					}
-				}
-			}
-		}
-
-	});
-
-	var settingsVue = new Vue({
-		el: '.settingsVue',
-		components: {
-			Permissions: Permissions,
-			emailPreference: emailPreference
-		},
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			companyName: "",
-			website: "",
-			facebook: "",
-			twitter: "",
-			objectName: "",
-			objectLastName: ""
-		}
-	});
-	var mainVue = new Vue({
-		// el: 'body',
-
-		components: {
-			Permissions: Permissions,
-			emailPreference: emailPreference,
-			countries: countries,
-			dropdown: dropdown,
-			PhotoList: PhotoList
-		},
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			// Administrator
-			companyName: "",
-			website: "",
-			facebook: "",
-			twitter: "",
-			objectName: "",
-			objectLastName: ""
-		},
-		// Reports
-		// numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
-		// numServicesToDo: (isset('numServicesToDo')) ? back.numServicesToDo : '',
-		// numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
-		// reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
-		// Services
-		// //temporal values
-		// pickerServiceAddressLine1: '',
-		// pickerServiceCity: '',
-		// pickerServiceState: '',
-		// pickerServicePostalCode: '',
-		// pickerServiceCountry: '',
-		// pickerServiceLatitude: '',
-		// pickerServiceLongitude: '',
-		// // form values
-		// serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
-		// serviceCity: (isset('city')) ? back.city : '',
-		// serviceState: (isset('state')) ? back.state : '',
-		// servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
-		// serviceCountry: (isset('country')) ? back.country : '',
-		// serviceLatitude: (isset('latitude')) ? back.latitude : null,
-		// serviceLongitude: (isset('longitude')) ? back.longitude : null,
-		// statusSwitch: true,
-		// // equipment
-		// equipmentTableFocus: true,
-		// // 1=table, 2=new, 3=show, 4=edit
-		// equipmentFocus: 1,
-		// equipmentId: 0,
-		// equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-		// equipmentPhotos: [],
-		// equipmentPhoto: '',
-		// equipmentKind: '',
-		// equipmentType: '',
-		// equipmentBrand: '',
-		// equipmentModel: '',
-		// equipmentCapacity: '',
-		// equipmentUnits: '',
-		// Generic
-		computed: {
-			// equipmentModalTitle: function(){
-			//     switch (this.equipmentFocus) {
-			//         case 1:
-			//         return 'Equipment List';
-			//         break;
-			//         case 2:
-			//         return 'Add Equipment';
-			//         break;
-			//         case 3:
-			//         return this.equipmentKind;
-			//         break;
-			//         case 4:
-			//         return 'Edit Equipment';
-			//         break;
-			//         default:
-			//         return 'Equipment';
-			//
-			//     }
-			// },
-			// missingServicesTag: function () {
-			//     if(this.numServicesMissing < 1){
-			//         return 'All Services Done';
-			//     }
-			//     return 'Missing Services: '+this.numServicesMissing;
-			// },
-			// locationPickerTag(){
-			//     if(this.serviceLatitude == null ){
-			//         return {
-			//             'icon': 'font-icon font-icon-pin-2',
-			//             'text': 'Choose Location',
-			//             'class': 'btn-primary'
-			//         };
-			//     }
-			//     return {
-			//         'icon': 'font-icon font-icon-ok',
-			//         'text': 'Location Selected',
-			//         'class': 'btn-success'
-			//     };
-			// }
-		},
-		watch: {
-			serviceCountry: function serviceCountry(val, oldVal) {
-				this.$broadcast('changeSelectedCountry', val);
-			}
-		},
-		events: {
-			countryChanged: function countryChanged(countrySelected) {
-				this.serviceCountry = countrySelected.key;
-			}
-		},
-
-		// // when a photo is deleted from the equipment photo edit
-		// equipmentChanged(){
-		//     this.getEquipment();
-		// }
-		methods: {
-			// // Equipment
-			// getEquipment(){
-			//     if(isset('equipmentUrl')){
-			//         $.ajax({
-			//             vue: mainVue,
-			//             url:      back.equipmentUrl+this.equipmentId,
-			//             type:     'GET',
-			//             success: function(data, textStatus, xhr) {
-			//                 //called when successful
-			//                 this.vue.equipmentId = data.id;
-			//                 this.vue.equipmentKind = data.kind;
-			//                 this.vue.equipmentType = data.type;
-			//                 this.vue.equipmentBrand = data.brand;
-			//                 this.vue.equipmentModel = data.model;
-			//                 this.vue.equipmentCapacity = data.capacity;
-			//                 this.vue.equipmentUnits = data.units;
-			//                 this.vue.equipmentPhotos = data.photos;
-			//             },
-			//             error: function(xhr, textStatus, errorThrown) {
-			//                 //called when there is an error
-			//                 console.log('error');
-			//             }
-			//         });
-			//     }
-			// },
-			// sendEquipment(type){
-			//     let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
-			//     let requestType = 'POST';
-			//
-			//     if(type == 'edit'){
-			//         url += this.equipmentId;
-			//         requestType = 'PATCH';
-			//     }
-			//
-			//     if(url != ''){
-			//         $.ajax({
-			//             vue: this,
-			//             url: url,
-			//             type: requestType,
-			//             dataType: 'json',
-			//             data: {
-			//                 'photo': this.equipmentPhoto,
-			//                 'kind': this.equipmentKind,
-			//                 'type': this.equipmentType,
-			//                 'brand': this.equipmentBrand,
-			//                 'model': this.equipmentModel,
-			//                 'capacity': this.equipmentCapacity,
-			//                 'units': this.equipmentUnits,
-			//                 'service_id': this.equipmentServiceId,
-			//             },
-			//             success: function(data, textStatus, xhr) {
-			//                 // refresh equipment list
-			//                 equipmentTable.bootstrapTable('refresh');
-			//                 // send back to list
-			//                 this.vue.openEquimentList();
-			//             },
-			//             error: function(xhr, textStatus, errorThrown) {
-			//                 console.log('error creating equipment');
-			//             }
-			//         });
-			//     }
-			// },
-			// clearEquipment(){
-			//     this.equipmentKind = '';
-			//     this.equipmentType = '';
-			//     this.equipmentBrand = '';
-			//     this.equipmentModel = '';
-			//     this.equipmentCapacity = '';
-			//     this.equipmentUnits = '';
-			// },
-			// setEquipmentFocus($num){
-			//     this.equipmentFocus = $num;
-			// },
-			// checkEquipmentFocusIs($num){
-			//     return (this.equipmentFocus == $num);
-			// },
-			// // service show
-			// openEquimentList(clearEquipment = true){
-			//     this.equipmentTableFocus = true;
-			//     this.equipmentFocus = 1;
-			//     if(clearEquipment){
-			//         this.clearEquipment();
-			//     }
-			//     $('#equipmentModal').modal('show');
-			// },
-
-			changeKey: function changeKey(num) {
-				this.dropdownKey = num;
-			}
-		}
-
-	});
-
-	/* ==========================================================================
-     GMaps
-     ========================================================================== */
-
-	// populateAddressFields(page){
-	//
-	//     this.setLocation(page);
-	//     if(page == 'create'){
-	//         this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-	//         this.serviceCity = this.pickerServiceCity;
-	//         this.servicePostalCode = this.pickerServicePostalCode;
-	//         this.serviceState = this.pickerServiceState;
-	//         this.serviceCountry = this.pickerServiceCountry;
-	//     }
-	//
-	// },
-	// setLocation(page){
-	//     if(page == 'create'){
-	//         this.serviceLongitude = this.pickerServiceLongitude;
-	//         this.serviceLatitude = this.pickerServiceLatitude;
-	//     }
-	// },
-	// changeServiceListStatus(status){
-	//     var intStatus = (!status) ? 1 : 0;
-	//     if(typeof back !== 'undefined'){
-	//         if(typeof back.serviceTableUrl !== 'undefined'){
-	//             let new_url = back.serviceTableUrl+intStatus;
-	//             generic_table.bootstrapTable('refresh', {url:new_url});
-	//         }
-	// 	}
-	// },
-	// previewEmailReport(id){
-	//     // prevent the user from clicking more than once
-	//     event.target.disabled = true;
-	//     event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-	//     new Spinner({
-	//         left: "90%",
-	//         radius: 5,
-	//         length: 4,
-	//         width: 1,
-	//     }).spin(event.target);
-	//     // HTTP Request or what ever to update the permission
-	//     $.ajax({
-	//         vue: this,
-	//         target: event.target,
-	//         url:      (isset('emailPreview')) ? back.emailPreview : '',
-	//         type:     'GET',
-	//         dataType: 'json',
-	//         data: {
-	//                 'id': id
-	//             },
-	//         complete: function(xhr, textStatus) {
-	//             this.target.disabled = false;
-	//             this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-	//         },
-	//         success: function(data, textStatus, xhr) {
-	//             $('#emailPreview').modal('show');
-	//             this.vue.reportEmailPreview = data.data.url;
-	//         },
-	//         error: function(xhr, textStatus, errorThrown) {
-	//             console.log('error');
-	//         }
-	//     });
-	// }
-	$('#mapModal').on('shown.bs.modal', function (e) {
-		if (isset('showLatitude') && isset('showLongitude')) {
-			var map = new Gmaps({
-				el: '#serviceMap',
-				lat: back.showLatitude,
-				lng: back.showLongitude
-			});
-
-			map.addMarker({
-				lat: back.showLatitude,
-				lng: back.showLongitude
-			});
-		}
-	});
-
-	/* ==========================================================================
-     Location Picker
-     ========================================================================== */
-
-	var locPicker = $('#locationPicker').locationpicker({
-		vue: serviceVue,
-		location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
-		radius: 0,
-		inputBinding: {
-			latitudeInput: $('#serviceLatitude'),
-			longitudeInput: $('#serviceLongitude'),
-			locationNameInput: $('#serviceAddress')
-		},
-		enableAutocomplete: true,
-		onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
-			var addressComponents = $(this).locationpicker('map').location.addressComponents;
-			var vue = $(this).data("locationpicker").settings.vue;
-
-			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-			vue.pickerServiceCity = addressComponents.city;
-			vue.pickerServiceState = addressComponents.stateOrProvince;
-			vue.pickerServicePostalCode = addressComponents.postalCode;
-			vue.pickerServiceCountry = addressComponents.country;
-			vue.pickerServiceLongitude = currentLocation.longitude;
-			vue.pickerServiceLatitude = currentLocation.latitude;
-		},
-		oninitialized: function oninitialized(component) {
-			var addressComponents = $(component).locationpicker('map').location.addressComponents;
-			var startLocation = $(component).data("locationpicker").settings.location;
-			var vue = $(component).data("locationpicker").settings.vue;
-
-			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-			vue.pickerServiceCity = addressComponents.city;
-			vue.pickerServiceState = addressComponents.stateOrProvince;
-			vue.pickerServicePostalCode = addressComponents.postalCode;
-			vue.pickerServiceCountry = addressComponents.country;
-			vue.pickerServiceLongitude = startLocation.longitude;
-			vue.pickerServiceLatitude = startLocation.latitude;
-		}
-	});
-
-	$('#locationPickerModal').on('shown.bs.modal', function () {
-		$('#locationPicker').locationpicker('autosize');
-	});
-
-	/* ==========================================================================
-     Maxlenght and Hide Show Password
-     ========================================================================== */
-
-	$('input.maxlength-simple').maxlength();
-
-	$('input.maxlength-custom-message').maxlength({
-		threshold: 10,
-		warningClass: "label label-success",
-		limitReachedClass: "label label-danger",
-		separator: ' of ',
-		preText: 'You have ',
-		postText: ' chars remaining.',
-		validate: true
-	});
-
-	$('input.maxlength-always-show').maxlength({
-		alwaysShow: true
-	});
-
-	$('textarea.maxlength-simple').maxlength({
-		alwaysShow: true
-	});
-
-	$('.hide-show-password').password();
-
-	/* ========================================================================== */
+  // report Vue instance
+  var reportVue = new Vue({
+    el: '.reportVue',
+    components: { dropdown: dropdown },
+    directives: { FormToAjax: FormToAjax },
+    data: {
+      numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
+      numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
+      numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
+      reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
+      serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
+      technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
+    },
+    computed: {
+      missingServicesTag: function missingServicesTag() {
+        if (this.numServicesMissing < 1) {
+          return 'All Services Done';
+        }
+        return 'Missing Services: ' + this.numServicesMissing;
+      }
+    },
+    methods: {
+      previewEmailReport: function previewEmailReport(id) {
+        // prevent the user from clicking more than once
+        event.target.disabled = true;
+        event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
+        new Spinner({
+          left: "90%",
+          radius: 5,
+          length: 4,
+          width: 1
+        }).spin(event.target);
+        // HTTP Request or what ever to update the permission
+        $.ajax({
+          vue: this,
+          target: event.target,
+          url: isset('emailPreview') ? back.emailPreview : '',
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            'id': id
+          },
+          complete: function complete(xhr, textStatus) {
+            this.target.disabled = false;
+            this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
+          },
+          success: function success(data, textStatus, xhr) {
+            $('#emailPreview').modal('show');
+            this.vue.reportEmailPreview = data.data.url;
+          },
+          error: function error(xhr, textStatus, errorThrown) {
+            console.log('error');
+          }
+        });
+      }
+    }
+  });
+
+  var settingsVue = new Vue({
+    el: '.settingsVue',
+    components: {
+      Permissions: Permissions,
+      emailPreference: emailPreference
+    },
+    directives: { FormToAjax: FormToAjax },
+    data: {
+      companyName: "",
+      website: "",
+      facebook: "",
+      twitter: "",
+      objectName: "",
+      objectLastName: ""
+    }
+  });
+
+  var serviceVue = new Vue({
+    el: '.serviceVue',
+    components: {
+      PhotoList: PhotoList,
+      countries: countries
+    },
+    directives: { FormToAjax: FormToAjax },
+    data: {
+      statusSwitch: true,
+      // Location picker values
+      pickerServiceAddressLine1: '',
+      pickerServiceCity: '',
+      pickerServiceState: '',
+      pickerServicePostalCode: '',
+      pickerServiceCountry: '',
+      pickerServiceLatitude: '',
+      pickerServiceLongitude: '',
+      // form values
+      serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
+      serviceCity: isset('city') ? back.city : '',
+      serviceState: isset('state') ? back.state : '',
+      servicePostalCode: isset('postalCode') ? back.postalCode : '',
+      serviceCountry: isset('country') ? back.country : '',
+      serviceLatitude: isset('latitude') ? back.latitude : null,
+      serviceLongitude: isset('longitude') ? back.longitude : null,
+      // Equipment
+      equipmentTableFocus: true,
+      equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+      equipmentId: 0,
+      equipmentServiceId: isset('serviceId') ? Number(back.serviceId) : 0,
+      equipmentPhotos: [],
+      equipmentPhoto: '',
+      equipmentKind: '',
+      equipmentType: '',
+      equipmentBrand: '',
+      equipmentModel: '',
+      equipmentCapacity: '',
+      equipmentUnits: ''
+    },
+    computed: {
+      equipmentModalTitle: function equipmentModalTitle() {
+        switch (this.equipmentFocus) {
+          case 1:
+            return 'Equipment List';
+            break;
+          case 2:
+            return 'Add Equipment';
+            break;
+          case 3:
+            return this.equipmentKind;
+            break;
+          case 4:
+            return 'Edit Equipment';
+            break;
+          default:
+            return 'Equipment';
+        }
+      },
+      locationPickerTag: function locationPickerTag() {
+        var attributes = {
+          'icon': 'font-icon font-icon-ok',
+          'text': 'Location Selected',
+          'class': 'btn-success'
+        };
+        if (this.serviceLatitude == null) {
+          attributes = {
+            'icon': 'font-icon font-icon-pin-2',
+            'text': 'Choose Location',
+            'class': 'btn-primary'
+          };
+        }
+        return attributes;
+      }
+    },
+    events: {
+      // when a photo is deleted from the equipment photo edit
+
+      equipmentChanged: function equipmentChanged() {
+        this.getEquipment();
+      }
+    },
+    methods: {
+      // Equipment
+
+      getEquipment: function getEquipment() {
+        if (isset('equipmentUrl')) {
+          $.ajax({
+            vue: this,
+            url: back.equipmentUrl + this.equipmentId,
+            type: 'GET',
+            success: function success(data, textStatus, xhr) {
+              //called when successful
+              this.vue.equipmentId = data.id;
+              this.vue.equipmentKind = data.kind;
+              this.vue.equipmentType = data.type;
+              this.vue.equipmentBrand = data.brand;
+              this.vue.equipmentModel = data.model;
+              this.vue.equipmentCapacity = data.capacity;
+              this.vue.equipmentUnits = data.units;
+              this.vue.equipmentPhotos = data.photos;
+            },
+            error: function error(xhr, textStatus, errorThrown) {
+              //called when there is an error
+              console.log('error');
+            }
+          });
+        }
+      },
+      sendEquipment: function sendEquipment(type) {
+        var url = isset('equipmentUrl') ? back.equipmentUrl : '';
+        var requestType = 'POST';
+
+        if (type == 'edit') {
+          url += this.equipmentId;
+          requestType = 'PATCH';
+        }
+
+        if (url != '') {
+          $.ajax({
+            vue: this,
+            url: url,
+            type: requestType,
+            dataType: 'json',
+            data: {
+              'photo': this.equipmentPhoto,
+              'kind': this.equipmentKind,
+              'type': this.equipmentType,
+              'brand': this.equipmentBrand,
+              'model': this.equipmentModel,
+              'capacity': this.equipmentCapacity,
+              'units': this.equipmentUnits,
+              'service_id': this.equipmentServiceId
+            },
+            success: function success(data, textStatus, xhr) {
+              // refresh equipment list
+              equipmentTable.bootstrapTable('refresh');
+              // send back to list
+              this.vue.openEquimentList();
+            },
+            error: function error(xhr, textStatus, errorThrown) {
+              console.log('error creating equipment');
+            }
+          });
+        }
+      },
+      clearEquipment: function clearEquipment() {
+        this.equipmentKind = '';
+        this.equipmentType = '';
+        this.equipmentBrand = '';
+        this.equipmentModel = '';
+        this.equipmentCapacity = '';
+        this.equipmentUnits = '';
+      },
+      setEquipmentFocus: function setEquipmentFocus($num) {
+        this.equipmentFocus = $num;
+      },
+      checkEquipmentFocusIs: function checkEquipmentFocusIs($num) {
+        return this.equipmentFocus == $num;
+      },
+      openEquimentList: function openEquimentList() {
+        var clearEquipment = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+        this.equipmentTableFocus = true;
+        this.equipmentFocus = 1;
+        if (clearEquipment) {
+          this.clearEquipment();
+        }
+        $('#equipmentModal').modal('show');
+      },
+      populateAddressFields: function populateAddressFields(page) {
+        this.setLocation(page);
+        if (page == 'create') {
+          this.serviceAddressLine1 = this.pickerServiceAddressLine1;
+          this.serviceCity = this.pickerServiceCity;
+          this.servicePostalCode = this.pickerServicePostalCode;
+          this.serviceState = this.pickerServiceState;
+          this.serviceCountry = this.pickerServiceCountry;
+        }
+      },
+      setLocation: function setLocation(page) {
+        if (page == 'create') {
+          this.serviceLongitude = this.pickerServiceLongitude;
+          this.serviceLatitude = this.pickerServiceLatitude;
+        }
+      },
+      changeServiceListStatus: function changeServiceListStatus(status) {
+        var intStatus = !status ? 1 : 0;
+        if (typeof back !== 'undefined') {
+          if (typeof back.serviceTableUrl !== 'undefined') {
+            var new_url = back.serviceTableUrl + intStatus;
+            generic_table.bootstrapTable('refresh', { url: new_url });
+          }
+        }
+      }
+    }
+
+  });
+
+  /* ==========================================================================
+      GMaps
+      ========================================================================== */
+  $('#mapModal').on('shown.bs.modal', function (e) {
+    if (isset('showLatitude') && isset('showLongitude')) {
+      var map = new Gmaps({
+        el: '#serviceMap',
+        lat: back.showLatitude,
+        lng: back.showLongitude
+      });
+
+      map.addMarker({
+        lat: back.showLatitude,
+        lng: back.showLongitude
+      });
+    }
+  });
+
+  /* ==========================================================================
+      Location Picker
+      ========================================================================== */
+
+  var locPicker = $('#locationPicker').locationpicker({
+    vue: serviceVue,
+    location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
+    radius: 0,
+    inputBinding: {
+      latitudeInput: $('#serviceLatitude'),
+      longitudeInput: $('#serviceLongitude'),
+      locationNameInput: $('#serviceAddress')
+    },
+    enableAutocomplete: true,
+    onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
+      var addressComponents = $(this).locationpicker('map').location.addressComponents;
+      var vue = $(this).data("locationpicker").settings.vue;
+
+      vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+      vue.pickerServiceCity = addressComponents.city;
+      vue.pickerServiceState = addressComponents.stateOrProvince;
+      vue.pickerServicePostalCode = addressComponents.postalCode;
+      vue.pickerServiceCountry = addressComponents.country;
+      vue.pickerServiceLongitude = currentLocation.longitude;
+      vue.pickerServiceLatitude = currentLocation.latitude;
+    },
+    oninitialized: function oninitialized(component) {
+      var addressComponents = $(component).locationpicker('map').location.addressComponents;
+      var startLocation = $(component).data("locationpicker").settings.location;
+      var vue = $(component).data("locationpicker").settings.vue;
+
+      vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+      vue.pickerServiceCity = addressComponents.city;
+      vue.pickerServiceState = addressComponents.stateOrProvince;
+      vue.pickerServicePostalCode = addressComponents.postalCode;
+      vue.pickerServiceCountry = addressComponents.country;
+      vue.pickerServiceLongitude = startLocation.longitude;
+      vue.pickerServiceLatitude = startLocation.latitude;
+    }
+  });
+
+  $('#locationPickerModal').on('shown.bs.modal', function () {
+    $('#locationPicker').locationpicker('autosize');
+  });
+
+  /* ==========================================================================
+      Maxlenght and Hide Show Password
+      ========================================================================== */
+
+  $('input.maxlength-simple').maxlength();
+
+  $('input.maxlength-custom-message').maxlength({
+    threshold: 10,
+    warningClass: "label label-success",
+    limitReachedClass: "label label-danger",
+    separator: ' of ',
+    preText: 'You have ',
+    postText: ' chars remaining.',
+    validate: true
+  });
+
+  $('input.maxlength-always-show').maxlength({
+    alwaysShow: true
+  });
+
+  $('textarea.maxlength-simple').maxlength({
+    alwaysShow: true
+  });
+
+  $('.hide-show-password').password();
+
+  /* ========================================================================== */
 });
 
 /*
@@ -23143,77 +22474,77 @@ Examples :
 
 (function (window, $, undefined) {
 
-	var Laravel = {
-		initialize: function initialize() {
-			this.methodLinks = $('a[data-method]');
-			this.token = $('a[data-token]');
-			this.registerEvents();
-		},
+  var Laravel = {
+    initialize: function initialize() {
+      this.methodLinks = $('a[data-method]');
+      this.token = $('a[data-token]');
+      this.registerEvents();
+    },
 
-		registerEvents: function registerEvents() {
-			this.methodLinks.on('click', this.handleMethod);
-		},
+    registerEvents: function registerEvents() {
+      this.methodLinks.on('click', this.handleMethod);
+    },
 
-		handleMethod: function handleMethod(e) {
-			e.preventDefault();
+    handleMethod: function handleMethod(e) {
+      e.preventDefault();
 
-			var link = $(this);
-			var httpMethod = link.data('method').toUpperCase();
-			var form;
+      var link = $(this);
+      var httpMethod = link.data('method').toUpperCase();
+      var form;
 
-			// If the data-method attribute is not PUT or DELETE,
-			// then we don't know what to do. Just ignore.
-			if ($.inArray(httpMethod, ['PUT', 'DELETE']) === -1) {
-				return false;
-			}
+      // If the data-method attribute is not PUT or DELETE,
+      // then we don't know what to do. Just ignore.
+      if ($.inArray(httpMethod, ['PUT', 'DELETE']) === -1) {
+        return false;
+      }
 
-			Laravel.verifyConfirm(link).done(function () {
-				form = Laravel.createForm(link);
-				form.submit();
-			});
-		},
+      Laravel.verifyConfirm(link).done(function () {
+        form = Laravel.createForm(link);
+        form.submit();
+      });
+    },
 
-		verifyConfirm: function verifyConfirm(link) {
-			var confirm = new $.Deferred();
-			swal({
-				title: "Are you sure?",
-				text: "You will not be able to recover this!",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText: "Yes, delete it!",
-				cancelButtonText: "No, cancel!",
-				closeOnConfirm: false
-			}, function () {
-				confirm.resolve(link);
-			});
+    verifyConfirm: function verifyConfirm(link) {
+      var confirm = new $.Deferred();
+      swal({
+        title: "Are you sure?",
+        text: "You will not be able to recover this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        closeOnConfirm: false
+      }, function () {
+        confirm.resolve(link);
+      });
 
-			return confirm.promise();
-		},
+      return confirm.promise();
+    },
 
-		createForm: function createForm(link) {
-			var form = $('<form>', {
-				'method': 'POST',
-				'action': link.attr('href')
-			});
+    createForm: function createForm(link) {
+      var form = $('<form>', {
+        'method': 'POST',
+        'action': link.attr('href')
+      });
 
-			var token = $('<input>', {
-				'type': 'hidden',
-				'name': '_token',
-				'value': link.data('token')
-			});
+      var token = $('<input>', {
+        'type': 'hidden',
+        'name': '_token',
+        'value': link.data('token')
+      });
 
-			var hiddenInput = $('<input>', {
-				'name': '_method',
-				'type': 'hidden',
-				'value': link.data('method')
-			});
+      var hiddenInput = $('<input>', {
+        'name': '_method',
+        'type': 'hidden',
+        'value': link.data('method')
+      });
 
-			return form.append(token, hiddenInput).appendTo('body');
-		}
-	};
+      return form.append(token, hiddenInput).appendTo('body');
+    }
+  };
 
-	Laravel.initialize();
+  Laravel.initialize();
 })(window, jQuery);
 
 },{"./components/Permissions.vue":127,"./components/checkboxList.vue":128,"./components/countries.vue":129,"./components/dropdown.vue":130,"./components/email.vue":131,"./components/photoList.vue":133,"./directives/FormToAjax.vue":134,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":121,"vue-resource":110}]},{},[126,124,123,125,135]);
