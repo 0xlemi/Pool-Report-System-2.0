@@ -20,7 +20,6 @@ class EquipmentController extends PageController
      */
     public function store(CreateEquipmentRequest $request)
     {
-        // dd($request->all());
         $equipment = Equipment::create(array_map('htmlentities', $request->all()));
         if($equipment){
             return Response::json([
@@ -58,7 +57,6 @@ class EquipmentController extends PageController
                         })
                         ->toArray()
         );
-
         return Response::json(array_merge($equipment->toArray(), $photo), 200);
     }
 
@@ -89,7 +87,6 @@ class EquipmentController extends PageController
 
     public function addPhoto(Request $request, $id)
     {
-
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);

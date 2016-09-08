@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="reportVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -405,4 +406,5 @@
 			</section>
 		</div>
 	</div>
+</div>
 @endsection
