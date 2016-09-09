@@ -17,6 +17,8 @@ class CreateImagesTable extends Migration
             $table->increments('id');
             $table->integer('admin_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('report_id')->unsigned()->index()->nullable()->default(null);
+            $table->integer('work_order_id')->unsigned()->index()->nullable()->default(null);
+            $table->integer('work_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('technician_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('supervisor_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);
@@ -44,6 +46,16 @@ class CreateImagesTable extends Migration
             $table->foreign('report_id')
                 ->references('id')
                 ->on('reports')
+                ->onDelete('cascade');
+
+            $table->foreign('work_order_id')
+                ->references('id')
+                ->on('work_orders')
+                ->onDelete('cascade');
+
+            $table->foreign('work_id')
+                ->references('id')
+                ->on('works')
                 ->onDelete('cascade');
 
             $table->foreign('service_id')
