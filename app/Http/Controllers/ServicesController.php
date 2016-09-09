@@ -135,6 +135,8 @@ class ServicesController extends PageController
             'showLatitude' => $service->latitude,
             'showLongitude' => $service->longitude,
             'equipmentUrl' => url('/equipment').'/',
+            'equipmentAddPhotoUrl' => url('/equipment/photos').'/',
+            'serviceId' => $service->id,
             'click_url' => url('clients').'/',
         ]);
 
@@ -164,9 +166,6 @@ class ServicesController extends PageController
             'state' => $service->state,
             'postalCode' => $service->postal_code,
             'country' => $service->country,
-            'equipmentUrl' => url('/equipment').'/',
-            'equipmentAddPhotoUrl' => url('/equipment/photos').'/',
-            'serviceId' => $service->id,
         ]);
 
         $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;

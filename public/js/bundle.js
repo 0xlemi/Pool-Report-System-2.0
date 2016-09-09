@@ -21953,7 +21953,7 @@ $(document).ready(function () {
               url: back.equipmentAddPhotoUrl + data.id,
               method: 'post',
               paramName: 'photo',
-              maxFilesize: 8,
+              maxFilesize: 25,
               acceptedFiles: '.jpg, .jpeg, .png',
               init: function init() {
                 this.on("success", function (file) {
@@ -22056,12 +22056,12 @@ $(document).ready(function () {
   // Dropzone.autoDiscover = false;
   Dropzone.options.genericDropzone = {
     paramName: 'photo',
-    maxFilesize: 8,
+    maxFilesize: 25,
     acceptedFiles: '.jpg, .jpeg, .png'
   };
   Dropzone.options.equipmentDropzone = {
     paramName: 'photo',
-    maxFilesize: 8,
+    maxFilesize: 25,
     acceptedFiles: '.jpg, .jpeg, .png'
   };
 

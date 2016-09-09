@@ -743,7 +743,7 @@ function isset(strVariableName) {
                                 url: back.equipmentAddPhotoUrl+data.id,
                                 method: 'post',
                                 paramName: 'photo',
-                                maxFilesize: 8,
+                                maxFilesize: 25,
                                 acceptedFiles: '.jpg, .jpeg, .png',
                                 init: function() {
                                     this.on("success", function(file) {
@@ -847,12 +847,12 @@ function isset(strVariableName) {
     // Dropzone.autoDiscover = false;
     Dropzone.options.genericDropzone = {
         paramName: 'photo',
-    	maxFilesize: 8,
+    	maxFilesize: 25,
     	acceptedFiles: '.jpg, .jpeg, .png'
     }
     Dropzone.options.equipmentDropzone = {
         paramName: 'photo',
-    	maxFilesize: 8,
+    	maxFilesize: 25,
     	acceptedFiles: '.jpg, .jpeg, .png',
     }
 

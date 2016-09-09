@@ -155,7 +155,7 @@
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-info"
 										@click="openEquimentList()">
-										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Check Equipment</button>
+										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>
 								</div>
 							</div>
 
@@ -187,7 +187,7 @@
 		</div>
 	</div>
 
-	@include('services.showEquipment')
+	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')
 </div>

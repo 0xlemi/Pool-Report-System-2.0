@@ -244,15 +244,6 @@
 				              	</div>
 							</div>
 
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Equipment</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-info"
-										@click="openEquimentList()">
-										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>
-								</div>
-							</div>
-
 							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Comments:</label>
 								<div class="col-sm-10">
