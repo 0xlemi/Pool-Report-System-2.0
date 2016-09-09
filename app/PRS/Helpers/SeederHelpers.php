@@ -5,6 +5,9 @@ namespace App\PRS\Helpers;
 use Faker\Factory;
 use Intervention;
 use DB;
+use App\WorkOrder;
+use App\Service;
+use App\Administrator;
 
 /**
  * Helper functions for seeder classes
@@ -53,7 +56,7 @@ class SeederHelpers
      * @param  string $table table to choose
      * @return integer        id of the random row
      */
-    public function get_random_id($table){
+    public function getRandomObject($table){
     	$table_ids = DB::table($table)->select('id')->get()->all();
         return $this->faker->randomElement($table_ids)->id;
     }
@@ -61,27 +64,24 @@ class SeederHelpers
     /**
      * Get a random service id linked to that admin
      * @param  integer  $admin_id
-     * @return integer            id of the random service
+     * @return App\Service
      */
-    public function get_random_service($admin_id){
-    	$table_ids = DB::table('services')->select('id')->where('admin_id', '=', $admin_id)->get()->all();
-        return $this->faker->randomElement($table_ids)->id;
+    public function getRandomService(Administrator $admin){
+        $serviceIds = $admin->services()
+                        ->get()
+                        ->pluck('id')
+                        ->all();
+        return Service::findOrFail($this->faker->randomElement($serviceIds));
     }
 
-    public function get_random_supervisor($admin_id)
+    public function getRandomWorkOrder(Administrator $admin)
     {
-        $table_ids = DB::table('supervisors')->select('id')->where('admin_id', '=', $admin_id)->get()->all();
-        return $this->faker->randomElement($table_ids)->id;
-    }
-
-    public function get_random_technician($admin_id)
-    {
-        $supervisor_id = $this->get_random_supervisor($admin_id);
-        $table_ids = DB::table('technicians')
-                        ->select('id')
-                        ->where('supervisor_id', '=', $supervisor_id)
-                        ->get()->all();
-        $this->faker->randomElement($table_ids)->id;
+        $service = $this->getRandomService($admin);
+        $workOrdersIds = $service->workOrders()
+                                ->get()
+                                ->pluck('id')
+                                ->all();
+        return WorkOrder::findOrFail($this->faker->randomElement($workOrdersIds));
     }
 
 }

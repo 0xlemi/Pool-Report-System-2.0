@@ -39,17 +39,17 @@ class EquipmentTableSeeder extends Seeder
 			$img = $this->seederHelper->get_random_image('equipment', 'equipment/'.$kind['folder'], rand(1, 5));
 
             // get a random admin_id that exists in database
-        	$service_id = $this->seederHelper->get_random_id('services');
+        	$serviceId = $this->seederHelper->getRandomObject('services');
 
-    		$equipment_id = factory(Equipment::class)->create([
+    		$equipment = factory(Equipment::class)->create([
                 'kind' => $kind['name'],
-        		'service_id' => $service_id,
-            ])->id;
+        		'service_id' => $serviceId,
+            ]);
 
     		// create images link it to equipment id
     		// normal image
     		Image::create([
-    			'equipment_id' => $equipment_id,
+    			'equipment_id' => $equipment->id,
     			'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
                 'icon_path' => $img['xs_img_path'],

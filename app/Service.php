@@ -75,10 +75,17 @@ class Service extends Model
     }
 
     /**
-     * Get associated reports with this service
+     * Get associated equipment with this service
      */
     public function equipment(){
     	return $this->hasMany('App\Equipment');
+    }
+
+    /**
+     * Get associated work orders with this service
+     */
+    public function workOrders(){
+    	return $this->hasMany('App\WorkOrder');
     }
 
     /**

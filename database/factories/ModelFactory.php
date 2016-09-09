@@ -88,6 +88,28 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
 	];
 });
 
+$factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
+    $start = $faker->dateTimeThisMonth()->format('Y-m-d H:i:s');
+    return [
+		'start' => $start,
+        'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
+        'finished' => $faker->boolean,
+        'price' => rand(100,1000000)/100,
+        'currency' => $faker->currencyCode,
+    ];
+});
+
+
+$factory->define(App\Work::class, function (Faker\Generator $faker){
+    return [
+        'description' => $faker->realText(rand(10,20)),
+        'quantity' => rand(100,1000000)/100,
+        'units' => 'units',
+        'cost' => rand(100,1000000)/100,
+    ];
+});
+
+
 $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
 	return [
         'name' => $faker->name,

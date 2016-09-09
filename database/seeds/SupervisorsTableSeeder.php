@@ -26,22 +26,22 @@ class SupervisorsTableSeeder extends Seeder
     		$img = $this->seederHelper->get_random_image('supervisor', 'supervisor', rand(1, 5));
 
             // get a random admin_id that exists in database
-            // $admin_id = $this->seederHelper->get_random_id('administrators');
-            $admin_id = rand(1,2);
+            // $adminId = $this->seederHelper->getRandomObject('administrators');
+            $adminId = rand(1,2);
 
-    		$supervisor_id = factory(App\Supervisor::class)->create([
-        		'admin_id' => $admin_id,
-            ])->id;
+    		$supervisor = factory(App\Supervisor::class)->create([
+        		'admin_id' => $adminId,
+            ]);
 
             factory(App\User::class)->create([
                 'password' => bcrypt('password'),
-                'userable_id' => $supervisor_id,
+                'userable_id' => $supervisor->id,
                 'userable_type' => 'App\Supervisor',
             ]);
 
     		// create images link it to supervisor
     		Image::create([
-    			'supervisor_id' => $supervisor_id,
+    			'supervisor_id' => $supervisor->id,
     			'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
                 'icon_path' => $img['xs_img_path'],

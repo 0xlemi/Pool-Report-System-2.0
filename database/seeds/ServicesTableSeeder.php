@@ -26,16 +26,16 @@ class ServicesTableSeeder extends Seeder
 			$img = $this->seederHelper->get_random_image('service', 'service', rand(1, 20));
 
             // get a random admin_id that exists in database
-        	$admin_id = $this->seederHelper->get_random_id('administrators');
+        	$adminId = $this->seederHelper->getRandomObject('administrators');
 
-    		$service_id = factory(App\Service::class)->create([
-        		'admin_id' => $admin_id,
-            ])->id;
+    		$service = factory(App\Service::class)->create([
+        		'admin_id' => $adminId,
+            ]);
 
     		// create images link it to service id
     		// normal image
     		Image::create([
-    			'service_id' => $service_id,
+    			'service_id' => $service->id,
     			'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
                 'icon_path' => $img['xs_img_path'],

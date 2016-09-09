@@ -27,26 +27,26 @@ class ReportsTableSeeder extends Seeder
         for ($i=0; $i < $this->number_of_reports; $i++) {
 
             // random technician id
-        	$technician_id = $this->seederHelper->get_random_id('technicians');
+        	$technicianId = $this->seederHelper->getRandomObject('technicians');
 
         	// get the user id in of the random technician
-        	$admin_id = Technician::findOrFail($technician_id)->admin()->id;
+        	$admin = Technician::findOrFail($technicianId)->admin();
 
         	// get a random service that shares the same admin_id
         	// as the technician
-        	$service_id = $this->seederHelper->get_random_service($admin_id);
+        	$service = $this->seederHelper->getRandomService($admin);
 
-    		$report_id = factory(App\Report::class)->create([
-                'service_id' => $service_id,
-                'technician_id' => $technician_id,
-            ])->id;
+    		$report = factory(App\Report::class)->create([
+                'service_id' => $service->id,
+                'technician_id' => $technicianId,
+            ]);
 
     		// create images link it to report
     		for ($e=1; $e <= 3; $e++) {
     			$img = $this->seederHelper->get_random_image('report', 'pool_photo_'.$e , rand(1, 50));
 
 				Image::create([
-					'report_id' => $report_id,
+					'report_id' => $report->id,
 					'normal_path' => $img['img_path'],
                     'thumbnail_path' => $img['tn_img_path'],
 					'order' => $e,

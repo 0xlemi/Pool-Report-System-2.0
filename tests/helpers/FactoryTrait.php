@@ -71,9 +71,9 @@ trait FactoryTrait
         for ($i=0; $i < $num_of_supervisors; $i++) {
 
             // get a random admin_id that exists in database
-            $admin_id = $this->seederHelper->get_random_id('administrators');
+            $adminId = $this->seederHelper->getRandomObject('administrators');
 
-            array_push($supervisors, $this->createSupervisor($admin_id));
+            array_push($supervisors, $this->createSupervisor($adminId));
         }
         if($num_of_supervisors == 1){
             return $supervisors[0];
@@ -103,9 +103,9 @@ trait FactoryTrait
         for ($i=0; $i < $num_of_technicians; $i++) {
 
             // get a random supervisor_id that exists in database
-            $supervisor_id = $this->seederHelper->get_random_id('supervisors');
+            $supervisorId = $this->seederHelper->getRandomObject('supervisors');
 
-            array_push($technicians, $this->createTechnician($supervisor_id));
+            array_push($technicians, $this->createTechnician($supervisorId));
         }
         if($num_of_technicians == 1){
             return $technicians[0];
@@ -152,9 +152,9 @@ trait FactoryTrait
         for ($i=0; $i < $num_of_services; $i++) {
 
             // get a random admin_id that exists in database
-        	$admin_id = $this->seederHelper->get_random_id('administrators');
+        	$adminId = $this->seederHelper->getRandomObject('administrators');
 
-            array_push($services, $this->createService($admin_id));
+            array_push($services, $this->createService($adminId));
         }
         if($num_of_services == 1){
             return $services[0];
@@ -172,27 +172,27 @@ trait FactoryTrait
         ]);
     }
 
-    public function createReports($num_of_reports, $get_all = false)
-    {
-        $reports = array();
-        for ($i=0; $i < $num_of_reports; $i++) {
-
-            $admin_id = $this->seederHelper->get_random_id('administrators');
-
-            // get a random service that shares the commun admin_id
-            $service_id = $this->seederHelper->get_random_service($admin_id);
-
-            // get a random technician that shares the commun admin_id
-        	$technician_id = $this->seederHelper->get_random_technician($admin_id);
-
-            array_push($reports, $this->createReport($service_id, $technician_id));
-        }
-        if($num_of_reports == 1){
-            return $reports[0];
-        }elseif($get_all){
-            return $reports;
-        }
-        return $reports[rand(0,--$num_of_reports)];
-    }
+    // public function createReports($num_of_reports, $get_all = false)
+    // {
+    //     $reports = array();
+    //     for ($i=0; $i < $num_of_reports; $i++) {
+    //
+    //         $adminId = $this->seederHelper->getRandomObject('administrators');
+    //
+    //         // get a random service that shares the commun admin_id
+    //         $service_id = $this->seederHelper->getRandomService(Administrator::findOrFail($adminId));
+    //
+    //         // get a random technician that shares the commun admin_id
+    //     	$technician_id = $this->seederHelper->get_random_technician($admin_id);
+    //
+    //         array_push($reports, $this->createReport($service_id, $technician_id));
+    //     }
+    //     if($num_of_reports == 1){
+    //         return $reports[0];
+    //     }elseif($get_all){
+    //         return $reports;
+    //     }
+    //     return $reports[rand(0,--$num_of_reports)];
+    // }
 
 }

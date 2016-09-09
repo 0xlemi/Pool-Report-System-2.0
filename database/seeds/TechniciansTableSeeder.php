@@ -26,22 +26,22 @@ class TechniciansTableSeeder extends Seeder
 			$img = $this->seederHelper->get_random_image('technician', 'technician', rand(1, 20));
 
             // get a random admin_id that exists in database
-            $supervisor_id = $this->seederHelper->get_random_id('supervisors');
+            $supervisorId = $this->seederHelper->getRandomObject('supervisors');
 
-    		$technician_id = factory(App\Technician::class)->create([
-                'supervisor_id' => $supervisor_id,
-            ])->id;
+    		$technician = factory(App\Technician::class)->create([
+                'supervisor_id' => $supervisorId,
+            ]);
 
             factory(App\User::class)->create([
                 'email' => 'username_'.rand(100000,999999),
                 'password' => bcrypt('password'),
-                'userable_id' => $technician_id,
+                'userable_id' => $technician->id,
                 'userable_type' => 'App\Technician',
             ]);
 
     		// create images link it to technician
     		Image::create([
-    			'technician_id' => $technician_id,
+    			'technician_id' => $technician->id,
     			'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
                 'icon_path' => $img['xs_img_path'],

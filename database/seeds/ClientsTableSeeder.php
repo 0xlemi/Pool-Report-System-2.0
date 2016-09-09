@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
+use App\Service;
+
 class ClientsTableSeeder extends Seeder
 {
     // number of clients to create
@@ -31,30 +33,30 @@ class ClientsTableSeeder extends Seeder
 			$img = $this->seederHelper->get_random_image('client', 'client/'.$gender, rand(1, 20));
 
             // get the service id for the pivot table
-            $service_id = $this->seederHelper->get_random_id('services');
+            $serviceId = $this->seederHelper->getRandomObject('services');
 
             // find admin_id congruent with the service
-            $admin_id = App\Service::findOrFail($service_id)->admin()->id;
+            $admin = Service::findOrFail($serviceId)->admin();
 
-    		$client_id = factory(App\Client::class)->create([
+    		$client = factory(App\Client::class)->create([
                     'name' => $faker->firstName($gender),
-                    'admin_id' => $admin_id,
-    			])->id;
+                    'admin_id' => $admin->id,
+    			]);
 
             factory(App\User::class)->create([
-                'userable_id' => $client_id,
+                'userable_id' => $client->id,
                 'userable_type' => 'App\Client',
             ]);
 
             // fill the pivot table that connects with the service
             DB::table('client_service')->insert([
-                'client_id' => $client_id,
-                'service_id' => $service_id,
+                'client_id' => $client->id,
+                'service_id' => $serviceId,
             ]);
 
     		// create images link it to technician
     		Image::create([
-    			'client_id' => $client_id,
+    			'client_id' => $client->id,
     			'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
                 'icon_path' => $img['xs_img_path'],
