@@ -43,6 +43,14 @@ class CreateTriggersImage extends Migration
                    ELSE 1
                  END +
                  CASE
+                   WHEN NEW.work_order_id IS NULL THEN 0
+                   ELSE 1
+                 END +
+                 CASE
+                   WHEN NEW.work_id IS NULL THEN 0
+                   ELSE 1
+                 END +
+                 CASE
                    WHEN NEW.report_id IS NULL THEN 0
                    ELSE 1
                  END <> 1 THEN

@@ -22,7 +22,6 @@ class CreateWorkOrdersTable extends Migration
             $table->char('currency', 3);
             $table->integer('service_id')->unsigned();
             $table->integer('supervisor_id')->unsigned();
-            $table->integer('technician_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->timestamps();
         });
@@ -35,10 +34,6 @@ class CreateWorkOrdersTable extends Migration
             $table->foreign('supervisor_id')
                 ->references('id')
                 ->on('supervisors')
-                ->onDelete('cascade');
-            $table->foreign('technician_id')
-                ->references('id')
-                ->on('technicians')
                 ->onDelete('cascade');
         });
     }

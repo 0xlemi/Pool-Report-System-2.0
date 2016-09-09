@@ -24,6 +24,8 @@ class CreateTriggersAdministrator extends Migration
                 INSERT INTO `seq` (`name`, `admin_id`, `val`)
                 VALUES ('reports', NEW.id, 0);
                 INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                VALUES ('work_orders', NEW.id, 0);
+                INSERT INTO `seq` (`name`, `admin_id`, `val`)
                 VALUES ('supervisors', NEW.id, 0);
                 INSERT INTO `seq` (`name`, `admin_id`, `val`)
                 VALUES ('technicians', NEW.id, 0);
