@@ -8,6 +8,7 @@ use JavaScript;
 use Carbon\Carbon;
 
 use App\Http\Requests;
+use App\Http\Requests\CreateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\SupervisorHelpers;
 use App\WorkOrder;
@@ -73,7 +74,7 @@ class WorkOrderController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateWorkOrderRequest $request)
     {
         // check permissions
 
