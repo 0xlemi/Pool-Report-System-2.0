@@ -111,9 +111,12 @@ class WorkOrderController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seq_id)
     {
-        //
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+
+        return view('workorders.show', compact('workOrder'));
+
     }
 
     /**

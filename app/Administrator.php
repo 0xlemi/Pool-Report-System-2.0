@@ -185,6 +185,20 @@ class Administrator extends Model
     }
 
     /**
+     * Get the work order based on the seq_id
+     * @param  integer $seq_id
+     * @return $report
+     */
+    public function workOrderBySeqId($seq_id){
+        return $this->hasManyThrough(
+                        'App\WorkOrder',
+                        'App\Service',
+                        'admin_id')
+                    ->where('work_orders.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
      *  Get services associated with this user
      * tested
      */
