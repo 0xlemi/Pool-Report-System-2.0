@@ -88,6 +88,11 @@ class Service extends Model
     	return $this->hasMany('App\WorkOrder');
     }
 
+    public function hasWorkOrders()
+    {
+        return ($this->workOrders()->get()->count() > 0);
+    }
+
     /**
      * get the service days as a boolean for each day insted of the number
      * @return array

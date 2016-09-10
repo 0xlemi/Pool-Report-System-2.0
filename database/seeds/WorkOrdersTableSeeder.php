@@ -45,7 +45,7 @@ class WorkOrdersTableSeeder extends Seeder
             ]);
 
             // add image
-            $img = $this->seederHelper->get_random_image('workOrders', 'pool_photo_1' , rand(1, 50));
+            $img = $this->seederHelper->get_random_image('workOrder', 'pool_photo_1' , rand(1, 50));
 			Image::create([
 				'work_order_id' => $workOrder->id,
 				'normal_path' => $img['img_path'],

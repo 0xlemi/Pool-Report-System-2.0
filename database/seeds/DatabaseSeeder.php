@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
 		'supervisor',
 		'technician',
 		'equipment',
-		'workOrders',
+		'workOrder',
+		'work',
 	];
 
     /**
@@ -46,6 +47,7 @@ class DatabaseSeeder extends Seeder
     	$this->call(TechniciansTableSeeder::class);
     	$this->call(ClientsTableSeeder::class);
     	$this->call(WorkOrdersTableSeeder::class);
+    	$this->call(WorksTableSeeder::class);
     	$this->call(ReportsTableSeeder::class);
     }
 

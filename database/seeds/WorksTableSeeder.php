@@ -10,7 +10,7 @@ use App\Work;
 class WorksTableSeeder extends Seeder
 {
 
-    private $amount = 100;
+    private $amount = 300;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -28,7 +28,7 @@ class WorksTableSeeder extends Seeder
 
         for ($i=0; $i < $this->amount; $i++) {
 
-        	$technicianId = $this->seederHelper->getRandomObject('technician');
+        	$technicianId = $this->seederHelper->getRandomObject('technicians');
 
             $admin = Technician::findOrFail($technicianId)->admin();
 
@@ -40,7 +40,7 @@ class WorksTableSeeder extends Seeder
             ])->id;
 
             // add image
-            $img = $this->seederHelper->get_random_image('workOrders/works', 'pool_photo_3' , rand(1, 50));
+            $img = $this->seederHelper->get_random_image('work', 'pool_photo_3' , rand(1, 50));
             for ($e=0; $e < rand(1,2); $e++) {
     			Image::create([
     				'work_id' => $workId,

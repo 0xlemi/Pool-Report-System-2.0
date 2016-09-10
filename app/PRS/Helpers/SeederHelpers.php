@@ -77,6 +77,15 @@ class SeederHelpers
     public function getRandomWorkOrder(Administrator $admin)
     {
         $service = $this->getRandomService($admin);
+        $i = 0;
+        while (!$service->hasWorkOrders()) {
+            $service = $this->getRandomService($admin);
+            // protection for infinite loop
+            if($i > 70){
+                throw new Exception("Services dont have WorkOrders attached to them.");
+            }
+            $i++;
+        }
         $workOrdersIds = $service->workOrders()
                                 ->get()
                                 ->pluck('id')
