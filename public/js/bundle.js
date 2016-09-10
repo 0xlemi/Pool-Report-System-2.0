@@ -22041,7 +22041,7 @@ $(document).ready(function () {
     });
   }
 
-  $('#new_report_datepicker').datetimepicker({
+  $('#genericDatepicker').datetimepicker({
     widgetPositioning: {
       horizontal: 'right'
     },
@@ -22098,7 +22098,9 @@ $(document).ready(function () {
     el: '.workOrderVue',
     components: { dropdown: dropdown },
     data: {
-      finishedSwitch: false
+      finishedSwitch: false,
+      supervisorId: 0,
+      serviceId: 0
     },
     methods: {
       changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {

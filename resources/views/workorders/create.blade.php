@@ -6,10 +6,10 @@
 		<div class="tbl">
 			<div class="tbl-row">
 				<div class="tbl-cell">
-					<h3>Create Report</h3>
+					<h3>Create Work Order</h3>
 					<ol class="breadcrumb breadcrumb-simple">
-						<li><a href="{{ url('reports') }}">Reports</a></li>
-						<li class="active">Create Report</li>
+						<li><a href="{{ url('workorders') }}">Work Orders</a></li>
+						<li class="active">Create Work Order</li>
 					</ol>
 				</div>
 			</div>
@@ -19,16 +19,16 @@
 		<div class="col-md-12 col-lg-12 col-xl-8 col-xl-offset-2">
 			<section class="card">
 					<header class="card-header card-header-lg">
-						Report info:
+						Work Order info:
 					</header>
 					<div class="card-block">
-						<form method="POST" action="{{ url('reports') }}" enctype="multipart/form-data">
+						<form method="POST" action="{{ url('workorders') }}" enctype="multipart/form-data">
 							{{ csrf_field() }}
 
 							<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
-									<dropdown :key.sync="dropdownKey"
+									<dropdown :key.sync="serviceId"
 												:options="{{ $services }}"
 												:name="'service'">
 									</dropdown>
@@ -41,8 +41,8 @@
                             <div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Supervisor</label>
 								<div class="col-sm-10">
-									<dropdown :key.sync="dropdownKey"
-												:options="{{ $supervisor }}"
+									<dropdown :key.sync="supervisorId"
+												:options="{{ $supervisors }}"
 												:name="'supervisor'">
 									</dropdown>
 									@if ($errors->has('supervisor'))
@@ -51,12 +51,37 @@
 								</div>
 							</div>
 
+                            <div class="form-group row {{($errors->has('price') || $errors->has('currency'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Price:</label>
+								<div class="col-sm-10">
+									<div class="input-group">
+										<div class="input-group-addon">$</div>
+										<input type="text" class="form-control money-mask-input"
+										 		name="price" placeholder="Amount"
+										 		value="{{ old('price') }}">
+										 <div class="input-group-addon">
+										 	<select name='currency' data-live-search="true">
+										 		<option value="USD" {{ (old('currency') == 'USD') ? 'selected':'' }}>USD</option>
+										 		<option value="MXN" {{ (old('currency') == 'MXN') ? 'selected':'' }}>MXN</option>
+										 		<option value="CAD" {{ (old('currency') == 'CAD') ? 'selected':'' }}>CAD</option>
+										 	</select>
+										 </div>
+									</div>
+									@if ($errors->has('price'))
+										<small class="text-muted">{{ $errors->first('price') }}</small>
+									@endif
+									@if ($errors->has('currency'))
+										<small class="text-muted">{{ $errors->first('currency') }}</small>
+									@endif
+								</div>
+							</div>
+
                             <div class="form-group row {{($errors->has('start'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Started at:</label>
 								<div class="col-sm-10">
-									<div class='input-group date' id="new_report_datepicker">
+									<div class='input-group date' id="genericDatepicker">
 										<input type='text' name='start' class="form-control"
-												id="new_report_datepicker_input"
+												id="genericDatepickerInput"
 												value="{{ old('start') }}"/>
 										@if ($errors->has('start'))
 											<small class="text-muted">{{ $errors->first('start') }}</small>
@@ -68,106 +93,40 @@
 								</div>
 							</div>
 
-                            <div class="form-group row {{($errors->has('end'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Ended at:</label>
-								<div class="col-sm-10">
-									<div class='input-group date' id="new_report_datepicker">
-										<input type='text' name='end' class="form-control"
-												id="new_report_datepicker_input"
-												value="{{ old('end') }}"/>
-										@if ($errors->has('end'))
-											<small class="text-muted">{{ $errors->first('end') }}</small>
-										@endif
-										<span class="input-group-addon">
-											<i class="font-icon font-icon-calend"></i>
-										</span>
-									</div>
-								</div>
-							</div>
-
-
-
 							<br>
 							<div class="form-group row">
-								<label class="col-sm-3 form-control-label">Photo 1 (Full Pool)</label>
-								<div class="col-sm-9">
+								<label class="col-sm-2 form-control-label">Photo</label>
+								<div class="col-sm-10">
 					                <div class="fileupload fileupload-new" data-provides="fileupload">
 					                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
 					                  <img src="{{ url('img/no_image.png') }}" alt="Placeholder" /></div>
 					                  <div class="fileupload-preview fileupload-exists thumbnail"
 					                   		style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-					                  @if ($errors->has('photo1'))
+					                  @if ($errors->has('photo'))
 					                  	<br>
-										<span class="label label-danger">{{ $errors->first('photo1') }}</span>
+										<span class="label label-danger">{{ $errors->first('photo') }}</span>
 										<br><br>
 									  @endif
 					                  <div>
 					                    <span class="btn btn-default btn-file">
 					                    <span class="fileupload-new">Select image</span>
 					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo1" id="photo1" ></span>
+					                    <input type="file" name="photo" id="photo" ></span>
 					                    <a href="#" class="btn btn-default fileupload-exists"
 					                    	data-dismiss="fileupload">Remove</a>
 					                  </div>
 					                </div>
 				              	</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-3 form-control-label">Photo 2 (Water Quality)</label>
-								<div class="col-sm-9">
-					                <div class="fileupload fileupload-new" data-provides="fileupload">
-					                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-					                  <img src="{{ url('img/no_image.png') }}" alt="Placeholder" /></div>
-					                  <div class="fileupload-preview fileupload-exists thumbnail"
-					                   		style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-					                  @if ($errors->has('photo2'))
-					                  	<br>
-										<span class="label label-danger">{{ $errors->first('photo2') }}</span>
-										<br><br>
-									  @endif
-					                  <div>
-					                    <span class="btn btn-default btn-file">
-					                    <span class="fileupload-new">Select image</span>
-					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo2" id="photo2" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists"
-					                    	data-dismiss="fileupload">Remove</a>
-					                  </div>
-					                </div>
-				              	</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-3 form-control-label">Photo 3 (Engine Room)</label>
-								<div class="col-sm-9">
-					                <div class="fileupload fileupload-new" data-provides="fileupload">
-					                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-					                  <img src="{{ url('img/no_image.png') }}" alt="Placeholder" /></div>
-					                  <div class="fileupload-preview fileupload-exists thumbnail"
-					                   		style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-					                  @if ($errors->has('photo3'))
-					                  	<br>
-										<span class="label label-danger">{{ $errors->first('photo3') }}</span>
-										<br><br>
-									  @endif
-					                  <div>
-					                    <span class="btn btn-default btn-file">
-					                    <span class="fileupload-new">Select image</span>
-					                    <span class="fileupload-exists">Change</span>
-					                    <input type="file" name="photo3" id="photo3" ></span>
-					                    <a href="#" class="btn btn-default fileupload-exists"
-					                    	data-dismiss="fileupload">Remove</a>
-					                  </div>
-					                </div>
-				              	</div>
-							</div>
+
 							<hr>
 							<p style="float: left;">
 								<a  class="btn btn-danger"
-								href="{{ url('reports') }}">
+								href="{{ url('workorders') }}">
 								<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
 								<button  class="btn btn-success"
 								type='submit'>
-								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Create Report</button>
+								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Create Work Order</button>
 							</p>
 							<br>
 							<br>

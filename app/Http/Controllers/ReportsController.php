@@ -92,7 +92,7 @@ class ReportsController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $technicians = $this->serviceHelpers->transformForDropdown($admin->technicians()->get());
+        $technicians = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
 
         JavaScript::put([
             'dropdownKey' => $request->old('service'),

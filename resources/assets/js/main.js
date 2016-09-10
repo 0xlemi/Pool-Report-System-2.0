@@ -832,7 +832,7 @@ function isset(strVariableName) {
 	    });
 	}
 
-	$('#new_report_datepicker').datetimepicker({
+	$('#genericDatepicker').datetimepicker({
 	        widgetPositioning: {
 				horizontal: 'right'
 			},
@@ -893,6 +893,8 @@ function isset(strVariableName) {
         components: { dropdown },
         data:{
             finishedSwitch: false,
+            supervisorId: 0,
+            serviceId: 0,
         },
         methods:{
             changeWorkOrderListFinished(finished){

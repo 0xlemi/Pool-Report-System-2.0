@@ -5,11 +5,32 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use JavaScript;
+use Carbon\Carbon;
 
 use App\Http\Requests;
+use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Helpers\SupervisorHelpers;
+use App\WorkOrder;
 
-class WorkOrderController extends Controller
+
+class WorkOrderController extends PageController
 {
+
+    private $serviceHelpers;
+    private $supervisorHelpers;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(ServiceHelpers $serviceHelpers, SupervisorHelpers $supervisorHelpers)
+    {
+        $this->middleware('auth');
+        $this->serviceHelpers = $serviceHelpers;
+        $this->supervisorHelpers = $supervisorHelpers;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -36,7 +57,14 @@ class WorkOrderController extends Controller
      */
     public function create()
     {
-        return view('workorders.create', compact('services', 'technician'));
+        // check permissions
+
+        $admin = $this->loggedUserAdministrator();
+
+        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+
+        return view('workorders.create', compact('services', 'supervisors'));
     }
 
     /**
@@ -47,7 +75,33 @@ class WorkOrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // check permissions
+
+        $admin = $this->loggedUserAdministrator();
+
+        $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
+
+        $workOrder = WorkOrder::create(array_merge(
+                            array_map('htmlentities', $request->all()),
+                            [
+                                'start' => $startDate,
+                                'service_id' => $service->id,
+                                'supervisor_id' => $supervisor->id,
+                            ])
+                    );
+        $photo = true;
+        if($request->photo){
+            $photo = $workOrder->addImageFromForm($request->file('photo'));
+        }
+        if($workOrder && $photo){
+            flash()->success('Created', 'New Work Order was successfully created.');
+            return redirect('workorders');
+        }
+        flash()->success('Not created', 'New Work Order was not created, please try again later.');
+        return redirect()->back();
+
     }
 
     /**
