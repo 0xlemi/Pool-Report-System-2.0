@@ -19,12 +19,12 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['throttle:10'] ], function (){
 	Route::post('login', 'Api\UserController@login');
-	Route::post('signUp', 'Api\AdministratorsController@store');
+	Route::post('signup', 'Api\AdministratorsController@store');
 });
 
 Route::group(['middleware' => ['auth:api'] ], function(){
-	Route::get('todaysRoute', 'Api\UserController@todaysRoute');
-	Route::post('resetToken', 'Api\UserController@resetToken');
+	Route::get('todaysroute', 'Api\UserController@todaysRoute');
+	Route::post('resettoken', 'Api\UserController@resetToken');
 	Route::get('account', 'Api\UserController@show');
 	Route::post('account', 'Api\UserController@update');
 

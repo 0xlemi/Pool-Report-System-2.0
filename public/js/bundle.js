@@ -22093,6 +22093,24 @@ $(document).ready(function () {
      VueJs code
      ========================================================================== */
 
+  // workOrders Vue instance
+  var workOrderVue = new Vue({
+    el: '.workOrderVue',
+    components: { dropdown: dropdown },
+    data: {
+      finishedSwitch: false
+    },
+    methods: {
+      changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {
+        var intFinished = !finished ? 1 : 0;
+        if (isset('workOrderTableUrl')) {
+          var new_url = back.workOrderTableUrl + intFinished;
+          generic_table.bootstrapTable('refresh', { url: new_url });
+        }
+      }
+    }
+  });
+
   // report Vue instance
   var reportVue = new Vue({
     el: '.reportVue',
@@ -22355,11 +22373,9 @@ $(document).ready(function () {
       },
       changeServiceListStatus: function changeServiceListStatus(status) {
         var intStatus = !status ? 1 : 0;
-        if (typeof back !== 'undefined') {
-          if (typeof back.serviceTableUrl !== 'undefined') {
-            var new_url = back.serviceTableUrl + intStatus;
-            generic_table.bootstrapTable('refresh', { url: new_url });
-          }
+        if (isset('serviceTableUrl')) {
+          var new_url = back.serviceTableUrl + intStatus;
+          generic_table.bootstrapTable('refresh', { url: new_url });
         }
       }
     }

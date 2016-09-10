@@ -175,6 +175,17 @@ class Administrator extends Model
 
     /**
      *  Get services associated with this user
+     */
+    public function workOrders($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
+        return $this->hasManyThrough(
+                        'App\WorkOrder',
+                        'App\Service',
+                        'admin_id')->orderBy('seq_id', $order);
+    }
+
+    /**
+     *  Get services associated with this user
      * tested
      */
     public function services($descending_order = false){

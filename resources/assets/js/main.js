@@ -887,6 +887,24 @@ function isset(strVariableName) {
     VueJs code
     ========================================================================== */
 
+    // workOrders Vue instance
+    let workOrderVue = new Vue({
+        el:'.workOrderVue',
+        components: { dropdown },
+        data:{
+            finishedSwitch: false,
+        },
+        methods:{
+            changeWorkOrderListFinished(finished){
+                var intFinished = (!finished) ? 1 : 0;
+                if(isset('workOrderTableUrl')){
+                    let new_url = back.workOrderTableUrl+intFinished;
+                    generic_table.bootstrapTable('refresh', {url:new_url});
+            	}
+            }
+        },
+    });
+
     // report Vue instance
     let reportVue = new Vue({
         el:'.reportVue',
@@ -1146,11 +1164,9 @@ function isset(strVariableName) {
             },
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;
-                if(typeof back !== 'undefined'){
-                    if(typeof back.serviceTableUrl !== 'undefined'){
-                        let new_url = back.serviceTableUrl+intStatus;
-                        generic_table.bootstrapTable('refresh', {url:new_url});
-                    }
+                if(isset('serviceTableUrl')){
+                    let new_url = back.serviceTableUrl+intStatus;
+                    generic_table.bootstrapTable('refresh', {url:new_url});
             	}
             },
         },

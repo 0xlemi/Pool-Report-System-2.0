@@ -114,6 +114,44 @@ class DataTableController extends PageController
 
     }
 
+    public function workOrders(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'finished' => 'required|boolean',
+        ]);
+        if ($validator->fails()) {
+            return Response::json([
+                    'message' => 'Paramenters failed validation.',
+                    'errors' => $validator->errors()->toArray(),
+                ],
+                422
+            );
+        }
+
+        $workOrders = $this->loggedUserAdministrator()
+                        ->workOrders()
+                        ->get()
+                        ->where('finished', (int) $request->finished)
+                        ->transform(function($item){
+                            $supervisor =  $item->supervisor();
+                            $timezone = $supervisor->admin()->timezone;
+                            return (object) array(
+                                'id' => $item->seq_id,
+                                'start' => (new Carbon($item->start, 'UTC'))
+                                                ->setTimezone($timezone)
+                                                ->format('d M Y h:i:s A'),
+                                'end' => (new Carbon($item->end, 'UTC'))
+                                                ->setTimezone($timezone)
+                                                ->format('d M Y h:i:s A'),
+                                'price' => $item->price.' <strong>'.$item->currency.'</strong>',
+                                'service' => $item->service()->name,
+                                'supervisor' => $supervisor->name.' '.$supervisor->last_name,
+                            );
+                        })
+                        ->flatten(1);
+        return Response::json($workOrders , 200);
+    }
+
     public function services(Request $request)
     {
         $validator = Validator::make($request->all(), [

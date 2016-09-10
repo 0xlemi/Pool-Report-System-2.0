@@ -37,6 +37,7 @@ Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
 
 Route::resource('reports', 'ReportsController');
+Route::resource('workorders', 'WorkOrderController');
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController');
 Route::resource('clients', 'ClientsController');
@@ -55,6 +56,7 @@ Route::patch('settings/billing', 'SettingsController@billing');
 Route::patch('settings/permissions', 'SettingsController@permissions');
 
 Route::get('datatables/reports', 'DataTableController@reports');
+Route::get('datatables/workorders', 'DataTableController@workOrders');
 Route::get('datatables/missingServices', 'DataTableController@missingServices');
 Route::get('datatables/missingServicesInfo', 'DataTableController@missingServicesInfo');
 Route::get('datatables/services', 'DataTableController@services');
