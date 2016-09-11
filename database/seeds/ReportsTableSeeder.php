@@ -49,6 +49,7 @@ class ReportsTableSeeder extends Seeder
 					'report_id' => $report->id,
 					'normal_path' => $img['img_path'],
                     'thumbnail_path' => $img['tn_img_path'],
+                    'icon_path' => $img['xs_img_path'],
 					'order' => $e,
 				]);
     		}

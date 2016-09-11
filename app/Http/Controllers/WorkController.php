@@ -9,17 +9,22 @@ use Response;
 
 use App\Http\Requests;
 use App\Work;
+use App\PRS\Transformers\WorkTransformer;
 
 class WorkController extends Controller
 {
+
+    public $workTransformer;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(WorkTransformer $workTransformer)
     {
         $this->middleware('auth');
+        $this->workTransformer = $workTransformer;
     }
 
     /**
@@ -42,24 +47,11 @@ class WorkController extends Controller
     public function show($id)
     {
         try{
-            $work = Work::findOrFail($id);
+            $work = $this->workTransformer->transform(Work::findOrFail($id));
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Work with that id, does not exist.');
         }
-
-        $photo = array(
-            'photos' => $work->images()->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                    'normal' => url($item->normal_path),
-                                    'thumbnail' => url($item->thumbnail_path),
-                                    'order' => $item->order,
-                                    'title' => 'Photo title',
-                                );
-                        })
-                        ->toArray()
-        );
-        return Response::json(array_merge($work->toArray(), $photo), 200);
+        return Response::json($work, 200);
     }
 
     /**

@@ -50,6 +50,7 @@ class WorkOrdersTableSeeder extends Seeder
 				'work_order_id' => $workOrder->id,
 				'normal_path' => $img['img_path'],
                 'thumbnail_path' => $img['tn_img_path'],
+                'icon_path' => $img['xs_img_path'],
 				'order' => 1,
 			]);
 

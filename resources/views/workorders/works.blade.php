@@ -83,15 +83,14 @@
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
-
+								<input type="text" name="coste" readonly class="form-control" v-model="workCost">
 							</div>
 						</div>
 
 						<br>
-						<div v-if="!(workPhotos == [])">
-							<h4>Work Photos</h4>
+						<div v-if="(typeof workPhotos[0] !== 'undefined')">
 							<hr>
-
+							<h5>Work Photos</h5>
 							<photo-list :data="workPhotos" :object-id="workId" :can-delete="false" :photos-url="'{{ url('works/photos') }}'" ></photo-list>
 						</div>
 
@@ -138,10 +137,7 @@
 
 
 						<hr>
-
-						<div class="col-md-12">
-						</div>
-
+						<photo-list :data="workPhotos" :object-id="workId" :can-delete="true" :photos-url="'{{ url('works/photos') }}'" ></photo-list>
 						<div class="col-md-12">
 	                        <!-- Dropzone -->
 							<div class="box-typical-upload box-typical-upload-in">

@@ -46,6 +46,7 @@ class WorksTableSeeder extends Seeder
     				'work_id' => $workId,
     				'normal_path' => $img['img_path'],
                     'thumbnail_path' => $img['tn_img_path'],
+                    'icon_path' => $img['xs_img_path'],
     				'order' => $e,
     			]);
             }

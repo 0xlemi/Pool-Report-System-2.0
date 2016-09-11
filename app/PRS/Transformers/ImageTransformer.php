@@ -15,7 +15,9 @@ class ImageTransformer extends Transformer
         return [
             'full_size' => url($image->normal_path),
             'thumbnail' => url($image->thumbnail_path),
-            'icon' => url($image->icon_path),            
+            'icon' => url($image->icon_path),
+            'order' => $image->order,
+            'title' => 'Photo title',
         ];
     }
 

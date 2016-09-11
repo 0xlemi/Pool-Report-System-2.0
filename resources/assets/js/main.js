@@ -726,13 +726,14 @@ function isset(strVariableName) {
                 type:     'GET',
                 success: function(data, textStatus, xhr) {
                     //called when successful
+                    console.log(data);
                     this.vue.workId = data.id;
                     this.vue.workTitle = data.title;
                     this.vue.workDescription = data.description;
                     this.vue.workQuantity = data.quantity;
                     this.vue.workUnits = data.units;
                     this.vue.workCost = data.cost;
-                    this.vue.technicianId = data.technician_id;
+                    this.vue.workTechnician = data.technican;
                     this.vue.workPhotos = data.photos;
 
                     this.vue.openWorkModal(2);
@@ -967,7 +968,7 @@ function isset(strVariableName) {
             workQuantity: '',
             workUnits: '',
             workCost: '',
-            technicianId: '',
+            workTechnician: [],
             workPhotos: [],
         },
         computed:{
@@ -995,7 +996,7 @@ function isset(strVariableName) {
                 this.workQuantity= '';
                 this.workUnits= '';
                 this.workCost= '';
-                this.technicianId= '';
+                this.workTechnician= '';
                 this.workPhotos= '';
             },
             setWorkFocus($num){
@@ -1025,7 +1026,7 @@ function isset(strVariableName) {
                         this.vue.workQuantity = data.quantity;
                         this.vue.workUnits = data.units;
                         this.vue.workCost = data.cost;
-                        this.vue.technicianId = data.technician_id;
+                        this.vue.workTechnician = data.technician;
                         this.vue.workPhotos = data.photos;
                     },
                     error: function(xhr, textStatus, errorThrown) {

@@ -21164,7 +21164,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n        <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.normal }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n    </div><!--.col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n        <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.full_size }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n    </div><!--.col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -21936,13 +21936,14 @@ $(document).ready(function () {
         type: 'GET',
         success: function success(data, textStatus, xhr) {
           //called when successful
+          console.log(data);
           this.vue.workId = data.id;
           this.vue.workTitle = data.title;
           this.vue.workDescription = data.description;
           this.vue.workQuantity = data.quantity;
           this.vue.workUnits = data.units;
           this.vue.workCost = data.cost;
-          this.vue.technicianId = data.technician_id;
+          this.vue.workTechnician = data.technican;
           this.vue.workPhotos = data.photos;
 
           this.vue.openWorkModal(2);
@@ -22172,7 +22173,7 @@ $(document).ready(function () {
       workQuantity: '',
       workUnits: '',
       workCost: '',
-      technicianId: '',
+      workTechnician: [],
       workPhotos: []
     },
     computed: {
@@ -22200,7 +22201,7 @@ $(document).ready(function () {
         this.workQuantity = '';
         this.workUnits = '';
         this.workCost = '';
-        this.technicianId = '';
+        this.workTechnician = '';
         this.workPhotos = '';
       },
       setWorkFocus: function setWorkFocus($num) {
@@ -22229,7 +22230,7 @@ $(document).ready(function () {
             this.vue.workQuantity = data.quantity;
             this.vue.workUnits = data.units;
             this.vue.workCost = data.cost;
-            this.vue.technicianId = data.technician_id;
+            this.vue.workTechnician = data.technician;
             this.vue.workPhotos = data.photos;
           },
           error: function error(xhr, textStatus, errorThrown) {

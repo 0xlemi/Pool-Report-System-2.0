@@ -49,7 +49,7 @@ class EquipmentController extends PageController
             'photos' => $equipment->images()->get()
                         ->transform(function($item){
                             return (object) array(
-                                    'normal' => url($item->normal_path),
+                                    'full_size' => url($item->normal_path),
                                     'thumbnail' => url($item->thumbnail_path),
                                     'order' => $item->order,
                                     'title' => 'Photo title',

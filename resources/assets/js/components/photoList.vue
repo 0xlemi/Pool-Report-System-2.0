@@ -8,7 +8,7 @@
         			<div class="gallery-hover-layout-in">
         				<p class="gallery-item-title">{{ image.title }}</p>
         				<div class="btn-group">
-        					<a class="fancybox btn" href="{{ image.normal }}" title="{{ image.title }}">
+        					<a class="fancybox btn" href="{{ image.full_size }}" title="{{ image.title }}">
         						<i class="font-icon font-icon-eye"></i>
         					</a>
                             <a v-if="canDelete" @click="deletePhoto(image.order)" class="btn">
