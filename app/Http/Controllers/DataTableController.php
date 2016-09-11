@@ -166,6 +166,7 @@ class DataTableController extends PageController
                         $service = $item->service();
                         $technician = $item->technician();
                         return [
+                            'id' => $item->id,
                             'title' => $item->title,
                             'quantity' => $item->quantity.' '.$item->units,
                             'cost' => $item->cost.' '.$service->currency,

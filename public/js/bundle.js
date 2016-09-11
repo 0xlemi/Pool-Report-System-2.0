@@ -21886,6 +21886,7 @@ $(document).ready(function () {
 
   var generic_table = $('.generic_table');
   var equipmentTable = $('#equipmentTable');
+  var worksTable = $('#worksTable');
   var missingServices = $('#missingServices');
 
   var tableOptions = {
@@ -21907,6 +21908,7 @@ $(document).ready(function () {
 
   generic_table.bootstrapTable(tableOptions);
   equipmentTable.bootstrapTable(tableOptions);
+  worksTable.bootstrapTable(tableOptions);
   missingServices.bootstrapTable(tableOptions);
 
   $('.generic_table').on('click-row.bs.table', function (e, row, $element) {
@@ -21917,6 +21919,62 @@ $(document).ready(function () {
       $element.addClass('table_active');
     }
     window.location.href = back.click_url + row.id;
+  });
+
+  $('#worksTable').on('click-row.bs.table', function (e, row, $element) {
+    if ($element.hasClass('table_active')) {
+      $element.removeClass('table_active');
+    } else {
+      worksTable.find('tr.table_active').removeClass('table_active');
+      $element.addClass('table_active');
+    }
+    if (isset('worksUrl')) {
+      $.ajax({
+        vue: workOrderVue,
+        worksTable: worksTable,
+        url: back.worksUrl + row.id,
+        type: 'GET',
+        success: function success(data, textStatus, xhr) {
+          //called when successful
+          this.vue.workId = data.id;
+          this.vue.workTitle = data.title;
+          this.vue.workDescription = data.description;
+          this.vue.workQuantity = data.quantity;
+          this.vue.workUnits = data.units;
+          this.vue.workCost = data.cost;
+          this.vue.technicianId = data.technician_id;
+          this.vue.workPhotos = data.photos;
+
+          this.vue.openWorkModal(2);
+          // remove dropzone instance
+          Dropzone.forElement("#worksDropzone").destroy();
+
+          if (isset('worksAddPhotoUrl')) {
+            // generating the dropzone dinamicly
+            // in order to change the url
+            $("#worksDropzone").dropzone({
+              vue: this.vue,
+              url: back.worksAddPhotoUrl + data.id,
+              method: 'post',
+              paramName: 'photo',
+              maxFilesize: 25,
+              acceptedFiles: '.jpg, .jpeg, .png',
+              init: function init() {
+                this.on("success", function (file) {
+                  this.options.vue.$emit('workChanged');
+                });
+              }
+            });
+          }
+          // remove the selected color from the row
+          this.worksTable.find('tr.table_active').removeClass('table_active');
+        },
+        error: function error(xhr, textStatus, errorThrown) {
+          //called when there is an error
+          console.log('error');
+        }
+      });
+    }
   });
 
   $('#equipmentTable').on('click-row.bs.table', function (e, row, $element) {
@@ -22059,11 +22117,11 @@ $(document).ready(function () {
     maxFilesize: 25,
     acceptedFiles: '.jpg, .jpeg, .png'
   };
-  Dropzone.options.equipmentDropzone = {
-    paramName: 'photo',
-    maxFilesize: 25,
-    acceptedFiles: '.jpg, .jpeg, .png'
-  };
+  // Dropzone.options.equipmentDropzone = {
+  //     paramName: 'photo',
+  // 	maxFilesize: 25,
+  // 	acceptedFiles: '.jpg, .jpeg, .png',
+  // }
 
   /* ==========================================================================
       Custom Slick Carousel
@@ -22096,13 +22154,90 @@ $(document).ready(function () {
   // workOrders Vue instance
   var workOrderVue = new Vue({
     el: '.workOrderVue',
-    components: { dropdown: dropdown },
+    components: {
+      PhotoList: PhotoList,
+      dropdown: dropdown
+    },
     data: {
+      // index
       finishedSwitch: false,
+      // create
       supervisorId: 0,
-      serviceId: 0
+      serviceId: 0,
+      // show
+      workFocus: 0, // 1=new, 2=show, 3=edit
+      workId: 0,
+      workTitle: '',
+      workDescription: '',
+      workQuantity: '',
+      workUnits: '',
+      workCost: '',
+      technicianId: '',
+      workPhotos: []
+    },
+    computed: {
+      workModalTitle: function workModalTitle() {
+        switch (this.workFocus) {
+          case 1:
+            return 'Add Work';
+            break;
+          case 2:
+            return 'View Work';
+            break;
+          case 3:
+            return 'Edit Work';
+            break;
+          default:
+            return 'Work';
+        }
+      }
     },
     methods: {
+      clearWork: function clearWork() {
+        this.workId = 0;
+        this.workTitle = '';
+        this.workDescription = '';
+        this.workQuantity = '';
+        this.workUnits = '';
+        this.workCost = '';
+        this.technicianId = '';
+        this.workPhotos = '';
+      },
+      setWorkFocus: function setWorkFocus($num) {
+        if ($num == 1) {
+          this.clearWork();
+        }
+        this.workFocus = $num;
+      },
+      checkWorkFocusIs: function checkWorkFocusIs($num) {
+        return this.workFocus == $num;
+      },
+      openWorkModal: function openWorkModal($focus) {
+        this.setWorkFocus($focus);
+        $('#workModal').modal('show');
+      },
+      workChanged: function workChanged() {
+        $.ajax({
+          vue: this,
+          url: back.worksUrl + row.id,
+          type: 'GET',
+          success: function success(data, textStatus, xhr) {
+            //called when successful
+            this.vue.workId = data.id;
+            this.vue.workTitle = data.title;
+            this.vue.workDescription = data.description;
+            this.vue.workQuantity = data.quantity;
+            this.vue.workUnits = data.units;
+            this.vue.workCost = data.cost;
+            this.vue.technicianId = data.technician_id;
+            this.vue.workPhotos = data.photos;
+          },
+          error: function error(xhr, textStatus, errorThrown) {
+            //called when there is an error
+            console.log('error');
+          }
+        });
+      },
       changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {
         var intFinished = !finished ? 1 : 0;
         if (isset('workOrderTableUrl')) {

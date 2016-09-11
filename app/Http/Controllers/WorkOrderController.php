@@ -117,6 +117,11 @@ class WorkOrderController extends PageController
 
         $default_table_url = url('datatables/works/'.$seq_id);
 
+        JavaScript::put([
+            'worksUrl' => url('/works').'/',
+            'worksAddPhotoUrl' => url('/works/photos').'/',
+        ]);
+
         return view('workorders.show', compact('workOrder', 'default_table_url'));
 
     }

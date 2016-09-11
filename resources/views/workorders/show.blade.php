@@ -70,18 +70,16 @@
 						</form>
 						<br>
 						<h4>Work Done</h4>
-						<hr>
-
 						<div id="toolbar">
-							<button tyle="button" class="btn btn-primary">
-								<i class="glyphicon glyphicon-briefcase"></i>&nbsp;&nbsp;&nbsp;Add Work
+							<button tyle="button" class="btn btn-primary" @click="openWorkModal(1)">
+								<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Work
 							</button>
 						</div>
 						<div class="table-responsive">
-							<table class="generic_table"
+							<table id="worksTable"
 								   data-toolbar="#toolbar"
 								   data-url='{{ $default_table_url }}'
-								   data-page-list='[5, 10, 20, 50, 100, 200]'
+								   data-page-size="5"
 								   data-search='true'
 								   data-show-export="true"
 								   data-export-types="['excel', 'pdf']"
@@ -90,11 +88,11 @@
 								   >
 								<thead>
 								    <tr>
+								        <th data-field="id" data-visible="false"></th>
 								        <th data-field="title" data-sortable="true">Title</th>
 								        <th data-field="quantity" data-sortable="true">Quantity</th>
 								        <th data-field="cost" data-sortable="true">Cost</th>
 								        <th data-field="technician" data-sortable="true">Technician</th>
-
 								    </tr>
 								</thead>
 							</table>
@@ -124,6 +122,7 @@
 		</div>
 	</div>
 
-</div>
+@include('workorders.works');
 
+</div>
 @endsection

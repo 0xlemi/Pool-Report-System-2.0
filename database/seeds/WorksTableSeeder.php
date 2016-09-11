@@ -40,8 +40,8 @@ class WorksTableSeeder extends Seeder
             ])->id;
 
             // add image
+            for ($e=0; $e < rand(0,3); $e++) {
             $img = $this->seederHelper->get_random_image('work', 'pool_photo_3' , rand(1, 50));
-            for ($e=0; $e < rand(1,2); $e++) {
     			Image::create([
     				'work_id' => $workId,
     				'normal_path' => $img['img_path'],

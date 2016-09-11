@@ -38,6 +38,7 @@ Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto'
 
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
+Route::resource('works', 'WorkController');
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController');
 Route::resource('clients', 'ClientsController');

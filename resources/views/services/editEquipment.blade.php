@@ -119,7 +119,7 @@
 						<div v-if="equipmentPhotos == []">
 							<h4>Equipment Photos</h4>
 							<hr>
-							<photo-list :data="equipmentPhotos"></photo-list>
+							<!-- photo list -->
 						</div>
 					</div>
 
