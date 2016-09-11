@@ -102,6 +102,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
 
 $factory->define(App\Work::class, function (Faker\Generator $faker){
     return [
+        'title' => $faker->word,
         'description' => $faker->realText(rand(10,20)),
         'quantity' => rand(100,1000000)/100,
         'units' => 'units',

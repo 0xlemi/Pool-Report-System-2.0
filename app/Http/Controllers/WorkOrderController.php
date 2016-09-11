@@ -115,7 +115,9 @@ class WorkOrderController extends PageController
     {
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
 
-        return view('workorders.show', compact('workOrder'));
+        $default_table_url = url('datatables/works/'.$seq_id);
+
+        return view('workorders.show', compact('workOrder', 'default_table_url'));
 
     }
 

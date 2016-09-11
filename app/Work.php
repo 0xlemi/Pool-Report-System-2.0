@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\PRS\Traits\Model\ImageTrait;
+
 class Work extends Model
 {
     use ImageTrait;
@@ -13,6 +15,7 @@ class Work extends Model
      * @var array
      */
     protected $fillable = [
+        'title',
         'description',
         'quantity',
         'units',
