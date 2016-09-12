@@ -21126,7 +21126,7 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":121,"vue-hot-reload-api":95,"vueify/lib/insert-css":122}],132:[function(require,module,exports){
-module.exports = '<span>\n    <img class="iconOption" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOption {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
+module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
 },{}],133:[function(require,module,exports){
 'use strict';
 
@@ -22165,7 +22165,7 @@ $(document).ready(function () {
       // create
       supervisorId: 0,
       serviceId: 0,
-      // show
+      // show and edit
       workFocus: 0, // 1=new, 2=show, 3=edit
       workId: 0,
       workTitle: '',

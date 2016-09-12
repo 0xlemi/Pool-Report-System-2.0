@@ -960,7 +960,7 @@ function isset(strVariableName) {
             // create
             supervisorId: 0,
             serviceId: 0,
-            // show
+            // show and edit
             workFocus: 0, // 1=new, 2=show, 3=edit
             workId: 0,
             workTitle: '',

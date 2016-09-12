@@ -14,3 +14,15 @@
  .box-typical-upload {
     height: 100%;
 }
+
+
+/*round image icon*/
+.iconOption {
+    display: block;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 25px;
+    top: 5px;
+    border-radius: 50%;
+}

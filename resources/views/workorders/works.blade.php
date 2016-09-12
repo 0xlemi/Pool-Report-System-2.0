@@ -83,7 +83,9 @@
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
-								<input type="text" name="coste" readonly class="form-control" v-model="workCost">
+								<input type="text" name="coste" readonly class="form-control" style="text-indent: 40px;"
+									:value="workTechnician.fullName">
+                            	<img class="iconOption" :src="workTechnician.icon" alt="Technician Photo">
 							</div>
 						</div>
 
@@ -130,7 +132,10 @@
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
-
+								<dropdown :key.sync="workTechnician.id"
+										:options="{{ $technicians }}"
+										:name="'technician'">
+								</dropdown>
 							</div>
 						</div>
 

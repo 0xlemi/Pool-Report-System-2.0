@@ -27,15 +27,14 @@ class WorkTransformer extends Transformer
         try{
             $technicianObject = Technician::findOrFail($work->technician_id);
 
-            $technicianPhoto = [];
-            if($technicianObject->imageExists()){
-                $technicianPhoto = $this->imageTransformer->transform($technicianObject->image(1, false));
-            }
+            // $technicianPhoto = [];
+            // if($technicianObject->imageExists()){
+            //     $technicianPhoto = $this->imageTransformer->transform($technicianObject->image(1, false));
+            // }
             $technician = [
                 'id' => $technicianObject->seq_id,
-                'name' => $technicianObject->name,
-                'last_name' => $technicianObject->last_name,
-                'photo' => $technicianPhoto,
+                'fullName' => $technicianObject->name.' '.$technicianObject->last_name,
+                'icon' => url($technicianObject->icon()),
             ];
         }catch(ModelNotFoundException $e){
             $technician = 'No Technician';

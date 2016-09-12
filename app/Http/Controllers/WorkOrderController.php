@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\Http\Requests\CreateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\SupervisorHelpers;
+use App\PRS\Helpers\TechnicianHelpers;
 use App\WorkOrder;
 
 
@@ -19,17 +20,21 @@ class WorkOrderController extends PageController
 
     private $serviceHelpers;
     private $supervisorHelpers;
+    private $technicianHelpers;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ServiceHelpers $serviceHelpers, SupervisorHelpers $supervisorHelpers)
+    public function __construct(ServiceHelpers $serviceHelpers,
+                                    SupervisorHelpers $supervisorHelpers,
+                                    TechnicianHelpers $technicianHelpers)
     {
         $this->middleware('auth');
         $this->serviceHelpers = $serviceHelpers;
         $this->supervisorHelpers = $supervisorHelpers;
+        $this->technicianHelpers = $technicianHelpers;
     }
 
     /**
@@ -113,7 +118,11 @@ class WorkOrderController extends PageController
      */
     public function show($seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $admin = $this->loggedUserAdministrator();
+
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $technicians  = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
 
         $default_table_url = url('datatables/works/'.$seq_id);
 
@@ -122,7 +131,7 @@ class WorkOrderController extends PageController
             'worksAddPhotoUrl' => url('/works/photos').'/',
         ]);
 
-        return view('workorders.show', compact('workOrder', 'default_table_url'));
+        return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));
 
     }
 
