@@ -20,6 +20,16 @@
 						</div>
 
                         <div class="form-group row">
+							<label class="col-sm-2 form-control-label">Technician</label>
+							<div class="col-sm-10">
+								<dropdown :key.sync="workTechnician.id"
+									:options="{{ $technicians }}"
+									:name="'technician'">
+								</dropdown>
+							</div>
+						</div>
+
+                        <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Quantity</label>
 							<div class="col-sm-10">
 								<input type="text" name="quantity" class="form-control" v-model="workQuantity">
@@ -40,10 +50,12 @@
 							</div>
 						</div>
 
-                        <div class="form-group row">
-							<label class="col-sm-2 form-control-label">Technician</label>
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
-
+								<textarea rows="4" class="form-control"
+										v-model="workDescription" placeholder="Describe the work done">
+								</textarea>
 							</div>
 						</div>
 
@@ -56,6 +68,15 @@
 							<label class="col-sm-2 form-control-label">Title</label>
 							<div class="col-sm-10">
 								<input type="text" name="title" readonly class="form-control" v-model="workTitle">
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Technician</label>
+							<div class="col-sm-10">
+								<input type="text" name="coste" readonly class="form-control" style="text-indent: 40px;"
+									:value="workTechnician.fullName">
+                            	<img class="iconOption" :src="workTechnician.icon" alt="Technician Photo">
 							</div>
 						</div>
 
@@ -80,14 +101,15 @@
 							</div>
 						</div>
 
-                        <div class="form-group row">
-							<label class="col-sm-2 form-control-label">Technician</label>
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
-								<input type="text" name="coste" readonly class="form-control" style="text-indent: 40px;"
-									:value="workTechnician.fullName">
-                            	<img class="iconOption" :src="workTechnician.icon" alt="Technician Photo">
+								<textarea rows="4" class="form-control"
+										v-model="workDescription" readonly placeholder="Describe the work done">
+								</textarea>
 							</div>
 						</div>
+
 
 						<br>
 						<div v-if="(typeof workPhotos[0] !== 'undefined')">
@@ -105,6 +127,16 @@
 							<label class="col-sm-2 form-control-label">Title</label>
 							<div class="col-sm-10">
 								<input type="text" name="title" class="form-control" v-model="workTitle">
+							</div>
+						</div>
+
+                        <div class="form-group row">
+							<label class="col-sm-2 form-control-label">Technician</label>
+							<div class="col-sm-10">
+								<dropdown :key.sync="workTechnician.id"
+										:options="{{ $technicians }}"
+										:name="'technician'">
+								</dropdown>
 							</div>
 						</div>
 
@@ -129,17 +161,14 @@
 							</div>
 						</div>
 
-                        <div class="form-group row">
-							<label class="col-sm-2 form-control-label">Technician</label>
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
-								<dropdown :key.sync="workTechnician.id"
-										:options="{{ $technicians }}"
-										:name="'technician'">
-								</dropdown>
+								<textarea rows="4" class="form-control"
+										v-model="workDescription" placeholder="Describe the work done">
+								</textarea>
 							</div>
 						</div>
-
-
 
 						<hr>
 						<photo-list :data="workPhotos" :object-id="workId" :can-delete="true" :photos-url="'{{ url('works/photos') }}'" ></photo-list>
@@ -163,14 +192,13 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-            <button v-show="checkWorkFocusIs(1)" class="btn btn-success" type="button" >
+            <button v-show="checkWorkFocusIs(1)" class="btn btn-success" type="button" @click="sendWork('create')">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Create Work</button>
             <button v-show="checkWorkFocusIs(2)" class="btn btn-primary" type="button" @click="setWorkFocus(3)">
 				<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;&nbsp;Edit Work</button>
-
             <button v-show="checkWorkFocusIs(3)" class="btn btn-warning" type="button" @click="setWorkFocus(2)">
 				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</button>
-            <button v-show="checkWorkFocusIs(3)" class="btn btn-success" type="button" >
+            <button v-show="checkWorkFocusIs(3)" class="btn btn-success" type="button" @click="sendWork('edit')">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update Work</button>
 	      </div>
 	    </div>

@@ -129,6 +129,7 @@ class WorkOrderController extends PageController
         JavaScript::put([
             'worksUrl' => url('/works').'/',
             'worksAddPhotoUrl' => url('/works/photos').'/',
+            'workOrderId' => $workOrder->id,
         ]);
 
         return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));

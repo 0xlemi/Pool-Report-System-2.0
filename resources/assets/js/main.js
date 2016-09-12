@@ -960,16 +960,20 @@ function isset(strVariableName) {
             // create
             supervisorId: 0,
             serviceId: 0,
-            // show and edit
-            workFocus: 0, // 1=new, 2=show, 3=edit
-            workId: 0,
-            workTitle: '',
-            workDescription: '',
-            workQuantity: '',
-            workUnits: '',
-            workCost: '',
-            workTechnician: [],
-            workPhotos: [],
+            // Work
+                // show and edit
+                workFocus: 0, // 1=new, 2=show, 3=edit
+                workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
+                workId: 0,
+                workTitle: '',
+                workDescription: '',
+                workQuantity: '',
+                workUnits: '',
+                workCost: '',
+                workTechnician: {
+                    'id': 0,
+                },
+                workPhotos: [],
         },
         computed:{
             workModalTitle: function(){
@@ -989,6 +993,53 @@ function isset(strVariableName) {
             },
         },
         methods:{
+            sendWork(type){
+                let url = (isset('worksUrl')) ? back.worksUrl: '';
+                let requestType = 'POST';
+                if(type == 'edit'){
+                    url += this.workId;
+                    requestType = 'PATCH';
+                }
+
+                if(url != ''){
+                    $.ajax({
+                        vue: this,
+                        swal: swal,
+                        url: url,
+                        type: requestType,
+                        dataType: 'json',
+                        data: {
+                            title: this.workTitle,
+                            description: this.workDescription,
+                            quantity: this.workQuantity,
+                            units: this.workUnits,
+                            cost: this.workCost,
+                            work_order_id: this.workOrderId,
+                            technician_id: this.workTechnician.id,
+                        },
+                        success: function(data, textStatus, xhr) {
+                            // refresh equipment list
+                            worksTable.bootstrapTable('refresh');
+
+                            this.vue.closeWorkModal();
+
+                            // send success alert
+                            this.swal({
+                                title: data.title,
+                                text: data.message,
+			                    type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            console.log(xhr);
+                            console.log(textStatus);
+                            console.log(errorThrown);
+                        }
+                    });
+                }
+            },
             clearWork(){
                 this.workId= 0;
                 this.workTitle= '';
@@ -1011,7 +1062,10 @@ function isset(strVariableName) {
             openWorkModal($focus){
                 this.setWorkFocus($focus);
                 $('#workModal').modal('show');
-
+            },
+            closeWorkModal(){
+                $('#workModal').modal('hide');
+                this.clearWork();
             },
             workChanged(){
                 $.ajax({

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Response;
 
 use App\Http\Requests;
+use App\Http\Requests\CreateWorkRequest;
 use App\Work;
 use App\PRS\Transformers\WorkTransformer;
 
@@ -33,9 +34,19 @@ class WorkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateWorkRequest $request)
     {
-        //
+        $work = Work::create(array_map('htmlentities', $request->all()));
+        if($work){
+            return Response::json([
+                'title' => 'Work Created',
+                'message' => 'The work was successfully created'
+            ], 200);
+        }
+        // return Response::json([
+        //         'title' => 'Work Created',
+        //         'error' => 'The work was not created created'
+        //     ], 500);
     }
 
     /**
@@ -61,9 +72,21 @@ class WorkController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateWorkRequest $request, $id)
     {
-        //
+        try {
+            $work = Work::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work with that id, does not exist.');
+        }
+
+        $work->fill(array_map('htmlentities', $request->except('work_order_id')));
+        $work->save();
+
+        return Response::json([
+                'title' => 'Work Updated',
+                'message' => 'The work was successfully updated'
+            ], 200);
     }
 
     /**
