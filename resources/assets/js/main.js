@@ -961,9 +961,11 @@ function isset(strVariableName) {
             serviceId: 0,
             // Show
             finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
+                // Photos
+                    // photoFocus: 1, // 1=before work  2=after work
                 // Work
                     // show and edit
-                    workFocus: 0, // 1=new, 2=show, 3=edit
+                    // workFocus: 1, // 1=new, 2=show, 3=edit
                     workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
                     workId: 0,
                     workTitle: '',
@@ -992,6 +994,18 @@ function isset(strVariableName) {
                         return 'Work';
                 }
             },
+            // photoModalTitle: function(){
+            //     switch (this.photoFocus){
+            //         case 1:
+            //             return 'Photos before work was started';
+            //         break;
+            //         case 2:
+            //             return 'Photos after the work was finished';
+            //         break;
+            //         default:
+            //             return 'Photos';
+            //     }
+            // },
         },
         events:{
             workChanged(){
@@ -999,6 +1013,16 @@ function isset(strVariableName) {
             }
         },
         methods:{
+            // openPhotosModal($focus){
+            //     this.photoFocus = $focus;
+            //     $('#photosWorkOrderModal').modal('show');
+            // },
+            // markedAsFinished(){
+            //
+            // },
+            // openFinishModal(){
+            //     $('#finishWorkOrderModal').modal('show');
+            // },
             sendWork(type){
                 let url = (isset('worksUrl')) ? back.worksUrl: '';
                 let requestType = 'POST';

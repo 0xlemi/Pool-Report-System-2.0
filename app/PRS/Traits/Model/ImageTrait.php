@@ -5,6 +5,7 @@ namespace App\PRS\Traits\Model;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use Intervention;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\Image;
 
@@ -88,6 +89,16 @@ trait ImageTrait{
      */
     public function images(){
         return $this->hasMany('App\Image');
+    }
+
+    /**
+     * get the images by the type
+     * @param  int $type
+     * @return Collection
+     */
+    public function imagesByType($type)
+    {
+        return $this->images()->where('type', $type)->get();
     }
 
      /**

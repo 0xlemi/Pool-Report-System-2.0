@@ -28,6 +28,7 @@ class CreateImagesTable extends Migration
             $table->string('thumbnail_path');   // 300x* image
             $table->string('icon_path'); // 64x64 image
             $table->smallInteger('order')->default(1);
+            $table->smallInteger('type')->default(1); // main use is in Work orders
             $table->timestamps();
             $table->softDeletes();
         });

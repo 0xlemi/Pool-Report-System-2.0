@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 
 use App\PRS\Traits\Model\ImageTrait;
 
@@ -47,6 +48,24 @@ class WorkOrder extends Model
     public function works()
     {
     	return $this->hasMany('App\Work');
+    }
+
+    /**
+     * images before any work has been done
+     * @return Collection
+     */
+    public function imagesBeforeWork()
+    {
+        return $this->imagesByType(1);
+    }
+
+    /**
+     * images after the work was completed
+     * @return Collection
+     */
+    public function imagesAfterWork()
+    {
+        return $this->imagesByType(2);
     }
 
 }

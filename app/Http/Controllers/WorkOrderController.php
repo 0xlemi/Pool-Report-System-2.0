@@ -130,10 +130,10 @@ class WorkOrderController extends PageController
             'worksUrl' => url('/works').'/',
             'worksAddPhotoUrl' => url('/works/photos').'/',
             'workOrderId' => $workOrder->id,
+            'workOrderFinished' => $workOrder->finished,
         ]);
 
         return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));
-
     }
 
     /**
