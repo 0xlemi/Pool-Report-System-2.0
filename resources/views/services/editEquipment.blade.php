@@ -170,7 +170,10 @@
 						<hr>
 
 						<div class="col-md-12">
-							<photo-list :data="equipmentPhotos" :object-id="equipmentId" :can-delete="true" :photos-url="'{{ url('equipment/photos') }}'" ></photo-list>
+							<photo-list :data="equipmentPhotos" :object-id="equipmentId"
+										:can-delete="true" :photos-url="'{{ url('equipment/photos') }}'"
+										:event-delete-photo="'equipmentChanged'">
+							</photo-list>
 						</div>
 
 						<div class="col-md-12">

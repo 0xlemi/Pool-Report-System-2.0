@@ -110,12 +110,12 @@
 							</div>
 						</div>
 
-
-						<br>
 						<div v-if="(typeof workPhotos[0] !== 'undefined')">
 							<hr>
-							<h5>Work Photos</h5>
-							<photo-list :data="workPhotos" :object-id="workId" :can-delete="false" :photos-url="'{{ url('works/photos') }}'" ></photo-list>
+							<photo-list :data="workPhotos" :object-id="workId"
+										:can-delete="false" :photos-url="'{{ url('works/photos') }}'"
+										>
+							</photo-list>
 						</div>
 
 					</div>
@@ -171,7 +171,10 @@
 						</div>
 
 						<hr>
-						<photo-list :data="workPhotos" :object-id="workId" :can-delete="true" :photos-url="'{{ url('works/photos') }}'" ></photo-list>
+						<photo-list :data="workPhotos" :object-id="workId"
+										:can-delete="true" :photos-url="'{{ url('works/photos') }}'"
+										:event-delete-photo="'workChanged'">
+						</photo-list>
 						<div class="col-md-12">
 	                        <!-- Dropzone -->
 							<div class="box-typical-upload box-typical-upload-in">

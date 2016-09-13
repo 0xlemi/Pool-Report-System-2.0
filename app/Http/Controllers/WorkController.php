@@ -89,6 +89,50 @@ class WorkController extends Controller
             ], 200);
     }
 
+    public function addPhoto(Request $request, $id)
+    {
+        $this->validate($request, [
+            'photo' => 'required|mimes:jpg,jpeg,png'
+        ]);
+
+        try {
+            $work = Work::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work with that id, does not exist.');
+        }
+
+        $file = $request->file('photo');
+        if($work->addImageFromForm($file)){
+            return Response::json([
+                'message' => 'The photo was added to the equipment'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not added to the equipment'
+            ], 500);
+
+    }
+
+    public function removePhoto($id, $order)
+    {
+        try {
+            $work = Work::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work with that id, does not exist.');
+        }
+
+        $image = $work->image($order, false);
+
+        if($image->delete()){
+                return Response::json([
+                'message' => 'The photo was deleted from the equipment'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not deleted from the equipment'
+            ], 500);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

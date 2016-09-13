@@ -21134,7 +21134,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['data', 'objectId', 'canDelete', 'photosUrl'],
+    props: ['data', 'objectId', 'canDelete', 'photosUrl', 'eventDeletePhoto'],
     data: function data() {
         return {
             debug: {}
@@ -21153,8 +21153,7 @@ exports.default = {
                 url: this.deleteUrl + order,
                 type: 'DELETE',
                 success: function success(data, textStatus, xhr) {
-                    console.log('image deleted');
-                    this.vue.$dispatch('equipmentChanged');
+                    this.vue.$dispatch(this.vue.eventDeletePhoto);
                 },
                 error: function error(xhr, textStatus, errorThrown) {
                     console.log('image was not deleted');
@@ -21936,7 +21935,6 @@ $(document).ready(function () {
                 type: 'GET',
                 success: function success(data, textStatus, xhr) {
                     //called when successful
-                    console.log(data);
                     this.vue.workId = data.id;
                     this.vue.workTitle = data.title;
                     this.vue.workDescription = data.description;
@@ -22197,6 +22195,11 @@ $(document).ready(function () {
                 }
             }
         },
+        events: {
+            workChanged: function workChanged() {
+                this.getWork();
+            }
+        },
         methods: {
             sendWork: function sendWork(type) {
                 var url = isset('worksUrl') ? back.worksUrl : '';
@@ -22241,6 +22244,29 @@ $(document).ready(function () {
                             console.log(xhr);
                             console.log(textStatus);
                             console.log(errorThrown);
+                        }
+                    });
+                }
+            },
+            getWork: function getWork() {
+                if (isset('worksUrl')) {
+                    $.ajax({
+                        vue: this,
+                        url: back.worksUrl + this.workId,
+                        type: 'GET',
+                        success: function success(data, textStatus, xhr) {
+                            this.vue.workId = data.id;
+                            this.vue.workTitle = data.title;
+                            this.vue.workDescription = data.description;
+                            this.vue.workQuantity = data.quantity;
+                            this.vue.workUnits = data.units;
+                            this.vue.workCost = data.cost;
+                            this.vue.workTechnician = data.technican;
+                            this.vue.workPhotos = data.photos;
+                        },
+                        error: function error(xhr, textStatus, errorThrown) {
+                            //called when there is an error
+                            console.log('error');
                         }
                     });
                 }

@@ -103,17 +103,17 @@
 							<button  class="btn btn-info"
 							 data-toggle="modal" >
 							<i class="font-icon font-icon-mail"></i>&nbsp;&nbsp;Preview email</button>
-							&nbsp;&nbsp;&nbsp;&nbsp;
 						</p>
 						<p style="float: right;display:inline;">
 							<a class="btn btn-danger"
 							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/workorders/'.$workOrder->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
-							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
 							href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
 							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Work Order</a>
+							<button  class="btn btn-success">
+							<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;Finish Work Order</button>
 						</p>
 						<br>
 						<br>

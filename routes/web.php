@@ -36,6 +36,9 @@ Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto'
 Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
 
+Route::post('works/photos/{id}', 'WorkController@addPhoto');
+Route::delete('works/photos/{id}/{order}', 'WorkController@removePhoto');
+
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController');

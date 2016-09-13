@@ -26,7 +26,7 @@
 <script>
 
 export default {
-    props :['data', 'objectId', 'canDelete', 'photosUrl'],
+    props :['data', 'objectId', 'canDelete', 'photosUrl', 'eventDeletePhoto'],
     data () {
         return {
             debug: {}
@@ -44,8 +44,7 @@ export default {
                 url: this.deleteUrl+order,
                 type: 'DELETE',
                 success: function(data, textStatus, xhr) {
-                    console.log('image deleted');
-                    this.vue.$dispatch('equipmentChanged')
+                    this.vue.$dispatch(this.vue.eventDeletePhoto);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     console.log('image was not deleted');

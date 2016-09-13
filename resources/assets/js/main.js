@@ -726,7 +726,6 @@ function isset(strVariableName) {
                 type:     'GET',
                 success: function(data, textStatus, xhr) {
                     //called when successful
-                    console.log(data);
                     this.vue.workId = data.id;
                     this.vue.workTitle = data.title;
                     this.vue.workDescription = data.description;
@@ -960,20 +959,22 @@ function isset(strVariableName) {
             // create
             supervisorId: 0,
             serviceId: 0,
-            // Work
-                // show and edit
-                workFocus: 0, // 1=new, 2=show, 3=edit
-                workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
-                workId: 0,
-                workTitle: '',
-                workDescription: '',
-                workQuantity: '',
-                workUnits: '',
-                workCost: '',
-                workTechnician: {
-                    'id': 0,
-                },
-                workPhotos: [],
+            // Show
+            finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
+                // Work
+                    // show and edit
+                    workFocus: 0, // 1=new, 2=show, 3=edit
+                    workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
+                    workId: 0,
+                    workTitle: '',
+                    workDescription: '',
+                    workQuantity: '',
+                    workUnits: '',
+                    workCost: '',
+                    workTechnician: {
+                        'id': 0,
+                    },
+                    workPhotos: [],
         },
         computed:{
             workModalTitle: function(){
@@ -991,6 +992,11 @@ function isset(strVariableName) {
                         return 'Work';
                 }
             },
+        },
+        events:{
+            workChanged(){
+                this.getWork();
+            }
         },
         methods:{
             sendWork(type){
@@ -1036,6 +1042,29 @@ function isset(strVariableName) {
                             console.log(xhr);
                             console.log(textStatus);
                             console.log(errorThrown);
+                        }
+                    });
+                }
+            },
+            getWork(){
+                if(isset('worksUrl')){
+                    $.ajax({
+                        vue: this,
+                        url:      back.worksUrl+this.workId,
+                        type:     'GET',
+                        success: function(data, textStatus, xhr) {
+                            this.vue.workId = data.id;
+                            this.vue.workTitle = data.title;
+                            this.vue.workDescription = data.description;
+                            this.vue.workQuantity = data.quantity;
+                            this.vue.workUnits = data.units;
+                            this.vue.workCost = data.cost;
+                            this.vue.workTechnician = data.technican;
+                            this.vue.workPhotos = data.photos;
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            //called when there is an error
+                            console.log('error');
                         }
                     });
                 }
