@@ -22255,10 +22255,10 @@ $(document).ready(function () {
             // Show
             finished: isset('workOrderFinished') ? back.workOrderFinished : 0,
             // Photos
-            // photoFocus: 1, // 1=before work  2=after work
+            photoFocus: 1, // 1=before work  2=after work
             // Work
             // show and edit
-            // workFocus: 1, // 1=new, 2=show, 3=edit
+            workFocus: 1, // 1=new, 2=show, 3=edit
             workOrderId: isset('workOrderId') ? back.workOrderId : 0,
             workId: 0,
             workTitle: '',
@@ -22286,6 +22286,18 @@ $(document).ready(function () {
                     default:
                         return 'Work';
                 }
+            },
+            photoModalTitle: function photoModalTitle() {
+                switch (this.photoFocus) {
+                    case 1:
+                        return 'Photos before work was started';
+                        break;
+                    case 2:
+                        return 'Photos after the work was finished';
+                        break;
+                    default:
+                        return 'Photos';
+                }
             }
         },
         events: {
@@ -22294,16 +22306,14 @@ $(document).ready(function () {
             }
         },
         methods: {
-            // openPhotosModal($focus){
-            //     this.photoFocus = $focus;
-            //     $('#photosWorkOrderModal').modal('show');
-            // },
-            // markedAsFinished(){
-            //
-            // },
-            // openFinishModal(){
-            //     $('#finishWorkOrderModal').modal('show');
-            // },
+            openPhotosModal: function openPhotosModal($focus) {
+                this.photoFocus = $focus;
+                $('#photosWorkOrderModal').modal('show');
+            },
+            markedAsFinished: function markedAsFinished() {},
+            openFinishModal: function openFinishModal() {
+                $('#finishWorkOrderModal').modal('show');
+            },
             sendWork: function sendWork(type) {
                 var url = isset('worksUrl') ? back.worksUrl : '';
                 var requestType = 'POST';
