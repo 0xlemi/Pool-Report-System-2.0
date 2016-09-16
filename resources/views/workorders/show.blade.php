@@ -72,7 +72,7 @@
 									<button type="button" class="btn btn-warning" @click="openPhotosModal(1)">
 										<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;Before Work
 									</button>
-									<button type="button" class="btn btn-info" @click="openPhotosModal(2)">
+									<button v-if="finished" type="button" class="btn btn-info" @click="openPhotosModal(2)">
 										<i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;After Work
 									</button>
 								</div>

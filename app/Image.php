@@ -15,6 +15,7 @@ class Image extends Model
     	'normal_path',
         'thumbnail_path',
         'icon_path',
+        'type',
     	'order',
     ];
 

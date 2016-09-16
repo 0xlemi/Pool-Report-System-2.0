@@ -21243,6 +21243,9 @@ exports.default = {
                 type: 'DELETE',
                 success: function success(data, textStatus, xhr) {
                     this.vue.$dispatch(this.vue.eventDeletePhoto);
+                    var index = this.data.findIndex(function (data) {
+                        return data.order === order;
+                    });
                 },
                 error: function error(xhr, textStatus, errorThrown) {
                     console.log('image was not deleted');
@@ -22266,6 +22269,8 @@ $(document).ready(function () {
             workQuantity: '',
             workUnits: '',
             workCost: '',
+            workOrderBeforePhotos: isset('workOrderBeforePhotos') ? back.workOrderBeforePhotos : 0,
+            workOrderAfterPhotos: isset('workOrderAfterPhotos') ? back.workOrderAfterPhotos : 0,
             workTechnician: {
                 'id': 0
             },
@@ -22309,6 +22314,9 @@ $(document).ready(function () {
             openPhotosModal: function openPhotosModal($focus) {
                 this.photoFocus = $focus;
                 $('#photosWorkOrderModal').modal('show');
+            },
+            checkPhotoFocus: function checkPhotoFocus($num) {
+                return this.photoFocus == $num;
             },
             markedAsFinished: function markedAsFinished() {},
             openFinishModal: function openFinishModal() {

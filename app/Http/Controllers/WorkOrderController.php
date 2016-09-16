@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use JavaScript;
+use Response;
 use Carbon\Carbon;
 
 use App\Http\Requests;
@@ -12,6 +13,7 @@ use App\Http\Requests\CreateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\SupervisorHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Transformers\ImageTransformer;
 use App\WorkOrder;
 
 
@@ -21,6 +23,7 @@ class WorkOrderController extends PageController
     private $serviceHelpers;
     private $supervisorHelpers;
     private $technicianHelpers;
+    private $imageTransformer;
 
     /**
      * Create a new controller instance.
@@ -29,12 +32,14 @@ class WorkOrderController extends PageController
      */
     public function __construct(ServiceHelpers $serviceHelpers,
                                     SupervisorHelpers $supervisorHelpers,
-                                    TechnicianHelpers $technicianHelpers)
+                                    TechnicianHelpers $technicianHelpers,
+                                    ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->serviceHelpers = $serviceHelpers;
         $this->supervisorHelpers = $supervisorHelpers;
         $this->technicianHelpers = $technicianHelpers;
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -119,11 +124,11 @@ class WorkOrderController extends PageController
     public function show($seq_id)
     {
         $admin = $this->loggedUserAdministrator();
-
         $workOrder = $admin->workOrderBySeqId($seq_id);
+        $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
+        $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
         $technicians  = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
-
         $default_table_url = url('datatables/works/'.$seq_id);
 
         JavaScript::put([
@@ -131,9 +136,28 @@ class WorkOrderController extends PageController
             'worksAddPhotoUrl' => url('/works/photos').'/',
             'workOrderId' => $workOrder->id,
             'workOrderFinished' => $workOrder->finished,
+            'workOrderBeforePhotos' => $imagesBeforeWork,
+            'workOrderAfterPhotos' => $imagesAfterWork,
         ]);
 
         return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));
+    }
+
+    public function finish(Request $request, $seq_id)
+    {
+        $this->validate($request, [
+            'end' => 'required|date'
+        ]);
+        $admin = $this->loggedUserAdministrator();
+
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $workOrder->end = $request->end;
+        $workOrder->finished = true;
+        $workOrder->save();
+
+        return Response::json([
+                'message' => 'The work has been finalized'
+            ], 200);
     }
 
     /**
@@ -146,6 +170,28 @@ class WorkOrderController extends PageController
     {
         //
     }
+
+    public function addPhotoBefore(Request $request, $id)
+    {
+        return $this->addPhoto($request, $id, 1);
+    }
+
+    public function addPhotoAfter(Request $request, $id)
+    {
+        return $this->addPhoto($request, $id, 2);
+    }
+
+    public function removePhotoBefore($id, $order)
+    {
+        return $this->removePhoto($id, $order, 1);
+    }
+
+    public function removePhotoAfter($id, $order)
+    {
+        return $this->removePhoto($id, $order, 2);
+    }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -168,5 +214,52 @@ class WorkOrderController extends PageController
     public function destroy($id)
     {
         //
+    }
+
+    private function addPhoto(Request $request, $id, $type)
+    {
+        $this->validate($request, [
+            'photo' => 'required|mimes:jpg,jpeg,png'
+        ]);
+
+        // refactor this
+        try {
+            $workOrder = WorkOrder::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work Order with that id, does not exist.');
+        }
+
+        $file = $request->file('photo');
+        if($image = $workOrder->addImageFromForm($file)){
+            $image->type = $type;
+            $image->save();
+            return Response::json([
+                'message' => 'The photo was added to the work order'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not added to the work order'
+            ], 500);
+
+    }
+
+    private function removePhoto($id, $order, $type)
+    {
+        try {
+            $workOrder = WorkOrder::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work with that id, does not exist.');
+        }
+
+        $image = $workOrder->image($order, false, $type);
+
+        if($image->delete()){
+                return Response::json([
+                'message' => 'The photo was deleted from the work order'
+            ], 200);
+        }
+        return Response::json([
+                'error' => 'The photo could not deleted from the work order'
+            ], 500);
     }
 }

@@ -43,6 +43,7 @@ trait ImageTrait{
 
 	 /**
      * Add a image to this client
+     * @return Image
      * tested for
      * Administrator: yes
      * Supervisor:
@@ -137,17 +138,11 @@ trait ImageTrait{
 
     /**
      * get full size image
-     * tested for
-     * Administrator:
-     * Supervisor:
-     * Technician:
-     * Service:
-     * Client:
-     * Report:
      */
-    public function image($order = 1, $getUrl = true){
+    public function image($order = 1, $getUrl = true, $type = 1){
         $image = $this->images()
             ->where('order', '=', $order)
+            ->where('type', '=', $type)
             ->first();
         if($getUrl){
             if(!$image){

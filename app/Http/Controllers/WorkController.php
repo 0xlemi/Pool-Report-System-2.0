@@ -104,11 +104,11 @@ class WorkController extends Controller
         $file = $request->file('photo');
         if($work->addImageFromForm($file)){
             return Response::json([
-                'message' => 'The photo was added to the equipment'
+                'message' => 'The photo was added to the work'
             ], 200);
         }
         return Response::json([
-                'error' => 'The photo could not added to the equipment'
+                'error' => 'The photo could not added to the work'
             ], 500);
 
     }
@@ -125,11 +125,11 @@ class WorkController extends Controller
 
         if($image->delete()){
                 return Response::json([
-                'message' => 'The photo was deleted from the equipment'
+                'message' => 'The photo was deleted from the work'
             ], 200);
         }
         return Response::json([
-                'error' => 'The photo could not deleted from the equipment'
+                'error' => 'The photo could not deleted from the work'
             ], 500);
     }
 

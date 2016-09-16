@@ -8,9 +8,21 @@ use App\Http\Requests;
 use App\Http\Requests\CreateEquipmentRequest;
 use App\Equipment;
 use Response;
+use App\PRS\Transformers\ImageTransformer;
 
 class EquipmentController extends PageController
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct(ImageTransformer $imageTransformer)
+    {
+        $this->middleware('auth');
+        $this->imageTransformer = $imageTransformer;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -45,17 +57,10 @@ class EquipmentController extends PageController
             return $this->respondNotFound('Equipment with that id, does not exist.');
         }
 
+        $this->imageTransformer->transformCollection($equipment->images()->get());
         $photo = array(
-            'photos' => $equipment->images()->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                    'full_size' => url($item->normal_path),
-                                    'thumbnail' => url($item->thumbnail_path),
-                                    'order' => $item->order,
-                                    'title' => 'Photo title',
-                                );
-                        })
-                        ->toArray()
+            'photos' => $this->imageTransformer
+                        ->transformCollection($equipment->images()->get())
         );
         return Response::json(array_merge($equipment->toArray(), $photo), 200);
     }

@@ -973,6 +973,8 @@ function isset(strVariableName) {
                     workQuantity: '',
                     workUnits: '',
                     workCost: '',
+                    workOrderBeforePhotos: (isset('workOrderBeforePhotos')) ? back.workOrderBeforePhotos : 0,
+                    workOrderAfterPhotos: (isset('workOrderAfterPhotos')) ? back.workOrderAfterPhotos : 0,
                     workTechnician: {
                         'id': 0,
                     },
@@ -1016,6 +1018,9 @@ function isset(strVariableName) {
             openPhotosModal($focus){
                 this.photoFocus = $focus;
                 $('#photosWorkOrderModal').modal('show');
+            },
+            checkPhotoFocus($num){
+                return (this.photoFocus == $num);
             },
             markedAsFinished(){
 

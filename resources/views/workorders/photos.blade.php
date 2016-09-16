@@ -9,6 +9,18 @@
 	      <div class="modal-body">
 				<div class="row">
 
+				<!-- Before Work is Done Photos -->
+				<div class="col-md-12" v-show="checkPhotoFocus(1)">
+						<photo-list :data="workOrderBeforePhotos" :object-id="workId"
+										:can-delete="false" :photos-url="'{{ url('works/photos') }}'">
+						</photo-list>
+				</div>
+
+				<div class="col-md-12" v-show="checkPhotoFocus(2)">
+					<photo-list :data="workOrderAfterPhotos" :object-id="workId"
+									:can-delete="false" :photos-url="'{{ url('works/photos') }}'">
+					</photo-list>
+				</div>
 
 
 				</div>

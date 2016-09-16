@@ -45,6 +45,7 @@ export default {
                 type: 'DELETE',
                 success: function(data, textStatus, xhr) {
                     this.vue.$dispatch(this.vue.eventDeletePhoto);
+                    let index = this.data.findIndex(data => data.order === order);
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     console.log('image was not deleted');
