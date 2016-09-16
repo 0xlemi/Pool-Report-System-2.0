@@ -1054,6 +1054,38 @@ function isset(strVariableName) {
             openFinishModal(){
                 $('#finishWorkOrderModal').modal('show');
             },
+            destroyWork(){
+                if(isset('worksUrl')){
+                        $.ajax({
+                        vue: this,
+                        swal: swal,
+                        url: back.worksUrl+this.workId,
+                        type: 'DELETE',
+                        success: function(data, textStatus, xhr) {
+                            // refresh equipment list
+                            worksTable.bootstrapTable('refresh');
+                            
+                            this.vue.closeWorkModal();
+                            // send success alert
+                            this.swal({
+                                title: data.title,
+                                text: data.message,
+			                    type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            // this.swal({
+                            //     title: data.title,
+                            //     text: data.message,
+			                //     type: "error",
+                            //     showConfirmButton: true
+                            // });
+                        }
+                    });
+                }
+            },
             sendWork(type){
                 let url = (isset('worksUrl')) ? back.worksUrl: '';
                 let requestType = 'POST';

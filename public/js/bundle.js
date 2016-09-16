@@ -22349,6 +22349,38 @@ $(document).ready(function () {
             openFinishModal: function openFinishModal() {
                 $('#finishWorkOrderModal').modal('show');
             },
+            destroyWork: function destroyWork() {
+                if (isset('worksUrl')) {
+                    $.ajax({
+                        vue: this,
+                        swal: swal,
+                        url: back.worksUrl + this.workId,
+                        type: 'DELETE',
+                        success: function success(data, textStatus, xhr) {
+                            // refresh equipment list
+                            worksTable.bootstrapTable('refresh');
+
+                            this.vue.closeWorkModal();
+                            // send success alert
+                            this.swal({
+                                title: data.title,
+                                text: data.message,
+                                type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function error(xhr, textStatus, errorThrown) {
+                            // this.swal({
+                            //     title: data.title,
+                            //     text: data.message,
+                            //     type: "error",
+                            //     showConfirmButton: true
+                            // });
+                        }
+                    });
+                }
+            },
             sendWork: function sendWork(type) {
                 var url = isset('worksUrl') ? back.worksUrl : '';
                 var requestType = 'POST';

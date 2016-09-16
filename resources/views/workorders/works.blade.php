@@ -196,8 +196,10 @@
 
             <button v-show="checkWorkFocusIs(1)" class="btn btn-success" type="button" @click="sendWork('create')">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Create Work</button>
+			<button v-show="checkWorkFocusIs(2)" class="btn btn-danger" type="button" @click="destroyWork()">
+				<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;Delete</button>
             <button v-show="checkWorkFocusIs(2)" class="btn btn-primary" type="button" @click="setWorkFocus(3)">
-				<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;&nbsp;Edit Work</button>
+				<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;&nbsp;Edit</button>
             <button v-show="checkWorkFocusIs(3)" class="btn btn-warning" type="button" @click="setWorkFocus(2)">
 				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</button>
             <button v-show="checkWorkFocusIs(3)" class="btn btn-success" type="button" @click="sendWork('edit')">

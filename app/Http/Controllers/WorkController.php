@@ -141,6 +141,20 @@ class WorkController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $work = Work::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work with that id, does not exist.');
+        }
+        if($work->delete()){
+            return Response::json([
+                        'title' => 'Work Deleted',
+                        'message' => 'The work was deleted successfully.'
+                    ], 200);
+        }
+        return Response::json([
+                        'title' => 'Not Deleted',
+                        'message' => 'The work was not deleted.'
+                    ], 500);
     }
 }
