@@ -171,8 +171,7 @@
 
 						<div class="col-md-12">
 							<photo-list :data="equipmentPhotos" :object-id="equipmentId"
-										:can-delete="true" :photos-url="'{{ url('equipment/photos') }}'"
-										:event-delete-photo="'equipmentChanged'">
+										:can-delete="true" :photos-url="'{{ url('equipment/photos') }}'">
 							</photo-list>
 						</div>
 

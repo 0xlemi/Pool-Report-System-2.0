@@ -1125,28 +1125,6 @@ function isset(strVariableName) {
                 $('#workModal').modal('hide');
                 this.clearWork();
             },
-            workChanged(){
-                $.ajax({
-                    vue: this,
-                    url:      back.worksUrl+row.id,
-                    type:     'GET',
-                    success: function(data, textStatus, xhr) {
-                        //called when successful
-                        this.vue.workId = data.id;
-                        this.vue.workTitle = data.title;
-                        this.vue.workDescription = data.description;
-                        this.vue.workQuantity = data.quantity;
-                        this.vue.workUnits = data.units;
-                        this.vue.workCost = data.cost;
-                        this.vue.workTechnician = data.technician;
-                        this.vue.workPhotos = data.photos;
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        //called when there is an error
-                        console.log('error');
-                    }
-                });
-            },
             changeWorkOrderListFinished(finished){
                 var intFinished = (!finished) ? 1 : 0;
                 if(isset('workOrderTableUrl')){

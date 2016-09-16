@@ -172,8 +172,7 @@
 
 						<hr>
 						<photo-list :data="workPhotos" :object-id="workId"
-										:can-delete="true" :photos-url="'{{ url('works/photos') }}'"
-										:event-delete-photo="'workChanged'">
+										:can-delete="true" :photos-url="'{{ url('works/photos') }}'">
 						</photo-list>
 						<div class="col-md-12">
 	                        <!-- Dropzone -->
