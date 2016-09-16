@@ -2,7 +2,17 @@
 
 namespace App\PRS\Traits;
 
+use Carbon\Carbon;
+
 trait HelperTrait{
+
+    // dates are NOT sent in UTC
+    function format_date(string $date){
+        $admin = $this->loggedUserAdministrator();
+    	return (new Carbon($date, 'UTC'))
+                ->setTimezone($admin->timezone)
+                ->format('l jS \\of F Y h:i:s A');
+    }
 
     function styleEmailPermissions($person)
     {

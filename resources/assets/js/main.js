@@ -961,6 +961,8 @@ function isset(strVariableName) {
             serviceId: 0,
             // Show
             finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
+                // Finish
+                    workOrderFinishedAt: '',
                 // Photos
                     photoFocus: 1, // 1=before work  2=after work
                 // Work
@@ -1015,15 +1017,39 @@ function isset(strVariableName) {
             }
         },
         methods:{
+            finishWorkOrder(){
+                if(isset('finishWorkOrderUrl') && isset('workOrderUrl')){
+                    $.ajax({
+                        swal: swal,
+                        url: back.finishWorkOrderUrl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'end': this.workOrderFinishedAt,
+                        },
+                        success: function(data, textStatus, xhr) {
+                            window.location = back.workOrderUrl;
+                            // send success alert
+                            this.swal({
+                                title: data.title,
+                                text: data.message,
+    		                    type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+
+                        }
+                    });
+                }
+            },
             openPhotosModal($focus){
                 this.photoFocus = $focus;
                 $('#photosWorkOrderModal').modal('show');
             },
             checkPhotoFocus($num){
                 return (this.photoFocus == $num);
-            },
-            markedAsFinished(){
-
             },
             openFinishModal(){
                 $('#finishWorkOrderModal').modal('show');

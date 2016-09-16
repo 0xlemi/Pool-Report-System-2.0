@@ -2,12 +2,17 @@
 
 namespace App\PRS\Helpers;
 use Illuminate\Support\Collection;
+use App\PRS\Traits\ControllerTrait;
+use App\PRS\Traits\HelperTrait;
 
 /**
  * Helpers for work order elements
  */
 class WorkOrderHelpers
 {
+    use ControllerTrait;
+    use HelperTrait;
+
     public function styleFinishedStatus(int $finished)
     {
         if($finished){

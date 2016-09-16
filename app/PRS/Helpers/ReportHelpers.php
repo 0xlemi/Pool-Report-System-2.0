@@ -4,18 +4,12 @@ namespace App\PRS\Helpers;
 
 use Carbon\Carbon;
 use App\PRS\Traits\ControllerTrait;
+use App\PRS\Traits\HelperTrait;
 
 class ReportHelpers
 {
     use ControllerTrait;
-
-    // dates are NOT sent in UTC
-    function format_date(string $date){
-        $admin = $this->loggedUserAdministrator();
-    	return (new Carbon($date, 'UTC'))
-                ->setTimezone($admin->timezone)
-                ->format('l jS \\of F Y h:i:s A');
-    }
+    use HelperTrait;
 
     // dates are NOT sent in UTC
     // start_time and end_time are not in UTC, thats why we dont convernt $completed_date

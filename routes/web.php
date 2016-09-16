@@ -32,11 +32,11 @@ Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
-Route::post('workOrders/finish/{seq_id}', 'WorkOrderController@finish');
-Route::post('workOrders/photos/before/{seq_id}', 'WorkOrderController@addPhotoBefore');
-Route::post('workOrders/photos/after/{seq_id}', 'WorkOrderController@addPhotoAfter');
-Route::delete('workOrders/photos/before/{seq_id}/{order}', 'WorkOrderController@removePhotoBefore');
-Route::delete('workOrders/photos/after/{seq_id}/{order}', 'WorkOrderController@removePhotoAfter');
+Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
+Route::post('workorders/photos/before/{id}', 'WorkOrderController@addPhotoBefore');
+Route::post('workorders/photos/after/{id}', 'WorkOrderController@addPhotoAfter');
+Route::delete('workorders/photos/before/{id}/{order}', 'WorkOrderController@removePhotoBefore');
+Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@removePhotoAfter');
 
 Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');

@@ -62,7 +62,14 @@
                             <div class="form-group row">
 								<label class="col-sm-2 form-control-label">Started at</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->start }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrderHelpers->format_date($workOrder->start) }}"></p>
+								</div>
+							</div>
+
+							<div class="form-group row" v-if="finished">
+								<label class="col-sm-2 form-control-label">Finished at</label>
+								<div class="col-sm-10">
+									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrderHelpers->format_date($workOrder->end) }}"></p>
 								</div>
 							</div>
 
@@ -133,9 +140,9 @@
 		</div>
 	</div>
 
-@include('workorders.works');
-@include('workorders.finish');
-@include('workorders.photos');
+@include('workorders.works')
+@include('workorders.finish')
+@include('workorders.photos')
 
 </div>
 @endsection

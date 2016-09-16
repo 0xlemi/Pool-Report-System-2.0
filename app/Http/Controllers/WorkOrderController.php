@@ -138,6 +138,8 @@ class WorkOrderController extends PageController
             'workOrderFinished' => $workOrder->finished,
             'workOrderBeforePhotos' => $imagesBeforeWork,
             'workOrderAfterPhotos' => $imagesAfterWork,
+            'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
+            'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),
         ]);
 
         return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));
@@ -151,12 +153,13 @@ class WorkOrderController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $workOrder = $admin->workOrderBySeqId($seq_id);
-        $workOrder->end = $request->end;
+        $workOrder->end = (new Carbon($request->end, $admin->timezone))->setTimezone('UTC');
         $workOrder->finished = true;
         $workOrder->save();
 
         return Response::json([
-                'message' => 'The work has been finalized'
+                'title' => 'Work Order Finished',
+                'message' => 'The work order has been finalized successfully.'
             ], 200);
     }
 

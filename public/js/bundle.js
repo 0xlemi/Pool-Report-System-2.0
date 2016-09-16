@@ -22258,6 +22258,8 @@ $(document).ready(function () {
             serviceId: 0,
             // Show
             finished: isset('workOrderFinished') ? back.workOrderFinished : 0,
+            // Finish
+            workOrderFinishedAt: '',
             // Photos
             photoFocus: 1, // 1=before work  2=after work
             // Work
@@ -22312,6 +22314,31 @@ $(document).ready(function () {
             }
         },
         methods: {
+            finishWorkOrder: function finishWorkOrder() {
+                if (isset('finishWorkOrderUrl') && isset('workOrderUrl')) {
+                    $.ajax({
+                        swal: swal,
+                        url: back.finishWorkOrderUrl,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            'end': this.workOrderFinishedAt
+                        },
+                        success: function success(data, textStatus, xhr) {
+                            window.location = back.workOrderUrl;
+                            // send success alert
+                            this.swal({
+                                title: data.title,
+                                text: data.message,
+                                type: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        },
+                        error: function error(xhr, textStatus, errorThrown) {}
+                    });
+                }
+            },
             openPhotosModal: function openPhotosModal($focus) {
                 this.photoFocus = $focus;
                 $('#photosWorkOrderModal').modal('show');
@@ -22319,7 +22346,6 @@ $(document).ready(function () {
             checkPhotoFocus: function checkPhotoFocus($num) {
                 return this.photoFocus == $num;
             },
-            markedAsFinished: function markedAsFinished() {},
             openFinishModal: function openFinishModal() {
                 $('#finishWorkOrderModal').modal('show');
             },
