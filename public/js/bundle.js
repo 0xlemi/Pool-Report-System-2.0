@@ -21223,7 +21223,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['data', 'objectId', 'canDelete', 'photosUrl', 'eventDeletePhoto'],
+    props: ['data', 'objectId', 'canDelete', 'photosUrl'],
     data: function data() {
         return {
             debug: {}
@@ -21242,10 +21242,11 @@ exports.default = {
                 url: this.deleteUrl + order,
                 type: 'DELETE',
                 success: function success(data, textStatus, xhr) {
-                    this.vue.$dispatch(this.vue.eventDeletePhoto);
-                    var index = this.data.findIndex(function (data) {
+                    // remove the just deleted photo from options
+                    var index = this.vue.data.findIndex(function (data) {
                         return data.order === order;
                     });
+                    this.vue.data = this.vue.data.splice(index, 1);
                 },
                 error: function error(xhr, textStatus, errorThrown) {
                     console.log('image was not deleted');
