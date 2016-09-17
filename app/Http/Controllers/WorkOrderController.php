@@ -136,9 +136,9 @@ class WorkOrderController extends PageController
             'worksAddPhotoUrl' => url('/works/photos').'/',
             'workOrderId' => $workOrder->id,
             'workOrderFinished' => $workOrder->finished,
-            'workOrderBeforePhotos' => $imagesBeforeWork,
-            'workOrderAfterPhotos' => $imagesAfterWork,
             'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
+            'workOrderAfterPhotos' => $imagesAfterWork,
+            'workOrderPhotoAfterUrl' => url('workorders/photos/after/'.$workOrder->id),
             'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),
         ]);
 
@@ -178,12 +178,16 @@ class WorkOrderController extends PageController
 
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+        $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
 
         $startDate = (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone);
         JavaScript::put([
             'defaultDate' => $startDate,
             'serviceId' => $workOrder->service()->seq_id,
             'supervisorId' => $workOrder->supervisor()->seq_id,
+            'workOrderId' => $workOrder->id,
+            'workOrderPhotoBeforeUrl' => url('workorders/photos/before/'.$workOrder->id),
+            'workOrderBeforePhotos' => $imagesBeforeWork,
         ]);
 
         return view('workorders.edit', compact('workOrder', 'services', 'supervisors'));
@@ -203,6 +207,10 @@ class WorkOrderController extends PageController
 
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
+        if($workOrder->finished){
+            return $this->respondWithValidationError('Work Order can\'t be changed once finilized.');
+        }
+
         $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
@@ -220,6 +228,16 @@ class WorkOrderController extends PageController
 
         flash()->success('Updated', 'Work Order was successfully updated.');
         return redirect('workorders/'.$workOrder->seq_id);
+    }
+
+    public function getPhotosBefore($id)
+    {
+        return $this->getPhoto($id, 'before');
+    }
+
+    public function getPhotosAfter($id)
+    {
+        return $this->getPhoto($id, 'after');
     }
 
 
@@ -252,6 +270,20 @@ class WorkOrderController extends PageController
     public function destroy($id)
     {
         //
+    }
+
+    private function getPhoto($id, $type)
+    {
+        try{
+            $workOrder = WorkOrder::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work Order with that id, does not exist.');
+        }
+
+        if($type == 'after'){
+            return $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
+        }
+        return $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
     }
 
     private function addPhoto(Request $request, $id, $type)

@@ -150,7 +150,7 @@
 							data-method="delete" data-token="{{ csrf_token() }}"
 			        		data-confirm="Are you sure?" href="{{ url('/workorders/'.$workOrder->seq_id) }}">
 							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
-							<a  class="btn btn-primary"
+							<a v-if="!(finished)" class="btn btn-primary"
 							href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
 							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Work Order</a>
 							<button v-if="!(finished)" class="btn btn-success" @click="openFinishModal()">

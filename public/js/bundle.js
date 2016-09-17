@@ -22049,7 +22049,7 @@ $(document).ready(function () {
                             url: back.worksAddPhotoUrl + data.id,
                             method: 'post',
                             paramName: 'photo',
-                            maxFilesize: 25,
+                            maxFilesize: 50,
                             acceptedFiles: '.jpg, .jpeg, .png',
                             init: function init() {
                                 this.on("success", function (file) {
@@ -22103,7 +22103,7 @@ $(document).ready(function () {
                             url: back.equipmentAddPhotoUrl + data.id,
                             method: 'post',
                             paramName: 'photo',
-                            maxFilesize: 25,
+                            maxFilesize: 50,
                             acceptedFiles: '.jpg, .jpeg, .png',
                             init: function init() {
                                 this.on("success", function (file) {
@@ -22200,22 +22200,6 @@ $(document).ready(function () {
     });
 
     /* ==========================================================================
-        Dropzone
-        ========================================================================== */
-
-    // Dropzone.autoDiscover = false;
-    Dropzone.options.genericDropzone = {
-        paramName: 'photo',
-        maxFilesize: 25,
-        acceptedFiles: '.jpg, .jpeg, .png'
-    };
-    // Dropzone.options.equipmentDropzone = {
-    //     paramName: 'photo',
-    // 	maxFilesize: 25,
-    // 	acceptedFiles: '.jpg, .jpeg, .png',
-    // }
-
-    /* ==========================================================================
         Custom Slick Carousel
         ========================================================================== */
 
@@ -22261,7 +22245,7 @@ $(document).ready(function () {
             // Finish
             workOrderFinishedAt: '',
             // Photos
-            photoFocus: 1, // 1=before work  2=after work
+            photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
             // Work
             // show and edit
             workValidationErrors: {},
@@ -22299,7 +22283,7 @@ $(document).ready(function () {
             photoModalTitle: function photoModalTitle() {
                 switch (this.photoFocus) {
                     case 1:
-                        return 'Photos before work was started';
+                        return 'Photos before work started';
                         break;
                     case 2:
                         return 'Photos after the work was finished';
@@ -22312,9 +22296,37 @@ $(document).ready(function () {
         events: {
             workChanged: function workChanged() {
                 this.getWork();
+            },
+            workOrderChangePhotos: function workOrderChangePhotos() {
+                this.refreshWorkOrderPhotos('after');
+                this.refreshWorkOrderPhotos('before');
             }
         },
         methods: {
+            refreshWorkOrderPhotos: function refreshWorkOrderPhotos(type) {
+                var url = '';
+                if (type == 'before' && isset('workOrderPhotoBeforeUrl')) {
+                    url = back.workOrderPhotoBeforeUrl;
+                } else if (type == 'after' && isset('workOrderPhotoAfterUrl')) {
+                    url = back.workOrderPhotoAfterUrl;
+                }
+
+                if (url != '') {
+                    $.ajax({
+                        vue: this,
+                        url: url,
+                        type: 'GET',
+                        success: function success(data, textStatus, xhr) {
+                            if (type == 'before') {
+                                this.vue.workOrderBeforePhotos = data;
+                            } else if (type == 'after') {
+                                this.vue.workOrderAfterPhotos = data;
+                            }
+                        },
+                        error: function error(xhr, textStatus, errorThrown) {}
+                    });
+                }
+            },
             checkValidationError: function checkValidationError($fildName) {
                 return $fildName in this.workValidationErrors;
             },
@@ -22851,6 +22863,36 @@ $(document).ready(function () {
             });
         }
     });
+
+    /* ==========================================================================
+        Dropzone
+        ========================================================================== */
+
+    // Dropzone.autoDiscover = false;
+    Dropzone.options.genericDropzone = {
+        paramName: 'photo',
+        maxFilesize: 50,
+        acceptedFiles: '.jpg, .jpeg, .png'
+    };
+
+    Dropzone.options.workOrderDropzone = {
+        vue: workOrderVue,
+        paramName: 'photo',
+        maxFilesize: 50,
+        acceptedFiles: '.jpg, .jpeg, .png',
+        init: function init() {
+            this.on("success", function (file) {
+                this.options.vue.$emit('workOrderChangePhotos');
+            });
+        }
+    };
+
+    // Dropzone.options.equipmentDropzone = {
+    //     paramName: 'photo',
+    // 	maxFilesize: 50,
+    // 	acceptedFiles: '.jpg, .jpeg, .png',
+    // }
+
 
     /* ==========================================================================
         Location Picker

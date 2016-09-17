@@ -121,11 +121,8 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Photos</label>
 								<div class="col-sm-10">
-									<button type="button" class="btn btn-warning" @click="openPhotosModal(1)">
+									<button type="button" class="btn btn-warning" @click="openPhotosModal(3)">
 										<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;Before Work
-									</button>
-									<button v-if="finished" type="button" class="btn btn-info" @click="openPhotosModal(2)">
-										<i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;After Work
 									</button>
 								</div>
 							</div>
@@ -146,5 +143,8 @@
 			</section>
 		</div>
 	</div>
+
+@include('workorders.photos')
+
 </div>
 @endsection

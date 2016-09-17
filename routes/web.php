@@ -33,6 +33,8 @@ Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
+Route::get('workorders/photos/before/{id}', 'WorkOrderController@getPhotosBefore');
+Route::get('workorders/photos/after/{id}', 'WorkOrderController@getPhotosAfter');
 Route::post('workorders/photos/before/{id}', 'WorkOrderController@addPhotoBefore');
 Route::post('workorders/photos/after/{id}', 'WorkOrderController@addPhotoAfter');
 Route::delete('workorders/photos/before/{id}/{order}', 'WorkOrderController@removePhotoBefore');

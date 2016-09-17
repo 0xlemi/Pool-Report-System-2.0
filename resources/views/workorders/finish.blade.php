@@ -35,7 +35,7 @@
                     <!-- Dropzone -->
 					<div class="box-typical-upload box-typical-upload-in">
                         <div class="drop-zone">
-                            <form id="genericDropzone" action="{{ url('workorders/photos/after/'.$workOrder->id) }}" method="POST" class="dropzone">
+                            <form id="workOrderDropzone" action="{{ url('workorders/photos/after/'.$workOrder->id) }}" method="POST" class="dropzone">
                             	{{ csrf_field() }}
                             	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
                                 <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
