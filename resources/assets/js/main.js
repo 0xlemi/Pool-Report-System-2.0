@@ -1309,6 +1309,7 @@ function isset(strVariableName) {
         },
         directives: { FormToAjax },
         data: {
+            validationErrors: {},
             statusSwitch: true,
             // Location picker values
             pickerServiceAddressLine1: '',
@@ -1382,6 +1383,9 @@ function isset(strVariableName) {
             }
         },
         methods: {
+            checkValidationError($fildName){
+                return $fildName in this.validationErrors;
+            },
             // Equipment
             destroyEquipment(){
                 if(isset('equipmentUrl')){
@@ -1486,7 +1490,7 @@ function isset(strVariableName) {
                             this.vue.openEquimentList();
                         },
                         error: function(xhr, textStatus, errorThrown) {
-                            console.log('error creating equipment');
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }
@@ -1498,6 +1502,8 @@ function isset(strVariableName) {
                 this.equipmentModel = '';
                 this.equipmentCapacity = '';
                 this.equipmentUnits = '';
+                // clear the validation errors to
+                this.validationErrors = {};
             },
             setEquipmentFocus($num){
                 this.equipmentFocus = $num;

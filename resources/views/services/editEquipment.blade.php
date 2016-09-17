@@ -45,45 +45,54 @@
                     <!-- Create new Equipment -->
 					<div class="col-md-12" v-show="checkEquipmentFocusIs(2)">
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('kind'))}">
 							<label class="col-sm-2 form-control-label">Kind</label>
 							<div class="col-sm-10">
-								<input type="text" name="kind" class="form-control" v-model="equipmentKind">
+								<input type="text" name="kind" class="form-control"
+										placeholder="Example: Pump, Solar Panels, Filter, etc..." v-model="equipmentKind">
+								<small v-if="checkValidationError('kind')" class="text-muted">@{{ validationErrors.kind[0] }}</small>
 							</div>
 						</div>
 
-                       <div class="form-group row">
+                       <div class="form-group row" :class="{'form-group-error' : (checkValidationError('type'))}">
 							<label class="col-sm-2 form-control-label">Type</label>
 							<div class="col-sm-10">
-								<input type="text" name="type" class="form-control" v-model="equipmentType">
+								<input type="text" name="type" class="form-control"
+								placeholder="Example: Single-speed, Varaible-speed, etc..." v-model="equipmentType">
+								<small v-if="checkValidationError('type')" class="text-muted">@{{ validationErrors.type[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('brand'))}">
 							<label class="col-sm-2 form-control-label">Brand</label>
 							<div class="col-sm-10">
 								<input type="text" name="brand" class="form-control" v-model="equipmentBrand">
+								<small v-if="checkValidationError('brand')" class="text-muted">@{{ validationErrors.brand[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('model'))}">
 							<label class="col-sm-2 form-control-label">Model</label>
 							<div class="col-sm-10">
 								<input type="text" name="model" class="form-control" v-model="equipmentModel">
+								<small v-if="checkValidationError('model')" class="text-muted">@{{ validationErrors.model[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('capacity'))}">
 							<label class="col-sm-2 form-control-label">Capacity</label>
 							<div class="col-sm-10">
 								<input type="number" name="capacity" class="form-control" v-model="equipmentCapacity">
+								<small v-if="checkValidationError('capacity')" class="text-muted">@{{ validationErrors.capacity[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
 							<label class="col-sm-2 form-control-label">Units</label>
 							<div class="col-sm-10">
-								<input type="text" name="units" class="form-control" v-model="equipmentUnits">
+								<input type="text" name="units" class="form-control"
+										placeholder="Example: hp, kWh, etc..." v-model="equipmentUnits">
+								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 
@@ -126,45 +135,51 @@
 					<!-- Edit Equipment -->
                     <div class="col-md-12" v-show="checkEquipmentFocusIs(4)">
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('kind'))}">
 							<label class="col-sm-2 form-control-label">Kind</label>
 							<div class="col-sm-10">
 								<input type="text" name="kind" class="form-control" v-model="equipmentKind">
+								<small v-if="checkValidationError('kind')" class="text-muted">@{{ validationErrors.kind[0] }}</small>
 							</div>
 						</div>
 
-                       <div class="form-group row">
+                       <div class="form-group row" :class="{'form-group-error' : (checkValidationError('type'))}">
 							<label class="col-sm-2 form-control-label">Type</label>
 							<div class="col-sm-10">
 								<input type="text" name="type" class="form-control" v-model="equipmentType">
+								<small v-if="checkValidationError('type')" class="text-muted">@{{ validationErrors.type[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('brand'))}">
 							<label class="col-sm-2 form-control-label">Brand</label>
 							<div class="col-sm-10">
 								<input type="text" name="brand" class="form-control" v-model="equipmentBrand">
+								<small v-if="checkValidationError('brand')" class="text-muted">@{{ validationErrors.brand[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('model'))}">
 							<label class="col-sm-2 form-control-label">Model</label>
 							<div class="col-sm-10">
 								<input type="text" name="model" class="form-control" v-model="equipmentModel">
+								<small v-if="checkValidationError('model')" class="text-muted">@{{ validationErrors.model[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('capacity'))}">
 							<label class="col-sm-2 form-control-label">Capacity</label>
 							<div class="col-sm-10">
 								<input type="number" name="capacity" class="form-control" v-model="equipmentCapacity">
+								<small v-if="checkValidationError('capacity')" class="text-muted">@{{ validationErrors.capacity[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
 							<label class="col-sm-2 form-control-label">Units</label>
 							<div class="col-sm-10">
 								<input type="text" name="units" class="form-control" v-model="equipmentUnits">
+								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 						<hr>

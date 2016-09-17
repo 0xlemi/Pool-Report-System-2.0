@@ -22607,6 +22607,7 @@ $(document).ready(function () {
         },
         directives: { FormToAjax: FormToAjax },
         data: {
+            validationErrors: {},
             statusSwitch: true,
             // Location picker values
             pickerServiceAddressLine1: '',
@@ -22680,6 +22681,10 @@ $(document).ready(function () {
             }
         },
         methods: {
+            checkValidationError: function checkValidationError($fildName) {
+                return $fildName in this.validationErrors;
+            },
+
             // Equipment
             destroyEquipment: function destroyEquipment() {
                 var _this2 = this;
@@ -22788,7 +22793,7 @@ $(document).ready(function () {
                             this.vue.openEquimentList();
                         },
                         error: function error(xhr, textStatus, errorThrown) {
-                            console.log('error creating equipment');
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }
@@ -22800,6 +22805,8 @@ $(document).ready(function () {
                 this.equipmentModel = '';
                 this.equipmentCapacity = '';
                 this.equipmentUnits = '';
+                // clear the validation errors to
+                this.validationErrors = {};
             },
             setEquipmentFocus: function setEquipmentFocus($num) {
                 this.equipmentFocus = $num;
