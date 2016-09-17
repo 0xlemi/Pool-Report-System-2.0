@@ -939,6 +939,7 @@ function isset(strVariableName) {
             dropdown
         },
         data:{
+            validationErrors: {},
             // index
             finishedSwitch: false,
             // create edit
@@ -952,7 +953,6 @@ function isset(strVariableName) {
                     photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
                 // Work
                     // show and edit
-                    workValidationErrors: {},
                     workFocus: 1, // 1=new, 2=show, 3=edit
                     workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
                     workId: 0,
@@ -1034,7 +1034,7 @@ function isset(strVariableName) {
                 }
             },
             checkValidationError($fildName){
-                return $fildName in this.workValidationErrors;
+                return $fildName in this.validationErrors;
             },
             finishWorkOrder(){
                 if(isset('finishWorkOrderUrl') && isset('workOrderUrl')){
@@ -1059,7 +1059,7 @@ function isset(strVariableName) {
                             });
                         },
                         error: function(xhr, textStatus, errorThrown) {
-                            this.vue.workValidationErrors = xhr.responseJSON;
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }
@@ -1161,9 +1161,7 @@ function isset(strVariableName) {
                             });
                         },
                         error: function(xhr, textStatus, errorThrown) {
-                            console.log(xhr);
-                            console.log(textStatus);
-                            console.log(errorThrown);
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }

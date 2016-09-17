@@ -17,7 +17,7 @@
 							<input type='text' name='end' class="form-control"
 									id="genericDatepickerInput"
 									v-model="workOrderFinishedAt"/>
-							<small v-if="checkValidationError('end')" class="text-muted">@{{ workValidationErrors.end[0] }}</small>
+							<small v-if="checkValidationError('end')" class="text-muted">@{{ validationErrors.end[0] }}</small>
 							<span class="input-group-addon">
 								<i class="font-icon font-icon-calend"></i>
 							</span>

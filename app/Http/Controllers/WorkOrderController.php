@@ -137,6 +137,7 @@ class WorkOrderController extends PageController
             'workOrderId' => $workOrder->id,
             'workOrderFinished' => $workOrder->finished,
             'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
+            'workOrderBeforePhotos' => $imagesBeforeWork,
             'workOrderAfterPhotos' => $imagesAfterWork,
             'workOrderPhotoAfterUrl' => url('workorders/photos/after/'.$workOrder->id),
             'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),

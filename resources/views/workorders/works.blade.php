@@ -12,50 +12,60 @@
                     <!-- Create new Work -->
 					<div class="col-md-12" v-show="checkWorkFocusIs(1)">
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('title'))}">
 							<label class="col-sm-2 form-control-label">Title</label>
 							<div class="col-sm-10">
 								<input type="text" name="title" class="form-control" v-model="workTitle">
+								<small v-if="checkValidationError('title')" class="text-muted">@{{ validationErrors.title[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('technician_id'))}">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
 								<dropdown :key.sync="workTechnician.id"
 									:options="{{ $technicians }}"
 									:name="'technician'">
 								</dropdown>
+								<small v-if="checkValidationError('technician_id')" class="text-muted">@{{ validationErrors.technician_id[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('quantity'))}">
 							<label class="col-sm-2 form-control-label">Quantity</label>
 							<div class="col-sm-10">
-								<input type="text" name="quantity" class="form-control" v-model="workQuantity">
+								<input type="number" name="quantity" class="form-control" v-model="workQuantity">
+								<small v-if="checkValidationError('quantity')" class="text-muted">@{{ validationErrors.quantity[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
 							<label class="col-sm-2 form-control-label">Units</label>
 							<div class="col-sm-10">
 								<input type="text" name="units" class="form-control" v-model="workUnits">
+								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('cost'))}">
 							<label class="col-sm-2 form-control-label">Cost</label>
 							<div class="col-sm-10">
-								<input type="text" name="cost" class="form-control" v-model="workCost">
+								<div class="input-group">
+									<div class="input-group-addon">$</div>
+										<input type="number" name="cost" class="form-control" v-model="workCost">
+									<div class="input-group-addon">{{ $workOrder->currency }}</div>
+								</div>
+								<small v-if="checkValidationError('cost')" class="text-muted">@{{ validationErrors.cost[0] }}</small>
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row" :class="{'form-group-error' : (checkValidationError('description'))}">
 							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
 								<textarea rows="4" class="form-control"
 										v-model="workDescription" placeholder="Describe the work done.">
 								</textarea>
+								<small v-if="checkValidationError('description')" class="text-muted">@{{ validationErrors.description[0] }}</small>
 							</div>
 						</div>
 
@@ -123,50 +133,56 @@
                     <!-- Edit Work -->
                     <div class="col-md-12" v-show="checkWorkFocusIs(3)">
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('title'))}">
 							<label class="col-sm-2 form-control-label">Title</label>
 							<div class="col-sm-10">
 								<input type="text" name="title" class="form-control" v-model="workTitle">
+								<small v-if="checkValidationError('title')" class="text-muted">@{{ validationErrors.title[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('technician_id'))}">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
 								<dropdown :key.sync="workTechnician.id"
 										:options="{{ $technicians }}"
 										:name="'technician'">
 								</dropdown>
+								<small v-if="checkValidationError('technician_id')" class="text-muted">@{{ validationErrors.technician_id[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('quantity'))}">
 							<label class="col-sm-2 form-control-label">Quantity</label>
 							<div class="col-sm-10">
 								<input type="text" name="quantity" class="form-control" v-model="workQuantity">
+								<small v-if="checkValidationError('quantity')" class="text-muted">@{{ validationErrors.quantity[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
 							<label class="col-sm-2 form-control-label">Units</label>
 							<div class="col-sm-10">
 								<input type="text" name="units" class="form-control" v-model="workUnits">
+								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 
-                        <div class="form-group row">
+                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('cost'))}">
 							<label class="col-sm-2 form-control-label">Cost</label>
 							<div class="col-sm-10">
 								<input type="text" name="coste" class="form-control" v-model="workCost">
+								<small v-if="checkValidationError('cost')" class="text-muted">@{{ validationErrors.cost[0] }}</small>
 							</div>
 						</div>
 
-						<div class="form-group row">
+						<div class="form-group row" :class="{'form-group-error' : (checkValidationError('description'))}">
 							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
 								<textarea rows="4" class="form-control"
 										v-model="workDescription" placeholder="Describe the work done">
 								</textarea>
+								<small v-if="checkValidationError('description')" class="text-muted">@{{ validationErrors.description[0] }}</small>
 							</div>
 						</div>
 

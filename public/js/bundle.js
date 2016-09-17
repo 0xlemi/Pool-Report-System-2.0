@@ -22235,6 +22235,7 @@ $(document).ready(function () {
             dropdown: dropdown
         },
         data: {
+            validationErrors: {},
             // index
             finishedSwitch: false,
             // create edit
@@ -22248,7 +22249,6 @@ $(document).ready(function () {
             photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
             // Work
             // show and edit
-            workValidationErrors: {},
             workFocus: 1, // 1=new, 2=show, 3=edit
             workOrderId: isset('workOrderId') ? back.workOrderId : 0,
             workId: 0,
@@ -22328,7 +22328,7 @@ $(document).ready(function () {
                 }
             },
             checkValidationError: function checkValidationError($fildName) {
-                return $fildName in this.workValidationErrors;
+                return $fildName in this.validationErrors;
             },
             finishWorkOrder: function finishWorkOrder() {
                 if (isset('finishWorkOrderUrl') && isset('workOrderUrl')) {
@@ -22353,7 +22353,7 @@ $(document).ready(function () {
                             });
                         },
                         error: function error(xhr, textStatus, errorThrown) {
-                            this.vue.workValidationErrors = xhr.responseJSON;
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }
@@ -22459,9 +22459,7 @@ $(document).ready(function () {
                             });
                         },
                         error: function error(xhr, textStatus, errorThrown) {
-                            console.log(xhr);
-                            console.log(textStatus);
-                            console.log(errorThrown);
+                            this.vue.validationErrors = xhr.responseJSON;
                         }
                     });
                 }
