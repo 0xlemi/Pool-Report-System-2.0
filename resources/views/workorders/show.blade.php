@@ -38,6 +38,17 @@
 								</div>
 							</div>
 
+							<div class="form-group row {{($errors->has('title'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Title:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="title" maxlength="50" value="{{ $workOrder->title }}">
+									@if ($errors->has('title'))
+										<small class="text-muted">{{ $errors->first('title') }}</small>
+									@endif
+								</div>
+							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Name</label>
 								<div class="col-sm-10">
@@ -70,6 +81,18 @@
 								<label class="col-sm-2 form-control-label">Finished at</label>
 								<div class="col-sm-10">
 									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrderHelpers->format_date($workOrder->end) }}"></p>
+								</div>
+							</div>
+
+							<div class="form-group row {{($errors->has('description'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Description:</label>
+								<div class="col-sm-10">
+									<textarea rows="5" class="form-control"
+												placeholder="Describe the work order to be done."
+												name="description">{{ $workOrder->description }}</textarea>
+									@if ($errors->has('description'))
+										<small class="text-muted">{{ $errors->first('description') }}</small>
+									@endif
 								</div>
 							</div>
 

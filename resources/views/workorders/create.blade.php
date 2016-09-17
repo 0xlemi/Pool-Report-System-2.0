@@ -25,6 +25,17 @@
 						<form method="POST" action="{{ url('workorders') }}" enctype="multipart/form-data">
 							{{ csrf_field() }}
 
+							<div class="form-group row {{($errors->has('title'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Title:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="title" maxlength="50" value="">
+									@if ($errors->has('title'))
+										<small class="text-muted">{{ $errors->first('title') }}</small>
+									@endif
+								</div>
+							</div>
+
 							<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
@@ -90,6 +101,18 @@
 											<i class="font-icon font-icon-calend"></i>
 										</span>
 									</div>
+								</div>
+							</div>
+
+							<div class="form-group row {{($errors->has('description'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Description:</label>
+								<div class="col-sm-10">
+									<textarea rows="5" class="form-control"
+												placeholder="Describe the work order to be done."
+												name="description"></textarea>
+									@if ($errors->has('description'))
+										<small class="text-muted">{{ $errors->first('description') }}</small>
+									@endif
 								</div>
 							</div>
 

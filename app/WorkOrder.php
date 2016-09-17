@@ -17,6 +17,8 @@ class WorkOrder extends Model
      * @var array
      */
     protected $fillable = [
+        'title',
+        'description',
         'start',
         'end',
         'finished',

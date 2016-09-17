@@ -91,6 +91,8 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
 $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
     $start = $faker->dateTimeThisMonth()->format('Y-m-d H:i:s');
     return [
+        'title' => $faker->word,
+        'description' => $faker->realText(rand(100,500)),
 		'start' => $start,
         'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
         'finished' => $faker->boolean,
@@ -103,7 +105,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
 $factory->define(App\Work::class, function (Faker\Generator $faker){
     return [
         'title' => $faker->word,
-        'description' => $faker->realText(rand(10,20)),
+        'description' => $faker->realText(rand(100,500)),
         'quantity' => rand(100,1000000)/100,
         'units' => 'units',
         'cost' => rand(100,1000000)/100,

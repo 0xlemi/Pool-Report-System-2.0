@@ -15,6 +15,8 @@ class CreateWorkOrdersTable extends Migration
     {
         Schema::create('work_orders', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
+            $table->text('description');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->boolean('finished');

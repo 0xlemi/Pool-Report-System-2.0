@@ -54,7 +54,7 @@
 							<label class="col-sm-2 form-control-label">Description</label>
 							<div class="col-sm-10">
 								<textarea rows="4" class="form-control"
-										v-model="workDescription" placeholder="Describe the work done">
+										v-model="workDescription" placeholder="Describe the work done.">
 								</textarea>
 							</div>
 						</div>
