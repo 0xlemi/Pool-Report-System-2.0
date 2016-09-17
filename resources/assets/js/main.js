@@ -881,13 +881,13 @@ function isset(strVariableName) {
             }
 	    });
    }
-   	if(isset('default_date')){
-	    $('#edit_report_datepicker').datetimepicker({
+   	if(isset('defaultDate')){
+	    $('#editGenericDatepicker').datetimepicker({
 	        widgetPositioning: {
 				horizontal: 'right'
 			},
 			debug: false,
-	        defaultDate: back.default_date,
+	        defaultDate: back.defaultDate,
 	    });
 	}
 
@@ -956,9 +956,9 @@ function isset(strVariableName) {
         data:{
             // index
             finishedSwitch: false,
-            // create
-            supervisorId: 0,
-            serviceId: 0,
+            // create edit
+            supervisorId: (isset('supervisorId')) ? back.supervisorId : 0,
+            serviceId: (isset('serviceId')) ? back.serviceId : 0,
             // Show
             finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
                 // Finish

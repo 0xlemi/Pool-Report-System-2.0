@@ -37,6 +37,8 @@ class CreateWorkOrderRequest extends FormRequest
     public function rules()
     {
         return [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'service' => 'required|integer|min:1',
             'supervisor' => 'required|integer|min:1',
             'start' => 'required|date',

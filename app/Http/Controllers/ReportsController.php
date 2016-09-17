@@ -211,13 +211,13 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $technicians = $this->serviceHelpers->transformForDropdown($admin->technicians()->get());
+        $technicians = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
-            'default_date' => $date,
+            'defaultDate' => $date,
             'serviceKey' => $report->service()->seq_id,
             'technicianKey' => $report->technician()->seq_id,
         ]);

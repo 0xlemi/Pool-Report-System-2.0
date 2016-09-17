@@ -29,9 +29,9 @@
 							<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Compleated at:</label>
 								<div class="col-sm-10">
-									<div class='input-group date' id="edit_report_datepicker">
-										<input type='text' name='completed_at' class="form-control" id="edit_report_datepicker_input"/>
-										@if ($errors->has('completed_at'))
+									<div class='input-group date' id="editGenericDatepicker">
+										<input type='text' name='completed_at' class="form-control" id="editGenericDatepickerInput"/>
+										@if($errors->has('completed_at'))
 											<small class="text-muted">{{ $errors->first('completed_at') }}</small>
 										@endif
 										<span class="input-group-addon">

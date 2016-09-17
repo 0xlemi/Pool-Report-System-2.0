@@ -169,10 +169,59 @@ class WorkOrderController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($seq_id)
     {
-        //
+
+        $admin = $this->loggedUserAdministrator();
+
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+
+        $startDate = (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone);
+        JavaScript::put([
+            'defaultDate' => $startDate,
+            'serviceId' => $workOrder->service()->seq_id,
+            'supervisorId' => $workOrder->supervisor()->seq_id,
+        ]);
+
+        return view('workorders.edit', compact('workOrder', 'services', 'supervisors'));
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(CreateWorkOrderRequest $request, $seq_id)
+    {
+
+        $admin = $this->loggedUserAdministrator();
+
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
+        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
+
+        $workOrder->fill(array_merge(
+                            array_map('htmlentities', $request->all()),
+                            [
+                                'start' => $startDate,
+                                'service_id' => $service->id,
+                                'supervisor_id' => $supervisor->id,
+                            ]
+                        ));
+
+        $workOrder->save();
+
+        flash()->success('Updated', 'Work Order was successfully updated.');
+        return redirect('workorders/'.$workOrder->seq_id);
+    }
+
 
     public function addPhotoBefore(Request $request, $id)
     {
@@ -192,20 +241,6 @@ class WorkOrderController extends PageController
     public function removePhotoAfter($id, $order)
     {
         return $this->removePhoto($id, $order, 2);
-    }
-
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
