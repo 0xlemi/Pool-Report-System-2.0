@@ -9,19 +9,22 @@
 	      <div class="modal-body">
 			<div class="row">
 			<div class="col-md-12">
-				<div class="form-group row">
+
+				<div class="form-group row" :class="{'form-group-error' : (checkValidationError('end'))}">
 					<label class="col-sm-2 form-control-label">Finished at</label>
 					<div class="col-sm-10">
 						<div class='input-group date' id="genericDatepicker">
 							<input type='text' name='end' class="form-control"
 									id="genericDatepickerInput"
 									v-model="workOrderFinishedAt"/>
+							<small v-if="checkValidationError('end')" class="text-muted">@{{ workValidationErrors.end[0] }}</small>
 							<span class="input-group-addon">
 								<i class="font-icon font-icon-calend"></i>
 							</span>
 						</div>
 					</div>
 				</div>
+
 				<hr>
 				<div class="col-md-12">
 					<photo-list :data="workOrderAfterPhotos" :object-id="workOrderId"

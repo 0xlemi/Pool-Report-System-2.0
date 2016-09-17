@@ -967,6 +967,7 @@ function isset(strVariableName) {
                     photoFocus: 1, // 1=before work  2=after work
                 // Work
                     // show and edit
+                    workValidationErrors: {},
                     workFocus: 1, // 1=new, 2=show, 3=edit
                     workOrderId: (isset('workOrderId')) ? back.workOrderId : 0,
                     workId: 0,
@@ -1017,9 +1018,13 @@ function isset(strVariableName) {
             }
         },
         methods:{
+            checkValidationError($fildName){
+                return $fildName in this.workValidationErrors;
+            },
             finishWorkOrder(){
                 if(isset('finishWorkOrderUrl') && isset('workOrderUrl')){
                     $.ajax({
+                        vue: this,
                         swal: swal,
                         url: back.finishWorkOrderUrl,
                         type: 'POST',
@@ -1039,7 +1044,7 @@ function isset(strVariableName) {
                             });
                         },
                         error: function(xhr, textStatus, errorThrown) {
-
+                            this.vue.workValidationErrors = xhr.responseJSON;
                         }
                     });
                 }

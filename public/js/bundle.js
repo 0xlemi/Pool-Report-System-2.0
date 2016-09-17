@@ -22264,6 +22264,7 @@ $(document).ready(function () {
             photoFocus: 1, // 1=before work  2=after work
             // Work
             // show and edit
+            workValidationErrors: {},
             workFocus: 1, // 1=new, 2=show, 3=edit
             workOrderId: isset('workOrderId') ? back.workOrderId : 0,
             workId: 0,
@@ -22314,9 +22315,13 @@ $(document).ready(function () {
             }
         },
         methods: {
+            checkValidationError: function checkValidationError($fildName) {
+                return $fildName in this.workValidationErrors;
+            },
             finishWorkOrder: function finishWorkOrder() {
                 if (isset('finishWorkOrderUrl') && isset('workOrderUrl')) {
                     $.ajax({
+                        vue: this,
                         swal: swal,
                         url: back.finishWorkOrderUrl,
                         type: 'POST',
@@ -22335,7 +22340,9 @@ $(document).ready(function () {
                                 showConfirmButton: false
                             });
                         },
-                        error: function error(xhr, textStatus, errorThrown) {}
+                        error: function error(xhr, textStatus, errorThrown) {
+                            this.vue.workValidationErrors = xhr.responseJSON;
+                        }
                     });
                 }
             },
