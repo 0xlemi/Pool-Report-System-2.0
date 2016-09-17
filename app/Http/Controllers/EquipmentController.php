@@ -142,6 +142,20 @@ class EquipmentController extends PageController
      */
     public function destroy($id)
     {
-        //
+        try {
+            $equipment = Equipment::findOrFail($id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Equipment with that id, does not exist.');
+        }
+        if($equipment->delete()){
+            return Response::json([
+                        'title' => 'Equipment Deleted',
+                        'message' => 'The equipment was deleted successfully.'
+                    ], 200);
+        }
+        return Response::json([
+                        'title' => 'Not Deleted',
+                        'message' => 'The equipment was not deleted.'
+                    ], 500);
     }
 }

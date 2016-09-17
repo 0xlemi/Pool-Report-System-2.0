@@ -193,13 +193,15 @@
 				</div>
 	      </div>
 	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			<button v-show="!checkEquipmentFocusIs(1)" class="btn btn-warning" type="button" @click="openEquimentList()">
-				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back to the table</button>
+				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</button>
             <button v-show="checkEquipmentFocusIs(2)" class="btn btn-success" type="button" @click="sendEquipment('create')">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Add Equipment</button>
+			<button v-show="checkEquipmentFocusIs(4)" class="btn btn-danger" type="button" @click="destroyEquipment()">
+				<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;Delete</button>
             <button v-show="checkEquipmentFocusIs(4)" class="btn btn-success" type="button" @click="sendEquipment('edit')">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Edit Equipment</button>
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	      </div>
 	    </div>
 	  </div>

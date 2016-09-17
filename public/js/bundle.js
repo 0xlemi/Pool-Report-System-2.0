@@ -22350,35 +22350,54 @@ $(document).ready(function () {
                 $('#finishWorkOrderModal').modal('show');
             },
             destroyWork: function destroyWork() {
-                if (isset('worksUrl')) {
-                    $.ajax({
-                        vue: this,
-                        swal: swal,
-                        url: back.worksUrl + this.workId,
-                        type: 'DELETE',
-                        success: function success(data, textStatus, xhr) {
-                            // refresh equipment list
-                            worksTable.bootstrapTable('refresh');
+                var _this = this;
 
-                            this.vue.closeWorkModal();
-                            // send success alert
-                            this.swal({
-                                title: data.title,
-                                text: data.message,
-                                type: "success",
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {
-                            // this.swal({
-                            //     title: data.title,
-                            //     text: data.message,
-                            //     type: "error",
-                            //     showConfirmButton: true
-                            // });
-                        }
-                    });
+                if (isset('worksUrl')) {
+                    (function () {
+                        var vue = _this;
+                        swal({
+                            title: "Are you sure?",
+                            text: "You will not be able to recover this!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel!",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                $.ajax({
+                                    vue: vue,
+                                    swal: swal,
+                                    url: back.worksUrl + vue.workId,
+                                    type: 'DELETE',
+                                    success: function success(data, textStatus, xhr) {
+                                        // refresh equipment list
+                                        worksTable.bootstrapTable('refresh');
+
+                                        this.vue.closeWorkModal();
+                                        // send success alert
+                                        this.swal({
+                                            title: data.title,
+                                            text: data.message,
+                                            type: "success",
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+                                    },
+                                    error: function error(xhr, textStatus, errorThrown) {
+                                        // this.swal({
+                                        //     title: data.title,
+                                        //     text: data.message,
+                                        //     type: "error",
+                                        //     showConfirmButton: true
+                                        // });
+                                    }
+                                });
+                            }
+                        });
+                    })();
                 }
             },
             sendWork: function sendWork(type) {
@@ -22645,6 +22664,57 @@ $(document).ready(function () {
         },
         methods: {
             // Equipment
+            destroyEquipment: function destroyEquipment() {
+                var _this2 = this;
+
+                if (isset('equipmentUrl')) {
+                    (function () {
+                        var vue = _this2;
+                        swal({
+                            title: "Are you sure?",
+                            text: "You will not be able to recover this!",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: "Yes, delete it!",
+                            cancelButtonText: "No, cancel!",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                $.ajax({
+                                    vue: vue,
+                                    swal: swal,
+                                    url: back.equipmentUrl + vue.equipmentId,
+                                    type: 'DELETE',
+                                    success: function success(data, textStatus, xhr) {
+                                        // refresh equipment list
+                                        equipmentTable.bootstrapTable('refresh');
+
+                                        this.vue.openEquimentList();
+                                        // send success alert
+                                        this.swal({
+                                            title: data.title,
+                                            text: data.message,
+                                            type: "success",
+                                            timer: 2000,
+                                            showConfirmButton: false
+                                        });
+                                    },
+                                    error: function error(xhr, textStatus, errorThrown) {
+                                        // this.swal({
+                                        //     title: data.title,
+                                        //     text: data.message,
+                                        //     type: "error",
+                                        //     showConfirmButton: true
+                                        // });
+                                    }
+                                });
+                            }
+                        });
+                    })();
+                }
+            },
             getEquipment: function getEquipment() {
                 if (isset('equipmentUrl')) {
                     $.ajax({

@@ -1056,32 +1056,47 @@ function isset(strVariableName) {
             },
             destroyWork(){
                 if(isset('worksUrl')){
-                        $.ajax({
-                        vue: this,
-                        swal: swal,
-                        url: back.worksUrl+this.workId,
-                        type: 'DELETE',
-                        success: function(data, textStatus, xhr) {
-                            // refresh equipment list
-                            worksTable.bootstrapTable('refresh');
-                            
-                            this.vue.closeWorkModal();
-                            // send success alert
-                            this.swal({
-                                title: data.title,
-                                text: data.message,
-			                    type: "success",
-                                timer: 2000,
-                                showConfirmButton: false
+                    let vue = this;
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to recover this!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    }, function(isConfirm){
+                        if(isConfirm){
+                            $.ajax({
+                                vue: vue,
+                                swal: swal,
+                                url: back.worksUrl+vue.workId,
+                                type: 'DELETE',
+                                success: function(data, textStatus, xhr) {
+                                    // refresh equipment list
+                                    worksTable.bootstrapTable('refresh');
+
+                                    this.vue.closeWorkModal();
+                                    // send success alert
+                                    this.swal({
+                                        title: data.title,
+                                        text: data.message,
+        			                    type: "success",
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    // this.swal({
+                                    //     title: data.title,
+                                    //     text: data.message,
+        			                //     type: "error",
+                                    //     showConfirmButton: true
+                                    // });
+                                }
                             });
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            // this.swal({
-                            //     title: data.title,
-                            //     text: data.message,
-			                //     type: "error",
-                            //     showConfirmButton: true
-                            // });
                         }
                     });
                 }
@@ -1350,6 +1365,53 @@ function isset(strVariableName) {
         },
         methods: {
             // Equipment
+            destroyEquipment(){
+                if(isset('equipmentUrl')){
+                    let vue = this;
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will not be able to recover this!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "Yes, delete it!",
+                        cancelButtonText: "No, cancel!",
+                        closeOnConfirm: true,
+                        closeOnCancel: true
+                    }, function(isConfirm){
+                        if(isConfirm){
+                            $.ajax({
+                                vue: vue,
+                                swal: swal,
+                                url: back.equipmentUrl+vue.equipmentId,
+                                type: 'DELETE',
+                                success: function(data, textStatus, xhr) {
+                                    // refresh equipment list
+                                    equipmentTable.bootstrapTable('refresh');
+
+                                    this.vue.openEquimentList();
+                                    // send success alert
+                                    this.swal({
+                                        title: data.title,
+                                        text: data.message,
+            		                    type: "success",
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    });
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    // this.swal({
+                                    //     title: data.title,
+                                    //     text: data.message,
+            		                //     type: "error",
+                                    //     showConfirmButton: true
+                                    // });
+                                }
+                            });
+                        }
+                    });
+                }
+            },
             getEquipment(){
                 if(isset('equipmentUrl')){
                     $.ajax({
