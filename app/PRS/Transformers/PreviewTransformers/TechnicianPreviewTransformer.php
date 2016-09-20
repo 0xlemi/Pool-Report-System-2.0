@@ -2,6 +2,7 @@
 
 namespace App\PRS\Transformers\PreviewTransformers;
 
+use App\PRS\Traits\ControllerTrait;
 use App\PRS\Transformers\Transformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\Technician;
@@ -11,6 +12,8 @@ use App\Technician;
  */
 class TechnicianPreviewTransformer extends Transformer
 {
+
+    use ControllerTrait;
 
     private $imageTransformer;
 
@@ -32,6 +35,7 @@ class TechnicianPreviewTransformer extends Transformer
             'name' => $technician->name,
             'last_name' => $technician->last_name,
             'photo' => $photo,
+            'href' => url("api/v1/technicians/{$technician->seq_id}?api_token={$this->getUser()->api_token}"),
         ];
     }
 

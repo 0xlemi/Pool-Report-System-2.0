@@ -4,6 +4,9 @@ namespace App\PRS\Transformers\PreviewTransformers;
 
 use App\Supervisor;
 
+
+use App\PRS\Traits\ControllerTrait;
+
 use App\PRS\Transformers\Transformer;
 use App\PRS\Transformers\ImageTransformer;
 
@@ -12,6 +15,8 @@ use App\PRS\Transformers\ImageTransformer;
  */
 class SupervisorPreviewTransformer extends Transformer
 {
+
+    use ControllerTrait;
 
     private $imageTransformer;
 
@@ -33,6 +38,7 @@ class SupervisorPreviewTransformer extends Transformer
             'name' => $supervisor->name,
             'last_name' => $supervisor->last_name,
             'photo' => $photo,
+            'href' => url("api/v1/supervisors/{$supervisor->seq_id}?api_token={$this->getUser()->api_token}"),
         ];
     }
 

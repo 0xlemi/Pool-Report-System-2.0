@@ -4,6 +4,8 @@ namespace App\PRS\Transformers\PreviewTransformers;
 
 use App\Service;
 
+use App\PRS\Traits\ControllerTrait;
+
 use App\PRS\Transformers\Transformer;
 use App\PRS\Transformers\ImageTransformer;
 
@@ -12,6 +14,9 @@ use App\PRS\Transformers\ImageTransformer;
  */
 class ServicePreviewTransformer extends Transformer
 {
+
+
+    use ControllerTrait;
 
     private $imageTransformer;
 
@@ -32,7 +37,7 @@ class ServicePreviewTransformer extends Transformer
             'id' => $service->seq_id,
             'name' => $service->name,
             'photo' => $photo,
-
+            'href' => url("api/v1/services/{$service->seq_id}?api_token={$this->getUser()->api_token}"),
         ];
     }
 
