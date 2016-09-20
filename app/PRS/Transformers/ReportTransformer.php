@@ -7,6 +7,8 @@ use App\Report;
 use App\PRS\Transformers\ServiceTransformer;
 use App\PRS\Transformers\TechnicianTransformer;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
+use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 use Carbon\Carbon;
 
 
@@ -16,17 +18,17 @@ use Carbon\Carbon;
 class ReportTransformer extends Transformer
 {
 
-    private $serviceTransformer;
-    private $technicianTransformer;
+    private $servicePreviewTransformer;
+    private $technicianPreviewTransformer;
     private $imageTransformer;
 
     public function __construct(
-            ServiceTransformer $serviceTransformer,
-            TechnicianTransformer $technicianTransformer,
+            ServicePreviewTransformer $servicePreviewTransformer,
+            TechnicianPreviewTransformer $technicianPreviewTransformer,
             ImageTransformer $imageTransformer)
     {
-        $this->serviceTransformer = $serviceTransformer;
-        $this->technicianTransformer = $technicianTransformer;
+        $this->servicePreviewTransformer = $servicePreviewTransformer;
+        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -65,8 +67,10 @@ class ReportTransformer extends Transformer
             'photo1' => $photo1,
             'photo2' => $photo2,
             'photo3' => $photo3,
-            'service_id' => $report->service()->id,
-            'technician_id' => $report->technician()->id,
+            'service' => $this->servicePreviewTransformer
+                            ->transform($report->service()),
+            'technician' => $this->technicianPreviewTransformer
+                            ->transform($report->technician()),
         ];
     }
 

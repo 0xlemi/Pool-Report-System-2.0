@@ -57,7 +57,6 @@ class ServiceTransformer extends Transformer
             'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
             'photo' => $photo,
-
         ];
     }
 

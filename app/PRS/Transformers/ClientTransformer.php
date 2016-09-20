@@ -5,7 +5,7 @@ namespace App\PRS\Transformers;
 use App\Client;
 use App\Service;
 
-use App\PRS\Transformers\SupervisorTransformer;
+use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\ImageTransformer;
 
 use Auth;
@@ -16,23 +16,19 @@ use Auth;
 class ClientTransformer extends Transformer
 {
 
-    private $serviceTransformer;
+    private $servicePreviewTransformer;
     private $imageTransformer;
 
-    public function __construct(ServiceTransformer $serviceTransformer, ImageTransformer $imageTransformer)
+    public function __construct(ServicePreviewTransformer $servicePreviewTransformer, ImageTransformer $imageTransformer)
     {
-        $this->serviceTransformer = $serviceTransformer;
+        $this->servicePreviewTransformer = $servicePreviewTransformer;
         $this->imageTransformer = $imageTransformer;
     }
 
 
     public function transform(Client $client)
     {
-        $services = $client->services()->get();
-        $all_services  = array();
-        foreach($services as $service){
-            $all_services[] = $this->serviceTransformer->transform($service);
-        }
+        $services = $this->servicePreviewTransformer->transformCollection($client->services()->get());
 
         $photo = 'no image';
         if($client->imageExists()){
@@ -50,9 +46,10 @@ class ClientTransformer extends Transformer
             'getReportsEmails' => $client->get_reports_emails,
             'comments' => $client->comments,
             'photo' => $photo,
-            'services' =>
-                $all_services
-                // $this->$serviceTransformer->transformCollection($client->services()->get())
+            'services' => $this->servicePreviewTransformer
+                            ->transformCollection(
+                                    $client->services()->get()
+                                ),
         ];
     }
 
