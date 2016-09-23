@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Notifications\ReportCreatedNotification;
 use App\PRS\Transformers\ReportTransformer;
 use App\PRS\Helpers\ReportHelpers;
 
@@ -252,6 +253,7 @@ class ReportsController extends ApiController
             }catch(ModelNotFoundException $e){
                 return $this->respondNotFound('Technician with that id, does not exist.');
             }
+
         // end validation
 
         // ***** Persisting *****
@@ -259,8 +261,11 @@ class ReportsController extends ApiController
             // $service and $technician_id were checked allready
             $report->service_id = $service->id;
             $report->technician_id = $technician_id;
-
-            $report->fill($request->all());
+            //
+            $report->fill($request->except([
+                'service_id',
+                'technician_id',
+            ]));
 
             $report->save();
 

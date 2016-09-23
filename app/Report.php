@@ -34,7 +34,6 @@ class Report extends Model
         'salt',
         'latitude',
         'longitude',
-        'altitude',
         'accuracy',
     ];
 
