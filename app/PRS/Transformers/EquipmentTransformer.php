@@ -24,6 +24,7 @@ class EquipmentTransformer extends Transformer
     public function transform(Equipment $equipment)
     {
         return [
+            'id' => $equipment->id,
             'kind' => $equipment->kind,
             'type' => $equipment->type,
             'brand' => $equipment->brand,

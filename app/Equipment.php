@@ -30,7 +30,9 @@ class Equipment extends Model
      * @var array
      */
 	protected $hidden = [
-        'service_id'
+        'service_id',
+        'created_at',
+        'updated_at'
 	];
 
     public function service()

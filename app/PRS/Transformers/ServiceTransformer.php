@@ -8,11 +8,15 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\EquipmentTransformer;
 
+use App\PRS\Traits\ControllerTrait;
+
 /**
  * Transformer for the service class
  */
 class ServiceTransformer extends Transformer
 {
+
+    use ControllerTrait;
 
     private $serviceHelpers;
     private $imageTransformer;
@@ -61,7 +65,10 @@ class ServiceTransformer extends Transformer
             'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
             'photo' => $photo,
-            'equipment' => $this->equipmentTransformer->transformCollection($service->equipment()->get()),
+            'equipment' => [
+                'number' => $service->equipment()->count(),
+                'href' => url("api/v1/services/{$service->seq_id}/equipment?api_token={$this->getUser()->api_token}"),
+            ],
         ];
     }
 
