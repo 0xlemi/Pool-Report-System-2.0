@@ -44,7 +44,15 @@ class EquipmentController extends ApiController
     {
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
-        // add validation
+        // validation
+        $this->validate($request, [
+            'kind' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'capacity' => 'required|numeric',
+            'units' => 'required|string|max:255',
+        ]);
 
         // ***** Persisting *****
         $equipment = DB::transaction(function () use($request, $service){
@@ -92,6 +100,16 @@ class EquipmentController extends ApiController
      */
     public function update(Request $request, Equipment $equipment)
     {
+
+        // validation
+        $this->validate($request, [
+            'kind' => 'string|max:255',
+            'type' => 'string|max:255',
+            'brand' => 'string|max:255',
+            'model' => 'string|max:255',
+            'capacity' => 'numeric',
+            'units' => 'string|max:255',
+        ]);
 
         // ***** Persisting *****
         DB::transaction(function () use($request, $equipment){
