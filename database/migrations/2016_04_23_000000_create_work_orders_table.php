@@ -18,7 +18,7 @@ class CreateWorkOrdersTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->dateTime('start');
-            $table->dateTime('end');
+            $table->dateTime('end')->nullable();
             $table->boolean('finished');
             $table->decimal('price', 16, 2);
             $table->char('currency', 3);

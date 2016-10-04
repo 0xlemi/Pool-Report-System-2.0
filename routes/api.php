@@ -37,9 +37,13 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::post('equipment/{equipment}', 'Api\EquipmentController@update');
 	Route::delete('equipment/{equipment}', 'Api\EquipmentController@destroy');
 
+	// Work
+	// Route::get('work/{work}', 'Api\WorkController@show');
+
 	Route::resource('services', 'Api\ServicesController');
 	Route::resource('supervisors', 'Api\SupervisorsController');
 	Route::resource('technicians', 'Api\TechniciansController');
 	Route::resource('clients', 'Api\ClientsController');
+	Route::resource('workorders', 'Api\WorkOrderController');
 	Route::resource('reports', 'Api\ReportsController');
 });
