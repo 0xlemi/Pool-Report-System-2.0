@@ -6,6 +6,7 @@ use App\Service;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Transformers\EquipmentTransformer;
 
 /**
  * Transformer for the service class
@@ -15,13 +16,16 @@ class ServiceTransformer extends Transformer
 
     private $serviceHelpers;
     private $imageTransformer;
+    private $equipmentTransformer;
 
     public function __construct(
                         ServiceHelpers $serviceHelpers,
-                        ImageTransformer $imageTransformer)
+                        ImageTransformer $imageTransformer,
+                        EquipmentTransformer $equipmentTransformer)
     {
         $this->serviceHelpers = $serviceHelpers;
         $this->imageTransformer = $imageTransformer;
+        $this->equipmentTransformer = $equipmentTransformer;
     }
 
 
@@ -57,6 +61,7 @@ class ServiceTransformer extends Transformer
             'status' => ($service->status) ? true : false,
             'comments' => $service->comments,
             'photo' => $photo,
+            'equipment' => $this->equipmentTransformer->transformCollection($service->equipment()->get()),
         ];
     }
 
