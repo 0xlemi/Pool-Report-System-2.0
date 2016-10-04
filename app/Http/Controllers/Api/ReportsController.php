@@ -258,28 +258,28 @@ class ReportsController extends ApiController
 
         // ***** Persisting *****
         $transaction = DB::transaction(function () use($request, $report, $service, $technician_id) {
-            // $service and $technician_id were checked allready
-            $report->service_id = $service->id;
-            $report->technician_id = $technician_id;
-            //
-            $report->fill($request->except([
-                'service_id',
-                'technician_id',
-            ]));
 
+            // $service and $technician_id were checked allready
+            $report->fill(array_merge(
+                array_map('htmlentities', $request->except('on_time')),
+                [
+                    'service_id' => $service->id,
+                    'technician_id' => $technician_id
+                ]
+            ));
             $report->save();
 
             if(isset($request->photo1)){
                 $report->deleteImage(1);
-                $report->addImageFromForm($request->file('photo1'));
+                $report->addImageFromForm($request->file('photo1'), 1);
             }
             if(isset($request->photo2)){
                 $report->deleteImage(2);
-                $report->addImageFromForm($request->file('photo2'));
+                $report->addImageFromForm($request->file('photo2'), 2);
             }
             if(isset($request->photo3)){
                 $report->deleteImage(3);
-                $report->addImageFromForm($request->file('photo3'));
+                $report->addImageFromForm($request->file('photo3'), 3);
             }
 
         });
