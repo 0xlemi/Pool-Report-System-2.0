@@ -60,7 +60,7 @@ class WorkOrderTransformer extends Transformer
             'photosAfterWork' => $this->imageTransformer->transformCollection($workOrder->imagesAfterWork()),
         ];
 
-        if((!$workOrder->finished) && ($workOrder->end != null)){
+        if(($workOrder->finished) && ($workOrder->end != null)){
             // add the end attribute to array
             $attributes = array_merge($attributes, [
                 'end' => (new Carbon($workOrder->end, 'UTC'))->setTimezone($admin->timezone)

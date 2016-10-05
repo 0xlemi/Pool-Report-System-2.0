@@ -141,9 +141,18 @@ class WorkOrderController extends ApiController
             'photosBeforeWork.*' => 'mimes:jpg,jpeg,png',
         ]);
 
+
         $admin = $this->loggedUserAdministrator();
         // send json friendly message if not found
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        // check that work order is not marked as finished
+        if($workOrder->finished){
+            return response()->json([
+                'error' => 'Work order cannot be changed once is finished.'
+            ], 422);
+        }
+
 
         // ***** Persisting *****
         DB::transaction(function () use($request, $workOrder, $admin) {
@@ -184,6 +193,57 @@ class WorkOrderController extends ApiController
             'message' => 'Work Order was updated successfully.',
             'object' => $this->workOrderTransformer->transform($workOrder),
         ]);
+    }
+
+    /**
+     * Mark WorkOrder as finished
+     * @param  Request $request
+     * @param  int  $seq_id
+     * @return \Illuminate\Http\Response
+     */
+    public function finish(Request $request, $seq_id)
+    {
+
+        $this->validate($request, [
+            'end' => 'required|date',
+            // check that the end date is after the start date
+            'photosAfterWork.*' => 'mimes:jpg,jpeg,png',
+        ]);
+
+        $admin = $this->loggedUserAdministrator();
+        // send json friendly message if not found
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        // check that work order is not marked as finished
+        if($workOrder->finished){
+            return response()->json([
+                'error' => 'This Work Order was already finished.'
+            ], 422);
+        }
+
+        // ***** Persisting *****
+        $save = DB::transaction(function () use($request, $workOrder, $admin) {
+            $workOrder->end = (new Carbon( $request->end ))->setTimezone('UTC');
+            $workOrder->finished = 1;
+
+            // Add Photos
+            if(isset($request->photosAfterWork)){
+                foreach ($request->photosAfterWork as $photo) {
+                    $workOrder->addImageFromForm($photo, null, 2);
+                }
+            }
+            return $workOrder->save();
+        });
+
+        if($save){
+            return response()->json([
+                'message' => 'Work Order was marked as finished successfully.',
+            ]);
+        }
+        return response()->json([
+            'error' => 'Work Order was not marked as finished.',
+        ], 500);
+
     }
 
     /**
