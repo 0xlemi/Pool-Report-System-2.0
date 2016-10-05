@@ -33,8 +33,8 @@ class WorkPreviewTransformer extends Transformer
         return [
             'id' => $work->id,
             'title' => $work->title,
-            'photo' => $photo,
             'href' => url("api/v1/work/{$work->id}?api_token={$this->getUser()->api_token}"),
+            'photo' => $photo,
         ];
     }
 

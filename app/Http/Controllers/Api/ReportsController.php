@@ -51,14 +51,9 @@ class ReportsController extends ApiController
             return $this->indexByDate($request->date);
         }
 
-        $validator = Validator::make($request->all(), [
-            'limit' => 'numeric|between:0,25'
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25'
         ]);
-
-        if ($validator->fails()) {
-            // return error responce
-            return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-        }
 
         $limit = ($request->limit)?: 5;
         $reports = $this->loggedUserAdministrator()->reports()->paginate($limit);

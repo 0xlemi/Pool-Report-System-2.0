@@ -26,11 +26,21 @@ class EquipmentController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($serviceSeqId)
+    public function index(Request $request, $serviceSeqId)
     {
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25'
+        ]);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
-        // remeber to add pagination
-        return $this->equipmentTransformer->transformCollection($service->equipment()->get());
+
+        $limit = ($request->limit)?: 5;
+        $equipment = $service->equipment()->paginate($limit);
+
+        return $this->respondWithPagination(
+            $equipment,
+            $this->equipmentTransformer->transformCollection($equipment)
+        );
     }
 
 
@@ -88,7 +98,9 @@ class EquipmentController extends ApiController
      */
     public function show(Equipment $equipment)
     {
-        return $this->equipmentTransformer->transform($equipment);
+        return $this->respond([
+            'data' =>$this->equipmentTransformer->transform($equipment)
+        ]);
     }
 
     /**

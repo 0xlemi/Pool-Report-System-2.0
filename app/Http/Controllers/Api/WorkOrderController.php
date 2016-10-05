@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\WorkOrderTransformer;
+use App\Work;
 
 class WorkOrderController extends ApiController
 {
@@ -25,7 +26,7 @@ class WorkOrderController extends ApiController
     public function index(Request $request)
     {
         $this->validate($request, [
-            'limit' => 'numeric|between:1,25'
+            'limit' => 'integer|between:1,25'
         ]);
 
         $limit = ($request->limit)?: 5;
@@ -55,9 +56,14 @@ class WorkOrderController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seq_id)
     {
-        //
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+
+        return $this->respond([
+            'data' => $this->workOrderTransformer->transform($workOrder),
+        ]);
+
     }
 
     /**
