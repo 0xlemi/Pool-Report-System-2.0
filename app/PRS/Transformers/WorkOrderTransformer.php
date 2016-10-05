@@ -56,6 +56,8 @@ class WorkOrderTransformer extends Transformer
             'service'=> $this->serviceTransformer->transform($service),
             'supervisor'=> $this->supervisorTransformer->transform($supervisor),
             'works' => $this->workTransformer->transformCollection($workOrder->works()->get()),
+            'photosBeforeWork' => $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork()),
+            'photosAfterWork' => $this->imageTransformer->transformCollection($workOrder->imagesAfterWork()),
         ];
 
         if((!$workOrder->finished) && ($workOrder->end != null)){

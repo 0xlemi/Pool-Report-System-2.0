@@ -14,7 +14,7 @@ trait ImageTrait{
     /**
      * add a image from form information
      */
-	public function addImageFromForm(UploadedFile $file, $order = 0){
+	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
 		//generate image names
         $name = get_random_name('normal_'.$this->id, $file->guessExtension());
         $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
@@ -36,7 +36,14 @@ trait ImageTrait{
         $image->thumbnail_path = env('FOLDER_IMG').'client/'.$name_thumbnail;
         $image->icon_path = env('FOLDER_IMG').'client/'.$name_icon;
 
-        $image->order = ($order) ?: $this->numImages() + 1;
+        if($order){
+            $image->order = $order;
+        }else{
+            $image->order = $this->numImages() + 1;
+        }
+        if($type){
+            $image->type = $type;
+        }
 
         // presist image to the database
         return $this->addImage($image);

@@ -139,6 +139,7 @@ class ReportsController extends ApiController
             $report = Report::create([
                 'service_id' => $service->id,
                 'technician_id' => $technician_id,
+                // need to check what timezone is completed
                 'completed' => $request->completed,
                 'on_time' => $on_time,
                 'ph' => $request->ph,
