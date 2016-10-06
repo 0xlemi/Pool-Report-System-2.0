@@ -204,12 +204,6 @@ class WorkOrderController extends ApiController
     public function finish(Request $request, $seq_id)
     {
 
-        $this->validate($request, [
-            'end' => 'required|date',
-            // check that the end date is after the start date
-            'photosAfterWork.*' => 'mimes:jpg,jpeg,png',
-        ]);
-
         $admin = $this->loggedUserAdministrator();
         // send json friendly message if not found
         $workOrder = $admin->workOrderBySeqId($seq_id);
@@ -220,6 +214,11 @@ class WorkOrderController extends ApiController
                 'error' => 'This Work Order was already finished.'
             ], 422);
         }
+
+        $this->validate($request, [
+            'end' => 'required|date|afterDB:work_orders,start,'.$workOrder->id,
+            'photosAfterWork.*' => 'mimes:jpg,jpeg,png',
+        ]);
 
         // ***** Persisting *****
         $save = DB::transaction(function () use($request, $workOrder, $admin) {
