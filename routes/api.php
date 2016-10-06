@@ -38,8 +38,8 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::delete('equipment/{equipment}', 'Api\EquipmentController@destroy');
 
 	// Work
-	Route::get('workorders/{serviceSeqId}/work', 'Api\WorkController@index');
-	Route::post('workorders/{serviceSeqId}/work', 'Api\WorkController@store');
+	Route::get('workorders/{workOrderSeqId}/work', 'Api\WorkController@index');
+	Route::post('workorders/{workOrderSeqId}/work', 'Api\WorkController@store');
 	Route::get('work/{work}', 'Api\WorkController@show');
 	Route::post('work/{work}', 'Api\WorkController@update');
 	Route::delete('work/{work}', 'Api\WorkController@destroy');

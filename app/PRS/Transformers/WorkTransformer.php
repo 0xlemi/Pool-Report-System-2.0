@@ -3,6 +3,7 @@
 namespace App\PRS\Transformers;
 
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 
 use Auth;
 use App\Technician;
@@ -15,31 +16,18 @@ class WorkTransformer extends Transformer
 {
 
     private $imageTransformer;
+    private $technicianTransformer;
 
-    public function __construct(ImageTransformer $imageTransformer)
+    public function __construct(ImageTransformer $imageTransformer,
+                                TechnicianPreviewTransformer $technicianTransformer)
     {
         $this->imageTransformer = $imageTransformer;
+        $this->technicianTransformer = $technicianTransformer;
     }
 
 
     public function transform(Work $work)
     {
-        try{
-            $technicianObject = Technician::findOrFail($work->technician_id);
-
-            // $technicianPhoto = [];
-            // if($technicianObject->imageExists()){
-            //     $technicianPhoto = $this->imageTransformer->transform($technicianObject->image(1, false));
-            // }
-            $technician = [
-                'id' => $technicianObject->seq_id,
-                'fullName' => $technicianObject->name.' '.$technicianObject->last_name,
-                'icon' => url($technicianObject->icon()),
-            ];
-        }catch(ModelNotFoundException $e){
-            $technician = 'No Technician';
-        }
-
         $photos = [];
         if($work->numImages() > 0){
             $photos = $this->imageTransformer->transformCollection($work->images()->get());
@@ -52,7 +40,7 @@ class WorkTransformer extends Transformer
             'quantity' => $work->quantity,
             'units' => $work->units,
             'cost' => $work->cost,
-            'technican' => $technician,
+            'technican' => $this->technicianTransformer->transform($work->technician()),
             'photos' => $photos,
         ];
     }

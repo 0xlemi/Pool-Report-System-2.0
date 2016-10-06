@@ -84,7 +84,7 @@ class EquipmentController extends ApiController
         if($equipment){
             return response()->json([
                 'message' => 'Equipment created successfully.',
-                'object' => $equipment->toArray(),
+                'object' => $this->equipmentTransformer->transform($equipment),
                 ] , 200);
         }
         return response()->json(['message' => 'Equipment was not created.'] , 500);
