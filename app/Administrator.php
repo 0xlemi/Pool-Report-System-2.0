@@ -2,9 +2,11 @@
 
 namespace App;
 
+use Laravel\Cashier\Billable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use App\PRS\Traits\Model\ImageTrait;
+
 
 use Carbon\Carbon;
 
@@ -12,6 +14,7 @@ class Administrator extends Model
 {
 
     use ImageTrait;
+    use Billable;
 
     /**
      * The attributes that are mass assignable.

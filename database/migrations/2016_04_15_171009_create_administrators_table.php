@@ -26,6 +26,11 @@ class CreateAdministratorsTable extends Migration
                 $table->string('twitter')->nullable();
             // Email Preferences
                 $table->boolean('get_reports_emails')->default(0);
+            // Billing
+                $table->string('stripe_id')->nullable();
+                $table->string('card_brand')->nullable();
+                $table->string('card_last_four')->nullable();
+                $table->timestamp('trial_ends_at')->nullable();
             // Permissions
                 // Report
                 $table->boolean('sup_report_index')->default(1);
