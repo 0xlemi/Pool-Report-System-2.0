@@ -92,7 +92,7 @@ class WorkController extends ApiController
                 'object' => $this->workTransformer->transform($work),
                 ] , 200);
         }
-        return response()->json(['message' => 'Work was not created.'] , 500);
+        return response()->json(['error' => 'Work was not created.'] , 500);
     }
 
     /**
@@ -103,7 +103,9 @@ class WorkController extends ApiController
      */
     public function show(Work $work)
     {
-        //
+        return $this->respond([
+            'data' => $this->workTransformer->transform($work)
+        ]);
     }
 
     /**
@@ -115,7 +117,51 @@ class WorkController extends ApiController
      */
     public function update(Request $request, Work $work)
     {
-        //
+        // validation
+        $this->validate($request, [
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'quantity' => 'numeric',
+            'units' => 'string|max:255',
+            'cost' => 'numeric',
+            'technician_id' => 'integer|min:1',
+            'photos.*' => 'mimes:jpg,jpeg,png',
+            'photosDelete.*' => 'integer|min:1',
+        ]);
+
+        // ***** Persisting *****
+        DB::transaction(function () use($request, $work){
+
+            $work->update(array_map('htmlentities',
+                    $request->except([
+                        'work_order_id',
+                        'technician_id',
+                        'photos',
+                        'photosDelete',
+                    ])
+            ));
+
+            //Delete Photos
+            if(isset($request->photosDelete)){
+                foreach ($request->photosDelete as $order) {
+                    $work->deleteImage($order);
+                }
+            }
+
+            // Add Photos
+            if(isset($request->photos)){
+                foreach ($request->photos as $photo) {
+                    $work->addImageFromForm($photo);
+                }
+            }
+
+
+        });
+
+        return response()->json([
+            'message' => 'Work updated successfully.',
+            'object' => $this->workTransformer->transform($work),
+            ] , 200);
     }
 
     /**
@@ -126,6 +172,11 @@ class WorkController extends ApiController
      */
     public function destroy(Work $work)
     {
-        //
+        if($work->delete()){
+            return response()->json([
+                'message' => 'Work deleted successfully.',
+                ] , 200);
+        }
+        return response()->json(['error' => 'Work was not deleted.'] , 500);
     }
 }
