@@ -62,6 +62,7 @@ class EquipmentController extends ApiController
             'model' => 'required|string|max:255',
             'capacity' => 'required|numeric',
             'units' => 'required|string|max:255',
+            'photos.*' => 'mimes:jpg,jpeg,png',
         ]);
 
         // ***** Persisting *****
@@ -74,8 +75,11 @@ class EquipmentController extends ApiController
                                 ]
                             ));
 
-            if ($request->photo) {
-                $equipment->addImageFromForm($request->file('photo'));
+            // Add Photos
+            if(isset($request->photos)){
+                foreach ($request->photos as $photo) {
+                    $equipment->addImageFromForm($photo);
+                }
             }
 
             return $equipment;
@@ -121,6 +125,8 @@ class EquipmentController extends ApiController
             'model' => 'string|max:255',
             'capacity' => 'numeric',
             'units' => 'string|max:255',
+            'photos.*' => 'mimes:jpg,jpeg,png',
+            'photosDelete.*' => 'integer|min:1',
         ]);
 
         // ***** Persisting *****
@@ -128,16 +134,24 @@ class EquipmentController extends ApiController
 
             $equipment->update($request->except('service_id'));
 
-            // add multiple photo functionality
-            if ($request->photo) {
-                $equipment->deleteImage(1);
-                $equipment->addImageFromForm($request->file('photo'), 1);
+            //Delete Photos
+            if(isset($request->photosDelete)){
+                foreach ($request->photosDelete as $order) {
+                    $equipment->deleteImage($order);
+                }
+            }
+
+            // Add Photos
+            if(isset($request->photos)){
+                foreach ($request->photos as $photo) {
+                    $equipment->addImageFromForm($photo);
+                }
             }
         });
 
         return response()->json([
             'message' => 'Equipment updated successfully.',
-            'object' => $equipment->toArray(),
+            'object' => $this->equipmentTransformer->transform($equipment),
             ] , 200);
     }
 
