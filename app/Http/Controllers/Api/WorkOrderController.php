@@ -139,6 +139,7 @@ class WorkOrderController extends ApiController
             'price' => 'numeric|max:10000000',
             'currency' => 'string|size:3',
             'photosBeforeWork.*' => 'mimes:jpg,jpeg,png',
+            'photosBeforeWorkDelete.*' => 'integer|min:1',
         ]);
 
 
@@ -165,6 +166,7 @@ class WorkOrderController extends ApiController
                         'service_id',
                         'supervisor_id',
                         'photosBeforeWork',
+                        'photosBeforeWorkDelete',
                         ]
                     )
             ));
@@ -177,6 +179,13 @@ class WorkOrderController extends ApiController
             }
             if(isset($request->supervisor_id)){
                 $workOrder->supervisor_id = $admin->supervisorBySeqId($request->supervisor_id)->id;
+            }
+
+            //Delete Photos
+            if(isset($request->photosBeforeWorkDelete)){
+                foreach ($request->photosBeforeWorkDelete as $order) {
+                    $workOrder->deleteImage($order);
+                }
             }
 
             // Add Photos

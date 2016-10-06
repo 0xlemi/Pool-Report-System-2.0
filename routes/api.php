@@ -37,6 +37,13 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::post('equipment/{equipment}', 'Api\EquipmentController@update');
 	Route::delete('equipment/{equipment}', 'Api\EquipmentController@destroy');
 
+	// Work
+	Route::get('workorders/{serviceSeqId}/work', 'Api\WorkController@index');
+	Route::post('workorders/{serviceSeqId}/work', 'Api\WorkController@store');
+	Route::get('work/{work}', 'Api\WorkController@show');
+	Route::post('work/{work}', 'Api\WorkController@update');
+	Route::delete('work/{work}', 'Api\WorkController@destroy');
+
 	// WorkOrder
 	Route::resource('workorders', 'Api\WorkOrderController');
 	Route::post('workorders/{seq_id}/finish', 'Api\WorkOrderController@finish');
