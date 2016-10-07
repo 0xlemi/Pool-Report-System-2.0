@@ -57,9 +57,29 @@ Route::resource('technicians', 'TechniciansController');
 Route::get('chat', 'ChatController@home');
 
 Route::post('admin/billing', function(Request $request){
-    // dd('hello');
-    dd($request->all());
+    $user = Auth::user();
+    if(!$user->isAdministrator()){
+        return response()->json(['message' => 'You are not logged in as administrator'], 422);
+    }
+    $admin = $user->userable();
+
+    return $admin->newSubscription('main', 'perTechnicianPlan')
+                ->create($request->stripeToken)
+                ->updateQuantity($admin->billableTechnicians());
+
 });
+
+// Route::get('admin/billing/addTechnician', function(Request $request){
+//     $user = Auth::user();
+//     if(!$user->isAdministrator()){
+//         return response()->json(['message' => 'You are not logged in as administrator'], 422);
+//     }
+//     $admin = $user->userable();
+//
+//     return $admin->subscription('main')
+//                 ->updateQuantity(1);
+//
+// });
 
 Route::get('settings', 'SettingsController@index');
 Route::patch('settings/account', 'SettingsController@account');

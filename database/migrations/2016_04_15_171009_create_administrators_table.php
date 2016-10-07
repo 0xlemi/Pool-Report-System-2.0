@@ -27,6 +27,8 @@ class CreateAdministratorsTable extends Migration
             // Email Preferences
                 $table->boolean('get_reports_emails')->default(0);
             // Billing
+                $table->integer('free_technicians')->default(2);    
+                // Stripe
                 $table->string('stripe_id')->nullable();
                 $table->string('card_brand')->nullable();
                 $table->string('card_last_four')->nullable();

@@ -1333,7 +1333,7 @@ function isset(strVariableName) {
                         this.alertMessage = response.error.message;
                         this.alertOpen = true;
                         clickEvent.target.disabled = false; // Re-enable submission
-                        clickEvent.target.innerHTML = 'Submit Payment';
+                        clickEvent.target.innerHTML = 'Add Credit Card';
 
                     } else { // Token was created!
 

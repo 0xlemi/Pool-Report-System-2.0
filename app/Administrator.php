@@ -277,6 +277,12 @@ class Administrator extends Model
                     ->firstOrFail();
     }
 
+    public function billableTechnicians()
+    {
+        $count = $this->technicians()->count() - $this->free_technicians;
+        return max($count,0);
+    }
+
     /**
      * Get technicians assaciated with this user
      * tested
@@ -287,7 +293,7 @@ class Administrator extends Model
                         'App\Technician',
                         'App\Supervisor',
                         'admin_id')
-                    ->orderBy('seq_id', $order);
+                    ->orderBy('technicians.seq_id', $order);
     }
 
     /**

@@ -3,7 +3,7 @@
     {{ csrf_field() }}
     <div class="row">
         <div class="col-md-6">
-            <alert :type="'danger'" :message.sync="alertMessage" :active.sync="alertOpen"></alert>    
+            <alert :type="'danger'" :message.sync="alertMessage" :active.sync="alertOpen"></alert>
         </div>
     </div>
 
@@ -55,5 +55,5 @@
 		<small class="text-muted">The number on the back of the card.</small>
 	</fieldset>
 
-    <button type="button" class="btn btn-primary" @click="submitCreditCard">Submit Payment</button>
+    <button type="button" class="btn btn-primary" @click="submitCreditCard">Add Credit Card</button>
 </form>
