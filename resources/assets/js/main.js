@@ -8,6 +8,7 @@ var emailPreference  = require('./components/email.vue');
 var FormToAjax   	= require('./directives/FormToAjax.vue');
 var countries       = require('./components/countries.vue');
 var dropdown       = require('./components/dropdown.vue');
+var alert       = require('./components/alert.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -43,6 +44,12 @@ function isset(strVariableName) {
 	}
 	return false
  }
+
+
+/* ==========================================================================
+	Billing Stripe
+	========================================================================== */
+
 
 
 
@@ -1289,6 +1296,7 @@ function isset(strVariableName) {
         components:{
             Permissions,
             emailPreference,
+            alert,
         },
         directives: { FormToAjax },
         data:{
@@ -1298,6 +1306,48 @@ function isset(strVariableName) {
             twitter: "",
             objectName: "",
             objectLastName: "",
+            alertMessage: "Error",
+            alertOpen: false,
+        },
+        methods:{
+            submitCreditCard(){
+                let $form = $('#payment-form');
+                let clickEvent = event;
+
+                // Disable the submit button to prevent repeated clicks:
+                clickEvent.target.disabled = true;
+                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
+
+                new Spinner({
+                    left: "90%",
+                    radius: 5,
+                    length: 4,
+                    width: 1,
+                }).spin(clickEvent.target);
+
+                // Request a token from Stripe:
+                Stripe.card.createToken($form, (status, response) => {
+                    if (response.error) { // Problem!
+
+                        // Show the errors on the form:
+                        this.alertMessage = response.error.message;
+                        this.alertOpen = true;
+                        clickEvent.target.disabled = false; // Re-enable submission
+                        clickEvent.target.innerHTML = 'Submit Payment';
+
+                    } else { // Token was created!
+
+                        // Get the token ID:
+                        var token = response.id;
+
+                        // Insert the token ID into the form so it gets submitted to the server:
+                        $form.append($('<input type="hidden" name="stripeToken">').val(token));
+
+                        // Submit the form:
+                        $form.get(0).submit();
+                    }
+                });
+            },
         },
     });
 

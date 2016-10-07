@@ -144,7 +144,7 @@
 
                     @can('billing', $setting)
                     <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
-
+                        @include('settings.billing')    
                     </div><!--.tab-pane-->
                     @endcan
 

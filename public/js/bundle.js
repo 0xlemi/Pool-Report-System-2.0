@@ -21004,6 +21004,36 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = {
+    props: ['type', 'message', 'active'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        close: function close() {
+            this.active = false;
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div v-if=\"active\" class=\"alert alert-{{ type }} alert-fill alert-close fade in\" role=\"alert\">\n\t<button type=\"button\" @click=\"close\" class=\"close\" aria-label=\"Close\">\n\t\t<span aria-hidden=\"true\">×</span>\n\t</button>\n\t<span>{{ message }}</span>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-266d0912", module.exports)
+  } else {
+    hotAPI.update("_v-266d0912", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":98,"vue-hot-reload-api":95}],106:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 
 var Vue = require('vue');
@@ -21058,7 +21088,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0b82fa36", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],106:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21115,7 +21145,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],107:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21182,7 +21212,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":109,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],108:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":110,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],109:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21214,9 +21244,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],109:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],110:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21267,7 +21297,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],111:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21351,7 +21381,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],112:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],113:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21364,6 +21394,7 @@ var emailPreference = require('./components/email.vue');
 var FormToAjax = require('./directives/FormToAjax.vue');
 var countries = require('./components/countries.vue');
 var dropdown = require('./components/dropdown.vue');
+var alert = require('./components/alert.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -21398,6 +21429,10 @@ $(document).ready(function () {
         }
         return false;
     }
+
+    /* ==========================================================================
+    	Billing Stripe
+    	========================================================================== */
 
     /* ==========================================================================
     	Scroll
@@ -22586,7 +22621,8 @@ $(document).ready(function () {
         el: '.settingsVue',
         components: {
             Permissions: Permissions,
-            emailPreference: emailPreference
+            emailPreference: emailPreference,
+            alert: alert
         },
         directives: { FormToAjax: FormToAjax },
         data: {
@@ -22595,7 +22631,52 @@ $(document).ready(function () {
             facebook: "",
             twitter: "",
             objectName: "",
-            objectLastName: ""
+            objectLastName: "",
+            alertMessage: "Error",
+            alertOpen: false
+        },
+        methods: {
+            submitCreditCard: function submitCreditCard() {
+                var _this2 = this;
+
+                var $form = $('#payment-form');
+                var clickEvent = event;
+
+                // Disable the submit button to prevent repeated clicks:
+                clickEvent.target.disabled = true;
+                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
+
+                new Spinner({
+                    left: "90%",
+                    radius: 5,
+                    length: 4,
+                    width: 1
+                }).spin(clickEvent.target);
+
+                // Request a token from Stripe:
+                Stripe.card.createToken($form, function (status, response) {
+                    if (response.error) {
+                        // Problem!
+
+                        // Show the errors on the form:
+                        _this2.alertMessage = response.error.message;
+                        _this2.alertOpen = true;
+                        clickEvent.target.disabled = false; // Re-enable submission
+                        clickEvent.target.innerHTML = 'Submit Payment';
+                    } else {
+                        // Token was created!
+
+                        // Get the token ID:
+                        var token = response.id;
+
+                        // Insert the token ID into the form so it gets submitted to the server:
+                        $form.append($('<input type="hidden" name="stripeToken">').val(token));
+
+                        // Submit the form:
+                        $form.get(0).submit();
+                    }
+                });
+            }
         }
     });
 
@@ -22687,11 +22768,11 @@ $(document).ready(function () {
 
             // Equipment
             destroyEquipment: function destroyEquipment() {
-                var _this2 = this;
+                var _this3 = this;
 
                 if (isset('equipmentUrl')) {
                     (function () {
-                        var vue = _this2;
+                        var vue = _this3;
                         swal({
                             title: "Are you sure?",
                             text: "You will not be able to recover this!",
@@ -23058,6 +23139,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":104,"./components/checkboxList.vue":105,"./components/countries.vue":106,"./components/dropdown.vue":107,"./components/email.vue":108,"./components/photoList.vue":110,"./directives/FormToAjax.vue":111,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,112]);
+},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/checkboxList.vue":106,"./components/countries.vue":107,"./components/dropdown.vue":108,"./components/email.vue":109,"./components/photoList.vue":111,"./directives/FormToAjax.vue":112,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,113]);
 
 //# sourceMappingURL=bundle.js.map

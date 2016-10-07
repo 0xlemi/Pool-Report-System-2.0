@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,7 @@
 */
 
 Auth::routes();
+Route::auth();
 
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
@@ -21,9 +23,6 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::get('/unsubscribe/{token}', 'HomeController@emailOptions');
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
-
-// not sure about this one
-Route::auth();
 
 // remove this eventually
 Route::get('/logout', 'Auth\LoginController@logout');
@@ -56,6 +55,11 @@ Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
 
 Route::get('chat', 'ChatController@home');
+
+Route::post('admin/billing', function(Request $request){
+    // dd('hello');
+    dd($request->all());
+});
 
 Route::get('settings', 'SettingsController@index');
 Route::patch('settings/account', 'SettingsController@account');
