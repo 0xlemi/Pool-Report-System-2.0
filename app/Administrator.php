@@ -279,7 +279,9 @@ class Administrator extends Model
 
     public function billableTechnicians()
     {
-        $count = $this->technicians()->count() - $this->free_technicians;
+        $count = $this->technicians()
+                    ->where('technicians.active', 1)
+                    ->count() - $this->free_technicians;
         return max($count,0);
     }
 

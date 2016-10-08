@@ -56,6 +56,10 @@ Route::resource('technicians', 'TechniciansController');
 
 Route::get('chat', 'ChatController@home');
 
+Route::post(
+    'stripe/webhook',
+    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+);
 Route::post('admin/billing', function(Request $request){
     $user = Auth::user();
     if(!$user->isAdministrator()){
@@ -63,6 +67,11 @@ Route::post('admin/billing', function(Request $request){
     }
     $admin = $user->userable();
 
+    if ($admin->subscribed('main')) {
+        $admin->updateCard($request->stripeToken);
+        return $admin->subscription('main')
+                    ->updateQuantity($admin->billableTechnicians());
+    }
     return $admin->newSubscription('main', 'perTechnicianPlan')
                 ->create($request->stripeToken)
                 ->updateQuantity($admin->billableTechnicians());
