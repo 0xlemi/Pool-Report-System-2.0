@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+@inject('technicianHelpers', 'App\PRS\Helpers\TechnicianHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -22,6 +23,7 @@
 					</header>
 					<div class="card-block">
 						<form>
+
 							@if($technician->numImages() > 0)
 								<div class="form-group row">
 									<label class="col-sm-2 form-control-label">Photo</label>
@@ -46,6 +48,13 @@
 									</div>
 								</div>
 							@endif
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Status:</label>
+								<div class="col-sm-10">
+									{!! $technicianHelpers->styleStatus($technician->status) !!}
+								</div>
+							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">ID</label>

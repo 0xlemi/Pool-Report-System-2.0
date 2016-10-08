@@ -36,7 +36,11 @@ class Administrator extends Model
      * @var array
      */
 	protected $hidden = [
-
+        'free_technicians',
+        'stripe_id',
+        'card_brand',
+        'card_last_four',
+        'trial_ends_at'    
 	];
 
     /**

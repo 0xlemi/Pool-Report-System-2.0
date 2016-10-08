@@ -11,7 +11,8 @@
 		<label class="form-label semibold">Card Number</label>
         <div class="row">
             <div class="col-md-4">
-		        <input type="text" size="20" data-stripe="number" class="form-control" placeholder="xxxx xxxx xxxx xxxx">
+		        <input type="text" size="20" data-stripe="number" class="form-control"
+                        placeholder="xxxx xxxx xxxx {{ ($admin->card_last_four) ?: 'xxxx' }}">
             </div>
         </div>
 	</fieldset>
@@ -55,5 +56,7 @@
 		<small class="text-muted">The number on the back of the card.</small>
 	</fieldset>
 
-    <button type="button" class="btn btn-primary" @click="submitCreditCard">Add Credit Card</button>
+    <button type="button" class="btn btn-primary" @click="submitCreditCard">
+        {{ ($admin->card_last_four) ? 'Update Credit Card' : 'Add Credit Card' }}
+    </button>
 </form>

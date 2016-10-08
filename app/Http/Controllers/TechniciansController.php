@@ -41,9 +41,10 @@ class TechniciansController extends PageController
     {
         $this->checkPermissions('index');
 
-        $default_table_url = url('datatables/technicians');
+        $default_table_url = url('datatables/technicians?status=1');
 
         JavaScript::put([
+            'techniciansTableUrl' => url('datatables/technicians?status='),
             'click_url' => url('technicians').'/'
         ]);
 

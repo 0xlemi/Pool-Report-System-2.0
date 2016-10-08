@@ -266,11 +266,16 @@ class DataTableController extends PageController
         return Response::json($supervisors, 200);
     }
 
-    public function technicians()
+    public function technicians(Request $request)
     {
+        $this->validate($request, [
+            'status' => 'required|boolean',
+        ]);
+
         $technicians = $this->loggedUserAdministrator()
                             ->technicians()
                             ->get()
+                            ->where('status', (int) $request->status)
                             ->transform(function($item){
                                 $supervisor = $item->supervisor();
                                 return (object) array(

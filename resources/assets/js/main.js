@@ -1313,6 +1313,7 @@ function isset(strVariableName) {
             submitCreditCard(){
                 let $form = $('#payment-form');
                 let clickEvent = event;
+                let buttonTag = clickEvent.target.innerHTML;
 
                 // Disable the submit button to prevent repeated clicks:
                 clickEvent.target.disabled = true;
@@ -1333,7 +1334,7 @@ function isset(strVariableName) {
                         this.alertMessage = response.error.message;
                         this.alertOpen = true;
                         clickEvent.target.disabled = false; // Re-enable submission
-                        clickEvent.target.innerHTML = 'Add Credit Card';
+                        clickEvent.target.innerHTML = buttonTag;
 
                     } else { // Token was created!
 
@@ -1598,6 +1599,22 @@ function isset(strVariableName) {
     });
 
 
+    let technicianVue = new Vue({
+        el: '.technicianVue',
+        components: { dropdown },
+        data:{
+            statusSwitch: true,
+        },
+        methods:{
+            changeServiceListStatus(status){
+                var intStatus = (!status) ? 1 : 0;
+                if(isset('techniciansTableUrl')){
+                    let new_url = back.techniciansTableUrl+intStatus;
+                    generic_table.bootstrapTable('refresh', {url:new_url});
+            	}
+            }
+        }
+    });
 
 
 /* ==========================================================================

@@ -22641,6 +22641,7 @@ $(document).ready(function () {
 
                 var $form = $('#payment-form');
                 var clickEvent = event;
+                var buttonTag = clickEvent.target.innerHTML;
 
                 // Disable the submit button to prevent repeated clicks:
                 clickEvent.target.disabled = true;
@@ -22662,7 +22663,7 @@ $(document).ready(function () {
                         _this2.alertMessage = response.error.message;
                         _this2.alertOpen = true;
                         clickEvent.target.disabled = false; // Re-enable submission
-                        clickEvent.target.innerHTML = 'Submit Payment';
+                        clickEvent.target.innerHTML = buttonTag;
                     } else {
                         // Token was created!
 
@@ -22930,6 +22931,23 @@ $(document).ready(function () {
             }
         }
 
+    });
+
+    var technicianVue = new Vue({
+        el: '.technicianVue',
+        components: { dropdown: dropdown },
+        data: {
+            statusSwitch: true
+        },
+        methods: {
+            changeServiceListStatus: function changeServiceListStatus(status) {
+                var intStatus = !status ? 1 : 0;
+                if (isset('techniciansTableUrl')) {
+                    var new_url = back.techniciansTableUrl + intStatus;
+                    generic_table.bootstrapTable('refresh', { url: new_url });
+                }
+            }
+        }
     });
 
     /* ==========================================================================
