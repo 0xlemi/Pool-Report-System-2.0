@@ -23,7 +23,7 @@
 					</a>
 					<div class="checkbox-toggle" style="display:inline;position:relative;left:30px;">
 						<input type="checkbox" id="statusSwitch" v-model="statusSwitch"
-								@click="changeServiceListStatus(statusSwitch)">
+								@click="changeTechnicianListStatus(statusSwitch)">
 						<label for="statusSwitch">Status</label>
 					</div>
 				</div>

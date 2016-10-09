@@ -22941,7 +22941,7 @@ $(document).ready(function () {
             dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0
         },
         methods: {
-            changeServiceListStatus: function changeServiceListStatus(status) {
+            changeTechnicianListStatus: function changeTechnicianListStatus(status) {
                 var intStatus = !status ? 1 : 0;
                 if (isset('techniciansTableUrl')) {
                     var new_url = back.techniciansTableUrl + intStatus;

@@ -156,7 +156,7 @@ class TechniciansController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateTechnicianRequest $request, $seq_id)
+    public function update(Request $request, $seq_id)
     {
         $this->checkPermissions('edit');
 
@@ -173,14 +173,17 @@ class TechniciansController extends PageController
                                 array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor->id ]
                             ));
-        // if($request->status){
-        //     if($admin->canAddObject()){
-        //         flash()->overlay("You have run out of free users.",
-        //                 "Want more? go to settings and subscribe for monthly plan (4.99 per user/month).",
-        //                 'warning');
-        //     }
-        //     $technician->status = $request->status;
-        // }
+        if($request->status){
+            if(!$admin->canAddObject()){
+                flash()->overlay("Oops, run out of free users.",
+                        "Want more? Go to settings and subscribe for monthly plan.",
+                        'warning');
+                return redirect()->back();
+            }
+            $technician->status = 1;
+        }else{
+            $technician->status = 0;
+        }
 
         $photo = false;
         if($request->photo){
@@ -188,7 +191,11 @@ class TechniciansController extends PageController
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
 
-        if(!$user->save() && !$technician->save() && !$photo){
+
+        $userSaved = $user->save();
+        $technicianSaved = $technician->save();
+
+        if(!$userSaved && !$technicianSaved && !$photo){
             flash()->overlay("You did not change anything", 'You did not make changes in technician information.', 'info');
             return redirect()->back();
         }

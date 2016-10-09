@@ -150,7 +150,10 @@ class SupervisorsController extends PageController
             $photo = $supervisor->addImageFromForm($request->file('photo'));
         }
 
-        if(!$user->save() && !$supervisor->save() && !$photo){
+        $userSaved = $user->save();
+        $supervisorSaved = $supervisor->save();
+
+        if(!$userSaved && !$supervisorSaved && !$photo){
             flash()->overlay("You did not change anything", 'You did not make changes in supervisor information.', 'info');
             return redirect()->back();
         }

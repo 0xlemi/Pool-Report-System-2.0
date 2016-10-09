@@ -167,7 +167,10 @@ class ClientsController extends PageController
             $photo = $client->addImageFromForm($request->file('photo'));
         }
 
-        if(!$user->save() && !$client->save() && !$photo){
+        $userSaved = $user->save();
+        $clientSaved = $client->save();
+
+        if(!$userSaved && !$clientSaved && !$photo){
             flash()->overlay("You did not change anything", 'You did not make changes in client information.', 'info');
             return redirect()->back();
         }

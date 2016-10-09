@@ -285,7 +285,8 @@ class DataTableController extends PageController
                                     'cellphone' => $item->cellphone,
                                     'supervisor' => $supervisor->name.' '.$supervisor->last_name,
                                 );
-                            });
+                            })
+                            ->flatten(1);
         return Response::json($technicians, 200);
     }
 

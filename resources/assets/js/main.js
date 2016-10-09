@@ -1607,7 +1607,7 @@ function isset(strVariableName) {
             dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
         },
         methods:{
-            changeServiceListStatus(status){
+            changeTechnicianListStatus(status){
                 var intStatus = (!status) ? 1 : 0;
                 if(isset('techniciansTableUrl')){
                     let new_url = back.techniciansTableUrl+intStatus;
