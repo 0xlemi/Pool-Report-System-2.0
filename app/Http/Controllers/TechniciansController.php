@@ -160,8 +160,9 @@ class TechniciansController extends PageController
     {
         $this->checkPermissions('edit');
 
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
+        $admin = $this->loggedUserAdministrator();
+        $technician = $admin->technicianBySeqId($seq_id);
+        $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
         $user = $technician->user();
 
@@ -172,6 +173,14 @@ class TechniciansController extends PageController
                                 array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor->id ]
                             ));
+        // if($request->status){
+        //     if($admin->canAddObject()){
+        //         flash()->overlay("You have run out of free users.",
+        //                 "Want more? go to settings and subscribe for monthly plan (4.99 per user/month).",
+        //                 'warning');
+        //     }
+        //     $technician->status = $request->status;
+        // }
 
         $photo = false;
         if($request->photo){

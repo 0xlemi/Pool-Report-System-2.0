@@ -20,6 +20,7 @@ class CreateSupervisorTable extends Migration
             $table->string('cellphone');
             $table->string('address');
             $table->char('language', 2)->default('en');
+            $table->boolean('status')->default(true);
             $table->text('comments');
 
             // Email Preferences

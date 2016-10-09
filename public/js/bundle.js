@@ -22937,7 +22937,8 @@ $(document).ready(function () {
         el: '.technicianVue',
         components: { dropdown: dropdown },
         data: {
-            statusSwitch: true
+            statusSwitch: true,
+            dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0
         },
         methods: {
             changeServiceListStatus: function changeServiceListStatus(status) {

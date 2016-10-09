@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="technicianVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -127,6 +128,7 @@
 										data-on="Active" data-off="Not Active"
 										data-onstyle="success" data-offstyle="danger"
 										data-size="small" name="status" {{ ($technician->status) ? 'checked':'' }}>
+								<small class="text-muted">You are only charged for active technicians.</small>
 								</div>
 							</div>
 
@@ -175,4 +177,5 @@
 			</section>
 		</div>
 	</div>
+</div>
 @endsection

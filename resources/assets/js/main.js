@@ -1604,6 +1604,7 @@ function isset(strVariableName) {
         components: { dropdown },
         data:{
             statusSwitch: true,
+            dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
         },
         methods:{
             changeServiceListStatus(status){

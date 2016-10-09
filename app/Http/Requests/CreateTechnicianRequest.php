@@ -54,6 +54,7 @@ class CreateTechnicianRequest extends Request
             'username' => 'required|alpha_dash|between:4,25|unique:users,email,'.$userable_id.',userable_id',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
+            'status' => 'boolean',
             'language' => 'required|string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',

@@ -70,11 +70,11 @@ Route::post('admin/billing', function(Request $request){
     if ($admin->subscribed('main')) {
         $admin->updateCard($request->stripeToken);
         return $admin->subscription('main')
-                    ->updateQuantity($admin->billableTechnicians());
+                    ->updateQuantity($admin->billableObjects());
     }
     return $admin->newSubscription('main', 'perTechnicianPlan')
                 ->create($request->stripeToken)
-                ->updateQuantity($admin->billableTechnicians());
+                ->updateQuantity($admin->billableObjects());
 
 });
 

@@ -36,11 +36,11 @@ class Administrator extends Model
      * @var array
      */
 	protected $hidden = [
-        'free_technicians',
+        'free_objects',
         'stripe_id',
         'card_brand',
         'card_last_four',
-        'trial_ends_at'    
+        'trial_ends_at'
 	];
 
     /**
@@ -281,12 +281,59 @@ class Administrator extends Model
                     ->firstOrFail();
     }
 
-    public function billableTechnicians()
+    /**
+     * Check if you can add another object like supervisor or technician
+     * @return boolean
+     */
+    public function canAddObject()
     {
-        $count = $this->technicians()
-                    ->where('technicians.active', 1)
-                    ->count() - $this->free_technicians;
+        // check that the user has a subcription or that has free objects left.
+        if($this->subscribed('main') || ($this->objectActiveCount() < $this->free_objects)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Objects that are we should bill for, after the free ones are deducted.
+     * @return int      number of elements to change for
+     */
+    public function billableObjects()
+    {
+        $count = $this->objectActiveCount() - $this->free_objects;
         return max($count,0);
+    }
+
+    /**
+     * Number of technicans + supervisors that are active
+     * @return int
+     */
+    public function objectActiveCount()
+    {
+        return $this->technicianActiveCount()
+                + $this->supervisorActiveCount();
+    }
+
+    /**
+     * Number of technicians that are active
+     * @return int
+     */
+    public function technicianActiveCount()
+    {
+        return $this->technicians()
+                    ->where('technicians.status', 1)
+                    ->count();
+    }
+
+    /**
+     * Number of supervisors that are active
+     * @return int
+     */
+    public function supervisorActiveCount()
+    {
+        return $this->supervisors()
+                    ->where('supervisors.status', 1)
+                    ->count();
     }
 
     /**
