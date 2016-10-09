@@ -30,6 +30,12 @@ class SupervisorHelpers
                 });
     }
 
-
+    public function styleStatus(int $active)
+    {
+        if($active){
+            return '<h3><span class="label label-success">Active</span></h3>';
+        }
+        return '<h3><span class="label label-danger">Inactive</span></h3>';
+    }
 
 }

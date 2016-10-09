@@ -250,11 +250,16 @@ class DataTableController extends PageController
         return Response::json($clients, 200);
     }
 
-    public function supervisors()
+    public function supervisors(Request $request)
     {
+        $this->validate($request, [
+            'status' => 'required|boolean',
+        ]);
+
         $supervisors = $this->loggedUserAdministrator()
                         ->supervisors()
                         ->get()
+                        ->where('status', (int) $request->status)
                         ->transform(function($item){
                             return (object) array(
                                 'id' => $item->seq_id,
@@ -262,7 +267,8 @@ class DataTableController extends PageController
                                 'email' => $item->user()->email,
                                 'cellphone' => $item->cellphone,
                             );
-                        });
+                        })
+                        ->flatten(1);
         return Response::json($supervisors, 200);
     }
 

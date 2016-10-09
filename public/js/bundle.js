@@ -22933,6 +22933,22 @@ $(document).ready(function () {
 
     });
 
+    var supervisorVue = new Vue({
+        el: '.supervisorVue',
+        data: {
+            statusSwitch: true
+        },
+        methods: {
+            changeSupervisorListStatus: function changeSupervisorListStatus(status) {
+                var intStatus = !status ? 1 : 0;
+                if (isset('supervisorTableUrl')) {
+                    var new_url = back.supervisorTableUrl + intStatus;
+                    generic_table.bootstrapTable('refresh', { url: new_url });
+                }
+            }
+        }
+    });
+
     var technicianVue = new Vue({
         el: '.technicianVue',
         components: { dropdown: dropdown },

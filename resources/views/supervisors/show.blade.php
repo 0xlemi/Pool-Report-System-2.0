@@ -49,6 +49,13 @@
 							@endif
 
 							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Status:</label>
+								<div class="col-sm-10">
+									{!! $helper->styleStatus($supervisor->status) !!}
+								</div>
+							</div>
+
+							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">ID</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $supervisor->seq_id }}">

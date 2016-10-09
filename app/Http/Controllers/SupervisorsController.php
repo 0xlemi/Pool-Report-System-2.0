@@ -35,9 +35,10 @@ class SupervisorsController extends PageController
     {
         $this->checkPermissions('index');
 
-        $default_table_url = url('datatables/supervisors');
+        $default_table_url = url('datatables/supervisors?status=1');
 
         JavaScript::put([
+            'supervisorTableUrl' => url('datatables/supervisors?status='),
             'click_url' => url('supervisors').'/',
         ]);
 
@@ -136,13 +137,29 @@ class SupervisorsController extends PageController
     {
         $this->checkPermissions('edit');
 
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+        $admin = $this->loggedUserAdministrator();
+
+        $supervisor = $admin->supervisorBySeqId($seq_id);
 
         $user = $supervisor->user();
 
         $user->email = htmlentities($request->email);
 
         $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
+
+        if($request->status){
+            // If user can not add more objects and the status is set to false.
+            // then reject the change.
+            if(!$admin->canAddObject() && !$supervisor->status){
+                flash()->overlay("Oops, run out of free users.",
+                        "Want more? Go to settings and subscribe for monthly plan.",
+                        'warning');
+                return redirect()->back();
+            }
+            $supervisor->status = 1;
+        }else{
+            $supervisor->status = 0;
+        }
 
         $photo = false;
         if($request->photo){

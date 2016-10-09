@@ -156,7 +156,7 @@ class TechniciansController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id)
+    public function update(CreateTechnicianRequest $request, $seq_id)
     {
         $this->checkPermissions('edit');
 

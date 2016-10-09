@@ -35,6 +35,4 @@ class TechnicianHelpers
         return '<h3><span class="label label-danger">Inactive</span></h3>';
     }
 
-
-
 }
