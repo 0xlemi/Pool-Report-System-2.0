@@ -281,6 +281,26 @@ class Administrator extends Model
                     ->firstOrFail();
     }
 
+    public function setBillibleUsersAsInactive()
+    {
+        return ($this->setSupervisorsAsInactive() && $this->setTechniciansAsInactive());
+    }
+
+    protected function setSupervisorsAsInactive()
+    {
+        return $this->supervisors()
+                ->update(['supervisors.status' => 0]);
+    }
+
+    protected function setTechniciansAsInactive()
+    {
+        return $this->hasManyThrough(
+                        'App\Technician',
+                        'App\Supervisor',
+                        'admin_id')
+            ->update(['technicians.status' => 0]);
+    }
+
     /**
      * Check if you can add another object like supervisor or technician
      * @return boolean

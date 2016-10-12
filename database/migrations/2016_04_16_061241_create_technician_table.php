@@ -29,7 +29,7 @@ class CreateTechnicianTable extends Migration
             $table->integer('supervisor_id')->unsigned();
             $table->integer('seq_id')->index();
             $table->softDeletes();
-            $table->timestamps();
+            // $table->timestamps();
         });
 
         Schema::table('technicians', function(Blueprint $table){

@@ -15,6 +15,10 @@ class Technician extends Model
 
     use ImageTrait;
 
+    // not using timestamps because trows a bug when you try to run
+    // $admin->setTechniciansAsInactive() updated_at field is 
+    public $timestamps = false;
+
     /**
 	 * variables that can be mass assign
 	 * @var array
