@@ -12,6 +12,7 @@ use Schema;
 
 use DateTimeZone;
 use DateTime;
+use Auth;
 
 use App\User;
 use App\Administrator;
@@ -45,6 +46,12 @@ class SettingsController extends PageController
         // SECURITY BUG, YOU SHOULD NOT SEND ALL THE ADMIN INFORMATION
         $admin = $user->admin();
         $setting = Setting::class;
+
+
+        JavaScript::put([
+            'downgradeSubscriptionUrl' => url('settings/downgradeSubscription'),
+            'upgradeSubscriptionUrl' => url('settings/upgradeSubscription'),
+        ]);
 
         $timezones = $this->getTimezone();
         $url = (object) array(
@@ -216,7 +223,54 @@ class SettingsController extends PageController
 
     public function billing(Request $request)
     {
+        $user = Auth::user();
+        if(!$user->isAdministrator()){
+            return response()->json(['message' => 'You are not logged in as administrator'], 422);
+        }
+        $admin = $user->userable();
 
+        if ($admin->subscribed('main')) {
+        $admin->updateCard($request->stripeToken);
+            return $admin->subscription('main')
+                        ->updateQuantity($admin->billableObjects());
+        }
+        return $admin->newSubscription('main', 'pro')
+                    ->create($request->stripeToken)
+                    ->updateQuantity($admin->billableObjects());
+    }
+
+    public function upgradeSubscription()
+    {
+        $user = Auth::user();
+        if(!$user->isAdministrator()){
+            return response()->json(['message' => 'You are not logged in as administrator'], 422);
+        }
+        $admin = $user->userable();
+
+        if($admin->subscribedToPlan('free', 'main')) {
+            return $admin->subscription('main')->swap('pro');
+        }elseif($admin->subscribedToPlan('pro', 'main')){
+            return response()->json(['error' => 'You cannot upgrade if you are on pro subscription.'], 422);
+        }
+
+    }
+
+    public function downgradeSubscription()
+    {
+        $user = Auth::user();
+        if(!$user->isAdministrator()){
+            return response()->json(['message' => 'You are not logged in as administrator'], 422);
+        }
+        $admin = $user->userable();
+
+        if ($admin->subscribedToPlan('pro', 'main')) {
+            // set supervisors and technicians to inactive
+            return $admin->subscription('main')->swap('free');
+        }elseif($admin->subscribedToPlan('free', 'main')){
+            return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
+        }
+        // return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
+        dd('nothing');
     }
 
     private function getTimezone()

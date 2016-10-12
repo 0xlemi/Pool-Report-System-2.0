@@ -21413,6 +21413,7 @@ $(document).ready(function () {
     $.ajaxSetup({
         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
     });
+    Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
 
     /* ==========================================================================
        Custom functions
@@ -22676,6 +22677,66 @@ $(document).ready(function () {
                         // Submit the form:
                         $form.get(0).submit();
                     }
+                });
+            },
+            downgradeSubscription: function downgradeSubscription() {
+                var vue = this;
+                // I need to check the that downgradeSubscriptionUrl is defined
+                var downgradeSubscriptionUrl = back.downgradeSubscriptionUrl;
+                swal({
+                    title: "Are you sure?",
+                    text: "Your technicians and supervisors will become inactive!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, downgrade!",
+                    cancelButtonText: "No, cancel!",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        vue.$http.post(downgradeSubscriptionUrl).then(function (response) {
+                            swal("Downgraded to free", "You account is set to free.", "success");
+                        }, function (response) {
+                            console.log(response);
+                            swal("Sorry there was a problem!", "We could not downgrade your subscription,\
+                                        send us an email to support@poolreportsystem.com", "error");
+                        });
+                    } else {
+                        swal("Cancelled", "Your subscription was not changed.", "error");
+                    }
+                });
+            },
+            upgradeSubscription: function upgradeSubscription() {
+                var vue = this;
+                var clickEvent = event;
+                // I need to check the that upgradeSubscriptionUrl is defined
+                var upgradeSubscriptionUrl = back.upgradeSubscriptionUrl;
+                var buttonTag = clickEvent.target.innerHTML;
+
+                // Disable the submit button to prevent repeated clicks:
+                clickEvent.target.disabled = true;
+                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading';
+                new Spinner({
+                    left: "90%",
+                    radius: 5,
+                    length: 4,
+                    width: 1
+                }).spin(clickEvent.target);
+
+                vue.$http.post(upgradeSubscriptionUrl).then(function (response) {
+                    clickEvent.target.disabled = false;
+                    clickEvent.target.innerHTML = 'Downgrade to free';
+                    swal("Upgrated to Pro", "You account is set to pro.", "success");
+                    // change button to downgrade
+                }, function (response) {
+                    console.log(response);
+                    // enable, remove spinner and set tab to the one before
+                    clickEvent.target.disabled = false;
+                    clickEvent.target.innerHTML = buttonTag;
+
+                    swal("Sorry there was a problem!", "We could not upgrade your subscription,\
+                            send us an email to support@poolreportsystem.com", "error");
                 });
             }
         }

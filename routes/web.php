@@ -60,35 +60,6 @@ Route::post(
     'stripe/webhook',
     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
 );
-Route::post('admin/billing', function(Request $request){
-    $user = Auth::user();
-    if(!$user->isAdministrator()){
-        return response()->json(['message' => 'You are not logged in as administrator'], 422);
-    }
-    $admin = $user->userable();
-
-    if ($admin->subscribed('main')) {
-        $admin->updateCard($request->stripeToken);
-        return $admin->subscription('main')
-                    ->updateQuantity($admin->billableObjects());
-    }
-    return $admin->newSubscription('main', 'perTechnicianPlan')
-                ->create($request->stripeToken)
-                ->updateQuantity($admin->billableObjects());
-
-});
-
-// Route::get('admin/billing/addTechnician', function(Request $request){
-//     $user = Auth::user();
-//     if(!$user->isAdministrator()){
-//         return response()->json(['message' => 'You are not logged in as administrator'], 422);
-//     }
-//     $admin = $user->userable();
-//
-//     return $admin->subscription('main')
-//                 ->updateQuantity(1);
-//
-// });
 
 Route::get('settings', 'SettingsController@index');
 Route::patch('settings/account', 'SettingsController@account');
@@ -96,7 +67,9 @@ Route::patch('settings/changeEmail', 'SettingsController@changeEmail');
 Route::patch('settings/changePassword', 'SettingsController@changePassword');
 Route::patch('settings/company', 'SettingsController@company');
 Route::patch('settings/email', 'SettingsController@email');
-Route::patch('settings/billing', 'SettingsController@billing');
+Route::post('settings/billing', 'SettingsController@billing');
+Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
+Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
 Route::patch('settings/permissions', 'SettingsController@permissions');
 
 Route::get('datatables/reports', 'DataTableController@reports');
