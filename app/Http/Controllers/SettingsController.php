@@ -51,6 +51,11 @@ class SettingsController extends PageController
         JavaScript::put([
             'downgradeSubscriptionUrl' => url('settings/downgradeSubscription'),
             'upgradeSubscriptionUrl' => url('settings/upgradeSubscription'),
+            'subscribed' => $admin->subscribed('main'),
+            'plan' => ($admin->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
+            'activeObjects' => $admin->objectActiveCount(),
+            'billableObjects' => $admin->billableObjects(),
+            'freeObjects' => $admin->free_objects,
         ]);
 
         $timezones = $this->getTimezone();
@@ -221,7 +226,7 @@ class SettingsController extends PageController
 
     }
 
-    public function billing(Request $request)
+    public function subscribe(Request $request)
     {
         $user = Auth::user();
         if(!$user->isAdministrator()){
@@ -229,14 +234,41 @@ class SettingsController extends PageController
         }
         $admin = $user->userable();
 
+        // Admin is upgrading the credit card.
         if ($admin->subscribed('main')) {
-        $admin->updateCard($request->stripeToken);
-            return $admin->subscription('main')
-                        ->updateQuantity($admin->billableObjects());
+            return $this->updateCreditCard($admin, $request->stripeToken);
         }
-        return $admin->newSubscription('main', 'pro')
+
+        // Admin is subscribing for the first time
+        $result = $admin->newSubscription('main', 'pro')
                     ->create($request->stripeToken)
                     ->updateQuantity($admin->billableObjects());
+        if($result){
+            flash()->overlay('Upgraded to Pro',
+                    'You are now free to add as much technicians and supervisors as you need.',
+                    'success');
+            return redirect()->back();
+        }
+            flash()->overlay('Error upgrading to Pro',
+                    'Send us an email to support@poolreprotsystem to upgrade you manualy.',
+                    'error');
+            return redirect()->back();
+    }
+
+    private function updateCreditCard(Administrator $admin, string $stripeToken)
+    {
+        $admin->updateCard($stripeToken);
+        $result = $admin->subscription('main')
+                    ->updateQuantity($admin->billableObjects());
+
+        if($result){
+            flash()->overlay('Credit Card Changed', 'Your credit card was updated successfully.', 'success');
+            return redirect()->back();
+        }
+        flash()->overlay('Error changing credit card',
+                'Send us an email to support@poolreprotsystem to change your credit card manualy.',
+                'error');
+        return redirect()->back();
     }
 
     public function upgradeSubscription()
@@ -248,7 +280,8 @@ class SettingsController extends PageController
         $admin = $user->userable();
 
         if($admin->subscribedToPlan('free', 'main')) {
-            return $admin->subscription('main')->swap('pro');
+            return $admin->subscription('main')
+                            ->swap('pro');
         }elseif($admin->subscribedToPlan('pro', 'main')){
             return response()->json(['error' => 'You cannot upgrade if you are on pro subscription.'], 422);
         }

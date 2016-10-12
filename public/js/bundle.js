@@ -21036,6 +21036,99 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 
+var Spinner = require("spin");
+
+exports.default = {
+    props: ['subscribed', 'plan', 'activeObjects', 'billableObjects', 'freeObjects'],
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        downgradeSubscription: function downgradeSubscription() {
+            var vue = this;
+            // I need to check the that downgradeSubscriptionUrl is defined
+            var downgradeSubscriptionUrl = back.downgradeSubscriptionUrl;
+            swal({
+                title: "Are you sure?",
+                text: "Your technicians and supervisors will become inactive!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, downgrade!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    vue.$http.post(downgradeSubscriptionUrl).then(function (response) {
+                        vue.plan = 'free';
+                        swal("Downgraded to free", "You account is set to free.", "success");
+                    }, function (response) {
+                        console.log(response);
+                        swal("Sorry there was a problem!", "We could not downgrade your subscription,\
+                                        send us an email to support@poolreportsystem.com", "error");
+                    });
+                } else {
+                    swal("Cancelled", "Your subscription was not changed.", "error");
+                }
+            });
+        },
+        upgradeSubscription: function upgradeSubscription() {
+            var _this = this;
+
+            var vue = this;
+            var clickEvent = event;
+            // I need to check the that upgradeSubscriptionUrl is defined
+            var upgradeSubscriptionUrl = back.upgradeSubscriptionUrl;
+            var buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            vue.$http.post(upgradeSubscriptionUrl).then(function (response) {
+                clickEvent.target.disabled = false;
+                _this.plan = 'pro';
+                swal("Upgrated to Pro", "You account is set to pro.", "success");
+                // change button to downgrade
+            }, function (response) {
+                console.log(response);
+                // enable, remove spinner and set tab to the one before
+                clickEvent.target.disabled = false;
+
+                swal("Sorry there was a problem!", "We could not upgrade your subscription,\
+                            send us an email to support@poolreportsystem.com", "error");
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-12\" v-if=\"subscribed\">\n        <h4 class=\"semibold\">Payment method</h4>\n        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#creditCardModal\">\n\t\t\t<i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;&nbsp;&nbsp;\n\t\t\tUpdate Credit Card\n\t\t</button>\n        <hr>\n\t</div>\n\n    <div class=\"col-md-12\">\n        <h4 class=\"semibold\">Subscription</h4>\n        <div v-if=\"plan == 'pro'\">\n            <p>\n                Your account is on a <strong>Pro</strong>\n                subscription for {{ billableObjects }} users\n            </p>\n            <br>\n            <button type=\"button\" class=\"btn btn-danger\" @click=\"downgradeSubscription\">\n        \t\t<i class=\"glyphicon glyphicon-arrow-down\"></i>&nbsp;&nbsp;&nbsp;\n        \t    Downgrade to Free\n        \t</button>\n            <small class=\"text-muted\">\n                Downgrading will not delete any data,\n                but your supervisors and technicians<br>\n                are going to be set to inactive.\n            </small>\n        </div>\n\n        <!-- Is unsubscribed or in a free subscription -->\n        <div v-else=\"\">\n            <p>\n                Your account is on a <strong>free</strong> subscription.<br>\n                Using {{ activeObjects }} out of your {{ freeObjects  }} free users.\n            </p>\n            <br>\n            <div v-if=\"subscribed\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"upgradeSubscription\">\n            \t\t<i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \t    Upgrade to Pro\n            \t</button>\n            </div>\n            <div v-else=\"\">\n                <button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#creditCardModal\">\n            \t\t<i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \t    Upgrade to Pro\n            \t</button>\n            </div>\n            <small class=\"text-muted\">\n                You are not going to be changed if you dont go passed your {{ freeObjects }} free users.\n            </small>\n        </div>\n    </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5d571856", module.exports)
+  } else {
+    hotAPI.update("_v-5d571856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"spin":85,"vue":98,"vue-hot-reload-api":95}],107:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
 var Vue = require('vue');
 
 exports.default = Vue.component('checkbox-list', {
@@ -21088,7 +21181,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0b82fa36", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],107:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21145,7 +21238,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],108:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],109:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21212,7 +21305,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":110,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],109:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":111,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],110:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21244,9 +21337,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],110:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],111:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21297,7 +21390,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],112:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21381,7 +21474,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],113:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],114:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21395,6 +21488,7 @@ var FormToAjax = require('./directives/FormToAjax.vue');
 var countries = require('./components/countries.vue');
 var dropdown = require('./components/dropdown.vue');
 var alert = require('./components/alert.vue');
+var billing = require('./components/billing.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -22623,7 +22717,8 @@ $(document).ready(function () {
         components: {
             Permissions: Permissions,
             emailPreference: emailPreference,
-            alert: alert
+            alert: alert,
+            billing: billing
         },
         directives: { FormToAjax: FormToAjax },
         data: {
@@ -22634,7 +22729,13 @@ $(document).ready(function () {
             objectName: "",
             objectLastName: "",
             alertMessage: "Error",
-            alertOpen: false
+            alertOpen: false,
+            // billing
+            subscribed: isset('subscribed') ? back.subscribed : null,
+            plan: isset('plan') ? back.plan : null,
+            activeObjects: isset('activeObjects') ? back.activeObjects : null,
+            billableObjects: isset('billableObjects') ? back.billableObjects : null,
+            freeObjects: isset('freeObjects') ? back.freeObjects : null
         },
         methods: {
             submitCreditCard: function submitCreditCard() {
@@ -22677,66 +22778,6 @@ $(document).ready(function () {
                         // Submit the form:
                         $form.get(0).submit();
                     }
-                });
-            },
-            downgradeSubscription: function downgradeSubscription() {
-                var vue = this;
-                // I need to check the that downgradeSubscriptionUrl is defined
-                var downgradeSubscriptionUrl = back.downgradeSubscriptionUrl;
-                swal({
-                    title: "Are you sure?",
-                    text: "Your technicians and supervisors will become inactive!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, downgrade!",
-                    cancelButtonText: "No, cancel!",
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        vue.$http.post(downgradeSubscriptionUrl).then(function (response) {
-                            swal("Downgraded to free", "You account is set to free.", "success");
-                        }, function (response) {
-                            console.log(response);
-                            swal("Sorry there was a problem!", "We could not downgrade your subscription,\
-                                        send us an email to support@poolreportsystem.com", "error");
-                        });
-                    } else {
-                        swal("Cancelled", "Your subscription was not changed.", "error");
-                    }
-                });
-            },
-            upgradeSubscription: function upgradeSubscription() {
-                var vue = this;
-                var clickEvent = event;
-                // I need to check the that upgradeSubscriptionUrl is defined
-                var upgradeSubscriptionUrl = back.upgradeSubscriptionUrl;
-                var buttonTag = clickEvent.target.innerHTML;
-
-                // Disable the submit button to prevent repeated clicks:
-                clickEvent.target.disabled = true;
-                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Upgrading';
-                new Spinner({
-                    left: "90%",
-                    radius: 5,
-                    length: 4,
-                    width: 1
-                }).spin(clickEvent.target);
-
-                vue.$http.post(upgradeSubscriptionUrl).then(function (response) {
-                    clickEvent.target.disabled = false;
-                    clickEvent.target.innerHTML = 'Downgrade to free';
-                    swal("Upgrated to Pro", "You account is set to pro.", "success");
-                    // change button to downgrade
-                }, function (response) {
-                    console.log(response);
-                    // enable, remove spinner and set tab to the one before
-                    clickEvent.target.disabled = false;
-                    clickEvent.target.innerHTML = buttonTag;
-
-                    swal("Sorry there was a problem!", "We could not upgrade your subscription,\
-                            send us an email to support@poolreportsystem.com", "error");
                 });
             }
         }
@@ -23235,6 +23276,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/checkboxList.vue":106,"./components/countries.vue":107,"./components/dropdown.vue":108,"./components/email.vue":109,"./components/photoList.vue":111,"./directives/FormToAjax.vue":112,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,113]);
+},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/billing.vue":106,"./components/checkboxList.vue":107,"./components/countries.vue":108,"./components/dropdown.vue":109,"./components/email.vue":110,"./components/photoList.vue":112,"./directives/FormToAjax.vue":113,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,114]);
 
 //# sourceMappingURL=bundle.js.map

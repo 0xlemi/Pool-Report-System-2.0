@@ -67,7 +67,7 @@ Route::patch('settings/changeEmail', 'SettingsController@changeEmail');
 Route::patch('settings/changePassword', 'SettingsController@changePassword');
 Route::patch('settings/company', 'SettingsController@company');
 Route::patch('settings/email', 'SettingsController@email');
-Route::post('settings/billing', 'SettingsController@billing');
+Route::post('settings/subscribe', 'SettingsController@subscribe');
 Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
 Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
 Route::patch('settings/permissions', 'SettingsController@permissions');

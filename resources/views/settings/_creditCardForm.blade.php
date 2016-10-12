@@ -1,4 +1,4 @@
-<form action="{{ url('settings/billing') }}" method="POST" id="payment-form">
+<form action="{{ url('settings/subscribe') }}" method="POST" id="payment-form">
     {{ csrf_field() }}
     <!-- <div class="row"> -->
         <!-- <div class="col-md-6"> -->
