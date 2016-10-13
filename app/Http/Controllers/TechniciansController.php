@@ -168,22 +168,22 @@ class TechniciansController extends PageController
 
         $user->email = htmlentities($request->username);
 
-
         $technician->fill(array_merge(
                                 array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor->id ]
                             ));
-        if($request->status){
-            if(!$admin->canAddObject()){
-                flash()->overlay("Oops, run out of free users.",
-                        "Want more? Go to settings and subscribe for monthly plan.",
-                        'warning');
-                return redirect()->back();
-            }
-            $technician->status = 1;
-        }else{
-            $technician->status = 0;
+
+        $status = ($request->status)? 1:0;
+        // if he is setting the status to active
+        // if is changing the status compared with the one already in database
+        // or if admin dosn't pass the checks for subscription and free objects
+        if( ($status && ($status != $technician->status)) && !$admin->canAddObject()){
+            flash()->overlay("Oops, you need a Pro account.",
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    'info');
+            return redirect()->back();
         }
+        $technician->status = $status;
 
         $photo = false;
         if($request->photo){

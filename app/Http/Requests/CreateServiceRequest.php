@@ -38,7 +38,7 @@ class CreateServiceRequest extends Request
             'end_time' => 'required|date_format:H:i|after:start_time',
             'amount' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
-            'services.*' => 'integer|min:1',
+            'services.*' => 'integer|min:1', // apears to be doing nothing
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:750',
         ];

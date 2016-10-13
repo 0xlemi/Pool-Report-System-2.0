@@ -308,7 +308,7 @@ class Administrator extends Model
     public function canAddObject()
     {
         // check that the user has a subcription or that has free objects left.
-        if($this->subscribed('main') || ($this->objectActiveCount() < $this->free_objects)){
+        if($this->subscribedToPlan('pro', 'main') || ($this->objectActiveCount() < $this->free_objects)){
             return true;
         }
         return false;
