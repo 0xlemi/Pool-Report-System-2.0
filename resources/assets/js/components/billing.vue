@@ -87,6 +87,7 @@ var Spinner = require("spin");
                         if (isConfirm) {
                             vue.$http.post(downgradeSubscriptionUrl).then((response) => {
                                 vue.plan = 'free';
+								vue.activeObjects = 0;
                                 swal("Downgraded to free", "You account is set to free.", "success");
                             }, (response) => {
                                 console.log(response);

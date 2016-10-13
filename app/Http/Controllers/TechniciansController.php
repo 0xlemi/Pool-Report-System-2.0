@@ -84,6 +84,14 @@ class TechniciansController extends PageController
 
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
+        // check if the you can add new users
+        if(!$this->loggedUserAdministrator()->canAddObject()){
+            flash()->overlay("Oops, you need a Pro account.",
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    'info');
+            return redirect()->back()->withInput();
+        }
+
         $technician =   Technician::create(
                                 array_merge(
                                     array_map('htmlentities', $request->all()),

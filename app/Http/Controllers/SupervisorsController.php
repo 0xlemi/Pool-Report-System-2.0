@@ -69,6 +69,14 @@ class SupervisorsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
+        // check if the you can add new users
+        if(!$admin->canAddObject()){
+            flash()->overlay("Oops, you need a Pro account.",
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    'info');
+            return redirect()->back()->withInput();
+        }
+
         $supervisor = Supervisor::create(
                         array_merge(
                             array_map('htmlentities', $request->all()),

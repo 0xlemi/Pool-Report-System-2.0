@@ -21063,6 +21063,7 @@ exports.default = {
                 if (isConfirm) {
                     vue.$http.post(downgradeSubscriptionUrl).then(function (response) {
                         vue.plan = 'free';
+                        vue.activeObjects = 0;
                         swal("Downgraded to free", "You account is set to free.", "success");
                     }, function (response) {
                         console.log(response);
