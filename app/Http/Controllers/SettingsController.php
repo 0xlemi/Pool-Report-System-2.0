@@ -299,7 +299,7 @@ class SettingsController extends PageController
         if ($admin->subscribedToPlan('pro', 'main')) {
             $result = $admin->subscription('main')->swap('free');
             if($result){
-                return $admin->setBillibleUsersAsInactive();    
+                return (string) $admin->setBillibleUsersAsInactive();    
             }
         }elseif($admin->subscribedToPlan('free', 'main')){
             return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);

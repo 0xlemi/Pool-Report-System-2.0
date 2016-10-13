@@ -369,6 +369,28 @@ class Administrator extends Model
                     ->orderBy('technicians.seq_id', $order);
     }
 
+    // /**
+    //  * Get technicians assaciated with this user
+    //  */
+    // public function technicians(){
+    //     return $this->hasManyThrough(
+    //                     'App\Technician',
+    //                     'App\Supervisor',
+    //                     'admin_id');
+    // }
+    //
+    // /**
+    //  *
+    //  * get technicians ordered
+    //  * @param  boolean $descending_order
+    //  */
+    // public function techniciansOrderBy($descending_order = false)
+    // {
+    //     $order = ($descending_order) ? 'desc' : 'asc';
+    //     return $this->technicians()
+    //                 ->orderBy('technicians.seq_id', $order);
+    // }
+
     /**
      * Get technicains associated with this user and seq_id convination
      * @param  int $seq_id
