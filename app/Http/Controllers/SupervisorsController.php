@@ -147,19 +147,17 @@ class SupervisorsController extends PageController
 
         $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
 
-        if($request->status){
-            // If user can not add more objects and the status is set to false.
-            // then reject the change.
-            if(!$admin->canAddObject() && !$supervisor->status){
-                flash()->overlay("Oops, run out of free users.",
-                        "Want more? Go to settings and subscribe for monthly plan.",
-                        'warning');
-                return redirect()->back();
-            }
-            $supervisor->status = 1;
-        }else{
-            $supervisor->status = 0;
+        $status = ($request->status)? 1:0;
+        // if he is setting the status to active
+        // if is changing the status compared with the one already in database
+        // or if admin dosn't pass the checks for subscription and free objects
+        if( ($status && ($status != $supervisor->status)) && !$admin->canAddObject()){
+            flash()->overlay("Oops, you need a Pro account.",
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    'info');
+            return redirect()->back();
         }
+        $supervisor->status = $status;
 
         $photo = false;
         if($request->photo){
