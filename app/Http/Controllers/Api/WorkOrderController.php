@@ -29,11 +29,21 @@ class WorkOrderController extends ApiController
     public function index(Request $request)
     {
         $this->validate($request, [
-            'limit' => 'integer|between:1,50'
+            'limit' => 'integer|between:1,50',
+            'finished' => 'boolean',
         ]);
 
+        $admin = $this->loggedUserAdministrator();
+
         $limit = ($request->limit)?: 5;
-        $workOrders= $this->loggedUserAdministrator()->workOrders()->paginate($limit);
+        if($request->has('finished')){
+            $workOrders = $admin->workOrders()
+                            ->where('finished', $request->finished)
+                            ->paginate($limit);
+        }else{
+            $workOrders = $admin->workOrders()
+                            ->paginate($limit);
+        }
 
         return $this->respondWithPagination(
             $workOrders,
