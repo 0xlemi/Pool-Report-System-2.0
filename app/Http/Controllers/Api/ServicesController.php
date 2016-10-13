@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests;
 
 use App\PRS\Transformers\ServiceTransformer;
+use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Helpers\ServiceHelpers;
 
 use App\Service;
@@ -18,11 +19,13 @@ use DB;
 use Validator;
 use Illuminate\View\View;
 use App\Http\Requests\CreateServiceRequest;
+use App\Administrator;
 
 class ServicesController extends ApiController
 {
 
     private $serviceTransformer;
+    private $servicePreviewTransformer;
     private $serviceHelpers;
 
 
@@ -31,9 +34,12 @@ class ServicesController extends ApiController
     *
     * @return void
     */
-    public function __construct(ServiceTransformer $serviceTransformer, ServiceHelpers $serviceHelpers)
+    public function __construct(ServiceTransformer $serviceTransformer,
+                                ServicePreviewTransformer $servicePreviewTransformer,
+                                ServiceHelpers $serviceHelpers)
     {
         $this->serviceTransformer = $serviceTransformer;
+        $this->servicePreviewTransformer = $servicePreviewTransformer;
         $this->serviceHelpers = $serviceHelpers;
     }
 
@@ -50,11 +56,17 @@ class ServicesController extends ApiController
         }
 
         $this->validate($request, [
+            'preview' => 'boolean',
+            'status' => 'boolean',
             'limit' => 'integer|between:1,25',
-            'status' => 'boolean'
         ]);
 
         $admin = $this->loggedUserAdministrator();
+
+        // make a preview transformation
+        if($request->preview){
+            return $this->indexPreview($request, $admin);
+        }
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
@@ -71,6 +83,21 @@ class ServicesController extends ApiController
             $this->serviceTransformer->transformCollection($services)
         );
 
+    }
+
+    protected function indexPreview(Request $request, Administrator $admin)
+    {
+        if($request->has('status')){
+            $services = $admin->services()
+                                ->where('status', $request->status)
+                                ->get();
+        }else{
+            $services = $admin->services()->get();
+        }
+
+        return $this->respond([
+                'data' => $this->servicePreviewTransformer->transformCollection($services)
+            ]);
     }
 
     /**

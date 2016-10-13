@@ -13,18 +13,23 @@ use Validator;
 use DB;
 
 use App\PRS\Transformers\TechnicianTransformer;
+use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Administrator;
 
 class TechniciansController extends ApiController
 {
 
     private $technicianTransformer;
+    private $technicianPreviewTransformer;
 
-    public function __construct(TechnicianTransformer $technicianTransformer)
+    public function __construct(TechnicianTransformer $technicianTransformer,
+                                TechnicianPreviewTransformer $technicianPreviewTransformer)
     {
         $this->technicianTransformer = $technicianTransformer;
+        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
     }
     /**
      * Display a listing of the resource.
@@ -39,11 +44,17 @@ class TechniciansController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,25',
+            'preview' => 'boolean',
             'status' => 'boolean',
+            'limit' => 'integer|between:1,25',
         ]);
 
         $admin = $this->loggedUserAdministrator();
+
+        // make a preview transformation
+        if($request->preview){
+            return $this->indexPreview($request, $admin);
+        }
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
@@ -59,6 +70,21 @@ class TechniciansController extends ApiController
             $technicians,
             $this->technicianTransformer->transformCollection($technicians)
         );
+    }
+
+    protected function indexPreview(Request $request, Administrator $admin)
+    {
+        if($request->has('status')){
+            $technicians = $admin->technicians()
+                                ->where('technicians.status', $request->status)
+                                ->get();
+        }else{
+            $technicians = $admin->technicians()->get();
+        }
+
+        return $this->respond([
+                'data' => $this->technicianPreviewTransformer->transformCollection($technicians)
+            ]);
     }
 
     /**
