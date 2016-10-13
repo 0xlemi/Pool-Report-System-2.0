@@ -14,11 +14,14 @@ use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\SupervisorTransformer;
+use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
+use App\Administrator;
 
 class SupervisorsController extends ApiController
 {
 
     private $supervisorTransformer;
+    private $supervisorPreviewTransformer;
 
 
     /**
@@ -26,9 +29,11 @@ class SupervisorsController extends ApiController
     *
     * @return void
     */
-    public function __construct(SupervisorTransformer $supervisorTransformer)
+    public function __construct(SupervisorTransformer $supervisorTransformer,
+                                SupervisorPreviewTransformer $supervisorPreviewTransformer)
     {
         $this->supervisorTransformer = $supervisorTransformer;
+        $this->supervisorPreviewTransformer = $supervisorPreviewTransformer;
     }
 
     /**
@@ -44,13 +49,20 @@ class SupervisorsController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,50',
+            'preview' => 'boolean',
             'status' => 'boolean',
+            'limit' => 'integer|between:1,25',
         ]);
 
         $admin = $this->loggedUserAdministrator();
 
+        // make a preview transformation
+        if($request->preview){
+            return $this->indexPreview($request, $admin);
+        }
+
         $limit = ($request->limit)?: 5;
+        // Filter by status
         if($request->has('status')){
             $supervisors = $admin->supervisors()
                             ->where('status', $request->status)
@@ -65,6 +77,22 @@ class SupervisorsController extends ApiController
             $this->supervisorTransformer->transformCollection($supervisors)
         );
 
+    }
+
+    protected function indexPreview(Request $request, Administrator $admin)
+    {
+
+        if($request->has('status')){
+            $supervisors = $admin->supervisors()
+                                ->where('status', $request->status)
+                                ->get();
+        }else{
+            $supervisors = $admin->supervisors()->get();
+        }
+
+        return $this->respond([
+                'data' => $this->supervisorPreviewTransformer->transformCollection($supervisors)
+            ]);
     }
 
     /**
