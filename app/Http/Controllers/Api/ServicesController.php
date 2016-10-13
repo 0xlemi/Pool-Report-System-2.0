@@ -50,16 +50,21 @@ class ServicesController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,25',
+            'limit' => 'integer|between:1,50',
             'status' => 'boolean'
         ]);
 
+        $admin = $this->loggedUserAdministrator();
+
         $limit = ($request->limit)?: 5;
-        $status = ($request->status)? 1: 0;
-        $services = $this->loggedUserAdministrator()
-                            ->services()
-                            ->where('status', $status)
+        if($request->has('status')){
+            $services = $admin->services()
+                            ->where('status', $request->status)
                             ->paginate($limit);
+        }else{
+            $services = $admin->services()
+                            ->paginate($limit);
+        }
 
         return $this->respondWithPagination(
             $services,

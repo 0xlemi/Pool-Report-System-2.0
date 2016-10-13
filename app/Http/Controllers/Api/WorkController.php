@@ -29,7 +29,7 @@ class WorkController extends ApiController
     public function index(Request $request, $workOrderSeqId)
     {
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,50'
         ]);
 
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);

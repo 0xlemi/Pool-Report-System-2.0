@@ -29,7 +29,7 @@ class WorkOrderController extends ApiController
     public function index(Request $request)
     {
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,50'
         ]);
 
         $limit = ($request->limit)?: 5;

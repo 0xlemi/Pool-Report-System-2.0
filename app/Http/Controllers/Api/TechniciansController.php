@@ -37,13 +37,23 @@ class TechniciansController extends ApiController
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
-        
+
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,50',
+            'status' => 'boolean',
         ]);
 
+        $admin = $this->loggedUserAdministrator();
+
         $limit = ($request->limit)?: 5;
-        $technicians = $this->loggedUserAdministrator()->technicians()->paginate($limit);
+        if($request->has('status')){
+            $technicians = $admin->technicians()
+                            ->where('technicians.status', $request->status)
+                            ->paginate($limit);
+        }else{
+            $technicians = $admin->technicians()
+                            ->paginate($limit);
+        }
 
         return $this->respondWithPagination(
             $technicians,

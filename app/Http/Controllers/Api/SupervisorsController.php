@@ -44,11 +44,21 @@ class SupervisorsController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,50',
+            'status' => 'boolean',
         ]);
 
+        $admin = $this->loggedUserAdministrator();
+
         $limit = ($request->limit)?: 5;
-        $supervisors = $this->loggedUserAdministrator()->supervisors()->paginate($limit);
+        if($request->has('status')){
+            $supervisors = $admin->supervisors()
+                            ->where('status', $request->status)
+                            ->paginate($limit);
+        }else{
+            $supervisors = $admin->supervisors()
+                            ->paginate($limit);
+        }
 
         return $this->respondWithPagination(
             $supervisors,

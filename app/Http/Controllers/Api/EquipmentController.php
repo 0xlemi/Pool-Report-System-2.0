@@ -29,7 +29,7 @@ class EquipmentController extends ApiController
     public function index(Request $request, $serviceSeqId)
     {
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,50'
         ]);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
