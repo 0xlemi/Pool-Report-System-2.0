@@ -58,6 +58,7 @@ class ServicesController extends ApiController
         $this->validate($request, [
             'preview' => 'boolean',
             'status' => 'boolean',
+            // dont validate limit if preview is true
             'limit' => 'integer|between:1,25',
         ]);
 
