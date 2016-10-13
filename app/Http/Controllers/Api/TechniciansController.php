@@ -39,7 +39,7 @@ class TechniciansController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,50',
+            'limit' => 'integer|between:1,25',
             'status' => 'boolean',
         ]);
 
