@@ -12,11 +12,6 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/test', function(){
-    $admin = \Auth::user()->admin();
-    dd($admin->technicianActiveCount());
-});
-
 Auth::routes();
 Route::auth();
 
