@@ -113,7 +113,7 @@
 								<input type="checkbox" data-toggle="toggle"
 										data-on="Active" data-off="Not Active"
 										data-onstyle="success" data-offstyle="danger"
-										data-size="small" name="status" {{ ($supervisor->status) ? 'checked':'' }}>
+										data-size="small" name="status" {{ ($supervisor->user()->active) ? 'checked':'' }}>
 								<small class="text-muted">You are only charged for active supervisors.</small>
 								</div>
 							</div>
