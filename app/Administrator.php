@@ -288,17 +288,22 @@ class Administrator extends Model
 
     protected function setSupervisorsAsInactive()
     {
-        return $this->supervisors()
-                ->update(['supervisors.status' => 0]);
+        $supervisors = $this->supervisors()->get();
+        foreach ($supervisors as $supervisor) {
+            $user = $supervisor->user();
+            $user->active = 0;
+            $user->save();
+        }
     }
 
     protected function setTechniciansAsInactive()
     {
-        return $this->hasManyThrough(
-                        'App\Technician',
-                        'App\Supervisor',
-                        'admin_id')
-            ->update(['technicians.status' => 0]);
+        $technicians = $this->technicians()->get();
+        foreach ($technicians as $technician) {
+            $user = $technician->user();
+            $user->active = 0;
+            $user->save();
+        }
     }
 
     /**
@@ -330,30 +335,26 @@ class Administrator extends Model
      */
     public function objectActiveCount()
     {
-        return $this->technicianActiveCount()
-                + $this->supervisorActiveCount();
+        return $this->techniciansActive()->count()
+                + $this->supervisorsActive()->count();
     }
 
-    /**
-     * Number of technicians that are active
-     * @return int
-     */
-    public function technicianActiveCount()
+    public function techniciansActive($active = true)
     {
-        return $this->technicians()
-                    ->where('technicians.status', 1)
-                    ->count();
+        $isActive = ($active)? 1:0;
+        return $this->technicians()->get()
+                    ->filter(function($item) use ($isActive){
+                        return ($item->user()->active == $isActive);
+                    });
     }
 
-    /**
-     * Number of supervisors that are active
-     * @return int
-     */
-    public function supervisorActiveCount()
+    public function supervisorsActive($active = true)
     {
-        return $this->supervisors()
-                    ->where('supervisors.status', 1)
-                    ->count();
+        $isActive = ($active)? 1:0;
+        return $this->supervisors()->get()
+                    ->filter(function($item) use ($isActive){
+                        return ($item->user()->active == $isActive);
+                    });
     }
 
     /**

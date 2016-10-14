@@ -257,9 +257,7 @@ class DataTableController extends PageController
         ]);
 
         $supervisors = $this->loggedUserAdministrator()
-                        ->supervisors()
-                        ->get()
-                        ->where('status', (int) $request->status)
+                        ->supervisorsActive($request->status)
                         ->transform(function($item){
                             return (object) array(
                                 'id' => $item->seq_id,
@@ -279,9 +277,7 @@ class DataTableController extends PageController
         ]);
 
         $technicians = $this->loggedUserAdministrator()
-                            ->technicians()
-                            ->get()
-                            ->where('status', (int) $request->status)
+                            ->techniciansActive($request->status)
                             ->transform(function($item){
                                 $supervisor = $item->supervisor();
                                 return (object) array(
