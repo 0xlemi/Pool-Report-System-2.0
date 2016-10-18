@@ -212,6 +212,74 @@ class AdministratorTest extends ModelTester
     }
 
     /** @test */
+    public function it_gets_all_work_orders()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $ser = $this->createService($admin->id);
+
+        $super = $this->createSupervisor($admin->id);
+
+        $workOrder1 = factory(App\WorkOrder::class)->create([
+            'service_id' => $ser->id,
+            'supervisor_id' => $super->id,
+        ]);
+        $workOrder2 = factory(App\WorkOrder::class)->create([
+            'service_id' => $ser->id,
+            'supervisor_id' => $super->id,
+        ]);
+
+        // When
+        $workOrders = $admin->workOrders()->get();
+
+        // Then
+        $this->assertEquals(2,sizeof($workOrders));
+        $this->assertSameObject($workOrder1, $workOrders[0]);
+        $this->assertSameObject($workOrder2, $workOrders[1]);
+
+    }
+
+    /** @test */
+    public function it_gets_work_orders_by_seq_id()
+    {
+        // Given
+        $admin1 = $this->createAdministrator();
+        $admin2 = $this->createAdministrator();
+
+        $ser1 = $this->createService($admin1->id);
+        $ser2 = $this->createService($admin2->id);
+
+        $super1 = $this->createSupervisor($admin1->id);
+        $super2 = $this->createSupervisor($admin2->id);
+
+        $workOrder1 = factory(App\WorkOrder::class)->create([
+            'service_id' => $ser1->id,
+            'supervisor_id' => $super1->id,
+        ]);
+        $workOrder2 = factory(App\WorkOrder::class)->create([
+            'service_id' => $ser2->id,
+            'supervisor_id' => $super2->id,
+        ]);
+        $workOrder3 = factory(App\WorkOrder::class)->create([
+            'service_id' => $ser2->id,
+            'supervisor_id' => $super2->id,
+        ]);
+
+
+        // When
+        $workOrder_1 = $admin1->workOrderBySeqId(1);
+        $workOrder_2 = $admin2->workOrderBySeqId(1);
+        $workOrder_3 = $admin2->workOrderBySeqId(2);
+
+        // Then
+        $this->assertSameObject($workOrder_1, $workOrder1);
+        $this->assertSameObject($workOrder_2, $workOrder2);
+        $this->assertSameObject($workOrder_3, $workOrder3);
+
+    }
+
+    /** @test */
     public function it_gets_all_services()
     {
         // Given

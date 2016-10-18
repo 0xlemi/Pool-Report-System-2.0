@@ -95,7 +95,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
         'description' => $faker->realText(rand(100,500)),
 		'start' => $start,
         'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
-        'finished' => $faker->boolean,
+        'finished' => $faker->numberBetween(0, 1),
         'price' => rand(100,1000000)/100,
         'currency' => $faker->currencyCode,
     ];

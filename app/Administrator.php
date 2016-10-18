@@ -56,8 +56,8 @@ class Administrator extends Model
 
     /**
      * Get all dates that have at least one report in them
-     * tested
      * @return Collertion
+     * tested
      */
     public function datesWithReport()
     {
@@ -86,6 +86,7 @@ class Administrator extends Model
     /**
      * Total number of services that need to be done today
      * @return int
+     * no need for test
      */
     public function numberServicesDoToday()
     {
@@ -96,6 +97,7 @@ class Administrator extends Model
      * Total number of services that need to be done in a date
      * @param  Carbon $date in Administrator set Timezone
      * @return  int
+     * no need for test
      */
     public function numberServicesDoIn(Carbon $date)
     {
@@ -106,6 +108,7 @@ class Administrator extends Model
      * Number of services that are missing in a date
      * @param  Carbon $date in Administrator set Timezone
      * @return  int
+     * no need for test
      */
     public function numberServicesMissing(Carbon $date)
     {
@@ -116,6 +119,7 @@ class Administrator extends Model
      * get the services that need to be done today
      * @param  boolean $AddCompletedReports add or remove services that where already done today
      * @return Collection
+     * no need for test
      */
     public function servicesDoToday($AddCompletedReports = false)
     {
@@ -124,10 +128,10 @@ class Administrator extends Model
 
     /**
      * get the services that need to be done in certain date
-     * tested
      * @param  Carbon  $date in Administrator timezone
      * @param  boolean $AddCompletedReports   add or remove the services that where already done
      * @return Collection
+     * tested
      */
     public function servicesDoIn(Carbon $date, $AddCompletedReports = false)
     {
@@ -158,9 +162,8 @@ class Administrator extends Model
 
     /**
      * Get the reports in this date
-     * tested
      * @param  Carbon $date date is Administrator timzone
-     *
+     * tested
      */
     public function reportsByDate(Carbon $date){
         $date_str = $date->toDateTimeString();
@@ -172,7 +175,7 @@ class Administrator extends Model
     /**
      * Get the reports based on the seq_id
      * @param  integer $seq_id
-     * @return $report
+     * @return App\Report
      * tested
      */
     public function reportsBySeqId($seq_id){
@@ -183,6 +186,9 @@ class Administrator extends Model
 
     /**
      *  Get services associated with this user
+     * @param boolean
+     * @return Collection
+     * tested
      */
     public function workOrders($descending_order = false){
         $order = ($descending_order) ? 'desc' : 'asc';
@@ -195,7 +201,8 @@ class Administrator extends Model
     /**
      * Get the work order based on the seq_id
      * @param  integer $seq_id
-     * @return $report
+     * @return App\WorkOrder
+     * tested
      */
     public function workOrderBySeqId($seq_id){
         return $this->hasManyThrough(
@@ -224,21 +231,6 @@ class Administrator extends Model
         return $this->hasMany('App\Service', 'admin_id')
                     ->where('services.seq_id', '=', $seq_id)
                     ->firstOrFail();
-    }
-
-    // not on use
-    public function clientsThroughServices(){
-        $this->load('services.clients'); // eager load far relation
-        $clients = new Collection; // Illuminate\Database\Eloquent\Collection
-
-        foreach ($this->services as $service)
-        {
-           $clients = $clients->merge($service->clients);
-        }
-
-        $clients = $clients->unique()->sortBy('seq_id'); // remove the duplicates
-
-        return $clients; // all clients collection
     }
 
     /**
