@@ -266,16 +266,15 @@ class AdministratorTest extends ModelTester
             'supervisor_id' => $super2->id,
         ]);
 
-
         // When
         $workOrder_1 = $admin1->workOrderBySeqId(1);
         $workOrder_2 = $admin2->workOrderBySeqId(1);
         $workOrder_3 = $admin2->workOrderBySeqId(2);
 
         // Then
-        $this->assertSameObject($workOrder_1, $workOrder1);
-        $this->assertSameObject($workOrder_2, $workOrder2);
-        $this->assertSameObject($workOrder_3, $workOrder3);
+        $this->assertSameObject($workOrder1, $workOrder_1);
+        $this->assertSameObject($workOrder2, $workOrder_2);
+        $this->assertSameObject($workOrder3, $workOrder_3);
 
     }
 

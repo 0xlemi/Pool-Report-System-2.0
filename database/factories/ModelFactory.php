@@ -83,7 +83,7 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
         'type' => $faker->word,
         'brand' => $faker->randomElement($brands),
         'model' => $faker->word.'-'.rand(1000,9999),
-        'capacity' => rand(100,1000000)/100,
+        'capacity' => number_format(rand(100,1000000)/100, 2, '.', ''),
         'units' => 'units',
 	];
 });
@@ -96,7 +96,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
 		'start' => $start,
         'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
         'finished' => $faker->numberBetween(0, 1),
-        'price' => rand(100,1000000)/100,
+        'price' => number_format(rand(100,1000000)/100, 2, '.', ''),
         'currency' => $faker->currencyCode,
     ];
 });
@@ -106,9 +106,9 @@ $factory->define(App\Work::class, function (Faker\Generator $faker){
     return [
         'title' => $faker->word,
         'description' => $faker->realText(rand(100,500)),
-        'quantity' => rand(100,1000000)/100,
+        'quantity' => number_format(rand(100,1000000)/100, 2, '.', ''),
         'units' => 'units',
-        'cost' => rand(100,1000000)/100,
+        'cost' => number_format(rand(100,1000000)/100, 2, '.', ''),
     ];
 });
 
