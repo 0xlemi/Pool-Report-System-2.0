@@ -275,39 +275,21 @@ class Administrator extends Model
     }
 
     /**
-     * Get technicians assaciated with this user
+     * Get technicians assaciated with this admin
      * tested
      */
-    public function technicians($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
+    public function technicians(){
         return $this->hasManyThrough(
-                        'App\Technician',
-                        'App\Supervisor',
-                        'admin_id')
-                    ->orderBy('technicians.seq_id', $order);
+                            'App\Technician',
+                            'App\Supervisor',
+                            'admin_id'
+                        );
     }
 
-    // /**
-    //  * Get technicians assaciated with this user
-    //  */
-    // public function technicians(){
-    //     return $this->hasManyThrough(
-    //                     'App\Technician',
-    //                     'App\Supervisor',
-    //                     'admin_id');
-    // }
-    //
-    // /**
-    //  *
-    //  * get technicians ordered
-    //  * @param  boolean $descending_order
-    //  */
-    // public function techniciansOrderBy($descending_order = false)
-    // {
-    //     $order = ($descending_order) ? 'desc' : 'asc';
-    //     return $this->technicians()
-    //                 ->orderBy('technicians.seq_id', $order);
-    // }
+    public function techniciansInOrder($order = 'asc')
+    {
+        return $this->technicians()->orderBy('technicians.seq_id', $order);
+    }
 
     /**
      * Get technicains associated with this user and seq_id convination
@@ -315,10 +297,7 @@ class Administrator extends Model
      * tested
      */
     public function technicianBySeqId($seq_id){
-        return $this->hasManyThrough(
-                        'App\Technician',
-                        'App\Supervisor',
-                        'admin_id')
+        return $this->technicians()
                     ->where('technicians.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }

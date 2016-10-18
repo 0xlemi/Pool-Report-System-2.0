@@ -59,11 +59,11 @@ class TechniciansController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
-            $technicians = $admin->technicians()
+            $technicians = $admin->techniciansInOrder()
                             ->where('technicians.status', $request->status)
                             ->paginate($limit);
         }else{
-            $technicians = $admin->technicians()
+            $technicians = $admin->techniciansInOrder()
                             ->paginate($limit);
         }
 
@@ -76,11 +76,11 @@ class TechniciansController extends ApiController
     protected function indexPreview(Request $request, Administrator $admin)
     {
         if($request->has('status')){
-            $technicians = $admin->technicians()
+            $technicians = $admin->techniciansInOrder()
                                 ->where('technicians.status', $request->status)
                                 ->get();
         }else{
-            $technicians = $admin->technicians()->get();
+            $technicians = $admin->techniciansInOrder()->get();
         }
 
         return $this->respond([
@@ -128,7 +128,7 @@ class TechniciansController extends ApiController
             $technician->save();
 
             // create User
-            $technician_id = $admin->technicians(true)->first()->id;
+            $technician_id = $admin->techniciansInOrder('desc')->first()->id;
             $user = User::create([
                 'email' => htmlentities($request->username),
                 'password' => bcrypt($request->password),
@@ -146,7 +146,7 @@ class TechniciansController extends ApiController
 
         return $this->respondPersisted(
             'The technician was successfuly created.',
-            $this->technicianTransformer->transform($admin->technicians(true)->first())
+            $this->technicianTransformer->transform($admin->techniciansInOrder('desc')->first())
         );
     }
 

@@ -128,7 +128,7 @@ class WorkOrderController extends PageController
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
-        $technicians  = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
+        $technicians  = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $default_table_url = url('datatables/works/'.$seq_id);
 
         JavaScript::put([

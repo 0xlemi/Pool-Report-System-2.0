@@ -88,7 +88,7 @@ trait BillableAdministrator{
     public function techniciansActive($active = true)
     {
         $isActive = ($active)? 1:0;
-        return $this->technicians()->get()
+        return $this->techniciansInOrder()->get()
                     ->filter(function($item) use ($isActive){
                         return ($item->user()->active == $isActive);
                     });
@@ -102,7 +102,7 @@ trait BillableAdministrator{
     public function supervisorsActive($active = true)
     {
         $isActive = ($active)? 1:0;
-        return $this->supervisors()->get()
+        return $this->supervisorsInOrder()->get()
                     ->filter(function($item) use ($isActive){
                         return ($item->user()->active == $isActive);
                     });

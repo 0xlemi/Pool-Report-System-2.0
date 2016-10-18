@@ -92,7 +92,7 @@ class ReportsController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $technicians = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
+        $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
 
         JavaScript::put([
             'dropdownKey' => $request->old('service'),
@@ -211,7 +211,7 @@ class ReportsController extends PageController
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $technicians = $this->technicianHelpers->transformForDropdown($admin->technicians()->get());
+        $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
