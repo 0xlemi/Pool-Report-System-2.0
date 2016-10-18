@@ -73,7 +73,7 @@ class WorkOrderController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
 
         return view('workorders.create', compact('services', 'supervisors'));
     }
@@ -178,7 +178,7 @@ class WorkOrderController extends PageController
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
         $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
 
         $startDate = (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone);

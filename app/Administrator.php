@@ -257,10 +257,14 @@ class Administrator extends Model
      * Get supervisors assaciated with this user
      * tested
      */
-    public function supervisors($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
-        return $this->hasMany('App\Supervisor', 'admin_id')
-                    ->orderBy('seq_id', $order);
+    public function supervisors(){
+        return $this->hasMany('App\Supervisor', 'admin_id');
+    }
+
+    public function supervisorsInOrder($order = 'asc')
+    {
+        return $this->technicians()
+                    ->orderBy('supervisors.seq_id', $order);
     }
 
     /**

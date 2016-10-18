@@ -65,11 +65,11 @@ class SupervisorsController extends ApiController
         $limit = ($request->limit)?: 5;
         // Filter by status
         if($request->has('status')){
-            $supervisors = $admin->supervisors()
+            $supervisors = $admin->supervisorsInOrder()
                             ->where('status', $request->status)
                             ->paginate($limit);
         }else{
-            $supervisors = $admin->supervisors()
+            $supervisors = $admin->supervisorsInOrder()
                             ->paginate($limit);
         }
 
@@ -84,11 +84,11 @@ class SupervisorsController extends ApiController
     {
 
         if($request->has('status')){
-            $supervisors = $admin->supervisors()
+            $supervisors = $admin->supervisorsInOrder()
                                 ->where('status', $request->status)
                                 ->get();
         }else{
-            $supervisors = $admin->supervisors()->get();
+            $supervisors = $admin->supervisorsInOrder()->get();
         }
 
         return $this->respond([
@@ -130,7 +130,7 @@ class SupervisorsController extends ApiController
             $supervisor->save();
 
             // create User
-            $supervisor_id = $admin->supervisors(true)->first()->id;
+            $supervisor_id = $admin->supervisorsInOrder('desc')->first()->id;
             $user = User::create([
                 'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
@@ -147,7 +147,7 @@ class SupervisorsController extends ApiController
 
         return $this->respondPersisted(
             'The supervisor was successfuly created.',
-            $this->supervisorTransformer->transform($admin->supervisors(true)->first())
+            $this->supervisorTransformer->transform($admin->supervisorsInOrder('desc')->first())
         );
     }
 

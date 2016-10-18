@@ -62,7 +62,7 @@ class TechniciansController extends PageController
 
         $supervisors = $this->supervisorHelpers->transformForDropdown(
                     $this->loggedUserAdministrator()
-                    ->supervisors()
+                    ->supervisorsInOrder()
                     ->get()
                 );
         JavaScript::put([
@@ -148,7 +148,7 @@ class TechniciansController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $technician = $admin->technicianBySeqId($seq_id);
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisors()->get());
+        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $supervisorSelected = Supervisor::find($technician->supervisor_id);
         JavaScript::put([
             'dropdownKey' => $supervisorSelected->seq_id,
