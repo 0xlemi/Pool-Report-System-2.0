@@ -87,10 +87,10 @@ class WorkController extends ApiController
         });
 
         if($work){
-            return response()->json([
-                'message' => 'Work created successfully.',
-                'object' => $this->workTransformer->transform($work),
-                ] , 200);
+            return $this->respondPersisted(
+                'Work created successfully.',
+                $this->workTransformer->transform($work)
+            );
         }
         return response()->json(['error' => 'Work was not created.'] , 500);
     }
@@ -158,10 +158,10 @@ class WorkController extends ApiController
 
         });
 
-        return response()->json([
-            'message' => 'Work updated successfully.',
-            'object' => $this->workTransformer->transform($work),
-            ] , 200);
+        return $this->respondPersisted(
+            'Work updated successfully.',
+            $this->workTransformer->transform($work)
+        );
     }
 
     /**

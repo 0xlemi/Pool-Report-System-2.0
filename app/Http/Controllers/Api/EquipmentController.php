@@ -86,10 +86,10 @@ class EquipmentController extends ApiController
         });
 
         if($equipment){
-            return response()->json([
-                'message' => 'Equipment created successfully.',
-                'object' => $this->equipmentTransformer->transform($equipment),
-                ] , 200);
+            return $this->respondPersisted(
+                'Equipment created successfully.',
+                $this->equipmentTransformer->transform($equipment)
+            );
         }
         return response()->json(['message' => 'Equipment was not created.'] , 500);
     }
@@ -149,10 +149,10 @@ class EquipmentController extends ApiController
             }
         });
 
-        return response()->json([
-            'message' => 'Equipment updated successfully.',
-            'object' => $this->equipmentTransformer->transform($equipment),
-            ] , 200);
+        return $this->respondPersisted(
+            'Equipment updated successfully.',
+            $this->equipmentTransformer->transform($equipment)
+        );
     }
 
     /**

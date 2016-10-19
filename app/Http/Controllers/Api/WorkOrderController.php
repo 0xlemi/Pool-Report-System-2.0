@@ -104,10 +104,10 @@ class WorkOrderController extends ApiController
         });
 
         if($workOrder){
-            return response()->json([
-                'message' => 'Work Order was created successfully.',
-                'object' => $this->workOrderTransformer->transform($admin->workOrdersInOrder('desc')->first())
-            ]);
+            return $this->respondPersisted(
+                'Work Order was created successfully.',
+                $this->workOrderTransformer->transform($admin->workOrdersInOrder('desc')->first())
+            );
         }
         return response()->json([
             'error' => 'Work Order was not created.',
@@ -208,10 +208,10 @@ class WorkOrderController extends ApiController
             $workOrder->save();
         });
 
-        return $this->respond([
-            'message' => 'Work Order was updated successfully.',
-            'object' => $this->workOrderTransformer->transform($workOrder),
-        ]);
+        return $this->respondPersisted(
+            'Work Order was updated successfully.',
+            $this->workOrderTransformer->transform($admin->workOrderBySeqId($seq_id))
+        );
     }
 
     /**
