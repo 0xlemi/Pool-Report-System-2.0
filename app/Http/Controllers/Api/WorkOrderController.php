@@ -37,11 +37,11 @@ class WorkOrderController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('finished')){
-            $workOrders = $admin->workOrders()
+            $workOrders = $admin->workOrdersInOrder()
                             ->where('finished', $request->finished)
                             ->paginate($limit);
         }else{
-            $workOrders = $admin->workOrders()
+            $workOrders = $admin->workOrdersInOrder()
                             ->paginate($limit);
         }
 

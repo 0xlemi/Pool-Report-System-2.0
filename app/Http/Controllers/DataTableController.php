@@ -129,7 +129,7 @@ class DataTableController extends PageController
         }
 
         $workOrders = $this->loggedUserAdministrator()
-                        ->workOrders()
+                        ->workOrdersInOrder()
                         ->get()
                         ->where('finished', (int) $request->finished)
                         ->transform(function($item){

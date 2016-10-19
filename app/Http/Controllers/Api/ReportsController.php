@@ -56,7 +56,7 @@ class ReportsController extends ApiController
         ]);
 
         $limit = ($request->limit)?: 5;
-        $reports = $this->loggedUserAdministrator()->reports()->paginate($limit);
+        $reports = $this->loggedUserAdministrator()->reportsInOrder()->paginate($limit);
 
         return $this->respondWithPagination(
             $reports,
@@ -172,7 +172,7 @@ class ReportsController extends ApiController
 
         return $this->respondPersisted(
             'The report was successfuly created.',
-            $this->reportTransformer->transform($admin->reports(true)->first())
+            $this->reportTransformer->transform($admin->reportsInOrder('desc')->first())
         );
 
     }

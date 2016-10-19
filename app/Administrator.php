@@ -46,7 +46,7 @@ class Administrator extends Model
 
     /**
      * Get the user this administrator is morphed by
-     * @return $user
+     * @return \App\User
      * tested
      */
     public function user()
@@ -56,7 +56,7 @@ class Administrator extends Model
 
     /**
      * Get all dates that have at least one report in them
-     * @return Collertion
+     * @return Collection
      * tested
      */
     public function datesWithReport()
@@ -157,7 +157,7 @@ class Administrator extends Model
      */
     public function reportsByDate(Carbon $date){
         $date_str = $date->toDateTimeString();
-        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
+        return $this->reports()
                     ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
                     ->orderBy('seq_id');
     }
@@ -166,10 +166,17 @@ class Administrator extends Model
      * Get reports associatod with this user
      * tested
      */
-    public function reports($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
-        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
-                    ->orderBy('seq_id', $order);
+    public function reports(){
+        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id');
+    }
+
+    /**
+     * Get reports order by seq_id
+     * @param  string $order    'asc' or 'desc'
+     */
+    public function reportsInOrder($order = 'asc')
+    {
+        return $this->reports()->orderBy('seq_id', $order);
     }
 
     /**
@@ -179,7 +186,7 @@ class Administrator extends Model
      * tested
      */
     public function reportsBySeqId($seq_id){
-        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
+        return $this->reports()
                     ->where('reports.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
@@ -190,12 +197,20 @@ class Administrator extends Model
      * @return Collection
      * tested
      */
-    public function workOrders($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
+    public function workOrders(){
         return $this->hasManyThrough(
                         'App\WorkOrder',
                         'App\Service',
-                        'admin_id')->orderBy('seq_id', $order);
+                        'admin_id');
+    }
+
+    /**
+     * Get work orders ordered by seq_id
+     * @param  string $order    asc or desc
+     */
+    public function workOrdersInOrder($order = 'asc')
+    {
+        return $this->workOrders()->orderBy('seq_id', $order);
     }
 
     /**
@@ -205,10 +220,7 @@ class Administrator extends Model
      * tested
      */
     public function workOrderBySeqId($seq_id){
-        return $this->hasManyThrough(
-                        'App\WorkOrder',
-                        'App\Service',
-                        'admin_id')
+        return $this->workOrders()
                     ->where('work_orders.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
@@ -221,6 +233,10 @@ class Administrator extends Model
         return $this->hasMany('App\Service', 'admin_id');
     }
 
+    /**
+     * Get services ordered by seq_id
+     * @param  string $order    asc or desc
+     */
     public function servicesInOrder($order = 'asc')
     {
         return $this->services()->orderBy('seq_id', $order);
@@ -232,7 +248,7 @@ class Administrator extends Model
      * tested
      */
     public function serviceBySeqId($seq_id){
-        return $this->hasMany('App\Service', 'admin_id')
+        return $this->services()
                     ->where('services.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
@@ -245,6 +261,10 @@ class Administrator extends Model
         return Client::where('admin_id', $this->id);
     }
 
+    /**
+     * Get clients ordered by seq_id
+     * @param  string $order    asc or desc
+     */
     public function clientsInOrder($order = 'asc')
     {
         return $this->clients()->orderBy('seq_id', $order);
@@ -256,7 +276,7 @@ class Administrator extends Model
      * tested
      */
     public function clientsBySeqId($seq_id){
-        return Client::where('admin_id', $this->id)
+        return $this->clients()
                     ->where('clients.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
@@ -269,6 +289,10 @@ class Administrator extends Model
         return $this->hasMany('App\Supervisor', 'admin_id');
     }
 
+    /**
+     * Get supervisors ordered by seq_id
+     * @param  string $order    asc or desc
+     */
     public function supervisorsInOrder($order = 'asc')
     {
         return $this->technicians()
@@ -281,7 +305,7 @@ class Administrator extends Model
      * tested
      */
     public function supervisorBySeqId($seq_id){
-        return $this->hasMany('App\Supervisor', 'admin_id')
+        return $this->supervisors()
                     ->where('supervisors.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
@@ -298,6 +322,10 @@ class Administrator extends Model
                         );
     }
 
+    /**
+     * Get technicians ordered by seq_id
+     * @param  string $order    asc or desc
+     */
     public function techniciansInOrder($order = 'asc')
     {
         return $this->technicians()->orderBy('technicians.seq_id', $order);
