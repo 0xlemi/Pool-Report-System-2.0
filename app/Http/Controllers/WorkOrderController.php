@@ -72,7 +72,7 @@ class WorkOrderController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
 
         return view('workorders.create', compact('services', 'supervisors'));
@@ -177,7 +177,7 @@ class WorkOrderController extends PageController
 
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->services()->get());
+        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
 

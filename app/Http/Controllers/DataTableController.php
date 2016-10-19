@@ -192,7 +192,7 @@ class DataTableController extends PageController
         }
 
         $services = $this->loggedUserAdministrator()
-                        ->services()
+                        ->servicesInOrder()
                         ->get()
                         ->where('status', (int) $request->status)
                         ->transform(function($item){
@@ -236,7 +236,7 @@ class DataTableController extends PageController
     public function clients()
     {
         $clients = $this->loggedUserAdministrator()
-                        ->clients()
+                        ->clientsInOrder()
                         ->get()
                         ->transform(function($item){
                             return (object) array(

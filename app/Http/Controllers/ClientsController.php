@@ -54,7 +54,7 @@ class ClientsController extends PageController
     {
         $this->checkPermissions('create');
 
-        $services = $this->loggedUserAdministrator()->services()->get();
+        $services = $this->loggedUserAdministrator()->servicesInOrder()->get();
 
         return view('clients.create', compact('services'));
     }
@@ -136,7 +136,7 @@ class ClientsController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $client = $admin->clientsBySeqId($seq_id);
-        $services = $admin->services()->get();
+        $services = $admin->servicesInOrder()->get();
 
         return view('clients.edit',compact('client', 'services'));
     }

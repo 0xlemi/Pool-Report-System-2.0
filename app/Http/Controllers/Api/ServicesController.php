@@ -71,11 +71,11 @@ class ServicesController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
-            $services = $admin->services()
+            $services = $admin->servicesInOrder()
                             ->where('status', $request->status)
                             ->paginate($limit);
         }else{
-            $services = $admin->services()
+            $services = $admin->servicesInOrder()
                             ->paginate($limit);
         }
 
@@ -89,11 +89,11 @@ class ServicesController extends ApiController
     protected function indexPreview(Request $request, Administrator $admin)
     {
         if($request->has('status')){
-            $services = $admin->services()
+            $services = $admin->servicesInOrder()
                                 ->where('status', $request->status)
                                 ->get();
         }else{
-            $services = $admin->services()->get();
+            $services = $admin->servicesInOrder()->get();
         }
 
         return $this->respond([

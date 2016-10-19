@@ -74,16 +74,6 @@ class Administrator extends Model
     }
 
     /**
-     * Get reports associatod with this user
-     * tested
-     */
-    public function reports($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
-        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
-                    ->orderBy('seq_id', $order);
-    }
-
-    /**
      * Total number of services that need to be done today
      * @return int
      * no need for test
@@ -173,6 +163,16 @@ class Administrator extends Model
     }
 
     /**
+     * Get reports associatod with this user
+     * tested
+     */
+    public function reports($descending_order = false){
+        $order = ($descending_order) ? 'desc' : 'asc';
+        return $this->hasManyThrough('App\Report', 'App\Service', 'admin_id')
+                    ->orderBy('seq_id', $order);
+    }
+
+    /**
      * Get the reports based on the seq_id
      * @param  integer $seq_id
      * @return App\Report
@@ -217,9 +217,13 @@ class Administrator extends Model
      *  Get services associated with this user
      * tested
      */
-    public function services($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
-        return $this->hasMany('App\Service', 'admin_id')->orderBy('seq_id', $order);
+    public function services(){
+        return $this->hasMany('App\Service', 'admin_id');
+    }
+
+    public function servicesInOrder($order = 'asc')
+    {
+        return $this->services()->orderBy('seq_id', $order);
     }
 
     /**
@@ -237,9 +241,13 @@ class Administrator extends Model
      * Get clients associated with this user
      * tested
      */
-    public function clients($descending_order = false){
-        $order = ($descending_order) ? 'desc' : 'asc';
-        return Client::where('admin_id', $this->id)->orderBy('seq_id', $order);
+    public function clients(){
+        return Client::where('admin_id', $this->id);
+    }
+
+    public function clientsInOrder($order = 'asc')
+    {
+        return $this->clients()->orderBy('seq_id', $order);
     }
 
     /**

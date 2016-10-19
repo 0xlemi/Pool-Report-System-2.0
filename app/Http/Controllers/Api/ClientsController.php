@@ -50,7 +50,7 @@ class ClientsController extends ApiController
         ]);
 
         $limit = ($request->limit)?: 5;
-        $clients = $this->loggedUserAdministrator()->clients()->paginate($limit);
+        $clients = $this->loggedUserAdministrator()->clientsInOrder()->paginate($limit);
 
         return $this->respondWithPagination(
             $clients,
@@ -98,7 +98,7 @@ class ClientsController extends ApiController
             $client->save();
 
             // Crete the User
-            $client_id = $admin->clients(true)->first()->id;
+            $client_id = $admin->clientsInOrder('desc')->first()->id;
             $user = User::create([
                 'email' => htmlentities($request->email),
                 'password' => bcrypt(str_random(20)),
@@ -119,7 +119,7 @@ class ClientsController extends ApiController
         // throw a success message
         return $this->respondPersisted(
             'The client was successfuly created.',
-            $this->clientTransformer->transform($admin->clients(true)->first())
+            $this->clientTransformer->transform($admin->clientsInOrder('desc')->first())
         );
 
     }
