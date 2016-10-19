@@ -59,8 +59,9 @@ class TechniciansController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
+            // $technicians = $admin->techniciansActive($request->status)
+                            // ->paginate($limit);
             $technicians = $admin->techniciansInOrder()
-                            ->where('technicians.status', $request->status)
                             ->paginate($limit);
         }else{
             $technicians = $admin->techniciansInOrder()
@@ -76,9 +77,7 @@ class TechniciansController extends ApiController
     protected function indexPreview(Request $request, Administrator $admin)
     {
         if($request->has('status')){
-            $technicians = $admin->techniciansInOrder()
-                                ->where('technicians.status', $request->status)
-                                ->get();
+            $technicians = $admin->techniciansActive($request->status);
         }else{
             $technicians = $admin->techniciansInOrder()->get();
         }
@@ -227,8 +226,9 @@ class TechniciansController extends ApiController
 
             // update user
             $user = $technician->user();
-            if(isset($request->username)){ $user->email = htmlentities($request->username); }
-            if(isset($request->password)){ $user->password = bcrypt($request->password); }
+            if($request->has('username')){ $user->email = htmlentities($request->username); }
+            if($request->has('password')){ $user->password = bcrypt($request->password); }
+            if($request->has('status')){ $user->active = $request->status; }
 
             // persist
             $technician->save();
@@ -305,6 +305,7 @@ class TechniciansController extends ApiController
             'cellphone' => 'string|max:20',
             'address'   => 'max:100',
             'language' => 'string|max:2',
+            'status' => 'boolean',
             'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',

@@ -295,7 +295,7 @@ class Administrator extends Model
      */
     public function supervisorsInOrder($order = 'asc')
     {
-        return $this->technicians()
+        return $this->supervisors()
                     ->orderBy('supervisors.seq_id', $order);
     }
 

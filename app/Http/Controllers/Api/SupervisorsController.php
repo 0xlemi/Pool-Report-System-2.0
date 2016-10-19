@@ -65,12 +65,13 @@ class SupervisorsController extends ApiController
         $limit = ($request->limit)?: 5;
         // Filter by status
         if($request->has('status')){
+            // $supervisors = $admin->supervisorsActive()
+            //                     ->paginate($limit);
             $supervisors = $admin->supervisorsInOrder()
-                            ->where('status', $request->status)
-                            ->paginate($limit);
+                                ->paginate($limit);
         }else{
             $supervisors = $admin->supervisorsInOrder()
-                            ->paginate($limit);
+                                ->paginate($limit);
         }
 
         return $this->respondWithPagination(
@@ -84,9 +85,7 @@ class SupervisorsController extends ApiController
     {
 
         if($request->has('status')){
-            $supervisors = $admin->supervisorsInOrder()
-                                ->where('status', $request->status)
-                                ->get();
+            $supervisors = $admin->supervisorsActive();
         }else{
             $supervisors = $admin->supervisorsInOrder()->get();
         }
@@ -214,8 +213,9 @@ class SupervisorsController extends ApiController
 
             // update the user
             $user = $supervisor->user();
-            if(isset($request->email)){ $user->email = htmlentities($request->email); }
-            if(isset($request->password)){ $user->password = bcrypt($request->password); }
+            if($request->has('email')){ $user->email = htmlentities($request->email); }
+            if($request->has('password')){ $user->password = bcrypt($request->password); }
+            if($request->has('status')){ $user->active = $request->status; }
 
             $supervisor->save();
             $user->save();
@@ -289,6 +289,7 @@ protected function validateSupervisorRequestCreate(Request $request)
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
             'language' => 'string|max:2',
+            'status' => 'boolean',
             'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',

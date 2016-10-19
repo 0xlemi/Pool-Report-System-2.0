@@ -37,6 +37,7 @@ class SupervisorPreviewTransformer extends Transformer
             'id' => $supervisor->seq_id,
             'name' => $supervisor->name,
             'last_name' => $supervisor->last_name,
+            'status' => $supervisor->user()->active,
             'href' => url("api/v1/supervisors/{$supervisor->seq_id}?api_token={$this->getUser()->api_token}"),
             'photo' => $photo,
         ];

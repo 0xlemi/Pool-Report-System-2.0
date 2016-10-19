@@ -143,8 +143,8 @@ class WorkOrderController extends ApiController
         $this->validate($request,[
             'title' => 'string|max:255',
             'description' => 'string',
-            'service' => 'integer|min:1',
-            'supervisor' => 'integer|min:1',
+            'service_id' => 'integer|min:1',
+            'supervisor_id' => 'integer|min:1',
             'start' => 'date',
             'price' => 'numeric|max:10000000',
             'currency' => 'string|size:3',

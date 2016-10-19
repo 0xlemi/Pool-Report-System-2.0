@@ -44,6 +44,7 @@ class TechnicianTransformer extends Transformer
             'cellphone' => $technician->cellphone,
             'address' => $technician->address,
             'language' => $technician->language,
+            'status' => $technician->user()->active,
             'getReportsEmails' => $technician->get_reports_emails,
             'comments' => $technician->comments,
             'photo' => $photo,

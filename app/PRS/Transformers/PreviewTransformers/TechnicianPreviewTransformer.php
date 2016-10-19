@@ -34,6 +34,7 @@ class TechnicianPreviewTransformer extends Transformer
             'id' => $technician->seq_id,
             'name' => $technician->name,
             'last_name' => $technician->last_name,
+            'status' => $technician->user()->active,
             'href' => url("api/v1/technicians/{$technician->seq_id}?api_token={$this->getUser()->api_token}"),
             'photo' => $photo,
         ];
