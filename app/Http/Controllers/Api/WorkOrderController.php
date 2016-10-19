@@ -64,8 +64,8 @@ class WorkOrderController extends ApiController
         $this->validate($request,[
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'service' => 'required|integer|min:1',
-            'supervisor' => 'required|integer|min:1',
+            'service_id' => 'required|integer|min:1',
+            'supervisor_id' => 'required|integer|min:1',
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
@@ -106,7 +106,7 @@ class WorkOrderController extends ApiController
         if($workOrder){
             return response()->json([
                 'message' => 'Work Order was created successfully.',
-                'object' => $this->workOrderTransformer->transform($workOrder)
+                'object' => $this->workOrderTransformer->transform($admin->workOrdersInOrder('desc')->first())
             ]);
         }
         return response()->json([
