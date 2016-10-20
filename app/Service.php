@@ -50,6 +50,11 @@ class Service extends Model
         'admin_id',
     ];
 
+    // public function end_time()
+    // {
+    //     return new EndTime();
+    // }
+
     /**
 	 * Get the associated Administrator with this service
 	 * tested

@@ -126,7 +126,7 @@ class ReportsController extends ApiController
             }
 
         // check if the report was made on time
-        $on_time = $this->reportHelpers->checkOnTime(
+        $on_time = $this->reportHelpers->checkOnTimeValue(
                 (new Carbon($request->completed, $admin->timezone)),
                 $service->start_time,
                 $service->end_time

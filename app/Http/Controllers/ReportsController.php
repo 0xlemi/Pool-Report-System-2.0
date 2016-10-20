@@ -118,7 +118,7 @@ class ReportsController extends PageController
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
-        $on_time = $this->reportHelpers->checkOnTime(
+        $on_time = $this->reportHelpers->checkOnTimeValue(
 // ****** check the timezoen for check on time
                 $completed_at,
                 $service->start_time,

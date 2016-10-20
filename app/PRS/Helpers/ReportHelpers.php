@@ -11,29 +11,94 @@ class ReportHelpers
     use ControllerTrait;
     use HelperTrait;
 
-    // dates are NOT sent in UTC
-    // start_time and end_time are not in UTC, thats why we dont convernt $completed_date
-    public function checkOnTime(Carbon $completed_date, $start_time, $end_time)
+
+    /**
+     * Check if the completed date is late.
+     * Dates and times should be in the admin->timezone not UTC
+     * @param  Carbon $completedDate   date the report was made
+     * @param  string $endTime
+     * @param  string $timeTimezone  $admin->timezone
+     * @return boolean
+     * tested
+     */
+    public function checkIsLate(Carbon $completedDate, string $endTime, string $timeTimezone)
     {
-        $admin = $this->loggedUserAdministrator();
+        $carbonEnd = $this->prepareTime($completedDate, $endTime, $timeTimezone);
 
-        $completed_date_string = $completed_date->toDateString();
+        // $completedDate happend later than $carbon_end
+        return $completedDate->gt($carbonEnd);
+    }
 
-        $carbon_start = new Carbon( $completed_date_string.' '.$start_time, $admin->timezone);
-        $carbon_end = new Carbon( $completed_date_string.' '.$end_time, $admin->timezone);
+    /**
+     * Check if the completed date is early.
+     * Dates and times should be in the admin->timezone not UTC
+     * @param  Carbon $completedDate   date the report was made
+     * @param  string $startTime
+     * @param  string $timeTimezone  $admin->timezone
+     * @return boolean
+     * tested
+     */
+    public function checkIsEarly(Carbon $completedDate, string $startTime, string $timeTimezone)
+    {
+        $carbonStart = $this->prepareTime($completedDate, $startTime, $timeTimezone);
 
-        $on_time = 0;
-        if($completed_date->between($carbon_start, $carbon_end)){
-            // onTime
-            $on_time = 1;
-        }elseif($completed_date->gt($carbon_start)){
-            // late
-            $on_time = 2;
-        }elseif($completed_date->lt($carbon_end)){
-            // early
-            $on_time = 3;
+        // $completedDate happend before $carbon_end
+        return $completedDate->lt($carbonStart);
+    }
+
+    /**
+     * Check if the completed date is onTime.
+     * Dates and times should be in the admin->timezone not UTC
+     * @param  Carbon $completedDate   date the report was made
+     * @param  string $startTime
+     * @param  string $endTime
+     * @param  string $timesTimezone  $admin->timezone
+     * @return boolean
+     * tested
+     */
+    public function checkIsOnTime(Carbon $completedDate, string $startTime, string $endTime, string $timesTimezone)
+    {
+        $carbonStart = $this->prepareTime($completedDate, $startTime, $timesTimezone);
+        $carbonEnd = $this->prepareTime($completedDate, $endTime, $timesTimezone);
+
+        return $completedDate->between($carbonStart, $carbonEnd);
+    }
+
+    /**
+     * Check if the completed date is late, early or on time
+     * Dates and times should be in the admin->timezone not UTC
+     * @param  Carbon $completedDate   date the report was made
+     * @param  string $startTime
+     * @param  string $endTime
+     * @param  string $timesTimezone  $admin->timezone
+     * @return int                1=on_time, 2=late, 3=early
+     * tested
+     */
+    public function checkOnTimeValue(Carbon $completedDate, string $startTime, string $endTime, string $timesTimezone)
+    {
+        if($this->checkIsOnTime($completedDate, $startTime, $endTime, $timesTimezone)){
+            return 1; // onTime
+        }elseif($this->checkIsLate($completedDate, $endTime, $timesTimezone)){
+            return 2; // late
+        }elseif($this->checkIsEarly($completedDate, $startTime, $timesTimezone)){
+            return 3; //early
         }
-        return $on_time;
+        return 0; //unknown
+    }
+
+    /**
+     * Check if the completed date is late.
+     * Dates and times should be in the admin->timezone not UTC
+     * @param  Carbon $completedDate   date the report was made
+     * @param  string $startTime
+     * @param  string $endTime
+     * @param  string $timesTimezone  $admin->timezone
+     * @return int                1=on_time, 2=late, 3=early
+     */
+    protected function prepareTime(Carbon $completedDate, string $time, string $timeTimezone)
+    {
+        $completedDateString = $completedDate->toDateString();
+        return (new Carbon($completedDateString.' '.$time, $timeTimezone));
     }
 
     function styleOnTime($on_time){

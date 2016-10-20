@@ -21,6 +21,7 @@ class TodaysRouteController extends PageController
     public function __construct(TechnicianHelpers $technicianHelpers,
                                 ReportHelpers $reportHelpers)
     {
+        $this->middleware('auth');
         $this->technicianHelpers = $technicianHelpers;
         $this->reportHelpers = $reportHelpers;
     }
@@ -59,7 +60,7 @@ class TodaysRouteController extends PageController
         $service = $admin->serviceBySeqId($request->service_id);
         $technician = $admin->technicianBySeqId($request->technician_id);
 
-        $on_time = $this->reportHelpers->checkOnTime(
+        $on_time = $this->reportHelpers->checkOnTimeValue(
 // ****** check the timezoen for check on time
                 $completed_at,
                 $service->start_time,
