@@ -1,6 +1,18 @@
 <div class="mobile-menu-left-overlay"></div>
 <nav class="side-menu">
     <ul class="side-menu-list">
+        <li class="orange-red {{ Request::is('dashboard*')? 'opened':'' }}">
+            <a href="{{ url('/dashboard') }}">
+                <i class="font-icon font-icon-speed"></i>
+                <span class="lbl">Dashboard</span>
+            </a>
+        </li>
+        <li class="grey {{ Request::is('todaysroute*')? 'opened':'' }}">
+            <a href="{{ url('/todaysroute') }}">
+                <i class="glyphicon glyphicon-road"></i>
+                <span class="lbl">Today's Route</span>
+            </a>
+        </li>
         <li class="brown {{ Request::is('reports*')? 'opened':'' }}">
             <a href="{{ url('/reports') }}">
                 <i class="font-icon font-icon-notebook"></i>

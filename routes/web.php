@@ -16,6 +16,7 @@ Auth::routes();
 Route::auth();
 
 Route::get('/', 'HomeController@index');
+Route::get('/dashboard', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
 
 // change email settings from link
@@ -26,6 +27,8 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 
 // remove this eventually
 Route::get('/logout', 'Auth\LoginController@logout');
+
+Route::get('todaysroute', 'TodaysRouteController@index');
 
 Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
@@ -72,6 +75,7 @@ Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubsc
 Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
 Route::patch('settings/permissions', 'SettingsController@permissions');
 
+Route::get('datatables/todaysroute', 'DataTableController@todaysroute');
 Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/workorders', 'DataTableController@workOrders');
 Route::get('datatables/works/{workOrderSeqId}', 'DataTableController@works');

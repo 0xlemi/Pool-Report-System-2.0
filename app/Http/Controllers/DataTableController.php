@@ -35,6 +35,25 @@ class DataTableController extends PageController
         $this->clientHelpers = $clientHelpers;
     }
 
+    public function todaysroute()
+    {
+
+        $services = $this->loggedUserAdministrator()
+                ->servicesDoToday()
+                ->transform(function($item){
+                        return (object) array(
+                            'id' => $item->seq_id,
+                            'name' => $item->name,
+                            'address' => $item->address_line,
+                            'type' => $this->serviceHelpers->get_styled_type($item->type),
+                            'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
+                        );
+                    })
+                ->flatten(1);
+
+        return response()->json($services);
+    }
+
     public function reports(Request $request)
     {
         if(!validateDate($request->date))
