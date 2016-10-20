@@ -130,6 +130,7 @@ class Administrator extends Model
         }
 
         return $this->services()
+            ->where('status', '=', 1)
             ->get()
             ->map(function($service) use ($date, $AddCompletedReports){
                 // check that the service is do in this date

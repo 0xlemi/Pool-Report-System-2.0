@@ -29,6 +29,8 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 Route::get('/logout', 'Auth\LoginController@logout');
 
 Route::get('todaysroute', 'TodaysRouteController@index');
+Route::get('todaysroute/report/{service_seq_id}', 'TodaysRouteController@createReport');
+Route::post('todaysroute/report', 'TodaysRouteController@storeReport');
 
 Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
