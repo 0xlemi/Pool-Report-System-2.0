@@ -46,7 +46,7 @@ class DataTableController extends PageController
                             'name' => $item->name,
                             'address' => $item->address_line,
                             'type' => $this->serviceHelpers->get_styled_type($item->type),
-                            'end_time' => $item->end_time,
+                            'end_time' => $item->EndTime()->colored(),
                             'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
                         );
                     })

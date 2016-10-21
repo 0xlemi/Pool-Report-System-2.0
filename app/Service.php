@@ -8,6 +8,7 @@ use Intervention;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Classes\ValueObjects\EndTime;
 
 use Carbon\Carbon;
 
@@ -50,10 +51,11 @@ class Service extends Model
         'admin_id',
     ];
 
-    // public function end_time()
-    // {
-    //     return new EndTime();
-    // }
+    public function endTime()
+    {
+        $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
+        return (new EndTime($this, $reportHelpers));
+    }
 
     /**
 	 * Get the associated Administrator with this service

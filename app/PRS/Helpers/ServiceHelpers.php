@@ -8,6 +8,178 @@ use Illuminate\Support\Collection;
  */
 class ServiceHelpers
 {
+
+
+    /**
+     * Transform collection of services to generate dropdown options
+     * @param  Collection $services
+     * @return Collection
+     */
+    public function transformForDropdown(Collection $services)
+    {
+        return $services
+            ->transform(function($item){
+                return (object) array(
+                    'key' => $item->seq_id,
+                    'label' => $item->name,
+                    'icon' => url($item->icon()),
+                );
+            });
+    }
+
+    /**
+     * Get the binary number between 0,127 that represents de days of the week
+     * @param  boolean $monday
+     * @param  boolean $tuesday
+     * @param  boolean $wednesday
+     * @param  boolean $thursday
+     * @param  boolean $friday
+     * @param  boolean $saturday
+     * @param  boolean $sunday
+     * @return integer
+     */
+    public function service_days_to_num(
+    	$monday, $tuesday, $wednesday,
+    	$thursday, $friday, $saturday, $sunday){
+    	// basicamente es un numero binario de 7 digitos, el numero maximo posible es 2^7 = 128
+        $num = 0;
+        if($monday){
+            $num += 1;
+        }if($tuesday){
+            $num += 2;
+        }if($wednesday){
+            $num += 4;
+        }if($thursday){
+            $num += 8;
+        }if($friday){
+            $num += 16;
+        }if($saturday){
+            $num += 32;
+        }if($sunday){
+            $num += 64;
+        }
+        return $num;
+    }
+
+    /**
+     * transform service days number to a array of days
+     * where active days are set to true.
+     * @param  integer $num
+     * @return array      array of the days of the week
+     */
+    public function num_to_service_days($num)
+    {
+        // we are expecting a number between 0 and 127
+        // is basically a decimal to binary conversion
+        $days = array(
+            'monday'    => false,
+            'tuesday'   => false,
+            'wednesday' => false,
+            'thursday'  => false,
+            'friday'    => false,
+            'saturday'  => false,
+            'sunday'    => false,
+        );
+        if($num >= 64){
+            $days['sunday'] = true;
+            $num -= 64;
+        }if($num >= 32){
+            $days['saturday'] = true;
+            $num -= 32;
+        }if($num >= 16){
+            $days['friday'] = true;
+            $num -= 16;
+        }if($num >= 8){
+            $days['thursday'] = true;
+            $num -= 8;
+        }if($num >= 4){
+            $days['wednesday'] = true;
+            $num -= 4;
+        }if($num >= 2){
+            $days['tuesday'] = true;
+            $num -= 2;
+        }if($num >= 1){
+            $days['monday'] = true;
+            $num -= 1;
+        }
+        return $days;
+    }
+
+    /**
+     * Get the days of the week in text
+     * @param  integer $num service_days number stored in database
+     * @return string
+     */
+    public function get_styled_service_days($num){
+        $days = $this->num_to_service_days($num);
+        $result = '';
+        foreach ($days as $day => $active) {
+            if($active){
+                $result .= substr($day, 0, 3).', ';
+            }
+        }
+        return '<span class="label label-pill label-default">'.$result.'</span>';
+    }
+
+    /**
+     * Styling the service status
+     * @param  integer  $status  the status code
+     * @param  boolean $is_pill tag must be in pill format
+     * @return string
+     */
+    public function get_styled_status($status, $is_pill = true){
+    	$tag_type = '';
+    	if($is_pill){
+    		$tag_type = 'label-pill';
+    	}
+    	if($status){
+    		return '<span class="label '.$tag_type.' label-success">Active</span>';
+    	}
+    	return '<span class="label '.$tag_type.' label-danger">Inactive</span>';
+    }
+
+    /**
+     * Styling the service type
+     * @param  integer  $type
+     * @param  boolean $is_pill
+     * @return string
+     */
+    public function get_styled_type($type, $is_pill = true){
+    	$tag_type = '';
+    	if($is_pill){
+    		$tag_type = 'label-pill';
+    	}
+    	switch ($type) {
+    		case 1:
+    			return '<span class="label '.$tag_type.' label-info">chlorine</span>';
+    			break;
+    		case 2:
+    			return '<span class="label '.$tag_type.' label-primary">Salt</span>';
+    			break;
+    		default:
+    			return '<span class="label '.$tag_type.' label-default">Unknown</span>';
+    			break;
+    	}
+    }
+
+    public function getCountries()
+    {
+        return $this->countries;
+    }
+
+    /**
+     * Get the country name by the country code
+     * @param  string $code string of 2 characters
+     * @return string       full name of the country
+     */
+    public function get_country_by_code($code){
+
+    	if(array_key_exists($code, $this->countries)){
+    		return $this->countries[$code];
+    	}
+    	return $code;
+    }
+
     private $countries = array(
     		'US' => 'United States',
     		'MX' => 'Mexico',
@@ -255,175 +427,5 @@ class ServiceHelpers
     		'ZM' => 'Zambia',
     		'ZW' => 'Zimbabwe',
     	);
-
-    /**
-     * Transform collection of services to generate dropdown options
-     * @param  Collection $services
-     * @return Collection
-     */
-    public function transformForDropdown(Collection $services)
-    {
-        return $services
-            ->transform(function($item){
-                return (object) array(
-                    'key' => $item->seq_id,
-                    'label' => $item->name,
-                    'icon' => url($item->icon()),
-                );
-            });
-    }
-
-    /**
-     * Get the binary number between 0,127 that represents de days of the week
-     * @param  boolean $monday
-     * @param  boolean $tuesday
-     * @param  boolean $wednesday
-     * @param  boolean $thursday
-     * @param  boolean $friday
-     * @param  boolean $saturday
-     * @param  boolean $sunday
-     * @return integer
-     */
-    public function service_days_to_num(
-    	$monday, $tuesday, $wednesday,
-    	$thursday, $friday, $saturday, $sunday){
-    	// basicamente es un numero binario de 7 digitos, el numero maximo posible es 2^7 = 128
-        $num = 0;
-        if($monday){
-            $num += 1;
-        }if($tuesday){
-            $num += 2;
-        }if($wednesday){
-            $num += 4;
-        }if($thursday){
-            $num += 8;
-        }if($friday){
-            $num += 16;
-        }if($saturday){
-            $num += 32;
-        }if($sunday){
-            $num += 64;
-        }
-        return $num;
-    }
-
-    /**
-     * transform service days number to a array of days
-     * where active days are set to true.
-     * @param  integer $num
-     * @return array      array of the days of the week
-     */
-    public function num_to_service_days($num)
-    {
-        // we are expecting a number between 0 and 127
-        // is basically a decimal to binary conversion
-        $days = array(
-            'monday'    => false,
-            'tuesday'   => false,
-            'wednesday' => false,
-            'thursday'  => false,
-            'friday'    => false,
-            'saturday'  => false,
-            'sunday'    => false,
-        );
-        if($num >= 64){
-            $days['sunday'] = true;
-            $num -= 64;
-        }if($num >= 32){
-            $days['saturday'] = true;
-            $num -= 32;
-        }if($num >= 16){
-            $days['friday'] = true;
-            $num -= 16;
-        }if($num >= 8){
-            $days['thursday'] = true;
-            $num -= 8;
-        }if($num >= 4){
-            $days['wednesday'] = true;
-            $num -= 4;
-        }if($num >= 2){
-            $days['tuesday'] = true;
-            $num -= 2;
-        }if($num >= 1){
-            $days['monday'] = true;
-            $num -= 1;
-        }
-        return $days;
-    }
-
-    /**
-     * Get the days of the week in text
-     * @param  integer $num service_days number stored in database
-     * @return string
-     */
-    public function get_styled_service_days($num){
-        $days = $this->num_to_service_days($num);
-        $result = '';
-        foreach ($days as $day => $active) {
-            if($active){
-                $result .= substr($day, 0, 3).', ';
-            }
-        }
-        return '<span class="label label-pill label-default">'.$result.'</span>';
-    }
-
-    /**
-     * Styling the service status
-     * @param  integer  $status  the status code
-     * @param  boolean $is_pill tag must be in pill format
-     * @return string
-     */
-    public function get_styled_status($status, $is_pill = true){
-    	$tag_type = '';
-    	if($is_pill){
-    		$tag_type = 'label-pill';
-    	}
-    	if($status){
-    		return '<span class="label '.$tag_type.' label-success">Active</span>';
-    	}
-    	return '<span class="label '.$tag_type.' label-danger">Inactive</span>';
-    }
-
-    /**
-     * Styling the service type
-     * @param  integer  $type
-     * @param  boolean $is_pill
-     * @return string
-     */
-    public function get_styled_type($type, $is_pill = true){
-    	$tag_type = '';
-    	if($is_pill){
-    		$tag_type = 'label-pill';
-    	}
-    	switch ($type) {
-    		case 1:
-    			return '<span class="label '.$tag_type.' label-info">chlorine</span>';
-    			break;
-    		case 2:
-    			return '<span class="label '.$tag_type.' label-primary">Salt</span>';
-    			break;
-    		default:
-    			return '<span class="label '.$tag_type.' label-default">Unknown</span>';
-    			break;
-    	}
-    }
-
-    public function getCountries()
-    {
-        return $this->countries;
-    }
-
-    /**
-     * Get the country name by the country code
-     * @param  string $code string of 2 characters
-     * @return string       full name of the country
-     */
-    public function get_country_by_code($code){
-
-    	if(array_key_exists($code, $this->countries)){
-    		return $this->countries[$code];
-    	}
-    	return $code;
-    }
 
 }

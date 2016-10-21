@@ -129,7 +129,8 @@ class ReportsController extends ApiController
         $on_time = $this->reportHelpers->checkOnTimeValue(
                 (new Carbon($request->completed, $admin->timezone)),
                 $service->start_time,
-                $service->end_time
+                $service->end_time,
+                $admin->timezone
             );
 
         // ***** Persisting *****

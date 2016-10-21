@@ -122,7 +122,8 @@ class ReportsController extends PageController
 // ****** check the timezoen for check on time
                 $completed_at,
                 $service->start_time,
-                $service->end_time
+                $service->end_time,
+                $admin->timezone
             );
 
         $report = Report::create([
