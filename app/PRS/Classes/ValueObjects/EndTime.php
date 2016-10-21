@@ -8,22 +8,27 @@ use App\Service;
 
 class EndTime{
 
-    protected $reportHelpers;
-    protected $service;
+    protected $endTime;
     protected $timezone;
+    protected $reportHelpers;
 
-    public function __construct(Service $service, ReportHelpers $reportHelpers)
+    public function __construct(string $endTime, string $timezone, ReportHelpers $reportHelpers)
     {
+        $this->endTime = $endTime;
+        $this->timezone = $timezone;
         $this->reportHelpers = $reportHelpers;
-        $this->service = $service;
-        $this->timezone = $this->service->admin()->timezone;
     }
 
+    /**
+     * Span tag with the end time in red if is late or green if is still on time
+     * @return string  html span with time
+     * tested
+     */
     public function colored()
     {
         $isLate = $this->reportHelpers->checkIsLate(
                             Carbon::now($this->timezone),
-                            $this->service->end_time,
+                            $this->endTime,
                             $this->timezone
                         );
         $class = ($isLate) ? 'danger':'success';
@@ -31,9 +36,14 @@ class EndTime{
     }
 
 
+    /**
+     * Convert to string
+     * @return string
+     * tested
+     */
     public function __toString()
     {
-        return (new Carbon($this->service->end_time))->format('g:i:s A');;
+        return (new Carbon($this->endTime))->format('g:i:s A');
     }
 
 }

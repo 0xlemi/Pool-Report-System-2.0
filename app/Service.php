@@ -9,6 +9,7 @@ use Intervention;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Classes\ValueObjects\EndTime;
+use App\PRS\Classes\ValueObjects\ServiceDays;
 
 use Carbon\Carbon;
 
@@ -102,12 +103,12 @@ class Service extends Model
     public function endTime()
     {
         $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-        return (new EndTime($this, $reportHelpers));
+        return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
     }
 
     public function serviceDays()
     {
-        
+        return (new ServiceDays($this->service_days));
     }
 
 
