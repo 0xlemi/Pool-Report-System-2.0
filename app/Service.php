@@ -51,11 +51,7 @@ class Service extends Model
         'admin_id',
     ];
 
-    public function endTime()
-    {
-        $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-        return (new EndTime($this, $reportHelpers));
-    }
+    //******** RELATIONSHIPS ********
 
     /**
 	 * Get the associated Administrator with this service
@@ -99,6 +95,23 @@ class Service extends Model
     {
         return ($this->workOrders()->get()->count() > 0);
     }
+
+
+    //******** VALUE OBJECTS ********
+
+    public function endTime()
+    {
+        $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
+        return (new EndTime($this, $reportHelpers));
+    }
+
+    public function serviceDays()
+    {
+        
+    }
+
+
+    //******** MISCELLANEOUS ********
 
     /**
      * get the service days as a boolean for each day insted of the number
