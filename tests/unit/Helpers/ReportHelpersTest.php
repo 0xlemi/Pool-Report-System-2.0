@@ -87,7 +87,7 @@ class ReportHelpersTest extends TestCase
 
 
     /** @test */
-    public function check_if_the_report_is_on_time_late_or_early()
+    public function check_if_the_report_is_on_time_late_or_early_and_give_value()
     {
         // Given
         $timezone = 'UTC';

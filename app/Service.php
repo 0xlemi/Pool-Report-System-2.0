@@ -100,12 +100,20 @@ class Service extends Model
 
     //******** VALUE OBJECTS ********
 
+    /**
+     * endTime ValueObject
+     * @return EndTime
+     */
     public function endTime()
     {
         $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
         return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
     }
 
+    /**
+     * ServiceDays ValueObject
+     * @return ServiceDays 
+     */
     public function serviceDays()
     {
         return (new ServiceDays($this->service_days));

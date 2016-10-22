@@ -8,7 +8,6 @@ use App\PRS\Traits\HelperTrait;
 
 class ReportHelpers
 {
-    use ControllerTrait;
     use HelperTrait;
 
 
