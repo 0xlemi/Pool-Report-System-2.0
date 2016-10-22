@@ -112,7 +112,7 @@ class Service extends Model
 
     /**
      * ServiceDays ValueObject
-     * @return ServiceDays 
+     * @return ServiceDays
      */
     public function serviceDays()
     {
@@ -122,15 +122,15 @@ class Service extends Model
 
     //******** MISCELLANEOUS ********
 
-    /**
-     * get the service days as a boolean for each day insted of the number
-     * @return array
-     * tested
-     */
-    public function service_days_by_day(){
-        $serviceHelpers = \App::make('App\PRS\Helpers\ServiceHelpers');
-        return $serviceHelpers->num_to_service_days($this->service_days);
-    }
+    // /**
+    //  * get the service days as a boolean for each day insted of the number
+    //  * @return array
+    //  * tested
+    //  */
+    // public function service_days_by_day(){
+    //     $serviceHelpers = \App::make('App\PRS\Helpers\ServiceHelpers');
+    //     return $serviceHelpers->num_to_service_days($this->service_days);
+    // }
 
     /**
      * check if this service is scheduled for a date
@@ -142,7 +142,7 @@ class Service extends Model
     {
         $admin = $this->admin();
         $dayToCheck = strtolower($date->format('l'));
-        return $this->service_days_by_day()[$dayToCheck];
+        return $this->serviceDays()->asArray()[$dayToCheck];
     }
 
     /**

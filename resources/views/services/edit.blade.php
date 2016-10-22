@@ -122,33 +122,33 @@
 								<label class="col-sm-2 form-control-label">Service Days:</label>
 								<div class="col-sm-10">
 									<div class="btn-group btn-group-sm" data-toggle="buttons">
-										<label class="btn {{ ($service->service_days_by_day()['monday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['monday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_monday" {{ ($service->service_days_by_day()['monday']) ? 'checked':'' }}>Monday
+													name="service_days_monday" {{ ($service->serviceDays()->asArray()['monday']) ? 'checked':'' }}>Monday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['tuesday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['tuesday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_tuesday" {{ ($service->service_days_by_day()['tuesday']) ? 'checked':'' }}>Tuesday
+													name="service_days_tuesday" {{ ($service->serviceDays()->asArray()['tuesday']) ? 'checked':'' }}>Tuesday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['wednesday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['wednesday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_wednesday" {{ ($service->service_days_by_day()['wednesday']) ? 'checked':'' }}>Wednesday
+													name="service_days_wednesday" {{ ($service->serviceDays()->asArray()['wednesday']) ? 'checked':'' }}>Wednesday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['thursday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['thursday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_thursday" {{ ($service->service_days_by_day()['thursday']) ? 'checked':'' }}>Thursday
+													name="service_days_thursday" {{ ($service->serviceDays()->asArray()['thursday']) ? 'checked':'' }}>Thursday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['friday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['friday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_friday" {{ ($service->service_days_by_day()['friday']) ? 'checked':'' }}>Friday
+													name="service_days_friday" {{ ($service->serviceDays()->asArray()['friday']) ? 'checked':'' }}>Friday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['saturday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['saturday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_saturday" {{ ($service->service_days_by_day()['saturday']) ? 'checked':'' }}>Saturday
+													name="service_days_saturday" {{ ($service->serviceDays()->asArray()['saturday']) ? 'checked':'' }}>Saturday
 										</label>
-										<label class="btn {{ ($service->service_days_by_day()['sunday']) ? 'active':'' }}">
+										<label class="btn {{ ($service->serviceDays()->asArray()['sunday']) ? 'active':'' }}">
 											<input type="checkbox" autocomplete="off"
-													name="service_days_sunday" {{ ($service->service_days_by_day()['sunday']) ? 'checked':'' }}>Sunday
+													name="service_days_sunday" {{ ($service->serviceDays()->asArray()['sunday']) ? 'checked':'' }}>Sunday
 										</label>
 									</div>
 								</div>

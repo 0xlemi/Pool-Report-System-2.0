@@ -213,7 +213,7 @@ class ServicesController extends ApiController
                 return $this->respondNotFound('Service with that id, does not exist.');
             }
 
-        $service_days = $this->getServiceDaysNumberFromRequest($service->service_days, $request);
+        $service_days = $this->getServiceDaysNumberFromRequest($service->serviceDays()->asArray(), $request);
         // ***** Persist *****
         $transaction = DB::transaction(function () use($request, $service, $service_days) {
 
@@ -272,14 +272,12 @@ class ServicesController extends ApiController
 
     /**
      * Get the service_days number from the request arguments not changing the dates that where not sent as arguments
-     * @param  int      $originalNum     service_days num that the unchanged service has
+     * @param  array    $days            
      * @param  Request  $request
      * @return  int                      final service_days num for persisting
      */
-    protected function getServiceDaysNumberFromRequest($originalNum, $request)
+    protected function getServiceDaysNumberFromRequest(array $days, $request)
     {
-        // get days from the number
-        $days = $this->serviceHelpers->num_to_service_days($originalNum);
         // get the get number from the service days ignoring the unset ones
         return $this->serviceHelpers->service_days_to_num(
             (isset($request->service_day_monday)) ? $request->service_day_monday : $days['monday'],

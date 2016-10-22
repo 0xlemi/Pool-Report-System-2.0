@@ -35,7 +35,7 @@ class ServiceTransformer extends Transformer
 
     public function transform(Service $service)
     {
-        $service_days = $this->serviceHelpers->num_to_service_days($service->service_days);
+        $service_days = $service->serviceDays()->asArray();
 
         $photo = 'no image';
         if($service->imageExists()){
