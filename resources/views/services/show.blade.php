@@ -100,7 +100,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service days</label>
 								<div class="col-sm-10">
-									{!! $serviceHelpers->get_styled_service_days($service->service_days) !!}
+									{!! $service->serviceDays()->shortNamesStyled() !!}
 								</div>
 							</div>
 							<div class="form-group row">

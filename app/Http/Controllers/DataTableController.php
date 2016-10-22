@@ -98,8 +98,7 @@ class DataTableController extends PageController
                                 'name' => $service->name,
                                 'address' => $service->address_line,
                                 'type' => $this->serviceHelpers->get_styled_type($service->type),
-                                'serviceDays' => $this->serviceHelpers
-                                                    ->get_styled_service_days($service->service_days),
+                                'serviceDays' => $service->serviceDays()->shortNamesStyled(),
                                 'price' => $service->amount.' <strong>'.$service->currency.'</strong>',
                             );
                         })
@@ -221,8 +220,7 @@ class DataTableController extends PageController
                                 'name' => $item->name,
                                 'address' => $item->address_line,
                                 'type' => $this->serviceHelpers->get_styled_type($item->type),
-                                'serviceDays' => $this->serviceHelpers
-                                                    ->get_styled_service_days($item->service_days),
+                                'serviceDays' => $item->serviceDays()->shortNamesStyled(),
                                 'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
                             );
                         })

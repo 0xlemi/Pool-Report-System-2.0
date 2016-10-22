@@ -122,16 +122,6 @@ class Service extends Model
 
     //******** MISCELLANEOUS ********
 
-    // /**
-    //  * get the service days as a boolean for each day insted of the number
-    //  * @return array
-    //  * tested
-    //  */
-    // public function service_days_by_day(){
-    //     $serviceHelpers = \App::make('App\PRS\Helpers\ServiceHelpers');
-    //     return $serviceHelpers->num_to_service_days($this->service_days);
-    // }
-
     /**
      * check if this service is scheduled for a date
      * tested

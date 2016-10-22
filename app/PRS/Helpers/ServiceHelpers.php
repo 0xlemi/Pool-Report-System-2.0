@@ -62,66 +62,6 @@ class ServiceHelpers
     }
 
     /**
-     * transform service days number to a array of days
-     * where active days are set to true.
-     * @param  integer $num
-     * @return array      array of the days of the week
-     */
-    public function num_to_service_days($num)
-    {
-        // we are expecting a number between 0 and 127
-        // is basically a decimal to binary conversion
-        $days = array(
-            'monday'    => false,
-            'tuesday'   => false,
-            'wednesday' => false,
-            'thursday'  => false,
-            'friday'    => false,
-            'saturday'  => false,
-            'sunday'    => false,
-        );
-        if($num >= 64){
-            $days['sunday'] = true;
-            $num -= 64;
-        }if($num >= 32){
-            $days['saturday'] = true;
-            $num -= 32;
-        }if($num >= 16){
-            $days['friday'] = true;
-            $num -= 16;
-        }if($num >= 8){
-            $days['thursday'] = true;
-            $num -= 8;
-        }if($num >= 4){
-            $days['wednesday'] = true;
-            $num -= 4;
-        }if($num >= 2){
-            $days['tuesday'] = true;
-            $num -= 2;
-        }if($num >= 1){
-            $days['monday'] = true;
-            $num -= 1;
-        }
-        return $days;
-    }
-
-    /**
-     * Get the days of the week in text
-     * @param  integer $num service_days number stored in database
-     * @return string
-     */
-    public function get_styled_service_days($num){
-        $days = $this->num_to_service_days($num);
-        $result = '';
-        foreach ($days as $day => $active) {
-            if($active){
-                $result .= substr($day, 0, 3).', ';
-            }
-        }
-        return '<span class="label label-pill label-default">'.$result.'</span>';
-    }
-
-    /**
      * Styling the service status
      * @param  integer  $status  the status code
      * @param  boolean $is_pill tag must be in pill format
