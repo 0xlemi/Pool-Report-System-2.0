@@ -9,7 +9,6 @@ use Illuminate\Support\Collection;
 class ServiceHelpers
 {
 
-
     /**
      * Transform collection of services to generate dropdown options
      * @param  Collection $services
@@ -59,23 +58,6 @@ class ServiceHelpers
             $num += 64;
         }
         return $num;
-    }
-
-    /**
-     * Styling the service status
-     * @param  integer  $status  the status code
-     * @param  boolean $is_pill tag must be in pill format
-     * @return string
-     */
-    public function get_styled_status($status, $is_pill = true){
-    	$tag_type = '';
-    	if($is_pill){
-    		$tag_type = 'label-pill';
-    	}
-    	if($status){
-    		return '<span class="label '.$tag_type.' label-success">Active</span>';
-    	}
-    	return '<span class="label '.$tag_type.' label-danger">Inactive</span>';
     }
 
     /**

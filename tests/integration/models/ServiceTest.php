@@ -83,60 +83,6 @@ class ServiceTest extends ModelTester
     }
 
     /** @test */
-    public function it_gets_service_days_by_days()
-    {
-        // Given
-        $admin = $this->createAdministrator();
-
-        $service1 = factory(App\Service::class)->create([
-            'admin_id' => $admin->id,
-            'service_days' => 42,
-        ]);
-        $service2 = factory(App\Service::class)->create([
-            'admin_id' => $admin->id,
-            'service_days' => 89,
-        ]);
-
-        // Service day number 42 equates to
-        $service_days1 = array(
-            'monday'    => false,
-            'tuesday'   => true,
-            'wednesday' => false,
-            'thursday'  => true,
-            'friday'    => false,
-            'saturday'  => true,
-            'sunday'    => false,
-        );
-        $service_days2 = array(
-            'monday'    => true,
-            'tuesday'   => false,
-            'wednesday' => false,
-            'thursday'  => true,
-            'friday'    => true,
-            'saturday'  => false,
-            'sunday'    => true,
-        );
-
-        // When
-        $service_days_1 = $service1->service_days_by_day();
-        $service_days_2 = $service2->service_days_by_day();
-
-
-        // Then
-        $this->assertSameArray(
-                    array_map('json_encode', $service_days1),
-                    array_map('json_encode', $service_days_1),
-                    true
-                );
-        $this->assertSameArray(
-                    array_map('json_encode', $service_days2),
-                    array_map('json_encode', $service_days_2),
-                    true
-                );
-
-    }
-
-    /** @test */
     public function if_is_scheduled_for_date()
     {
         // Given

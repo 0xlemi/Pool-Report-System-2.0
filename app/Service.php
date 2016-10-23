@@ -10,6 +10,7 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Classes\ValueObjects\EndTime;
 use App\PRS\Classes\ValueObjects\ServiceDays;
+use App\PRS\Classes\ValueObjects\Service\Status;
 
 use Carbon\Carbon;
 
@@ -119,6 +120,14 @@ class Service extends Model
         return (new ServiceDays($this->service_days));
     }
 
+    /**
+     * status ValueObject
+     * @return [type] [description]
+     */
+    public function status()
+    {
+        return (new Status($this->status));
+    }
 
     //******** MISCELLANEOUS ********
 
