@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects;
+namespace App\PRS\Classes\ValueObjects\Service;
 
 use App\Service;
 
@@ -42,7 +42,7 @@ class ServiceDays{
 
     /**
      * Get the days of the week in full name format.
-     * @return string 
+     * @return string
      * tested
      */
     public function fullNames()

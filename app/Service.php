@@ -8,8 +8,8 @@ use Intervention;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
-use App\PRS\Classes\ValueObjects\EndTime;
-use App\PRS\Classes\ValueObjects\ServiceDays;
+use App\PRS\Classes\ValueObjects\Service\EndTime;
+use App\PRS\Classes\ValueObjects\Service\ServiceDays;
 use App\PRS\Classes\ValueObjects\Service\Status;
 
 use Carbon\Carbon;

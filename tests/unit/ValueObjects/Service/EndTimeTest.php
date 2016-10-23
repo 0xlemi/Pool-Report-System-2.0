@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Carbon\Carbon;
-use App\PRS\Classes\ValueObjects\EndTime;
+use App\PRS\Classes\ValueObjects\Service\EndTime;
 
 
 class EndTimeTest extends TestCase
@@ -35,7 +35,7 @@ class EndTimeTest extends TestCase
                             ->once()
                             ->andReturn(true);
 
-        $endTimeMock = Mockery::mock('App\PRS\Classes\ValueObjects\EndTime[toString]', array(
+        $endTimeMock = Mockery::mock('App\PRS\Classes\ValueObjects\Service\EndTime[toString]', array(
                                     stringValue(), stringValue(), $reportHelpersMock
                                 ));
         $endTimeMock->shouldReceive('__toString')
@@ -60,7 +60,7 @@ class EndTimeTest extends TestCase
                             ->once()
                             ->andReturn(false);
 
-        $endTimeMock = Mockery::mock('App\PRS\Classes\ValueObjects\EndTime[toString]', array(
+        $endTimeMock = Mockery::mock('App\PRS\Classes\ValueObjects\Service\EndTime[toString]', array(
                                     stringValue(), stringValue(), $reportHelpersMock
                                 ));
         $endTimeMock->shouldReceive('__toString')

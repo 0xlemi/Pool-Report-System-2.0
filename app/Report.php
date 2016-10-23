@@ -37,6 +37,9 @@ class Report extends Model
         'accuracy',
     ];
 
+
+    //******** RELATIONSHIPS ********
+
     /**
      * associated service with this report
      * tested
@@ -77,6 +80,14 @@ class Report extends Model
     public function technician(){
     	return $this->belongsTo('App\Technician')->first();
     }
+
+
+    //******** VALUE OBJECTS ********
+
+    
+
+
+    //******** MISCELLANEOUS ********
 
     public function getEmailImage(Client $client = null)
     {

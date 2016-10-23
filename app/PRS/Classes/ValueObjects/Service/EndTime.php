@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects;
+namespace App\PRS\Classes\ValueObjects\Service;
 
 use Carbon\Carbon;
 use App\PRS\Helpers\ReportHelpers;
