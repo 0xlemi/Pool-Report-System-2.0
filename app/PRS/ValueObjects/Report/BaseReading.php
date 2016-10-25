@@ -1,11 +1,18 @@
 <?php
 
 namespace App\PRS\ValueObjects\Report;
+use App\PRS\ValueObjects\Administrator\BaseTag;
 
 abstract class BaseReading{
 
     protected $reading;
     protected $tag;
+
+    public function __construct(int $reading, BaseTag $tag)
+    {
+        $this->reading = $reading;
+        $this->tag = $tag;
+    }
 
     /**
      * Get the class color for depending on the reading

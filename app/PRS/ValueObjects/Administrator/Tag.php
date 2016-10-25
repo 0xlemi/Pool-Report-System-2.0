@@ -3,7 +3,7 @@
 namespace App\PRS\ValueObjects\Administrator;
 
 
-class Tag{
+class Tag implements BaseTag{
 
     protected $veryLow;
     protected $low;

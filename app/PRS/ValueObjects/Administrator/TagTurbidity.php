@@ -3,7 +3,7 @@
 namespace App\PRS\ValueObjects\Administrator;
 
 
-class TagTurbidity{
+class TagTurbidity implements BaseTag{
 
     protected $perfect;
     protected $low;
