@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\ValueObjects\Report\OnTime;
 use App\PRS\ValueObjects\Report\Reading;
+use App\PRS\ValueObjects\Report\Turbidity;
 use App\Client;
 use App\Image;
 use App\Mail\ServiceReportMail;
@@ -108,7 +109,7 @@ class Report extends Model
 
     public function turbidity()
     {
-
+        return new Turbidity($this->turbidity, $this->admin()->tags()->turbidity());
     }
 
     public function salt()
