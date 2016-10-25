@@ -25,6 +25,7 @@ class Tag{
      * Get tag depending on reading
      * @param  int    $num  value reading
      * @return string       tag
+     * tested
      */
     public function fromReading(int $num)
     {

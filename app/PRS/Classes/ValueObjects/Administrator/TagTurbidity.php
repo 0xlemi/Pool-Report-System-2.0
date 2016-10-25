@@ -19,27 +19,23 @@ class TagTurbidity{
         $this->veryHigh = $veryHigh;
     }
 
+    /**
+     * Get tag depending on reading
+     * @param  int    $num  value reading
+     * @return string       tag
+     * tested
+     */
     public function fromReading(int $num)
     {
-        switch ($num) {
-            case '1':
-                return $this->perfect;
-                break;
-            case '2':
-                return $this->low;
-                break;
-            case '3':
-                return $this->high;
-                break;
-            case '4':
-                return $this->veryHigh;
-                break;
-            default:
-                return 'Unknown';
-                break;
-        }
+        return $this->asArray()[$num];
     }
 
+
+    /**
+     * Array with tag names
+     * @return array
+     * tested
+     */
     public function asArray()
     {
         return [
