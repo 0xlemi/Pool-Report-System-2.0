@@ -10,6 +10,11 @@ class TagTurbidity implements BaseTag{
     protected $high;
     protected $veryHigh;
 
+    protected $colors = [ 4 => '#FA424A',
+                        3 => '#FDAD2A',
+                        2 => '#00A8FF',
+                        1 => '#46C35F'];
+
     public function __construct($perfect, $low,
                                 $high, $veryHigh)
     {
@@ -30,6 +35,15 @@ class TagTurbidity implements BaseTag{
         return $this->asArray()[$num];
     }
 
+    public function asArrayWithColor()
+    {
+        $styled = [];
+        foreach ($this->asArray() as $key => $value) {
+            $styled[$key] = (object)[ 'text' => $value, 'color' => $this->colors[$key]];
+        }
+        return $styled;
+    }
+
 
     /**
      * Array with tag names
@@ -39,10 +53,10 @@ class TagTurbidity implements BaseTag{
     public function asArray()
     {
         return [
-                1 => $this->perfect,
-                2 => $this->low,
-                3 => $this->high,
                 4 => $this->veryHigh,
+                3 => $this->high,
+                2 => $this->low,
+                1 => $this->perfect,
             ];
     }
 

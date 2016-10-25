@@ -11,6 +11,12 @@ class Tag implements BaseTag{
     protected $high;
     protected $veryHigh;
 
+    protected $colors = [ 5 => '#FA424A',
+                        4 => '#FDAD2A',
+                        3 => '#46C35F',
+                        2 => '#00A8FF',
+                        1 => '#AC6BEC'];
+
     public function __construct($veryLow, $low, $perfect,
                                 $high, $veryHigh)
     {
@@ -32,6 +38,15 @@ class Tag implements BaseTag{
         return $this->asArray()[$num];
     }
 
+    public function asArrayWithColor()
+    {
+        $styled = [];
+        foreach ($this->asArray() as $key => $value) {
+            $styled[$key] = (object)[ 'text' => $value, 'color' => $this->colors[$key]];
+        }
+        return $styled;
+    }
+
     /**
      * Array with tag names
      * @return array
@@ -40,11 +55,11 @@ class Tag implements BaseTag{
     public function asArray()
     {
         return [
-                1 => $this->veryLow,
-                2 => $this->low,
-                3 => $this->perfect,
-                4 => $this->high,
                 5 => $this->veryHigh,
+                4 => $this->high,
+                3 => $this->perfect,
+                2 => $this->low,
+                1 => $this->veryLow,
             ];
     }
 

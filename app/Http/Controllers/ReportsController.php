@@ -93,13 +93,14 @@ class ReportsController extends PageController
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $tags = $admin->tags();
 
         JavaScript::put([
             'dropdownKey' => $request->old('service'),
             'dropdownKey2' => $request->old('technician'),
         ]);
 
-        return view('reports.create', compact('services', 'technicians'));
+        return view('reports.create', compact('services', 'technicians', 'tags'));
     }
 
     /**
@@ -214,6 +215,7 @@ class ReportsController extends PageController
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $tags = $admin->tags();
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
@@ -223,7 +225,7 @@ class ReportsController extends PageController
             'serviceKey' => $report->service()->seq_id,
             'technicianKey' => $report->technician()->seq_id,
         ]);
-        return view('reports.edit', compact('report', 'services', 'technicians'));
+        return view('reports.edit', compact('report', 'services', 'technicians', 'tags'));
     }
 
 

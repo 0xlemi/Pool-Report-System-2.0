@@ -24,6 +24,7 @@
 					<div class="card-block">
 						<form method="POST" action="{{ url('reports') }}" enctype="multipart/form-data">
 							{{ csrf_field() }}
+
 							<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Compleated at:</label>
 								<div class="col-sm-10">
@@ -40,6 +41,7 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Service</label>
 								<div class="col-sm-10">
@@ -52,6 +54,7 @@
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('technician'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Technician</label>
 								<div class="col-sm-10">
@@ -64,6 +67,7 @@
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('ph'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">PH</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
@@ -75,47 +79,23 @@
 																{{ (old('ph') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FA424A;">
-																</span>&nbsp;&nbsp;Very High'
-																value="5"
-																{{ (old('ph') == 5) ? 'selected':'' }}
-																>Very High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FDAD2A;">
-																</span>&nbsp;&nbsp;High'
-																value="4"
-																{{ (old('ph') == 4) ? 'selected':'' }}
-																>High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #46C35F;">
-																</span>&nbsp;&nbsp;Perfect'
-																value="3"
-																{{ (old('ph') == 3) ? 'selected':'' }}
-																>Perfect
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #00A8FF;">
-																</span>&nbsp;&nbsp;Low'
-																value="2"
-																{{ (old('ph') == 2) ? 'selected':'' }}
-																>Low
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #AC6BEC;">
-																</span>&nbsp;&nbsp;Very Low'
-																value="1"
-																{{ (old('ph') == 1) ? 'selected':'' }}
-																>Very Low
-										</option>
+										@foreach($tags->ph()->asArrayWithColor() as $key => $tag)
+											<option data-content='
+												<span class="glyphicon glyphicon-asterisk"
+														style="color: {{$tag->color}};">
+												</span>
+												&nbsp;&nbsp;{{$tag->text}}'
+												value="{{$key}}"
+												{{ (old('ph') == $key) ? 'selected':''}}>
+											</option>
+										@endforeach
 									</select>
 									@if ($errors->has('ph'))
 										<small class="text-muted">{{ $errors->first('ph') }}</small>
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('chlorine'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Chlorine</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
@@ -127,47 +107,23 @@
 																{{ (old('chlorine') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FA424A;">
-																</span>&nbsp;&nbsp;Very High'
-																value="5"
-																{{ (old('chlorine') == 5) ? 'selected':'' }}
-																>Very High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FDAD2A;">
-																</span>&nbsp;&nbsp;High'
-																value="4"
-																{{ (old('chlorine') == 4) ? 'selected':'' }}
-																>High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #46C35F;">
-																</span>&nbsp;&nbsp;Perfect'
-																value="3"
-																{{ (old('chlorine') == 3) ? 'selected':'' }}
-																>Perfect
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #00A8FF;">
-																</span>&nbsp;&nbsp;Low'
-																value="2"
-																{{ (old('chlorine') == 2) ? 'selected':'' }}
-																>Low
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #AC6BEC;">
-																</span>&nbsp;&nbsp;Very Low'
-																value="1"
-																{{ (old('chlorine') == 1) ? 'selected':'' }}
-																>Very Low
-										</option>
+										@foreach($tags->chlorine()->asArrayWithColor() as $key => $tag)
+											<option data-content='
+												<span class="glyphicon glyphicon-asterisk"
+														style="color: {{$tag->color}};">
+												</span>
+												&nbsp;&nbsp;{{$tag->text}}'
+												value="{{$key}}"
+												{{ (old('chlorine') == $key) ? 'selected':''}}>
+											</option>
+										@endforeach
 									</select>
 									@if ($errors->has('chlorine'))
 										<small class="text-muted">{{ $errors->first('chlorine') }}</small>
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('temperature'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Temperature</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
@@ -179,47 +135,23 @@
 																{{ (old('temperature') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FA424A;">
-																</span>&nbsp;&nbsp;Very High'
-																value="5"
-																{{ (old('temperature') == 5) ? 'selected':'' }}
-																>Very High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FDAD2A;">
-																</span>&nbsp;&nbsp;High'
-																value="4"
-																{{ (old('temperature') == 4) ? 'selected':'' }}
-																>High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #46C35F;">
-																</span>&nbsp;&nbsp;Perfect'
-																value="3"
-																{{ (old('temperature') == 3) ? 'selected':'' }}
-																>Perfect
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #00A8FF;">
-																</span>&nbsp;&nbsp;Low'
-																value="2"
-																{{ (old('temperature') == 2) ? 'selected':'' }}
-																>Low
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #AC6BEC;">
-																</span>&nbsp;&nbsp;Very Low'
-																value="1"
-																{{ (old('temperature') == 1) ? 'selected':'' }}
-																>Very Low
-										</option>
+										@foreach($tags->temperature()->asArrayWithColor() as $key => $tag)
+											<option data-content='
+												<span class="glyphicon glyphicon-asterisk"
+														style="color: {{$tag->color}};">
+												</span>
+												&nbsp;&nbsp;{{$tag->text}}'
+												value="{{$key}}"
+												{{ (old('temperature') == $key) ? 'selected':''}}>
+											</option>
+										@endforeach
 									</select>
 									@if ($errors->has('temperature'))
 										<small class="text-muted">{{ $errors->first('temperature') }}</small>
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('turbidity'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Turbidity</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
@@ -231,40 +163,23 @@
 																{{ (old('turbidity') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FA424A;">
-																</span>&nbsp;&nbsp;Very High'
-																value="4"
-																{{ (old('turbidity') == 4) ? 'selected':'' }}
-																>Very High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FDAD2A;">
-																</span>&nbsp;&nbsp;High'
-																value="3"
-																{{ (old('turbidity') == 3) ? 'selected':'' }}
-																>High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #00A8FF;">
-																</span>&nbsp;&nbsp;Low'
-																value="2"
-																{{ (old('turbidity') == 2) ? 'selected':'' }}
-																>Low
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #46C35F;">
-																</span>&nbsp;&nbsp;Perfect'
-																value="1"
-																{{ (old('turbidity') == 1) ? 'selected':'' }}
-																>Perfect
-										</option>
+										@foreach($tags->turbidity()->asArrayWithColor() as $key => $tag)
+											<option data-content='
+												<span class="glyphicon glyphicon-asterisk"
+														style="color: {{$tag->color}};">
+												</span>
+												&nbsp;&nbsp;{{$tag->text}}'
+												value="{{$key}}"
+												{{ (old('turbidity') == $key) ? 'selected':''}}>
+											</option>
+										@endforeach
 									</select>
 									@if ($errors->has('turbidity'))
 										<small class="text-muted">{{ $errors->first('turbidity') }}</small>
 									@endif
 								</div>
 							</div>
+
 							<div class="form-group row {{($errors->has('salt'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Salt</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
@@ -276,48 +191,25 @@
 																{{ (old('salt') == 0) ? 'selected':'' }}
 																>Choose an option
 										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FA424A;">
-																</span>&nbsp;&nbsp;Very High'
-																value="5"
-																{{ (old('salt') == 5) ? 'selected':'' }}
-																>Very High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #FDAD2A;">
-																</span>&nbsp;&nbsp;High'
-																value="5"
-																{{ (old('salt') == 4) ? 'selected':'' }}
-																>High
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #46C35F;">
-																</span>&nbsp;&nbsp;Perfect'
-																value="3"
-																{{ (old('salt') == 3) ? 'selected':'' }}
-																>Perfect
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #00A8FF;">
-																</span>&nbsp;&nbsp;Low'
-																value="2"
-																{{ (old('salt') == 2) ? 'selected':'' }}
-																>Low
-										</option>
-										<option data-content='<span class="glyphicon glyphicon-asterisk"
-																style="color: #AC6BEC;">
-																</span>&nbsp;&nbsp;Very Low'
-																value="1"
-																{{ (old('salt') == 1) ? 'selected':'' }}
-																>Very Low
-										</option>
+										@foreach($tags->salt()->asArrayWithColor() as $key => $tag)
+											<option data-content='
+												<span class="glyphicon glyphicon-asterisk"
+														style="color: {{$tag->color}};">
+												</span>
+												&nbsp;&nbsp;{{$tag->text}}'
+												value="{{$key}}"
+												{{ (old('salt') == $key) ? 'selected':''}}>
+											</option>
+										@endforeach
 									</select>
 									@if ($errors->has('salt'))
 										<small class="text-muted">{{ $errors->first('salt') }}</small>
 									@endif
 								</div>
 							</div>
+
 							<br>
+
 							<div class="form-group row">
 								<label class="col-sm-3 form-control-label">Photo 1 (Full Pool)</label>
 								<div class="col-sm-9">
@@ -342,6 +234,7 @@
 					                </div>
 				              	</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-3 form-control-label">Photo 2 (Water Quality)</label>
 								<div class="col-sm-9">
@@ -366,6 +259,7 @@
 					                </div>
 				              	</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-3 form-control-label">Photo 3 (Engine Room)</label>
 								<div class="col-sm-9">
@@ -390,9 +284,10 @@
 					                </div>
 				              	</div>
 							</div>
+
 							<hr>
-							<p style="float: left;">
-								<a  class="btn btn-danger"
+							<p style="float: right;">
+								<a  class="btn btn-warning"
 								href="{{ url('reports') }}">
 								<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
 								<button  class="btn btn-success"
