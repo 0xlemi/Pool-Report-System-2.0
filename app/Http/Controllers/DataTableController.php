@@ -75,7 +75,7 @@ class DataTableController extends PageController
                         return (object) array(
                             'id' => $item->seq_id,
                             'service' => $service->name,
-                            'on_time' => $this->reportHelpers->styleOnTime($item->on_time),
+                            'on_time' => $item->onTime()->styled(),
                             'technician' => $technician->name.' '.$technician->last_name,
                         );
                     });

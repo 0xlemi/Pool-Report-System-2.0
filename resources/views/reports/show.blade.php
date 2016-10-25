@@ -39,7 +39,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Was made on time?</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleOnTime($report->on_time) !!}</p>
+									<p class="form-control-static">{!! $report->onTime()->styled() !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">

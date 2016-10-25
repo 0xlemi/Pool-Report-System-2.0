@@ -100,23 +100,6 @@ class ReportHelpers
         return (new Carbon($completedDateString.' '.$time, $timeTimezone));
     }
 
-    function styleOnTime($on_time){
-    	switch ($on_time) {
-    		case '1':
-    			return '<span class="label label-success">Done on Time</span>';
-    			break;
-    		case '2':
-    			return '<span class="label label-danger">Done Late</span>';
-    			break;
-    		case '3':
-    			return '<span class="label label-warning">Done Early</span>';
-    			break;
-    		default:
-    			return '<span class="label label-default">Unknown</span>';
-    			break;
-    	}
-    }
-
     function styleReadings($value, $is_turbidity = false){
     	if(!$is_turbidity){
     		switch ($value) {

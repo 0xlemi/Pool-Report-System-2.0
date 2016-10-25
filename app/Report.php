@@ -11,6 +11,7 @@ use Mail;
 
 use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Classes\ValueObjects\Report\OnTime;
 use App\Client;
 use App\Image;
 use App\Mail\ServiceReportMail;
@@ -84,7 +85,35 @@ class Report extends Model
 
     //******** VALUE OBJECTS ********
 
-    
+    public function onTime()
+    {
+        return (new OnTime($this->on_time));
+    }
+
+    public function ph()
+    {
+
+    }
+
+    public function chlorine()
+    {
+
+    }
+
+    public function temperature()
+    {
+
+    }
+
+    public function turbidity()
+    {
+
+    }
+
+    public function salt()
+    {
+
+    }
 
 
     //******** MISCELLANEOUS ********
