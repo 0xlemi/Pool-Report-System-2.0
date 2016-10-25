@@ -12,6 +12,7 @@ use Mail;
 use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Classes\ValueObjects\Report\OnTime;
+use App\PRS\Classes\ValueObjects\Report\Reading;
 use App\Client;
 use App\Image;
 use App\Mail\ServiceReportMail;
@@ -87,22 +88,22 @@ class Report extends Model
 
     public function onTime()
     {
-        return (new OnTime($this->on_time));
+        return new OnTime($this->on_time);
     }
 
     public function ph()
     {
-
+        return new Reading($this->ph, $this->admin()->tags()->ph());
     }
 
     public function chlorine()
     {
-
+        return new Reading($this->chlorine, $this->admin()->tags()->chlorine());
     }
 
     public function temperature()
     {
-
+        return new Reading($this->temperature, $this->admin()->tags()->temperature());
     }
 
     public function turbidity()
@@ -112,7 +113,7 @@ class Report extends Model
 
     public function salt()
     {
-
+        return new Reading($this->salt, $this->admin()->tags()->salt());
     }
 
 

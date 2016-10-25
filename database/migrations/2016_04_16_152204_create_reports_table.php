@@ -16,12 +16,12 @@ class CreateReportsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->dateTime('completed');
-            $table->enum('on_time', ['early', 'onTime', 'late']); 
-            $table->integer('ph');
-            $table->integer('chlorine');
-            $table->integer('temperature');
-            $table->integer('turbidity');
-            $table->integer('salt')->nullable();
+            $table->enum('on_time', ['early', 'onTime', 'late']);
+            $table->unsignedTinyInteger('ph');
+            $table->unsignedTinyInteger('chlorine');
+            $table->unsignedTinyInteger('temperature');
+            $table->unsignedTinyInteger('turbidity');
+            $table->unsignedTinyInteger('salt')->nullable();
             $table->decimal('latitude', 9, 6)->nullable();
             $table->decimal('longitude', 9, 6)->nullable();
             $table->decimal('altitude', 8, 2)->nullable();
