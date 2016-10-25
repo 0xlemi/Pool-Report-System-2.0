@@ -175,8 +175,9 @@ class ReportsController extends PageController
             'emailPreviewNoImage' => url('img/no_image.png'),
         ]);
 
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $admin = $this->loggedUserAdministrator();
 
+        $report = $admin->reportsBySeqId($seq_id);
 
         return view('reports.show', compact('report'));
     }

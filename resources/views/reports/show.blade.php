@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@inject('helper', 'App\PRS\Helpers\ReportHelpers')
 @section('content')
 <div class="reportVue">
 	<header class="section-header">
@@ -33,7 +32,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Compleated at:</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $helper->format_date($report->completed) }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->completed()->format('d M Y h:i:s A') }}"></p>
 								</div>
 							</div>
 							<div class="form-group row">
@@ -57,31 +56,31 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">PH</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->ph) !!}</p>
+									<p class="form-control-static">{!! $report->ph()->styled() !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Chlorine</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->chlorine) !!}</p>
+									<p class="form-control-static">{!! $report->chlorine()->styled() !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Temperature</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->temperature) !!}</p>
+									<p class="form-control-static">{!! $report->temperature()->styled() !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Turbidity</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->turbidity, true) !!}</p>
+									<p class="form-control-static">{!! $report->turbidity()->styled() !!}</p>
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Salt</label>
 								<div class="col-sm-10">
-									<p class="form-control-static">{!! $helper->styleReadings($report->salt) !!}</p>
+									<p class="form-control-static">{!! $report->salt()->styled() !!}</p>
 								</div>
 							</div>
 						</form>

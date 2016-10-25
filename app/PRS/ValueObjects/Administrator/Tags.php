@@ -28,27 +28,27 @@ class Tags{
 
     public function ph()
     {
-        return $ph;
+        return $this->ph;
     }
 
     public function chlorine()
     {
-        return $chlorine;
+        return $this->chlorine;
     }
 
     public function temperature()
     {
-        return $temperature;
+        return $this->temperature;
     }
 
     public function turbidity()
     {
-        return $turbidity;
+        return $this->turbidity;
     }
 
     public function salt()
     {
-        return $salt;
+        return $this->salt;
     }
 
 }

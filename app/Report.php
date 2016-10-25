@@ -87,6 +87,11 @@ class Report extends Model
 
     //******** VALUE OBJECTS ********
 
+    public function completed()
+    {
+        return (new Carbon($this->completed, 'UTC'))->setTimezone($this->admin()->timezone);
+    }
+
     public function onTime()
     {
         return new OnTime($this->on_time);

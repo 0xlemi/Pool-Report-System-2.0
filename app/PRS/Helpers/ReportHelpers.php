@@ -100,47 +100,5 @@ class ReportHelpers
         return (new Carbon($completedDateString.' '.$time, $timeTimezone));
     }
 
-    function styleReadings($value, $is_turbidity = false){
-    	if(!$is_turbidity){
-    		switch ($value) {
-    			case '1':
-    				return '<span class="label label-info">Very Low</span>';
-    				break;
-    			case '2':
-    				return '<span class="label label-primary">Low</span>';
-    				break;
-    			case '3':
-    				return '<span class="label label-success">Perfect</span>';
-    				break;
-    			case '4':
-    				return '<span class="label label-warning">High</span>';
-    				break;
-    			case '5':
-    				return '<span class="label label-danger">Very High</span>';
-    				break;
-    			default:
-    				return '<span class="label label-default">Unknown</span>';
-    				break;
-    		}
-    	}
-    	switch ($value) {
-    		case '1':
-    			return '<span class="label label-success">Perfect</span>';
-    			break;
-    		case '2':
-    			return '<span class="label label-primary">Low</span>';
-    			break;
-    		case '3':
-    			return '<span class="label label-warning">High</span>';
-    			break;
-    		case '4':
-    			return '<span class="label label-danger">Very High</span>';
-    			break;
-    		default:
-    			return '<span class="label label-default">Unknown</span>';
-    			break;
-    	}
-    }
-
 
 }
