@@ -40,7 +40,8 @@ class WorkTransformer extends Transformer
             'quantity' => $work->quantity,
             'units' => $work->units,
             'cost' => $work->cost,
-            'technican' => $this->technicianTransformer->transform($work->technician()),
+            'currency' => $work->workOrder()->currency,
+            'technician' => $this->technicianTransformer->transform($work->technician()),
             'photos' => $photos,
         ];
     }
