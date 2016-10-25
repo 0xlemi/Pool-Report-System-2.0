@@ -1,9 +1,9 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects\Administrator;
+namespace App\PRS\ValueObjects\Administrator;
 
-use App\PRS\Classes\ValueObjects\Administrator\TagTurbidity;
-use App\PRS\Classes\ValueObjects\Administrator\Tag;
+use App\PRS\ValueObjects\Administrator\TagTurbidity;
+use App\PRS\ValueObjects\Administrator\Tag;
 
 class Tags{
 

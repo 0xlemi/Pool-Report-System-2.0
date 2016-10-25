@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-use App\PRS\Classes\ValueObjects\Service\Status;
+use App\PRS\ValueObjects\Service\Status;
 
 class StatusTest extends TestCase
 {

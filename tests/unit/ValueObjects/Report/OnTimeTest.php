@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use App\PRS\Classes\ValueObjects\Report\OnTime;
+use App\PRS\ValueObjects\Report\OnTime;
 
 class OnTimeTest extends TestCase
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects\Report;
+namespace App\PRS\ValueObjects\Report;
 
-use App\PRS\Classes\ValueObjects\Administrator\Tag;
+use App\PRS\ValueObjects\Administrator\Tag;
 
 class Reading{
 

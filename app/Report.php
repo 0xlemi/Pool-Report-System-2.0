@@ -11,8 +11,8 @@ use Mail;
 
 use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
-use App\PRS\Classes\ValueObjects\Report\OnTime;
-use App\PRS\Classes\ValueObjects\Report\Reading;
+use App\PRS\ValueObjects\Report\OnTime;
+use App\PRS\ValueObjects\Report\Reading;
 use App\Client;
 use App\Image;
 use App\Mail\ServiceReportMail;

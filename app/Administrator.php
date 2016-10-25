@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use App\PRS\Traits\Model\ImageTrait;
 
-use App\PRS\Classes\ValueObjects\Administrator\Tags;
-use App\PRS\Classes\ValueObjects\Administrator\TagTurbidity;
-use App\PRS\Classes\ValueObjects\Administrator\Tag;
+use App\PRS\ValueObjects\Administrator\Tags;
+use App\PRS\ValueObjects\Administrator\TagTurbidity;
+use App\PRS\ValueObjects\Administrator\Tag;
 
 use App\PRS\Traits\Model\BillableAdministrator;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects\Administrator;
+namespace App\PRS\ValueObjects\Administrator;
 
 
 class Tag{

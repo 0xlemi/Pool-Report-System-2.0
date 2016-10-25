@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects\Report;
+namespace App\PRS\ValueObjects\Report;
 
 use App\Report;
 

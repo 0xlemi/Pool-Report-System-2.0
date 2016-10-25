@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 
-use App\PRS\Classes\ValueObjects\Administrator\TagTurbidity;
+use App\PRS\ValueObjects\Administrator\TagTurbidity;
 
 class TagTurbitidyTest extends TestCase
 {
@@ -36,7 +36,7 @@ class TagTurbitidyTest extends TestCase
     public function get_tag_turbidity_from_number_of_the_reading()
     {
         // Given
-        $mock = Mockery::mock('App\PRS\Classes\ValueObjects\Administrator\TagTurbidity[asArray]', ['','','','','']);
+        $mock = Mockery::mock('App\PRS\ValueObjects\Administrator\TagTurbidity[asArray]', ['','','','','']);
         $mock->shouldReceive('asArray')
                 ->times(2)
                 ->andReturn([

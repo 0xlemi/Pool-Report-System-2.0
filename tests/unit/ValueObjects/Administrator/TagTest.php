@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 
-use App\PRS\Classes\ValueObjects\Administrator\Tag;
+use App\PRS\ValueObjects\Administrator\Tag;
 
 class TagTest extends TestCase
 {
@@ -38,7 +38,7 @@ class TagTest extends TestCase
     public function get_tag_from_number_of_the_reading()
     {
         // Given
-        $mock = Mockery::mock('App\PRS\Classes\ValueObjects\Administrator\Tag[asArray]', ['','','','','']);
+        $mock = Mockery::mock('App\PRS\ValueObjects\Administrator\Tag[asArray]', ['','','','','']);
         $mock->shouldReceive('asArray')
                 ->times(3)
                 ->andReturn([

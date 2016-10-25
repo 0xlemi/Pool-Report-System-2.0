@@ -18,6 +18,12 @@
         <testsuite name="control">
             <directory suffix="Test.php">./tests/integration/controllers</directory>
         </testsuite>
+        <testsuite name="unit">
+            <directory suffix="Test.php">./tests/unit</directory>
+        </testsuite>
+        <testsuite name="valueObjects">
+            <directory suffix="Test.php">./tests/unit/ValueObjects</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

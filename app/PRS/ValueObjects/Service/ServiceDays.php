@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Classes\ValueObjects\Service;
+namespace App\PRS\ValueObjects\Service;
 
 use App\Service;
 

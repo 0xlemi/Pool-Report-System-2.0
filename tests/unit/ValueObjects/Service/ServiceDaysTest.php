@@ -2,7 +2,7 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-use App\PRS\Classes\ValueObjects\Service\ServiceDays;
+use App\PRS\ValueObjects\Service\ServiceDays;
 
 class ServiceDaysTest extends TestCase
 {
@@ -13,7 +13,7 @@ class ServiceDaysTest extends TestCase
     public function get_service_days_as_string_short_names()
     {
         // Given
-        $mock = Mockery::mock('App\PRS\Classes\ValueObjects\Service\ServiceDays[asArray]', array(0));
+        $mock = Mockery::mock('App\PRS\ValueObjects\Service\ServiceDays[asArray]', array(0));
         $mock->shouldReceive('asArray')
                             ->once()
                             ->andReturn([
@@ -38,7 +38,7 @@ class ServiceDaysTest extends TestCase
     public function get_service_days_as_string_short_names_styled()
     {
         // Given
-        $mock = Mockery::mock('App\PRS\Classes\ValueObjects\Service\ServiceDays[shortNames]', array(0));
+        $mock = Mockery::mock('App\PRS\ValueObjects\Service\ServiceDays[shortNames]', array(0));
         $mock->shouldReceive('shortNames')
                             ->once()
                             ->andReturn('mon, tue, wed');
@@ -55,7 +55,7 @@ class ServiceDaysTest extends TestCase
     public function get_service_days_as_string_full_names()
     {
         // Given
-        $mock = Mockery::mock('App\PRS\Classes\ValueObjects\Service\ServiceDays[asArray]', array(0));
+        $mock = Mockery::mock('App\PRS\ValueObjects\Service\ServiceDays[asArray]', array(0));
         $mock->shouldReceive('asArray')
                             ->once()
                             ->andReturn([
