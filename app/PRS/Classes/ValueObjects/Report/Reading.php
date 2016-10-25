@@ -11,13 +11,13 @@ class Reading{
 
     public function __construct(int $reading, Tag $tag)
     {
-        $this->ph = $reading;
+        $this->reading = $reading;
         $this->tag = $tag;
     }
 
     public function __toString()
     {
-        return $this->tag->fromNumber($this->ph);
+        return $this->tag->fromReading($this->reading);
     }
 
 }

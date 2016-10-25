@@ -19,7 +19,7 @@ class TagTurbidity{
         $this->veryHigh = $veryHigh;
     }
 
-    public function fromNumber(int $num)
+    public function fromReading(int $num)
     {
         switch ($num) {
             case '1':

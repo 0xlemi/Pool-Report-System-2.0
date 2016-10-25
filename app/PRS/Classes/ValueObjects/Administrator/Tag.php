@@ -21,30 +21,21 @@ class Tag{
         $this->veryHigh = $veryHigh;
     }
 
-    public function fromNumber(int $num)
+    /**
+     * Get tag depending on reading
+     * @param  int    $num  value reading
+     * @return string       tag
+     */
+    public function fromReading(int $num)
     {
-        switch ($num) {
-            case '1':
-                return $this->veryLow;
-                break;
-            case '2':
-                return $this->low;
-                break;
-            case '3':
-                return $this->perfect;
-                break;
-            case '4':
-                return $this->high;
-                break;
-            case '5':
-                return $this->veryHigh;
-                break;
-            default:
-                return 'Unknown';
-                break;
-        }
+        return $this->asArray()[$num];
     }
 
+    /**
+     * Array with tag names
+     * @return array
+     * tested
+     */
     public function asArray()
     {
         return [
