@@ -3,7 +3,7 @@
 namespace App\PRS\ValueObjects\Administrator;
 
 
-class TagTurbidity implements BaseTag{
+class TagTurbidity extends BaseTag{
 
     protected $perfect;
     protected $low;
@@ -23,27 +23,6 @@ class TagTurbidity implements BaseTag{
         $this->high = $high;
         $this->veryHigh = $veryHigh;
     }
-
-    /**
-     * Get tag depending on reading
-     * @param  int    $num  value reading
-     * @return string       tag
-     * tested
-     */
-    public function fromReading(int $num)
-    {
-        return $this->asArray()[$num];
-    }
-
-    public function asArrayWithColor()
-    {
-        $styled = [];
-        foreach ($this->asArray() as $key => $value) {
-            $styled[$key] = (object)[ 'text' => $value, 'color' => $this->colors[$key]];
-        }
-        return $styled;
-    }
-
 
     /**
      * Array with tag names

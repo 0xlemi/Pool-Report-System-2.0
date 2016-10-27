@@ -3,7 +3,7 @@
 namespace App\PRS\ValueObjects\Administrator;
 
 
-class Tag implements BaseTag{
+class Tag extends BaseTag{
 
     protected $veryLow;
     protected $low;
@@ -25,26 +25,6 @@ class Tag implements BaseTag{
         $this->perfect = $perfect;
         $this->high = $high;
         $this->veryHigh = $veryHigh;
-    }
-
-    /**
-     * Get tag depending on reading
-     * @param  int    $num  value reading
-     * @return string       tag
-     * tested
-     */
-    public function fromReading(int $num)
-    {
-        return $this->asArray()[$num];
-    }
-
-    public function asArrayWithColor()
-    {
-        $styled = [];
-        foreach ($this->asArray() as $key => $value) {
-            $styled[$key] = (object)[ 'text' => $value, 'color' => $this->colors[$key]];
-        }
-        return $styled;
     }
 
     /**

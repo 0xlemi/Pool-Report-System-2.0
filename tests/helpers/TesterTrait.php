@@ -31,4 +31,15 @@ trait TesterTrait
         return $this->assertTrue(empty($difference));
     }
 
+    public function assertSameArrayOfObjects($array1, $array2)
+    {
+        foreach ($array1 as $key => $object) {
+            if($object != $array2[$key])
+            {
+                return $this->assertTrue(false);
+            }
+        }
+        return $this->assertTrue(true);
+    }
+
 }

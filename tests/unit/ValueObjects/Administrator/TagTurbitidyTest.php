@@ -32,6 +32,35 @@ class TagTurbitidyTest extends TestCase
 
     }
 
+
+
+    /** @test */
+    public function get_tag_as_array_with_colors()
+    {
+        // Given
+        $mock = Mockery::mock('App\PRS\ValueObjects\Administrator\TagTurbidity[asArray]', ['','','','','']);
+        $mock->shouldReceive('asArray')
+                ->once()
+                ->andReturn([
+                        1 => 'first',
+                        2 => 'second',
+                        3 => 'third',
+                        4 => 'fourth',
+                    ]);
+
+        // When
+        $arrayWithColor = $mock->asArrayWithColor();
+
+        // Then
+        $this->assertSameArrayOfObjects($arrayWithColor , [
+                        1 => (object)['text' => 'first', 'color' => '#46C35F'],
+                        2 => (object)['text' => 'second', 'color' => '#00A8FF'],
+                        3 => (object)['text' => 'third', 'color' => '#FDAD2A'],
+                        4 => (object)['text' => 'fourth', 'color' => '#FA424A'],
+                    ]);
+
+    }
+
     /** @test */
     public function get_tag_turbidity_from_number_of_the_reading()
     {
