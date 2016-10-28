@@ -24,12 +24,6 @@ class CreateServicesTable extends Migration
             $table->string('postal_code');
             $table->char('country', 2);
             $table->tinyInteger('type'); // 1=chlorine, 2=salt
-            $table->integer('service_days');
-            $table->decimal('amount', 16, 2);
-            $table->char('currency', 3);
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->boolean('status')->default(1); // 1=active, 0=inactive
             $table->text('comments');
             $table->integer('admin_id')->unsigned();
             $table->integer('seq_id')->index();

@@ -32,6 +32,12 @@ class ServicesTableSeeder extends Seeder
         		'admin_id' => $adminId,
             ]);
 
+            if(rand(0,1)){
+                $ServiceContract = factory(App\ServiceContract::class)->create([
+                        'service_id' => $service->id,
+                ]);
+            }
+
     		// create images link it to service id
     		// normal image
     		Image::create([

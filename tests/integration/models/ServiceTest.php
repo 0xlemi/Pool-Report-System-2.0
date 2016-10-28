@@ -83,6 +83,25 @@ class ServiceTest extends ModelTester
     }
 
     /** @test */
+    public function it_gets_service_contract()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $service1 = $this->createService($admin->id);
+        $service2 = $this->createService($admin->id);
+
+        $contract1 = $this->createServiceContract($service1->id);
+        $contract2 = $this->createServiceContract($service2->id);
+
+        // When
+
+        // Then
+
+
+    }
+
+    /** @test */
     public function if_is_scheduled_for_date()
     {
         // Given

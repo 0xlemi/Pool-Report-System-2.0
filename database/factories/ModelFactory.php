@@ -37,9 +37,6 @@ $factory->define(App\Administrator::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Service::class, function (Faker\Generator $faker){
-	// time between 7am and 8pm
-	// $start_time = $faker->numberBetween(25200, 72000);
-	// dateTimeBetween('today', 'now');
 	return [
 		'name' => $faker->words($nb = 2, $asText = true),
         'latitude' => number_format($faker->latitude(-90, 90),6,'.',''),
@@ -50,12 +47,6 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
         'postal_code' => $faker->postcode,
         'country' => $faker->countryCode,
         'type' => $faker->numberBetween(1, 2), // not sure what types
-        'service_days' => $faker->numberBetween(0, 127),
-        'amount' => number_format($faker->numberBetween(75, 350), 2, '.', ''),
-        'currency' => $faker->currencyCode,
-        'start_time' => $faker->dateTimeBetween('today', 'now')->format('H:i:s'),
-        'end_time' => $faker->dateTimeBetween('now', 'tomorrow')->format('H:i:s'), // between start and end of day
-        'status' => $faker->numberBetween(0, 1),
         'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
 });
@@ -86,6 +77,18 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
         'capacity' => number_format(rand(100,1000000)/100, 2, '.', ''),
         'units' => 'units',
 	];
+});
+
+$factory->define(App\ServiceContract::class, function (Faker\Generator $faker){
+    return [
+        'service_days' => $faker->numberBetween(0, 127),
+        'amount' => number_format($faker->numberBetween(75, 350), 2, '.', ''),
+        'currency' => $faker->currencyCode,
+        'start_time' => $faker->dateTimeBetween('today', 'now')->format('H:i:s'),
+        'end_time' => $faker->dateTimeBetween('now', 'tomorrow')->format('H:i:s'), // between start and end of day
+        'active' => $faker->numberBetween(0, 1),
+        'comments' => $faker->realText(rand(100,500)),
+    ];
 });
 
 $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){

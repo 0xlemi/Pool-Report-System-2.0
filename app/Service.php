@@ -11,6 +11,7 @@ use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\ValueObjects\Service\EndTime;
 use App\PRS\ValueObjects\Service\ServiceDays;
 use App\PRS\ValueObjects\Service\Status;
+use App\ServiceContract;
 
 use Carbon\Carbon;
 
@@ -84,6 +85,14 @@ class Service extends Model
      */
     public function equipment(){
     	return $this->hasMany('App\Equipment');
+    }
+
+    /**
+     * Get associated ServiceContract with this service
+     */
+    public function serviceContract()
+    {
+        return $this->hasOne(ServiceContract::class);
     }
 
     /**

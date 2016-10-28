@@ -164,6 +164,13 @@ trait FactoryTrait
         return $services[rand(0,--$num_of_services)];
     }
 
+    public function createServiceContract($service_id)
+    {
+        return factory(App\ServiceContract::class)->create([
+            'service_id' => $service_id,
+        ]);
+    }
+
     public function createReport($service_id, $technician_id)
     {
         return factory(App\Report::class)->create([
