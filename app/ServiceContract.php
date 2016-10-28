@@ -13,14 +13,16 @@ class ServiceContract extends Model
      * @var array
      */
     protected $fillable = [
+        'active',
         'service_days',
         'amount',
         'currency',
         'start_time',
         'end_time',
-        'active',
         'comments',
     ];
+
+    protected $primaryKey = 'service_id';
 
 
     //******** RELATIONSHIPS ********

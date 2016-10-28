@@ -5,6 +5,8 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Image;
+use App\Service;
+use App\ServiceContract;
 use Carbon\Carbon;
 
 class ServiceTest extends ModelTester
@@ -91,14 +93,35 @@ class ServiceTest extends ModelTester
         $service1 = $this->createService($admin->id);
         $service2 = $this->createService($admin->id);
 
-        $contract1 = $this->createServiceContract($service1->id);
-        $contract2 = $this->createServiceContract($service2->id);
+        $this->createServiceContract($service1->id);
+        $this->createServiceContract($service2->id);
+        $contract1 = ServiceContract::findOrFail($service1->id);
+        $contract2 = ServiceContract::findOrFail($service2->id);
 
         // When
+        $contract_1 = $service1->serviceContract;
+        $contract_2  = $service2->serviceContract;
 
         // Then
+        $this->assertSameObject($contract1, $contract_1);
+        $this->assertSameObject($contract2, $contract_2);
 
+    }
 
+    /**
+     * @test
+     * @expectedException     Illuminate\Database\QueryException
+     */
+    public function get_excepiton_if_i_try_to_set_multiple_contracts_to_the_same_service()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $service = $this->createService($admin->id);
+
+        // When
+        $contract1 = $this->createServiceContract($service->id);
+        $contract2 = $this->createServiceContract($service->id);
     }
 
     /** @test */

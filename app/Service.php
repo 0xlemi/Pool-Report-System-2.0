@@ -89,6 +89,7 @@ class Service extends Model
 
     /**
      * Get associated ServiceContract with this service
+     * tested
      */
     public function serviceContract()
     {
