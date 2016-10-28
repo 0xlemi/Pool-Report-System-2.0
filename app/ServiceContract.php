@@ -27,9 +27,13 @@ class ServiceContract extends Model
 
     //******** RELATIONSHIPS ********
 
+    /**
+     * get Service associated with this ServiceContract
+     * tested
+     */
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
 
