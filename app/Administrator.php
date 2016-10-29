@@ -352,8 +352,10 @@ class Administrator extends Model
         }
 
         return $this->services()
-            ->where('status', '=', 1)
             ->get()
+            ->filter(function($item){
+                return $item->hasServiceContract();
+            })
             ->map(function($service) use ($date, $AddCompletedReports){
                 // check that the service is do in this date
                 if($service->checkIfIsDo($date)){

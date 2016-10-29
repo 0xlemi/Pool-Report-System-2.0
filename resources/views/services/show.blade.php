@@ -126,7 +126,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status</label>
 								<div class="col-sm-10">
-									{!! $service->status()->styled() !!}
+									{!! $service->contractActive()->styled() !!}
 								</div>
 							</div>
 

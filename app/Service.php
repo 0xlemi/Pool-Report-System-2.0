@@ -96,6 +96,11 @@ class Service extends Model
         return $this->hasOne(ServiceContract::class);
     }
 
+    public function hasServiceContract()
+    {
+        return ($this->serviceContract()->get()->count() > 0);
+    }
+
     /**
      * Get associated work orders with this service
      */
@@ -118,7 +123,7 @@ class Service extends Model
     public function endTime()
     {
         $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-        return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
+        return (new EndTime($this->serviceContract->end_time, $this->admin()->timezone, $reportHelpers));
     }
 
     /**
@@ -127,16 +132,20 @@ class Service extends Model
      */
     public function serviceDays()
     {
-        return (new ServiceDays($this->service_days));
+        $serviceDays = null;
+        if($this->hasServiceContract()){
+            $serviceDays = $this->serviceContract->service_days;
+        }
+        return (new ServiceDays($serviceDays));
     }
 
     /**
      * status ValueObject
      * @return [type] [description]
      */
-    public function status()
+    public function contractActive()
     {
-        return (new Status($this->status));
+        return (new Status($this->serviceContract->active));
     }
 
     //******** MISCELLANEOUS ********

@@ -210,10 +210,16 @@ class DataTableController extends PageController
             );
         }
 
+        $status = $request->status;
         $services = $this->loggedUserAdministrator()
                         ->servicesInOrder()
                         ->get()
-                        ->where('status', (int) $request->status)
+                        ->filter(function($item) use ($status){
+                            if($status){
+                                return $item->hasServiceContract();
+                            }
+                            return !$item->hasServiceContract();
+                        })
                         ->transform(function($item){
                             return (object) array(
                                 'id' => $item->seq_id,

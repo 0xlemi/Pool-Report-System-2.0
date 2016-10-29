@@ -9,7 +9,7 @@ class ServiceContractTest extends ModelTester
 {
 
     /** @test */
-    public function it_gets_service_natoheu()
+    public function it_gets_service()
     {
         // Given
         $admin = $this->createAdministrator();
