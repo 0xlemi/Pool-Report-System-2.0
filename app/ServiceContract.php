@@ -7,6 +7,7 @@ use App\Service;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\ValueObjects\Service\EndTime;
+use App\PRS\ValueObjects\Service\StartTime;
 use App\PRS\ValueObjects\Service\ServiceDays;
 use App\PRS\ValueObjects\Service\Status;
 
@@ -32,7 +33,7 @@ class ServiceContract extends Model
      * @var array
      */
 	protected $hidden = [
-        'service_id'    
+        'service_id'
 	];
 
     protected $primaryKey = 'service_id';
@@ -57,13 +58,22 @@ class ServiceContract extends Model
     //******** VALUE OBJECTS ********
 
     /**
-     * endTime ValueObject
+     * EndTime ValueObject
      * @return EndTime
      */
     public function endTime()
     {
         $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
         return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
+    }
+
+    /**
+     * StartTime ValueObject
+     * @return StartTime
+     */
+    public function startTime()
+    {
+        return (new StartTime($this->start_time));
     }
 
     /**

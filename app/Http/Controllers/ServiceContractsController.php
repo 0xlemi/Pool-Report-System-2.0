@@ -60,7 +60,7 @@ class ServiceContractsController extends PageController
             $data = [
                 'object' => $serviceContract,
                 'endTime' => $serviceContract->endTime()->timePickerValue(),
-                // 'startTime' => $serviceContract->startTime()->timePickerValue(),
+                'startTime' => $serviceContract->startTime()->timePickerValue(),
                 'contractExists' => true,
                 'serviceDaysArray' => $serviceContract->serviceDays()->asArray(),
                 'serviceDaysString' => $serviceContract->serviceDays()->shortNames(),

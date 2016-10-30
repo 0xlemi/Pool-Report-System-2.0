@@ -195,6 +195,7 @@
                 let data = response.data;
                 vue.focus = (data.contractExists) ? 2 : 1;
                 if(data.contractExists){
+
                     vue.monday = data.serviceDaysArray['monday'];
                     vue.tuesday = data.serviceDaysArray['tuesday'];
                     vue.wednesday = data.serviceDaysArray['wednesday'];
@@ -203,8 +204,10 @@
                     vue.saturday = data.serviceDaysArray['saturday'];
                     vue.sunday = data.serviceDaysArray['sunday'];
                     vue.serviceDaysString = data.serviceDaysString;
-                    vue.startTime = data.object.start_time;
-                    vue.endTime = data.object.end_time;
+
+                    vue.startTime = data.startTime;
+                    vue.endTime = data.endTime;
+
                     vue.price = data.object.amount;
                     vue.currency = data.object.currency;
                 }
