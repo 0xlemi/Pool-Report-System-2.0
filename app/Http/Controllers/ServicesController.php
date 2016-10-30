@@ -142,9 +142,8 @@ class ServicesController extends PageController
 
         $clients = $service->clients()->get();
         $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;
-        $serviceContractUrl = url('servicecontracts').'/';
 
-        return view('services.show', compact('service', 'clients', 'default_table_url', 'serviceContractUrl'));
+        return view('services.show', compact('service', 'clients', 'default_table_url'));
     }
 
     /**

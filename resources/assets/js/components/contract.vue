@@ -109,16 +109,14 @@
 										<input type="text" class="form-control"
 												placeholder="Amount" v-model="price">
 										<div class="input-group-addon">
+
 											<select v-model="currency">
-												<option value="USD" {{ (currency == 'USD') ? 'selected':'' }}>USD</option>
-												<option value="MXN" {{ (currency == 'MXN') ? 'selected':'' }}>MXN</option>
-												<option value="CAD" {{ (currency == 'CAD') ? 'selected':'' }}>CAD</option>
+												<option v-for="item in currencies" value="{{item}}">{{item}}</option>
 											</select>
 										</div>
 									</div>
 								</div>
 							</div>
-
                     </div>
 				</div>
 	      </div>
@@ -156,16 +154,11 @@
 
 <script>
 
-// var buttonGroup  = require('./buttonGroup.vue');
-// var checkbox  = require('./Checkbox.vue');
-
   export default {
-    props: ['serviceId', 'serviceContractUrl'],
+    props: ['serviceId', 'serviceContractUrl', 'currencies'],
     data () {
         return {
             focus: 1, // 1=create, 2=show, 3=edit
-            value: [],
-            // serviceDaysArray: [],
             monday: false,
             tuesday: false,
             wednesday: false,
