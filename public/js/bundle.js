@@ -21189,6 +21189,117 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+
+// var buttonGroup  = require('./buttonGroup.vue');
+// var checkbox  = require('./Checkbox.vue');
+
+exports.default = {
+    props: ['serviceId', 'serviceContractUrl'],
+    data: function data() {
+        return {
+            focus: 1, // 1=create, 2=show, 3=edit
+            value: [],
+            // serviceDaysArray: [],
+            monday: false,
+            tuesday: false,
+            wednesday: false,
+            thursday: false,
+            friday: false,
+            saturday: false,
+            sunday: false,
+            serviceDaysString: '',
+            startTime: '',
+            endTime: '',
+            price: '',
+            currency: ''
+        };
+    },
+
+    computed: {
+        priceWithCurrency: function priceWithCurrency() {
+            return this.price + ' ' + this.currency;
+        },
+        Url: function Url() {
+            return this.serviceContractUrl + this.serviceId;
+        }
+    },
+    methods: {
+        getValues: function getValues() {
+            var vue = this;
+            this.$http.get(this.Url).then(function (response) {
+                var data = response.data;
+                vue.focus = data.contractExists ? 2 : 1;
+                if (data.contractExists) {
+                    vue.monday = data.serviceDaysArray['monday'];
+                    vue.tuesday = data.serviceDaysArray['tuesday'];
+                    vue.wednesday = data.serviceDaysArray['wednesday'];
+                    vue.thursday = data.serviceDaysArray['thursday'];
+                    vue.friday = data.serviceDaysArray['friday'];
+                    vue.saturday = data.serviceDaysArray['saturday'];
+                    vue.sunday = data.serviceDaysArray['sunday'];
+                    vue.serviceDaysString = data.serviceDaysString;
+                    vue.startTime = data.object.start_time;
+                    vue.endTime = data.object.end_time;
+                    vue.price = data.object.amount;
+                    vue.currency = data.object.currency;
+                }
+            }, function (response) {
+                console.log('error with contract');
+            });
+        },
+        update: function update() {
+            this.$http.patch(this.Url, {
+                serviceDays: {
+                    monday: this.monday,
+                    tuesday: this.tuesday,
+                    wednesday: this.wednesday,
+                    thursday: this.thursday,
+                    friday: this.friday,
+                    saturday: this.saturday,
+                    sunday: this.sunday
+                },
+                start_time: this.startTime,
+                end_time: this.endTime,
+                price: this.price,
+                currency: this.currency
+            }).then(function (response) {}, function (response) {
+                console.log('error with contract');
+            });
+        },
+        destroyContract: function destroyContract() {},
+        buttonClass: function buttonClass(day) {
+            return day ? 'btn-secondary' : 'btn-default';
+        },
+        isFocus: function isFocus(num) {
+            return this.focus == num;
+        },
+        changeFocus: function changeFocus(num) {
+            this.focus = num;
+        }
+    },
+    ready: function ready() {
+        this.getValues();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Modal for ServiceContract preview -->\n\t<div class=\"modal fade\" id=\"contractModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Contract</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n                        create\n                    </div>\n\n                    <!-- Show Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n                        <div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Service days</label>\n                    \t\t<div class=\"col-sm-10\">\n                                <span class=\"label label-pill label-default\">{{ serviceDaysString }}</span>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Time interval</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<div class=\"input-group\">\n                    \t\t\t\t<div class=\"input-group-addon\">From:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"start_time\" value=\"{{ startTime }}\" readonly=\"\">\n                    \t\t\t\t<div class=\"input-group-addon\">To:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"end_time\" value=\"{{ endTime }}\" readonly=\"\">\n                    \t\t\t</div>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" id=\"inputPassword\" value=\"{{ priceWithCurrency }}\">\n                    \t\t</div>\n                    \t</div>\n\n                    </div>\n\n                    <!-- Edit Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n                            <div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"USD\" {{=\"\" (currency=\"=\" 'usd')=\"\" ?=\"\" 'selected':''=\"\" }}=\"\">USD</option>\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"MXN\" {{=\"\" (currency=\"=\" 'mxn')=\"\" ?=\"\" 'selected':''=\"\" }}=\"\">MXN</option>\n\t\t\t\t\t\t\t\t\t\t\t\t<option value=\"CAD\" {{=\"\" (currency=\"=\" 'cad')=\"\" ?=\"\" 'selected':''=\"\" }}=\"\">CAD</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n                    </div>\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" v-if=\"isFocus(1)\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t\t\t<p style=\"float: left;\">\n\t            <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" v-if=\"isFocus(2)\" @click=\"destroyContract()\">\n\t\t\t\t\tDestroy Contract\n\t\t\t\t</button>\n\t\t\t</p>\n\t        <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" v-if=\"isFocus(2)\" @click=\"changeFocus(3)\">\n\t\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n\n            <button type=\"button\" class=\"btn btn-warning\" data-dismiss=\"modal\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n            <button type=\"button\" class=\"btn btn-success\" data-dismiss=\"modal\" v-if=\"isFocus(3)\" @click=\"update()\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-51700a47", module.exports)
+  } else {
+    hotAPI.update("_v-51700a47", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":98,"vue-hot-reload-api":95}],109:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _vueMultiselect = require('vue-multiselect');
 
 var _vueMultiselect2 = _interopRequireDefault(_vueMultiselect);
@@ -21239,7 +21350,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],109:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21306,7 +21417,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":111,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],110:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":112,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],111:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21338,9 +21449,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],111:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],112:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],112:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21391,7 +21502,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],113:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21475,7 +21586,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],114:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],115:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21490,6 +21601,7 @@ var countries = require('./components/countries.vue');
 var dropdown = require('./components/dropdown.vue');
 var alert = require('./components/alert.vue');
 var billing = require('./components/billing.vue');
+var contract = require('./components/contract.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -22788,9 +22900,12 @@ $(document).ready(function () {
         el: '.serviceVue',
         components: {
             PhotoList: PhotoList,
-            countries: countries
+            countries: countries,
+            contract: contract
         },
-        directives: { FormToAjax: FormToAjax },
+        directives: {
+            FormToAjax: FormToAjax
+        },
         data: {
             validationErrors: {},
             statusSwitch: true,
@@ -23277,6 +23392,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/billing.vue":106,"./components/checkboxList.vue":107,"./components/countries.vue":108,"./components/dropdown.vue":109,"./components/email.vue":110,"./components/photoList.vue":112,"./directives/FormToAjax.vue":113,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,114]);
+},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/billing.vue":106,"./components/checkboxList.vue":107,"./components/contract.vue":108,"./components/countries.vue":109,"./components/dropdown.vue":110,"./components/email.vue":111,"./components/photoList.vue":113,"./directives/FormToAjax.vue":114,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,115]);
 
 //# sourceMappingURL=bundle.js.map

@@ -29,6 +29,11 @@ class Status{
     	return "<span class=\"label {$tag_type} label-{$class}\">{$this}</span>";
     }
 
+    public function asBoolean()
+    {
+        return $this->status;
+    }
+
     /**
      * @return string
      * tested

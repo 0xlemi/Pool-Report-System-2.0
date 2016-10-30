@@ -54,6 +54,7 @@ Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController');
 Route::resource('services', 'ServicesController');
+Route::resource('servicecontracts', 'ServiceContractsController');
 Route::resource('equipment', 'EquipmentController');
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');

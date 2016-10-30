@@ -8,7 +8,7 @@ class ServiceDays{
 
     protected $serviceDays;
 
-    public function __construct($serviceDays)
+    public function __construct(int $serviceDays)
     {
         $this->serviceDays = $serviceDays;
     }
@@ -20,7 +20,6 @@ class ServiceDays{
      */
     public function shortNames()
     {
-        if($this->serviceDays == null){ return 'No Contract'; }
         $result = '';
         foreach ($this->asArray() as $day => $active) {
             if($active){
@@ -48,7 +47,6 @@ class ServiceDays{
      */
     public function fullNames()
     {
-        if($this->serviceDays == null){ return 'No Contract'; }
         $result = '';
         foreach ($this->asArray() as $day => $active) {
             if($active){
@@ -72,7 +70,6 @@ class ServiceDays{
      */
     public function asArray()
     {
-        if($this->serviceDays == null){ return; }
                 // Transform ints to booleans
         $days = array_map(function($num){
                     return (boolean) $num;

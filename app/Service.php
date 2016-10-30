@@ -6,11 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Intervention;
 
-use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Traits\Model\ImageTrait;
-use App\PRS\ValueObjects\Service\EndTime;
-use App\PRS\ValueObjects\Service\ServiceDays;
-use App\PRS\ValueObjects\Service\Status;
 use App\ServiceContract;
 
 use Carbon\Carbon;
@@ -113,40 +109,6 @@ class Service extends Model
         return ($this->workOrders()->get()->count() > 0);
     }
 
-
-    //******** VALUE OBJECTS ********
-
-    /**
-     * endTime ValueObject
-     * @return EndTime
-     */
-    public function endTime()
-    {
-        $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-        return (new EndTime($this->serviceContract->end_time, $this->admin()->timezone, $reportHelpers));
-    }
-
-    /**
-     * ServiceDays ValueObject
-     * @return ServiceDays
-     */
-    public function serviceDays()
-    {
-        $serviceDays = null;
-        if($this->hasServiceContract()){
-            $serviceDays = $this->serviceContract->service_days;
-        }
-        return (new ServiceDays($serviceDays));
-    }
-
-    /**
-     * status ValueObject
-     * @return [type] [description]
-     */
-    public function contractActive()
-    {
-        return (new Status($this->serviceContract->active));
-    }
 
     //******** MISCELLANEOUS ********
 

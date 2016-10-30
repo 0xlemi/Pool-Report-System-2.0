@@ -97,36 +97,15 @@
 									{!! $serviceHelpers->get_styled_type($service->type, false) !!}
 								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Service days</label>
-								<div class="col-sm-10">
-									{!! $service->serviceDays()->shortNamesStyled() !!}
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Time interval</label>
-								<div class="col-sm-10">
-									<div class="input-group">
-										<div class="input-group-addon">From:</div>
-										<input type="text" class="form-control"
-												name="start_time" value="{{ $service->start_time }}" readonly>
-										<div class="input-group-addon">To:</div>
-										<input type="text" class="form-control"
-												name="end_time" value="{{ $service->end_time }}" readonly>
-									</div>
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Price</label>
-								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->amount.' '.$service->currency }}">
-								</div>
-							</div>
+
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Status</label>
+								<label class="col-sm-2 form-control-label">Contract</label>
 								<div class="col-sm-10">
-									{!! $service->contractActive()->styled() !!}
+									<button type="button" class="btn btn-secondary"
+										data-toggle="modal"
+										data-target="#contractModal">
+										<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;Manage Contract</button>
 								</div>
 							</div>
 
@@ -187,6 +166,7 @@
 		</div>
 	</div>
 
+	@include('services.contract')
 	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')

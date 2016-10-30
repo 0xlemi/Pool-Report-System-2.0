@@ -10,6 +10,7 @@ var countries       = require('./components/countries.vue');
 var dropdown       = require('./components/dropdown.vue');
 var alert       = require('./components/alert.vue');
 var billing       = require('./components/billing.vue');
+var contract       = require('./components/contract.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1366,9 +1367,12 @@ function isset(strVariableName) {
         el: '.serviceVue',
         components: {
             PhotoList,
-            countries
+            countries,
+            contract
         },
-        directives: { FormToAjax },
+        directives: {
+            FormToAjax
+        },
         data: {
             validationErrors: {},
             statusSwitch: true,
@@ -1389,18 +1393,18 @@ function isset(strVariableName) {
             serviceLatitude: (isset('latitude')) ? back.latitude : null,
             serviceLongitude: (isset('longitude')) ? back.longitude : null,
             // Equipment
-            equipmentTableFocus: true,
-            equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-            equipmentId: 0,
-            equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-            equipmentPhotos: [],
-            equipmentPhoto: '',
-            equipmentKind: '',
-            equipmentType: '',
-            equipmentBrand: '',
-            equipmentModel: '',
-            equipmentCapacity: '',
-            equipmentUnits: '',
+                equipmentTableFocus: true,
+                equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+                equipmentId: 0,
+                equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
+                equipmentPhotos: [],
+                equipmentPhoto: '',
+                equipmentKind: '',
+                equipmentType: '',
+                equipmentBrand: '',
+                equipmentModel: '',
+                equipmentCapacity: '',
+                equipmentUnits: '',
         },
         computed: {
             equipmentModalTitle: function(){
