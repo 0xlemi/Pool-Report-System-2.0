@@ -29,17 +29,17 @@
                     			<div class="input-group">
                     				<div class="input-group-addon">From:</div>
                     				<input type="text" class="form-control"
-                    						name="start_time" value="{{ startTime }}" readonly>
+                    						name="start_time" value="{{ startTimeShow }}" readonly>
                     				<div class="input-group-addon">To:</div>
                     				<input type="text" class="form-control"
-                    						name="end_time" value="{{ endTime }}" readonly>
+                    						name="end_time" value="{{ endTimeShow }}" readonly>
                     			</div>
                     		</div>
                     	</div>
                     	<div class="form-group row">
                     		<label class="col-sm-2 form-control-label">Price</label>
                     		<div class="col-sm-10">
-                    			<input type="text" readonly class="form-control" id="inputPassword" value="{{ priceWithCurrency }}">
+                    			<input type="text" readonly class="form-control" id="inputPassword" value="{{ priceShow }}">
                     		</div>
                     	</div>
 
@@ -109,7 +109,6 @@
 										<input type="text" class="form-control"
 												placeholder="Amount" v-model="price">
 										<div class="input-group-addon">
-
 											<select v-model="currency">
 												<option v-for="item in currencies" value="{{item}}">{{item}}</option>
 											</select>
@@ -121,26 +120,26 @@
 				</div>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
-
-            <button type="button" class="btn btn-primary" data-dismiss="modal" v-if="isFocus(1)">
-				Create
-			</button>
-
-			<p style="float: left;">
-	            <button type="button" class="btn btn-warning" data-dismiss="modal" v-if="isFocus(2)" @click="deactivateContract()">
+			<p style="float: left;" v-if="isFocus(2)">
+	            <button type="button" class="btn btn-warning" @click="deactivateContract">
 					Deactivate Contract
 				</button>
 			</p>
-	        <button type="button" class="btn btn-primary" data-dismiss="modal" v-if="isFocus(2)" @click="changeFocus(3)">
+	        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
+
+            <button type="button" class="btn btn-primary" v-if="isFocus(1)">
+				Create
+			</button>
+
+	        <button type="button" class="btn btn-primary" v-if="isFocus(2)" @click="changeFocus(3)">
 				<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;&nbsp;Edit
 			</button>
 
 
-            <button type="button" class="btn btn-warning" data-dismiss="modal" v-if="isFocus(3)" @click="changeFocus(2)">
+            <button type="button" class="btn btn-warning" v-if="isFocus(3)" @click="changeFocus(2)">
 				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
 			</button>
-            <button type="button" class="btn btn-success" data-dismiss="modal" v-if="isFocus(3)" @click="update()">
+            <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
 				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update
 			</button>
 
@@ -153,6 +152,8 @@
 </template>
 
 <script>
+
+var Spinner = require("spin");
 
   export default {
     props: ['serviceId', 'serviceContractUrl', 'currencies'],
@@ -171,12 +172,12 @@
             endTime: '',
             price: '',
             currency: '',
+			startTimeShow: '',
+            endTimeShow: '',
+            priceShow: '',
         }
     },
     computed: {
-        priceWithCurrency: function(){
-            return this.price+' '+this.currency;
-        },
         Url: function(){
             return this.serviceContractUrl+this.serviceId;
         },
@@ -200,9 +201,13 @@
 
                     vue.startTime = data.startTime;
                     vue.endTime = data.endTime;
+					vue.startTimeShow = data.startTime;
+                    vue.endTimeShow = data.endTime;
 
                     vue.price = data.object.amount;
                     vue.currency = data.object.currency;
+					vue.priceShow = data.object.amount+' '+data.object.currency;
+
                 }
 
             }, (response) => {
@@ -210,6 +215,22 @@
             });
         },
         update(){
+			let vue = this;
+            let clickEvent = event;
+
+			// save button text for later
+            let buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1,
+            }).spin(clickEvent.target);
+
             this.$http.patch(this.Url, {
                 serviceDays: {
                     monday: this.monday,
@@ -222,13 +243,19 @@
                 },
                 start_time: this.startTime,
                 end_time: this.endTime,
-                price: this.price,
+                amount: this.price,
                 currency: this.currency,
             }).then((response) => {
-
+				this.focus = 2;
+				// refresh the information
+				this.getValues();
             }, (response) => {
                 console.log('error with contract');
             });
+			// enable, remove spinner and set tab to the one before
+			// clickEvent.target.disabled = false;
+			// clickEvent.target.innerHTML = buttonTag;
+
         },
 		deactivateContract(){
 

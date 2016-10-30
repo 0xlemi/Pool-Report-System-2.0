@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\PRS\Helpers\ServiceHelpers;
 
 class ServiceContractsController extends PageController
 {
+
+    protected $serviceHelpers;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ServiceHelpers $serviceHelpers)
     {
+        $this->serviceHelpers = $serviceHelpers;
         $this->middleware('auth');
     }
 
@@ -81,12 +85,23 @@ class ServiceContractsController extends PageController
      */
     public function update(Request $request, $serviceSeqId)
     {
-        // $admin = $this->loggedUserAdministrator();
-        // $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
+        $admin = $this->loggedUserAdministrator();
+        $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
 
-        // $serviceContract->fill($request->all());
-        return $request->all();
+        // get the service days number 0-127
+        $serviceDays = $this->serviceHelpers->serviceDaysToNum($request->serviceDays);
 
+        $serviceContract->fill(array_merge(
+                    array_map('htmlentities', $request->except('serviceDays')),
+                    [
+                        'service_days' => $serviceDays,
+                    ]
+                ));
+        $serviceContract->save();
+
+        return response()->json([
+            'message' => 'Service Contract Successfuly updated',
+        ]);
     }
 
     /**

@@ -37,24 +37,22 @@ class ServiceHelpers
      * @param  boolean $sunday
      * @return integer
      */
-    public function service_days_to_num(
-    	$monday, $tuesday, $wednesday,
-    	$thursday, $friday, $saturday, $sunday){
+    public function serviceDaysToNum(array $serviceDays){
     	// basicamente es un numero binario de 7 digitos, el numero maximo posible es 2^7 = 128
         $num = 0;
-        if($monday){
+        if($serviceDays['monday']){
             $num += 1;
-        }if($tuesday){
+        }if($serviceDays['tuesday']){
             $num += 2;
-        }if($wednesday){
+        }if($serviceDays['wednesday']){
             $num += 4;
-        }if($thursday){
+        }if($serviceDays['thursday']){
             $num += 8;
-        }if($friday){
+        }if($serviceDays['friday']){
             $num += 16;
-        }if($saturday){
+        }if($serviceDays['saturday']){
             $num += 32;
-        }if($sunday){
+        }if($serviceDays['sunday']){
             $num += 64;
         }
         return $num;
