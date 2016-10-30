@@ -35,6 +35,15 @@ class EndTime{
         return "<span class=\"label label-{$class}\">{$this}</span>";
     }
 
+    /**
+     * Get the end time in a format that timePicker accepts
+     * @return string
+     * tested
+     */
+    public function timePickerValue()
+    {
+        return (new Carbon($this->endTime))->format('H:i');
+    }
 
     /**
      * Convert to string

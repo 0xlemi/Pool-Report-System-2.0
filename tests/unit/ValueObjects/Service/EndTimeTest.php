@@ -26,6 +26,21 @@ class EndTimeTest extends TestCase
     }
 
     /** @test */
+    public function get_end_tim_as_timepicker_formated_string()
+    {
+        // Given
+        $reportHelpersMock = Mockery::mock('App\PRS\Helpers\ReportHelpers');
+        $endTime = new EndTime('5:30:30', 'UTC', $reportHelpersMock);
+
+        // When
+        $string = $endTime->timePickerValue();
+
+        // Then
+        $this->assertEquals($string, '05:30');
+
+    }
+
+    /** @test */
     public function get_end_time_span_tag_colored_red_if_late()
     {
         // Given

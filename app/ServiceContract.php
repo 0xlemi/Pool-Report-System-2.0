@@ -27,6 +27,14 @@ class ServiceContract extends Model
         'comments',
     ];
 
+    /**
+     * hidden variables
+     * @var array
+     */
+	protected $hidden = [
+        'service_id'    
+	];
+
     protected $primaryKey = 'service_id';
 
 
@@ -41,17 +49,22 @@ class ServiceContract extends Model
         return $this->belongsTo(Service::class, 'service_id');
     }
 
+    public function admin()
+    {
+        return $this->service->admin();
+    }
+
     //******** VALUE OBJECTS ********
 
-    // /**
-    //  * endTime ValueObject
-    //  * @return EndTime
-    //  */
-    // public function endTime()
-    // {
-    //     $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-    //     return (new EndTime($this->serviceContract->end_time, $this->admin()->timezone, $reportHelpers));
-    // }
+    /**
+     * endTime ValueObject
+     * @return EndTime
+     */
+    public function endTime()
+    {
+        $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
+        return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
+    }
 
     /**
      * ServiceDays ValueObject
