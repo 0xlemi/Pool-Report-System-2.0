@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\UpdateServiceContractRequest;
 use App\PRS\Helpers\ServiceHelpers;
 
 class ServiceContractsController extends PageController
@@ -83,7 +84,7 @@ class ServiceContractsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $serviceSeqId)
+    public function update(UpdateServiceContractRequest $request, $serviceSeqId)
     {
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;

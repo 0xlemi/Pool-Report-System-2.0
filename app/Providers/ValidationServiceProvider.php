@@ -18,6 +18,20 @@ class ValidationServiceProvider extends ServiceProvider
     public function boot()
     {
         /**
+         * Validation condition to currency is supported
+         */
+
+         Validator::extend('validCurrency', function($attribute, $value) {
+            $validCurrencies = config('constants.currencies');
+            return in_array($value, $validCurrencies);
+        });
+        // message generation for the condition
+        Validator::replacer('validCurrency', function($message, $attribute) {
+            return "The {$attribute} is not a supported currency";
+        });
+
+
+        /**
          * Validation condition to check for date order in database
          */
         Validator::extend('afterDB', function($attribute, $value, $parameters, $validator) {

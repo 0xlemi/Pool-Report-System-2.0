@@ -84,24 +84,26 @@
 								<div class="col-sm-10">
 									<div class="input-group">
 										<div class="input-group-addon">From:</div>
-											<div class="input-group clockpicker" data-autoclose="true">
+											<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('start_time'))}">
 												<input type="text" class="form-control" v-model="startTime">
 												<span class="input-group-addon">
 													<span class="glyphicon glyphicon-time"></span>
 												</span>
 											</div>
 										<div class="input-group-addon">To:</div>
-										<div class="input-group clockpicker" data-autoclose="true">
+										<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('end_time'))}">
 											<input type="text" class="form-control" v-model="endTime">
 											<span class="input-group-addon">
 												<span class="glyphicon glyphicon-time"></span>
 											</span>
 										</div>
 									</div>
+									<small v-if="checkValidationError('start_time')" class="text-muted" style="color:red;">{{ validationErrors.start_time[0] }}</small>
+									<small v-if="checkValidationError('end_time')" class="text-muted" style="color:red;">{{ validationErrors.end_time[0] }}</small>
 								</div>
 							</div>
 
-							<div class="form-group row">
+							<div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}">
 								<label class="col-sm-2 form-control-label">Price:</label>
 								<div class="col-sm-10">
 									<div class="input-group">
@@ -114,6 +116,8 @@
 											</select>
 										</div>
 									</div>
+									<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
+									<small v-if="checkValidationError('currency')" class="text-muted">{{ validationErrors.currency[0] }}</small>
 								</div>
 							</div>
                     </div>
@@ -160,6 +164,8 @@ var Spinner = require("spin");
     data () {
         return {
             focus: 1, // 1=create, 2=show, 3=edit
+            validationErrors: {},
+
             monday: false,
             tuesday: false,
             wednesday: false,
@@ -211,7 +217,7 @@ var Spinner = require("spin");
                 }
 
             }, (response) => {
-                console.log('error with contract');
+				// show alert that something went wrong
             });
         },
         update(){
@@ -250,7 +256,9 @@ var Spinner = require("spin");
 				// refresh the information
 				this.getValues();
             }, (response) => {
-                console.log('error with contract');
+				this.validationErrors = response.data;
+				clickEvent.target.disabled = false;
+				clickEvent.target.innerHTML = buttonTag;
             });
 			// enable, remove spinner and set tab to the one before
 			// clickEvent.target.disabled = false;
@@ -262,6 +270,9 @@ var Spinner = require("spin");
 		},
         destroyContract(){
 
+        },
+        checkValidationError($fildName){
+            return $fildName in this.validationErrors;
         },
 		buttonClass(day){
 			return (day) ? 'btn-secondary':'btn-default';
