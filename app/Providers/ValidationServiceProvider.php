@@ -17,51 +17,13 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /**
-         * Validation condition to currency is supported
-         */
+        // Validation condition to currency is supported
+        Validator::extend('validCurrency', 'App\PRS\Validators\ValidCurrency@validate');
+        Validator::replacer('validCurrency', 'App\PRS\Validators\ValidCurrency@message');
 
-         Validator::extend('validCurrency', function($attribute, $value) {
-            $validCurrencies = config('constants.currencies');
-            return in_array($value, $validCurrencies);
-        });
-        // message generation for the condition
-        Validator::replacer('validCurrency', function($message, $attribute) {
-            return "The {$attribute} is not a supported currency";
-        });
-
-
-        /**
-         * Validation condition to check for date order in database
-         */
-        Validator::extend('afterDB', function($attribute, $value, $parameters, $validator) {
-            $table = $parameters[0];
-            $column = $parameters[1];
-            $id = $parameters[2];
-
-            $beforeDateRaw = DB::table($table)
-                ->select($column)
-                ->where('id', $id)
-                ->first()->$column;
-
-            $beforeDate = (new Carbon($beforeDateRaw, 'UTC'));
-            $afterDate = (new Carbon($value))->setTimezone('UTC');
-
-            return $beforeDate->lt($afterDate);
-        });
-        // message generation for the condition
-        Validator::replacer('afterDB', function($message, $attribute, $rule, $parameters) {
-            $table = $parameters[0];
-            $column = $parameters[1];
-            $id = $parameters[2];
-
-            $beforeDateRaw = DB::table($table)
-                ->select($column)
-                ->where('id', $id)
-                ->first()->$column;
-
-            return "The {$attribute} date should be after {$beforeDateRaw}";
-        });
+        // Validation condition to check for date order in database
+        Validator::extend('afterDB', 'App\PRS\Validators\TimeAfterDB@validate');
+        Validator::replacer('afterDB', 'App\PRS\Validators\TimeAfterDB@message');
 
     }
 
