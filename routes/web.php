@@ -50,11 +50,17 @@ Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto'
 Route::post('works/photos/{id}', 'WorkController@addPhoto');
 Route::delete('works/photos/{id}/{order}', 'WorkController@removePhoto');
 
+
+Route::get('servicecontracts/{serviceSeqId}', 'ServiceContractsController@show');
+Route::post('servicecontracts/{serviceSeqId}', 'ServiceContractsController@store');
+Route::patch('servicecontracts/{serviceSeqId}', 'ServiceContractsController@update');
+Route::post('servicecontracts/{serviceSeqId}/active', 'ServiceContractsController@toggleActivation');
+Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@destroy');
+
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController');
 Route::resource('services', 'ServicesController');
-Route::resource('servicecontracts', 'ServiceContractsController');
 Route::resource('equipment', 'EquipmentController');
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');

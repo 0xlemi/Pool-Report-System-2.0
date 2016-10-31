@@ -19,7 +19,6 @@ class ServiceContract extends Model
      * @var array
      */
     protected $fillable = [
-        'active',
         'service_days',
         'amount',
         'currency',
@@ -89,7 +88,7 @@ class ServiceContract extends Model
      * status ValueObject
      * @return [type] [description]
      */
-    public function contractActive()
+    public function active()
     {
         return (new Status($this->active));
     }

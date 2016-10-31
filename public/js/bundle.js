@@ -21207,6 +21207,8 @@ exports.default = {
             saturday: false,
             sunday: false,
             serviceDaysString: '',
+
+            active: true,
             startTime: '',
             endTime: '',
             price: '',
@@ -21220,6 +21222,18 @@ exports.default = {
     computed: {
         Url: function Url() {
             return this.serviceContractUrl + this.serviceId;
+        },
+        activationButton: function activationButton() {
+            if (this.active) {
+                return {
+                    tag: 'Deactivate Contract',
+                    class: 'btn-warning'
+                };
+            }
+            return {
+                tag: 'Activate Contract',
+                class: 'btn-success'
+            };
         }
     },
     methods: {
@@ -21228,7 +21242,10 @@ exports.default = {
             this.$http.get(this.Url).then(function (response) {
                 var data = response.data;
                 vue.focus = data.contractExists ? 2 : 1;
+                vue.validationErrors = {};
                 if (data.contractExists) {
+
+                    vue.active = data.active;
 
                     vue.monday = data.serviceDaysArray['monday'];
                     vue.tuesday = data.serviceDaysArray['tuesday'];
@@ -21252,12 +21269,52 @@ exports.default = {
                 // show alert that something went wrong
             });
         },
-        update: function update() {
+        create: function create() {
             var _this = this;
 
-            var vue = this;
             var clickEvent = event;
+            // save button text for later
+            var buttonTag = clickEvent.target.innerHTML;
 
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            this.$http.post(this.Url, {
+                serviceDays: {
+                    monday: this.monday,
+                    tuesday: this.tuesday,
+                    wednesday: this.wednesday,
+                    thursday: this.thursday,
+                    friday: this.friday,
+                    saturday: this.saturday,
+                    sunday: this.sunday
+                },
+                start_time: this.startTime,
+                end_time: this.endTime,
+                amount: this.price,
+                currency: this.currency
+            }).then(function (response) {
+                _this.focus = 2;
+                // refresh the information
+                _this.getValues();
+                // Change the button tag to Manage Contract
+                _this.$dispatch('contractCreated');
+            }, function (response) {
+                _this.validationErrors = response.data;
+                _this.revertButton(clickEvent, buttonTag);
+            });
+        },
+        update: function update() {
+            var _this2 = this;
+
+            var clickEvent = event;
             // save button text for later
             var buttonTag = clickEvent.target.innerHTML;
 
@@ -21286,20 +21343,65 @@ exports.default = {
                 amount: this.price,
                 currency: this.currency
             }).then(function (response) {
-                _this.focus = 2;
+                _this2.focus = 2;
                 // refresh the information
-                _this.getValues();
+                _this2.getValues();
             }, function (response) {
-                _this.validationErrors = response.data;
-                clickEvent.target.disabled = false;
-                clickEvent.target.innerHTML = buttonTag;
+                _this2.validationErrors = response.data;
+                _this2.revertButton(clickEvent, buttonTag);
             });
-            // enable, remove spinner and set tab to the one before
-            // clickEvent.target.disabled = false;
-            // clickEvent.target.innerHTML = buttonTag;
         },
-        deactivateContract: function deactivateContract() {},
-        destroyContract: function destroyContract() {},
+        toggleActivation: function toggleActivation() {
+            var _this3 = this;
+
+            var clickEvent = event;
+            // save button text for later
+            var buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            this.$http.post(this.Url + '/active').then(function (response) {
+                _this3.active = response.data.active;
+                _this3.revertButton(clickEvent, _this3.activationButton.tag);
+            }, function (response) {
+                _this3.revertButton(clickEvent, buttonTag);
+            });
+        },
+        destroy: function destroy() {
+            var _this4 = this;
+
+            var clickEvent = event;
+            // save button text for later
+            var buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            this.$http.delete(this.Url).then(function (response) {
+                // clear values
+                _this4.clean();
+                _this4.focus = 1;
+                _this4.$dispatch('contractDestroyed');
+            }, function (response) {
+                // add error alert
+                _this4.revertButton(clickEvent, buttonTag);
+            });
+        },
         checkValidationError: function checkValidationError($fildName) {
             return $fildName in this.validationErrors;
         },
@@ -21311,6 +21413,32 @@ exports.default = {
         },
         changeFocus: function changeFocus(num) {
             this.focus = num;
+        },
+        clean: function clean() {
+            this.validationErrors = {};
+
+            this.monday = false;
+            this.tuesday = false;
+            this.wednesday = false;
+            this.thursday = false;
+            this.friday = false;
+            this.saturday = false;
+            this.sunday = false;
+            this.serviceDaysString = '';
+
+            this.active = true;
+            this.startTime = '';
+            this.endTime = '';
+            this.price = '';
+            this.currency = '';
+            this.startTimeShow = '';
+            this.endTimeShow = '';
+            this.priceShow = '';
+        },
+        revertButton: function revertButton(clickEvent, buttonTag) {
+            // enable, remove spinner and set tab to the one before
+            clickEvent.target.disabled = false;
+            clickEvent.target.innerHTML = buttonTag;
         }
     },
     ready: function ready() {
@@ -21318,7 +21446,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Modal for ServiceContract preview -->\n\t<div class=\"modal fade\" id=\"contractModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Contract</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n                        create\n                    </div>\n\n                    <!-- Show Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n                        <div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Service days</label>\n                    \t\t<div class=\"col-sm-10\">\n                                <span class=\"label label-pill label-default\">{{ serviceDaysString }}</span>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Time interval</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<div class=\"input-group\">\n                    \t\t\t\t<div class=\"input-group-addon\">From:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"start_time\" value=\"{{ startTimeShow }}\" readonly=\"\">\n                    \t\t\t\t<div class=\"input-group-addon\">To:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"end_time\" value=\"{{ endTimeShow }}\" readonly=\"\">\n                    \t\t\t</div>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" id=\"inputPassword\" value=\"{{ priceShow }}\">\n                    \t\t</div>\n                    \t</div>\n\n                    </div>\n\n                    <!-- Edit Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n                            <div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n                    </div>\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(2)\">\n\t            <button type=\"button\" class=\"btn btn-warning\" @click=\"deactivateContract\">\n\t\t\t\t\tDeactivate Contract\n\t\t\t\t</button>\n\t\t\t</p>\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(2)\" @click=\"changeFocus(3)\">\n\t\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n\n            <button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Modal for ServiceContract preview -->\n\t<div class=\"modal fade\" id=\"contractModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Contract</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n                    </div>\n\n                    <!-- Show Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<div v-if=\"!active\" class=\"alert alert-warning alert-fill alert-close alert-dismissible fade in\" role=\"alert\">\n\t\t\t\t\t\t\tThis contract is deactivated\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Service days</label>\n                    \t\t<div class=\"col-sm-10\">\n                                <span class=\"label label-pill label-default\">{{ serviceDaysString }}</span>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Time interval</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<div class=\"input-group\">\n                    \t\t\t\t<div class=\"input-group-addon\">From:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"start_time\" value=\"{{ startTimeShow }}\" readonly=\"\">\n                    \t\t\t\t<div class=\"input-group-addon\">To:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"end_time\" value=\"{{ endTimeShow }}\" readonly=\"\">\n                    \t\t\t</div>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" id=\"inputPassword\" value=\"{{ priceShow }}\">\n                    \t\t</div>\n                    \t</div>\n\n                    </div>\n\n                    <!-- Edit Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n                            <div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n                    </div>\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(2)\">\n\t            <button type=\"button\" class=\"btn\" :class=\"activationButton.class\" @click=\"toggleActivation\">\n\t\t\t\t\t{{ activationButton.tag }}\n\t\t\t\t</button>\n\t\t\t</p>\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" v-if=\"isFocus(2) &amp;&amp; !active\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(2) &amp;&amp; active\" @click=\"changeFocus(3)\">\n\t\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -22961,6 +23089,8 @@ $(document).ready(function () {
             serviceCountry: isset('country') ? back.country : '',
             serviceLatitude: isset('latitude') ? back.latitude : null,
             serviceLongitude: isset('longitude') ? back.longitude : null,
+            // Contract
+            hasContract: isset('hasContract') ? back.hasContract : null,
             // Equipment
             equipmentTableFocus: true,
             equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
@@ -22994,6 +23124,12 @@ $(document).ready(function () {
                         return 'Equipment';
                 }
             },
+            contractTag: function contractTag() {
+                if (this.hasContract) {
+                    return "Manage";
+                }
+                return "Create";
+            },
             locationPickerTag: function locationPickerTag() {
                 var attributes = {
                     'icon': 'font-icon font-icon-ok',
@@ -23014,6 +23150,12 @@ $(document).ready(function () {
             // when a photo is deleted from the equipment photo edit
             equipmentChanged: function equipmentChanged() {
                 this.getEquipment();
+            },
+            contractCreated: function contractCreated() {
+                this.hasContract = true;
+            },
+            contractDestroyed: function contractDestroyed() {
+                this.hasContract = false;
             }
         },
         methods: {

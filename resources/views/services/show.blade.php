@@ -103,9 +103,9 @@
 								<label class="col-sm-2 form-control-label">Contract</label>
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-secondary"
-										data-toggle="modal"
-										data-target="#contractModal">
-										<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;Manage Contract</button>
+											data-toggle="modal" data-target="#contractModal">
+										<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;@{{ contractTag }} Contract
+									</button>
 								</div>
 							</div>
 
@@ -166,7 +166,10 @@
 		</div>
 	</div>
 
-	@include('services.contract')
+	<contract service-id="{{ $service->seq_id }}"
+        service-contract-url="{{ url('servicecontracts').'/' }}"
+        :currencies="{{ json_encode(config('constants.currencies')) }}">
+	</contract>
 	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')

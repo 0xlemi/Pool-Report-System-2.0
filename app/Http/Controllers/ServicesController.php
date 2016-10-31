@@ -134,6 +134,7 @@ class ServicesController extends PageController
         JavaScript::put([
             'showLatitude' => $service->latitude,
             'showLongitude' => $service->longitude,
+            'hasContract' => $service->hasServiceContract(),
             'equipmentUrl' => url('/equipment').'/',
             'equipmentAddPhotoUrl' => url('/equipment/photos').'/',
             'serviceId' => $service->id,
