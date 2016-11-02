@@ -21194,6 +21194,79 @@ var alert = require('./alert.vue');
 var Spinner = require("spin");
 
 exports.default = {
+    props: ['serviceId', 'chemicalUrl'],
+    components: {
+        alert: alert
+    },
+    data: function data() {
+        return {
+            focus: 2, // 1=create, 2=index, 3=edit
+            validationErrors: {},
+
+            name: '',
+            amount: '',
+            units: ''
+        };
+    },
+
+    computed: {
+        Url: function Url() {
+            return this.chemicalUrl + this.serviceId;
+        }
+    },
+    methods: {
+        getList: function getList() {},
+        update: function update() {},
+        checkValidationError: function checkValidationError($fildName) {
+            return $fildName in this.validationErrors;
+        },
+        isFocus: function isFocus(num) {
+            return this.focus == num;
+        },
+        changeFocus: function changeFocus(num) {
+            this.focus = num;
+        },
+        clean: function clean() {
+            this.validationErrors = {};
+
+            this.name = '';
+            this.amount = '';
+            this.units = '';
+        },
+        revertButton: function revertButton(clickEvent, buttonTag) {
+            // enable, remove spinner and set tab to the one before
+            clickEvent.target.disabled = false;
+            clickEvent.target.innerHTML = buttonTag;
+        }
+    },
+    ready: function ready() {
+        this.getList();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Chemicals</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n                    </div>\n\n                    <!-- Index Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n                        \n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-59c29947", module.exports)
+  } else {
+    hotAPI.update("_v-59c29947", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./alert.vue":105,"spin":85,"vue":98,"vue-hot-reload-api":95}],109:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var alert = require('./alert.vue');
+var Spinner = require("spin");
+
+exports.default = {
     props: ['serviceId', 'serviceContractUrl', 'currencies'],
     components: {
         alert: alert
@@ -21520,7 +21593,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51700a47", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":105,"spin":85,"vue":98,"vue-hot-reload-api":95}],109:[function(require,module,exports){
+},{"./alert.vue":105,"spin":85,"vue":98,"vue-hot-reload-api":95}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21577,7 +21650,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],110:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21644,7 +21717,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":112,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],111:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":113,"vue":98,"vue-hot-reload-api":95,"vue-multiselect":96}],112:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -21676,9 +21749,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],112:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95,"vueify/lib/insert-css":99}],113:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21729,7 +21802,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],114:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21813,7 +21886,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":98,"vue-hot-reload-api":95}],115:[function(require,module,exports){
+},{"vue":98,"vue-hot-reload-api":95}],116:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -21829,6 +21902,7 @@ var dropdown = require('./components/dropdown.vue');
 var alert = require('./components/alert.vue');
 var billing = require('./components/billing.vue');
 var contract = require('./components/contract.vue');
+var chemical = require('./components/chemical.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -23128,7 +23202,8 @@ $(document).ready(function () {
         components: {
             PhotoList: PhotoList,
             countries: countries,
-            contract: contract
+            contract: contract,
+            chemical: chemical
         },
         directives: {
             FormToAjax: FormToAjax
@@ -23633,6 +23708,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/billing.vue":106,"./components/checkboxList.vue":107,"./components/contract.vue":108,"./components/countries.vue":109,"./components/dropdown.vue":110,"./components/email.vue":111,"./components/photoList.vue":113,"./directives/FormToAjax.vue":114,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,115]);
+},{"./components/Permissions.vue":104,"./components/alert.vue":105,"./components/billing.vue":106,"./components/checkboxList.vue":107,"./components/chemical.vue":108,"./components/contract.vue":109,"./components/countries.vue":110,"./components/dropdown.vue":111,"./components/email.vue":112,"./components/photoList.vue":114,"./directives/FormToAjax.vue":115,"bootstrap-toggle":1,"dateformat":2,"dropzone":3,"gmaps.core":4,"gmaps.markers":5,"jquery-locationpicker":6,"spin":85,"sweetalert":94,"vue":98,"vue-resource":97}]},{},[103,101,100,102,116]);
 
 //# sourceMappingURL=bundle.js.map

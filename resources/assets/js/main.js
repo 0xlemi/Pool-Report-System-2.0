@@ -11,6 +11,7 @@ var dropdown       = require('./components/dropdown.vue');
 var alert       = require('./components/alert.vue');
 var billing       = require('./components/billing.vue');
 var contract       = require('./components/contract.vue');
+var chemical       = require('./components/chemical.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1368,7 +1369,8 @@ function isset(strVariableName) {
         components: {
             PhotoList,
             countries,
-            contract
+            contract,
+            chemical,
         },
         directives: {
             FormToAjax
@@ -1458,7 +1460,7 @@ function isset(strVariableName) {
                 this.hasContract = true;
             },
             contractDestroyed(){
-                this.hasContract = false;    
+                this.hasContract = false;
             }
         },
         methods: {

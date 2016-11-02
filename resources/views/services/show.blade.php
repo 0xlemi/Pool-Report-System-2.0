@@ -113,7 +113,7 @@
 								<label class="col-sm-2 form-control-label">Chemicals</label>
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-info"
-											data-toggle="modal" data-target="#chemicalsModal">
+											data-toggle="modal" data-target="#chemicalModal">
 										<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals
 									</button>
 								</div>
@@ -147,6 +147,8 @@
 										<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>
 								</div>
 							</div>
+
+							<datatable table-url="{{ url('services') }}"></datatable>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>

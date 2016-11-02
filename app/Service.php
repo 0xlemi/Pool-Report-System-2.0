@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\Chemical;
 use App\ServiceContract;
 
 use Carbon\Carbon;
@@ -95,6 +96,14 @@ class Service extends Model
     public function hasServiceContract()
     {
         return ($this->serviceContract()->get()->count() > 0);
+    }
+
+    /**
+     * Get associated ServiceContract with this service
+     */
+    public function chemicals()
+    {
+        return $this->hasMany(Chemical::class);
     }
 
     /**
