@@ -56,9 +56,14 @@ class ServiceContractsController extends PageController
                         ]
                     ));
 
+        if($serviceContract){
+            return response()->json([
+                'message' => 'Service Contract Successfuly created',
+            ]);
+        }
         return response()->json([
-            'message' => 'Service Contract Successfuly created',
-        ]);
+            'error' => 'Service Contract was not created, please try again.',
+        ], 500);
     }
 
     /**
@@ -149,7 +154,7 @@ class ServiceContractsController extends PageController
             ]);
         }
         return response()->json([
-                'message' => 'Service Contract could not be destroyed, try again.',
+                'error' => 'Service Contract could not be destroyed, try again.',
         ], 500);
     }
 }

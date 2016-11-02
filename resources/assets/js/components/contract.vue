@@ -13,6 +13,8 @@
                     <!-- Create new Contract -->
                     <div class="col-md-12" v-show="isFocus(1)">
 
+						<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
+
 						<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Days:</label>
 								<div class="col-sm-10">
@@ -90,6 +92,8 @@
                     <!-- Show Contract -->
                     <div class="col-md-12" v-show="isFocus(2)">
 
+						<alert type="danger" :message="alertMessageShow" :active="alertActiveShow"></alert>
+
 						<div v-if="!active" class="alert alert-warning alert-fill alert-close alert-dismissible fade in" role="alert">
 							This contract is deactivated
 						</div>
@@ -124,6 +128,8 @@
 
                     <!-- Edit Contract -->
                     <div class="col-md-12" v-show="isFocus(3)">
+
+						<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
 
                             <div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Days:</label>
@@ -236,15 +242,19 @@
 
 <script>
 
+var alert = require('./alert.vue');
 var Spinner = require("spin");
 
   export default {
     props: ['serviceId', 'serviceContractUrl', 'currencies'],
+	components: {
+		alert
+	},
     data () {
         return {
             focus: 1, // 1=create, 2=show, 3=edit
             validationErrors: {},
-
+			// days
             monday: false,
             tuesday: false,
             wednesday: false,
@@ -253,6 +263,13 @@ var Spinner = require("spin");
             saturday: false,
             sunday: false,
             serviceDaysString: '',
+			// alert
+			alertMessageCreate: '',
+			alertMessageShow: '',
+			alertMessageEdit: '',
+			alertActiveCreate: false,
+			alertActiveShow: false,
+			alertActiveEdit: false,
 
 			active: true,
             startTime: '',
@@ -313,7 +330,9 @@ var Spinner = require("spin");
                 }
 
             }, (response) => {
-				// show alert that something went wrong
+				this.focus = 2;
+				this.alertMessageShow = "The information could not be retrieved, please try again."
+				this.alertActiveShow = true;
             });
         },
 		create(){
@@ -322,6 +341,7 @@ var Spinner = require("spin");
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert('create');
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
@@ -353,8 +373,14 @@ var Spinner = require("spin");
 				// Change the button tag to Manage Contract
 				this.$dispatch('contractCreated');
             }, (response) => {
-				this.validationErrors = response.data;
-				this.revertButton(clickEvent, buttonTag);
+				if(response.status == 422){
+					this.validationErrors = response.data;
+					this.revertButton(clickEvent, buttonTag);
+				}else{
+					this.alertMessageCreate = "The Service Contract could not be created, please try again."
+					this.alertActiveCreate = true;
+					this.revertButton(clickEvent, buttonTag);
+				}
             });
 		},
         update(){
@@ -363,6 +389,7 @@ var Spinner = require("spin");
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert('edit');
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
@@ -392,8 +419,14 @@ var Spinner = require("spin");
 				// refresh the information
 				this.getValues();
             }, (response) => {
-				this.validationErrors = response.data;
-				this.revertButton(clickEvent, buttonTag);
+				if(response.status == 422){
+					this.validationErrors = response.data;
+					this.revertButton(clickEvent, buttonTag);
+				}else{
+					this.alertMessageEdit = "The Service Contract could not be updated, please try again."
+					this.alertActiveEdit = true;
+					this.revertButton(clickEvent, buttonTag);
+				}
             });
 
         },
@@ -403,6 +436,7 @@ var Spinner = require("spin");
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert('show');
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
@@ -417,6 +451,8 @@ var Spinner = require("spin");
 				this.active = response.data.active;
 				this.revertButton(clickEvent, this.activationButton.tag);
             }, (response) => {
+				this.alertMessageShow = "The activation could not be changed, please try again."
+				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
 
@@ -427,6 +463,7 @@ var Spinner = require("spin");
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert('show');
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
@@ -443,7 +480,8 @@ var Spinner = require("spin");
 				this.focus = 1;
 				this.$dispatch('contractDestroyed');
             }, (response) => {
-				// add error alert
+				this.alertMessageShow = "The Service Contract could not be destroyed, please try again."
+				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
 
@@ -460,6 +498,18 @@ var Spinner = require("spin");
         changeFocus(num){
             this.focus = num;
         },
+		resetAlert(alert){
+			if(alert == 'create'){
+				this.alertMessageCreate = ""
+				this.alertActiveCreate = false;
+			}else if(alert == 'show'){
+				this.alertMessageShow = ""
+				this.alertActiveShow = false;
+			}else if(alert == 'edit'){
+				this.alertMessageEdit = ""
+				this.alertActiveEdit = false;
+			}
+		},
 		clean(){
 			this.validationErrors = {};
 
