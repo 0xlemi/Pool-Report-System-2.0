@@ -38,7 +38,7 @@ class ServicesTableSeeder extends Seeder
                 ]);
             }
 
-            for ($i=0; $i < rand(2,5); $i++) {
+            for ($e=0; $e < rand(2,5); $e++) {
                 factory(App\Chemical::class)->create([
                     'service_id' => $service->id,
                 ]);
