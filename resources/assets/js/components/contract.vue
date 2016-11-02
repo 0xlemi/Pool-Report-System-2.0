@@ -300,32 +300,31 @@ var Spinner = require("spin");
     },
     methods: {
         getValues(){
-            let vue = this;
             this.$http.get(this.Url).then((response) => {
                 let data = response.data;
-                vue.focus = (data.contractExists) ? 2 : 1;
-				vue.validationErrors = {};
+                this.focus = (data.contractExists) ? 2 : 1;
+				this.validationErrors = {};
                 if(data.contractExists){
 
-					vue.active = data.active;
+					this.active = data.active;
 
-                    vue.monday = data.serviceDaysArray['monday'];
-                    vue.tuesday = data.serviceDaysArray['tuesday'];
-                    vue.wednesday = data.serviceDaysArray['wednesday'];
-                    vue.thursday = data.serviceDaysArray['thursday'];
-                    vue.friday = data.serviceDaysArray['friday'];
-                    vue.saturday = data.serviceDaysArray['saturday'];
-                    vue.sunday = data.serviceDaysArray['sunday'];
-                    vue.serviceDaysString = data.serviceDaysString;
+                    this.monday = data.serviceDaysArray['monday'];
+                    this.tuesday = data.serviceDaysArray['tuesday'];
+                    this.wednesday = data.serviceDaysArray['wednesday'];
+                    this.thursday = data.serviceDaysArray['thursday'];
+                    this.friday = data.serviceDaysArray['friday'];
+                    this.saturday = data.serviceDaysArray['saturday'];
+                    this.sunday = data.serviceDaysArray['sunday'];
+                    this.serviceDaysString = data.serviceDaysString;
 
-                    vue.startTime = data.startTime;
-                    vue.endTime = data.endTime;
-					vue.startTimeShow = data.startTime;
-                    vue.endTimeShow = data.endTime;
+                    this.startTime = data.startTime;
+                    this.endTime = data.endTime;
+					this.startTimeShow = data.startTime;
+                    this.endTimeShow = data.endTime;
 
-                    vue.price = data.object.amount;
-                    vue.currency = data.object.currency;
-					vue.priceShow = data.object.amount+' '+data.object.currency;
+                    this.price = data.object.amount;
+                    this.currency = data.object.currency;
+					this.priceShow = data.object.amount+' '+data.object.currency;
 
                 }
 
@@ -457,9 +456,27 @@ var Spinner = require("spin");
             });
 
 		},
-        destroy(){
-
+		destroy(){
+			let vue = this;
 			let clickEvent = event;
+			swal({
+                title: "Are you sure?",
+                text: "All invoces associated with this contract will be destroyed too!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete invoices too!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function(isConfirm){
+                if(isConfirm){
+                    vue.destroyRequest(clickEvent);
+                }
+            });
+		},
+        destroyRequest(clickEvent){
+
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 

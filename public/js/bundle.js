@@ -21251,32 +21251,31 @@ exports.default = {
         getValues: function getValues() {
             var _this = this;
 
-            var vue = this;
             this.$http.get(this.Url).then(function (response) {
                 var data = response.data;
-                vue.focus = data.contractExists ? 2 : 1;
-                vue.validationErrors = {};
+                _this.focus = data.contractExists ? 2 : 1;
+                _this.validationErrors = {};
                 if (data.contractExists) {
 
-                    vue.active = data.active;
+                    _this.active = data.active;
 
-                    vue.monday = data.serviceDaysArray['monday'];
-                    vue.tuesday = data.serviceDaysArray['tuesday'];
-                    vue.wednesday = data.serviceDaysArray['wednesday'];
-                    vue.thursday = data.serviceDaysArray['thursday'];
-                    vue.friday = data.serviceDaysArray['friday'];
-                    vue.saturday = data.serviceDaysArray['saturday'];
-                    vue.sunday = data.serviceDaysArray['sunday'];
-                    vue.serviceDaysString = data.serviceDaysString;
+                    _this.monday = data.serviceDaysArray['monday'];
+                    _this.tuesday = data.serviceDaysArray['tuesday'];
+                    _this.wednesday = data.serviceDaysArray['wednesday'];
+                    _this.thursday = data.serviceDaysArray['thursday'];
+                    _this.friday = data.serviceDaysArray['friday'];
+                    _this.saturday = data.serviceDaysArray['saturday'];
+                    _this.sunday = data.serviceDaysArray['sunday'];
+                    _this.serviceDaysString = data.serviceDaysString;
 
-                    vue.startTime = data.startTime;
-                    vue.endTime = data.endTime;
-                    vue.startTimeShow = data.startTime;
-                    vue.endTimeShow = data.endTime;
+                    _this.startTime = data.startTime;
+                    _this.endTime = data.endTime;
+                    _this.startTimeShow = data.startTime;
+                    _this.endTimeShow = data.endTime;
 
-                    vue.price = data.object.amount;
-                    vue.currency = data.object.currency;
-                    vue.priceShow = data.object.amount + ' ' + data.object.currency;
+                    _this.price = data.object.amount;
+                    _this.currency = data.object.currency;
+                    _this.priceShow = data.object.amount + ' ' + data.object.currency;
                 }
             }, function (response) {
                 _this.focus = 2;
@@ -21408,9 +21407,27 @@ exports.default = {
             });
         },
         destroy: function destroy() {
+            var vue = this;
+            var clickEvent = event;
+            swal({
+                title: "Are you sure?",
+                text: "All invoces associated with this contract will be destroyed too!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete invoices too!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    vue.destroyRequest(clickEvent);
+                }
+            });
+        },
+        destroyRequest: function destroyRequest(clickEvent) {
             var _this5 = this;
 
-            var clickEvent = event;
             // save button text for later
             var buttonTag = clickEvent.target.innerHTML;
 
