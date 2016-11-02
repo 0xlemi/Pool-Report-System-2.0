@@ -33,8 +33,14 @@ class ServicesTableSeeder extends Seeder
             ]);
 
             if(rand(0,1)){
-                $ServiceContract = factory(App\ServiceContract::class)->create([
-                        'service_id' => $service->id,
+                factory(App\ServiceContract::class)->create([
+                    'service_id' => $service->id,
+                ]);
+            }
+
+            for ($i=0; $i < rand(2,5); $i++) {
+                factory(App\Chemical::class)->create([
+                    'service_id' => $service->id,
                 ]);
             }
 
