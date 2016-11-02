@@ -110,9 +110,28 @@
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Location</label>
+								<label class="col-sm-2 form-control-label">Chemicals</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-info"
+											data-toggle="modal" data-target="#chemicalsModal">
+										<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals
+									</button>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Equipment</label>
 								<div class="col-sm-10">
 									<button type="button" class="btn btn-primary"
+										@click="openEquimentList()">
+										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>
+								</div>
+							</div>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Location</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-success"
 										data-toggle="modal"
 										data-target="#mapModal">
 										<i class="font-icon font-icon-earth-bordered"></i>&nbsp;&nbsp;&nbsp;Show Map</button>
@@ -126,15 +145,6 @@
 										data-toggle="modal"
 										data-target="#clientsModal">
 										<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Equipment</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-info"
-										@click="openEquimentList()">
-										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>
 								</div>
 							</div>
 

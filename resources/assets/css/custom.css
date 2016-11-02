@@ -26,3 +26,8 @@
     top: 5px;
     border-radius: 50%;
 }
+
+/* Font Icon */
+.fa {
+	font-size: 120%;
+}

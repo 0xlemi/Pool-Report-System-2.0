@@ -18,6 +18,7 @@ elixir(function(mix) {
     	.less('app.less', 'public/css/less.css')
     	.styles([
     		'bootstrap-table.css',
+            'font-awesome.min.css',
     		'dropzone.css',
         	'app.css',
             'bootstrap-fileupload.css',
