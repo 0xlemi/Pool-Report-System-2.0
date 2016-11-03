@@ -6,8 +6,6 @@ use App\Equipment;
 
 use App\PRS\Transformers\ImageTransformer;
 
-use Auth;
-
 /**
  * Transformer for the technician class
  */

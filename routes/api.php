@@ -30,6 +30,11 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 
 	Route::post('permissions', 'Api\AdministratorsController@permissions');
 
+	// Contract
+	Route::get('services/{serviceSeqId}/contract', 'Api\ServiceContractsController@show');
+	Route::post('services/{serviceSeqId}/contract', 'Api\ServiceContractsController@storeOrUpdate');
+	Route::delete('services/{serviceSeqId}/contract', 'Api\ServiceContractsController@destroy');
+
 	// Equipment
 	Route::get('services/{serviceSeqId}/equipment', 'Api\EquipmentController@index');
 	Route::post('services/{serviceSeqId}/equipment', 'Api\EquipmentController@store');
