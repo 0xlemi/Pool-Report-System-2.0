@@ -31,13 +31,6 @@ class Service extends Model
         'state',
         'postal_code',
         'country',
-        'type',
-        'service_days',
-        'amount',
-        'currency',
-        'start_time',
-        'end_time',
-        'status',
         'comments',
         'admin_id',
     ];
@@ -131,7 +124,7 @@ class Service extends Model
     {
         $admin = $this->admin();
         $dayToCheck = strtolower($date->format('l'));
-        return $this->serviceDays()->asArray()[$dayToCheck];
+        return $this->serviceContract->serviceDays()->asArray()[$dayToCheck];
     }
 
     /**

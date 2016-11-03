@@ -19,7 +19,6 @@ class DataTableController extends PageController
 {
 
     protected $reportHelpers;
-    protected $serviceHelpers;
     protected $clientHelpers;
 
     /**
@@ -27,11 +26,10 @@ class DataTableController extends PageController
      *
      * @return void
      */
-    public function __construct(ReportHelpers $reportHelpers, ServiceHelpers $serviceHelpers, ClientHelpers $clientHelpers)
+    public function __construct(ReportHelpers $reportHelpers, ClientHelpers $clientHelpers)
     {
         $this->middleware('auth');
         $this->reportHelpers = $reportHelpers;
-        $this->serviceHelpers = $serviceHelpers;
         $this->clientHelpers = $clientHelpers;
     }
 
@@ -45,9 +43,8 @@ class DataTableController extends PageController
                             'id' => $item->seq_id,
                             'name' => $item->name,
                             'address' => $item->address_line,
-                            'type' => $this->serviceHelpers->get_styled_type($item->type),
-                            'end_time' => $item->EndTime()->colored(),
-                            'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
+                            'end_time' => $item->serviceContract->EndTime()->colored(),
+                            'price' => $item->serviceContract->amount.' <strong>'.$item->serviceContract->currency.'</strong>',
                         );
                     })
                 ->flatten(1);
@@ -97,9 +94,8 @@ class DataTableController extends PageController
                                 'id' => $service->seq_id,
                                 'name' => $service->name,
                                 'address' => $service->address_line,
-                                'type' => $this->serviceHelpers->get_styled_type($service->type),
-                                'serviceDays' => $service->serviceDays()->shortNamesStyled(),
-                                'price' => $service->amount.' <strong>'.$service->currency.'</strong>',
+                                'serviceDays' => $service->serviceContract->serviceDays()->shortNamesStyled(),
+                                'price' => $service->serviceContract->amount.' <strong>'.$service->serviceContract->currency.'</strong>',
                             );
                         })
                         ->flatten(1);
@@ -220,14 +216,19 @@ class DataTableController extends PageController
                             }
                             return !$item->hasServiceContract();
                         })
-                        ->transform(function($item){
+                        ->transform(function($item) use ($status){
+                            $serviceDays = "<span class=\"label label-pill label-default\">No Contract</span>";
+                            $price = "<span class=\"label label-pill label-default\">No Contract</span>";
+                            if($status){
+                                $serviceDays = $item->serviceContract->serviceDays()->shortNamesStyled();
+                                $price = $item->serviceContract->amount.' <strong>'.$item->serviceContract->currency.'</strong>';
+                            }
                             return (object) array(
                                 'id' => $item->seq_id,
                                 'name' => $item->name,
                                 'address' => $item->address_line,
-                                'type' => $this->serviceHelpers->get_styled_type($item->type),
-                                'serviceDays' => $item->serviceDays()->shortNamesStyled(),
-                                'price' => $item->amount.' <strong>'.$item->currency.'</strong>',
+                                'serviceDays' => $serviceDays,
+                                'price' => $price,
                             );
                         })
                         ->flatten(1);

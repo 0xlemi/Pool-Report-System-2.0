@@ -1394,8 +1394,6 @@ function isset(strVariableName) {
             serviceCountry: (isset('country')) ? back.country : '',
             serviceLatitude: (isset('latitude')) ? back.latitude : null,
             serviceLongitude: (isset('longitude')) ? back.longitude : null,
-            // Contract
-                hasContract: (isset('hasContract')) ? back.hasContract : null,
             // Equipment
                 equipmentTableFocus: true,
                 equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
@@ -1429,12 +1427,6 @@ function isset(strVariableName) {
                     return 'Equipment';
                 }
             },
-            contractTag(){
-                if(this.hasContract){
-                    return "Manage";
-                }
-                return "Create";
-            },
             locationPickerTag(){
                 let attributes = {
                         'icon': 'font-icon font-icon-ok',
@@ -1456,12 +1448,6 @@ function isset(strVariableName) {
             equipmentChanged(){
                 this.getEquipment();
             },
-            contractCreated(){
-                this.hasContract = true;
-            },
-            contractDestroyed(){
-                this.hasContract = false;
-            }
         },
         methods: {
             checkValidationError($fildName){

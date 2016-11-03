@@ -1,5 +1,16 @@
 <template>
 
+	<!-- Button to activate the modal -->
+	<div class="form-group row">
+		<label class="col-sm-2 form-control-label">Contract</label>
+		<div class="col-sm-10">
+			<button type="button" class="btn btn-secondary"
+					data-toggle="modal" data-target="#contractModal">
+				<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;{{ buttonTag }} Contract
+			</button>
+		</div>
+	</div>
+
     <!-- Modal for ServiceContract preview -->
 	<div class="modal fade" id="contractModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
@@ -253,6 +264,7 @@ var Spinner = require("spin");
     data () {
         return {
             focus: 1, // 1=create, 2=show, 3=edit
+			contractExists: false,
             validationErrors: {},
 			// days
             monday: false,
@@ -296,12 +308,16 @@ var Spinner = require("spin");
 					tag: 'Activate Contract',
 					class: 'btn-success'
 				};
-		}
+		},
+        buttonTag: function(){
+			return (this.contractExists) ? "Manage" : "Create";
+        }
     },
     methods: {
         getValues(){
             this.$http.get(this.Url).then((response) => {
                 let data = response.data;
+				this.contractExists = data.contractExists;
                 this.focus = (data.contractExists) ? 2 : 1;
 				this.validationErrors = {};
                 if(data.contractExists){
@@ -369,8 +385,6 @@ var Spinner = require("spin");
                 this.focus = 2;
 				// refresh the information
 				this.getValues();
-				// Change the button tag to Manage Contract
-				this.$dispatch('contractCreated');
             }, (response) => {
 				if(response.status == 422){
 					this.validationErrors = response.data;
@@ -495,7 +509,6 @@ var Spinner = require("spin");
 				// clear values
 				this.clean();
 				this.focus = 1;
-				this.$dispatch('contractDestroyed');
             }, (response) => {
 				this.alertMessageShow = "The Service Contract could not be destroyed, please try again."
 				this.alertActiveShow = true;
@@ -528,6 +541,7 @@ var Spinner = require("spin");
 			}
 		},
 		clean(){
+			this.contractExists = false;
 			this.validationErrors = {};
 
             this.monday = false;

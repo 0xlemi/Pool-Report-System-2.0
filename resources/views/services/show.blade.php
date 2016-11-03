@@ -91,23 +91,11 @@
 									<input type="text" readonly class="form-control" id="inputPassword" value="{{ $serviceHelpers->get_country_by_code($service->country) }}">
 								</div>
 							</div>
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Type</label>
-								<div class="col-sm-10">
-									{!! $serviceHelpers->get_styled_type($service->type, false) !!}
-								</div>
-							</div>
 
-
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Contract</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-secondary"
-											data-toggle="modal" data-target="#contractModal">
-										<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;@{{ contractTag }} Contract
-									</button>
-								</div>
-							</div>
+							<contract service-id="{{ $service->seq_id }}"
+						        service-contract-url="{{ url('servicecontracts').'/' }}"
+						        :currencies="{{ json_encode(config('constants.currencies')) }}">
+							</contract>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Chemicals</label>
@@ -178,10 +166,7 @@
 		</div>
 	</div>
 
-	<contract service-id="{{ $service->seq_id }}"
-        service-contract-url="{{ url('servicecontracts').'/' }}"
-        :currencies="{{ json_encode(config('constants.currencies')) }}">
-	</contract>
+
 	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')

@@ -46,7 +46,6 @@ $factory->define(App\Service::class, function (Faker\Generator $faker){
         'state' => $faker->state,
         'postal_code' => $faker->postcode,
         'country' => $faker->countryCode,
-        'type' => $faker->numberBetween(1, 2), // not sure what types
         'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
 	];
 });

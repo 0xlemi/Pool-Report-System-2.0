@@ -83,25 +83,10 @@ class ServicesController extends PageController
 
         $admin  = $this->loggedUserAdministrator();
 
-        // get the service days number 0-127
-        $service_days = $this->serviceHelpers->service_days_to_num(
-            $request->service_days_monday,
-            $request->service_days_tuesday,
-            $request->service_days_wednesday,
-            $request->service_days_thursday,
-            $request->service_days_friday,
-            $request->service_days_saturday,
-            $request->service_days_sunday
-        );
-
-
         $service = Service::create(
                             array_merge(
                                 array_map('htmlentities', $request->all()),
                                 [
-                                    'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
-                                    'service_days' => $service_days,
-                                    'status' => ($request->status)? 1:0, // 0=inactive, 1=active
                                     'admin_id' => $admin->id,
                                 ]
                             )
@@ -187,26 +172,7 @@ class ServicesController extends PageController
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
-        // get the service days number 0-127
-        $service_days = $this->serviceHelpers->service_days_to_num(
-            $request->service_days_monday,
-            $request->service_days_tuesday,
-            $request->service_days_wednesday,
-            $request->service_days_thursday,
-            $request->service_days_friday,
-            $request->service_days_saturday,
-            $request->service_days_sunday
-        );
-
-        $service->fill(
-                array_merge(
-                    array_map('htmlentities', $request->except('admin_id')),
-                    [
-                        'type' => ($request->type)? 1:2, // 1=chlorine, 2=salt
-                        'service_days' => $service_days,
-                        'status' => ($request->status)? 1:0, // 0=inactive, 1=active
-                    ]
-                ));
+        $service->fill(array_map('htmlentities', $request->except('admin_id')));
 
         $photo = true;
         if($request->photo){

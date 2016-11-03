@@ -23,7 +23,6 @@ class CreateServicesTable extends Migration
             $table->string('state');
             $table->string('postal_code');
             $table->char('country', 2);
-            $table->tinyInteger('type'); // 1=chlorine, 2=salt
             $table->text('comments');
             $table->integer('admin_id')->unsigned();
             $table->integer('seq_id')->index();

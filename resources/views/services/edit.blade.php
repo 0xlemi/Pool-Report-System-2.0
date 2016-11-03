@@ -109,16 +109,6 @@
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Type:</label>
-								<div class="col-sm-10">
-									<input type="checkbox" data-toggle="toggle"
-										data-on="chlorine" data-off="Salt"
-										data-onstyle="info" data-offstyle="primary"
-										data-size="small" name="type" {{ ($service->type == 1) ? 'checked':'' }}>
-								</div>
-							</div>
-
-							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Photo</label>
 								<div class="col-sm-10">
 					                <div class="fileupload fileupload-new" data-provides="fileupload">
