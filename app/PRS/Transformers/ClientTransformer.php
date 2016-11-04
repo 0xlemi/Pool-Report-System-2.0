@@ -11,7 +11,7 @@ use App\PRS\Transformers\ImageTransformer;
 use Auth;
 
 /**
- * Transformer for the technician class
+ * Transformer for the client class to api readible array
  */
 class ClientTransformer extends Transformer
 {
@@ -25,7 +25,12 @@ class ClientTransformer extends Transformer
         $this->imageTransformer = $imageTransformer;
     }
 
-
+    /**
+     * Transform Client to api readible array
+     * @param  Client $client
+     * @return array
+     * tested
+     */
     public function transform(Client $client)
     {
         $services = $this->servicePreviewTransformer->transformCollection($client->services()->get());
@@ -46,10 +51,7 @@ class ClientTransformer extends Transformer
             'getReportsEmails' => $client->get_reports_emails,
             'comments' => $client->comments,
             'photo' => $photo,
-            'services' => $this->servicePreviewTransformer
-                            ->transformCollection(
-                                    $client->services()->get()
-                                ),
+            'services' => $services,
         ];
     }
 

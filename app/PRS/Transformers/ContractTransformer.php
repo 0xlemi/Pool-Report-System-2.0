@@ -10,6 +10,12 @@ use App\ServiceContract;
 class ContractTransformer extends Transformer
 {
 
+    /**
+     * Transform ServiceContract into api friendly array
+     * @param  ServiceContract $contract
+     * @return array
+     * tested
+     */
     public function transform(ServiceContract $contract)
     {
         $serviceDays = $contract->serviceDays()->asArray();
@@ -31,7 +37,7 @@ class ContractTransformer extends Transformer
             ],
             'comments' => $contract->comments,
         ];
-        
+
     }
 
 }

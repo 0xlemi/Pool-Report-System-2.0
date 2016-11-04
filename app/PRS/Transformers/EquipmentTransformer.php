@@ -19,6 +19,11 @@ class EquipmentTransformer extends Transformer
         $this->imageTransformer = $imageTransformer;
     }
 
+    /**
+     * Transform Equimpent into api readable array
+     * @param  Equipment $equipment
+     * @return array               
+     */
     public function transform(Equipment $equipment)
     {
         return [

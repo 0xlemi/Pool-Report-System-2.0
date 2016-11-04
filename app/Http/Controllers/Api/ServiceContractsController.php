@@ -27,7 +27,6 @@ class ServiceContractsController extends ApiController
     public function storeOrUpdate(Request $request, $serviceSeqId)
     {
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
-
     }
 
     /**
@@ -54,7 +53,6 @@ class ServiceContractsController extends ApiController
     public function destroy($serviceSeqId)
     {
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
-        //
     }
 
     /**
