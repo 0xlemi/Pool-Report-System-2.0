@@ -22,7 +22,8 @@ class EquipmentTransformer extends Transformer
     /**
      * Transform Equimpent into api readable array
      * @param  Equipment $equipment
-     * @return array               
+     * @return array
+     * tested
      */
     public function transform(Equipment $equipment)
     {

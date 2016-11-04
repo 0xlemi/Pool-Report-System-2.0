@@ -10,6 +10,12 @@ use App\Image;
 class ImageTransformer extends Transformer
 {
 
+    /**
+     * Transform Image to api friendly array
+     * @param  Image  $image
+     * @return array
+     * tested
+     */
     public function transform(Image $image)
     {
         return [

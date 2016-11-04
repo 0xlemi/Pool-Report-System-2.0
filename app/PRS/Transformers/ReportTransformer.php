@@ -32,41 +32,30 @@ class ReportTransformer extends Transformer
         $this->imageTransformer = $imageTransformer;
     }
 
+    /**
+     * Transform Report to api friendly array
+     * @param  Report $report
+     * @return array
+     * tested
+     */
     public function transform(Report $report)
     {
-        $photo1 = 'no image';
-        if($report->imageExists()){
-            $photo1 = $this->imageTransformer->transform($report->image(1, false));
-        }
-        $photo2 = 'no image';
-        if($report->imageExists()){
-            $photo2 = $this->imageTransformer->transform($report->image(2, false));
-        }
-        $photo3 = 'no image';
-        if($report->imageExists()){
-            $photo3 = $this->imageTransformer->transform($report->image(3, false));
-        }
-
-        $admin = $report->admin();
-        $completed_at = (new Carbon($report->completed, 'UTC'))
-                            ->setTimezone($admin->timezone);
-
         return [
             'id' => $report->seq_id,
-            'completed' => $completed_at,
+            'completed' => $report->completed(),
             'on_time' => $report->on_time,
             'ph' => $report->ph,
             'chlorine' => $report->chlorine,
             'temperature' => $report->temperature,
             'turbidity' => $report->turbidity,
             'salt' => $report->salt,
-            'latitude' => $report->latitude,
-            'longitude' => $report->longitude,
-            'altitude' => $report->altitude,
-            'accuracy' => $report->accuracy,
-            'photo1' => $photo1,
-            'photo2' => $photo2,
-            'photo3' => $photo3,
+            'location' =>
+                [
+                    'latitude' => $report->latitude,
+                    'longitude' => $report->longitude,
+                    'accuracy' => $report->accuracy,
+                ],
+            'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
             'service' => $this->servicePreviewTransformer
                             ->transform($report->service()),
             'technician' => $this->technicianPreviewTransformer
