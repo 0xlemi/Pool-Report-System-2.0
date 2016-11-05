@@ -7,8 +7,7 @@ use App\Service;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\EquipmentTransformer;
-
-use App\PRS\Traits\ControllerTrait;
+use App\PRS\Classes\Logged;
 
 /**
  * Transformer for the service class
@@ -16,20 +15,15 @@ use App\PRS\Traits\ControllerTrait;
 class ServiceTransformer extends Transformer
 {
 
-    use ControllerTrait;
-
-    private $serviceHelpers;
     private $imageTransformer;
-    private $equipmentTransformer;
+    private $logged;
 
     public function __construct(
-                        ServiceHelpers $serviceHelpers,
                         ImageTransformer $imageTransformer,
-                        EquipmentTransformer $equipmentTransformer)
+                        Logged $logged)
     {
-        $this->serviceHelpers = $serviceHelpers;
         $this->imageTransformer = $imageTransformer;
-        $this->equipmentTransformer = $equipmentTransformer;
+        $this->logged = $logged;
     }
 
 
@@ -53,7 +47,7 @@ class ServiceTransformer extends Transformer
             'photo' => $photo,
             'equipment' => [
                 'number' => $service->equipment()->count(),
-                'href' => url("api/v1/services/{$service->seq_id}/equipment?api_token={$this->getUser()->api_token}"),
+                'href' => url("api/v1/services/{$service->seq_id}/equipment?api_token={$this->logged->user()->api_token}"),
             ],
         ];
     }

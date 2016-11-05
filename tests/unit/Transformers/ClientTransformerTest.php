@@ -17,30 +17,24 @@ class ClientTransformerTest extends TestCase
     {
         // Given
         $mockServicePreviewTransformer = Mockery::mock(ServicePreviewTransformer::class);
-        $mockServicePreviewTransformer->shouldReceive('transformCollection')
-                                        ->once()
+        $mockServicePreviewTransformer->shouldReceive('transformCollection')->once()
                                         ->andReturn([
                                             'service1',
                                             'service2'
                                         ]);
 
         $mockImageTransformer = Mockery::mock(ImageTransformer::class);
-        $mockImageTransformer->shouldReceive('transform')
-                            ->once()
-                            ->andReturn('image');
+        $mockImageTransformer->shouldReceive('transform')->once()->andReturn('image');
 
         $mockUser = Mockery::mock();
         $mockUser->email = 'email@example.com';
 
         $mockClient = Mockery::mock(Client::class);
-        $mockClient->shouldReceive('image')
-                    ->andReturn(Mockery::mock(Image::class));
-        $mockClient->shouldReceive('imageExists')
-                    ->andReturn(true);
-        $mockClient->shouldReceive('services->get')
-                    ->andReturn(null);
-        $mockClient->shouldReceive('user')
-                    ->andReturn($mockUser);
+        $mockClient->shouldReceive('image')->once()->andReturn(Mockery::mock(Image::class));
+        $mockClient->shouldReceive('imageExists')->once()->andReturn(true);
+        $mockClient->shouldReceive('services->get')->once()->andReturn(null);
+        $mockClient->shouldReceive('user')->once()->andReturn($mockUser);
+
         $mockClient->shouldReceive('getAttribute')->with('seq_id')->andReturn(3);
         $mockClient->shouldReceive('getAttribute')->with('name')->andReturn('firstName');
         $mockClient->shouldReceive('getAttribute')->with('last_name')->andReturn('lastName');

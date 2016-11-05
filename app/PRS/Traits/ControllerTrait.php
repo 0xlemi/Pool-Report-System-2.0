@@ -3,31 +3,18 @@
 namespace App\PRS\Traits;
 
 use Auth;
+use App\PRS\Classes\Logged;
 
 trait ControllerTrait{
 
     public function loggedUserAdministrator()
     {
-        $user = $this->getUser();
-        if(isset($user)){
-            return $user->admin();
-        }
-        return null;
+        return (new Logged)->admin();
     }
 
     public function getUser()
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if(isset($session_user)){
-            return $session_user;
-        }elseif(isset($api_user)){
-            return $api_user;
-        }
-        return null;
+        return (new Logged)->user();
     }
-
-    
 
 }

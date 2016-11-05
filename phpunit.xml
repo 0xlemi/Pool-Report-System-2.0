@@ -24,6 +24,9 @@
         <testsuite name="valueObjects">
             <directory suffix="Test.php">./tests/unit/ValueObjects</directory>
         </testsuite>
+        <testsuite name="transformers">
+            <directory suffix="Test.php">./tests/unit/Transformers</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

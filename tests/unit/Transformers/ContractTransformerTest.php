@@ -14,8 +14,7 @@ class ContractTransformerTest extends TestCase
     {
         // Given
         $mockServiceContract = Mockery::mock(ServiceContract::class);
-        $mockServiceContract->shouldReceive('serviceDays->asArray')
-                            ->once()
+        $mockServiceContract->shouldReceive('serviceDays->asArray')->once()
                             ->andReturn([
                                 'monday' => true,
                                 'tuesday' => false,

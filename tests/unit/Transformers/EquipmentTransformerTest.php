@@ -16,16 +16,13 @@ class EquipmentTransformerTest extends TestCase
     {
         // Given
         $mockImageTransformer = Mockery::mock(ImageTransformer::class);
-        $mockImageTransformer->shouldReceive('transformCollection')
-                            ->once()
+        $mockImageTransformer->shouldReceive('transformCollection')->once()
                             ->andReturn([
                                 'image1',
                                 'image2'
                             ]);
         $mockEquipment = Mockery::mock(Equipment::class);
-        $mockEquipment->shouldReceive('images->get')
-                    ->once()
-                    ->andReturn(null);
+        $mockEquipment->shouldReceive('images->get')->once()->andReturn(null);
 
         $mockEquipment->shouldReceive('getAttribute')->with('id')->andReturn(3);
         $mockEquipment->shouldReceive('getAttribute')->with('kind')->andReturn('Pump');
