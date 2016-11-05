@@ -28,6 +28,12 @@ class TechnicianTransformer extends Transformer
     }
 
 
+    /**
+     * Transform Technician to api friendly array
+     * @param  Technician $technician
+     * @return array
+     * tested
+     */
     public function transform(Technician $technician)
     {
 

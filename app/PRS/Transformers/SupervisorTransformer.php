@@ -20,6 +20,12 @@ class SupervisorTransformer extends Transformer
         $this->imageTransformer = $imageTransformer;
     }
 
+    /**
+     * Transform Supervisor to api friendly array
+     * @param  Supervisor $supervisor
+     * @return array
+     * tested
+     */
     public function transform(Supervisor $supervisor)
     {
 
