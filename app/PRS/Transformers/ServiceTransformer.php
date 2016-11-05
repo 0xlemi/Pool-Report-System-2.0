@@ -26,7 +26,12 @@ class ServiceTransformer extends Transformer
         $this->logged = $logged;
     }
 
-
+    /**
+     * Transform Service into api friendly array
+     * @param  Service $service
+     * @return array
+     * tested
+     */
     public function transform(Service $service)
     {
 
