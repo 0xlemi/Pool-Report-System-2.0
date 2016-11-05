@@ -184,8 +184,8 @@ class WorkOrderController extends PageController
         $startDate = (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone);
         JavaScript::put([
             'defaultDate' => $startDate,
-            'serviceId' => $workOrder->service()->seq_id,
-            'supervisorId' => $workOrder->supervisor()->seq_id,
+            'serviceId' => $workOrder->service->seq_id,
+            'supervisorId' => $workOrder->supervisor->seq_id,
             'workOrderId' => $workOrder->id,
             'workOrderPhotoBeforeUrl' => url('workorders/photos/before/'.$workOrder->id),
             'workOrderBeforePhotos' => $imagesBeforeWork,

@@ -33,7 +33,15 @@ class WorkOrder extends Model
      */
     public function service()
     {
-    	return $this->belongsTo('App\Service')->first();
+    	return $this->belongsTo('App\Service');
+    }
+
+    /**
+     * associated administrator with this workOrder
+     */
+    public function admin()
+    {
+        return $this->service()->admin();
     }
 
     /**
@@ -41,7 +49,7 @@ class WorkOrder extends Model
      */
     public function supervisor()
     {
-    	return $this->belongsTo('App\Supervisor')->first();
+    	return $this->belongsTo('App\Supervisor');
     }
 
     /**
@@ -69,5 +77,20 @@ class WorkOrder extends Model
     {
         return $this->imagesByType(2);
     }
+
+
+    //******** VALUE OBJECTS ********
+
+    public function start()
+    {
+        return (new Carbon($this->start, 'UTC'))->setTimezone($this->admin()->timezone);
+    }
+
+    public function end()
+    {
+        return (new Carbon($this->end, 'UTC'))->setTimezone($this->admin()->timezone);
+    }
+
+
 
 }

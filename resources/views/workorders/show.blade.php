@@ -52,14 +52,14 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Name</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->service()->name }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->service->name }}"></p>
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Supervisor Name</label>
 								<div class="col-sm-10">
-									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->supervisor()->name }}"></p>
+									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->supervisor->name }}"></p>
 								</div>
 							</div>
 

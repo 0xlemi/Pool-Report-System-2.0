@@ -8,6 +8,7 @@ use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
 
 use App\PRS\Traits\ControllerTrait;
+use App\PRS\Classes\Logged;
 use App\Supervisor;
 use App\Service;
 use App\WorkOrder;
@@ -18,8 +19,6 @@ use Carbon\Carbon;
  */
 class WorkOrderTransformer extends Transformer
 {
-
-    use ControllerTrait;
 
     private $workTransformer;
     private $serviceTransformer;
@@ -40,21 +39,16 @@ class WorkOrderTransformer extends Transformer
 
     public function transform(WorkOrder $workOrder)
     {
-        $admin = $this->loggedUserAdministrator();
-
-        $service = Service::findOrFail($workOrder->service_id);
-        $supervisor = Supervisor::findOrFail($workOrder->supervisor_id);
-
         $attributes =  [
             'id' => $workOrder->seq_id,
             'title' => $workOrder->title,
             'description' => $workOrder->description,
-            'start' => (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone),
+            'start' => $workOrder->start(),
             'finished' => $workOrder->finished,
             'price' => $workOrder->price,
             'currency' => $workOrder->currency,
-            'service'=> $this->serviceTransformer->transform($service),
-            'supervisor'=> $this->supervisorTransformer->transform($supervisor),
+            'service'=> $this->serviceTransformer->transform($workOrder->service),
+            'supervisor'=> $this->supervisorTransformer->transform($workOrder->supervisor),
             'works' => $this->workTransformer->transformCollection($workOrder->works()->get()),
             'photosBeforeWork' => $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork()),
             'photosAfterWork' => $this->imageTransformer->transformCollection($workOrder->imagesAfterWork()),
@@ -63,7 +57,7 @@ class WorkOrderTransformer extends Transformer
         if(($workOrder->finished) && ($workOrder->end != null)){
             // add the end attribute to array
             $attributes = array_merge($attributes, [
-                'end' => (new Carbon($workOrder->end, 'UTC'))->setTimezone($admin->timezone)
+                'end' => $workOrder->end()
             ]);
         }
 
