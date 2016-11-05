@@ -49,6 +49,11 @@ class ServiceTransformer extends Transformer
             'postal_code' => $service->postal_code,
             'country' => $service->country,
             'comments' => $service->comments,
+            'location' =>
+                [
+                    'latitude' => $service->latitude,
+                    'longitude' => $service->longitude,
+                ],
             'photo' => $photo,
             'equipment' => [
                 'number' => $service->equipment()->count(),

@@ -36,6 +36,8 @@ class ServiceTransformerTest extends TestCase
         $mockService->shouldReceive('getAttribute')->with('state')->andReturn('State');
         $mockService->shouldReceive('getAttribute')->with('postal_code')->andReturn('PostalCode');
         $mockService->shouldReceive('getAttribute')->with('country')->andReturn('Country');
+        $mockService->shouldReceive('getAttribute')->with('latitude')->andReturn(123.123123);
+        $mockService->shouldReceive('getAttribute')->with('longitude')->andReturn(345.345345);
         $mockService->shouldReceive('getAttribute')->with('comments')->andReturn('Comments');
 
         // When
@@ -51,6 +53,11 @@ class ServiceTransformerTest extends TestCase
             'postal_code' => 'PostalCode',
             'country' => 'Country',
             'comments' => 'Comments',
+            'location' =>
+                [
+                    'latitude' => 123.123123,
+                    'longitude' => 345.345345,
+                ],
             'photo' => 'Image',
             'equipment' => [
                 'number' => 3,
