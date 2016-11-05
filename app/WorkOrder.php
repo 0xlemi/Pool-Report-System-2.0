@@ -81,11 +81,19 @@ class WorkOrder extends Model
 
     //******** VALUE OBJECTS ********
 
+    /**
+     * Start date in the admin timezone
+     * @return Carbon
+     */
     public function start()
     {
         return (new Carbon($this->start, 'UTC'))->setTimezone($this->admin()->timezone);
     }
 
+    /**
+     * End date in the admin timezone
+     * @return Carbon
+     */
     public function end()
     {
         return (new Carbon($this->end, 'UTC'))->setTimezone($this->admin()->timezone);

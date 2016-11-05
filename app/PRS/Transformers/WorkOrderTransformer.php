@@ -37,6 +37,11 @@ class WorkOrderTransformer extends Transformer
         $this->imageTransformer = $imageTransformer;
     }
 
+    /**
+     * Transform WorkOrder to api friendly array
+     * @param  WorkOrder $workOrder
+     * @return array               
+     */
     public function transform(WorkOrder $workOrder)
     {
         $attributes =  [

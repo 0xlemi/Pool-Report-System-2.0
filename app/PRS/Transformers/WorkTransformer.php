@@ -16,16 +16,21 @@ class WorkTransformer extends Transformer
 {
 
     private $imageTransformer;
-    private $technicianTransformer;
+    private $technicianPreviewTransformer;
 
     public function __construct(ImageTransformer $imageTransformer,
-                                TechnicianPreviewTransformer $technicianTransformer)
+                                TechnicianPreviewTransformer $technicianPreviewTransformer)
     {
         $this->imageTransformer = $imageTransformer;
-        $this->technicianTransformer = $technicianTransformer;
+        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
     }
 
-
+    /**
+     * Tranform Work into api friendly array
+     * @param  Work   $work
+     * @return array
+     * tested
+     */
     public function transform(Work $work)
     {
         $photos = [];
@@ -41,7 +46,7 @@ class WorkTransformer extends Transformer
             'units' => $work->units,
             'cost' => $work->cost,
             'currency' => $work->workOrder()->currency,
-            'technician' => $this->technicianTransformer->transform($work->technician()),
+            'technician' => $this->technicianPreviewTransformer->transform($work->technician()),
             'photos' => $photos,
         ];
     }
