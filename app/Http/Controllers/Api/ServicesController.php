@@ -120,17 +120,6 @@ class ServicesController extends ApiController
 
         $admin = $this->loggedUserAdministrator();
 
-        // // get the service days number 0-127 from request
-        // $service_days = $this->serviceHelpers->service_days_to_num(
-        //     $request->service_day_monday,
-        //     $request->service_day_tuesday,
-        //     $request->service_day_wednesday,
-        //     $request->service_day_thursday,
-        //     $request->service_day_friday,
-        //     $request->service_day_saturday,
-        //     $request->service_day_sunday
-        // );
-
         // Create service
         $transaction = DB::transaction(function () use($request, $admin) {
 
@@ -211,9 +200,8 @@ class ServicesController extends ApiController
                 return $this->respondNotFound('Service with that id, does not exist.');
             }
 
-        $service_days = $this->getServiceDaysNumberFromRequest($service->serviceDays()->asArray(), $request);
         // ***** Persist *****
-        $transaction = DB::transaction(function () use($request, $service, $service_days) {
+        $transaction = DB::transaction(function () use($request, $service) {
 
             $service->fill(
                 array_merge(
@@ -266,26 +254,6 @@ class ServicesController extends ApiController
 
     }
 
-    // /**
-    //  * Get the service_days number from the request arguments not changing the dates that where not sent as arguments
-    //  * @param  array    $days
-    //  * @param  Request  $request
-    //  * @return  int                      final service_days num for persisting
-    //  */
-    // protected function getServiceDaysNumberFromRequest(array $days, $request)
-    // {
-    //     // get the get number from the service days ignoring the unset ones
-    //     return $this->serviceHelpers->service_days_to_num(
-    //         (isset($request->service_day_monday)) ? $request->service_day_monday : $days['monday'],
-    //         (isset($request->service_day_tuesday)) ? $request->service_day_tuesday : $days['tuesday'],
-    //         (isset($request->service_day_wednesday)) ? $request->service_day_wednesday : $days['wednesday'],
-    //         (isset($request->service_day_thursday)) ? $request->service_day_thursday : $days['thursday'],
-    //         (isset($request->service_day_friday)) ? $request->service_day_friday : $days['friday'],
-    //         (isset($request->service_day_saturday)) ? $request->service_day_saturday : $days['saturday'],
-    //         (isset($request->service_day_sunday)) ? $request->service_day_sunday : $days['sunday']
-    //     );
-    // }
-
     protected function validateServiceCreate(Request $request)
     {
         return $this->validate($request, [
@@ -297,19 +265,6 @@ class ServicesController extends ApiController
             'state' => 'required|string|max:30',
             'postal_code' => 'required|string|max:15',
             'country' => 'required|string|size:2',
-            // 'type' => 'required|numeric|between:1,2',
-            // 'start_time' => 'required|date_format:H:i',
-            // 'end_time' => 'required|date_format:H:i|after:start_time',
-            // 'status' => 'boolean',
-            // 'amount' => 'required|numeric|max:10000000',
-            // 'currency' => 'required|string|size:3',
-            // 'service_day_monday' => 'required|boolean',
-            // 'service_day_tuesday' => 'required|boolean',
-            // 'service_day_wednesday' => 'required|boolean',
-            // 'service_day_thursday' => 'required|boolean',
-            // 'service_day_friday' => 'required|boolean',
-            // 'service_day_saturday' => 'required|boolean',
-            // 'service_day_sunday' => 'required|boolean',
             'comments' => 'string|max:750',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
@@ -326,19 +281,6 @@ class ServicesController extends ApiController
             'state' => 'string|max:30',
             'postal_code' => 'string|max:15',
             'country' => 'string|size:2',
-            // 'type' => 'numeric|between:1,2',
-            // 'start_time' => 'date_format:H:i',
-            // 'end_time' => 'date_format:H:i|after:start_time',
-            // 'status' => 'boolean',
-            // 'amount' => 'numeric|max:10000000',
-            // 'currency' => 'string|size:3',
-            // 'service_day_monday' => 'boolean',
-            // 'service_day_tuesday' => 'boolean',
-            // 'service_day_wednesday' => 'boolean',
-            // 'service_day_thursday' => 'boolean',
-            // 'service_day_friday' => 'boolean',
-            // 'service_day_saturday' => 'boolean',
-            // 'service_day_sunday' => 'boolean',
             'comments' => 'string|max:750',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);

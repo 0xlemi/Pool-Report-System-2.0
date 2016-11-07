@@ -22,8 +22,12 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::replacer('validCurrency', 'App\PRS\Validators\ValidCurrency@message');
 
         // Validation condition to check for date order in database
-        Validator::extend('afterDB', 'App\PRS\Validators\TimeAfterDB@validate');
-        Validator::replacer('afterDB', 'App\PRS\Validators\TimeAfterDB@message');
+        Validator::extend('afterDB', 'App\PRS\Validators\DateTimeAfterDB@validate');
+        Validator::replacer('afterDB', 'App\PRS\Validators\DateTimeAfterDB@message');
+
+        // Validation condition to check for date order in database
+        Validator::extend('timeAfterDB', 'App\PRS\Validators\TimeAfterDB@validate');
+        Validator::replacer('timeAfterDB', 'App\PRS\Validators\TimeAfterDB@message');
 
     }
 

@@ -19,6 +19,7 @@ class ServiceContract extends Model
      * @var array
      */
     protected $fillable = [
+        'active',
         'service_days',
         'amount',
         'currency',

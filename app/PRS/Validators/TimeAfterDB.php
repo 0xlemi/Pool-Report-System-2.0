@@ -8,19 +8,26 @@ use Carbon\Carbon;
 class TimeAfterDB
 {
 
-    public function validate($attribute, $value, $parameters)
+    public function validate($attribute, $value, $parameters, $validator)
     {
         $table = $parameters[0];
         $column = $parameters[1];
         $id = $parameters[2];
+        $todayDate = Carbon::today()->toDateString();
 
-        $beforeDateRaw = DB::table($table)
-            ->select($column)
-            ->where('id', $id)
-            ->first()->$column;
+        if($validator->hasAttribute($parameters[3])){
+            $beforeTime = $validator->attributes()[$parameters[3]];
+        }else{
+            $beforeTime  = DB::table($table)
+                ->select($column)
+                ->where('service_id', $id)
+                ->first()->$column;
+        }
+        $beforeDateTime =  "{$todayDate} {$beforeTime}";
+        $afterDateTime =  "{$todayDate} {$value}";
 
-        $beforeDate = (new Carbon($beforeDateRaw, 'UTC'));
-        $afterDate = (new Carbon($value))->setTimezone('UTC');
+        $beforeDate = new Carbon($beforeDateTime);
+        $afterDate = new Carbon($afterDateTime);
 
         return $beforeDate->lt($afterDate);
     }
@@ -31,12 +38,12 @@ class TimeAfterDB
         $column = $parameters[1];
         $id = $parameters[2];
 
-        $beforeDateRaw = DB::table($table)
-            ->select($column)
-            ->where('id', $id)
-            ->first()->$column;
+        $beforeTime  = DB::table($table)
+                ->select($column)
+                ->where('service_id', $id)
+                ->first()->$column;
 
-        return "The {$attribute} date should be after {$beforeDateRaw}";
+        return "The {$attribute} date should be after start_time or DB start_time ({$beforeTime})";
     }
 
 }
