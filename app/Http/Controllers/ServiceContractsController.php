@@ -7,20 +7,21 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\ServiceContractRequest;
 use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Helpers\ContractHelpers;
 
 class ServiceContractsController extends PageController
 {
 
-    protected $serviceHelpers;
+    protected $contractHelpers;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ServiceHelpers $serviceHelpers)
+    public function __construct(ContractHelpers $contractHelpers)
     {
-        $this->serviceHelpers = $serviceHelpers;
+        $this->contractHelpers = $contractHelpers;
         $this->middleware('auth');
     }
 
@@ -47,7 +48,7 @@ class ServiceContractsController extends PageController
         $service = $admin->serviceBySeqId($serviceSeqId);
 
         // get the service days number 0-127
-        $serviceDays = $this->serviceHelpers->serviceDaysToNum($request->serviceDays);
+        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->serviceDays);
 
         $serviceContract = $service->serviceContract()->create(array_merge(
                         array_map('htmlentities', $request->except('serviceDays')),
@@ -108,7 +109,7 @@ class ServiceContractsController extends PageController
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
 
         // get the service days number 0-127
-        $serviceDays = $this->serviceHelpers->serviceDaysToNum($request->serviceDays);
+        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->serviceDays);
 
         $serviceContract->fill(array_merge(
                     array_map('htmlentities', $request->except('serviceDays')),
