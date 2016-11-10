@@ -1378,6 +1378,7 @@ function isset(strVariableName) {
         data: {
             validationErrors: {},
             statusSwitch: true,
+            serviceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
             // Location picker values
             pickerServiceAddressLine1: '',
             pickerServiceCity: '',
@@ -1398,7 +1399,6 @@ function isset(strVariableName) {
                 equipmentTableFocus: true,
                 equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
                 equipmentId: 0,
-                equipmentServiceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
                 equipmentPhotos: [],
                 equipmentPhoto: '',
                 equipmentKind: '',
@@ -1407,6 +1407,12 @@ function isset(strVariableName) {
                 equipmentModel: '',
                 equipmentCapacity: '',
                 equipmentUnits: '',
+            // chemicals
+                chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+                chemicalId: 0,
+                chemicalName: '',
+                chemicalAmount: '',
+                chemicalUnits: '',
         },
         computed: {
             equipmentModalTitle: function(){
@@ -1453,6 +1459,7 @@ function isset(strVariableName) {
             checkValidationError($fildName){
                 return $fildName in this.validationErrors;
             },
+            // Chemicals
             // Equipment
             destroyEquipment(){
                 if(isset('equipmentUrl')){
@@ -1548,7 +1555,7 @@ function isset(strVariableName) {
                             'model': this.equipmentModel,
                             'capacity': this.equipmentCapacity,
                             'units': this.equipmentUnits,
-                            'service_id': this.equipmentServiceId,
+                            'service_id': this.serviceId,
                         },
                         success: function(data, textStatus, xhr) {
                             // refresh equipment list
@@ -1586,6 +1593,7 @@ function isset(strVariableName) {
                 }
                 $('#equipmentModal').modal('show');
             },
+            // Location
             populateAddressFields(page){
                 this.setLocation(page);
                 if(page == 'create'){
@@ -1603,6 +1611,7 @@ function isset(strVariableName) {
                     this.serviceLatitude = this.pickerServiceLatitude;
                 }
             },
+            // Index
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;
                 if(isset('serviceTableUrl')){

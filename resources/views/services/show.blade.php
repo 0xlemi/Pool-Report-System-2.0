@@ -136,8 +136,6 @@
 								</div>
 							</div>
 
-							<datatable table-url="{{ url('services') }}"></datatable>
-
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
 								<div class="col-sm-10">
@@ -166,7 +164,9 @@
 		</div>
 	</div>
 
-
+	<chemical service-id="{{ $service->seq_id }}"
+	    service-contract-url="{{ url('servicecontracts').'/' }}">
+	</chemical>
 	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')
