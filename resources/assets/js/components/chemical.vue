@@ -10,14 +10,16 @@
 	      </div>
 	      <div class="modal-body">
 				<div class="row">
+
                     <!-- Create new Chemical -->
                     <div class="col-md-12" v-show="isFocus(1)">
 
                     </div>
 
                     <!-- Index Chemical -->
+					{{ 'selected: '+ chemicalId }}
                     <div class="col-md-12" v-show="isFocus(2)">
-							<bootstrap-table :columns="columns" :data="data" :options="options"></bootstrap-table>
+						<bootstrap-table :chemical-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
                     </div>
 
                     <!-- Edit Chemical -->
@@ -30,12 +32,12 @@
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
 
-            <button type="button" class="btn btn-primary" v-if="isFocus(1)" @click="create">
-				Create
+			<button type="button" class="btn btn-warning" v-if="isFocus(3) || isFocus(1)" @click="changeFocus(2)">
+				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
 			</button>
 
-            <button type="button" class="btn btn-warning" v-if="isFocus(3)" @click="changeFocus(2)">
-				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
+            <button type="button" class="btn btn-primary" v-if="isFocus(1)" @click="create">
+				Create
 			</button>
 
             <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
@@ -65,6 +67,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
     data () {
         return {
             focus: 2, // 1=create, 2=index, 3=edit
+            chemicalId: 0,
             validationErrors: {},
 
             name: '',
@@ -144,6 +147,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 		        toggle:'table',
 		        sidePagination:'client',
 		        pagination:'true',
+				classes: 'table',
 				icons: {
 					paginationSwitchDown:'font-icon-arrow-square-down',
 					paginationSwitchUp: 'font-icon-arrow-square-down up',
@@ -161,6 +165,14 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				exportTypes: ['excel', 'pdf'],
 				minimumCountColumns: 2,
 				showFooter: false,
+
+				uniqueId: 'id',
+				idField: 'id',
+				// singleSelect: true,
+				// clickToSelect: true,
+
+				toolbarButton: true,
+				toolbarButtonText: 'Add Chemical',
 		    }
         }
     },
@@ -169,10 +181,27 @@ var BootstrapTable = require('./BootstrapTable.vue');
             return this.chemicalUrl+this.serviceId;
         },
     },
+	watch: {
+		chemicalId: function (val) {
+			this.getValues(val);
+	    },
+	},
+	events: {
+		toolbarButtonClicked(){
+			this.clean();
+			this.changeFocus(1);
+		}
+	},
     methods: {
         getList(){
-
+			// console.log(document.getElementById('toolbar'));
         },
+		getValues(chemicalId){
+
+		},
+		create(){
+
+		},
         update(){
 
         },

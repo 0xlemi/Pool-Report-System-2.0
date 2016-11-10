@@ -1,8 +1,13 @@
 <template>
 <div class="bootstrap-table">
     <div class="fixed-table-toolbar">
-        <div class="bs-bars pull-{{options.toolbarAlign}}">
-            <slot></slot>
+        <div class="pull-{{options.toolbarAlign}}">
+            <slot>
+                <!-- by lem93 -->
+                <button v-if="options.toolbarButton" @click="$dispatch('toolbarButtonClicked')" type="button" class="btn btn-primary">
+					<i class="{{ options.toolbarButtonIcon }}"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}
+				</button>
+            </slot>
         </div>
         <div class="columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}">
             <button v-if="options.showPaginationSwitch"
@@ -463,6 +468,11 @@ var DEFAULTS = {
     buttonsAlign: 'right',
     toolbarAlign: 'left',
 
+    // By lem93
+        toolbarButton : false,
+        toolbarButtonIcon : 'glyphicon glyphicon-plus',
+        toolbarButtonText : 'Add New',
+
     idField: undefined,
     clickToSelect: false,
     singleSelect: false,
@@ -578,6 +588,10 @@ var BootstrapTable = {
         options: {
             type: Object,
             default: function () { return DEFAULTS; }
+        },
+        chemicalId: {
+            type: Number,
+            required: true
         }
     },
     data: function () {
@@ -756,6 +770,20 @@ var BootstrapTable = {
         }
     },
     methods: {
+        // lem93 methods
+        colorTable(e){
+            this.clearRowClasses(e.path[3].rows);
+            e.path[1].classList.toggle('table_active');
+        },
+        selectId(id){
+            this.chemicalId = id;
+        },
+        clearRowClasses(rows){
+            for (let row of rows) {
+                row.classList.remove('table_active');
+            }
+        },
+        // end
         initLocale: function () {
             if (!this.options.locale) {
                 return;
@@ -1110,8 +1138,10 @@ var BootstrapTable = {
             var column = this.fieldColumns[getFieldIndex(this.fieldColumns, field)],
                 value = getItemField(item, field, this.options.escape);
 
-            this.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item);
-            this.trigger(e.type === 'click' ? 'click-row' : 'dbl-click-row', item, field);
+            // this.trigger(e.type === 'click' ? 'click-cell' : 'dbl-click-cell', field, value, item);
+            // this.trigger(e.type === 'click' ? 'click-row' : 'dbl-click-row', item, field);
+            this.colorTable(e); // lem93
+            this.selectId(item.id); // lem93
 
             // if click to select - then trigger the checkbox/radio click
             if (e.type === 'click' && this.options.clickToSelect && column.clickToSelect) {
