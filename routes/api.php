@@ -45,9 +45,9 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	// Chemicals
 	Route::get('services/{serviceSeqId}/chemicals', 'Api\ChemicalController@index');
 	Route::post('services/{serviceSeqId}/chemicals', 'Api\ChemicalController@store');
-	Route::get('chemicals/{equipment}', 'Api\ChemicalController@show');
-	Route::post('chemicals/{equipment}', 'Api\ChemicalController@update');
-	Route::delete('chemicals/{equipment}', 'Api\ChemicalController@destroy');
+	Route::get('chemicals/{chemical}', 'Api\ChemicalController@show');
+	Route::post('chemicals/{chemical}', 'Api\ChemicalController@update');
+	Route::delete('chemicals/{chemical}', 'Api\ChemicalController@destroy');
 
 	// Work
 	Route::get('workorders/{workOrderSeqId}/work', 'Api\WorkController@index');

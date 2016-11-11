@@ -22,7 +22,7 @@ class ChemicalController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($serviceSeqId)
+    public function index(Request $request, $serviceSeqId)
     {
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
@@ -45,7 +45,7 @@ class ChemicalController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $serviceSeqId)
     {
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
@@ -56,9 +56,7 @@ class ChemicalController extends ApiController
             'units' => 'required|string|max:255',
         ]);
 
-        $chemical = $service->chemicals()->create([
-            $request->all()
-        ]);
+        $chemical = $service->chemicals()->create($request->all());
 
         if($chemical){
             return $this->respondPersisted(
