@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\CreateChemicalRequest;
 use App\Chemical;
 
 class chemicalController extends PageController
@@ -51,10 +52,8 @@ class chemicalController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $serviceSeqId)
+    public function store(CreateChemicalRequest $request, $serviceSeqId)
     {
-        // validate
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
         $chemical = $service->chemicals()->create($request->all());
@@ -76,10 +75,8 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Chemical $chemical)
+    public function update(CreateChemicalRequest $request, Chemical $chemical)
     {
-        // validate
-
         $chemical->update($request->all());
 
         return response()->json([

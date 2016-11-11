@@ -30,7 +30,7 @@
 							<label class="col-sm-2 form-control-label">Name</label>
 							<div class="col-sm-10">
 								<input type="text" name="name" class="form-control" v-model="name">
-								<small v-if="checkValidationError('name')" class="text-muted">@{{ validationErrors.name[0] }}</small>
+								<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
 							</div>
 						</div>
 
@@ -38,7 +38,7 @@
 							<label class="col-sm-2 form-control-label">Amount</label>
 							<div class="col-sm-10">
 								<input type="number" name="amount" class="form-control" v-model="amount">
-								<small v-if="checkValidationError('amount')" class="text-muted">@{{ validationErrors.amount[0] }}</small>
+								<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
 							</div>
 						</div>
 
@@ -47,7 +47,7 @@
 							<div class="col-sm-10">
 								<input type="text" name="units" class="form-control"
 										placeholder="Example: PH, PPM, etc..." v-model="units">
-								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
+								<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 
@@ -71,7 +71,7 @@
 							<label class="col-sm-2 form-control-label">Name</label>
 							<div class="col-sm-10">
 								<input type="text" name="name" class="form-control" v-model="name">
-								<small v-if="checkValidationError('name')" class="text-muted">@{{ validationErrors.name[0] }}</small>
+								<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
 							</div>
 						</div>
 
@@ -79,7 +79,7 @@
 							<label class="col-sm-2 form-control-label">Amount</label>
 							<div class="col-sm-10">
 								<input type="number" name="amount" class="form-control" v-model="amount">
-								<small v-if="checkValidationError('amount')" class="text-muted">@{{ validationErrors.amount[0] }}</small>
+								<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
 							</div>
 						</div>
 
@@ -88,7 +88,7 @@
 							<div class="col-sm-10">
 								<input type="text" name="units" class="form-control"
 										placeholder="Example: PH, PPM, etc..." v-model="units">
-								<small v-if="checkValidationError('units')" class="text-muted">@{{ validationErrors.units[0] }}</small>
+								<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
 							</div>
 						</div>
 
