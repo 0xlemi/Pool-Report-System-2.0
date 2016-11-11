@@ -163,7 +163,7 @@ class ServiceContractsController extends ApiController
         $values = array_map('htmlentities', $request->except('service_days'));
 
         // get the service days number 0-127 from request
-        if($request->has('serviceDays')){
+        if($request->has('service_days')){
             $values = array_merge(
                     $values,
                     [

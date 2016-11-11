@@ -6,6 +6,7 @@ use App\Service;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Transformers\ContractTransformer;
 use App\PRS\Transformers\EquipmentTransformer;
 use App\PRS\Classes\Logged;
 
@@ -16,13 +17,16 @@ class ServiceTransformer extends Transformer
 {
 
     private $imageTransformer;
+    private $contractTransformer;
     private $logged;
 
     public function __construct(
                         ImageTransformer $imageTransformer,
+                        ContractTransformer $contractTransformer,
                         Logged $logged)
     {
         $this->imageTransformer = $imageTransformer;
+        $this->contractTransformer = $contractTransformer;
         $this->logged = $logged;
     }
 
@@ -40,6 +44,11 @@ class ServiceTransformer extends Transformer
             $photo = $this->imageTransformer->transform($service->image(1, false));
         }
 
+        $contract = 'no contract';
+        if($service->hasServiceContract()){
+            $contract = $this->contractTransformer->transform($service->serviceContract);
+        }
+
         return [
             'id' => $service->seq_id,
             'name' => $service->name,
@@ -55,6 +64,7 @@ class ServiceTransformer extends Transformer
                     'longitude' => $service->longitude,
                 ],
             'photo' => $photo,
+            'contract' => $contract,
             'equipment' => [
                 'number' => $service->equipment()->count(),
                 'href' => url("api/v1/services/{$service->seq_id}/equipment?api_token={$this->logged->user()->api_token}"),
