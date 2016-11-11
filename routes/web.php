@@ -44,14 +44,16 @@ Route::post('workorders/photos/after/{id}', 'WorkOrderController@addPhotoAfter')
 Route::delete('workorders/photos/before/{id}/{order}', 'WorkOrderController@removePhotoBefore');
 Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@removePhotoAfter');
 
+Route::get('service/{workOrderSeqId}/works', 'WorkController@index');
+Route::post('service/{workOrderSeqId}/works', 'WorkController@store');
+Route::post('works/photos/{work}', 'WorkController@addPhoto');
+// Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
+
 Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
 
 Route::get('chemicals/{serviceSeqId}', 'chemicalController@index');
 Route::post('chemicals/{serviceSeqId}', 'chemicalController@store');
-
-Route::post('works/photos/{id}', 'WorkController@addPhoto');
-Route::delete('works/photos/{id}/{order}', 'WorkController@removePhoto');
 
 Route::get('servicecontracts/{serviceSeqId}', 'ServiceContractsController@show');
 Route::post('servicecontracts/{serviceSeqId}', 'ServiceContractsController@store');
@@ -61,7 +63,9 @@ Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@des
 
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
-Route::resource('works', 'WorkController');
+Route::resource('works', 'WorkController', ['only' => [
+    'show', 'update', 'destroy'
+]]);
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController', ['only' => [
     'store', 'show', 'update', 'destroy'

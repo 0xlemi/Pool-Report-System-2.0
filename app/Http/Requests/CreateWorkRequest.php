@@ -41,7 +41,6 @@ class CreateWorkRequest extends FormRequest
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:20',
             'cost' => 'required|numeric|max:10000000',
-            'work_order_id'=> 'required|integer|min:1',
             'technician_id' => 'required|integer|min:1',
         ];
     }

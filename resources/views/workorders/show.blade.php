@@ -84,6 +84,23 @@
 								</div>
 							</div>
 
+							<works work-order-id="{{ $workOrder->seq_id }}"
+									base-url="{{ url('/') }}"
+									:technicians="{{ $technicians }}">
+							</works>
+
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Photos</label>
+								<div class="col-sm-10">
+									<button type="button" class="btn btn-warning" @click="openPhotosModal(1)">
+										<i class="fa fa-camera"></i>&nbsp;&nbsp;&nbsp;Before Work
+									</button>
+									<button v-if="finished" type="button" class="btn btn-info" @click="openPhotosModal(2)">
+										<i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;After Work
+									</button>
+								</div>
+							</div>
+
 							<div class="form-group row {{($errors->has('description'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Description:</label>
 								<div class="col-sm-10">
@@ -95,49 +112,6 @@
 									@endif
 								</div>
 							</div>
-
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Photos</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-warning" @click="openPhotosModal(1)">
-										<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;Before Work
-									</button>
-									<button v-if="finished" type="button" class="btn btn-info" @click="openPhotosModal(2)">
-										<i class="glyphicon glyphicon-check"></i>&nbsp;&nbsp;After Work
-									</button>
-								</div>
-							</div>
-
-						<br>
-
-						<h5>Work Done:</h4>
-						<div id="toolbar">
-							<button tyle="button" class="btn btn-primary" @click="openWorkModal(1)">
-								<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Work
-							</button>
-						</div>
-						<div class="table-responsive">
-							<table id="worksTable"
-								   data-toolbar="#toolbar"
-								   data-url='{{ $default_table_url }}'
-								   data-page-size="5"
-								   data-search='true'
-								   data-show-export="true"
-								   data-export-types="['excel', 'pdf']"
-								   data-minimum-count-columns="2"
-								   data-show-footer="false"
-								   >
-								<thead>
-								    <tr>
-								        <th data-field="id" data-visible="false"></th>
-								        <th data-field="title" data-sortable="true">Title</th>
-								        <th data-field="quantity" data-sortable="true">Quantity</th>
-								        <th data-field="cost" data-sortable="true">Cost</th>
-								        <th data-field="technician" data-sortable="true">Technician</th>
-								    </tr>
-								</thead>
-							</table>
-						</div>
 
 						<hr>
 						<!-- <p style="float: left;display:inline;">
@@ -163,7 +137,6 @@
 		</div>
 	</div>
 
-@include('workorders.works')
 @include('workorders.finish')
 @include('workorders.photos')
 

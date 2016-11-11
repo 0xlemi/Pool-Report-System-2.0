@@ -346,7 +346,7 @@ var Spinner = require("spin");
 
             }, (response) => {
 				this.focus = 2;
-				this.alertMessageShow = "The information could not be retrieved, please try again."
+				this.alertMessageShow = "The information could not be retrieved, please try again.";
 				this.alertActiveShow = true;
             });
         },
@@ -390,7 +390,7 @@ var Spinner = require("spin");
 					this.validationErrors = response.data;
 					this.revertButton(clickEvent, buttonTag);
 				}else{
-					this.alertMessageCreate = "The Service Contract could not be created, please try again."
+					this.alertMessageCreate = "The Service Contract could not be created, please try again.";
 					this.alertActiveCreate = true;
 					this.revertButton(clickEvent, buttonTag);
 				}
@@ -436,7 +436,7 @@ var Spinner = require("spin");
 					this.validationErrors = response.data;
 					this.revertButton(clickEvent, buttonTag);
 				}else{
-					this.alertMessageEdit = "The Service Contract could not be updated, please try again."
+					this.alertMessageEdit = "The Service Contract could not be updated, please try again.";
 					this.alertActiveEdit = true;
 					this.revertButton(clickEvent, buttonTag);
 				}
@@ -464,7 +464,7 @@ var Spinner = require("spin");
 				this.active = response.data.active;
 				this.revertButton(clickEvent, this.activationButton.tag);
             }, (response) => {
-				this.alertMessageShow = "The activation could not be changed, please try again."
+				this.alertMessageShow = "The activation could not be changed, please try again.";
 				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
@@ -510,7 +510,7 @@ var Spinner = require("spin");
 				this.clean();
 				this.focus = 1;
             }, (response) => {
-				this.alertMessageShow = "The Service Contract could not be destroyed, please try again."
+				this.alertMessageShow = "The Service Contract could not be destroyed, please try again.";
 				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });

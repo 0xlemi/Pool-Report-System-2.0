@@ -22404,7 +22404,7 @@ var BootstrapTable = {
                 return DEFAULTS;
             }
         },
-        chemicalId: {
+        objectId: {
             type: Number,
             required: true
         }
@@ -22591,7 +22591,7 @@ var BootstrapTable = {
             e.path[1].classList.add('table_active');
         },
         selectId: function selectId(id) {
-            this.chemicalId = id;
+            this.objectId = id;
             this.$dispatch('rowClicked');
         },
         clearRowClasses: function clearRowClasses(rows) {
@@ -23708,7 +23708,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :chemical-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\t        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :object-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\t        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24273,6 +24273,390 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+
+var alert = require('./alert.vue');
+var Spinner = require("spin");
+var BootstrapTable = require('./BootstrapTable.vue');
+var dropdown = require('./dropdown.vue');
+
+exports.default = {
+	props: ['workOrderId', 'baseUrl', 'technicians'],
+	components: {
+		alert: alert,
+		BootstrapTable: BootstrapTable,
+		dropdown: dropdown
+	},
+	data: function data() {
+		return {
+			focus: 2, // 1=create, 2=index, 3=show, 4=edit
+			workId: 0,
+			validationErrors: {},
+			currency: '',
+
+			// alert
+			alertMessageCreate: '',
+			alertMessageList: '',
+			alertMessageShow: '',
+			alertMessageEdit: '',
+			alertActiveCreate: false,
+			alertActiveList: false,
+			alertActiveShow: false,
+			alertActiveEdit: false,
+
+			titleName: '',
+			technician: {},
+			quantity: '',
+			units: '',
+			cost: '',
+			description: '',
+
+			showTitleName: '',
+			showTechnician: {},
+			showQuantity: '',
+			showUnits: '',
+			showCost: '',
+			showDescription: '',
+
+			columns: [{
+				title: 'ID',
+				field: 'id',
+				sortable: true,
+				visible: false
+			}, {
+				field: 'title',
+				title: 'Title',
+				sortable: true
+			}, {
+				field: 'quantity',
+				title: 'Quantity',
+				sortable: true
+			}, {
+				field: 'cost',
+				title: 'Cost',
+				sortable: true
+			}, {
+				field: 'technician',
+				title: 'Technician',
+				sortable: true
+			}],
+			data: [],
+			options: {
+				iconsPrefix: 'font-icon',
+				toggle: 'table',
+				sidePagination: 'client',
+				pagination: 'true',
+				classes: 'table',
+				icons: {
+					paginationSwitchDown: 'font-icon-arrow-square-down',
+					paginationSwitchUp: 'font-icon-arrow-square-down up',
+					refresh: 'font-icon-refresh',
+					toggle: 'font-icon-list-square',
+					columns: 'font-icon-list-rotate',
+					export: 'font-icon-download'
+				},
+				paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+				paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+				pageSize: 5,
+				pageList: [5, 10],
+				search: true,
+				showExport: true,
+				exportTypes: ['excel', 'pdf'],
+				minimumCountColumns: 2,
+				showFooter: false,
+
+				uniqueId: 'id',
+				idField: 'id',
+
+				toolbarButton: true,
+				toolbarButtonText: 'Add Work'
+			}
+		};
+	},
+
+	computed: {
+		workOrderUrl: function workOrderUrl() {
+			return this.baseUrl + '/service/' + this.workOrderId + '/works';
+		},
+		workUrl: function workUrl() {
+			return this.baseUrl + '/works/' + this.workId;
+		},
+		modalTitle: function modalTitle() {
+			switch (this.focus) {
+				case 1:
+					return 'New Work';
+					break;
+				case 2:
+					return 'Works List';
+					break;
+				case 3:
+					return 'View Work';
+					break;
+				case 4:
+					return 'Edit Work';
+					break;
+				default:
+					return 'Works';
+			}
+		}
+	},
+	events: {
+		toolbarButtonClicked: function toolbarButtonClicked() {
+			this.clean();
+			this.changeFocus(1);
+		},
+		rowClicked: function rowClicked() {
+			this.getValues(this.chemicalId);
+		}
+	},
+	methods: {
+		getList: function getList() {
+			var _this = this;
+
+			this.resetAlert('list');
+			this.$http.get(this.workOrderUrl).then(function (response) {
+				var data = response.data;
+				_this.data = data.list;
+				_this.currency = data.currency;
+				_this.validationErrors = {};
+				_this.$broadcast('refreshTable');
+			}, function (response) {
+				_this.focus = 2;
+				_this.alertMessageList = "The information could not be retrieved, please try again.";
+				_this.alertActiveList = true;
+			});
+		},
+		getValues: function getValues(workId) {
+			var _this2 = this;
+
+			this.$http.get(this.workUrl).then(function (response) {
+				console.log(response.data);
+				var data = response.data;
+				_this2.titleName = data.title;
+				_this2.quantity = data.quantity;
+				_this2.units = data.units;
+				_this2.cost = data.cost;
+				_this2.description = data.description;
+				_this2.technician = data.technician;
+
+				_this2.showTitleName = data.title;
+				_this2.showQuantity = data.quantity;
+				_this2.showUnits = data.units;
+				_this2.showCost = data.cost;
+				_this2.showDescription = data.description;
+				_this2.showTechnician = data.technician;
+
+				_this2.changeFocus(3);
+			}, function (response) {
+				_this2.focus = 2;
+				_this2.alertMessageList = "The information could not be retrieved, please try again.";
+				_this2.alertActiveList = true;
+			});
+		},
+		create: function create() {
+			var _this3 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('create');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.post(this.workOrderUrl, {
+				title: this.titleName,
+				technician_id: this.technician.id,
+				quantity: this.quantity,
+				units: this.units,
+				cost: this.cost,
+				description: this.description
+			}).then(function (response) {
+				_this3.changeFocus(2);
+				_this3.getList();
+			}, function (response) {
+				if (response.status == 422) {
+					_this3.validationErrors = response.data;
+					_this3.revertButton(clickEvent, buttonTag);
+				} else {
+					_this3.alertMessageCreate = "The work could not be created, please try again.";
+					_this3.alertActiveCreate = true;
+					_this3.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		update: function update() {
+			var _this4 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('edit');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.patch(this.workUrl, {
+				title: this.titleName,
+				technician_id: this.technician.id,
+				quantity: this.quantity,
+				units: this.units,
+				cost: this.cost,
+				description: this.description
+			}).then(function (response) {
+				// refresh the information
+				_this4.changeFocus(3);
+				_this4.getValues(_this4.workId);
+			}, function (response) {
+				if (response.status == 422) {
+					_this4.validationErrors = response.data;
+					_this4.revertButton(clickEvent, buttonTag);
+				} else {
+					_this4.alertMessageEdit = "The work could not be updated, please try again.";
+					_this4.alertActiveEdit = true;
+					_this4.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		destroy: function destroy() {
+			var vue = this;
+			var clickEvent = event;
+			swal({
+				title: "Are you sure?",
+				text: "Work is going to permanently deleted!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes, delete it!",
+				cancelButtonText: "No, cancel!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			}, function (isConfirm) {
+				if (isConfirm) {
+					vue.destroyRequest(clickEvent);
+				}
+			});
+		},
+		destroyRequest: function destroyRequest(clickEvent) {
+			var _this5 = this;
+
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('list');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.delete(this.workUrl).then(function (response) {
+				// clear values
+				_this5.changeFocus(2);
+			}, function (response) {
+				_this5.alertMessageEdit = "The work could not be destroyed, please try again.";
+				_this5.alertActiveEdit = true;
+				_this5.revertButton(clickEvent, buttonTag);
+			});
+		},
+		checkValidationError: function checkValidationError($fildName) {
+			return $fildName in this.validationErrors;
+		},
+		goBack: function goBack() {
+			switch (this.focus) {
+				case 1:
+					this.changeFocus(2);
+					break;
+				case 3:
+					this.changeFocus(2);
+					break;
+				case 4:
+					this.changeFocus(3);
+					break;
+				default:
+					return 'Works';
+			}
+		},
+		isFocus: function isFocus(num) {
+			return this.focus == num;
+		},
+		changeFocus: function changeFocus(num) {
+			if (num == 2) {
+				this.getList();
+			}
+			this.focus = num;
+		},
+		clean: function clean() {
+			this.validationErrors = {};
+
+			this.titleName = '';
+			this.technician = {};
+			this.quantity = '';
+			this.units = '';
+			this.cost = '';
+			this.description = '';
+		},
+		resetAlert: function resetAlert(alert) {
+			if (alert == 'create') {
+				this.alertMessageCreate = "";
+				this.alertActiveCreate = false;
+			} else if (alert == 'list') {
+				this.alertMessageList = "";
+				this.alertActiveList = false;
+			} else if (alert == 'show') {
+				this.alertMessageShow = "";
+				this.alertActiveShow = false;
+			} else if (alert == 'edit') {
+				this.alertMessageEdit = "";
+				this.alertActiveEdit = false;
+			}
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		}
+	},
+	ready: function ready() {
+		this.getList();
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Works</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#workModal\">\n\t\t\t\t<i class=\"fa fa-suitcase\"></i>&nbsp;&nbsp;&nbsp;Manage Works\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Work preview -->\n\t<div class=\"modal fade\" id=\"workModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :object-id.sync=\"workId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Show Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" readonly=\"\" class=\"form-control\" value=\"{{showTitleName}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" style=\"text-indent: 40px;\" :value=\"showTechnician.fullName\">\n                            \t<img class=\"iconOption\" :src=\"showTechnician.icon\" alt=\"Technician Photo\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" readonly=\"\" class=\"form-control\" value=\"{{showQuantity}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" readonly=\"\" class=\"form-control\" value=\"{{showUnits}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" value=\"{{showCost+' '+currency}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"showDescription\" readonly=\"\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t\t<!-- Edit Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(4)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"!isFocus(2)\" @click=\"goBack\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(3)\" @click=\"changeFocus(4)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(4)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-f400eac6", module.exports)
+  } else {
+    hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":183,"./alert.vue":185,"./dropdown.vue":191,"spin":164,"vue":177,"vue-hot-reload-api":174}],196:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
@@ -24353,7 +24737,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174}],196:[function(require,module,exports){
+},{"vue":177,"vue-hot-reload-api":174}],197:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -24370,6 +24754,7 @@ var alert = require('./components/alert.vue');
 var billing = require('./components/billing.vue');
 var contract = require('./components/contract.vue');
 var chemical = require('./components/chemical.vue');
+var works = require('./components/works.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -25243,7 +25628,8 @@ $(document).ready(function () {
         el: '.workOrderVue',
         components: {
             PhotoList: PhotoList,
-            dropdown: dropdown
+            dropdown: dropdown,
+            works: works
         },
         data: {
             validationErrors: {},
@@ -26172,6 +26558,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":184,"./components/alert.vue":185,"./components/billing.vue":186,"./components/checkboxList.vue":187,"./components/chemical.vue":188,"./components/contract.vue":189,"./components/countries.vue":190,"./components/dropdown.vue":191,"./components/email.vue":192,"./components/photoList.vue":194,"./directives/FormToAjax.vue":195,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":177,"vue-resource":176}]},{},[182,180,179,181,196]);
+},{"./components/Permissions.vue":184,"./components/alert.vue":185,"./components/billing.vue":186,"./components/checkboxList.vue":187,"./components/chemical.vue":188,"./components/contract.vue":189,"./components/countries.vue":190,"./components/dropdown.vue":191,"./components/email.vue":192,"./components/photoList.vue":194,"./components/works.vue":195,"./directives/FormToAjax.vue":196,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":177,"vue-resource":176}]},{},[182,180,179,181,197]);
 
 //# sourceMappingURL=bundle.js.map

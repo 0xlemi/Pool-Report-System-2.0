@@ -20,8 +20,15 @@ class Work extends Model
         'quantity',
         'units',
         'cost',
-        'work_order_id',
         'technician_id',
+    ];
+
+    /**
+     * hidden variables
+     * @var array
+     */
+    protected $hidden = [
+        'work_order_id',
     ];
 
     /**
@@ -45,6 +52,6 @@ class Work extends Model
      */
     public function service()
     {
-        return $this->workOrder()->service();
+        return $this->workOrder()->service;
     }
 }

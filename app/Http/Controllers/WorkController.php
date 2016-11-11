@@ -12,7 +12,7 @@ use App\Http\Requests\CreateWorkRequest;
 use App\Work;
 use App\PRS\Transformers\WorkTransformer;
 
-class WorkController extends Controller
+class WorkController extends PageController
 {
 
     public $workTransformer;
@@ -29,59 +29,90 @@ class WorkController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @param  int  $workOrderSeqId
+     * @return \Illuminate\Http\Response
+     */
+    public function index($workOrderSeqId)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+
+        $works = $workOrder->works()
+                        ->get()
+                        ->transform(function($item){
+                            $technician = $item->technician();
+                            return (object) array(
+                                'id' => $item->id,
+                                'title' => $item->title,
+                                'quantity' => "{$item->quantity} {$item->units}",
+                                'cost' => "{$item->cost} {$item->workOrder()->currency}",
+                                'technician' => "{$technician->name} {$technician->last_name}",
+                            );
+                        });
+        return response()->json([
+            'list' => $works,
+            'currency' => $workOrder->currency,
+        ]);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $workOrderSeqId
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateWorkRequest $request)
+    public function store(CreateWorkRequest $request, $workOrderSeqId)
     {
-        $work = Work::create(array_map('htmlentities', $request->all()));
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+
+        $work = $workOrder->works()->create(array_map('htmlentities', $request->all()));
+
         if($work){
-            return Response::json([
-                'title' => 'Work Created',
+            return response()->json([
                 'message' => 'The work was successfully created'
             ], 200);
         }
-        // return Response::json([
-        //         'title' => 'Work Created',
-        //         'error' => 'The work was not created created'
-        //     ], 500);
+        return response()->json([
+                'error' => 'The work was not created created, please try again.'
+            ], 500);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Work  $work
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Work $work)
     {
-        try{
-            $work = $this->workTransformer->transform(Work::findOrFail($id));
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
-        return Response::json($work, 200);
+        $technician = $work->technician();
+
+        return response()->json([
+            'title' => $work->title,
+            'quantity' => $work->quantity,
+            'units' => $work->units,
+            'cost' => $work->cost,
+            'description' => $work->description,
+            'technician' => (object)[
+                'id' => $technician->seq_id,
+                'fullName' => "{$technician->name} {$technician->last_name}",
+                'icon' => url($technician->icon()),
+            ],
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Work  $work
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateWorkRequest $request, $id)
+    public function update(CreateWorkRequest $request, Work $work)
     {
-        try {
-            $work = Work::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
-
-        $work->fill(array_map('htmlentities', $request->except('work_order_id')));
-        $work->save();
+        $work->update(array_map('htmlentities', $request->except('work_order_id')));
 
         return Response::json([
                 'title' => 'Work Updated',
@@ -89,17 +120,11 @@ class WorkController extends Controller
             ], 200);
     }
 
-    public function addPhoto(Request $request, $id)
+    public function addPhoto(Request $request, Work $work)
     {
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
-
-        try {
-            $work = Work::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
 
         $file = $request->file('photo');
         if($work->addImageFromForm($file)){
@@ -113,14 +138,8 @@ class WorkController extends Controller
 
     }
 
-    public function removePhoto($id, $order)
+    public function removePhoto(Work $work, $order)
     {
-        try {
-            $work = Work::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
-
         $image = $work->image($order, false);
 
         if($image->delete()){
@@ -136,25 +155,18 @@ class WorkController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Work  $work
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Work $work)
     {
-        try {
-            $work = Work::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
         if($work->delete()){
-            return Response::json([
-                        'title' => 'Work Deleted',
+            return response()->json([
                         'message' => 'The work was deleted successfully.'
                     ], 200);
         }
-        return Response::json([
-                        'title' => 'Not Deleted',
-                        'message' => 'The work was not deleted.'
+        return response()->json([
+                        'error' => 'The work was not deleted, please try again.'
                     ], 500);
     }
 }

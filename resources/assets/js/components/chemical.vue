@@ -58,7 +58,7 @@
 
 						<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-						<bootstrap-table :chemical-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+						<bootstrap-table :object-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
 
                     </div>
 

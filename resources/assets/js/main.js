@@ -12,6 +12,7 @@ var alert       = require('./components/alert.vue');
 var billing       = require('./components/billing.vue');
 var contract       = require('./components/contract.vue');
 var chemical       = require('./components/chemical.vue');
+var works       = require('./components/works.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -947,7 +948,8 @@ function isset(strVariableName) {
         el:'.workOrderVue',
         components: {
             PhotoList,
-            dropdown
+            dropdown,
+            works
         },
         data:{
             validationErrors: {},

@@ -589,7 +589,7 @@ var BootstrapTable = {
             type: Object,
             default: function () { return DEFAULTS; }
         },
-        chemicalId: {
+        objectId: {
             type: Number,
             required: true
         }
@@ -781,7 +781,7 @@ var BootstrapTable = {
             e.path[1].classList.add('table_active');
         },
         selectId(id){
-            this.chemicalId = id;
+            this.objectId = id;
 			this.$dispatch('rowClicked');
         },
         clearRowClasses(rows){

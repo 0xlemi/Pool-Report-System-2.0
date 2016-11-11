@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 
 use App\PRS\Traits\ControllerTrait;
+use App\PRS\Classes\Logged;
 
 use Validator;
 
@@ -15,12 +16,12 @@ use Auth;
 class PageController extends Controller
 {
 
+    use ControllerTrait;
+
     /**
      * @var int
      */
     protected $statusCode = 200;
-
-    use ControllerTrait;
 
 
     /**
