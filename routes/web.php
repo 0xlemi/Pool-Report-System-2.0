@@ -47,9 +47,11 @@ Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@remov
 Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
 
+Route::get('chemicals/{serviceSeqId}', 'chemicalController@index');
+Route::post('chemicals/{serviceSeqId}', 'chemicalController@store');
+
 Route::post('works/photos/{id}', 'WorkController@addPhoto');
 Route::delete('works/photos/{id}/{order}', 'WorkController@removePhoto');
-
 
 Route::get('servicecontracts/{serviceSeqId}', 'ServiceContractsController@show');
 Route::post('servicecontracts/{serviceSeqId}', 'ServiceContractsController@store');
@@ -61,7 +63,12 @@ Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController');
 Route::resource('services', 'ServicesController');
-Route::resource('equipment', 'EquipmentController');
+Route::resource('equipment', 'EquipmentController', ['only' => [
+    'store', 'show', 'update', 'destroy'
+]]);
+Route::resource('chemicals', 'chemicalController', ['only' => [
+    'update', 'destroy'
+]]);
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');

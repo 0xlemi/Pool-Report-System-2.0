@@ -22436,6 +22436,11 @@ var BootstrapTable = {
         this.initBody();
         this.initServer();
     },
+    events: {
+        refreshTable: function refreshTable() {
+            this.updatePagination();
+        }
+    },
     computed: {
         paginationSwitchIcon: function paginationSwitchIcon() {
             return this.options.icons[this.options.pagination ? 'paginationSwitchDown' : 'paginationSwitchUp'];
@@ -22583,10 +22588,11 @@ var BootstrapTable = {
         // lem93 methods
         colorTable: function colorTable(e) {
             this.clearRowClasses(e.path[3].rows);
-            e.path[1].classList.toggle('table_active');
+            e.path[1].classList.add('table_active');
         },
         selectId: function selectId(id) {
             this.chemicalId = id;
+            this.$dispatch('rowClicked');
         },
         clearRowClasses: function clearRowClasses(rows) {
             var _iteratorNormalCompletion = true;
@@ -23406,7 +23412,7 @@ var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
 
 exports.default = {
-	props: ['serviceId', 'chemicalUrl'],
+	props: ['serviceId', 'baseUrl'],
 	components: {
 		alert: alert,
 		BootstrapTable: BootstrapTable
@@ -23417,63 +23423,36 @@ exports.default = {
 			chemicalId: 0,
 			validationErrors: {},
 
+			// alert
+			alertMessageCreate: '',
+			alertMessageList: '',
+			alertMessageEdit: '',
+			alertActiveCreate: false,
+			alertActiveList: false,
+			alertActiveEdit: false,
+
 			name: '',
 			amount: '',
 			units: '',
 			columns: [{
 				title: 'Item ID',
 				field: 'id',
-				sortable: true
+				sortable: true,
+				visible: false
 			}, {
 				field: 'name',
-				title: 'Item Name',
+				title: 'Name',
 				sortable: true
 			}, {
 				field: 'amount',
-				title: 'Item Amount',
+				title: 'Amount',
+				sortable: true
+			}, {
+				field: 'units',
+				title: 'Units',
 				sortable: true
 			}],
-			data: [{
-				"id": 0,
-				"name": "Item 0",
-				"price": "$0"
-			}, {
-				"id": 1,
-				"name": "Item 1",
-				"price": "$1"
-			}, {
-				"id": 2,
-				"name": "Item 2",
-				"price": "$2"
-			}, {
-				"id": 3,
-				"name": "Item 3",
-				"price": "$3"
-			}, {
-				"id": 4,
-				"name": "Item 4",
-				"price": "$4"
-			}, {
-				"id": 5,
-				"name": "Item 5",
-				"price": "$5"
-			}, {
-				"id": 6,
-				"name": "Item 6",
-				"price": "$6"
-			}, {
-				"id": 7,
-				"name": "Item 7",
-				"price": "$7"
-			}, {
-				"id": 8,
-				"name": "Item 8",
-				"price": "$8"
-			}, {
-				"id": 9,
-				"name": "Item 9",
-				"price": "$9"
-			}],
+			data: [],
 			options: {
 				iconsPrefix: 'font-icon',
 				toggle: 'table',
@@ -23510,25 +23489,183 @@ exports.default = {
 	},
 
 	computed: {
-		Url: function Url() {
-			return this.chemicalUrl + this.serviceId;
+		serviceUrl: function serviceUrl() {
+			return this.baseUrl + this.serviceId;
+		},
+		chemicalUrl: function chemicalUrl() {
+			return this.baseUrl + this.chemicalId;
+		},
+		title: function title() {
+			switch (this.focus) {
+				case 1:
+					return 'New Chemical';
+					break;
+				case 2:
+					return 'Chemicals List';
+					break;
+				case 3:
+					return 'Edit Chemical';
+					break;
+				default:
+					return 'Chemicals';
+			}
 		}
 	},
 	watch: {
-		chemicalId: function chemicalId(val) {}
+		// chemicalId: function (val) {
+		// 	this.getValues(val);
+		// },
 	},
 	events: {
 		toolbarButtonClicked: function toolbarButtonClicked() {
 			this.clean();
 			this.changeFocus(1);
+		},
+		rowClicked: function rowClicked() {
+			this.getValues(this.chemicalId);
 		}
 	},
 	methods: {
 		getList: function getList() {
-			// console.log(document.getElementById('toolbar'));
+			var _this = this;
+
+			this.resetAlert('list');
+			this.$http.get(this.serviceUrl).then(function (response) {
+				_this.data = response.data.data;
+				_this.validationErrors = {};
+				_this.$broadcast('refreshTable');
+			}, function (response) {
+				_this.focus = 2;
+				_this.alertMessageList = "The information could not be retrieved, please try again.";
+				_this.alertActiveList = true;
+			});
 		},
-		create: function create() {},
-		update: function update() {},
+		getValues: function getValues(chemicalId) {
+			var chemical = this.data.find(function (data) {
+				return data.id === chemicalId;
+			});
+			this.name = chemical.name;
+			this.amount = chemical.amount;
+			this.units = chemical.units;
+			this.focus = 3;
+		},
+		create: function create() {
+			var _this2 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('create');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.post(this.serviceUrl, {
+				name: this.name,
+				amount: this.amount,
+				units: this.units
+			}).then(function (response) {
+				_this2.changeFocus(2);
+				_this2.getList();
+			}, function (response) {
+				if (response.status == 422) {
+					_this2.validationErrors = response.data;
+					_this2.revertButton(clickEvent, buttonTag);
+				} else {
+					_this2.alertMessageCreate = "The chemical could not be created, please try again.";
+					_this2.alertActiveCreate = true;
+					_this2.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		update: function update() {
+			var _this3 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('edit');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.patch(this.chemicalUrl, {
+				name: this.name,
+				amount: this.amount,
+				units: this.units
+			}).then(function (response) {
+				// refresh the information
+				_this3.changeFocus(2);
+			}, function (response) {
+				if (response.status == 422) {
+					_this3.validationErrors = response.data;
+					_this3.revertButton(clickEvent, buttonTag);
+				} else {
+					_this3.alertMessageEdit = "The chemical could not be updated, please try again.";
+					_this3.alertActiveEdit = true;
+					_this3.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		destroy: function destroy() {
+			var vue = this;
+			var clickEvent = event;
+			swal({
+				title: "Are you sure?",
+				text: "Chemical is going to permanently deleted!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes, delete it!",
+				cancelButtonText: "No, cancel!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			}, function (isConfirm) {
+				if (isConfirm) {
+					vue.destroyRequest(clickEvent);
+				}
+			});
+		},
+		destroyRequest: function destroyRequest(clickEvent) {
+			var _this4 = this;
+
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('list');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.delete(this.chemicalUrl).then(function (response) {
+				// clear values
+				_this4.changeFocus(2);
+			}, function (response) {
+				_this4.alertMessageEdit = "The chemical could not be destroyed, please try again.";
+				_this4.alertActiveEdit = true;
+				_this4.revertButton(clickEvent, buttonTag);
+			});
+		},
 		checkValidationError: function checkValidationError($fildName) {
 			return $fildName in this.validationErrors;
 		},
@@ -23536,6 +23673,9 @@ exports.default = {
 			return this.focus == num;
 		},
 		changeFocus: function changeFocus(num) {
+			if (num == 2) {
+				this.getList();
+			}
 			this.focus = num;
 		},
 		clean: function clean() {
@@ -23544,6 +23684,18 @@ exports.default = {
 			this.name = '';
 			this.amount = '';
 			this.units = '';
+		},
+		resetAlert: function resetAlert(alert) {
+			if (alert == 'create') {
+				this.alertMessageCreate = "";
+				this.alertActiveCreate = false;
+			} else if (alert == 'list') {
+				this.alertMessageList = "";
+				this.alertActiveList = false;
+			} else if (alert == 'edit') {
+				this.alertMessageEdit = "";
+				this.alertActiveEdit = false;
+			}
 		},
 		revertButton: function revertButton(clickEvent, buttonTag) {
 			// enable, remove spinner and set tab to the one before
@@ -23556,7 +23708,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog modal-lg\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Chemicals</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n                    </div>\n\n                    <!-- Index Chemical -->\n\t\t\t\t\t{{ 'selected: '+ chemicalId }}\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\t\t\t\t\t\t<bootstrap-table :chemical-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">@{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">@{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">@{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :chemical-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">@{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">@{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">@{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\t        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

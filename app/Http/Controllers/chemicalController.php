@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Chemical;
 
 class chemicalController extends PageController
 {
@@ -25,9 +26,23 @@ class chemicalController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($serviceSeqId)
     {
-        //
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+
+        $chemicals = $service->chemicals()
+                        ->get()
+                        ->transform(function($item){
+                            return (object) array(
+                                'id' => $item->id,
+                                'name' => $item->name,
+                                'amount' => $item->amount,
+                                'units' => $item->units,
+                            );
+                        });
+        return response()->json([
+            'data' => $chemicals
+        ]);
     }
 
     /**
@@ -36,20 +51,22 @@ class chemicalController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $serviceSeqId)
     {
-        //
-    }
+        // validate
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+
+        $chemical = $service->chemicals()->create($request->all());
+
+        if($chemical){
+            return response()->json([
+                'message' => 'Chemical was successfully created.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Chemical was not created, please try again.'
+            ], 500);
     }
 
     /**
@@ -59,9 +76,15 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Chemical $chemical)
     {
-        //
+        // validate
+
+        $chemical->update($request->all());
+
+        return response()->json([
+            'message' => 'Chemical was successfully updated.'
+        ]);
     }
 
     /**
@@ -70,8 +93,15 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Chemical $chemical)
     {
-        //
+        if($chemical->delete()){
+            return response()->json([
+                'message' => 'Chemical was successfully deleted.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Chemical was not deleted, please try again.'
+            ], 500);
     }
 }

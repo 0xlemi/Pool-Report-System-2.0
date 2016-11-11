@@ -621,6 +621,11 @@ var BootstrapTable = {
         this.initBody();
         this.initServer();
     },
+    events: {
+        refreshTable(){
+            this.updatePagination();
+        }
+    },
     computed: {
         paginationSwitchIcon: function () {
             return this.options.icons[this.options.pagination ?
@@ -773,10 +778,11 @@ var BootstrapTable = {
         // lem93 methods
         colorTable(e){
             this.clearRowClasses(e.path[3].rows);
-            e.path[1].classList.toggle('table_active');
+            e.path[1].classList.add('table_active');
         },
         selectId(id){
             this.chemicalId = id;
+			this.$dispatch('rowClicked');
         },
         clearRowClasses(rows){
             for (let row of rows) {
