@@ -148,18 +148,15 @@ class DataTableController extends PageController
                         ->get()
                         ->where('finished', (int) $request->finished)
                         ->transform(function($item){
-                            $supervisor =  $item->supervisor();
-                            $timezone = $supervisor->admin()->timezone;
+                            $supervisor =  $item->supervisor;
                             return (object) array(
                                 'id' => $item->seq_id,
-                                'start' => (new Carbon($item->start, 'UTC'))
-                                                ->setTimezone($timezone)
+                                'start' => $item->start()
                                                 ->format('d M Y h:i:s A'),
-                                'end' => (new Carbon($item->end, 'UTC'))
-                                                ->setTimezone($timezone)
+                                'end' =>  $item->end()
                                                 ->format('d M Y h:i:s A'),
                                 'price' => $item->price.' <strong>'.$item->currency.'</strong>',
-                                'service' => $item->service()->name,
+                                'service' => $item->service->name,
                                 'supervisor' => $supervisor->name.' '.$supervisor->last_name,
                             );
                         })

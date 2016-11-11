@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Collection;
 
 use App\PRS\Traits\Model\ImageTrait;
 
+use Carbon\Carbon;
+
 class WorkOrder extends Model
 {
 
@@ -41,7 +43,7 @@ class WorkOrder extends Model
      */
     public function admin()
     {
-        return $this->service()->admin();
+        return $this->service->admin();
     }
 
     /**
