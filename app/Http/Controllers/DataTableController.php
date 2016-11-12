@@ -164,31 +164,6 @@ class DataTableController extends PageController
         return Response::json($workOrders , 200);
     }
 
-    public function works(int $workOrderSeqId)
-    {
-        try {
-            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work Order with that id, does not exist.');
-        }
-
-        $works = $workOrder->works()
-                    ->get()
-                    ->transform(function($item){
-                        $service = $item->service();
-                        $technician = $item->technician();
-                        return [
-                            'id' => $item->id,
-                            'title' => $item->title,
-                            'quantity' => $item->quantity.' '.$item->units,
-                            'cost' => $item->cost.' '.$service->currency,
-                            'technician' => $technician->name.' '.$technician->last_name,
-                        ];
-                    });
-
-        return Response::json($works, 200);
-    }
-
     public function services(Request $request)
     {
         $validator = Validator::make($request->all(), [
