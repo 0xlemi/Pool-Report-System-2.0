@@ -55,6 +55,14 @@ class ServiceContract extends Model
         return $this->service->admin();
     }
 
+    /**
+	 * Gets ServiceContract morphed Invoices
+	 */
+	public function invoices()
+    {
+      return $this->morphMany('App\Invoice', 'invoiceable');
+    }
+
     //******** VALUE OBJECTS ********
 
     /**

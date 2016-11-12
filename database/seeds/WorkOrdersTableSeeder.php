@@ -44,6 +44,20 @@ class WorkOrdersTableSeeder extends Seeder
                 'supervisor_id' => $supervisorId,
             ]);
 
+            // Generate Invoices with Payments
+            for ($o=0; $o < rand(1,4); $o++) {
+                    $invoice = $workOrder ->invoices()->create([
+                        'amount' => $workOrder ->price,
+                        'currency' => $workOrder ->currency,
+                    ]);
+                    $numberPayments = rand(0,3);
+                    for ($a=0; $a < $numberPayments; $a++) {
+                        $invoice->payments()->create([
+                            'amount' => $invoice->amount / $numberPayments,
+                        ]);
+                    }
+                }
+
             // add image
             $img = $this->seederHelper->get_random_image('workOrder', 'pool_photo_3' , rand(1, 50));
 			Image::create([

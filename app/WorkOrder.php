@@ -55,6 +55,14 @@ class WorkOrder extends Model
     }
 
     /**
+	 * Gets ServiceContract morphed Invoices
+	 */
+	public function invoices()
+    {
+      return $this->morphMany('App\Invoice', 'invoiceable');
+    }
+
+    /**
      * Get associated works with this work Order
      */
     public function works()

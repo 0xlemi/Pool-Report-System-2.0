@@ -2,6 +2,7 @@
 
 
 use Carbon\Carbon;
+use App\Invoice;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,13 @@ $factory->define(App\Administrator::class, function (Faker\Generator $faker) {
     	'language' => $faker->languageCode,
 		'timezone' => 'America/Mazatlan',
     ];
+});
+
+$factory->define(App\Invoice::class, function (Faker\Generator $faker){
+	return [
+        'amount' => number_format($faker->numberBetween(75, 500), 2, '.', ''),
+        'currency' => $faker->currencyCode,
+	];
 });
 
 $factory->define(App\Service::class, function (Faker\Generator $faker){
