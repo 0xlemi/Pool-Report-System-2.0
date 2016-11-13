@@ -11,6 +11,7 @@ use App\PRS\ValueObjects\Administrator\TagTurbidity;
 use App\PRS\ValueObjects\Administrator\Tag;
 
 use App\PRS\Traits\Model\BillableAdministrator;
+use App\Invoice;
 
 use Carbon\Carbon;
 
@@ -138,10 +139,19 @@ class Administrator extends Model
     }
 
     /**
+     * Get invoices associated with this user
+     */
+    public function invoices()
+    {
+        return Invoice::where('admin_id', $this->id);
+    }
+
+    /**
      *  Get services associated with this user
      * tested
      */
-    public function services(){
+    public function services()
+    {
         return $this->hasMany('App\Service', 'admin_id');
     }
 

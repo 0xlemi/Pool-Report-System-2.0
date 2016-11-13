@@ -20,7 +20,13 @@ class CreateInvoicesTable extends Migration
             $table->char('currency', 3);
             $table->string('invoiceable_type');
             $table->integer('invoiceable_id')->unsigned();
+            $table->integer('admin_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('admin_id')
+                ->references('id')
+                ->on('administrators')
+                ->onDelete('cascade');
         });
 
         DB::unprepared("

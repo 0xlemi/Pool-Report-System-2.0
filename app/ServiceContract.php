@@ -47,7 +47,7 @@ class ServiceContract extends Model
      */
     public function service()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->belongsTo('App\Service', 'service_id');
     }
 
     public function admin()

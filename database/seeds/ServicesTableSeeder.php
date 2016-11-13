@@ -42,6 +42,7 @@ class ServicesTableSeeder extends Seeder
                     $invoice = $contract->invoices()->create([
                         'amount' => $contract->amount,
                         'currency' => $contract->currency,
+                        'admin_id' => $adminId,
                     ]);
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {

@@ -15,6 +15,7 @@ class Invoice extends Model
         'closed',
         'amount',
         'currency',
+        'admin_id',
     ];
 
     /**

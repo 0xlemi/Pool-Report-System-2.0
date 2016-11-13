@@ -47,8 +47,9 @@ class WorkOrdersTableSeeder extends Seeder
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {
                     $invoice = $workOrder ->invoices()->create([
-                        'amount' => $workOrder ->price,
-                        'currency' => $workOrder ->currency,
+                        'amount' => $workOrder->price,
+                        'currency' => $workOrder->currency,
+                        'admin_id' => $admin->id,
                     ]);
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
