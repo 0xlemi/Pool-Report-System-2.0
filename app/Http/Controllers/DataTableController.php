@@ -312,12 +312,12 @@ class DataTableController extends PageController
                         ->transform(function($item) use ($closed){
                             $closedText = "<span class=\"label label-pill label-default\">Not Closed</span>";
                             if($closed){
-                                $closedText = $item->closed;
+                                $closedText = $item->closed()->format('d M Y h:i:s A');
                             }
                             return (object)[
                                 'id' => $item->seq_id,
                                 'service' => $item->invoiceable->service->name,
-                                'type' => $item->invoiceable_type,
+                                'type' => $item->type()->styled(true),
                                 'amount' => "{$item->amount} {$item->currency}",
                                 'closed' => $closedText,
                             ];

@@ -1663,7 +1663,7 @@ function isset(strVariableName) {
     let invoiceVue = new Vue({
         el: '.invoiceVue',
         data:{
-            statusSwitch: true,
+            statusSwitch: false,
         },
         methods:{
             changeStatus(status){

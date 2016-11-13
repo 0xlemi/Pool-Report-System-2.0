@@ -4,6 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\PRS\ValueObjects\Invoice\Type;
+use Carbon\Carbon;
+
 class Invoice extends Model
 {
 
@@ -18,6 +21,11 @@ class Invoice extends Model
         'admin_id',
     ];
 
+    public function admin()
+    {
+        return $this->invoiceable->admin();
+    }
+
     /**
      * Get all the commentable object
      */
@@ -30,4 +38,18 @@ class Invoice extends Model
     {
         return $this->hasMany('App\Payment');
     }
+
+
+    //******** VALUE OBJECTS ********
+
+    public function closed()
+    {
+        return (new Carbon($this->closed, 'UTC'))->setTimezone($this->admin()->timezone);
+    }
+
+    public function type()
+    {
+        return new Type($this->invoiceable_type);
+    }
+
 }

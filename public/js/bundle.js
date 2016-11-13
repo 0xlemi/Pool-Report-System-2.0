@@ -26354,7 +26354,7 @@ $(document).ready(function () {
     var invoiceVue = new Vue({
         el: '.invoiceVue',
         data: {
-            statusSwitch: true
+            statusSwitch: false
         },
         methods: {
             changeStatus: function changeStatus(status) {
