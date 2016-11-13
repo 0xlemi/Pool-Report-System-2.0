@@ -4,8 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InvoiceController extends Controller
+use JavaScript;
+
+class InvoiceController extends PageController
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +26,14 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        //
+        $defaultTableUrl = url('datatables/invoices?closed=0');
+
+        JavaScript::put([
+            'invoicesTableUrl' => url('datatables/invoices?closed='),
+            'click_url' => url('invoices').'/',
+        ]);
+
+        return view('invoices.index', compact('defaultTableUrl'));
     }
 
     /**

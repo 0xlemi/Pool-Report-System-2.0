@@ -289,4 +289,41 @@ class DataTableController extends PageController
         return Response::json($technicians, 200);
     }
 
+    public function invoices(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'closed' => 'required|boolean',
+        ]);
+        if ($validator->fails()) {
+            return Response::json([
+                    'message' => 'Paramenters failed validation.',
+                    'errors' => $validator->errors()->toArray(),
+                ],
+                422
+            );
+        }
+
+        $closed = $request->closed;
+        $condition = ($closed)? '!=' : '=';
+        $invoices = $this->loggedUserAdministrator()
+                        ->invoices()
+                        ->get()
+                        ->where('closed', $condition , NULL)
+                        ->transform(function($item) use ($closed){
+                            $closedText = "<span class=\"label label-pill label-default\">Not Closed</span>";
+                            if($closed){
+                                $closedText = $item->closed;
+                            }
+                            return (object)[
+                                'id' => $item->seq_id,
+                                'service' => $item->invoiceable->service->name,
+                                'type' => $item->invoiceable_type,
+                                'amount' => "{$item->amount} {$item->currency}",
+                                'closed' => $closedText,
+                            ];
+                        })
+                        ->flatten(1);
+        return response()->json($invoices);
+    }
+
 }

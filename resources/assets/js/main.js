@@ -1660,6 +1660,22 @@ function isset(strVariableName) {
         }
     });
 
+    let invoiceVue = new Vue({
+        el: '.invoiceVue',
+        data:{
+            statusSwitch: true,
+        },
+        methods:{
+            changeStatus(status){
+                var intStatus = (!status) ? 1 : 0;
+                if(isset('invoicesTableUrl')){
+                    let new_url = back.invoicesTableUrl+intStatus;
+                    generic_table.bootstrapTable('refresh', {url:new_url});
+            	}
+            }
+        }
+    });
+
 
 /* ==========================================================================
     GMaps

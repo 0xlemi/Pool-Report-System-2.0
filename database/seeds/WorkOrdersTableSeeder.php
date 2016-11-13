@@ -7,6 +7,7 @@ use App\Supervisor;
 use App\Image;
 
 use App\WorkOrder;
+use Carbon\Carbon;
 
 class WorkOrdersTableSeeder extends Seeder
 {
@@ -47,6 +48,7 @@ class WorkOrdersTableSeeder extends Seeder
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {
                     $invoice = $workOrder->invoices()->create([
+                        'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $workOrder->price,
                         'currency' => $workOrder->currency,
                         'admin_id' => $admin->id,

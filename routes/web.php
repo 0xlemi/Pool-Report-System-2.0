@@ -76,7 +76,9 @@ Route::resource('chemicals', 'chemicalController', ['only' => [
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
-
+Route::resource('invoices', 'InvoiceController', ['only' => [
+    'index', 'show', 'destroy'
+]]);
 Route::get('chat', 'ChatController@home');
 
 Route::post(
@@ -106,3 +108,4 @@ Route::get('datatables/equipment/{service_seq_id}', 'DataTableController@equipme
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');
+Route::get('datatables/invoices', 'DataTableController@invoices');

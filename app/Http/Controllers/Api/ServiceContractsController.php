@@ -145,7 +145,7 @@ class ServiceContractsController extends ApiController
         $this->validate($request, [
             'active' => 'boolean',
             'start_time' => 'date_format:H:i',
-            'end_time' => "date_format:H:i|timeAfterDB:service_contracts,start_time,{$contract->id},start_time",
+            'end_time' => "date_format:H:i|timeAfterDB:service_contracts,start_time,{$contract->service_id},start_time",
             'status' => 'boolean',
             'amount' => 'numeric|max:10000000',
             'currency' => 'string|validCurrency',

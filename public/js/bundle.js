@@ -26351,6 +26351,22 @@ $(document).ready(function () {
         }
     });
 
+    var invoiceVue = new Vue({
+        el: '.invoiceVue',
+        data: {
+            statusSwitch: true
+        },
+        methods: {
+            changeStatus: function changeStatus(status) {
+                var intStatus = !status ? 1 : 0;
+                if (isset('invoicesTableUrl')) {
+                    var new_url = back.invoicesTableUrl + intStatus;
+                    generic_table.bootstrapTable('refresh', { url: new_url });
+                }
+            }
+        }
+    });
+
     /* ==========================================================================
         GMaps
         ========================================================================== */
