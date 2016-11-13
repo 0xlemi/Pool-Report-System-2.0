@@ -2,7 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
+use App\ServiceContract;
+use App\Invoice;
 use App\Image;
+use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
 {
     // number of services to create
@@ -33,11 +36,12 @@ class ServicesTableSeeder extends Seeder
             ]);
 
             if(rand(0,1)){
-                $contract = factory(App\ServiceContract::class)->create([
+                factory(App\ServiceContract::class)->create([
                     'service_id' => $service->id,
                 ]);
+                $contract = ServiceContract::findOrFail($service->id);
 
-                // Generate Invoices with Payments
+                // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
                     $invoice = $contract->invoices()->create([
                         'amount' => $contract->amount,

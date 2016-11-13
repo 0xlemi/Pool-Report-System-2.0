@@ -14,7 +14,7 @@ class CreateServiceContractsTable extends Migration
     public function up()
     {
         Schema::create('service_contracts', function (Blueprint $table) {
-            $table->integer('service_id')->unsigned()->primary();
+            $table->integer('service_id')->unsigned()->primary(); // same as service_id
             $table->boolean('active')->default(1); // 1=active, 0=inactive
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);

@@ -36,7 +36,7 @@
 					    <tr>
 					        <th data-field="id" data-sortable="true">#</th>
 					        <th data-field="name" data-sortable="true">Name</th>
-					        <th data-field="email" data-sortable="true">Email</th>
+					        <th data-field="email" data-sortable="true">Type</th>
 					        <th data-field="type" data-sortable="true">Type</th>
 					        <th data-field="cellphone" data-sortable="true">Cellphone</th>
 					    </tr>

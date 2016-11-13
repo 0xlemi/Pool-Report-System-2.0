@@ -147,6 +147,18 @@ class Administrator extends Model
     }
 
     /**
+     * Get the invoices based on the seq_id
+     * @param  integer $seq_id
+     * @return App\Invoice
+     * tested
+     */
+    public function invoicesBySeqId($seq_id){
+        return $this->invoices()
+                    ->where('invoices.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
      *  Get services associated with this user
      * tested
      */
