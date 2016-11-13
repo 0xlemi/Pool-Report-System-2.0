@@ -42,9 +42,12 @@ class InvoiceController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($seqId)
     {
-        //
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+        $service = $invoice->invoiceable->service;
+
+        return view('invoices.show', compact('invoice', 'service'));
     }
 
     /**
