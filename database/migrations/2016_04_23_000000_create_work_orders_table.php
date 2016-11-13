@@ -24,7 +24,7 @@ class CreateWorkOrdersTable extends Migration
             $table->char('currency', 3);
             $table->integer('service_id')->unsigned();
             $table->integer('supervisor_id')->unsigned();
-            $table->integer('seq_id')->index();
+            $table->integer('seq_id')->unsigned()->index();
             $table->timestamps();
         });
 

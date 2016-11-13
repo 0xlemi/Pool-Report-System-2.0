@@ -28,7 +28,7 @@ class CreateReportsTable extends Migration
             $table->decimal('accuracy', 8, 2)->nullable();
             $table->integer('service_id')->unsigned();
             $table->integer('technician_id')->unsigned();
-            $table->integer('seq_id')->index();
+            $table->integer('seq_id')->unsigned()->index();
             $table->softDeletes();
             $table->timestamps();
         });

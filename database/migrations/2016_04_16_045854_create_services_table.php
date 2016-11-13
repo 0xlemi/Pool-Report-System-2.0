@@ -25,7 +25,7 @@ class CreateServicesTable extends Migration
             $table->char('country', 2);
             $table->text('comments');
             $table->integer('admin_id')->unsigned();
-            $table->integer('seq_id')->index();
+            $table->integer('seq_id')->unsigned()->index();
             $table->softDeletes();
             $table->timestamps();
         });

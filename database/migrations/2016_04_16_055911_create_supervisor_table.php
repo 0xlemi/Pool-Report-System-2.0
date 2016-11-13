@@ -26,7 +26,7 @@ class CreateSupervisorTable extends Migration
             $table->boolean('get_reports_emails')->default(1);
 
             $table->integer('admin_id')->unsigned();
-            $table->integer('seq_id')->index();
+            $table->integer('seq_id')->unsigned()->index();
             $table->softDeletes();
             $table->timestamps();
         });

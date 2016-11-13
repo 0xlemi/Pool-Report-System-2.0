@@ -26,7 +26,7 @@ class CreateClientsTable extends Migration
             $table->boolean('get_reports_emails')->default(1);
 
             $table->integer('seq_id')->index();
-            $table->integer('admin_id')->unsigned();
+            $table->integer('admin_id')->unsigned()->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });
