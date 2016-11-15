@@ -68,4 +68,7 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::resource('technicians', 'Api\TechniciansController');
 	Route::resource('clients', 'Api\ClientsController');
 	Route::resource('reports', 'Api\ReportsController');
+	Route::resource('invoices', 'Api\InvoiceController', ['only' => [
+	    'index', 'show', 'destroy'
+	]]);
 });
