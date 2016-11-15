@@ -24302,7 +24302,7 @@ exports.default = {
 
 	computed: {
 		invoiceUrl: function invoiceUrl() {
-			return this.baseUrl + '/invoice/' + this.invoiceId + '/payments';
+			return this.baseUrl + '/invoices/' + this.invoiceId + '/payments';
 		},
 		paymentUrl: function paymentUrl() {
 			return this.baseUrl + '/payments/' + this.paymentId;
@@ -24353,6 +24353,7 @@ exports.default = {
 		getValues: function getValues(paymentId) {
 			var _this2 = this;
 
+			this.resetAlert('list');
 			this.$http.get(this.paymentUrl).then(function (response) {
 				var data = response.data;
 				_this2.amount = data.amount;

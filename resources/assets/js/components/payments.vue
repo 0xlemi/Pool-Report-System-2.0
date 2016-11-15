@@ -182,7 +182,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
     },
     computed: {
         invoiceUrl: function(){
-            return this.baseUrl+'/invoice/'+this.invoiceId+'/payments'
+            return this.baseUrl+'/invoices/'+this.invoiceId+'/payments'
         },
 		paymentUrl: function(){
             return this.baseUrl+'/payments/'+this.paymentId;

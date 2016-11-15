@@ -60,6 +60,10 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::resource('workorders', 'Api\WorkOrderController');
 	Route::post('workorders/{seq_id}/finish', 'Api\WorkOrderController@finish');
 
+	// Payments
+	Route::get('invoices/{invoiceSeqId}/payments', 'Api\PaymentController@index');
+	Route::post('invoices/{invoiceSeqId}/payments', 'Api\PaymentController@store');
+
 	// Work
 	// Route::get('work/{work}', 'Api\WorkController@show');
 
@@ -70,5 +74,8 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::resource('reports', 'Api\ReportsController');
 	Route::resource('invoices', 'Api\InvoiceController', ['only' => [
 	    'index', 'show', 'destroy'
+	]]);
+	Route::resource('payments', 'Api\PaymentController', ['only' => [
+	    'show', 'destroy'
 	]]);
 });

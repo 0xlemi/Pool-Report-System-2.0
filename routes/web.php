@@ -55,14 +55,16 @@ Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto'
 Route::get('chemicals/{serviceSeqId}', 'chemicalController@index');
 Route::post('chemicals/{serviceSeqId}', 'chemicalController@store');
 
+// Service Contracts
 Route::get('servicecontracts/{serviceSeqId}', 'ServiceContractsController@show');
 Route::post('servicecontracts/{serviceSeqId}', 'ServiceContractsController@store');
 Route::patch('servicecontracts/{serviceSeqId}', 'ServiceContractsController@update');
 Route::post('servicecontracts/{serviceSeqId}/active', 'ServiceContractsController@toggleActivation');
 Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@destroy');
 
-Route::get('invoice/{invoiceSeqId}/payments', 'PaymentController@index');
-Route::post('invoice/{invoiceSeqId}/payments', 'PaymentController@store');
+// Payments
+Route::get('invoices/{invoiceSeqId}/payments', 'PaymentController@index');
+Route::post('invoices/{invoiceSeqId}/payments', 'PaymentController@store');
 
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
@@ -79,9 +81,6 @@ Route::resource('chemicals', 'chemicalController', ['only' => [
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
-Route::resource('invoices', 'InvoiceController', ['only' => [
-    'index', 'show', 'destroy'
-]]);
 Route::resource('invoices', 'InvoiceController', ['only' => [
     'index', 'show', 'destroy'
 ]]);
