@@ -56,8 +56,15 @@ class InvoiceController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seqId)
     {
-        //
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+
+        if($invoice->delete()){
+            flash()->success('Deleted', 'The invoice was successfuly deleted');
+            return redirect('invoices');
+        }
+        flash()->error('Not Deleted', 'We could not delete this invoice, please try again later.');
+        return redirect()->back();
     }
 }
