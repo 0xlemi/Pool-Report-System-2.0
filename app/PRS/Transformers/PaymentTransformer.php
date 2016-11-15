@@ -10,17 +10,18 @@ use App\PRS\Transformers\PreviewTransformers\InvoicePreviewTransformer;
  */
 class PaymentTransformer extends Transformer
 {
-    protected $invoicePreviewTransformer;
-
-    public function __construct(InvoicePreviewTransformer $invoicePreviewTransformer)
-    {
-        $this->invoicePreviewTransformer = $invoicePreviewTransformer;
-    }
+    // protected $invoicePreviewTransformer;
+    //
+    // public function __construct(InvoicePreviewTransformer $invoicePreviewTransformer)
+    // {
+    //     $this->invoicePreviewTransformer = $invoicePreviewTransformer;
+    // }
 
     /**
      * Transform Payment to api friendly array
      * @param  Payment $payment
      * @return array
+     * tested
      */
     public function transform(Payment $payment)
     {
