@@ -3,27 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Payment;
 
-class PaymentController extends Controller
+class PaymentController extends PageController
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($invoiceSeqId)
     {
-        //
-    }
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $payments = $invoice->payments
+                        ->transform(function($item) use ($invoice){
+                            return (object) array(
+                                'id' => $item->seq_id,
+                                'paid' => $item->createdAt()
+                                            ->format('d M Y h:i:s A'),
+                                'amount' => "{$item->amount} <strong>{$invoice->currency}</strong>",
+                            );
+                        });
+        return response()->json([
+            'list' => $payments,
+            'currency' => $invoice->currency,
+        ]);
     }
 
     /**
@@ -32,9 +48,23 @@ class PaymentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $invoiceSeqId)
     {
-        //
+        $this->validate($request, [
+            'amount' => 'required|numeric|max:10000000',
+        ]);
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+
+        $payment = $invoice->payments()->create($request->all());
+
+        if($payment){
+            return response()->json([
+                'message' => 'Payment was successfully created.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Payment was not created, please try again.'
+            ], 500);
     }
 
     /**
@@ -43,32 +73,14 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($paymentSeqId)
     {
-        //
-    }
+        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return response()->json([
+            'amount' => $payment->amount,
+            'paid' => $payment->createdAt()->format('d M Y h:i:s A'),
+        ]);
     }
 
     /**
@@ -77,8 +89,17 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($paymentSeqId)
     {
-        //
+        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
+
+        if($payment->delete()){
+            return response()->json([
+                'message' => 'Payment was successfully deleted.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Payment was not deleted, please try again.'
+            ], 500);
     }
 }

@@ -3,7 +3,7 @@
 	<div class="form-group row">
 		<label class="col-sm-2 form-control-label">Works</label>
 		<div class="col-sm-10">
-			<button type="button" class="btn btn-info" @click="getList"
+			<button type="button" class="btn btn-primary" @click="getList"
 					data-toggle="modal" data-target="#workModal">
 				<i class="fa fa-suitcase"></i>&nbsp;&nbsp;&nbsp;Manage Works
 			</button>

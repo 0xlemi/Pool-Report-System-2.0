@@ -13,6 +13,7 @@ var billing       = require('./components/billing.vue');
 var contract       = require('./components/contract.vue');
 var chemical       = require('./components/chemical.vue');
 var works       = require('./components/works.vue');
+var payments       = require('./components/payments.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1662,6 +1663,7 @@ function isset(strVariableName) {
 
     let invoiceVue = new Vue({
         el: '.invoiceVue',
+        components: { payments },
         data:{
             statusSwitch: false,
         },

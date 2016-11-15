@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="invoiceVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -8,7 +9,7 @@
 					<h3>View Invoice</h3>
 					<ol class="breadcrumb breadcrumb-simple">
 						<li><a href="{{ url('invoices') }}">Invoices</a></li>
-						<li class="active">View Invoice {{ $invoice->seq_id }}</li>
+						<li class="active">View Invoice #{{ $invoice->seq_id }}</li>
 					</ol>
 				</div>
 			</div>
@@ -17,7 +18,7 @@
 	<div class="row">
 		<div class="col-md-12 col-lg-12 col-xl-8 col-xl-offset-2">
 			<section class="card">
-					<header class="card-header card-header-lg">
+					<header class="card-header card-header-xxl">
 						Invoice #{{ $invoice->seq_id }}
 					</header>
 					<div class="card-block">
@@ -66,15 +67,19 @@
 							</div>
 						</div>
 
+						<payments invoice-id="{{ $invoice->seq_id }}"
+						    base-url="{{ url('/') }}">
+						</payments>
+
 
 						<hr>
 						<p style="float: right;">
-                            
+
 						</p>
 						<br>
 					</div>
 			</section>
 		</div>
 	</div>
-
+</div>
 @endsection

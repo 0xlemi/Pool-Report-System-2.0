@@ -58,7 +58,7 @@
             </a>
         </li>
 
-        <li class="gold {{ Request::is('invoces*')? 'opened':'' }}">
+        <li class="gold {{ Request::is('invoices*')? 'opened':'' }}">
             <a href="{{ url('/invoices') }}">
                 <i class="glyphicon glyphicon-book"></i>
                 <span class="lbl">Invoices</span>

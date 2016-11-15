@@ -61,6 +61,9 @@ Route::patch('servicecontracts/{serviceSeqId}', 'ServiceContractsController@upda
 Route::post('servicecontracts/{serviceSeqId}/active', 'ServiceContractsController@toggleActivation');
 Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@destroy');
 
+Route::get('invoice/{invoiceSeqId}/payments', 'PaymentController@index');
+Route::post('invoice/{invoiceSeqId}/payments', 'PaymentController@store');
+
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController', ['only' => [
@@ -78,6 +81,12 @@ Route::resource('supervisors', 'SupervisorsController');
 Route::resource('technicians', 'TechniciansController');
 Route::resource('invoices', 'InvoiceController', ['only' => [
     'index', 'show', 'destroy'
+]]);
+Route::resource('invoices', 'InvoiceController', ['only' => [
+    'index', 'show', 'destroy'
+]]);
+Route::resource('payments', 'PaymentController', ['only' => [
+    'show', 'destroy'
 ]]);
 Route::get('chat', 'ChatController@home');
 

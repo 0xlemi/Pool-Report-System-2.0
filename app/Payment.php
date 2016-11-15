@@ -15,9 +15,21 @@ class Payment extends Model
         'amount',
     ];
 
+    public function admin()
+    {
+        return $this->invoice->admin();
+    }
+
     public function invoice()
     {
         return $this->belongsTo('App\Invoice');
+    }
+
+    //******** VALUE OBJECTS ********
+
+    public function createdAt()
+    {
+        return $this->created_at->setTimezone($this->admin()->timezone);
     }
 
 }

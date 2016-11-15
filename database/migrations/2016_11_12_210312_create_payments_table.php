@@ -17,6 +17,7 @@ class CreatePaymentsTable extends Migration
             $table->increments('id');
             $table->decimal('amount', 16, 2);
             $table->integer('invoice_id')->unsigned();
+            $table->integer('seq_id')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('invoice_id')

@@ -12,6 +12,9 @@ use App\PRS\ValueObjects\Administrator\Tag;
 
 use App\PRS\Traits\Model\BillableAdministrator;
 use App\Invoice;
+use App\Payment;
+
+use DB;
 
 use Carbon\Carbon;
 
@@ -155,6 +158,27 @@ class Administrator extends Model
     public function invoicesBySeqId($seq_id){
         return $this->invoices()
                     ->where('invoices.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
+     * Get invoices associated with this user
+     */
+    public function payments()
+    {
+        return Payment::join('invoices', 'invoices.id', '=', 'payments.invoice_id')
+                    ->where('admin_id', '=', $this->id)
+                    ->select('payments.*');
+    }
+
+    /**
+     * Get the payments based on the seq_id
+     * @param  integer $seq_id
+     * @return App\Payment
+     */
+    public function paymentsBySeqId($seq_id){
+        return $this->payments()
+                    ->where('payments.seq_id', '=', $seq_id)
                     ->firstOrFail();
     }
 
