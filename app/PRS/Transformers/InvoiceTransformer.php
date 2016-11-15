@@ -8,6 +8,7 @@ use App\Invoice;
 use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\ContractPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\WorkOrderPreviewTransformer;
+use App\PRS\Classes\Logged;
 
 
 /**
@@ -18,14 +19,17 @@ class InvoiceTransformer extends Transformer
     protected $servicePreviewTransformer;
     protected $contractPreviewTransformer;
     protected $workOrderPreviewTransformer;
+    protected $logged;
 
     public function __construct(ServicePreviewTransformer $servicePreviewTransformer,
                                 ContractPreviewTransformer $contractPreviewTransformer,
-                                WorkOrderPreviewTransformer $workOrderPreviewTransformer)
+                                WorkOrderPreviewTransformer $workOrderPreviewTransformer,
+                                Logged $logged)
     {
         $this->servicePreviewTransformer = $servicePreviewTransformer;
         $this->contractPreviewTransformer = $contractPreviewTransformer;
         $this->workOrderPreviewTransformer = $workOrderPreviewTransformer;
+        $this->logged = $logged;
     }
 
     /**
@@ -51,7 +55,10 @@ class InvoiceTransformer extends Transformer
             'invoiceable' => $invoiceable,
             'service' => $this->servicePreviewTransformer
                                 ->transform($invoice->invoiceable->service),
-            // 'payments' => [],
+            'payments' => [
+                'number' => $invoice->payments()->count(),
+                'href' => url("api/v1/invoices/{$invoice->seq_id}/payments?api_token={$this->logged->user()->api_token}"),
+            ],
         ];
     }
 
