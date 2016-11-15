@@ -26,6 +26,19 @@
 
 						<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
+						<!-- <div class="form-group row">
+							<label class="col-sm-2 form-control-label">Start at:</label>
+							<div class="col-sm-10">
+								<div class='input-group date' id="genericDatepicker">
+									<input type='text' name='start' class="form-control" id="genericDatepickerInput"/>
+
+									<span class="input-group-addon">
+										<i class="font-icon font-icon-calend"></i>
+									</span>
+								</div>
+							</div>
+						</div> -->
+
 						<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Days:</label>
 								<div class="col-sm-10">

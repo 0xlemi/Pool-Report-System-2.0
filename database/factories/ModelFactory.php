@@ -104,6 +104,7 @@ $factory->define(App\Chemical::class, function (Faker\Generator $faker){
 
 $factory->define(App\ServiceContract::class, function (Faker\Generator $faker){
     return [
+        'start' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'service_days' => $faker->numberBetween(0, 127),
         'amount' => number_format($faker->numberBetween(75, 350), 2, '.', ''),
         'currency' => $faker->currencyCode,
