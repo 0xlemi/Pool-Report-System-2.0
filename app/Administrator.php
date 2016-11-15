@@ -153,7 +153,6 @@ class Administrator extends Model
      * Get the invoices based on the seq_id
      * @param  integer $seq_id
      * @return App\Invoice
-     * tested
      */
     public function invoicesBySeqId($seq_id){
         return $this->invoices()

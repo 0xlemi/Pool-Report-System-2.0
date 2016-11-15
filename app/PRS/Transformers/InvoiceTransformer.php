@@ -51,6 +51,7 @@ class InvoiceTransformer extends Transformer
             'invoiceable' => $invoiceable,
             'service' => $this->servicePreviewTransformer
                                 ->transform($invoice->invoiceable->service),
+            // 'payments' => [],
         ];
     }
 

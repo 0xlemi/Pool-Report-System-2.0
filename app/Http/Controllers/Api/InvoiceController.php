@@ -45,7 +45,11 @@ class InvoiceController extends ApiController
      */
     public function show($seqId)
     {
-        //
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+
+        return $this->respond([
+            'data' => $this->invoiceTransformer->transform($invoice)
+        ]);
     }
 
     /**
@@ -56,6 +60,13 @@ class InvoiceController extends ApiController
      */
     public function destroy($seqId)
     {
-        //
+        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+
+        if($invoice->delete()){
+            return response()->json([
+                'message' => 'Invoice deleted successfully.',
+                ] , 200);
+        }
+        return response()->json(['error' => 'Invoice was not deleted.'] , 500);
     }
 }

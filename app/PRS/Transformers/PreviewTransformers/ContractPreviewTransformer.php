@@ -25,7 +25,6 @@ class ContractPreviewTransformer extends Transformer
         $service = $contract->service;
         return [
             'service_id' => $service->seq_id,
-            'amount' => $contract->amount,
             'active' => ($contract->active) ? true : false,
             'href' => url("api/v1/services/{$service->seq_id}/contract?api_token={$this->logged->user()->api_token}"),
         ];
