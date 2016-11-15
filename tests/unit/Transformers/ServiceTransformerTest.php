@@ -5,7 +5,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\ServiceTransformer;
+use App\PRS\Transformers\ContractTransformer;
 use App\PRS\Classes\Logged;
+use App\ServiceContract;
 use App\Image;
 use App\Service;
 
@@ -19,6 +21,9 @@ class ServiceTransformerTest extends TestCase
         $mockImageTransformer = Mockery::mock(ImageTransformer::class);
         $mockImageTransformer->shouldReceive('transform')->once()->andReturn('Image');
 
+        $mockContractTransformer = Mockery::mock(ContractTransformer::class);
+        $mockContractTransformer->shouldReceive('transform')->once()->andReturn('Contract');
+
         $mockUser = Mockery::mock();
         $mockUser->api_token = 'ApiToken';
         $mockLogged = Mockery::mock(Logged::class);
@@ -28,6 +33,8 @@ class ServiceTransformerTest extends TestCase
         $mockService->shouldReceive('equipment->count')->once()->andReturn(3);
         $mockService->shouldReceive('imageExists')->once()->andReturn(true);
         $mockService->shouldReceive('image')->once()->andReturn(Mockery::mock(Image::class));
+        $mockService->shouldReceive('hasServiceContract')->once()->andReturn(true);
+        $mockService->shouldReceive('getAttribute')->with('serviceContract')->andReturn(Mockery::mock(ServiceContract::class));
 
         $mockService->shouldReceive('getAttribute')->with('seq_id')->andReturn(2);
         $mockService->shouldReceive('getAttribute')->with('name')->andReturn('HouseName');
@@ -41,7 +48,7 @@ class ServiceTransformerTest extends TestCase
         $mockService->shouldReceive('getAttribute')->with('comments')->andReturn('Comments');
 
         // When
-        $array = (new ServiceTransformer($mockImageTransformer, $mockLogged))->transform($mockService);
+        $array = (new ServiceTransformer($mockImageTransformer, $mockContractTransformer, $mockLogged))->transform($mockService);
 
         // Then
         $this->assertEquals($array, [
@@ -59,6 +66,7 @@ class ServiceTransformerTest extends TestCase
                     'longitude' => 345.345345,
                 ],
             'photo' => 'Image',
+            'contract' => 'Contract',
             'equipment' => [
                 'number' => 3,
                 'href' => url("api/v1/services/2/equipment?api_token=ApiToken"),

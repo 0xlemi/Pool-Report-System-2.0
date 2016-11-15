@@ -36,6 +36,7 @@ class InvoiceTransformer extends Transformer
      * Transform Invoice to api friendly array
      * @param  Inovice $invoice
      * @return array
+     * tested
      */
     public function transform(Invoice $invoice)
     {
