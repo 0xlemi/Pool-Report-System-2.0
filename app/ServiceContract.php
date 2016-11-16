@@ -10,6 +10,7 @@ use App\PRS\ValueObjects\Service\EndTime;
 use App\PRS\ValueObjects\Service\StartTime;
 use App\PRS\ValueObjects\Service\ServiceDays;
 use App\PRS\ValueObjects\Service\Status;
+use App\PRS\ValueObjects\ServiceContract\Start;
 
 class ServiceContract extends Model
 {
@@ -19,6 +20,7 @@ class ServiceContract extends Model
      * @var array
      */
     protected $fillable = [
+        'start',
         'active',
         'service_days',
         'amount',
@@ -64,6 +66,15 @@ class ServiceContract extends Model
     }
 
     //******** VALUE OBJECTS ********
+
+    /**
+     * Start ValueObject
+     * @return Start
+     */
+    public function start()
+    {
+        return (new Start($this->start));
+    }
 
     /**
      * EndTime ValueObject

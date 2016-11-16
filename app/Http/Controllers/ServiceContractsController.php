@@ -85,6 +85,8 @@ class ServiceContractsController extends PageController
             $serviceContract = $service->serviceContract;
             $data = [
                 'object' => $serviceContract,
+                'start' => $serviceContract->start()->datePickerValue(),
+                'startShow' => (string) $serviceContract->start(),
                 'endTime' => $serviceContract->endTime()->timePickerValue(),
                 'startTime' => $serviceContract->startTime()->timePickerValue(),
                 'contractExists' => true,

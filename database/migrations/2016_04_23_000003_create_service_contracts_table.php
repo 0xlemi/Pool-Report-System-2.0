@@ -15,7 +15,7 @@ class CreateServiceContractsTable extends Migration
     {
         Schema::create('service_contracts', function (Blueprint $table) {
             $table->integer('service_id')->unsigned()->primary(); // same as service_id
-            $table->dateTime('start');
+            $table->date('start');
             $table->boolean('active')->default(1); // 1=active, 0=inactive
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);

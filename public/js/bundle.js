@@ -8391,6 +8391,257 @@ if (typeof window !== 'undefined') {
 }
 module.exports = exports['default'];
 },{"./modules/default-params":165,"./modules/handle-click":166,"./modules/handle-dom":167,"./modules/handle-key":168,"./modules/handle-swal-dom":169,"./modules/set-params":171,"./modules/utils":172}],174:[function(require,module,exports){
+
+/**
+ * The array of names of the tooltip messages of the datetime picker.
+ *
+ * This is a constant and should not be modified.
+ */
+var DATETIME_PICKER_TOOLTIPS = [
+  "today", "clear", "close",
+  "selectMonth", "prevMonth", "nextMonth",
+  "selectYear", "prevYear", "nextYear",
+  "selectDecade", "prevDecade", "nextDecade",
+  "prevCentury", "nextCentury",
+  "pickHour", "incrementHour", "decrementHour",
+  "pickMinute", "incrementMinute", "decrementMinute",
+  "pickSecond", "incrementSecond", "decrementSecond",
+  "togglePeriod", "selectTime"
+];
+
+/**
+ * The default language used by this component.
+ */
+var DEFAULT_LANGUAGE = "en-US";
+
+/**
+ * A datetime picker control.
+ *
+ * @param model
+ *    the model bind to the control, which must be a two way binding variable.
+ * @param type
+ *    the optional type of this datetime picker control. Available values are
+ *    - "datetime": Indicating that this control is a datetime picker,
+ *    - "date": Indicating that this control is a date picker,
+ *    - "time": Indicating that this control is a time picker.
+ *    Default value is "datetime".
+ * @param language
+ *    the optional language code used to localize the control, which must be
+ *    a valid language code supported by the moment.js library. If it is not set,
+ *    and the [vue-i18n](https://github.com/Haixing-Hu/vue-i18n) plugin is used,
+ *    the component will use the language code `$language` provided by the
+ *    [vue-i18n](https://github.com/Haixing-Hu/vue-i18n) plugin; otherwise, the
+ *    component will use the default value "en-US".
+ * @param datetimeFormat
+ *    the optional format of the datetime this component should display, which
+ *    must be a valid datetime format of the moment.js library. This property
+ *    only works when the "type" property is "datetime". Default value is
+ *    "YYYY-MM-DD HH:mm:ss".
+ * @param dateFormat
+ *    the optional format of the date this component should display, which
+ *    must be a valid datetime format of the moment.js library. This property
+ *    only works when the "type" property is "date". Default value is
+ *    "YYYY-MM-DD".
+ * @param timeFormat
+ *    the optional format of the time this component should display, which
+ *    must be a valid datetime format of the moment.js library. This property
+ *    only works when the "type" property is "time". Default value is
+ *    "HH:mm:ss".
+ * @param name
+ *    the optional name of the selection control.
+ * @param onChange
+ *    the optional event handler triggered when the value of the datetime picker
+ *    was changed. If this parameter is presented and is not null, it must be a
+ *    function which accept one argument: the new date time, which is a moment
+ *    object.
+ */
+module.exports = {
+  replace: true,
+  inherit: false,
+  template: "<div class='input-group date'>" +
+              "<input class='form-control' :name='name' type='text' />" +
+              "<span class='input-group-addon'>" +
+                "<i class='fa fa-fw fa-calendar'></i>" +
+              "</span>" +
+            "</div>",
+  props: {
+    model: {
+      required: true,
+      twoWay: true
+    },
+    type: {
+      type: String,
+      required: false,
+      default: "datetime"
+    },
+    language: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    datetimeFormat: {
+      type: String,
+      required: false,
+      default: "YYYY-MM-DD HH:mm:ss"
+    },
+    dateFormat: {
+      type: String,
+      required: false,
+      default: "YYYY-MM-DD"
+    },
+    timeFormat: {
+      type: String,
+      required: false,
+      default: "HH:mm:ss"
+    },
+    name: {
+      type: String,
+      required: false,
+      default: ""
+    },
+    onChange: {
+      required: false,
+      default: null
+    }
+  },
+  beforeCompile: function() {
+    this.isChanging = false;
+    this.control = null;
+  },
+  ready: function() {
+    // console.debug("datetime-picker.ready");
+    var options = {
+      useCurrent: false,
+      showClear: true,
+      showClose: false,
+      icons: {
+        time: 'fa fa-clock-o',
+        date: 'fa fa-calendar',
+        up: 'fa fa-chevron-up',
+        down: 'fa fa-chevron-down',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-dot-circle-o',
+        clear: 'fa fa-trash',
+        close: 'fa fa-times'
+      }
+    };
+    // set the locale
+    var language = this.language;
+    if (language === null || language === "") {
+      if (this.$language) {
+        language = this.$language;
+      } else {
+        langauge = DEFAULT_LANGUAGE;
+      }
+    }
+    options.locale = this.getLanguageCode(language);
+    // set the format
+    switch (this.type) {
+    case "date":
+      options.format = this.dateFormat;
+      break;
+    case "time":
+      options.format = this.timeFormat;
+      break;
+    case "datetime":
+    default:
+      options.format = this.datetimeFormat;
+      break;
+    }
+    // use the vue-i18n plugin for localize the tooltips
+    if (this.$i18n && this.$i18n.datetime_picker) {
+      var messages = this.$i18n.datetime_picker;
+      var tooltips = $.fn.datetimepicker.defaults.tooltips;
+      for (var i = 0; i < DATETIME_PICKER_TOOLTIPS.length; ++i) {
+        var name = DATETIME_PICKER_TOOLTIPS[i];
+        if (messages[name]) {
+          tooltips[name] = messages[name];    // localize
+        }
+      }
+      options.tooltips = tooltips;
+    }
+    // create the control
+    $(this.$el).datetimepicker(options);
+    this.control = $(this.$el).data("DateTimePicker");
+    // set the date to the current value of the model
+    this.control.date(this.model);
+    var me = this;
+    $(this.$el).on("dp.change", function () {
+      if (! me.isChanging) {
+        me.isChanging = true;
+        me.model = me.control.date();
+        me.$nextTick(function () {
+          me.isChanging = false;
+          if (me.onChange) {
+            me.onChange(me.model);
+          }
+        });
+      }
+    });
+  },
+  watch: {
+    "model": function(val, oldVal) {
+      if (! this.isChanging) {
+        this.isChanging = true;
+        this.control.date(val);
+        this.isChanging = false;
+        if (this.onChange) {
+          this.onChange(val);
+        }
+      }
+    }
+  },
+  methods: {
+    /**
+     * Gets the language code from the "language-country" locale code.
+     *
+     * The function will strip the language code before the first "-" of a
+     * locale code. For example, pass "en-US" will returns "en". But for some
+     * special locales, the function reserves the locale code. For example,
+     * the "zh-CN" for the simplified Chinese and the "zh-TW" for the
+     * traditional Chinese.
+     *
+     * @param locale
+     *    A locale code.
+     * @return
+     *    the language code of the locale.
+     */
+    getLanguageCode: function(locale) {
+      if (locale === null || locale.length === 0) {
+        return "en";
+      }
+      if (locale.length <= 2) {
+        return locale;
+      } else {
+        switch (locale) {
+          case "zh-CN":
+          case "zh-TW":
+          case "ar-MA":
+          case "ar-SA":
+          case "ar-TN":
+          case "de-AT":
+          case "en-AU":
+          case "en-CA":
+          case "en-GB":
+          case "fr-CA":
+          case "hy-AM":
+          case "ms-MY":
+          case "pt-BR":
+          case "sr-CYRL":
+          case "tl-PH":
+          case "tzm-LATN":
+          case "tzm":
+            return locale.toLowerCase();
+          default:
+            // reserve only the first two letters language code
+            return locale.substr(0, 2);
+        }
+      }
+    }
+  }
+};
+},{}],175:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -8691,7 +8942,7 @@ function format (id) {
   return match ? match[0] : id
 }
 
-},{}],175:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -9567,7 +9818,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 });
 
 
-},{}],176:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 /*!
  * vue-resource v0.7.4
  * https://github.com/vuejs/vue-resource
@@ -10944,7 +11195,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 module.exports = plugin;
-},{}],177:[function(require,module,exports){
+},{}],178:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.26
@@ -21021,7 +21272,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":163}],178:[function(require,module,exports){
+},{"_process":163}],179:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 exports.insert = function (css) {
@@ -21041,7 +21292,7 @@ exports.insert = function (css) {
   return elem
 }
 
-},{}],179:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 "use strict";
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -21222,7 +21473,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   };
 }();
 
-},{}],180:[function(require,module,exports){
+},{}],181:[function(require,module,exports){
 'use strict';
 
 /* ===========================================================
@@ -21391,7 +21642,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],181:[function(require,module,exports){
+},{}],182:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -21952,7 +22203,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   });
 }(window.jQuery);
 
-},{}],182:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};/**
  * @author zhixin wen <wenzhixin2010@gmail.com>
  * version: 1.10.0
@@ -22058,7 +22309,7 @@ $(function(){$('[data-toggle="table"]').bootstrapTable();});}(jQuery);/*
  * Table export
  */(function(c){c.fn.extend({tableExport:function tableExport(p){function y(b,u,d,e,k){if(-1==c.inArray(d,a.ignoreRow)&&-1==c.inArray(d-e,a.ignoreRow)){var L=c(b).filter(function(){return"none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display")||"always"==c(this).closest("table").data("tableexport-display"));}).find(u),f=0;L.each(function(b){if(("always"==c(this).data("tableexport-display")||"none"!=c(this).css("display")&&"hidden"!=c(this).css("visibility")&&"none"!=c(this).data("tableexport-display"))&&-1==c.inArray(b,a.ignoreColumn)&&-1==c.inArray(b-L.length,a.ignoreColumn)&&"function"===typeof k){var e,u=0,g,h=0;if("undefined"!=typeof B[d]&&0<B[d].length)for(e=0;e<=b;e++){"undefined"!=typeof B[d][e]&&(k(null,d,e),delete B[d][e],b++);}c(this).is("[colspan]")&&(u=parseInt(c(this).attr("colspan")),f+=0<u?u-1:0);c(this).is("[rowspan]")&&(h=parseInt(c(this).attr("rowspan")));k(this,d,b);for(e=0;e<u-1;e++){k(null,d,b+e);}if(h)for(g=1;g<h;g++){for("undefined"==typeof B[d+g]&&(B[d+g]=[]),B[d+g][b+f]="",e=1;e<u;e++){B[d+g][b+f-e]="";}}}});}}function M(b){!0===a.consoleLog&&console.log(b.output());if("string"===a.outputMode)return b.output();if("base64"===a.outputMode)return C(b.output());try{var u=b.output("blob");saveAs(u,a.fileName+".pdf");}catch(d){D(a.fileName+".pdf","data:application/pdf;base64,",b.output());}}function N(b,a,d){var e=0;"undefined"!=typeof d&&(e=d.colspan);if(0<=e){for(var k=b.width,c=b.textPos.x,f=a.table.columns.indexOf(a.column),g=1;g<e;g++){k+=a.table.columns[f+g].width;}1<e&&("right"===b.styles.halign?c=b.textPos.x+k-b.width:"center"===b.styles.halign&&(c=b.textPos.x+(k-b.width)/2));b.width=k;b.textPos.x=c;"undefined"!=typeof d&&1<d.rowspan&&("middle"===b.styles.valign?b.textPos.y+=b.height*(d.rowspan-1)/2:"bottom"===b.styles.valign&&(b.textPos.y+=(d.rowspan-1)*b.height),b.height*=d.rowspan);if("middle"===b.styles.valign||"bottom"===b.styles.valign)d=("string"===typeof b.text?b.text.split(/\r\n|\r|\n/g):b.text).length||1,2<d&&(b.textPos.y-=(2-1.15)/2*a.row.styles.fontSize*(d-2)/3);return!0;}return!1;}function J(b,a,d){return b.replace(new RegExp(a.replace(/([.*+?^=!:${}()|\[\]\/\\])/g,"\\$1"),"g"),d);}function V(b){b=J(b||"0",a.numbers.html.decimalMark,".");b=J(b,a.numbers.html.thousandsSeparator,"");return"number"===typeof b||!1!==jQuery.isNumeric(b)?b:!1;}function v(b,u,d){var e="";if(null!=b){b=c(b);var k=b.html();"function"===typeof a.onCellHtmlData&&(k=a.onCellHtmlData(b,u,d,k));if(!0===a.htmlContent)e=c.trim(k);else{var f=k.replace(/\n/g,'\u2028').replace(/<br\s*[\/]?>/gi,'⁠'),k=c("<div/>").html(f).contents(),f="";c.each(k.text().split('\u2028'),function(b,a){0<b&&(f+=" ");f+=c.trim(a);});c.each(f.split('⁠'),function(b,a){0<b&&(e+="\n");e+=c.trim(a).replace(/\u00AD/g,"");});if(a.numbers.html.decimalMark!=a.numbers.output.decimalMark||a.numbers.html.thousandsSeparator!=a.numbers.output.thousandsSeparator)if(k=V(e),!1!==k){var g=(""+k).split(".");1==g.length&&(g[1]="");var h=3<g[0].length?g[0].length%3:0,e=(0>k?"-":"")+(a.numbers.output.thousandsSeparator?(h?g[0].substr(0,h)+a.numbers.output.thousandsSeparator:"")+g[0].substr(h).replace(/(\d{3})(?=\d)/g,"$1"+a.numbers.output.thousandsSeparator):g[0])+(g[1].length?a.numbers.output.decimalMark+g[1]:"");}}!0===a.escape&&(e=escape(e));"function"===typeof a.onCellData&&(e=a.onCellData(b,u,d,e));}return e;}function W(b,a,d){return a+"-"+d.toLowerCase();}function O(b,a){var d=/^rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)$/.exec(b),e=a;d&&(e=[parseInt(d[1]),parseInt(d[2]),parseInt(d[3])]);return e;}function P(b){var a=E(b,"text-align"),d=E(b,"font-weight"),e=E(b,"font-style"),k="";"start"==a&&(a="rtl"==E(b,"direction")?"right":"left");700<=d&&(k="bold");"italic"==e&&(k+=e);""==k&&(k="normal");return{style:{align:a,bcolor:O(E(b,"background-color"),[255,255,255]),color:O(E(b,"color"),[0,0,0]),fstyle:k},colspan:parseInt(c(b).attr("colspan"))||0,rowspan:parseInt(c(b).attr("rowspan"))||0};}function E(b,a){try{return window.getComputedStyle?(a=a.replace(/([a-z])([A-Z])/,W),window.getComputedStyle(b,null).getPropertyValue(a)):b.currentStyle?b.currentStyle[a]:b.style[a];}catch(d){}return"";}function K(b,a,d){a=E(b,a).match(/\d+/);if(null!==a){a=a[0];var e=document.createElement("div");e.style.overflow="hidden";e.style.visibility="hidden";b.parentElement.appendChild(e);e.style.width=100+d;d=100/e.offsetWidth;b.parentElement.removeChild(e);return a*d;}return 0;}function D(a,c,d){var e=window.navigator.userAgent;if(0<e.indexOf("MSIE ")||e.match(/Trident.*rv\:11\./)){if(c=document.createElement("iframe"))document.body.appendChild(c),c.setAttribute("style","display:none"),c.contentDocument.open("txt/html","replace"),c.contentDocument.write(d),c.contentDocument.close(),c.focus(),c.contentDocument.execCommand("SaveAs",!0,a),document.body.removeChild(c);}else if(e=document.createElement("a")){e.style.display="none";e.download=a;0<=c.toLowerCase().indexOf("base64,")?e.href=c+C(d):e.href=c+encodeURIComponent(d);document.body.appendChild(e);if(document.createEvent)null==H&&(H=document.createEvent("MouseEvents")),H.initEvent("click",!0,!1),e.dispatchEvent(H);else if(document.createEventObject)e.fireEvent("onclick");else if("function"==typeof e.onclick)e.onclick();document.body.removeChild(e);}}function C(a){var c="",d,e,k,g,f,h,l=0;a=a.replace(/\x0d\x0a/g,"\n");e="";for(k=0;k<a.length;k++){g=a.charCodeAt(k),128>g?e+=String.fromCharCode(g):(127<g&&2048>g?e+=String.fromCharCode(g>>6|192):(e+=String.fromCharCode(g>>12|224),e+=String.fromCharCode(g>>6&63|128)),e+=String.fromCharCode(g&63|128));}for(a=e;l<a.length;){d=a.charCodeAt(l++),e=a.charCodeAt(l++),k=a.charCodeAt(l++),g=d>>2,d=(d&3)<<4|e>>4,f=(e&15)<<2|k>>6,h=k&63,isNaN(e)?f=h=64:isNaN(k)&&(h=64),c=c+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(g)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(d)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(f)+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(h);}return c;}var a={consoleLog:!1,csvEnclosure:'"',csvSeparator:",",csvUseBOM:!0,displayTableName:!1,escape:!1,excelstyles:["border-bottom","border-top","border-left","border-right"],fileName:"tableExport",htmlContent:!1,ignoreColumn:[],ignoreRow:[],jspdf:{orientation:"p",unit:"pt",format:"a4",margins:{left:20,right:10,top:10,bottom:10},autotable:{styles:{cellPadding:2,rowHeight:12,fontSize:8,fillColor:255,textColor:50,fontStyle:"normal",overflow:"ellipsize",halign:"left",valign:"middle"},headerStyles:{fillColor:[52,73,94],textColor:255,fontStyle:"bold",halign:"center"},alternateRowStyles:{fillColor:245},tableExport:{onAfterAutotable:null,onBeforeAutotable:null,onTable:null}}},numbers:{html:{decimalMark:".",thousandsSeparator:","},output:{decimalMark:".",thousandsSeparator:","}},onCellData:null,onCellHtmlData:null,outputMode:"file",tbodySelector:"tr",theadSelector:"tr",tableName:"myTableName",type:"csv",worksheetName:"xlsWorksheetName"},r=this,H=null,q=[],n=[],m=0,B=[],g="";c.extend(!0,a,p);if("csv"==a.type||"txt"==a.type){p=function p(b,f,d,e){n=c(r).find(b).first().find(f);n.each(function(){g="";y(this,d,m,e+n.length,function(b,e,d){var c=g,f="";if(null!=b)if(b=v(b,e,d),e=null===b||""==b?"":b.toString(),b instanceof Date)f=a.csvEnclosure+b.toLocaleString()+a.csvEnclosure;else if(f=J(e,a.csvEnclosure,a.csvEnclosure+a.csvEnclosure),0<=f.indexOf(a.csvSeparator)||/[\r\n ]/g.test(f))f=a.csvEnclosure+f+a.csvEnclosure;g=c+(f+a.csvSeparator);});g=c.trim(g).substring(0,g.length-1);0<g.length&&(0<w.length&&(w+="\n"),w+=g);m++;});return n.length;};var w="",z=0,m=0,z=z+p("thead",a.theadSelector,"th,td",z),z=z+p("tbody",a.tbodySelector,"td",z);p("tfoot",a.tbodySelector,"td",z);w+="\n";!0===a.consoleLog&&console.log(w);if("string"===a.outputMode)return w;if("base64"===a.outputMode)return C(w);try{var A=new Blob([w],{type:"text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8"});saveAs(A,a.fileName+"."+a.type,"csv"!=a.type||!1===a.csvUseBOM);}catch(b){D(a.fileName+"."+a.type,"data:text/"+("csv"==a.type?"csv":"plain")+";charset=utf-8,"+("csv"==a.type&&a.csvUseBOM?'﻿':""),w);}}else if("sql"==a.type){var m=0,l="INSERT INTO `"+a.tableName+"` (",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,q.length,function(a,c,d){l+="'"+v(a,c,d)+"',";});m++;l=c.trim(l);l=c.trim(l).substring(0,l.length-1);});l+=") VALUES ";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(a,c,d){g+="'"+v(a,c,d)+"',";});3<g.length&&(l+="("+g,l=c.trim(l).substring(0,l.length-1),l+="),");m++;});l=c.trim(l).substring(0,l.length-1);l+=";";!0===a.consoleLog&&console.log(l);if("string"===a.outputMode)return l;if("base64"===a.outputMode)return C(l);try{A=new Blob([l],{type:"text/plain;charset=utf-8"}),saveAs(A,a.fileName+".sql");}catch(b){D(a.fileName+".sql","data:application/sql;charset=utf-8,",l);}}else if("json"==a.type){var Q=[],q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){var a=[];y(this,"th,td",m,q.length,function(c,d,e){a.push(v(c,d,e));});Q.push(a);});var R=[],n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=[];y(this,"td",m,q.length+n.length,function(c,d,e){a.push(v(c,d,e));});0<a.length&&(1!=a.length||""!=a[0])&&R.push(a);m++;});p=[];p.push({header:Q,data:R});p=JSON.stringify(p);!0===a.consoleLog&&console.log(p);if("string"===a.outputMode)return p;if("base64"===a.outputMode)return C(p);try{A=new Blob([p],{type:"application/json;charset=utf-8"}),saveAs(A,a.fileName+".json");}catch(b){D(a.fileName+".json","data:application/json;charset=utf-8;base64,",p);}}else if("xml"===a.type){var m=0,t='<?xml version="1.0" encoding="utf-8"?>',t=t+"<tabledata><fields>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){y(this,"th,td",m,n.length,function(a,c,d){t+="<field>"+v(a,c,d)+"</field>";});m++;});var t=t+"</fields><data>",S=1,n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){var a=1;g="";y(this,"td",m,q.length+n.length,function(c,d,e){g+="<column-"+a+">"+v(c,d,e)+"</column-"+a+">";a++;});0<g.length&&"<column-1></column-1>"!=g&&(t+='<row id="'+S+'">'+g+"</row>",S++);m++;});t+="</data></tabledata>";!0===a.consoleLog&&console.log(t);if("string"===a.outputMode)return t;if("base64"===a.outputMode)return C(t);try{A=new Blob([t],{type:"application/xml;charset=utf-8"}),saveAs(A,a.fileName+".xml");}catch(b){D(a.fileName+".xml","data:application/xml;charset=utf-8;base64,",t);}}else if("excel"==a.type||"xls"==a.type||"word"==a.type||"doc"==a.type){p="excel"==a.type||"xls"==a.type?"excel":"word";var z="excel"==p?"xls":"doc",f="xls"==z?'xmlns:x="urn:schemas-microsoft-com:office:excel"':'xmlns:w="urn:schemas-microsoft-com:office:word"',m=0,x="<table><thead>",q=c(r).find("thead").first().find(a.theadSelector);q.each(function(){g="";y(this,"th,td",m,q.length,function(b,f,d){if(null!=b){g+='<th style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</th>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});x+="</thead><tbody>";n=c(r).find("tbody").first().find(a.tbodySelector);n.each(function(){g="";y(this,"td",m,q.length+n.length,function(b,f,d){if(null!=b){g+='<td style="';for(var e in a.excelstyles){a.excelstyles.hasOwnProperty(e)&&(g+=a.excelstyles[e]+": "+c(b).css(a.excelstyles[e])+";");}c(b).is("[colspan]")&&(g+='" colspan="'+c(b).attr("colspan"));c(b).is("[rowspan]")&&(g+='" rowspan="'+c(b).attr("rowspan"));g+='">'+v(b,f,d)+"</td>";}});0<g.length&&(x+="<tr>"+g+"</tr>");m++;});a.displayTableName&&(x+="<tr><td></td></tr><tr><td></td></tr><tr><td>"+v(c("<p>"+a.tableName+"</p>"))+"</td></tr>");x+="</tbody></table>";!0===a.consoleLog&&console.log(x);f='<html xmlns:o="urn:schemas-microsoft-com:office:office" '+f+' xmlns="http://www.w3.org/TR/REC-html40">'+('<meta http-equiv="content-type" content="application/vnd.ms-'+p+'; charset=UTF-8">');f+="<head>";"excel"===p&&(f+="\x3c!--[if gte mso 9]>",f+="<xml>",f+="<x:ExcelWorkbook>",f+="<x:ExcelWorksheets>",f+="<x:ExcelWorksheet>",f+="<x:Name>",f+=a.worksheetName,f+="</x:Name>",f+="<x:WorksheetOptions>",f+="<x:DisplayGridlines/>",f+="</x:WorksheetOptions>",f+="</x:ExcelWorksheet>",f+="</x:ExcelWorksheets>",f+="</x:ExcelWorkbook>",f+="</xml>",f+="<![endif]--\x3e");f+="</head>";f+="<body>";f+=x;f+="</body>";f+="</html>";!0===a.consoleLog&&console.log(f);if("string"===a.outputMode)return f;if("base64"===a.outputMode)return C(f);try{A=new Blob([f],{type:"application/vnd.ms-"+a.type}),saveAs(A,a.fileName+"."+z);}catch(b){D(a.fileName+"."+z,"data:application/vnd.ms-"+p+";base64,",f);}}else if("png"==a.type)html2canvas(c(r)[0],{allowTaint:!0,background:"#fff",onrendered:function onrendered(b){b=b.toDataURL();b=b.substring(22);for(var c=atob(b),d=new ArrayBuffer(c.length),e=new Uint8Array(d),f=0;f<c.length;f++){e[f]=c.charCodeAt(f);}!0===a.consoleLog&&console.log(c);if("string"===a.outputMode)return c;if("base64"===a.outputMode)return C(b);try{var g=new Blob([d],{type:"image/png"});saveAs(g,a.fileName+".png");}catch(h){D(a.fileName+".png","data:image/png;base64,",b);}}});else if("pdf"==a.type)if(!1===a.jspdf.autotable){var A={dim:{w:K(c(r).first().get(0),"width","mm"),h:K(c(r).first().get(0),"height","mm")},pagesplit:!1},T=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);T.addHTML(c(r).first(),a.jspdf.margins.left,a.jspdf.margins.top,A,function(){M(T);});}else{var h=a.jspdf.autotable.tableExport;if("string"===typeof a.jspdf.format&&"bestfit"===a.jspdf.format.toLowerCase()){var F={a0:[2383.94,3370.39],a1:[1683.78,2383.94],a2:[1190.55,1683.78],a3:[841.89,1190.55],a4:[595.28,841.89]},I="",G="",U=0;c(r).filter(":visible").each(function(){if("none"!=c(this).css("display")){var a=K(c(this).get(0),"width","pt");if(a>U){a>F.a0[0]&&(I="a0",G="l");for(var f in F){F.hasOwnProperty(f)&&F[f][1]>a&&(I=f,G="l",F[f][0]>a&&(G="p"));}U=a;}}});a.jspdf.format=""==I?"a4":I;a.jspdf.orientation=""==G?"w":G;}h.doc=new jsPDF(a.jspdf.orientation,a.jspdf.unit,a.jspdf.format);c(r).filter(function(){return"none"!=c(this).data("tableexport-display")&&(c(this).is(":visible")||"always"==c(this).data("tableexport-display"));}).each(function(){var b,f=0;h.columns=[];h.rows=[];h.rowoptions={};if("function"===typeof h.onTable&&!1===h.onTable(c(this),a))return!0;a.jspdf.autotable.tableExport=null;var d=c.extend(!0,{},a.jspdf.autotable);a.jspdf.autotable.tableExport=h;d.margin={};c.extend(!0,d.margin,a.jspdf.margins);d.tableExport=h;"function"!==typeof d.beforePageContent&&(d.beforePageContent=function(a){1==a.pageCount&&a.table.rows.concat(a.table.headerRow).forEach(function(b){0<b.height&&(b.height+=(2-1.15)/2*b.styles.fontSize,a.table.height+=(2-1.15)/2*b.styles.fontSize);});});"function"!==typeof d.createdHeaderCell&&(d.createdHeaderCell=function(a,b){if("undefined"!=typeof h.columns[b.column.dataKey]){var c=h.columns[b.column.dataKey];a.styles.halign=c.style.align;"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor);"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color);"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle);}});"function"!==typeof d.createdCell&&(d.createdCell=function(a,b){var c=h.rowoptions[b.row.index+":"+b.column.dataKey];"undefined"!=typeof c&&"undefined"!=typeof c.style&&(a.styles.halign=c.style.align,"inherit"===d.styles.fillColor&&(a.styles.fillColor=c.style.bcolor),"inherit"===d.styles.textColor&&(a.styles.textColor=c.style.color),"inherit"===d.styles.fontStyle&&(a.styles.fontStyle=c.style.fstyle));});"function"!==typeof d.drawHeaderCell&&(d.drawHeaderCell=function(a,b){var c=h.columns[b.column.dataKey];return 1!=c.style.hasOwnProperty("hidden")||!0!==c.style.hidden?N(a,b,c):!1;});"function"!==typeof d.drawCell&&(d.drawCell=function(a,b){return N(a,b,h.rowoptions[b.row.index+":"+b.column.dataKey]);});q=c(this).find("thead").find(a.theadSelector);q.each(function(){b=0;y(this,"th,td",f,q.length,function(a,c,e){var d=P(a);d.title=v(a,c,e);d.key=b++;h.columns.push(d);});f++;});var e=0;n=c(this).find("tbody").find(a.tbodySelector);n.each(function(){var a=[];b=0;y(this,"td",f,q.length+n.length,function(d,f,g){if("undefined"===typeof h.columns[b]){var l={title:"",key:b,style:{hidden:!0}};h.columns.push(l);}null!==d?h.rowoptions[e+":"+b++]=P(d):(l=c.extend(!0,{},h.rowoptions[e+":"+(b-1)]),l.colspan=-1,h.rowoptions[e+":"+b++]=l);a.push(v(d,f,g));});a.length&&(h.rows.push(a),e++);f++;});if("function"===typeof h.onBeforeAutotable)h.onBeforeAutotable(c(this),h.columns,h.rows,d);h.doc.autoTable(h.columns,h.rows,d);if("function"===typeof h.onAfterAutotable)h.onAfterAutotable(c(this),d);a.jspdf.autotable.startY=h.doc.autoTableEndPosY()+d.margin.top;});M(h.doc);h.columns.length=0;h.rows.length=0;delete h.doc;h.doc=null;}return this;}});})(jQuery);
 
-},{}],183:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.bootstrap-table .table {\n    margin-bottom: 0 !important;\n    border-bottom: 1px solid #dddddd;\n    border-collapse: collapse !important;\n    border-radius: 1px;\n}\n\n.bootstrap-table .table:not(.table-condensed),\n.bootstrap-table .table:not(.table-condensed) > tbody > tr > th,\n.bootstrap-table .table:not(.table-condensed) > tfoot > tr > th,\n.bootstrap-table .table:not(.table-condensed) > thead > tr > td,\n.bootstrap-table .table:not(.table-condensed) > tbody > tr > td,\n.bootstrap-table .table:not(.table-condensed) > tfoot > tr > td {\n    padding: 8px;\n}\n\n.bootstrap-table .table.table-no-bordered > thead > tr > th,\n.bootstrap-table .table.table-no-bordered > tbody > tr > td {\n    border-right: 2px solid transparent;\n}\n\n.bootstrap-table .table.table-no-bordered > tbody > tr > td:last-child {\n    border-right: none;\n}\n\n.fixed-table-container {\n    position: relative;\n    clear: both;\n    border: 1px solid #dddddd;\n    border-radius: 4px;\n    -webkit-border-radius: 4px;\n    -moz-border-radius: 4px;\n}\n\n.fixed-table-container.table-no-bordered {\n    border: 1px solid transparent;\n}\n\n.fixed-table-footer,\n.fixed-table-header {\n    overflow: hidden;\n}\n\n.fixed-table-footer {\n    border-top: 1px solid #dddddd;\n}\n\n.fixed-table-body {\n    overflow-x: auto;\n    overflow-y: auto;\n    height: 100%;\n}\n\n.fixed-table-container table {\n    width: 100%;\n}\n\n.fixed-table-container thead th {\n    height: 0;\n    padding: 0;\n    margin: 0;\n    border-left: 1px solid #dddddd;\n}\n\n.fixed-table-container thead th:focus {\n    outline: 0 solid transparent;\n}\n\n.fixed-table-container thead th:first-child {\n    border-left: none;\n    border-top-left-radius: 4px;\n    -webkit-border-top-left-radius: 4px;\n    -moz-border-radius-topleft: 4px;\n}\n\n.fixed-table-container thead th .th-inner,\n.fixed-table-container tbody td .th-inner {\n    padding: 8px;\n    line-height: 24px;\n    vertical-align: top;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n}\n\n.fixed-table-container thead th .sortable {\n    cursor: pointer;\n    background-position: right;\n    background-repeat: no-repeat;\n    padding-right: 30px;\n}\n\n.fixed-table-container thead th .sortable.both {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC');\n}\n\n.fixed-table-container thead th .sortable.asc {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZ0lEQVQ4y2NgGLKgquEuFxBPAGI2ahhWCsS/gDibUoO0gPgxEP8H4ttArEyuQYxAPBdqEAxPBImTY5gjEL9DM+wTENuQahAvEO9DMwiGdwAxOymGJQLxTyD+jgWDxCMZRsEoGAVoAADeemwtPcZI2wAAAABJRU5ErkJggg==');\n}\n\n.fixed-table-container thead th .sortable.desc {\n    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAYAAAByUDbMAAAAZUlEQVQ4y2NgGAWjYBSggaqGu5FA/BOIv2PBIPFEUgxjB+IdQPwfC94HxLykus4GiD+hGfQOiB3J8SojEE9EM2wuSJzcsFMG4ttQgx4DsRalkZENxL+AuJQaMcsGxBOAmGvopk8AVz1sLZgg0bsAAAAASUVORK5CYII= ');\n}\n\n.fixed-table-container th.detail {\n    width: 30px;\n}\n\n.fixed-table-container tbody td {\n    border-left: 1px solid #dddddd;\n}\n\n.fixed-table-container tbody tr:first-child td {\n    border-top: none;\n}\n\n.fixed-table-container tbody td:first-child {\n    border-left: none;\n}\n\n/* the same color with .active */\n.fixed-table-container tbody .selected td {\n    background-color: #f5f5f5;\n}\n\n.fixed-table-container .bs-checkbox {\n    text-align: center;\n}\n\n.fixed-table-container .bs-checkbox .th-inner {\n    padding: 8px 0;\n}\n\n.fixed-table-container input[type=\"radio\"],\n.fixed-table-container input[type=\"checkbox\"] {\n    margin: 0 auto !important;\n}\n\n.fixed-table-container .no-records-found {\n    text-align: center;\n}\n\n.fixed-table-pagination div.pagination,\n.fixed-table-pagination .pagination-detail {\n    margin-top: 10px;\n    margin-bottom: 10px;\n}\n\n.fixed-table-pagination div.pagination .pagination {\n    margin: 0;\n}\n\n.fixed-table-pagination .pagination a {\n    padding: 6px 12px;\n    line-height: 1.428571429;\n}\n\n.fixed-table-pagination .pagination-info {\n    line-height: 34px;\n    margin-right: 5px;\n}\n\n.fixed-table-pagination .btn-group {\n    position: relative;\n    display: inline-block;\n    vertical-align: middle;\n}\n\n.fixed-table-pagination .dropup .dropdown-menu {\n    margin-bottom: 0;\n}\n\n.fixed-table-pagination .page-list {\n    display: inline-block;\n}\n\n.fixed-table-toolbar .columns-left {\n    margin-right: 5px;\n}\n\n.fixed-table-toolbar .columns-right {\n    margin-left: 5px;\n}\n\n.fixed-table-toolbar .columns label {\n    display: block;\n    padding: 3px 20px;\n    clear: both;\n    font-weight: normal;\n    line-height: 1.428571429;\n}\n\n.fixed-table-toolbar .bs-bars,\n.fixed-table-toolbar .search,\n.fixed-table-toolbar .columns {\n    position: relative;\n    margin-top: 10px;\n    margin-bottom: 10px;\n    line-height: 34px;\n}\n\n.fixed-table-pagination li.disabled a {\n    pointer-events: none;\n    cursor: default;\n}\n\n.fixed-table-loading {\n    position: absolute;\n    right: 0;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    z-index: 99;\n}\n\n.fixed-table-loading-bg {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    opacity: 0.9;\n    background-color: #fff;\n}\n\n.fixed-table-loading-text:before {\n    content: '';\n    display: inline-block;\n    height: 100%;\n    vertical-align: middle;\n}\n\n.fixed-table-loading-text {\n    position: absolute;\n    width: 100%;\n    height: 100%;\n    display: inline-block;\n    text-align: center;\n    vertical-align: middle;\n}\n\n.fixed-table-body .card-view .title {\n    font-weight: bold;\n    display: inline-block;\n    min-width: 30%;\n    text-align: left !important;\n}\n\n/* support bootstrap 2 */\n.fixed-table-body thead th .th-inner {\n    box-sizing: border-box;\n}\n\n.table th, .table td {\n    vertical-align: middle;\n    box-sizing: border-box;\n}\n\n.fixed-table-toolbar .dropdown-menu {\n    text-align: left;\n    max-height: 300px;\n    overflow: auto;\n}\n\n.fixed-table-toolbar .btn-group > .btn-group {\n    display: inline-block;\n    margin-left: -1px !important;\n}\n\n.fixed-table-toolbar .btn-group > .btn-group > .btn {\n    border-radius: 0;\n}\n\n.fixed-table-toolbar .btn-group > .btn-group:first-child > .btn {\n    border-top-left-radius: 4px;\n    border-bottom-left-radius: 4px;\n}\n\n.fixed-table-toolbar .btn-group > .btn-group:last-child > .btn {\n    border-top-right-radius: 4px;\n    border-bottom-right-radius: 4px;\n}\n\n.bootstrap-table .table > thead > tr > th {\n    vertical-align: bottom;\n    border-bottom: 1px solid #ddd;\n}\n\n/* support bootstrap 3 */\n.bootstrap-table .table thead > tr > th {\n    padding: 0;\n    margin: 0;\n}\n\n.bootstrap-table .fixed-table-footer tbody > tr > td {\n    padding: 0 !important;\n}\n\n.bootstrap-table .fixed-table-footer .table {\n    border-bottom: none;\n    border-radius: 0;\n    padding: 0 !important;\n}\n\n.pull-right .dropdown-menu {\n    right: 0;\n    left: auto;\n}\n\n/* calculate scrollbar width */\np.fixed-table-scroll-inner {\n    width: 100%;\n    height: 200px;\n}\n\ndiv.fixed-table-scroll-outer {\n    top: 0;\n    left: 0;\n    visibility: hidden;\n    width: 200px;\n    height: 150px;\n    overflow: hidden;\n}\n")
 'use strict';
@@ -23183,7 +23434,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0c3612d6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/get-iterator":1,"babel-runtime/core-js/json/stringify":2,"babel-runtime/core-js/object/keys":3,"babel-runtime/helpers/typeof":6,"vue":177,"vue-hot-reload-api":174,"vueify/lib/insert-css":178}],184:[function(require,module,exports){
+},{"babel-runtime/core-js/get-iterator":1,"babel-runtime/core-js/json/stringify":2,"babel-runtime/core-js/object/keys":3,"babel-runtime/helpers/typeof":6,"vue":178,"vue-hot-reload-api":175,"vueify/lib/insert-css":179}],185:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: red;\n}\n")
 'use strict';
@@ -23215,7 +23466,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174,"vueify/lib/insert-css":178}],185:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175,"vueify/lib/insert-css":179}],186:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23245,7 +23496,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-266d0912", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174}],186:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175}],187:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23339,7 +23590,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d571856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":164,"vue":177,"vue-hot-reload-api":174}],187:[function(require,module,exports){
+},{"spin":164,"vue":178,"vue-hot-reload-api":175}],188:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23399,7 +23650,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0b82fa36", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174}],188:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175}],189:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23719,7 +23970,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-59c29947", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":183,"./alert.vue":185,"spin":164,"vue":177,"vue-hot-reload-api":174}],189:[function(require,module,exports){
+},{"./BootstrapTable.vue":184,"./alert.vue":186,"spin":164,"vue":178,"vue-hot-reload-api":175}],190:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23730,10 +23981,13 @@ Object.defineProperty(exports, "__esModule", {
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 
+var VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js');
+
 exports.default = {
     props: ['serviceId', 'serviceContractUrl', 'currencies'],
     components: {
-        alert: alert
+        alert: alert,
+        VueDatetimePicker: VueDatetimePicker
     },
     data: function data() {
         return {
@@ -23758,13 +24012,15 @@ exports.default = {
             alertActiveEdit: false,
 
             active: true,
+            start: null,
             startTime: '',
             endTime: '',
             price: '',
             currency: '',
             startTimeShow: '',
             endTimeShow: '',
-            priceShow: ''
+            priceShow: '',
+            startShow: ''
         };
     },
 
@@ -23818,6 +24074,9 @@ exports.default = {
                     _this.price = data.object.amount;
                     _this.currency = data.object.currency;
                     _this.priceShow = data.object.amount + ' ' + data.object.currency;
+
+                    _this.start = data.start;
+                    _this.startShow = data.startShow;
                 }
             }, function (response) {
                 _this.focus = 2;
@@ -23856,7 +24115,8 @@ exports.default = {
                 start_time: this.startTime,
                 end_time: this.endTime,
                 amount: this.price,
-                currency: this.currency
+                currency: this.currency,
+                start: this.start
             }).then(function (response) {
                 _this2.focus = 2;
                 // refresh the information
@@ -23903,7 +24163,8 @@ exports.default = {
                 start_time: this.startTime,
                 end_time: this.endTime,
                 amount: this.price,
-                currency: this.currency
+                currency: this.currency,
+                start: this.start
             }).then(function (response) {
                 _this3.focus = 2;
                 // refresh the information
@@ -24033,10 +24294,12 @@ exports.default = {
             this.startTime = '';
             this.endTime = '';
             this.price = '';
+            this.start = null;
             this.currency = '';
             this.startTimeShow = '';
             this.endTimeShow = '';
             this.priceShow = '';
+            this.startShow = '';
         },
         revertButton: function revertButton(clickEvent, buttonTag) {
             // enable, remove spinner and set tab to the one before
@@ -24049,7 +24312,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<!-- Button to activate the modal -->\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Contract</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"modal\" data-target=\"#contractModal\">\n\t\t\t\t<i class=\"font-icon font-icon-page\"></i>&nbsp;&nbsp;&nbsp;{{ buttonTag }} Contract\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for ServiceContract preview -->\n\t<div class=\"modal fade\" id=\"contractModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Contract</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Start at:</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group date\" id=\"genericDatepicker\">\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"start\" class=\"form-control\" id=\"genericDatepickerInput\">\n\n\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-calend\"></i>\n\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n                    </div>\n\n                    <!-- Show Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t\t<div v-if=\"!active\" class=\"alert alert-warning alert-fill alert-close alert-dismissible fade in\" role=\"alert\">\n\t\t\t\t\t\t\tThis contract is deactivated\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Service days</label>\n                    \t\t<div class=\"col-sm-10\">\n                                <span class=\"label label-pill label-default\">{{ serviceDaysString }}</span>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Time interval</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<div class=\"input-group\">\n                    \t\t\t\t<div class=\"input-group-addon\">From:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"start_time\" value=\"{{ startTimeShow }}\" readonly=\"\">\n                    \t\t\t\t<div class=\"input-group-addon\">To:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"end_time\" value=\"{{ endTimeShow }}\" readonly=\"\">\n                    \t\t\t</div>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" id=\"inputPassword\" value=\"{{ priceShow }}\">\n                    \t\t</div>\n                    \t</div>\n\n                    </div>\n\n                    <!-- Edit Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                            <div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n                    </div>\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(2)\">\n\t            <button type=\"button\" class=\"btn\" :class=\"activationButton.class\" @click=\"toggleActivation\">\n\t\t\t\t\t{{ activationButton.tag }}\n\t\t\t\t</button>\n\t\t\t</p>\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" v-if=\"isFocus(2) &amp;&amp; !active\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(2) &amp;&amp; active\" @click=\"changeFocus(3)\">\n\t\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<!-- Button to activate the modal -->\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Contract</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"modal\" data-target=\"#contractModal\">\n\t\t\t\t<i class=\"font-icon font-icon-page\"></i>&nbsp;&nbsp;&nbsp;{{ buttonTag }} Contract\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for ServiceContract preview -->\n\t<div class=\"modal fade\" id=\"contractModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Contract</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n                    <!-- Create new Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : checkValidationError('start')}\">\n\t\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Start at:</label>\n\t\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t\t<vue-datetime-picker class=\"\" name=\"start\" :model.sync=\"start\" type=\"date\" language=\"en\" date-format=\"L\">\n\t\t\t\t\t\t\t    \t</vue-datetime-picker>\n\t\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start')\" class=\"text-muted\">{{ validationErrors.start[0] }}</small>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Show Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t\t<div v-if=\"!active\" class=\"alert alert-warning alert-fill alert-close alert-dismissible fade in\" role=\"alert\">\n\t\t\t\t\t\t\tThis contract is deactivated\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Service days</label>\n                    \t\t<div class=\"col-sm-10\">\n                                <span class=\"label label-pill label-default\">{{ serviceDaysString }}</span>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Time interval</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<div class=\"input-group\">\n                    \t\t\t\t<div class=\"input-group-addon\">From:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"start_time\" value=\"{{ startTimeShow }}\" readonly=\"\">\n                    \t\t\t\t<div class=\"input-group-addon\">To:</div>\n                    \t\t\t\t<input type=\"text\" class=\"form-control\" name=\"end_time\" value=\"{{ endTimeShow }}\" readonly=\"\">\n                    \t\t\t</div>\n                    \t\t</div>\n                    \t</div>\n                    \t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" id=\"inputPassword\" value=\"{{ priceShow }}\">\n                    \t\t</div>\n                    \t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n                    \t\t<label class=\"col-sm-2 form-control-label\">Starts at</label>\n                    \t\t<div class=\"col-sm-10\">\n                    \t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ startShow }}\">\n                    \t\t</div>\n                    \t</div>\n\n                    </div>\n\n                    <!-- Edit Contract -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Service Days:</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"btn-group btn-group-sm\">\n\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(monday)\" class=\"btn\" @click=\"monday = !monday\">Mon\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(tuesday)\" class=\"btn\" @click=\"tuesday = !tuesday\">Tue\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(wednesday)\" class=\"btn\" @click=\"wednesday = !wednesday\">Wed\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(thursday)\" class=\"btn\" @click=\"thursday = !thursday\">Thu\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(friday)\" class=\"btn\" @click=\"friday = !friday\">Fri\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(saturday)\" class=\"btn\" @click=\"saturday = !saturday\">Sat\n\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button type=\"button\" :class=\"buttonClass(sunday)\" class=\"btn\" @click=\"sunday = !sunday\">Sun\n\t\t\t\t\t\t\t\t\t</button>\n\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Time interval:</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">From:</div>\n\t\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('start_time'))}\">\n\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"startTime\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">To:</div>\n\t\t\t\t\t\t\t\t\t<div class=\"input-group clockpicker\" data-autoclose=\"true\" :class=\"{'form-group-error' : (checkValidationError('end_time'))}\">\n\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"endTime\">\n\t\t\t\t\t\t\t\t\t\t<span class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t\t<span class=\"glyphicon glyphicon-time\"></span>\n\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.start_time[0] }}</small>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('end_time')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end_time[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price:</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('currency')\" class=\"text-muted\">{{ validationErrors.currency[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : checkValidationError('start')}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Start at:</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<vue-datetime-picker class=\"\" name=\"start\" :model.sync=\"start\" type=\"date\" language=\"en\" date-format=\"L\">\n\t\t\t\t\t\t    \t</vue-datetime-picker>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('start')\" class=\"text-muted\">{{ validationErrors.start[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(2)\">\n\t            <button type=\"button\" class=\"btn\" :class=\"activationButton.class\" @click=\"toggleActivation\">\n\t\t\t\t\t{{ activationButton.tag }}\n\t\t\t\t</button>\n\t\t\t</p>\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" v-if=\"isFocus(2) &amp;&amp; !active\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(2) &amp;&amp; active\" @click=\"changeFocus(3)\">\n\t\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24060,7 +24323,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51700a47", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":185,"spin":164,"vue":177,"vue-hot-reload-api":174}],190:[function(require,module,exports){
+},{"./alert.vue":186,"spin":164,"vue":178,"vue-datetime-picker/src/vue-datetime-picker.js":174,"vue-hot-reload-api":175}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24117,7 +24380,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174,"vue-multiselect":175}],191:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175,"vue-multiselect":176}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24184,7 +24447,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":193,"vue":177,"vue-hot-reload-api":174,"vue-multiselect":175}],192:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":194,"vue":178,"vue-hot-reload-api":175,"vue-multiselect":176}],193:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -24216,9 +24479,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174,"vueify/lib/insert-css":178}],193:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175,"vueify/lib/insert-css":179}],194:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24497,7 +24760,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":183,"./alert.vue":185,"spin":164,"vue":177,"vue-hot-reload-api":174}],195:[function(require,module,exports){
+},{"./BootstrapTable.vue":184,"./alert.vue":186,"spin":164,"vue":178,"vue-hot-reload-api":175}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24548,7 +24811,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174}],196:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -24932,7 +25195,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":183,"./alert.vue":185,"./dropdown.vue":191,"spin":164,"vue":177,"vue-hot-reload-api":174}],197:[function(require,module,exports){
+},{"./BootstrapTable.vue":184,"./alert.vue":186,"./dropdown.vue":192,"spin":164,"vue":178,"vue-hot-reload-api":175}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25016,7 +25279,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":177,"vue-hot-reload-api":174}],198:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175}],199:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -26855,6 +27118,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":184,"./components/alert.vue":185,"./components/billing.vue":186,"./components/checkboxList.vue":187,"./components/chemical.vue":188,"./components/contract.vue":189,"./components/countries.vue":190,"./components/dropdown.vue":191,"./components/email.vue":192,"./components/payments.vue":194,"./components/photoList.vue":195,"./components/works.vue":196,"./directives/FormToAjax.vue":197,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":177,"vue-resource":176}]},{},[182,180,179,181,198]);
+},{"./components/Permissions.vue":185,"./components/alert.vue":186,"./components/billing.vue":187,"./components/checkboxList.vue":188,"./components/chemical.vue":189,"./components/contract.vue":190,"./components/countries.vue":191,"./components/dropdown.vue":192,"./components/email.vue":193,"./components/payments.vue":195,"./components/photoList.vue":196,"./components/works.vue":197,"./directives/FormToAjax.vue":198,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":178,"vue-resource":177}]},{},[183,181,180,182,199]);
 
 //# sourceMappingURL=bundle.js.map

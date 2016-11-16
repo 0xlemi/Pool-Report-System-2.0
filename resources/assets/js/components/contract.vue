@@ -26,19 +26,6 @@
 
 						<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
-						<!-- <div class="form-group row">
-							<label class="col-sm-2 form-control-label">Start at:</label>
-							<div class="col-sm-10">
-								<div class='input-group date' id="genericDatepicker">
-									<input type='text' name='start' class="form-control" id="genericDatepickerInput"/>
-
-									<span class="input-group-addon">
-										<i class="font-icon font-icon-calend"></i>
-									</span>
-								</div>
-							</div>
-						</div> -->
-
 						<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Days:</label>
 								<div class="col-sm-10">
@@ -111,6 +98,17 @@
 									<small v-if="checkValidationError('currency')" class="text-muted">{{ validationErrors.currency[0] }}</small>
 								</div>
 							</div>
+
+							<div class="form-group row" :class="{'form-group-error' : checkValidationError('start')}">
+								<label class="col-sm-2 form-control-label">Start at:</label>
+								<div class="col-sm-10">
+									<vue-datetime-picker class="" name="start" :model.sync="start"
+														type="date" language="en" date-format="L">
+							    	</vue-datetime-picker>
+									<small v-if="checkValidationError('start')" class="text-muted">{{ validationErrors.start[0] }}</small>
+								</div>
+							</div>
+
                     </div>
 
                     <!-- Show Contract -->
@@ -148,6 +146,13 @@
                     		</div>
                     	</div>
 
+						<div class="form-group row">
+                    		<label class="col-sm-2 form-control-label">Starts at</label>
+                    		<div class="col-sm-10">
+                    			<input type="text" readonly class="form-control" value="{{ startShow }}">
+                    		</div>
+                    	</div>
+
                     </div>
 
                     <!-- Edit Contract -->
@@ -155,78 +160,89 @@
 
 						<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
 
-                            <div class="form-group row">
-								<label class="col-sm-2 form-control-label">Service Days:</label>
-								<div class="col-sm-10">
-									<div class="btn-group btn-group-sm" >
+                        <div class="form-group row">
+							<label class="col-sm-2 form-control-label">Service Days:</label>
+							<div class="col-sm-10">
+								<div class="btn-group btn-group-sm" >
 
-										<button type="button" :class="buttonClass(monday)"
-												class="btn" @click="monday = !monday" >Mon
-										</button>
-										<button type="button" :class="buttonClass(tuesday)"
-												class="btn" @click="tuesday = !tuesday" >Tue
-										</button>
-										<button type="button" :class="buttonClass(wednesday)"
-												class="btn" @click="wednesday = !wednesday" >Wed
-										</button>
-										<button type="button" :class="buttonClass(thursday)"
-												class="btn" @click="thursday = !thursday" >Thu
-										</button>
-										<button type="button" :class="buttonClass(friday)"
-												class="btn" @click="friday = !friday" >Fri
-										</button>
-										<button type="button" :class="buttonClass(saturday)"
-												class="btn" @click="saturday = !saturday" >Sat
-										</button>
-										<button type="button" :class="buttonClass(sunday)"
-												class="btn" @click="sunday = !sunday" >Sun
-										</button>
+									<button type="button" :class="buttonClass(monday)"
+											class="btn" @click="monday = !monday" >Mon
+									</button>
+									<button type="button" :class="buttonClass(tuesday)"
+											class="btn" @click="tuesday = !tuesday" >Tue
+									</button>
+									<button type="button" :class="buttonClass(wednesday)"
+											class="btn" @click="wednesday = !wednesday" >Wed
+									</button>
+									<button type="button" :class="buttonClass(thursday)"
+											class="btn" @click="thursday = !thursday" >Thu
+									</button>
+									<button type="button" :class="buttonClass(friday)"
+											class="btn" @click="friday = !friday" >Fri
+									</button>
+									<button type="button" :class="buttonClass(saturday)"
+											class="btn" @click="saturday = !saturday" >Sat
+									</button>
+									<button type="button" :class="buttonClass(sunday)"
+											class="btn" @click="sunday = !sunday" >Sun
+									</button>
 
-									</div>
 								</div>
 							</div>
+						</div>
 
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Time interval:</label>
-								<div class="col-sm-10">
-									<div class="input-group">
-										<div class="input-group-addon">From:</div>
-											<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('start_time'))}">
-												<input type="text" class="form-control" v-model="startTime">
-												<span class="input-group-addon">
-													<span class="glyphicon glyphicon-time"></span>
-												</span>
-											</div>
-										<div class="input-group-addon">To:</div>
-										<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('end_time'))}">
-											<input type="text" class="form-control" v-model="endTime">
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Time interval:</label>
+							<div class="col-sm-10">
+								<div class="input-group">
+									<div class="input-group-addon">From:</div>
+										<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('start_time'))}">
+											<input type="text" class="form-control" v-model="startTime">
 											<span class="input-group-addon">
 												<span class="glyphicon glyphicon-time"></span>
 											</span>
 										</div>
+									<div class="input-group-addon">To:</div>
+									<div class="input-group clockpicker" data-autoclose="true" :class="{'form-group-error' : (checkValidationError('end_time'))}">
+										<input type="text" class="form-control" v-model="endTime">
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-time"></span>
+										</span>
 									</div>
-									<small v-if="checkValidationError('start_time')" class="text-muted" style="color:red;">{{ validationErrors.start_time[0] }}</small>
-									<small v-if="checkValidationError('end_time')" class="text-muted" style="color:red;">{{ validationErrors.end_time[0] }}</small>
 								</div>
+								<small v-if="checkValidationError('start_time')" class="text-muted" style="color:red;">{{ validationErrors.start_time[0] }}</small>
+								<small v-if="checkValidationError('end_time')" class="text-muted" style="color:red;">{{ validationErrors.end_time[0] }}</small>
 							</div>
+						</div>
 
-							<div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}">
-								<label class="col-sm-2 form-control-label">Price:</label>
-								<div class="col-sm-10">
-									<div class="input-group">
-										<div class="input-group-addon">$</div>
-										<input type="text" class="form-control"
-												placeholder="Amount" v-model="price">
-										<div class="input-group-addon">
-											<select v-model="currency">
-												<option v-for="item in currencies" value="{{item}}">{{item}}</option>
-											</select>
-										</div>
+						<div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount') || checkValidationError('currency'))}">
+							<label class="col-sm-2 form-control-label">Price:</label>
+							<div class="col-sm-10">
+								<div class="input-group">
+									<div class="input-group-addon">$</div>
+									<input type="text" class="form-control"
+											placeholder="Amount" v-model="price">
+									<div class="input-group-addon">
+										<select v-model="currency">
+											<option v-for="item in currencies" value="{{item}}">{{item}}</option>
+										</select>
 									</div>
-									<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-									<small v-if="checkValidationError('currency')" class="text-muted">{{ validationErrors.currency[0] }}</small>
 								</div>
+								<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
+								<small v-if="checkValidationError('currency')" class="text-muted">{{ validationErrors.currency[0] }}</small>
 							</div>
+						</div>
+
+						<div class="form-group row" :class="{'form-group-error' : checkValidationError('start')}">
+							<label class="col-sm-2 form-control-label">Start at:</label>
+							<div class="col-sm-10">
+								<vue-datetime-picker class="" name="start" :model.sync="start"
+													type="date" language="en" date-format="L">
+						    	</vue-datetime-picker>
+								<small v-if="checkValidationError('start')" class="text-muted">{{ validationErrors.start[0] }}</small>
+							</div>
+						</div>
+
                     </div>
 				</div>
 	      </div>
@@ -269,10 +285,14 @@
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 
+var VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js');
+
+
   export default {
     props: ['serviceId', 'serviceContractUrl', 'currencies'],
 	components: {
-		alert
+		alert,
+		VueDatetimePicker,
 	},
     data () {
         return {
@@ -297,6 +317,7 @@ var Spinner = require("spin");
 			alertActiveEdit: false,
 
 			active: true,
+			start: null,
             startTime: '',
             endTime: '',
             price: '',
@@ -304,6 +325,7 @@ var Spinner = require("spin");
 			startTimeShow: '',
             endTimeShow: '',
             priceShow: '',
+            startShow: '',
         }
     },
     computed: {
@@ -355,6 +377,9 @@ var Spinner = require("spin");
                     this.currency = data.object.currency;
 					this.priceShow = data.object.amount+' '+data.object.currency;
 
+					this.start = data.start;
+					this.startShow = data.startShow;
+
                 }
 
             }, (response) => {
@@ -394,6 +419,7 @@ var Spinner = require("spin");
                 end_time: this.endTime,
                 amount: this.price,
                 currency: this.currency,
+                start: this.start,
             }).then((response) => {
                 this.focus = 2;
 				// refresh the information
@@ -440,6 +466,7 @@ var Spinner = require("spin");
                 end_time: this.endTime,
                 amount: this.price,
                 currency: this.currency,
+                start: this.start,
             }).then((response) => {
 				this.focus = 2;
 				// refresh the information
@@ -570,10 +597,12 @@ var Spinner = require("spin");
             this.startTime = '';
             this.endTime = '';
             this.price = '';
+            this.start = null;
             this.currency = '';
 			this.startTimeShow = '';
             this.endTimeShow = '';
             this.priceShow = '';
+            this.startShow = '';
 		},
 		revertButton(clickEvent, buttonTag){
 			// enable, remove spinner and set tab to the one before

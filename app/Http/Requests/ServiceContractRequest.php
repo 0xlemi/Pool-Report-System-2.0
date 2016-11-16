@@ -24,6 +24,7 @@ class ServiceContractRequest extends FormRequest
     public function rules()
     {
         return [
+            'start' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'amount' => 'required|numeric|max:10000000',
