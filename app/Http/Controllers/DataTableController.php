@@ -33,23 +33,28 @@ class DataTableController extends PageController
         $this->clientHelpers = $clientHelpers;
     }
 
-    public function todaysroute()
+    public function todaysroute(Request $request)
     {
-
+        $this->validate($request, [
+            'daysFromToday' => 'integer|between:0,6'
+        ]);
+        $daysFromToday = ($request->daysFromToday) ?: 0;
         $services = $this->loggedUserAdministrator()
-                ->servicesDoToday()
+                ->servicesDoIn(Carbon::now()->addDays($daysFromToday))
                 ->transform(function($item){
-                        return (object) array(
+                        return (object) [
                             'id' => $item->seq_id,
                             'name' => $item->name,
                             'address' => $item->address_line,
-                            'end_time' => $item->serviceContract->EndTime()->colored(),
+                            'endTime' => $item->serviceContract->EndTime()->colored(),
                             'price' => $item->serviceContract->amount.' <strong>'.$item->serviceContract->currency.'</strong>',
-                        );
+                        ];
                     })
                 ->flatten(1);
 
-        return response()->json($services);
+        return response()->json([
+            'list' => $services
+        ]);
     }
 
     public function reports(Request $request)

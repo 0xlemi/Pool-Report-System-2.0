@@ -28,13 +28,59 @@ class TodaysRouteController extends PageController
 
     public function index()
     {
-        $default_table_url = url('datatables/todaysroute');
+        $defaultTableUrl = url('datatables/todaysroute');
+        $click_url = url('todaysroute/report/').'/';
+        $buttonsTags = [
+            (object)[
+                        'text' => 'Today',
+                        'class' => 'btn-primary-outline',
+                        'classSelected' => 'btn-primary',
+                        'value' => 0,
+                    ],
+            (object)[
+                        'text' => 'Tomorrow',
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 1,
+                    ],
+            (object)[
+                        'text' => Carbon::now()->addDays(2)->format('D'),
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 2,
+                    ],
+            (object)[
+                        'text' => Carbon::now()->addDays(3)->format('D'),
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 3,
+                    ],
+            (object)[
+                        'text' => Carbon::now()->addDays(4)->format('D'),
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 4,
+                    ],
+            (object)[
+                        'text' => Carbon::now()->addDays(5)->format('D'),
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 5,
+                    ],
+            (object)[
+                        'text' => Carbon::now()->addDays(6)->format('D'),
+                        'class' => 'btn-default-outline',
+                        'classSelected' => 'btn-default',
+                        'value' => 6,
+                    ],
+        ];
 
         JavaScript::put([
             'click_url' => url('todaysroute/report/').'/',
+            'buttons' => $buttonsTags,
         ]);
 
-        return view('todaysroute.index', compact('default_table_url'));
+        return view('todaysroute.index', compact('defaultTableUrl'));
     }
 
     public function createReport(Request $request, int $service_seq_id)

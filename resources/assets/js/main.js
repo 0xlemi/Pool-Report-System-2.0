@@ -14,6 +14,7 @@ var contract       = require('./components/contract.vue');
 var chemical       = require('./components/chemical.vue');
 var works       = require('./components/works.vue');
 var payments       = require('./components/payments.vue');
+var routeTable     = require('./components/routeTable.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -1374,6 +1375,7 @@ function isset(strVariableName) {
             countries,
             contract,
             chemical,
+            routeTable,
         },
         directives: {
             FormToAjax

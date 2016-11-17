@@ -22533,6 +22533,8 @@ var DEFAULTS = {
     toolbarButtonIcon: 'glyphicon glyphicon-plus',
     toolbarButtonText: 'Add New',
 
+    toolbarGroupButtons: {},
+
     idField: undefined,
     clickToSelect: false,
     singleSelect: false,
@@ -22658,6 +22660,9 @@ var BootstrapTable = {
         objectId: {
             type: Number,
             required: true
+        },
+        buttonValue: {
+            default: null
         }
     },
     data: function data() {
@@ -22870,6 +22875,9 @@ var BootstrapTable = {
                     }
                 }
             }
+        },
+        clickGroupButton: function clickGroupButton(value) {
+            this.buttonValue = value;
         },
 
         // end
@@ -23419,7 +23427,7 @@ BootstrapTable.locales = LOCALES;
 
 module.exports = BootstrapTable;
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"bootstrap-table\">\n    <div class=\"fixed-table-toolbar\">\n        <div class=\"pull-{{options.toolbarAlign}}\">\n            <slot>\n                <!-- by lem93 -->\n                <button v-if=\"options.toolbarButton\" @click=\"$dispatch('toolbarButtonClicked')\" type=\"button\" class=\"btn btn-primary\">\n\t\t\t\t\t<i class=\"{{ options.toolbarButtonIcon }}\"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}\n\t\t\t\t</button>\n            </slot>\n        </div>\n        <div class=\"columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}\">\n            <button v-if=\"options.showPaginationSwitch\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"paginationSwitch\" title=\"{{options.formatPaginationSwitch()}}\" v-on:click=\"togglePagination\">\n                <i class=\"{{options.iconsPrefix}} {{paginationSwitchIcon}}\"></i>\n            </button>\n            <button v-if=\"options.showRefresh\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"refresh\" title=\"{{options.formatRefresh()}}\" v-on:click=\"refresh\">\n                <i class=\"{{options.iconsPrefix}} {{options.icons.refresh}}\"></i>\n            </button>\n            <button v-if=\"options.showToggle\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"toggle\" title=\"{{options.formatToggle()}}\" v-on:click=\"toggleView\">\n                <i class=\"{{options.iconsPrefix}} {{options.icons.toggle}}\"></i>\n            </button>\n            <div v-if=\"options.showColumns\" class=\"keep-open btn-group\" title=\"{{this.options.formatColumns()}}\">\n                <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle\">\n                    <i class=\"{{options.iconsPrefix}} {{options.icons.columns}}\"></i> <span class=\"caret\"></span>\n                </button>\n                <ul class=\"dropdown-menu\" role=\"menu\">\n                    <li v-for=\"(i, column) in fieldColumns\" v-on:click.stop=\"\">\n                        <label v-if=\"!(column.radio || column.checkbox || options.cardView &amp;&amp; !column.cardVisible)\">\n                            <input type=\"checkbox\" data-field=\"{{column.filed}}\" :disabled=\"toggleColumnsCount <= options.minimumCountColumns &amp;&amp; column.visible\" v-model=\"column.visible\"> {{column.title}}\n                        </label>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div v-if=\"options.search\" class=\"pull-{{options.searchAlign}} search\">\n            <input class=\"form-control input-{{options.iconSize}}\" type=\"text\" placeholder=\"{{options.formatSearch()}}\" v-model=\"searchText\" v-on:keyup=\"search($event)\">\n        </div>\n    </div>\n    <div class=\"fixed-table-container\" v-bind:style=\"{'padding-bottom': (options.height ? view.headerHeight : 0) + 'px', height: options.height + 'px'}\">\n        <div class=\"fixed-table-header\" v-if=\"options.showHeader &amp;&amp; !options.cardView &amp;&amp; options.height\">\n            <table class=\"{{options.classes}}\">\n                <thead>\n                    <tr v-for=\"_columns in columns\">\n                        <th v-if=\"!options.cardView &amp;&amp; options.detailView\" class=\"detail\" rowspan=\"columns.length\">\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        <template v-for=\"column in _columns\">\n                        <th v-if=\"!(!column.visible || options.cardView &amp;&amp; !column.cardVisible)\" title=\"{{{column.titleTooltip}}}\" v-bind:class=\"[{'bs-checkbox': column.checkbox || column.radio}, column.class]\" v-bind:style=\"column.style\" rowspan=\"{{column.rowspan}}\" colspan=\"{{column.colspan}}\" data-field=\"{{column.field}}\" tabindex=\"0\">\n                            <div class=\"th-inner\" v-bind:class=\"[{sortable: options.sortable &amp;&amp; column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']\" v-on:click=\"onSort(column)\" v-on:keypress.enter=\"onSort(column)\">\n\n                                <input v-if=\"column.checkbox &amp;&amp; !options.singleSelect &amp;&amp; options.checkboxHeader\" name=\"btSelectAll\" type=\"checkbox\" v-model=\"selected.all\" v-on:change=\"onCheckAllChange\">\n\n                                <template v-if=\"!column.checkbox &amp;&amp; !column.radio\">\n                                {{column.title}}\n                                </template>\n                            </div>\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        </template>\n                    </tr>\n                </thead>\n            </table>\n        </div>\n        <div class=\"fixed-table-body\">\n            <div v-if=\"loading\" class=\"fixed-table-loading\" v-bind:style=\"{top: view.headerHeight + 1 + 'px'}\">\n                <div class=\"fixed-table-loading-bg\"></div>\n                <div class=\"fixed-table-loading-text\">\n                    {{options.formatLoadingMessage()}}\n                </div>\n            </div>\n            <table class=\"{{options.classes}}\">\n                <thead v-if=\"options.showHeader &amp;&amp; !options.cardView &amp;&amp; !options.height\">\n                    <tr v-for=\"_columns in columns\">\n                        <th v-if=\"!options.cardView &amp;&amp; options.detailView\" class=\"detail\" rowspan=\"columns.length\">\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        <template v-for=\"column in _columns\">\n                        <th v-if=\"!(!column.visible || options.cardView &amp;&amp; !column.cardVisible)\" title=\"{{column.titleTooltip}}\" v-bind:class=\"[{'bs-checkbox': column.checkbox || column.radio}, column.class]\" v-bind:style=\"column.style\" rowspan=\"{{column.rowspan}}\" colspan=\"{{column.colspan}}\" data-field=\"{{column.field}}\" tabindex=\"0\">\n                            <div class=\"th-inner\" v-bind:class=\"[{sortable: options.sortable &amp;&amp; column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']\" v-on:click=\"onSort(column)\" v-on:keypress.enter=\"onSort(column)\">\n\n                                <input v-if=\"column.checkbox &amp;&amp; !options.singleSelect &amp;&amp; options.checkboxHeader\" name=\"btSelectAll\" type=\"checkbox\" v-model=\"selected.all\" v-on:change=\"onCheckAllChange\">\n\n                                <template v-if=\"!column.checkbox &amp;&amp; !column.radio\">\n                                {{column.title}}\n                                </template>\n                            </div>\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        </template>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"(i, item) in renderData\" v-bind:class=\"class\" data-index=\"{{i}}\" data-uniqueid=\"{{item[options.uniqueId]}}\">\n\n                        <template v-if=\"!options.cardView &amp;&amp; options.detailView\">\n                        <td>\n                            <a class=\"detail-icon\" href=\"javascript:\">\n                                <i v-bind:class=\"[options.iconsPrefix, icons.detailOpen]\"></i>\n                            </a>\n                        </td>\n                        </template>\n\n                        <template v-if=\"options.cardView\">\n                        <td colspan=\"{{header.fields.length}}\">\n                            <div class=\"card-views\">\n                                <div v-for=\"(j, field) in header.fields\" class=\"card-view\" v-bind:class=\"fieldColumns[j].class\">\n                                    <template v-if=\"!(!fieldColumns[j].visible || options.cardView &amp;&amp; !fieldColumns[j].cardVisible)\">\n                                        <input v-if=\"fieldColumns[j].checkbox || fieldColumns[j].radio\" name=\"{{options.selectItemName}}\" v-bind:value=\"item\" v-model=\"selected.items\" v-on:change=\"onCheckItemChange(item)\" v-bind:type=\"fieldColumns[j].checkbox ? 'checkbox' : 'radio'\">\n                                        <div v-else=\"\" class=\"card-view\">\n                                            <span v-if=\"options.showHeader\" class=\"title\">\n                                                {{fieldColumns[j].title}}\n                                            </span>\n                                            <span class=\"value\">\n                                                {{{item | fieldValue field i j}}}\n                                            </span>\n                                        </div>\n                                    </template>\n                                </div>\n                            </div>\n                        </td>\n                        </template>\n\n                        <template v-else=\"\">\n                            <template v-for=\"(j, field) in header.fields\">\n                                <template v-if=\"!(!fieldColumns[j].visible || options.cardView &amp;&amp; !fieldColumns[j].cardVisible)\">\n                                    <td v-if=\"fieldColumns[j].checkbox || fieldColumns[j].radio\" class=\"bs-checkbox\" v-bind:class=\"fieldColumns[j].class\">\n                                        <input name=\"{{options.selectItemName}}\" v-bind:value=\"item\" v-model=\"selected.items\" v-on:change=\"onCheckItemChange(item)\" v-bind:type=\"fieldColumns[j].checkbox ? 'checkbox' : 'radio'\">\n                                    </td>\n                                    <td v-else=\"\" v-on:click=\"onTdClick(item, fieldColumns[j].field, $event)\" v-on:dblclick=\"onTdClick(item, fieldColumns[j].field, $event)\">\n                                        {{{item | fieldValue field i j}}}\n                                    </td>\n                                </template>\n                            </template>\n                        </template>\n                    </tr>\n                    <tr v-if=\"!renderData.length\" class=\"no-records-found\">\n                        <td colspan=\"{{columnsLength + 1}}\">\n                            {{options.formatNoMatches()}}\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n        <div v-if=\"options.pagination\" class=\"fixed-table-pagination\">\n            <div class=\"pull-{{options.paginationDetailHAlign}} pagination-detail\">\n                <span class=\"pagination-info\">\n                    <template v-if=\"options.onlyInfoPagination\">\n                    {{options.formatDetailPagination(options.totalRows)}}\n                    </template>\n                    <template v-else=\"\">\n                    {{options.formatShowingRows(pageFrom, pageTo, options.totalRows)}}\n                    </template>\n                </span>\n                <span v-if=\"!options.onlyInfoPagination\" class=\"page-list\">\n                    {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[0]}}\n                    <span class=\"btn-group {{options.paginationVAlign == 'top' || options.paginationVAlign == 'both' ? 'dropdown' : 'dropup'}}\">\n                        <button type=\"button\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle\" data-toggle=\"dropdown\">\n                            <span class=\"page-size\">\n                                {{options.pageSize === options.totalRows ? options.formatAllRows() : options.pageSize}}\n                            </span> <span class=\"caret\"></span>\n                        </button>\n                        <ul class=\"dropdown-menu\" role=\"menu\">\n                            <li v-bind:class=\"{active: page == options.formatAllRows() || page == options.pageSize}\" v-for=\"page in options.pageList\" v-on:click=\"onPageListChange\">\n                                <a href=\"javascript:\">{{page}}</a>\n                            </li>\n                        </ul>\n                    </span> {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[1]}}\n                </span>\n            </div>\n            <div v-if=\"totalPages > 1\" class=\"pull-{{options.paginationHAlign}} pagination\">\n                <ul class=\"pagination pagination-{{options.iconSize}}\">\n                    <li class=\"page-pre\" v-on:click=\"onPagePre\">\n                        <a href=\"javascript:\">{{{options.paginationPreText}}}</a>\n                    </li>\n                    <li v-if=\"pageInfo.first\" class=\"page-first\" v-bind:class=\"{active: 1 == options.pageNumber}\" v-on:click=\"onPageFirst\">\n                        <a href=\"javascript:\">1</a>\n                    </li>\n                    <li v-if=\"pageInfo.firstSeparator\" class=\"page-first-separator disabled\">\n                        <a href=\"javascript:\">...</a>\n                    </li>\n                    <li class=\"page-number\" v-bind:class=\"{active: i == this.options.pageNumber}\" v-for=\"i in pageInfo.list\" v-on:click=\"onPageNumber\">\n                        <a href=\"javascript:\">{{i}}</a>\n                    </li>\n                    <li v-if=\"pageInfo.lastSeparator\" class=\"page-last-separator disabled\">\n                        <a href=\"javascript:\">...</a>\n                    </li>\n                    <li v-if=\"pageInfo.last\" class=\"page-last\" v-bind:class=\"{active: totalPages == options.pageNumber}\" v-on:click=\"onPageLast\">\n                        <a href=\"javascript:\">{{totalPages}}</a>\n                    </li>\n                    <li class=\"page-next\" v-on:click=\"onPageNext\">\n                        <a href=\"javascript:\">{{{options.paginationNextText}}}</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n    <div class=\"clearfix\"></div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"bootstrap-table\">\n    <div class=\"fixed-table-toolbar\">\n        <div class=\"pull-{{options.toolbarAlign}}\">\n            <slot>\n                <!-- Single button by lem93 -->\n                <button v-if=\"options.toolbarButton\" @click=\"$dispatch('toolbarButtonClicked')\" type=\"button\" class=\"btn btn-primary\">\n\t\t\t\t\t<i class=\"{{ options.toolbarButtonIcon }}\"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}\n\t\t\t\t</button>\n                <!-- Group button by lem93 -->\n                <div v-if=\"options.toolbarGroupButtons != {}\">\n                    <span v-for=\"button in options.toolbarGroupButtons\">\n                        <button type=\"button\" class=\"btn\" :class=\"(buttonValue == button.value ) ? button.classSelected : button.class\" @click=\"clickGroupButton(button.value)\">\n        \t\t\t\t\t{{ button.text }}\n        \t\t\t\t</button>\n                    </span>\n                </div>\n            </slot>\n        </div>\n        <div class=\"columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}\">\n            <button v-if=\"options.showPaginationSwitch\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"paginationSwitch\" title=\"{{options.formatPaginationSwitch()}}\" v-on:click=\"togglePagination\">\n                <i class=\"{{options.iconsPrefix}} {{paginationSwitchIcon}}\"></i>\n            </button>\n            <button v-if=\"options.showRefresh\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"refresh\" title=\"{{options.formatRefresh()}}\" v-on:click=\"refresh\">\n                <i class=\"{{options.iconsPrefix}} {{options.icons.refresh}}\"></i>\n            </button>\n            <button v-if=\"options.showToggle\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}\" type=\"button\" name=\"toggle\" title=\"{{options.formatToggle()}}\" v-on:click=\"toggleView\">\n                <i class=\"{{options.iconsPrefix}} {{options.icons.toggle}}\"></i>\n            </button>\n            <div v-if=\"options.showColumns\" class=\"keep-open btn-group\" title=\"{{this.options.formatColumns()}}\">\n                <button type=\"button\" data-toggle=\"dropdown\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle\">\n                    <i class=\"{{options.iconsPrefix}} {{options.icons.columns}}\"></i> <span class=\"caret\"></span>\n                </button>\n                <ul class=\"dropdown-menu\" role=\"menu\">\n                    <li v-for=\"(i, column) in fieldColumns\" v-on:click.stop=\"\">\n                        <label v-if=\"!(column.radio || column.checkbox || options.cardView &amp;&amp; !column.cardVisible)\">\n                            <input type=\"checkbox\" data-field=\"{{column.filed}}\" :disabled=\"toggleColumnsCount <= options.minimumCountColumns &amp;&amp; column.visible\" v-model=\"column.visible\"> {{column.title}}\n                        </label>\n                    </li>\n                </ul>\n            </div>\n        </div>\n        <div v-if=\"options.search\" class=\"pull-{{options.searchAlign}} search\">\n            <input class=\"form-control input-{{options.iconSize}}\" type=\"text\" placeholder=\"{{options.formatSearch()}}\" v-model=\"searchText\" v-on:keyup=\"search($event)\">\n        </div>\n    </div>\n    <div class=\"fixed-table-container\" v-bind:style=\"{'padding-bottom': (options.height ? view.headerHeight : 0) + 'px', height: options.height + 'px'}\">\n        <div class=\"fixed-table-header\" v-if=\"options.showHeader &amp;&amp; !options.cardView &amp;&amp; options.height\">\n            <table class=\"{{options.classes}}\">\n                <thead>\n                    <tr v-for=\"_columns in columns\">\n                        <th v-if=\"!options.cardView &amp;&amp; options.detailView\" class=\"detail\" rowspan=\"columns.length\">\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        <template v-for=\"column in _columns\">\n                        <th v-if=\"!(!column.visible || options.cardView &amp;&amp; !column.cardVisible)\" title=\"{{{column.titleTooltip}}}\" v-bind:class=\"[{'bs-checkbox': column.checkbox || column.radio}, column.class]\" v-bind:style=\"column.style\" rowspan=\"{{column.rowspan}}\" colspan=\"{{column.colspan}}\" data-field=\"{{column.field}}\" tabindex=\"0\">\n                            <div class=\"th-inner\" v-bind:class=\"[{sortable: options.sortable &amp;&amp; column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']\" v-on:click=\"onSort(column)\" v-on:keypress.enter=\"onSort(column)\">\n\n                                <input v-if=\"column.checkbox &amp;&amp; !options.singleSelect &amp;&amp; options.checkboxHeader\" name=\"btSelectAll\" type=\"checkbox\" v-model=\"selected.all\" v-on:change=\"onCheckAllChange\">\n\n                                <template v-if=\"!column.checkbox &amp;&amp; !column.radio\">\n                                {{column.title}}\n                                </template>\n                            </div>\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        </template>\n                    </tr>\n                </thead>\n            </table>\n        </div>\n        <div class=\"fixed-table-body\">\n            <div v-if=\"loading\" class=\"fixed-table-loading\" v-bind:style=\"{top: view.headerHeight + 1 + 'px'}\">\n                <div class=\"fixed-table-loading-bg\"></div>\n                <div class=\"fixed-table-loading-text\">\n                    {{options.formatLoadingMessage()}}\n                </div>\n            </div>\n            <table class=\"{{options.classes}}\">\n                <thead v-if=\"options.showHeader &amp;&amp; !options.cardView &amp;&amp; !options.height\">\n                    <tr v-for=\"_columns in columns\">\n                        <th v-if=\"!options.cardView &amp;&amp; options.detailView\" class=\"detail\" rowspan=\"columns.length\">\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        <template v-for=\"column in _columns\">\n                        <th v-if=\"!(!column.visible || options.cardView &amp;&amp; !column.cardVisible)\" title=\"{{column.titleTooltip}}\" v-bind:class=\"[{'bs-checkbox': column.checkbox || column.radio}, column.class]\" v-bind:style=\"column.style\" rowspan=\"{{column.rowspan}}\" colspan=\"{{column.colspan}}\" data-field=\"{{column.field}}\" tabindex=\"0\">\n                            <div class=\"th-inner\" v-bind:class=\"[{sortable: options.sortable &amp;&amp; column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']\" v-on:click=\"onSort(column)\" v-on:keypress.enter=\"onSort(column)\">\n\n                                <input v-if=\"column.checkbox &amp;&amp; !options.singleSelect &amp;&amp; options.checkboxHeader\" name=\"btSelectAll\" type=\"checkbox\" v-model=\"selected.all\" v-on:change=\"onCheckAllChange\">\n\n                                <template v-if=\"!column.checkbox &amp;&amp; !column.radio\">\n                                {{column.title}}\n                                </template>\n                            </div>\n                            <div class=\"fht-cell\"></div>\n                        </th>\n                        </template>\n                    </tr>\n                </thead>\n                <tbody>\n                    <tr v-for=\"(i, item) in renderData\" v-bind:class=\"class\" data-index=\"{{i}}\" data-uniqueid=\"{{item[options.uniqueId]}}\">\n\n                        <template v-if=\"!options.cardView &amp;&amp; options.detailView\">\n                        <td>\n                            <a class=\"detail-icon\" href=\"javascript:\">\n                                <i v-bind:class=\"[options.iconsPrefix, icons.detailOpen]\"></i>\n                            </a>\n                        </td>\n                        </template>\n\n                        <template v-if=\"options.cardView\">\n                        <td colspan=\"{{header.fields.length}}\">\n                            <div class=\"card-views\">\n                                <div v-for=\"(j, field) in header.fields\" class=\"card-view\" v-bind:class=\"fieldColumns[j].class\">\n                                    <template v-if=\"!(!fieldColumns[j].visible || options.cardView &amp;&amp; !fieldColumns[j].cardVisible)\">\n                                        <input v-if=\"fieldColumns[j].checkbox || fieldColumns[j].radio\" name=\"{{options.selectItemName}}\" v-bind:value=\"item\" v-model=\"selected.items\" v-on:change=\"onCheckItemChange(item)\" v-bind:type=\"fieldColumns[j].checkbox ? 'checkbox' : 'radio'\">\n                                        <div v-else=\"\" class=\"card-view\">\n                                            <span v-if=\"options.showHeader\" class=\"title\">\n                                                {{fieldColumns[j].title}}\n                                            </span>\n                                            <span class=\"value\">\n                                                {{{item | fieldValue field i j}}}\n                                            </span>\n                                        </div>\n                                    </template>\n                                </div>\n                            </div>\n                        </td>\n                        </template>\n\n                        <template v-else=\"\">\n                            <template v-for=\"(j, field) in header.fields\">\n                                <template v-if=\"!(!fieldColumns[j].visible || options.cardView &amp;&amp; !fieldColumns[j].cardVisible)\">\n                                    <td v-if=\"fieldColumns[j].checkbox || fieldColumns[j].radio\" class=\"bs-checkbox\" v-bind:class=\"fieldColumns[j].class\">\n                                        <input name=\"{{options.selectItemName}}\" v-bind:value=\"item\" v-model=\"selected.items\" v-on:change=\"onCheckItemChange(item)\" v-bind:type=\"fieldColumns[j].checkbox ? 'checkbox' : 'radio'\">\n                                    </td>\n                                    <td v-else=\"\" v-on:click=\"onTdClick(item, fieldColumns[j].field, $event)\" v-on:dblclick=\"onTdClick(item, fieldColumns[j].field, $event)\">\n                                        {{{item | fieldValue field i j}}}\n                                    </td>\n                                </template>\n                            </template>\n                        </template>\n                    </tr>\n                    <tr v-if=\"!renderData.length\" class=\"no-records-found\">\n                        <td colspan=\"{{columnsLength + 1}}\">\n                            {{options.formatNoMatches()}}\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n        <div v-if=\"options.pagination\" class=\"fixed-table-pagination\">\n            <div class=\"pull-{{options.paginationDetailHAlign}} pagination-detail\">\n                <span class=\"pagination-info\">\n                    <template v-if=\"options.onlyInfoPagination\">\n                    {{options.formatDetailPagination(options.totalRows)}}\n                    </template>\n                    <template v-else=\"\">\n                    {{options.formatShowingRows(pageFrom, pageTo, options.totalRows)}}\n                    </template>\n                </span>\n                <span v-if=\"!options.onlyInfoPagination\" class=\"page-list\">\n                    {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[0]}}\n                    <span class=\"btn-group {{options.paginationVAlign == 'top' || options.paginationVAlign == 'both' ? 'dropdown' : 'dropup'}}\">\n                        <button type=\"button\" class=\"btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle\" data-toggle=\"dropdown\">\n                            <span class=\"page-size\">\n                                {{options.pageSize === options.totalRows ? options.formatAllRows() : options.pageSize}}\n                            </span> <span class=\"caret\"></span>\n                        </button>\n                        <ul class=\"dropdown-menu\" role=\"menu\">\n                            <li v-bind:class=\"{active: page == options.formatAllRows() || page == options.pageSize}\" v-for=\"page in options.pageList\" v-on:click=\"onPageListChange\">\n                                <a href=\"javascript:\">{{page}}</a>\n                            </li>\n                        </ul>\n                    </span> {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[1]}}\n                </span>\n            </div>\n            <div v-if=\"totalPages > 1\" class=\"pull-{{options.paginationHAlign}} pagination\">\n                <ul class=\"pagination pagination-{{options.iconSize}}\">\n                    <li class=\"page-pre\" v-on:click=\"onPagePre\">\n                        <a href=\"javascript:\">{{{options.paginationPreText}}}</a>\n                    </li>\n                    <li v-if=\"pageInfo.first\" class=\"page-first\" v-bind:class=\"{active: 1 == options.pageNumber}\" v-on:click=\"onPageFirst\">\n                        <a href=\"javascript:\">1</a>\n                    </li>\n                    <li v-if=\"pageInfo.firstSeparator\" class=\"page-first-separator disabled\">\n                        <a href=\"javascript:\">...</a>\n                    </li>\n                    <li class=\"page-number\" v-bind:class=\"{active: i == this.options.pageNumber}\" v-for=\"i in pageInfo.list\" v-on:click=\"onPageNumber\">\n                        <a href=\"javascript:\">{{i}}</a>\n                    </li>\n                    <li v-if=\"pageInfo.lastSeparator\" class=\"page-last-separator disabled\">\n                        <a href=\"javascript:\">...</a>\n                    </li>\n                    <li v-if=\"pageInfo.last\" class=\"page-last\" v-bind:class=\"{active: totalPages == options.pageNumber}\" v-on:click=\"onPageLast\">\n                        <a href=\"javascript:\">{{totalPages}}</a>\n                    </li>\n                    <li class=\"page-next\" v-on:click=\"onPageNext\">\n                        <a href=\"javascript:\">{{{options.paginationNextText}}}</a>\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n    <div class=\"clearfix\"></div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -24815,6 +24823,130 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var alert = require('./alert.vue');
+var BootstrapTable = require('./BootstrapTable.vue');
+
+exports.default = {
+    props: ['url'],
+    components: {
+        alert: alert,
+        BootstrapTable: BootstrapTable
+    },
+    data: function data() {
+        return {
+            serviceId: 0,
+            buttonValue: 0,
+
+            columns: [{
+                title: '#',
+                field: 'id',
+                sortable: true
+            }, {
+                field: 'name',
+                title: 'Name',
+                sortable: true
+            }, {
+                field: 'address',
+                title: 'Address',
+                sortable: true
+            }, {
+                field: 'type',
+                title: 'type',
+                sortable: true
+            }, {
+                field: 'endTime',
+                title: 'Do before',
+                sortable: true
+            }, {
+                field: 'price',
+                title: 'Price',
+                sortable: true
+            }],
+            data: [],
+            options: {
+                iconsPrefix: 'font-icon',
+                toggle: 'table',
+                sidePagination: 'client',
+                pagination: 'true',
+                classes: 'table',
+                icons: {
+                    paginationSwitchDown: 'font-icon-arrow-square-down',
+                    paginationSwitchUp: 'font-icon-arrow-square-down up',
+                    refresh: 'font-icon-refresh',
+                    toggle: 'font-icon-list-square',
+                    columns: 'font-icon-list-rotate',
+                    export: 'font-icon-download'
+                },
+                paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+                paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+                pageSize: 5,
+                pageList: [5, 10],
+                search: true,
+                showExport: true,
+                exportTypes: ['excel', 'pdf'],
+                minimumCountColumns: 2,
+                showFooter: false,
+
+                uniqueId: 'id',
+                idField: 'id',
+
+                toolbarGroupButtons: back.buttons ? back.buttons : {}
+            }
+        };
+    },
+
+    watch: {
+        buttonValue: function buttonValue(val) {
+            this.getList(val);
+        }
+    },
+    methods: {
+        getList: function getList(val) {
+            var _this = this;
+
+            this.resetAlert();
+            this.$http.get(this.url, {
+                daysFromToday: val
+            }).then(function (response) {
+                var data = response.data;
+                _this.data = data.list;
+                _this.validationErrors = {};
+                _this.$broadcast('refreshTable');
+            }, function (response) {
+                _this.alertMessageList = "The information could not be retrieved, please try again.";
+                _this.alertActiveList = true;
+            });
+        },
+        resetAlert: function resetAlert() {
+            this.alertMessageList = "";
+            this.alertActiveList = false;
+        }
+    },
+    ready: function ready() {
+        this.getList(this.buttonValue);
+        this.getList(this.buttonValue);
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<bootstrap-table :object-id.sync=\"serviceId\" :button-value.sync=\"buttonValue\" :columns=\"columns\" :data=\"data\" :options=\"options\">\n    </bootstrap-table>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1906f37a", module.exports)
+  } else {
+    hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":184,"./alert.vue":186,"vue":178,"vue-hot-reload-api":175}],198:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
@@ -25195,7 +25327,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":184,"./alert.vue":186,"./dropdown.vue":192,"spin":164,"vue":178,"vue-hot-reload-api":175}],198:[function(require,module,exports){
+},{"./BootstrapTable.vue":184,"./alert.vue":186,"./dropdown.vue":192,"spin":164,"vue":178,"vue-hot-reload-api":175}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -25279,7 +25411,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":178,"vue-hot-reload-api":175}],199:[function(require,module,exports){
+},{"vue":178,"vue-hot-reload-api":175}],200:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -25298,6 +25430,7 @@ var contract = require('./components/contract.vue');
 var chemical = require('./components/chemical.vue');
 var works = require('./components/works.vue');
 var payments = require('./components/payments.vue');
+var routeTable = require('./components/routeTable.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -26599,7 +26732,8 @@ $(document).ready(function () {
             PhotoList: PhotoList,
             countries: countries,
             contract: contract,
-            chemical: chemical
+            chemical: chemical,
+            routeTable: routeTable
         },
         directives: {
             FormToAjax: FormToAjax
@@ -27118,6 +27252,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":185,"./components/alert.vue":186,"./components/billing.vue":187,"./components/checkboxList.vue":188,"./components/chemical.vue":189,"./components/contract.vue":190,"./components/countries.vue":191,"./components/dropdown.vue":192,"./components/email.vue":193,"./components/payments.vue":195,"./components/photoList.vue":196,"./components/works.vue":197,"./directives/FormToAjax.vue":198,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":178,"vue-resource":177}]},{},[183,181,180,182,199]);
+},{"./components/Permissions.vue":185,"./components/alert.vue":186,"./components/billing.vue":187,"./components/checkboxList.vue":188,"./components/chemical.vue":189,"./components/contract.vue":190,"./components/countries.vue":191,"./components/dropdown.vue":192,"./components/email.vue":193,"./components/payments.vue":195,"./components/photoList.vue":196,"./components/routeTable.vue":197,"./components/works.vue":198,"./directives/FormToAjax.vue":199,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":164,"sweetalert":173,"vue":178,"vue-resource":177}]},{},[183,181,180,182,200]);
 
 //# sourceMappingURL=bundle.js.map

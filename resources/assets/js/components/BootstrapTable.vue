@@ -3,10 +3,19 @@
     <div class="fixed-table-toolbar">
         <div class="pull-{{options.toolbarAlign}}">
             <slot>
-                <!-- by lem93 -->
+                <!-- Single button by lem93 -->
                 <button v-if="options.toolbarButton" @click="$dispatch('toolbarButtonClicked')" type="button" class="btn btn-primary">
 					<i class="{{ options.toolbarButtonIcon }}"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}
 				</button>
+                <!-- Group button by lem93 -->
+                <div v-if="options.toolbarGroupButtons != {}">
+                    <span v-for="button in options.toolbarGroupButtons">
+                        <button type="button" class="btn" :class="(buttonValue == button.value ) ? button.classSelected : button.class" 
+                                @click="clickGroupButton(button.value)">
+        					{{ button.text }}
+        				</button>
+                    </span>
+                </div>
             </slot>
         </div>
         <div class="columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}">
@@ -473,6 +482,8 @@ var DEFAULTS = {
         toolbarButtonIcon : 'glyphicon glyphicon-plus',
         toolbarButtonText : 'Add New',
 
+        toolbarGroupButtons: {},
+
     idField: undefined,
     clickToSelect: false,
     singleSelect: false,
@@ -592,6 +603,9 @@ var BootstrapTable = {
         objectId: {
             type: Number,
             required: true
+        },
+        buttonValue: {
+            default: null
         }
     },
     data: function () {
@@ -788,6 +802,9 @@ var BootstrapTable = {
             for (let row of rows) {
                 row.classList.remove('table_active');
             }
+        },
+        clickGroupButton(value){
+            this.buttonValue = value;
         },
         // end
         initLocale: function () {
