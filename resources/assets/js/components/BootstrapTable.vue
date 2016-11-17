@@ -1,279 +1,281 @@
 <template>
-<div class="bootstrap-table">
-    <div class="fixed-table-toolbar">
-        <div class="pull-{{options.toolbarAlign}}">
-            <slot>
-                <!-- Single button by lem93 -->
-                <button v-if="options.toolbarButton" @click="$dispatch('toolbarButtonClicked')" type="button" class="btn btn-primary">
-					<i class="{{ options.toolbarButtonIcon }}"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}
-				</button>
-                <!-- Group button by lem93 -->
-                <div v-if="options.toolbarGroupButtons != {}">
-                    <span v-for="button in options.toolbarGroupButtons">
-                        <button type="button" class="btn" :class="(buttonValue == button.value ) ? button.classSelected : button.class" 
-                                @click="clickGroupButton(button.value)">
-        					{{ button.text }}
-        				</button>
-                    </span>
-                </div>
-            </slot>
-        </div>
-        <div class="columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}">
-            <button v-if="options.showPaginationSwitch"
-                class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
-                type="button" name="paginationSwitch"
-                title="{{options.formatPaginationSwitch()}}"
-                v-on:click="togglePagination">
-                <i class="{{options.iconsPrefix}} {{paginationSwitchIcon}}"></i>
-            </button>
-            <button v-if="options.showRefresh"
-                class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
-                type="button" name="refresh"
-                title="{{options.formatRefresh()}}"
-                v-on:click="refresh">
-                <i class="{{options.iconsPrefix}} {{options.icons.refresh}}"></i>
-            </button>
-            <button v-if="options.showToggle"
-                class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
-                type="button" name="toggle"
-                title="{{options.formatToggle()}}"
-                v-on:click="toggleView">
-                <i class="{{options.iconsPrefix}} {{options.icons.toggle}}"></i>
-            </button>
-            <div v-if="options.showColumns" class="keep-open btn-group"
-                title="{{this.options.formatColumns()}}">
-                <button type="button" data-toggle="dropdown"
-                    class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle">
-                    <i class="{{options.iconsPrefix}} {{options.icons.columns}}"></i> <span class="caret"></span>
+<span id="tableOverlay" :class="(disabledTable) ? 'disable-table' : ''">
+    <div class="bootstrap-table" >
+        <div class="fixed-table-toolbar">
+            <div class="pull-{{options.toolbarAlign}}">
+                <slot>
+                    <!-- Single button by lem93 -->
+                    <button v-if="options.toolbarButton" @click="$dispatch('toolbarButtonClicked')" type="button" class="btn btn-primary">
+    					<i class="{{ options.toolbarButtonIcon }}"></i>&nbsp;&nbsp;&nbsp;{{ options.toolbarButtonText }}
+    				</button>
+                    <!-- Group button by lem93 -->
+                    <div v-if="options.toolbarGroupButtons != {}">
+                        <span v-for="button in options.toolbarGroupButtons">
+                            <button type="button" class="btn" :class="(buttonValue == button.value ) ? button.classSelected : button.class"
+                                    @click="clickGroupButton(button.value)">
+            					{{ button.text }}
+            				</button>
+                        </span>
+                    </div>
+                </slot>
+            </div>
+            <div class="columns columns-{{options.buttonsAlign}} btn-group pull-{{options.buttonsAlign}}">
+                <button v-if="options.showPaginationSwitch"
+                    class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
+                    type="button" name="paginationSwitch"
+                    title="{{options.formatPaginationSwitch()}}"
+                    v-on:click="togglePagination">
+                    <i class="{{options.iconsPrefix}} {{paginationSwitchIcon}}"></i>
                 </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li v-for="(i, column) in fieldColumns" v-on:click.stop>
-                        <label v-if="!(column.radio || column.checkbox || options.cardView && !column.cardVisible)">
-                            <input type="checkbox" data-field="{{column.filed}}"
-                                :disabled="toggleColumnsCount <= options.minimumCountColumns && column.visible"
-                                v-model="column.visible"> {{column.title}}
-                        </label>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div v-if="options.search" class="pull-{{options.searchAlign}} search">
-            <input class="form-control input-{{options.iconSize}}"
-            type="text" placeholder="{{options.formatSearch()}}"
-            v-model="searchText" v-on:keyup="search($event)">
-        </div>
-    </div>
-    <div class="fixed-table-container"
-        v-bind:style="{'padding-bottom': (options.height ? view.headerHeight : 0) + 'px', height: options.height + 'px'}">
-        <div class="fixed-table-header" v-if="options.showHeader && !options.cardView && options.height">
-            <table class="{{options.classes}}">
-                <thead>
-                    <tr v-for="_columns in columns">
-                        <th v-if="!options.cardView && options.detailView"
-                            class="detail" rowspan="columns.length">
-                            <div class="fht-cell"></div>
-                        </th>
-                        <template v-for="column in _columns">
-                        <th v-if="!(!column.visible || options.cardView && !column.cardVisible)"
-                            title="{{{column.titleTooltip}}}"
-                            v-bind:class="[{'bs-checkbox': column.checkbox || column.radio}, column.class]"
-                            v-bind:style="column.style"
-                            rowspan="{{column.rowspan}}"
-                            colspan="{{column.colspan}}"
-                            data-field="{{column.field}}"
-                            tabindex="0">
-                            <div class="th-inner"
-                                v-bind:class="[{sortable: options.sortable && column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']"
-                                v-on:click="onSort(column)"
-                                v-on:keypress.enter="onSort(column)">
-
-                                <input v-if="column.checkbox && !options.singleSelect && options.checkboxHeader"
-                                    name="btSelectAll" type="checkbox" v-model="selected.all"
-                                    v-on:change="onCheckAllChange">
-
-                                <template v-if="!column.checkbox && !column.radio">
-                                {{column.title}}
-                                </template>
-                            </div>
-                            <div class="fht-cell"></div>
-                        </th>
-                        </template>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-        <div class="fixed-table-body">
-            <div v-if="loading" class="fixed-table-loading"
-                v-bind:style="{top: view.headerHeight + 1 + 'px'}">
-                <div class="fixed-table-loading-bg"></div>
-                <div class="fixed-table-loading-text">
-                    {{options.formatLoadingMessage()}}
+                <button v-if="options.showRefresh"
+                    class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
+                    type="button" name="refresh"
+                    title="{{options.formatRefresh()}}"
+                    v-on:click="refresh">
+                    <i class="{{options.iconsPrefix}} {{options.icons.refresh}}"></i>
+                </button>
+                <button v-if="options.showToggle"
+                    class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}}"
+                    type="button" name="toggle"
+                    title="{{options.formatToggle()}}"
+                    v-on:click="toggleView">
+                    <i class="{{options.iconsPrefix}} {{options.icons.toggle}}"></i>
+                </button>
+                <div v-if="options.showColumns" class="keep-open btn-group"
+                    title="{{this.options.formatColumns()}}">
+                    <button type="button" data-toggle="dropdown"
+                        class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle">
+                        <i class="{{options.iconsPrefix}} {{options.icons.columns}}"></i> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li v-for="(i, column) in fieldColumns" v-on:click.stop>
+                            <label v-if="!(column.radio || column.checkbox || options.cardView && !column.cardVisible)">
+                                <input type="checkbox" data-field="{{column.filed}}"
+                                    :disabled="toggleColumnsCount <= options.minimumCountColumns && column.visible"
+                                    v-model="column.visible"> {{column.title}}
+                            </label>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <table class="{{options.classes}}">
-                <thead v-if="options.showHeader && !options.cardView && !options.height">
-                    <tr v-for="_columns in columns">
-                        <th v-if="!options.cardView && options.detailView"
-                            class="detail" rowspan="columns.length">
-                            <div class="fht-cell"></div>
-                        </th>
-                        <template v-for="column in _columns">
-                        <th v-if="!(!column.visible || options.cardView && !column.cardVisible)"
-                            title="{{column.titleTooltip}}"
-                            v-bind:class="[{'bs-checkbox': column.checkbox || column.radio}, column.class]"
-                            v-bind:style="column.style"
-                            rowspan="{{column.rowspan}}"
-                            colspan="{{column.colspan}}"
-                            data-field="{{column.field}}"
-                            tabindex="0">
-                            <div class="th-inner"
-                                v-bind:class="[{sortable: options.sortable && column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']"
-                                v-on:click="onSort(column)"
-                                v-on:keypress.enter="onSort(column)">
+            <div v-if="options.search" class="pull-{{options.searchAlign}} search">
+                <input class="form-control input-{{options.iconSize}}"
+                type="text" placeholder="{{options.formatSearch()}}"
+                v-model="searchText" v-on:keyup="search($event)">
+            </div>
+        </div>
+        <div class="fixed-table-container"
+            v-bind:style="{'padding-bottom': (options.height ? view.headerHeight : 0) + 'px', height: options.height + 'px'}">
+            <div class="fixed-table-header" v-if="options.showHeader && !options.cardView && options.height">
+                <table class="{{options.classes}}">
+                    <thead>
+                        <tr v-for="_columns in columns">
+                            <th v-if="!options.cardView && options.detailView"
+                                class="detail" rowspan="columns.length">
+                                <div class="fht-cell"></div>
+                            </th>
+                            <template v-for="column in _columns">
+                            <th v-if="!(!column.visible || options.cardView && !column.cardVisible)"
+                                title="{{{column.titleTooltip}}}"
+                                v-bind:class="[{'bs-checkbox': column.checkbox || column.radio}, column.class]"
+                                v-bind:style="column.style"
+                                rowspan="{{column.rowspan}}"
+                                colspan="{{column.colspan}}"
+                                data-field="{{column.field}}"
+                                tabindex="0">
+                                <div class="th-inner"
+                                    v-bind:class="[{sortable: options.sortable && column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']"
+                                    v-on:click="onSort(column)"
+                                    v-on:keypress.enter="onSort(column)">
 
-                                <input v-if="column.checkbox && !options.singleSelect && options.checkboxHeader"
-                                    name="btSelectAll" type="checkbox" v-model="selected.all"
-                                    v-on:change="onCheckAllChange">
+                                    <input v-if="column.checkbox && !options.singleSelect && options.checkboxHeader"
+                                        name="btSelectAll" type="checkbox" v-model="selected.all"
+                                        v-on:change="onCheckAllChange">
 
-                                <template v-if="!column.checkbox && !column.radio">
-                                {{column.title}}
-                                </template>
-                            </div>
-                            <div class="fht-cell"></div>
-                        </th>
-                        </template>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(i, item) in renderData"
-                        v-bind:class="class"
-                        data-index="{{i}}"
-                        data-uniqueid="{{item[options.uniqueId]}}">
+                                    <template v-if="!column.checkbox && !column.radio">
+                                    {{column.title}}
+                                    </template>
+                                </div>
+                                <div class="fht-cell"></div>
+                            </th>
+                            </template>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="fixed-table-body">
+                <div v-if="loading" class="fixed-table-loading"
+                    v-bind:style="{top: view.headerHeight + 1 + 'px'}">
+                    <div class="fixed-table-loading-bg"></div>
+                    <div class="fixed-table-loading-text">
+                        {{options.formatLoadingMessage()}}
+                    </div>
+                </div>
+                <table class="{{options.classes}}">
+                    <thead v-if="options.showHeader && !options.cardView && !options.height">
+                        <tr v-for="_columns in columns">
+                            <th v-if="!options.cardView && options.detailView"
+                                class="detail" rowspan="columns.length">
+                                <div class="fht-cell"></div>
+                            </th>
+                            <template v-for="column in _columns">
+                            <th v-if="!(!column.visible || options.cardView && !column.cardVisible)"
+                                title="{{column.titleTooltip}}"
+                                v-bind:class="[{'bs-checkbox': column.checkbox || column.radio}, column.class]"
+                                v-bind:style="column.style"
+                                rowspan="{{column.rowspan}}"
+                                colspan="{{column.colspan}}"
+                                data-field="{{column.field}}"
+                                tabindex="0">
+                                <div class="th-inner"
+                                    v-bind:class="[{sortable: options.sortable && column.sortable}, options.sortName == column.field ? options.sortOrder : 'both']"
+                                    v-on:click="onSort(column)"
+                                    v-on:keypress.enter="onSort(column)">
 
-                        <template v-if="!options.cardView && options.detailView">
-                        <td>
-                            <a class="detail-icon" href="javascript:">
-                                <i v-bind:class="[options.iconsPrefix, icons.detailOpen]"></i>
-                            </a>
-                        </td>
-                        </template>
+                                    <input v-if="column.checkbox && !options.singleSelect && options.checkboxHeader"
+                                        name="btSelectAll" type="checkbox" v-model="selected.all"
+                                        v-on:change="onCheckAllChange">
 
-                        <template v-if="options.cardView">
-                        <td colspan="{{header.fields.length}}">
-                            <div class="card-views">
-                                <div v-for="(j, field) in header.fields" class="card-view"
-                                    v-bind:class="fieldColumns[j].class">
+                                    <template v-if="!column.checkbox && !column.radio">
+                                    {{column.title}}
+                                    </template>
+                                </div>
+                                <div class="fht-cell"></div>
+                            </th>
+                            </template>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(i, item) in renderData"
+                            v-bind:class="class"
+                            data-index="{{i}}"
+                            data-uniqueid="{{item[options.uniqueId]}}">
+
+                            <template v-if="!options.cardView && options.detailView">
+                            <td>
+                                <a class="detail-icon" href="javascript:">
+                                    <i v-bind:class="[options.iconsPrefix, icons.detailOpen]"></i>
+                                </a>
+                            </td>
+                            </template>
+
+                            <template v-if="options.cardView">
+                            <td colspan="{{header.fields.length}}">
+                                <div class="card-views">
+                                    <div v-for="(j, field) in header.fields" class="card-view"
+                                        v-bind:class="fieldColumns[j].class">
+                                        <template v-if="!(!fieldColumns[j].visible || options.cardView && !fieldColumns[j].cardVisible)">
+                                            <input v-if="fieldColumns[j].checkbox || fieldColumns[j].radio"
+                                                name="{{options.selectItemName}}"
+                                                v-bind:value="item" v-model="selected.items"
+                                                v-on:change="onCheckItemChange(item)"
+                                                v-bind:type="fieldColumns[j].checkbox ? 'checkbox' : 'radio'">
+                                            <div v-else class="card-view">
+                                                <span v-if="options.showHeader" class="title">
+                                                    {{fieldColumns[j].title}}
+                                                </span>
+                                                <span class="value">
+                                                    {{{item | fieldValue field i j}}}
+                                                </span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </td>
+                            </template>
+
+                            <template v-else>
+                                <template v-for="(j, field) in header.fields">
                                     <template v-if="!(!fieldColumns[j].visible || options.cardView && !fieldColumns[j].cardVisible)">
-                                        <input v-if="fieldColumns[j].checkbox || fieldColumns[j].radio"
-                                            name="{{options.selectItemName}}"
+                                        <td v-if="fieldColumns[j].checkbox || fieldColumns[j].radio"
+                                            class="bs-checkbox" v-bind:class="fieldColumns[j].class">
+                                            <input name="{{options.selectItemName}}"
                                             v-bind:value="item" v-model="selected.items"
                                             v-on:change="onCheckItemChange(item)"
                                             v-bind:type="fieldColumns[j].checkbox ? 'checkbox' : 'radio'">
-                                        <div v-else class="card-view">
-                                            <span v-if="options.showHeader" class="title">
-                                                {{fieldColumns[j].title}}
-                                            </span>
-                                            <span class="value">
-                                                {{{item | fieldValue field i j}}}
-                                            </span>
-                                        </div>
+                                        </td>
+                                        <td v-else
+                                            v-on:click="onTdClick(item, fieldColumns[j].field, $event)"
+                                            v-on:dblclick="onTdClick(item, fieldColumns[j].field, $event)">
+                                            {{{item | fieldValue field i j}}}
+                                        </td>
                                     </template>
-                                </div>
-                            </div>
-                        </td>
-                        </template>
-
-                        <template v-else>
-                            <template v-for="(j, field) in header.fields">
-                                <template v-if="!(!fieldColumns[j].visible || options.cardView && !fieldColumns[j].cardVisible)">
-                                    <td v-if="fieldColumns[j].checkbox || fieldColumns[j].radio"
-                                        class="bs-checkbox" v-bind:class="fieldColumns[j].class">
-                                        <input name="{{options.selectItemName}}"
-                                        v-bind:value="item" v-model="selected.items"
-                                        v-on:change="onCheckItemChange(item)"
-                                        v-bind:type="fieldColumns[j].checkbox ? 'checkbox' : 'radio'">
-                                    </td>
-                                    <td v-else
-                                        v-on:click="onTdClick(item, fieldColumns[j].field, $event)"
-                                        v-on:dblclick="onTdClick(item, fieldColumns[j].field, $event)">
-                                        {{{item | fieldValue field i j}}}
-                                    </td>
                                 </template>
                             </template>
+                        </tr>
+                        <tr v-if="!renderData.length" class="no-records-found">
+                            <td colspan="{{columnsLength + 1}}">
+                                {{options.formatNoMatches()}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div v-if="options.pagination" class="fixed-table-pagination">
+                <div class="pull-{{options.paginationDetailHAlign}} pagination-detail">
+                    <span class="pagination-info">
+                        <template v-if="options.onlyInfoPagination">
+                        {{options.formatDetailPagination(options.totalRows)}}
                         </template>
-                    </tr>
-                    <tr v-if="!renderData.length" class="no-records-found">
-                        <td colspan="{{columnsLength + 1}}">
-                            {{options.formatNoMatches()}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-if="options.pagination" class="fixed-table-pagination">
-            <div class="pull-{{options.paginationDetailHAlign}} pagination-detail">
-                <span class="pagination-info">
-                    <template v-if="options.onlyInfoPagination">
-                    {{options.formatDetailPagination(options.totalRows)}}
-                    </template>
-                    <template v-else>
-                    {{options.formatShowingRows(pageFrom, pageTo, options.totalRows)}}
-                    </template>
-                </span>
-                <span v-if="!options.onlyInfoPagination" class="page-list">
-                    {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[0]}}
-                    <span class="btn-group {{options.paginationVAlign == 'top' || options.paginationVAlign == 'both' ? 'dropdown' : 'dropup'}}">
-                        <button type="button" class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle" data-toggle="dropdown">
-                            <span class="page-size">
-                                {{options.pageSize === options.totalRows ? options.formatAllRows() : options.pageSize}}
-                            </span> <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li v-bind:class="{active: page == options.formatAllRows() || page == options.pageSize}"
-                                v-for="page in options.pageList"
-                                v-on:click="onPageListChange">
-                                <a href="javascript:">{{page}}</a>
-                            </li>
-                        </ul>
-                    </span> {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[1]}}
-                </span>
-            </div>
-            <div v-if="totalPages > 1" class="pull-{{options.paginationHAlign}} pagination">
-                <ul class="pagination pagination-{{options.iconSize}}">
-                    <li class="page-pre" v-on:click="onPagePre">
-                        <a href="javascript:">{{{options.paginationPreText}}}</a>
-                    </li>
-                    <li v-if="pageInfo.first" class="page-first"
-                        v-bind:class="{active: 1 == options.pageNumber}"
-                        v-on:click="onPageFirst">
-                        <a href="javascript:">1</a>
-                    </li>
-                    <li v-if="pageInfo.firstSeparator" class="page-first-separator disabled">
-                        <a href="javascript:">...</a>
-                    </li>
-                    <li class="page-number"
-                        v-bind:class="{active: i == this.options.pageNumber}"
-                        v-for="i in pageInfo.list"
-                        v-on:click="onPageNumber">
-                        <a href="javascript:">{{i}}</a>
-                    </li>
-                    <li v-if="pageInfo.lastSeparator" class="page-last-separator disabled">
-                        <a href="javascript:">...</a>
-                    </li>
-                    <li v-if="pageInfo.last" class="page-last"
-                        v-bind:class="{active: totalPages == options.pageNumber}"
-                        v-on:click="onPageLast">
-                        <a href="javascript:">{{totalPages}}</a>
-                    </li>
-                    <li class="page-next" v-on:click="onPageNext">
-                        <a href="javascript:">{{{options.paginationNextText}}}</a>
-                    </li>
-                </ul>
+                        <template v-else>
+                        {{options.formatShowingRows(pageFrom, pageTo, options.totalRows)}}
+                        </template>
+                    </span>
+                    <span v-if="!options.onlyInfoPagination" class="page-list">
+                        {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[0]}}
+                        <span class="btn-group {{options.paginationVAlign == 'top' || options.paginationVAlign == 'both' ? 'dropdown' : 'dropup'}}">
+                            <button type="button" class="btn btn-{{options.buttonsClass}} btn-{{options.iconSize}} dropdown-toggle" data-toggle="dropdown">
+                                <span class="page-size">
+                                    {{options.pageSize === options.totalRows ? options.formatAllRows() : options.pageSize}}
+                                </span> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li v-bind:class="{active: page == options.formatAllRows() || page == options.pageSize}"
+                                    v-for="page in options.pageList"
+                                    v-on:click="onPageListChange">
+                                    <a href="javascript:">{{page}}</a>
+                                </li>
+                            </ul>
+                        </span> {{options.formatRecordsPerPage('pageNumber').split('pageNumber')[1]}}
+                    </span>
+                </div>
+                <div v-if="totalPages > 1" class="pull-{{options.paginationHAlign}} pagination">
+                    <ul class="pagination pagination-{{options.iconSize}}">
+                        <li class="page-pre" v-on:click="onPagePre">
+                            <a href="javascript:">{{{options.paginationPreText}}}</a>
+                        </li>
+                        <li v-if="pageInfo.first" class="page-first"
+                            v-bind:class="{active: 1 == options.pageNumber}"
+                            v-on:click="onPageFirst">
+                            <a href="javascript:">1</a>
+                        </li>
+                        <li v-if="pageInfo.firstSeparator" class="page-first-separator disabled">
+                            <a href="javascript:">...</a>
+                        </li>
+                        <li class="page-number"
+                            v-bind:class="{active: i == this.options.pageNumber}"
+                            v-for="i in pageInfo.list"
+                            v-on:click="onPageNumber">
+                            <a href="javascript:">{{i}}</a>
+                        </li>
+                        <li v-if="pageInfo.lastSeparator" class="page-last-separator disabled">
+                            <a href="javascript:">...</a>
+                        </li>
+                        <li v-if="pageInfo.last" class="page-last"
+                            v-bind:class="{active: totalPages == options.pageNumber}"
+                            v-on:click="onPageLast">
+                            <a href="javascript:">{{totalPages}}</a>
+                        </li>
+                        <li class="page-next" v-on:click="onPageNext">
+                            <a href="javascript:">{{{options.paginationNextText}}}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
+        <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
-</div>
+</span>
 </template>
 
 <script>
@@ -612,6 +614,7 @@ var BootstrapTable = {
         return {
             fieldColumns: {},
             header: {},
+            disabledTable: false,
             pageFrom: 1,
             pageTo: 1,
             totalPages: 0,
@@ -638,6 +641,12 @@ var BootstrapTable = {
     events: {
         refreshTable(){
             this.updatePagination();
+        },
+        disableTable(){
+            this.disabledTable = true;
+        },
+        enableTable(){
+            this.disabledTable = false;
         }
     },
     computed: {
@@ -1361,6 +1370,23 @@ module.exports = BootstrapTable;
 </script>
 
 <style>
+/*added by lem93*/
+.disable-table{
+    pointer-events:none;
+    background-color: white;
+    filter:alpha(opacity=50); /* IE */
+    opacity: 0.5; /* Safari, Opera */
+    -moz-opacity:0.50; /* FireFox */
+    z-index: 20;
+    height: 100%;
+    width: 100%;
+    background-repeat:no-repeat;
+    background-position:center;
+    position:absolute;
+    top: 0px;
+    left: 0px;
+}
+
 .bootstrap-table .table {
     margin-bottom: 0 !important;
     border-bottom: 1px solid #dddddd;

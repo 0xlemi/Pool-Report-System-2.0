@@ -29,7 +29,7 @@ class TodaysRouteController extends PageController
     public function index()
     {
         $defaultTableUrl = url('datatables/todaysroute');
-        $click_url = url('todaysroute/report/').'/';
+        $clickUrl = url('todaysroute/report/').'/';
         $buttonsTags = [
             (object)[
                         'text' => 'Today',
@@ -76,11 +76,10 @@ class TodaysRouteController extends PageController
         ];
 
         JavaScript::put([
-            'click_url' => url('todaysroute/report/').'/',
             'buttons' => $buttonsTags,
         ]);
 
-        return view('todaysroute.index', compact('defaultTableUrl'));
+        return view('todaysroute.index', compact('defaultTableUrl', 'clickUrl'));
     }
 
     public function createReport(Request $request, int $service_seq_id)

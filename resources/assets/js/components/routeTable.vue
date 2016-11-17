@@ -1,7 +1,9 @@
 <template>
-	<bootstrap-table :object-id.sync="serviceId" :button-value.sync="buttonValue"
-                        :columns="columns" :data="data" :options="options">
-    </bootstrap-table>
+    <div>
+    	<bootstrap-table :object-id.sync="serviceId" :button-value.sync="buttonValue"
+                            :columns="columns" :data="data" :options="options">
+        </bootstrap-table>
+    </div>
 </template>
 
 <script>
@@ -10,7 +12,7 @@ var alert = require('./alert.vue');
 var BootstrapTable = require('./BootstrapTable.vue');
 
   export default {
-    props: ['url'],
+    props: ['url', 'clickUrl'],
     components: {
         alert,
         BootstrapTable
@@ -69,8 +71,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				},
 				paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
 				paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
-				pageSize: 5,
-				pageList: [5, 10],
+				pageSize: 10,
+				pageList: [5, 10, 20],
 				search: true,
 				showExport: true,
 				exportTypes: ['excel', 'pdf'],
@@ -87,11 +89,16 @@ var BootstrapTable = require('./BootstrapTable.vue');
     watch: {
         buttonValue: function(val){
             this.getList(val);
+        },
+        serviceId: function(val){
+            window.location = this.clickUrl+this.serviceId;
         }
     },
     methods: {
         getList(val){
 			this.resetAlert();
+			this.$broadcast('disableTable');
+
 			this.$http.get(this.url, {
                 daysFromToday: val
             }).then((response) => {
@@ -99,9 +106,11 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.data = data.list;
 				this.validationErrors = {};
 				this.$broadcast('refreshTable');
+			    this.$broadcast('enableTable');
             }, (response) => {
 				this.alertMessageList = "The information could not be retrieved, please try again.";
 				this.alertActiveList = true;
+			    this.$broadcast('enableTable');
             });
         },
         resetAlert(){
