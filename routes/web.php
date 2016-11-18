@@ -89,6 +89,10 @@ Route::resource('payments', 'PaymentController', ['only' => [
 ]]);
 Route::get('chat', 'ChatController@home');
 
+Route::resource('notifications', 'NotificationController', ['only' => [
+    'index'
+]]);
+
 Route::post(
     'stripe/webhook',
     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'

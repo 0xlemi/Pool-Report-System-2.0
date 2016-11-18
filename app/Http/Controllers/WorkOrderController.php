@@ -15,6 +15,7 @@ use App\PRS\Helpers\SupervisorHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\WorkOrder;
+use App\Notifications\NewWorkOrderNotification;
 
 
 class WorkOrderController extends PageController
@@ -107,6 +108,7 @@ class WorkOrderController extends PageController
             $photo = $workOrder->addImageFromForm($request->file('photo'));
         }
         if($workOrder && $photo){
+            $admin->user()->notify(new NewWorkOrderNotification($workOrder));
             flash()->success('Created', 'New Work Order was successfully created.');
             return redirect('workorders');
         }

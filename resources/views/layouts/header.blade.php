@@ -58,7 +58,7 @@
                                 </div>
                             </div>
                             <div class="dropdown-menu-notif-more">
-                                <a href="#">See more</a>
+                                <a href="{{ url('notifications') }}">See more</a>
                             </div>
                         </div>
                     </div>
