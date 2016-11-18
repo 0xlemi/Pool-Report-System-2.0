@@ -5,11 +5,13 @@ use App\PRS\Helpers\SeederHelpers;
 use App\ServiceContract;
 use App\Invoice;
 use App\Service;
+use App\Payment;
 use App\Image;
 use App\Notifications\NewServiceNotification;
 use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\AddedContractNotification;
+use App\Administrator;
 use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
 {
@@ -36,13 +38,14 @@ class ServicesTableSeeder extends Seeder
 
             // get a random admin_id that exists in database
         	$adminId = $this->seederHelper->getRandomObject('administrators');
+            $admin = Administrator::findOrFail($adminId);
 
     		$serviceId = factory(App\Service::class)->create([
-        		'admin_id' => $adminId,
+        		'admin_id' => $admin->id,
             ])->id;
             $service = Service::findOrFail($serviceId);
             if($this->withNotifications){
-                auth()->user()->notify(new NewServiceNotification($service));
+                $admin->user()->notify(new NewServiceNotification($service));
             }
 
             if(rand(0,1)){
@@ -51,28 +54,28 @@ class ServicesTableSeeder extends Seeder
                 ]);
                 $contract = ServiceContract::findOrFail($serviceId);
                 if($this->withNotifications){
-                    auth()->user()->notify(new AddedContractNotification($contract));
+                    $admin->user()->notify(new AddedContractNotification($contract));
                 }
                 // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
-                    $preInvoice = $contract->invoices()->create([
+                    $invoiceId = $contract->invoices()->create([
                         'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $contract->amount,
                         'currency' => $contract->currency,
-                        'admin_id' => $adminId,
-                    ]);
-                    $invoice = Invoice::findOrFail($preInvoice->id);
+                        'admin_id' => $admin->id,
+                    ])->id;
+                    $invoice = Invoice::findOrFail($invoiceId);
                     if($this->withNotifications){
-                        auth()->user()->notify(new NewInvoiceNotification($invoice));
+                        $admin->user()->notify(new NewInvoiceNotification($invoice));
                     }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
-                        $prePayment = $invoice->payments()->create([
+                        $paymentId = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
-                        ]);
-                        $payment = Invoice::findOrFail($prePayment->id);
+                        ])->id;
+                        $payment = Payment::findOrFail($paymentId);
                         if($this->withNotifications){
-                            auth()->user()->notify(new NewPaymentNotification($payment));
+                            $admin->user()->notify(new NewPaymentNotification($payment));
                         }
                     }
                 }

@@ -45,7 +45,7 @@ class AddedEquipmentNotification extends Notification
     {
         return [
             'title' => "New equipment was added",
-            'message' => "New equipment was added to {$this->equipment->service->name} service.",
+            'message' => "New equipment was added to {$this->equipment->service()->name} service.",
         ];
     }
 }

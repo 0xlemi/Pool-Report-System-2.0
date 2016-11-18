@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 use App\Notifications\NewSupervisorNotification;
+use App\Administrator;
 use App\Supervisor;
 class SupervisorsTableSeeder extends Seeder
 {
@@ -35,9 +36,11 @@ class SupervisorsTableSeeder extends Seeder
     		$supervisorId = factory(App\Supervisor::class)->create([
         		'admin_id' => $adminId,
             ])->id;
+            $admin = Administrator::findOrFail($adminId);
+
             $supervisor = Supervisor::findOrFail($supervisorId);
             if($this->withNotifications){
-                auth()->user()->notify(new NewSupervisorNotification($supervisor));
+                $admin->user()->notify(new NewSupervisorNotification($supervisor));
             }
 
             factory(App\User::class)->create([

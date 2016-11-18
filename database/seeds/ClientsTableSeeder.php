@@ -48,7 +48,7 @@ class ClientsTableSeeder extends Seeder
     		])->id;
             $client = Client::findOrFail($clientId);
             if($this->withNotifications){
-                auth()->user()->notify(new NewClientNotification($client));
+                $admin->user()->notify(new NewClientNotification($client));
             }
 
             factory(App\User::class)->create([

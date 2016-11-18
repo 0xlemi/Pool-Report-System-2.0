@@ -49,7 +49,7 @@ class EquipmentTableSeeder extends Seeder
             ])->id;
             $equipment = Equipment::findOrFail($equipmentId);
             if($this->withNotifications){
-                auth()->user()->notify(new AddedEquipmentNotification($equipment));
+                $equipment->service()->admin()->user()->notify(new AddedEquipmentNotification($equipment));
             }
 
     		// create images link it to equipment id

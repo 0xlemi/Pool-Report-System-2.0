@@ -3,6 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Service;
+use App\Invoice;
+use App\Payment;
 use App\Supervisor;
 use App\Image;
 
@@ -50,29 +52,29 @@ class WorkOrdersTableSeeder extends Seeder
             ])->id;
             $workOrder = WorkOrder::findOrFail($workOrderId);
             if($this->withNotifications){
-                auth()->user()->notify(new NewWorkOrderNotification($workOrder));
+                $admin->user()->notify(new NewWorkOrderNotification($workOrder));
             }
 
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {
-                    $preInvoice = $workOrder->invoices()->create([
+                    $invoiceId = $workOrder->invoices()->create([
                         'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $workOrder->price,
                         'currency' => $workOrder->currency,
                         'admin_id' => $admin->id,
-                    ]);
-                    $invoice = Invoice::findOrFail($preInvoice->id);
+                    ])->id;
+                    $invoice = Invoice::findOrFail($invoiceId);
                     if($this->withNotifications){
-                        auth()->user()->notify(new NewInvoiceNotification($invoice));
+                        $admin->user()->notify(new NewInvoiceNotification($invoice));
                     }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
-                        $prePayment = $invoice->payments()->create([
+                        $paymentId = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
-                        ]);
-                        $payment = Invoice::findOrFail($prePayment->id);
+                        ])->id;
+                        $payment = Payment::findOrFail($paymentId);
                         if($this->withNotifications){
-                            auth()->user()->notify(new NewPaymentNotification($payment));
+                            $admin->user()->notify(new NewPaymentNotification($payment));
                         }
                     }
                 }

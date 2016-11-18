@@ -43,6 +43,7 @@ class NewPaymentNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $payment = $this->payment;
         return [
             'title' => "A new payment was added",
             'message' => "New Payment for {$payment->amount} {$payment->invoice->currency} was added to the invoice #{$payment->invoice->seq_id}.",

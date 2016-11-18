@@ -43,7 +43,7 @@ class AddedWorkNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        $workOrder = $this->work->workOrder;
+        $workOrder = $this->work->workOrder();
         return [
             'title' => "A new work was added",
             'message' => "New work was added to {$workOrder->title} work order.",

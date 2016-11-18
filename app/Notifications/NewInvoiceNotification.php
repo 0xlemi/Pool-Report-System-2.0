@@ -43,8 +43,9 @@ class NewInvoiceNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $invoice = $this->invoice;
         return [
-            'link' => "invoices/{$this->invoice->seq_id}",
+            'link' => "invoices/{$invoice->seq_id}",
             'title' => "New invoice (#{$invoice->seq_id}) was created",
             'message' => "New invoice (#{$invoice->seq_id}) for {$invoice->amount} {$invoice->currency} has been created on a {$invoice->type()}.",
         ];
