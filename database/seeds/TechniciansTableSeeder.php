@@ -3,10 +3,13 @@
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
+use App\Notifications\NewTechnicianNotification;
+use App\Technician;
 class TechniciansTableSeeder extends Seeder
 {
     // number of technicians to create
     private $number_of_technicians = 20;
+    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -28,9 +31,13 @@ class TechniciansTableSeeder extends Seeder
             // get a random admin_id that exists in database
             $supervisorId = $this->seederHelper->getRandomObject('supervisors');
 
-    		$technician = factory(App\Technician::class)->create([
+    		$technicianId = factory(App\Technician::class)->create([
                 'supervisor_id' => $supervisorId,
-            ]);
+            ])->id;
+            $technician = Technician::findOrFail($technicianId);
+            if($this->withNotifications){
+                auth()->user()->notify(new NewTechnicianNotification($technician));
+            }
 
             factory(App\User::class)->create([
                 'email' => 'username_'.rand(100000,999999),

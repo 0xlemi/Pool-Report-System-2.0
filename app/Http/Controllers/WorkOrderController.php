@@ -108,7 +108,6 @@ class WorkOrderController extends PageController
             $photo = $workOrder->addImageFromForm($request->file('photo'));
         }
         if($workOrder && $photo){
-            $admin->user()->notify(new NewWorkOrderNotification($workOrder));
             flash()->success('Created', 'New Work Order was successfully created.');
             return redirect('workorders');
         }

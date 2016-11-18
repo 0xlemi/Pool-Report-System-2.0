@@ -7,12 +7,16 @@ use App\Supervisor;
 use App\Image;
 
 use App\WorkOrder;
+use App\Notifications\NewInvoiceNotification;
+use App\Notifications\NewPaymentNotification;
+use App\Notifications\NewWorkOrderNotification;
 use Carbon\Carbon;
 
 class WorkOrdersTableSeeder extends Seeder
 {
 
     private $amount = 100;
+    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -40,24 +44,36 @@ class WorkOrdersTableSeeder extends Seeder
         	$service = $this->seederHelper->getRandomService($admin);
 
 
-            $workOrder = factory(App\WorkOrder::class)->create([
+            $workOrderId = factory(App\WorkOrder::class)->create([
                 'service_id' => $service->id,
                 'supervisor_id' => $supervisorId,
-            ]);
+            ])->id;
+            $workOrder = WorkOrder::findOrFail($workOrderId);
+            if($this->withNotifications){
+                auth()->user()->notify(new NewWorkOrderNotification($workOrder));
+            }
 
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {
-                    $invoice = $workOrder->invoices()->create([
+                    $preInvoice = $workOrder->invoices()->create([
                         'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $workOrder->price,
                         'currency' => $workOrder->currency,
                         'admin_id' => $admin->id,
                     ]);
+                    $invoice = Invoice::findOrFail($preInvoice->id);
+                    if($this->withNotifications){
+                        auth()->user()->notify(new NewInvoiceNotification($invoice));
+                    }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
-                        $invoice->payments()->create([
+                        $prePayment = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
                         ]);
+                        $payment = Invoice::findOrFail($prePayment->id);
+                        if($this->withNotifications){
+                            auth()->user()->notify(new NewPaymentNotification($payment));
+                        }
                     }
                 }
 

@@ -4,11 +4,13 @@ use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 use App\Equipment;
+use App\Notifications\AddedEquipmentNotification;
 
 class EquipmentTableSeeder extends Seeder
 {
 
     private $amount = 100;
+    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -41,10 +43,14 @@ class EquipmentTableSeeder extends Seeder
             // get a random admin_id that exists in database
         	$serviceId = $this->seederHelper->getRandomObject('services');
 
-    		$equipment = factory(Equipment::class)->create([
+    		$equipmentId = factory(Equipment::class)->create([
                 'kind' => $kind['name'],
         		'service_id' => $serviceId,
-            ]);
+            ])->id;
+            $equipment = Equipment::findOrFail($equipmentId);
+            if($this->withNotifications){
+                auth()->user()->notify(new AddedEquipmentNotification($equipment));
+            }
 
     		// create images link it to equipment id
     		// normal image

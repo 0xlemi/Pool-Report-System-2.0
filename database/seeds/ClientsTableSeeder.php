@@ -2,13 +2,17 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
+use App\PRS\Classes\Logged;
 use App\Image;
 use App\Service;
+use App\Notifications\NewClientNotification;
+use App\Client;
 
 class ClientsTableSeeder extends Seeder
 {
     // number of clients to create
     private $number_of_clients = 60;
+    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -38,10 +42,14 @@ class ClientsTableSeeder extends Seeder
             // find admin_id congruent with the service
             $admin = Service::findOrFail($serviceId)->admin();
 
-    		$client = factory(App\Client::class)->create([
-                    'name' => $faker->firstName($gender),
-                    'admin_id' => $admin->id,
-    			]);
+    		$clientId = factory(App\Client::class)->create([
+                'name' => $faker->firstName($gender),
+                'admin_id' => $admin->id,
+    		])->id;
+            $client = Client::findOrFail($clientId);
+            if($this->withNotifications){
+                auth()->user()->notify(new NewClientNotification($client));
+            }
 
             factory(App\User::class)->create([
                 'userable_id' => $client->id,

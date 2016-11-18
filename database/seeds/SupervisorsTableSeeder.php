@@ -3,10 +3,13 @@
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
+use App\Notifications\NewSupervisorNotification;
+use App\Supervisor;
 class SupervisorsTableSeeder extends Seeder
 {
     // number of supervisors to create
     private $number_of_supervisors = 6;
+    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -29,9 +32,13 @@ class SupervisorsTableSeeder extends Seeder
             // $adminId = $this->seederHelper->getRandomObject('administrators');
             $adminId = rand(1,2);
 
-    		$supervisor = factory(App\Supervisor::class)->create([
+    		$supervisorId = factory(App\Supervisor::class)->create([
         		'admin_id' => $adminId,
-            ]);
+            ])->id;
+            $supervisor = Supervisor::findOrFail($supervisorId);
+            if($this->withNotifications){
+                auth()->user()->notify(new NewSupervisorNotification($supervisor));
+            }
 
             factory(App\User::class)->create([
                 'password' => bcrypt('password'),
