@@ -32,6 +32,7 @@ elixir(function(mix) {
             'bootstrap-fileupload.js',
             'bootstrap-clockpicker.js',
             'bootstrap-maxlenght.js',
+            'bootstrap.js',
             'main.js'
         ])
     	.version(['css/sass.css', 'css/less.css', 'css/main.css', 'js/bundle.js']);
