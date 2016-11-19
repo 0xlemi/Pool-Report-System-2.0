@@ -43,10 +43,11 @@ class NewTechnicianNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $technician = $this->technician;
         return [
-            'link' => "technicians/{$this->technician->seq_id}",
-            'title' => "New technician was created",
-            'message' => "New technician has been created.",
+            'link' => "technicians/{$technician->seq_id}",
+            'title' => "New <strong>Technician</strong> was created",
+            'message' => "New <strong>Technician</strong> (<a href=\"../technicians/{$technician->seq_id}\">{$technician->name} {$technician->last_name}</a>) has been created.",
         ];
     }
 }

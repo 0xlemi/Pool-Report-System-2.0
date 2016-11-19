@@ -43,10 +43,11 @@ class NewClientNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $client = $this->client;
         return [
-            'link' => "clients/{$this->client->seq_id}",
-            'title' => "New client was created",
-            'message' => "New client has been created.",
+            'link' => "clients/{$client->seq_id}",
+            'title' => "New <strong>Client</strong> was created",
+            'message' => "New <strong>Client</strong> (<a href=\"../clients/{$client->seq_id}\">{$client->name} {$client->last_name}</a>) has been created.",
         ];
     }
 }

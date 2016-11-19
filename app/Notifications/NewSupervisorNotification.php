@@ -43,10 +43,11 @@ class NewSupervisorNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $supervisor = $this->supervisor;
         return [
-            'link' => "supervisors/{$this->supervisor->seq_id}",
-            'title' => "New Supervisor was created",
-            'message' => "New Supervisor has been created.",
+            'link' => "supervisors/{$supervisor->seq_id}",
+            'title' => "New <strong>Supervisor</strong> was created",
+            'message' => "New <strong>Supervisor</strong> (<a href=\"../supervisors/{$supervisor->seq_id}\">{$supervisor->name} {$supervisor->last_name}</a>) has been created.",
         ];
     }
 }

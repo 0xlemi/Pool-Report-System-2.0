@@ -45,8 +45,8 @@ class AddedChemicalNotification extends Notification
     {
         $service = $this->chemical->service;
         return [
-            'title' => "New chemical was added",
-            'message' => "New chemical has been added to the service {$service->seq_id} {$service->name}.",
+            'title' => "New <strong>Chemical</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
+            'message' => "New <strong>Chemical</strong> has been added to the <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>).",
         ];
     }
 }

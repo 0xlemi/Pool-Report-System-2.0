@@ -43,10 +43,11 @@ class NewWorkOrderNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $workOrder = $this->workOrder;
         return [
-            'link' => "workorders/{$this->workOrder->seq_id}",
-            'title' => "New Work Order was created",
-            'message' => "New Work Order has been created.",
+            'link' => "workorders/{$workOrder->seq_id}",
+            'title' => "New <strong>Work Order</strong> was created",
+            'message' => "New <strong>Work Order</strong> (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>) has been created.",
         ];
     }
 }

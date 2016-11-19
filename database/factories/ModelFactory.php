@@ -38,9 +38,10 @@ $factory->define(App\Administrator::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Invoice::class, function (Faker\Generator $faker){
+    $validCurrencies = config('constants.currencies');
 	return [
         'amount' => number_format($faker->numberBetween(75, 500), 2, '.', ''),
-        'currency' => $faker->currencyCode,
+        'currency' => $faker->randomElement($validCurrencies),
 	];
 });
 
@@ -103,11 +104,12 @@ $factory->define(App\Chemical::class, function (Faker\Generator $faker){
 });
 
 $factory->define(App\ServiceContract::class, function (Faker\Generator $faker){
+    $validCurrencies = config('constants.currencies');
     return [
         'start' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
         'service_days' => $faker->numberBetween(0, 127),
         'amount' => number_format($faker->numberBetween(75, 350), 2, '.', ''),
-        'currency' => $faker->currencyCode,
+        'currency' => $faker->randomElement($validCurrencies),
         'start_time' => $faker->dateTimeBetween('today', 'now')->format('H:i:s'),
         'end_time' => $faker->dateTimeBetween('now', 'tomorrow')->format('H:i:s'), // between start and end of day
         'active' => $faker->numberBetween(0, 1),
@@ -117,6 +119,7 @@ $factory->define(App\ServiceContract::class, function (Faker\Generator $faker){
 
 $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
     $start = $faker->dateTimeThisMonth()->format('Y-m-d H:i:s');
+    $validCurrencies = config('constants.currencies');
     return [
         'title' => $faker->word,
         'description' => $faker->realText(rand(100,500)),
@@ -124,7 +127,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
         'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
         'finished' => $faker->numberBetween(0, 1),
         'price' => number_format(rand(100,1000000)/100, 2, '.', ''),
-        'currency' => $faker->currencyCode,
+        'currency' => $faker->randomElement($validCurrencies),
     ];
 });
 

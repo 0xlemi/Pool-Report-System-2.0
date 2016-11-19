@@ -43,9 +43,10 @@ class AddedEquipmentNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $service = $this->equipment->service();
         return [
-            'title' => "New equipment was added",
-            'message' => "New equipment was added to {$this->equipment->service()->name} service.",
+            'title' => "New <strong>Equipment</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
+            'message' => "New <strong>Equipment</strong> was added to the <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>).",
         ];
     }
 }

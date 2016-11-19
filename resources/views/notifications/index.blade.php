@@ -23,21 +23,13 @@
 	    				<tr>
 	    					<th>Description</th>
 	    					<th width="150">When</th>
-	                        <th width="90">Link</th>
 	    				</tr>
 	    				</thead>
 	    				<tbody>
 	                        @foreach($notifications as $notification)
-	    					<tr>
-	    						<td class="color-blue-grey-lighter">{{ $notification->data['message'] }}</td>
+	    					<tr class="{{ (!$notification->read_at) ? 'table-active' : '' }}">
+	    						<td class="color-blue-grey-lighter">{!! $notification->data['message'] !!}</td>
 	    						<td class="table-date">{{ $carbon::parse($notification->created_at)->diffForHumans() }}</td>
-	    						<td class="table-date">
-	                                @if(isset($notification->data['link']))
-	                                	<a href="{{ url($notification->data['link']) }}">Click Here</a>
-	                                @else
-	                                    <span class="label label-pill label-default">No link</span>
-	                                @endif
-	                            </td>
 	    					</tr>
 	                        @endforeach
 	    				</tbody>

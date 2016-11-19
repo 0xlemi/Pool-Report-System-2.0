@@ -43,10 +43,11 @@ class NewServiceNotification extends Notification
      */
     public function toArray($notifiable)
     {
+        $service = $this->service;
         return [
-            'link' => "services/{$this->service->seq_id}",
-            'title' => "New Service was created",
-            'message' => "New Service has been created.",
+            'link' => "services/{$service->seq_id}",
+            'title' => "New <strong>Service</strong> was created",
+            'message' => "New <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) has been created.",
         ];
     }
 }

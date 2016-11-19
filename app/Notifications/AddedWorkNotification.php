@@ -45,8 +45,8 @@ class AddedWorkNotification extends Notification
     {
         $workOrder = $this->work->workOrder();
         return [
-            'title' => "A new work was added",
-            'message' => "New work was added to {$workOrder->title} work order.",
+            'title' => "A new <strong>Work</strong> was added to <strong>Work Order</strong> \"{$workOrder->seq_id} {$workOrder->title}\"",
+            'message' => "New <strong>Work</strong> was added to the <strong>Work Order</strong> (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>).",
         ];
     }
 }
