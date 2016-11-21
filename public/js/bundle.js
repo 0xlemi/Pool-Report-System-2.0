@@ -27169,7 +27169,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 window.Echo = new _laravelEcho2.default({
     broadcaster: 'pusher',
     key: 'adaa734ec4ce7b21a7ae',
-    cluster: 'eu',
     encrypted: true
 });
 
@@ -29326,7 +29325,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":197,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],196:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":198,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],196:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29359,8 +29358,37 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],197:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['notifications'],
+    methods: {},
+    ready: function ready() {
+        var _this = this;
+
+        this.$http.get(Laravel.url + '/notifications/widget').then(function (response) {
+            _this.notifications = response.data;
+        });
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"dropdown dropdown-notification notif\">\n    <a href=\"#\" class=\"header-alarm dropdown-toggle active\" id=\"dd-notification\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n        <i class=\"font-icon-alarm\"></i>\n    </a>\n    <div class=\"dropdown-menu dropdown-menu-right dropdown-menu-notif\" aria-labelledby=\"dd-notification\">\n        <div class=\"dropdown-menu-notif-header\">\n            Notifications\n            <span class=\"label label-pill label-danger\">4</span>\n        </div>\n        <div class=\"dropdown-menu-notif-list\">\n            <div class=\"dropdown-menu-notif-item\">\n                <div class=\"photo\">\n                    <img src=\"\" alt=\"\">\n                </div>\n                <div class=\"dot\"></div>\n                <a href=\"#\">Morgan</a> was bothering about something\n                <div class=\"color-blue-grey-lighter\">7 hours ago</div>\n            </div>\n            <div class=\"dropdown-menu-notif-item\">\n                <div class=\"photo\">\n                    <img src=\"\" alt=\"\">\n                </div>\n                <div class=\"dot\"></div>\n                <a href=\"#\">Lioneli</a> had commented on this <a href=\"#\">Super Important Thing</a>\n                <div class=\"color-blue-grey-lighter\">7 hours ago</div>\n            </div>\n            <div class=\"dropdown-menu-notif-item\">\n                <div class=\"photo\">\n                    <img src=\"\" alt=\"\">\n                </div>\n                <div class=\"dot\"></div>\n                <a href=\"#\">Xavier</a> had commented on the <a href=\"#\">Movie title</a>\n                <div class=\"color-blue-grey-lighter\">7 hours ago</div>\n            </div>\n            <div class=\"dropdown-menu-notif-item\">\n                <div class=\"photo\">\n                    <img src=\"\" alt=\"\">\n                </div>\n                <a href=\"#\">Lionely</a> wants to go to <a href=\"#\">Cinema</a> with you to see <a href=\"#\">This Movie</a>\n                <div class=\"color-blue-grey-lighter\">7 hours ago</div>\n            </div>\n        </div>\n        <div class=\"dropdown-menu-notif-more\">\n            <a href=\"\">See more</a>\n        </div>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-563ab3b2", module.exports)
+  } else {
+    hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":180,"vue-hot-reload-api":177}],198:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],198:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29639,7 +29667,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":187,"./alert.vue":189,"spin":166,"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
+},{"./BootstrapTable.vue":187,"./alert.vue":189,"spin":166,"vue":180,"vue-hot-reload-api":177}],200:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29690,7 +29718,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],200:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29821,7 +29849,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":187,"./alert.vue":189,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"./BootstrapTable.vue":187,"./alert.vue":189,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30205,7 +30233,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":187,"./alert.vue":189,"./dropdown.vue":195,"spin":166,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+},{"./BootstrapTable.vue":187,"./alert.vue":189,"./dropdown.vue":195,"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30289,7 +30317,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -30309,6 +30337,7 @@ var chemical = require('./components/chemical.vue');
 var works = require('./components/works.vue');
 var payments = require('./components/payments.vue');
 var routeTable = require('./components/routeTable.vue');
+var notificationsWidget = require('./components/notificationsWidget.vue');
 require('./components/checkboxList.vue');
 
 var Spinner = require("spin");
@@ -31176,6 +31205,13 @@ $(document).ready(function () {
     /* ==========================================================================
        VueJs code
        ========================================================================== */
+
+    var mainVue = new Vue({
+        el: '.site-header',
+        components: {
+            notificationsWidget: notificationsWidget
+        }
+    });
 
     // workOrders Vue instance
     var workOrderVue = new Vue({
@@ -32130,6 +32166,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/Permissions.vue":188,"./components/alert.vue":189,"./components/billing.vue":190,"./components/checkboxList.vue":191,"./components/chemical.vue":192,"./components/contract.vue":193,"./components/countries.vue":194,"./components/dropdown.vue":195,"./components/email.vue":196,"./components/payments.vue":198,"./components/photoList.vue":199,"./components/routeTable.vue":200,"./components/works.vue":201,"./directives/FormToAjax.vue":202,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,203]);
+},{"./components/Permissions.vue":188,"./components/alert.vue":189,"./components/billing.vue":190,"./components/checkboxList.vue":191,"./components/chemical.vue":192,"./components/contract.vue":193,"./components/countries.vue":194,"./components/dropdown.vue":195,"./components/email.vue":196,"./components/notificationsWidget.vue":197,"./components/payments.vue":199,"./components/photoList.vue":200,"./components/routeTable.vue":201,"./components/works.vue":202,"./directives/FormToAjax.vue":203,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,204]);
 
 //# sourceMappingURL=bundle.js.map

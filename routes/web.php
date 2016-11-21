@@ -66,6 +66,10 @@ Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@des
 Route::get('invoices/{invoiceSeqId}/payments', 'PaymentController@index');
 Route::post('invoices/{invoiceSeqId}/payments', 'PaymentController@store');
 
+// Notifications
+Route::get('notifications', 'NotificationController@index');
+Route::get('notifications/widget', 'NotificationController@widget');
+
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController', ['only' => [
@@ -89,9 +93,6 @@ Route::resource('payments', 'PaymentController', ['only' => [
 ]]);
 Route::get('chat', 'ChatController@home');
 
-Route::resource('notifications', 'NotificationController', ['only' => [
-    'index'
-]]);
 
 Route::post(
     'stripe/webhook',

@@ -15,6 +15,7 @@ var chemical       = require('./components/chemical.vue');
 var works       = require('./components/works.vue');
 var payments       = require('./components/payments.vue');
 var routeTable     = require('./components/routeTable.vue');
+var notificationsWidget     = require('./components/notificationsWidget.vue');
 require('./components/checkboxList.vue');
 
 var Spinner         = require("spin");
@@ -944,6 +945,14 @@ function isset(strVariableName) {
  /* ==========================================================================
     VueJs code
     ========================================================================== */
+
+
+    let mainVue = new Vue({
+        el: '.site-header',
+        components: {
+            notificationsWidget
+        }
+    });
 
     // workOrders Vue instance
     let workOrderVue = new Vue({

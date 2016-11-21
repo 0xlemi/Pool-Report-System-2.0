@@ -27,7 +27,7 @@
 	    				</thead>
 	    				<tbody>
 	                        @foreach($notifications as $notification)
-	    					<tr class="{{ (!$notification->read_at) ? 'table-active' : '' }}">
+	    					<tr>
 	    						<td class="color-blue-grey-lighter">{!! $notification->data['message'] !!}</td>
 	    						<td class="table-date">{{ $carbon::parse($notification->created_at)->diffForHumans() }}</td>
 	    					</tr>

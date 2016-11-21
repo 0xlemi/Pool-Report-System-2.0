@@ -22,10 +22,26 @@ class NotificationController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $notifications = $this->getUser()->notifications()->paginate(30);
+        $notifications = $request->user()->notifications()->paginate(30);
         return view('notifications.index', compact('notifications'));
+    }
+
+    public function widget(Request $request)
+    {
+        $notifications = $request->user()
+                                ->notifications()
+                                ->take(4)
+                                ->get()
+                                ->transform(function($item){
+                                    return (object) array_merge(
+                                            (array) $item->data,
+                                            ['read' => ($item->read_at) ? true : false]
+                                        );
+                                });
+
+        return response()->json($notifications);
     }
 
 }

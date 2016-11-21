@@ -13,6 +13,7 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\Http\Requests;
 use App\Http\Requests\CreateServiceRequest;
 use App\Http\Controllers\PageController;
+use App\Notifications\NewServiceNotification;
 
 class ServicesController extends PageController
 {
@@ -83,20 +84,23 @@ class ServicesController extends PageController
 
         $admin  = $this->loggedUserAdministrator();
 
-        $service = Service::create(
+        $serviceId = Service::create(
                             array_merge(
                                 array_map('htmlentities', $request->all()),
                                 [
                                     'admin_id' => $admin->id,
                                 ]
                             )
-                    );
+                    )->id;
+        $service = Service::findOrFail($serviceId);
 
         $photo = true;
         if($request->photo){
             $photo = $service->addImageFromForm($request->file('photo'));
         }
-        if($service && $photo){
+
+        if($photo){
+            $admin->user()->notify(new NewServiceNotification($service));
             flash()->success('Created', 'New service successfully created.');
             return redirect('services');
         }
