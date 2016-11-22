@@ -45,7 +45,7 @@ class AddedEquipmentNotification extends Notification
     {
         $service = $this->equipment->service();
         return [
-            'icon' => url($service->icon()),
+            'icon' => url($this->equipment->icon()),
             'title' => "New <strong>Equipment</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "New <strong>Equipment</strong> was added to the <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>).",
         ];
