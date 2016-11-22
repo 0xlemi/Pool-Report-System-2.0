@@ -5,6 +5,7 @@ use App\PRS\Helpers\SeederHelpers;
 use App\Image;
 use App\Equipment;
 use App\Notifications\AddedEquipmentNotification;
+use App\Service;
 
 class EquipmentTableSeeder extends Seeder
 {
@@ -42,6 +43,7 @@ class EquipmentTableSeeder extends Seeder
 
             // get a random admin_id that exists in database
         	$serviceId = $this->seederHelper->getRandomObject('services');
+            $admin = Service::findOrFail($serviceId)->admin();
 
     		$equipmentId = factory(Equipment::class)->create([
                 'kind' => $kind['name'],
@@ -49,7 +51,7 @@ class EquipmentTableSeeder extends Seeder
             ])->id;
             $equipment = Equipment::findOrFail($equipmentId);
             if($this->withNotifications){
-                $equipment->service()->admin()->user()->notify(new AddedEquipmentNotification($equipment));
+                $equipment->service()->admin()->user()->notify(new AddedEquipmentNotification($equipment, $admin->user()));
             }
 
     		// create images link it to equipment id

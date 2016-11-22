@@ -52,7 +52,7 @@ class WorkOrdersTableSeeder extends Seeder
             ])->id;
             $workOrder = WorkOrder::findOrFail($workOrderId);
             if($this->withNotifications){
-                $admin->user()->notify(new NewWorkOrderNotification($workOrder));
+                $admin->user()->notify(new NewWorkOrderNotification($workOrder, $this->seederHelper->getRandomUser($admin, rand(1,3))));
             }
 
             // Generate Invoices with Payments

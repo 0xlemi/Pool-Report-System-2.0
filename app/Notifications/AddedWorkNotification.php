@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\User;
 use App\Work;
 
 class AddedWorkNotification extends Notification
@@ -13,15 +14,17 @@ class AddedWorkNotification extends Notification
     use Queueable;
 
     protected $work;
+    protected $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Work $work)
+    public function __construct(Work $work, User $user)
     {
         $this->work = $work;
+        $this->user = $user;
     }
 
     /**
@@ -44,10 +47,19 @@ class AddedWorkNotification extends Notification
     public function toArray($notifiable)
     {
         $workOrder = $this->work->workOrder();
+        $userable = $this->user->userable();
+        $type = $this->user->type();
+        $urlName = $type->url();
+
+        $person =  "<strong>System Administrator</strong>";
+        if(!$this->user->isAdministrator()){
+            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
+        }
         return [
             'icon' => url($this->work->icon()),
             'title' => "A new <strong>Work</strong> was added to <strong>Work Order</strong> \"{$workOrder->seq_id} {$workOrder->title}\"",
-            'message' => "New <strong>Work</strong> was added to the <strong>Work Order</strong> (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>).",
+            'message' => "New <strong>Work</strong> was added to the <strong>Work Order</strong>
+                            (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>) by {$person}.",
         ];
     }
 }

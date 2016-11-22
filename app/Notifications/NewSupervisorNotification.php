@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\User;
 use App\Supervisor;
 
 class NewSupervisorNotification extends Notification
@@ -13,15 +14,17 @@ class NewSupervisorNotification extends Notification
     use Queueable;
 
     protected $supervisor;
+    protected $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Supervisor $supervisor)
+    public function __construct(Supervisor $supervisor, User $user)
     {
         $this->supervisor = $supervisor;
+        $this->user = $user;
     }
 
     /**
@@ -44,11 +47,21 @@ class NewSupervisorNotification extends Notification
     public function toArray($notifiable)
     {
         $supervisor = $this->supervisor;
+        $userable = $this->user->userable();
+        $type = $this->user->type();
+        $urlName = $type->url();
+
+        $person =  "<strong>System Administrator</strong>";
+        if(!$this->user->isAdministrator()){
+            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
+        }
         return [
             'icon' => url($supervisor->icon()),
             'link' => "supervisors/{$supervisor->seq_id}",
             'title' => "New <strong>Supervisor</strong> was created",
-            'message' => "New <strong>Supervisor</strong> (<a href=\"../supervisors/{$supervisor->seq_id}\">{$supervisor->name} {$supervisor->last_name}</a>) has been created.",
+            'message' => "New <strong>Supervisor</strong>
+                            (<a href=\"../supervisors/{$supervisor->seq_id}\">{$supervisor->name} {$supervisor->last_name}</a>)
+                            has been created by {$person}.",
         ];
     }
 }

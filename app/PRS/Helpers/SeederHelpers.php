@@ -5,6 +5,9 @@ namespace App\PRS\Helpers;
 use Faker\Factory;
 use Intervention;
 use DB;
+use App\Client;
+use App\Technician;
+use App\Supervisor;
 use App\WorkOrder;
 use App\Service;
 use App\Administrator;
@@ -59,6 +62,46 @@ class SeederHelpers
     public function getRandomObject($table){
     	$table_ids = DB::table($table)->select('id')->get()->all();
         return $this->faker->randomElement($table_ids)->id;
+    }
+
+    public function getRandomUser(Administrator $admin, int $possibleUsers)
+    {
+        switch ($possibleUsers) {
+            case '1':
+                return $admin->user();
+                break;
+            case '2':
+                return Supervisor::findOrFail(
+                        $this->faker->randomElement(
+                            $admin
+                            ->supervisors
+                            ->pluck('id')
+                            ->all()
+                        )
+                    )->user();
+                break;
+            case '3':
+                return Technician::findOrFail(
+                        $this->faker->randomElement(
+                            $admin
+                            ->technicians
+                            ->pluck('id')
+                            ->all()
+                        )
+                    )->user();
+                break;
+            case '4':
+                return Client::findOrFail(
+                        $this->faker->randomElement(
+                            $admin
+                            ->clients()
+                            ->pluck('id')
+                            ->all()
+                        )
+                    )->user();
+                break;
+        }
+
     }
 
     /**

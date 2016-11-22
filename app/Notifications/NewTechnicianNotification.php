@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use App\User;
 use App\Technician;
 
 class NewTechnicianNotification extends Notification
@@ -13,15 +14,17 @@ class NewTechnicianNotification extends Notification
     use Queueable;
 
     protected $technician;
+    protected $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Technician $technician)
+    public function __construct(Technician $technician, User $user)
     {
         $this->technician = $technician;
+        $this->user = $user;
     }
 
     /**
@@ -44,11 +47,21 @@ class NewTechnicianNotification extends Notification
     public function toArray($notifiable)
     {
         $technician = $this->technician;
+        $userable = $this->user->userable();
+        $type = $this->user->type();
+        $urlName = $type->url();
+
+        $person =  "<strong>System Administrator</strong>";
+        if(!$this->user->isAdministrator()){
+            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
+        }
         return [
             'icon' => url($technician->icon()),
             'link' => "technicians/{$technician->seq_id}",
             'title' => "New <strong>Technician</strong> was created",
-            'message' => "New <strong>Technician</strong> (<a href=\"../technicians/{$technician->seq_id}\">{$technician->name} {$technician->last_name}</a>) has been created.",
+            'message' => "New <strong>Technician</strong>
+                            (<a href=\"../technicians/{$technician->seq_id}\">{$technician->name} {$technician->last_name}</a>)
+                            has been created by {$person}.",
         ];
     }
 }
