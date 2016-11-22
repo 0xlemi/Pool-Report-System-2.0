@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\PRS\ValueObjects\Invoice\Type;
+use App\PRS\ValueObjects\Invoice\TypeInvoice;
 use Carbon\Carbon;
 
 class Invoice extends Model
@@ -49,7 +49,7 @@ class Invoice extends Model
 
     public function type()
     {
-        return new Type($this->invoiceable_type);
+        return new TypeInvoice($this->invoiceable_type);
     }
 
 }

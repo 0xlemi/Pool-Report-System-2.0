@@ -2,16 +2,11 @@
 
 namespace App\PRS\ValueObjects\Invoice;
 
-class Type{
+use App\PRS\ValueObjects\All\Type;
 
-    protected $type;
+class TypeInvoice extends Type{
 
-    public function __construct($type)
-    {
-        $this->type = $type;
-    }
-
-    protected function color()
+    protected function colorClass()
     {
         if($this->type == 'App\ServiceContract'){
             return 'primary';
@@ -20,24 +15,22 @@ class Type{
         }else{
             return 'default';
         }
-
     }
 
-    public function styled(bool $pill)
+    /**
+     * Get styled span tag of the type
+     * @param  boolean $pill
+     * @return string
+     * tested
+     */
+    public function styled($pill = false)
     {
         $tag_type = '';
     	if($pill){
     		$tag_type = 'label-pill';
     	}
-        $class = $this->color();
+        $class = $this->colorClass();
     	return "<span class=\"label {$tag_type} label-{$class}\">{$this}</span>";
-    }
-
-
-    public function __toString()
-    {
-        // Put spaces between capital letters and remove 'App\'
-        return ltrim(preg_replace('/[A-Z]/', ' $0', substr($this->type, 4)));
     }
 
 }

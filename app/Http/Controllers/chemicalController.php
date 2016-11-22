@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Requests\CreateChemicalRequest;
 use App\Chemical;
+use App\Notifications\AddedChemicalNotification;
 
 class chemicalController extends PageController
 {
@@ -54,11 +55,14 @@ class chemicalController extends PageController
      */
     public function store(CreateChemicalRequest $request, $serviceSeqId)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        $admin = $this->loggedUserAdministrator();
+        $service = $admin->serviceBySeqId($serviceSeqId);
 
-        $chemical = $service->chemicals()->create($request->all());
+        $chemicalId = $service->chemicals()->create($request->all())->id;
 
+        $chemical = Chemical::findOrFail($chemicalId);
         if($chemical){
+            $admin->user()->notify(new AddedChemicalNotification($chemical, $request->user()));
             return response()->json([
                 'message' => 'Chemical was successfully created.'
             ]);

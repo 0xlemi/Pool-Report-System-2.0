@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
+use App\PRS\ValueObjects\All\Type;
 
 use Hash;
 
@@ -40,16 +41,11 @@ class User extends Authenticatable
         'api_token',
     ];
 
-    /**
-     * Get the element that this user morphs to
-     * @return It could be any of:
-     *         Administrator, Client, Supervisor, Technician
-     * tested
-     */
-    public function userable()
-    {
-        return $this->morphTo()->first();
-    }
+    protected $appends = [
+        'fullName'
+    ];
+
+
 
     /**
      * Is this user an administrator ?
@@ -105,6 +101,25 @@ class User extends Authenticatable
         return $object->name.' '.$object->last_name;
     }
 
+    public function getFullNameAttribute()
+    {
+        $object = $this->userable();
+        if($this->isAdministrator()){
+            return $object->name;
+        }
+        return $object->name.' '.$object->last_name;
+    }
+
+    //******** VALUE OBJECTS ********
+
+    public function type()
+    {
+        return new Type($this->userable_type);
+    }
+
+
+    //******** Relationships ********
+
     public function admin()
     {
         if($this->isAdministrator()){
@@ -113,6 +128,16 @@ class User extends Authenticatable
         return $this->userable()->admin();
     }
 
+    /**
+     * Get the element that this user morphs to
+     * @return It could be any of:
+     *         Administrator, Client, Supervisor, Technician
+     * tested
+     */
+    public function userable()
+    {
+        return $this->morphTo()->first();
+    }
 
 
 }
