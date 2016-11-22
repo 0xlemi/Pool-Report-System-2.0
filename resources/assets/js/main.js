@@ -2,21 +2,7 @@ var dateFormat 		= require('dateformat');
 
 // Vue imports
 var Vue 			= require('vue');
-var Permissions 	 = require('./components/Permissions.vue');
-var PhotoList 	     = require('./components/photoList.vue');
-var emailPreference  = require('./components/email.vue');
-var FormToAjax   	= require('./directives/FormToAjax.vue');
-var countries       = require('./components/countries.vue');
-var dropdown       = require('./components/dropdown.vue');
-var alert       = require('./components/alert.vue');
-var billing       = require('./components/billing.vue');
-var contract       = require('./components/contract.vue');
-var chemical       = require('./components/chemical.vue');
-var works       = require('./components/works.vue');
-var payments       = require('./components/payments.vue');
-var routeTable     = require('./components/routeTable.vue');
-var notificationsWidget     = require('./components/notificationsWidget.vue');
-require('./components/checkboxList.vue');
+
 
 var Spinner         = require("spin");
 var Gmaps           = require("gmaps.core");
@@ -946,11 +932,35 @@ function isset(strVariableName) {
     VueJs code
     ========================================================================== */
 
+    let Permissions 	 = require('./components/Permissions.vue');
+    let PhotoList 	     = require('./components/photoList.vue');
+    let emailPreference  = require('./components/email.vue');
+    let FormToAjax   	= require('./directives/FormToAjax.vue');
+    let countries       = require('./components/countries.vue');
+    let dropdown       = require('./components/dropdown.vue');
+    let alert       = require('./components/alert.vue');
+    let billing       = require('./components/billing.vue');
+    let contract       = require('./components/contract.vue');
+    let chemical       = require('./components/chemical.vue');
+    let works       = require('./components/works.vue');
+    let payments       = require('./components/payments.vue');
+    let routeTable     = require('./components/routeTable.vue');
+    let notificationsWidget     = require('./components/notificationsWidget.vue');
+    let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+    require('./components/checkboxList.vue');
+
 
     let mainVue = new Vue({
         el: '.site-header',
         components: {
             notificationsWidget
+        }
+    });
+
+    let notificationsVue = new Vue({
+        el: '.notificationsVue',
+        components: {
+            AllNotificationsAsReadButton
         }
     });
 

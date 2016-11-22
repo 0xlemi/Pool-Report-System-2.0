@@ -69,6 +69,8 @@ Route::post('invoices/{invoiceSeqId}/payments', 'PaymentController@store');
 // Notifications
 Route::get('notifications', 'NotificationController@index');
 Route::get('notifications/widget', 'NotificationController@widget');
+Route::post('notifications/read/widget', 'NotificationController@markWidgetAsRead');
+Route::post('notifications/read/all', 'NotificationController@markAllAsRead');
 
 Route::resource('reports', 'ReportsController');
 Route::resource('workorders', 'WorkOrderController');

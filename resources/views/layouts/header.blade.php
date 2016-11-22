@@ -13,7 +13,7 @@
 
                     <notifications-widget></notifications-widget>
 
-                    <div class="dropdown dropdown-notification messages">
+                    <!-- <div class="dropdown dropdown-notification messages">
                         <a href="#"
                            class="header-alarm dropdown-toggle active"
                            id="dd-messages"
@@ -41,9 +41,9 @@
                                            role="tab">Outbox</a>
                                     </li>
                                 </ul>
-                                <!--<button type="button" class="create">
+                                <button type="button" class="create">
                                     <i class="font-icon font-icon-pen-square"></i>
-                                </button>-->
+                                </button>
                             </div>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab-incoming" role="tabpanel">
@@ -123,7 +123,7 @@
                                 <a class="dropdown-item" href="#"><span class="flag-icon flag-icon-ch"></span>中國</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="dropdown user-menu">
                         <button class="dropdown-toggle" id="dd-user-menu" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

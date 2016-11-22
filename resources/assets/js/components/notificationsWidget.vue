@@ -1,7 +1,8 @@
 <template>
 <div class="dropdown dropdown-notification notif">
-    <a href="#"
-       class="header-alarm dropdown-toggle active"
+    <a @click.prevent="markAsRead"
+       class="header-alarm"
+       :class="{ 'active': unreadCount > 0 }"
        id="dd-notification"
        data-toggle="dropdown"
        aria-haspopup="true"
@@ -11,43 +12,13 @@
     <div class="dropdown-menu dropdown-menu-right dropdown-menu-notif" aria-labelledby="dd-notification">
         <div class="dropdown-menu-notif-header">
             Notifications
-            <span class="label label-pill label-danger">4</span>
+            <span class="label label-pill label-danger" v-if="unreadCount > 0">{{ unreadCount }}</span>
         </div>
         <div class="dropdown-menu-notif-list">
-            <div class="dropdown-menu-notif-item">
-                <div class="photo">
-                    <img src="" alt="">
-                </div>
-                <div class="dot"></div>
-                <a href="#">Morgan</a> was bothering about something
-                <div class="color-blue-grey-lighter">7 hours ago</div>
-            </div>
-            <div class="dropdown-menu-notif-item">
-                <div class="photo">
-                    <img src="" alt="">
-                </div>
-                <div class="dot"></div>
-                <a href="#">Lioneli</a> had commented on this <a href="#">Super Important Thing</a>
-                <div class="color-blue-grey-lighter">7 hours ago</div>
-            </div>
-            <div class="dropdown-menu-notif-item">
-                <div class="photo">
-                    <img src="" alt="">
-                </div>
-                <div class="dot"></div>
-                <a href="#">Xavier</a> had commented on the <a href="#">Movie title</a>
-                <div class="color-blue-grey-lighter">7 hours ago</div>
-            </div>
-            <div class="dropdown-menu-notif-item">
-                <div class="photo">
-                    <img src="" alt="">
-                </div>
-                <a href="#">Lionely</a> wants to go to <a href="#">Cinema</a> with you to see <a href="#">This Movie</a>
-                <div class="color-blue-grey-lighter">7 hours ago</div>
-            </div>
+            <notification :data="notification" v-for="notification in notifications"></notification>
         </div>
         <div class="dropdown-menu-notif-more">
-            <a href="">See more</a>
+            <a @click.prevent="seeAllNotifications">See more</a>
         </div>
     </div>
 </div>
@@ -55,14 +26,40 @@
 
 
 <script>
+import notification from './notification.vue';
+
 export default {
     props: ['notifications'],
+    data(){
+        return {
+            unreadCount: '0',
+        }
+    },
+    components: {
+        notification
+    },
     methods: {
+        markAsRead(){
+            // check if I have notifications to mark as read
+            // if(this.unreadCount > 0){
+                this.$http.post(Laravel.url+'/notifications/read/widget').then((response) => {
+                    this.getNotifications();
+                });
+            // }
+        },
+        seeAllNotifications(){
+            window.location = Laravel.url+'/notifications';
+        },
+        getNotifications(){
+            this.$http.get(Laravel.url+'/notifications/widget').then((response) => {
+                let data = response.data;
+                this.notifications = data.notifications;
+                this.unreadCount = data.unreadCount;
+            });
+        }
     },
     ready() {
-        this.$http.get(Laravel.url+'/notifications/widget').then((response) => {
-            this.notifications = response.data;
-        });
+        this.getNotifications();
     }
 
 }

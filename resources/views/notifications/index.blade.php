@@ -2,6 +2,7 @@
 
 @inject('carbon', 'Carbon\Carbon')
 @section('content')
+<div class="notificationsVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -28,17 +29,27 @@
 	    				<tbody>
 	                        @foreach($notifications as $notification)
 	    					<tr>
-	    						<td class="color-blue-grey-lighter">{!! $notification->data['message'] !!}</td>
+	    						<td class="color-blue-grey-lighter">
+									@if($notification->read_at === null)
+									<i class="fa fa-circle" style="color: #FA424A;"></i>
+									&nbsp;&nbsp;
+									@endif
+									{!! $notification->data['message'] !!}
+								</td>
 	    						<td class="table-date">{{ $carbon::parse($notification->created_at)->diffForHumans() }}</td>
 	    					</tr>
 	                        @endforeach
 	    				</tbody>
 	    			</table>
 	            	<div class="col-md-12">
-						{{ $notifications->links() }}
+						<nav>
+							{{ $notifications->links() }}
+							<all-notifications-as-read-button></all-notifications-as-read-button>
+						</nav>
 					</div>
             	</div><!--.box-typical-body-->
 			</section><!--.box-typical-->
 		</div>
 	</div>
+</div>
 @endsection

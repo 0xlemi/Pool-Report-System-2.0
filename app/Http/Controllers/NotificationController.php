@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class NotificationController extends PageController
 {
+
+    protected $paginationNumber = 30;
 
     /**
      * Create a new controller instance.
@@ -24,7 +27,11 @@ class NotificationController extends PageController
      */
     public function index(Request $request)
     {
-        $notifications = $request->user()->notifications()->paginate(30);
+        $notifications = $request->user()->notifications()->paginate($this->paginationNumber);
+
+        // mark the notifications as read
+        $this->markPageAsRead($request);
+
         return view('notifications.index', compact('notifications'));
     }
 
@@ -37,11 +44,43 @@ class NotificationController extends PageController
                                 ->transform(function($item){
                                     return (object) array_merge(
                                             (array) $item->data,
-                                            ['read' => ($item->read_at) ? true : false]
+                                            [
+                                                'read' => ($item->read_at) ? true : false,
+                                                'time' => Carbon::parse($item->created_at)->diffForHumans()
+                                            ]
                                         );
                                 });
 
-        return response()->json($notifications);
+        return response()->json([
+            'notifications' => $notifications,
+            'unreadCount' => $request->user()->unreadNotifications()->count(),
+        ]);
     }
+
+    public function markWidgetAsRead(Request $request)
+    {
+        dd($request->user()
+            ->notifications()
+            ->take(4)
+            ->get()
+            ->markAsRead());
+
+    }
+
+    public function markAllAsRead(Request $request)
+    {
+        $request->user()
+            ->unreadNotifications
+            ->markAsRead();
+    }
+
+    protected function markPageAsRead(Request $request)
+    {
+        $request->user()
+            ->notifications()
+            ->paginate($this->paginationNumber)
+            ->markAsRead();
+    }
+
 
 }
