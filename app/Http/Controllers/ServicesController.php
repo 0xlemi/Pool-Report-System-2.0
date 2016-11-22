@@ -100,7 +100,7 @@ class ServicesController extends PageController
         }
 
         if($photo){
-            $admin->user()->notify(new NewServiceNotification($service));
+            $admin->user()->notify(new NewServiceNotification($service, $request->user()));
             flash()->success('Created', 'New service successfully created.');
             return redirect('services');
         }
