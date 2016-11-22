@@ -123,7 +123,7 @@
 						<div v-if="(typeof workPhotos[0] !== 'undefined')">
 							<hr>
 							<photo-list :data="workPhotos" :object-id="workId"
-										:can-delete="false" :photos-url="'{{ url('works/photos') }}'"
+										:can-delete="false" :photos-url="'works/photos'"
 										>
 							</photo-list>
 						</div>
@@ -188,7 +188,7 @@
 
 						<hr>
 						<photo-list :data="workPhotos" :object-id="workId"
-										:can-delete="true" :photos-url="'{{ url('works/photos') }}'">
+										:can-delete="true" :photos-url="'works/photos'">
 						</photo-list>
 						<div class="col-md-12">
 	                        <!-- Dropzone -->

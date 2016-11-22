@@ -29441,18 +29441,18 @@ exports.default = {
 
             // check if I have notifications to mark as read
             // if(this.unreadCount > 0){
-            this.$http.post(Laravel.url + '/notifications/read/widget').then(function (response) {
+            this.$http.post(Laravel.url + 'notifications/read/widget').then(function (response) {
                 _this.getNotifications();
             });
             // }
         },
         seeAllNotifications: function seeAllNotifications() {
-            window.location = Laravel.url + '/notifications';
+            window.location = Laravel.url + 'notifications';
         },
         getNotifications: function getNotifications() {
             var _this2 = this;
 
-            this.$http.get(Laravel.url + '/notifications/widget').then(function (response) {
+            this.$http.get(Laravel.url + 'notifications/widget').then(function (response) {
                 var data = response.data;
                 _this2.notifications = data.notifications;
                 _this2.unreadCount = data.unreadCount;
@@ -29772,7 +29772,7 @@ exports.default = {
 
     computed: {
         deleteUrl: function deleteUrl() {
-            return this.photosUrl + '/' + this.objectId + '/';
+            return Laravel.url + this.photosUrl + '/' + this.objectId + '/';
         }
     },
     methods: {
@@ -29939,6 +29939,87 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _photoList = require('./photoList.vue');
+
+var _photoList2 = _interopRequireDefault(_photoList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    props: ['workOrderId', 'finished'],
+    components: {
+        photoList: _photoList2.default
+    },
+    data: function data() {
+        return {
+            focus: null, // 1=before work  2=after work
+            beforePhotos: null,
+            afterPhotos: null
+        };
+    },
+
+    computed: {
+        photoModalTitle: function photoModalTitle() {
+            switch (this.focus) {
+                case 1:
+                    return 'Photos before work started';
+                    break;
+                case 2:
+                    return 'Photos after the work was finished';
+                    break;
+                default:
+                    return 'Photos';
+            }
+        }
+    },
+    methods: {
+        refreshWorkOrderPhotos: function refreshWorkOrderPhotos(focus) {
+            var _this = this;
+
+            var url = '';
+            if (focus === 1) {
+                url = Laravel.url + 'workorders/photos/before/' + this.workOrderId;
+            } else if (focus === 2) {
+                url = Laravel.url + 'workorders/photos/after/' + this.workOrderId;
+            }
+
+            this.$http.get(url).then(function (response) {
+                if (focus == 1) {
+                    _this.beforePhotos = response.data;
+                } else if (focus == 2) {
+                    _this.afterPhotos = response.data;
+                }
+            });
+        },
+        changeFocus: function changeFocus($num) {
+            this.focus = $num;
+            // this.refreshWorkOrderPhotos($num);
+        }
+    },
+    ready: function ready() {
+        this.refreshWorkOrderPhotos(1);
+        this.refreshWorkOrderPhotos(2);
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Buttons  -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Photos</label>\n\t<div class=\"col-sm-10\">\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" @click=\"changeFocus(1)\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"fa fa-camera\"></i>\n            &nbsp;&nbsp;&nbsp;Before Work\n\t\t</button>\n\n\t\t<button v-if=\"finished\" type=\"button\" class=\"btn btn-info\" @click=\"changeFocus(2)\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"glyphicon glyphicon-check\"></i>\n            &nbsp;&nbsp;After Work\n\t\t</button>\n\n\t</div>\n</div>\n\n\n\n<!-- Modal for email preview -->\n<div class=\"modal fade\" id=\"workOrderPhotosModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ photoModalTitle }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\n\t\t\t<!-- Show Before Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\" v-show=\"focus === 1\">\n\t\t\t\t<photo-list :data=\"beforePhotos\" :object-id=\"workOrderId\" :can-delete=\"false\" :photos-url=\"'workorders/photos/before'\">\n\t\t\t\t</photo-list>\n\t\t\t</div>\n\n\t\t\t<!-- Show After Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\" v-show=\"focus === 2\">\n\t\t\t\t<photo-list :data=\"afterPhotos\" :object-id=\"workOrderId\" :can-delete=\"false\" :photos-url=\"'workorders/photos/after'\">\n\t\t\t\t</photo-list>\n\t\t\t</div>\n\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5a5841d4", module.exports)
+  } else {
+    hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./photoList.vue":202,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30322,7 +30403,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":196,"spin":166,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":196,"spin":166,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30406,7 +30487,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -31295,6 +31376,7 @@ $(document).ready(function () {
     var routeTable = require('./components/routeTable.vue');
     var notificationsWidget = require('./components/notificationsWidget.vue');
     var AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+    var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
     require('./components/checkboxList.vue');
 
     var mainVue = new Vue({
@@ -31317,6 +31399,7 @@ $(document).ready(function () {
         components: {
             PhotoList: PhotoList,
             dropdown: dropdown,
+            workOrderPhotosShow: workOrderPhotosShow,
             works: works
         },
         data: {
@@ -31329,25 +31412,7 @@ $(document).ready(function () {
             // Show
             finished: isset('workOrderFinished') ? back.workOrderFinished : 0,
             // Finish
-            workOrderFinishedAt: '',
-            // Photos
-            photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
-            workOrderBeforePhotos: isset('workOrderBeforePhotos') ? back.workOrderBeforePhotos : 0,
-            workOrderAfterPhotos: isset('workOrderAfterPhotos') ? back.workOrderAfterPhotos : 0
-        },
-        computed: {
-            photoModalTitle: function photoModalTitle() {
-                switch (this.photoFocus) {
-                    case 1:
-                        return 'Photos before work started';
-                        break;
-                    case 2:
-                        return 'Photos after the work was finished';
-                        break;
-                    default:
-                        return 'Photos';
-                }
-            }
+            workOrderFinishedAt: ''
         },
         events: {
             workOrderChangePhotos: function workOrderChangePhotos() {
@@ -31356,30 +31421,6 @@ $(document).ready(function () {
             }
         },
         methods: {
-            refreshWorkOrderPhotos: function refreshWorkOrderPhotos(type) {
-                var url = '';
-                if (type == 'before' && isset('workOrderPhotoBeforeUrl')) {
-                    url = back.workOrderPhotoBeforeUrl;
-                } else if (type == 'after' && isset('workOrderPhotoAfterUrl')) {
-                    url = back.workOrderPhotoAfterUrl;
-                }
-
-                if (url != '') {
-                    $.ajax({
-                        vue: this,
-                        url: url,
-                        type: 'GET',
-                        success: function success(data, textStatus, xhr) {
-                            if (type == 'before') {
-                                this.vue.workOrderBeforePhotos = data;
-                            } else if (type == 'after') {
-                                this.vue.workOrderAfterPhotos = data;
-                            }
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {}
-                    });
-                }
-            },
             checkValidationError: function checkValidationError($fildName) {
                 return $fildName in this.validationErrors;
             },
@@ -31410,13 +31451,6 @@ $(document).ready(function () {
                         }
                     });
                 }
-            },
-            openPhotosModal: function openPhotosModal($focus) {
-                this.photoFocus = $focus;
-                $('#photosWorkOrderModal').modal('show');
-            },
-            checkPhotoFocus: function checkPhotoFocus($num) {
-                return this.photoFocus == $num;
             },
             openFinishModal: function openFinishModal() {
                 $('#finishWorkOrderModal').modal('show');
@@ -32086,6 +32120,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/dropdown.vue":196,"./components/email.vue":197,"./components/notificationsWidget.vue":199,"./components/payments.vue":201,"./components/photoList.vue":202,"./components/routeTable.vue":203,"./components/works.vue":204,"./directives/FormToAjax.vue":205,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,206]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/dropdown.vue":196,"./components/email.vue":197,"./components/notificationsWidget.vue":199,"./components/payments.vue":201,"./components/photoList.vue":202,"./components/routeTable.vue":203,"./components/workOrderPhotosShow.vue":204,"./components/works.vue":205,"./directives/FormToAjax.vue":206,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,207]);
 
 //# sourceMappingURL=bundle.js.map

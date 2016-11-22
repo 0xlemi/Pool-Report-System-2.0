@@ -12,14 +12,14 @@
 				<!-- Show Before Work is Done Photos -->
 				<div class="col-md-12" v-show="checkPhotoFocus(1)">
 					<photo-list :data="workOrderBeforePhotos" :object-id="workOrderId"
-									:can-delete="false" :photos-url="'{{ url('workorders/photos/before') }}'">
+									:can-delete="false" :photos-url="'workorders/photos/before'">
 					</photo-list>
 				</div>
 
 				<!-- Show After Work is Done Photos -->
 				<div class="col-md-12" v-show="checkPhotoFocus(2)">
 					<photo-list :data="workOrderAfterPhotos" :object-id="workOrderId"
-									:can-delete="false" :photos-url="'{{ url('workorders/photos/after') }}'">
+									:can-delete="false" :photos-url="'workorders/photos/after'">
 					</photo-list>
 				</div>
 
@@ -30,7 +30,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<photo-list :data="workOrderBeforePhotos" :object-id="workOrderId"
-											:can-delete="true" :photos-url="'{{ url('workorders/photos/before') }}'">
+											:can-delete="true" :photos-url="'workorders/photos/before'">
 							</photo-list>
 						</div>
 					</div>

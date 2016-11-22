@@ -28,7 +28,7 @@
 				<hr>
 				<div class="col-md-12">
 					<photo-list :data="workOrderAfterPhotos" :object-id="workOrderId"
-									:can-delete="true" :photos-url="'{{ url('workorders/photos/after') }}'">
+									:can-delete="true" :photos-url="'workorders/photos/after'">
 					</photo-list>
 				</div>
 				<div class="col-md-12">

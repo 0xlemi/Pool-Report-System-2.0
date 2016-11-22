@@ -42,16 +42,16 @@ export default {
         markAsRead(){
             // check if I have notifications to mark as read
             // if(this.unreadCount > 0){
-                this.$http.post(Laravel.url+'/notifications/read/widget').then((response) => {
+                this.$http.post(Laravel.url+'notifications/read/widget').then((response) => {
                     this.getNotifications();
                 });
             // }
         },
         seeAllNotifications(){
-            window.location = Laravel.url+'/notifications';
+            window.location = Laravel.url+'notifications';
         },
         getNotifications(){
-            this.$http.get(Laravel.url+'/notifications/widget').then((response) => {
+            this.$http.get(Laravel.url+'notifications/widget').then((response) => {
                 let data = response.data;
                 this.notifications = data.notifications;
                 this.unreadCount = data.unreadCount;

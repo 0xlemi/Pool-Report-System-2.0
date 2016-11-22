@@ -947,6 +947,7 @@ function isset(strVariableName) {
     let routeTable     = require('./components/routeTable.vue');
     let notificationsWidget     = require('./components/notificationsWidget.vue');
     let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+    let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
     require('./components/checkboxList.vue');
 
 
@@ -970,6 +971,7 @@ function isset(strVariableName) {
         components: {
             PhotoList,
             dropdown,
+            workOrderPhotosShow,
             works
         },
         data:{
@@ -981,26 +983,8 @@ function isset(strVariableName) {
             serviceId: (isset('serviceId')) ? back.serviceId : 0,
             // Show
             finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
-                // Finish
-                    workOrderFinishedAt: '',
-                // Photos
-                    photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
-                    workOrderBeforePhotos: (isset('workOrderBeforePhotos')) ? back.workOrderBeforePhotos : 0,
-                    workOrderAfterPhotos: (isset('workOrderAfterPhotos')) ? back.workOrderAfterPhotos : 0,
-        },
-        computed:{
-            photoModalTitle: function(){
-                switch (this.photoFocus){
-                    case 1:
-                        return 'Photos before work started';
-                    break;
-                    case 2:
-                        return 'Photos after the work was finished';
-                    break;
-                    default:
-                        return 'Photos';
-                }
-            },
+            // Finish
+                workOrderFinishedAt: '',
         },
         events:{
             workOrderChangePhotos(){
@@ -1009,32 +993,6 @@ function isset(strVariableName) {
             }
         },
         methods:{
-            refreshWorkOrderPhotos(type){
-                let url = '';
-                if((type == 'before') && (isset('workOrderPhotoBeforeUrl'))){
-                    url = back.workOrderPhotoBeforeUrl;
-                }else if((type == 'after') && (isset('workOrderPhotoAfterUrl'))){
-                    url = back.workOrderPhotoAfterUrl;
-                }
-
-                if(url != ''){
-                    $.ajax({
-                        vue: this,
-                        url: url,
-                        type: 'GET',
-                        success: function(data, textStatus, xhr) {
-                            if(type == 'before'){
-                                this.vue.workOrderBeforePhotos = data;
-                            }else if(type == 'after'){
-                                this.vue.workOrderAfterPhotos = data;
-                            }
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-
-                        }
-                    });
-                }
-            },
             checkValidationError($fildName){
                 return $fildName in this.validationErrors;
             },
@@ -1065,13 +1023,6 @@ function isset(strVariableName) {
                         }
                     });
                 }
-            },
-            openPhotosModal($focus){
-                this.photoFocus = $focus;
-                $('#photosWorkOrderModal').modal('show');
-            },
-            checkPhotoFocus($num){
-                return (this.photoFocus == $num);
             },
             openFinishModal(){
                 $('#finishWorkOrderModal').modal('show');

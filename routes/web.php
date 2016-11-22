@@ -15,9 +15,12 @@ use Illuminate\Http\Request;
 Auth::routes();
 Route::auth();
 
+// Welcome Page
 Route::get('/', 'HomeController@index');
 Route::get('/dashboard', 'HomeController@index');
 Route::get('/home', 'HomeController@index');
+
+Route::get('/logout', 'Auth\LoginController@logout');
 
 // change email settings from link
 Route::group(['middleware' => ['throttle:500'] ], function (){
@@ -25,17 +28,17 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
 
-// remove this eventually
-Route::get('/logout', 'Auth\LoginController@logout');
-
+// Todays Route
 Route::get('todaysroute', 'TodaysRouteController@index');
 Route::get('todaysroute/report/{service_seq_id}', 'TodaysRouteController@createReport');
 Route::post('todaysroute/report', 'TodaysRouteController@storeReport');
 
+// Reports
 Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
+// Work Orders
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
 Route::get('workorders/photos/before/{id}', 'WorkOrderController@getPhotosBefore');
 Route::get('workorders/photos/after/{id}', 'WorkOrderController@getPhotosAfter');
@@ -44,14 +47,17 @@ Route::post('workorders/photos/after/{id}', 'WorkOrderController@addPhotoAfter')
 Route::delete('workorders/photos/before/{id}/{order}', 'WorkOrderController@removePhotoBefore');
 Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@removePhotoAfter');
 
+// Works
 Route::get('service/{workOrderSeqId}/works', 'WorkController@index');
 Route::post('service/{workOrderSeqId}/works', 'WorkController@store');
 Route::post('works/photos/{work}', 'WorkController@addPhoto');
 // Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
 
+// Equipment
 Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
 
+// Chemicals
 Route::get('chemicals/{serviceSeqId}', 'chemicalController@index');
 Route::post('chemicals/{serviceSeqId}', 'chemicalController@store');
 

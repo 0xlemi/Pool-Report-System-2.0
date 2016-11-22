@@ -34,7 +34,7 @@ export default {
     },
     computed:{
         deleteUrl: function(){
-            return this.photosUrl+'/'+this.objectId+'/'
+            return Laravel.url+this.photosUrl+'/'+this.objectId+'/'
         }
     },
     methods:{
