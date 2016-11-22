@@ -31332,39 +31332,10 @@ $(document).ready(function () {
             workOrderFinishedAt: '',
             // Photos
             photoFocus: 1, // 1=before work  2=after work 3=editing before work photo
-            // Work
-            // show and edit
-            workFocus: 1, // 1=new, 2=show, 3=edit
-            workOrderId: isset('workOrderId') ? back.workOrderId : 0,
-            workId: 0,
-            workTitle: '',
-            workDescription: '',
-            workQuantity: '',
-            workUnits: '',
-            workCost: '',
             workOrderBeforePhotos: isset('workOrderBeforePhotos') ? back.workOrderBeforePhotos : 0,
-            workOrderAfterPhotos: isset('workOrderAfterPhotos') ? back.workOrderAfterPhotos : 0,
-            workTechnician: {
-                'id': 0
-            },
-            workPhotos: []
+            workOrderAfterPhotos: isset('workOrderAfterPhotos') ? back.workOrderAfterPhotos : 0
         },
         computed: {
-            workModalTitle: function workModalTitle() {
-                switch (this.workFocus) {
-                    case 1:
-                        return 'Add Work';
-                        break;
-                    case 2:
-                        return 'View Work';
-                        break;
-                    case 3:
-                        return 'Edit Work';
-                        break;
-                    default:
-                        return 'Work';
-                }
-            },
             photoModalTitle: function photoModalTitle() {
                 switch (this.photoFocus) {
                     case 1:
@@ -31379,9 +31350,6 @@ $(document).ready(function () {
             }
         },
         events: {
-            workChanged: function workChanged() {
-                this.getWork();
-            },
             workOrderChangePhotos: function workOrderChangePhotos() {
                 this.refreshWorkOrderPhotos('after');
                 this.refreshWorkOrderPhotos('before');
@@ -31452,152 +31420,6 @@ $(document).ready(function () {
             },
             openFinishModal: function openFinishModal() {
                 $('#finishWorkOrderModal').modal('show');
-            },
-            destroyWork: function destroyWork() {
-                var _this = this;
-
-                if (isset('worksUrl')) {
-                    (function () {
-                        var vue = _this;
-                        swal({
-                            title: "Are you sure?",
-                            text: "You will not be able to recover this!",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Yes, delete it!",
-                            cancelButtonText: "No, cancel!",
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        }, function (isConfirm) {
-                            if (isConfirm) {
-                                $.ajax({
-                                    vue: vue,
-                                    swal: swal,
-                                    url: back.worksUrl + vue.workId,
-                                    type: 'DELETE',
-                                    success: function success(data, textStatus, xhr) {
-                                        // refresh equipment list
-                                        worksTable.bootstrapTable('refresh');
-
-                                        this.vue.closeWorkModal();
-                                        // send success alert
-                                        this.swal({
-                                            title: data.title,
-                                            text: data.message,
-                                            type: "success",
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
-                                    },
-                                    error: function error(xhr, textStatus, errorThrown) {
-                                        // this.swal({
-                                        //     title: data.title,
-                                        //     text: data.message,
-                                        //     type: "error",
-                                        //     showConfirmButton: true
-                                        // });
-                                    }
-                                });
-                            }
-                        });
-                    })();
-                }
-            },
-            sendWork: function sendWork(type) {
-                var url = isset('worksUrl') ? back.worksUrl : '';
-                var requestType = 'POST';
-                if (type == 'edit') {
-                    url += this.workId;
-                    requestType = 'PATCH';
-                }
-
-                if (url != '') {
-                    $.ajax({
-                        vue: this,
-                        swal: swal,
-                        url: url,
-                        type: requestType,
-                        dataType: 'json',
-                        data: {
-                            title: this.workTitle,
-                            description: this.workDescription,
-                            quantity: this.workQuantity,
-                            units: this.workUnits,
-                            cost: this.workCost,
-                            work_order_id: this.workOrderId,
-                            technician_id: this.workTechnician.id
-                        },
-                        success: function success(data, textStatus, xhr) {
-                            // refresh equipment list
-                            worksTable.bootstrapTable('refresh');
-
-                            this.vue.closeWorkModal();
-
-                            // send success alert
-                            this.swal({
-                                title: data.title,
-                                text: data.message,
-                                type: "success",
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {
-                            this.vue.validationErrors = xhr.responseJSON;
-                        }
-                    });
-                }
-            },
-            getWork: function getWork() {
-                if (isset('worksUrl')) {
-                    $.ajax({
-                        vue: this,
-                        url: back.worksUrl + this.workId,
-                        type: 'GET',
-                        success: function success(data, textStatus, xhr) {
-                            this.vue.workId = data.id;
-                            this.vue.workTitle = data.title;
-                            this.vue.workDescription = data.description;
-                            this.vue.workQuantity = data.quantity;
-                            this.vue.workUnits = data.units;
-                            this.vue.workCost = data.cost;
-                            this.vue.workTechnician = data.technican;
-                            this.vue.workPhotos = data.photos;
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {
-                            //called when there is an error
-                            console.log('error');
-                        }
-                    });
-                }
-            },
-            clearWork: function clearWork() {
-                this.workId = 0;
-                this.workTitle = '';
-                this.workDescription = '';
-                this.workQuantity = '';
-                this.workUnits = '';
-                this.workCost = '';
-                this.workTechnician = '';
-                this.workPhotos = '';
-            },
-            setWorkFocus: function setWorkFocus($num) {
-                if ($num == 1) {
-                    this.clearWork();
-                }
-                this.workFocus = $num;
-            },
-            checkWorkFocusIs: function checkWorkFocusIs($num) {
-                return this.workFocus == $num;
-            },
-            openWorkModal: function openWorkModal($focus) {
-                this.setWorkFocus($focus);
-                $('#workModal').modal('show');
-            },
-            closeWorkModal: function closeWorkModal() {
-                $('#workModal').modal('hide');
-                this.clearWork();
             },
             changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {
                 var intFinished = !finished ? 1 : 0;
@@ -31694,7 +31516,7 @@ $(document).ready(function () {
         },
         methods: {
             submitCreditCard: function submitCreditCard() {
-                var _this2 = this;
+                var _this = this;
 
                 var $form = $('#payment-form');
                 var clickEvent = event;
@@ -31717,8 +31539,8 @@ $(document).ready(function () {
                         // Problem!
 
                         // Show the errors on the form:
-                        _this2.alertMessage = response.error.message;
-                        _this2.alertOpen = true;
+                        _this.alertMessage = response.error.message;
+                        _this.alertOpen = true;
                         clickEvent.target.disabled = false; // Re-enable submission
                         clickEvent.target.innerHTML = buttonTag;
                     } else {
@@ -31838,11 +31660,11 @@ $(document).ready(function () {
             // Chemicals
             // Equipment
             destroyEquipment: function destroyEquipment() {
-                var _this3 = this;
+                var _this2 = this;
 
                 if (isset('equipmentUrl')) {
                     (function () {
-                        var vue = _this3;
+                        var vue = _this2;
                         swal({
                             title: "Are you sure?",
                             text: "You will not be able to recover this!",
