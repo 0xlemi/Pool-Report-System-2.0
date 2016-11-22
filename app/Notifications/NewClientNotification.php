@@ -45,6 +45,7 @@ class NewClientNotification extends Notification
     {
         $client = $this->client;
         return [
+            'icon' => url($client->icon()),
             'link' => "clients/{$client->seq_id}",
             'title' => "New <strong>Client</strong> was created",
             'message' => "New <strong>Client</strong> (<a href=\"../clients/{$client->seq_id}\">{$client->name} {$client->last_name}</a>) has been created.",

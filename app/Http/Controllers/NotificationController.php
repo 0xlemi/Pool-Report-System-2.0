@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class NotificationController extends PageController
 {
 
-    protected $paginationNumber = 30;
+    protected $paginationNumber = 20;
 
     /**
      * Create a new controller instance.
@@ -59,12 +59,11 @@ class NotificationController extends PageController
 
     public function markWidgetAsRead(Request $request)
     {
-        dd($request->user()
+        $request->user()
             ->notifications()
             ->take(4)
             ->get()
-            ->markAsRead());
-
+            ->markAsRead();
     }
 
     public function markAllAsRead(Request $request)

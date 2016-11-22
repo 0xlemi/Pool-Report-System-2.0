@@ -45,6 +45,7 @@ class NewTechnicianNotification extends Notification
     {
         $technician = $this->technician;
         return [
+            'icon' => url($technician->icon()),
             'link' => "technicians/{$technician->seq_id}",
             'title' => "New <strong>Technician</strong> was created",
             'message' => "New <strong>Technician</strong> (<a href=\"../technicians/{$technician->seq_id}\">{$technician->name} {$technician->last_name}</a>) has been created.",

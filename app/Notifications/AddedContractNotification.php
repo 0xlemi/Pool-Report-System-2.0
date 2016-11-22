@@ -45,6 +45,7 @@ class AddedContractNotification extends Notification
     {
         $service = $this->contract->service;
         return [
+            'icon' => url($service->icon()),
             'link' => "services/{$service->seq_id}",
             'title' => "New <strong>Contract</strong> for <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "Opened a new <strong>Contract</strong> for the <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>).",

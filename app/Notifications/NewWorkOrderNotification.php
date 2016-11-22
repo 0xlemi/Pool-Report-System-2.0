@@ -45,6 +45,7 @@ class NewWorkOrderNotification extends Notification
     {
         $workOrder = $this->workOrder;
         return [
+            'icon' => url($workOrder->icon()),
             'link' => "workorders/{$workOrder->seq_id}",
             'title' => "New <strong>Work Order</strong> was created",
             'message' => "New <strong>Work Order</strong> (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>) has been created.",

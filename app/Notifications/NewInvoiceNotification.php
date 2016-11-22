@@ -45,6 +45,7 @@ class NewInvoiceNotification extends Notification
     {
         $invoice = $this->invoice;
         return [
+            'icon' => url('img/notifications-button.png'),
             'link' => "invoices/{$invoice->seq_id}",
             'title' => "New <strong>Invoice</strong> (#{$invoice->seq_id}) was created",
             'message' => "New <strong>Invoice</strong> (<a href=\"../invoices/{$invoice->seq_id}\">#{$invoice->seq_id}</a>) for <strong>{$invoice->amount} {$invoice->currency}</strong> has been created on a <strong>{$invoice->type()}</strong>.",

@@ -24,6 +24,9 @@
 	    				<tr>
 	    					<th>Description</th>
 	    					<th width="150">When</th>
+							<th class="table-icon-cell">
+								<i class="fa fa-photo"></i>
+							</th>
 	    				</tr>
 	    				</thead>
 	    				<tbody>
@@ -37,6 +40,9 @@
 									{!! $notification->data['message'] !!}
 								</td>
 	    						<td class="table-date">{{ $carbon::parse($notification->created_at)->diffForHumans() }}</td>
+								<td class="table-photo">
+									<img src="{{ $notification->data['icon'] }}" alt="" data-toggle="tooltip" data-placement="bottom" title="Photo">
+								</td>
 	    					</tr>
 	                        @endforeach
 	    				</tbody>

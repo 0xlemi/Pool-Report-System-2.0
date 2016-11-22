@@ -45,6 +45,7 @@ class NewSupervisorNotification extends Notification
     {
         $supervisor = $this->supervisor;
         return [
+            'icon' => url($supervisor->icon()),
             'link' => "supervisors/{$supervisor->seq_id}",
             'title' => "New <strong>Supervisor</strong> was created",
             'message' => "New <strong>Supervisor</strong> (<a href=\"../supervisors/{$supervisor->seq_id}\">{$supervisor->name} {$supervisor->last_name}</a>) has been created.",

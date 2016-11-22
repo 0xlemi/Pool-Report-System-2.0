@@ -45,6 +45,7 @@ class NewServiceNotification extends Notification
     {
         $service = $this->service;
         return [
+            'icon' => url($service->icon()),
             'link' => "services/{$service->seq_id}",
             'title' => "New <strong>Service</strong> was created",
             'message' => "New <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) has been created.",
