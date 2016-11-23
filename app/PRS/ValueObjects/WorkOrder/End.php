@@ -15,16 +15,31 @@ class End{
         $this->timezone = $timezone;
     }
 
+    /**
+     * Get the carbon date in the corresponding timezone
+     * @return Carbor\Carbon
+     * tested
+     */
     public function carbon()
     {
         return (new Carbon($this->date, 'UTC'))->setTimezone($this->timezone);
     }
 
+    /**
+     * Get a long representation of the date
+     * @return string
+     * tested
+     */
     public function long()
     {
         return $this->carbon()->format('l jS \\of F Y h:i:s A');
     }
 
+    /**
+     * Check if the Work Order is finished or not
+     * @return boolean
+     * tested
+     */
     public function finished()
     {
         return ($this->date != null);
@@ -32,6 +47,7 @@ class End{
 
     /**
      * @return string
+     * tested
      */
     public function __toString()
     {
