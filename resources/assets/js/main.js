@@ -948,6 +948,7 @@ function isset(strVariableName) {
     let notificationsWidget     = require('./components/notificationsWidget.vue');
     let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
     let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
+    let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
     require('./components/checkboxList.vue');
 
 
@@ -972,59 +973,17 @@ function isset(strVariableName) {
             PhotoList,
             dropdown,
             workOrderPhotosShow,
+            finishWorkOrderButton,
             works
         },
         data:{
-            validationErrors: {},
             // index
             finishedSwitch: false,
             // create edit
             supervisorId: (isset('supervisorId')) ? back.supervisorId : 0,
             serviceId: (isset('serviceId')) ? back.serviceId : 0,
-            // Finish
-                workOrderFinishedAt: '',
-        },
-        events:{
-            workOrderChangePhotos(){
-                this.refreshWorkOrderPhotos('after');
-                this.refreshWorkOrderPhotos('before');
-            }
         },
         methods:{
-            checkValidationError($fildName){
-                return $fildName in this.validationErrors;
-            },
-            finishWorkOrder(){
-                if(isset('finishWorkOrderUrl') && isset('workOrderUrl')){
-                    $.ajax({
-                        vue: this,
-                        swal: swal,
-                        url: back.finishWorkOrderUrl,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            'end': this.workOrderFinishedAt,
-                        },
-                        success: function(data, textStatus, xhr) {
-                            window.location = back.workOrderUrl;
-                            // send success alert
-                            this.swal({
-                                title: data.title,
-                                text: data.message,
-    		                    type: "success",
-                                timer: 2000,
-                                showConfirmButton: false
-                            });
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            this.vue.validationErrors = xhr.responseJSON;
-                        }
-                    });
-                }
-            },
-            openFinishModal(){
-                $('#finishWorkOrderModal').modal('show');
-            },
             changeWorkOrderListFinished(finished){
                 var intFinished = (!finished) ? 1 : 0;
                 if(isset('workOrderTableUrl')){
@@ -1512,7 +1471,7 @@ function isset(strVariableName) {
     	acceptedFiles: '.jpg, .jpeg, .png',
         init: function() {
             this.on("success", function(file) {
-                this.options.vue.$emit('workOrderChangePhotos');
+                this.options.vue.$broadcast('workOrderPhotoUploaded');
             });
         }
     }

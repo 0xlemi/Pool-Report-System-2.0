@@ -122,10 +122,9 @@
 									&nbsp;&nbsp;Edit Work Order
 								</a>
 
-								<button class="btn btn-success" @click="openFinishModal()">
-									<i class="font-icon font-icon-ok"></i>
-									&nbsp;&nbsp;Finish Work Order
-								</button>
+								<finish-work-order-button work-order-id="{{ $workOrder->seq_id }}">
+								</finish-work-order-button>
+
 							@endif
 
 						</p>
@@ -134,8 +133,5 @@
 			</section>
 		</div>
 	</div>
-
-@include('workorders.finish')
-
 </div>
 @endsection
