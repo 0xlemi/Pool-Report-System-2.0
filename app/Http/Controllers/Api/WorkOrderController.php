@@ -36,9 +36,10 @@ class WorkOrderController extends ApiController
         $admin = $this->loggedUserAdministrator();
 
         $limit = ($request->limit)?: 5;
+        $operator = ($request->finished) ? '!=' : '=';
         if($request->has('finished')){
             $workOrders = $admin->workOrdersInOrder()
-                            ->where('finished', $request->finished)
+                            ->where('end', $operator, null)
                             ->paginate($limit);
         }else{
             $workOrders = $admin->workOrdersInOrder()
@@ -158,7 +159,7 @@ class WorkOrderController extends ApiController
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
         // check that work order is not marked as finished
-        if($workOrder->finished){
+        if($workOrder->end()->finished()){
             return response()->json([
                 'error' => 'Work order cannot be changed once is finished.'
             ], 422);
@@ -228,7 +229,7 @@ class WorkOrderController extends ApiController
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
         // check that work order is not marked as finished
-        if($workOrder->finished){
+        if($workOrder->end()->finished()){
             return response()->json([
                 'error' => 'This Work Order was already finished.'
             ], 422);
@@ -242,7 +243,6 @@ class WorkOrderController extends ApiController
         // ***** Persisting *****
         $save = DB::transaction(function () use($request, $workOrder, $admin) {
             $workOrder->end = (new Carbon( $request->end ))->setTimezone('UTC');
-            $workOrder->finished = 1;
 
             // Add Photos
             if(isset($request->photosAfterWork)){

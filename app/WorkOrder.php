@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\ValueObjects\WorkOrder\End;
 
 use Carbon\Carbon;
 
@@ -106,7 +107,7 @@ class WorkOrder extends Model
      */
     public function end()
     {
-        return (new Carbon($this->end, 'UTC'))->setTimezone($this->admin()->timezone);
+        return new End($this->end, $this->admin()->timezone);
     }
 
 

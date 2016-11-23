@@ -19,7 +19,6 @@ class CreateWorkOrdersTable extends Migration
             $table->text('description');
             $table->dateTime('start');
             $table->dateTime('end')->nullable();
-            $table->boolean('finished')->default(0);
             $table->decimal('price', 16, 2);
             $table->char('currency', 3);
             $table->integer('service_id')->unsigned();

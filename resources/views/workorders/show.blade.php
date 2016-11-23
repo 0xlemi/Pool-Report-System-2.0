@@ -27,7 +27,7 @@
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Status:</label>
 							<div class="col-sm-10">
-								{!! $workOrderHelpers->styleFinishedStatus($workOrder->finished) !!}
+								{!! $workOrderHelpers->styleFinishedStatus($workOrder->end()->finished()) !!}
 							</div>
 						</div>
 
@@ -77,19 +77,21 @@
 							</div>
 						</div>
 
-						<div class="form-group row" v-if="finished">
-							<label class="col-sm-2 form-control-label">Finished at</label>
-							<div class="col-sm-10">
-								<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrderHelpers->format_date($workOrder->end) }}"></p>
+						@if($workOrder->end()->finished())
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Finished at</label>
+								<div class="col-sm-10">
+									<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->end()->long() }}"></p>
+								</div>
 							</div>
-						</div>
+						@endif
 
 						<works work-order-id="{{ $workOrder->seq_id }}"
 								base-url="{{ url('/') }}"
 								:technicians="{{ $technicians }}">
 						</works>
 
-						<work-order-photos-show work-order-id="{{ $workOrder->seq_id }}" finished="{{ ($workOrder->end) ? true : false }}">
+						<work-order-photos-show work-order-id="{{ $workOrder->seq_id }}" finished="{{ $workOrder->end()->finished() }}">
 						</work-order-photos-show>
 
 						<div class="form-group row {{($errors->has('description'))? 'form-group-error':''}}">
@@ -113,17 +115,18 @@
 								<i class="font-icon font-icon-close-2"></i>
 								&nbsp;&nbsp;Delete
 							</a>
+							@if(!$workOrder->end()->finished())
+								<a class="btn btn-primary"
+										href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
+									<i class="font-icon font-icon-pencil"></i>
+									&nbsp;&nbsp;Edit Work Order
+								</a>
 
-							<a v-if="!(finished)" class="btn btn-primary"
-									href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
-								<i class="font-icon font-icon-pencil"></i>
-								&nbsp;&nbsp;Edit Work Order
-							</a>
-
-							<button v-if="!(finished)" class="btn btn-success" @click="openFinishModal()">
-								<i class="font-icon font-icon-ok"></i>
-								&nbsp;&nbsp;Finish Work Order
-							</button>
+								<button class="btn btn-success" @click="openFinishModal()">
+									<i class="font-icon font-icon-ok"></i>
+									&nbsp;&nbsp;Finish Work Order
+								</button>
+							@endif
 
 						</p>
 						<br><br>

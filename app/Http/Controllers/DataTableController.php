@@ -148,18 +148,18 @@ class DataTableController extends PageController
             );
         }
 
+        $operator = ($request->finished) ? '!=' : '=';
         $workOrders = $this->loggedUserAdministrator()
                         ->workOrdersInOrder()
                         ->get()
-                        ->where('finished', (int) $request->finished)
+                        ->where('end', $operator, null)
                         ->transform(function($item){
                             $supervisor =  $item->supervisor;
                             return (object) array(
                                 'id' => $item->seq_id,
                                 'start' => $item->start()
                                                 ->format('d M Y h:i:s A'),
-                                'end' =>  $item->end()
-                                                ->format('d M Y h:i:s A'),
+                                'end' =>  (string) $item->end(),
                                 'price' => $item->price.' <strong>'.$item->currency.'</strong>',
                                 'service' => $item->service->name,
                                 'supervisor' => $supervisor->name.' '.$supervisor->last_name,

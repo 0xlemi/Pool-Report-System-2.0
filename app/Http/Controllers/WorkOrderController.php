@@ -136,7 +136,7 @@ class WorkOrderController extends PageController
             'worksUrl' => url('/works').'/',
             'worksAddPhotoUrl' => url('/works/photos').'/',
             'workOrderId' => $workOrder->id,
-            'workOrderFinished' => $workOrder->finished,
+            'workOrderFinished' => $workOrder->end()->finished(),
             'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
             'workOrderBeforePhotos' => $imagesBeforeWork,
             'workOrderAfterPhotos' => $imagesAfterWork,
@@ -156,7 +156,6 @@ class WorkOrderController extends PageController
 
         $workOrder = $admin->workOrderBySeqId($seq_id);
         $workOrder->end = (new Carbon($request->end, $admin->timezone))->setTimezone('UTC');
-        $workOrder->finished = true;
         $workOrder->save();
 
         return Response::json([
@@ -209,7 +208,7 @@ class WorkOrderController extends PageController
 
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
-        if($workOrder->finished){
+        if($workOrder->end()->finished()){
             return $this->respondWithValidationError('Work Order can\'t be changed once finilized.');
         }
 

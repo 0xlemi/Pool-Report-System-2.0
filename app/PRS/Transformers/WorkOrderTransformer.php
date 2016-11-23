@@ -40,7 +40,7 @@ class WorkOrderTransformer extends Transformer
     /**
      * Transform WorkOrder to api friendly array
      * @param  WorkOrder $workOrder
-     * @return array               
+     * @return array
      */
     public function transform(WorkOrder $workOrder)
     {
@@ -49,7 +49,7 @@ class WorkOrderTransformer extends Transformer
             'title' => $workOrder->title,
             'description' => $workOrder->description,
             'start' => $workOrder->start(),
-            'finished' => $workOrder->finished,
+            'finished' => $workOrder->end()->finished(),
             'price' => $workOrder->price,
             'currency' => $workOrder->currency,
             'service'=> $this->serviceTransformer->transform($workOrder->service),
@@ -59,7 +59,7 @@ class WorkOrderTransformer extends Transformer
             'photosAfterWork' => $this->imageTransformer->transformCollection($workOrder->imagesAfterWork()),
         ];
 
-        if(($workOrder->finished) && ($workOrder->end != null)){
+        if($workOrder->end()->finished()){
             // add the end attribute to array
             $attributes = array_merge($attributes, [
                 'end' => $workOrder->end()

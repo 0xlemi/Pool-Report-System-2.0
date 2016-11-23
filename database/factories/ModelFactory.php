@@ -124,8 +124,7 @@ $factory->define(App\WorkOrder::class, function (Faker\Generator $faker){
         'title' => $faker->word,
         'description' => $faker->realText(rand(100,500)),
 		'start' => $start,
-        'end' => $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s'),
-        'finished' => $faker->numberBetween(0, 1),
+        'end' => (rand(0,1)) ? $faker->dateTimeBetween( $start, 'tomorrow')->format('Y-m-d H:i:s') : null,
         'price' => number_format(rand(100,1000000)/100, 2, '.', ''),
         'currency' => $faker->randomElement($validCurrencies),
     ];

@@ -981,8 +981,6 @@ function isset(strVariableName) {
             // create edit
             supervisorId: (isset('supervisorId')) ? back.supervisorId : 0,
             serviceId: (isset('serviceId')) ? back.serviceId : 0,
-            // Show
-            finished: (isset('workOrderFinished')) ? back.workOrderFinished : 0,
             // Finish
                 workOrderFinishedAt: '',
         },
