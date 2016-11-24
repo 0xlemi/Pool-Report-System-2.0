@@ -118,7 +118,6 @@
 								</div>
 							</div>
 
-
 							<work-order-photos-edit work-order-id="{{ $workOrder->seq_id }}">
 							</work-order-photos-edit>
 

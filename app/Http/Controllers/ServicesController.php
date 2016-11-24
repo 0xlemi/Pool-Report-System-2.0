@@ -202,15 +202,17 @@ class ServicesController extends PageController
     public function destroy($seq_id)
     {
         $this->checkPermissions('destroy');
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         if($service->delete()){
-            flash()->success('Deleted', 'The service was successfuly deleted');
-            return redirect('services');
+            flash()->success('Deleted', 'The service successfully deleted.');
+            return response()->json([
+                'message' => 'The service was deleted successfully.'
+            ]);
         }
-        flash()->error('Not Deleted', 'We could not delete the service, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The service was not deleted.'
+            ], 500);
     }
 
     protected function checkPermissions($typePermission)

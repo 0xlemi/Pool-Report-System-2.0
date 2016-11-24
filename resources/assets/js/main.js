@@ -950,6 +950,7 @@ function isset(strVariableName) {
     let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
     let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
     let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
+    let deleteButton = require('./components/deleteButton.vue');
     require('./components/checkboxList.vue');
 
 
@@ -1131,6 +1132,7 @@ function isset(strVariableName) {
             contract,
             chemical,
             routeTable,
+            deleteButton,
         },
         directives: {
             FormToAjax
@@ -1471,13 +1473,6 @@ function isset(strVariableName) {
             });
         }
     }
-
-    // Dropzone.options.equipmentDropzone = {
-    //     paramName: 'photo',
-    // 	maxFilesize: 50,
-    // 	acceptedFiles: '.jpg, .jpeg, .png',
-    // }
-
 
 /* ==========================================================================
     Location Picker

@@ -29292,6 +29292,114 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],196:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var Spinner = require("spin");
+
+exports.default = {
+    props: {
+        url: {
+            required: true
+        },
+        objectId: {
+            required: true
+        },
+        objectType: {
+            required: true
+        },
+        title: {
+            default: "Are you sure?"
+        },
+        message: {
+            default: "You will not be able to this!"
+        },
+        buttonTag: {
+            default: "Yes, delete it!"
+        }
+    },
+    data: function data() {
+        return {
+            token: Laravel.csrfToken
+        };
+    },
+
+    methods: {
+        destroy: function destroy() {
+            var vue = this;
+            var clickEvent = event;
+            swal({
+                title: this.title,
+                text: this.message,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: this.buttonTag,
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    vue.destroyRequest(clickEvent);
+                }
+            });
+        },
+        destroyRequest: function destroyRequest(clickEvent) {
+            var _this = this;
+
+            // save button text for later
+            var buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            this.$http.delete(Laravel.url + this.url + this.objectId).then(function (response) {
+                // redirect to index
+                window.location = Laravel.url + _this.url;
+                // Note: the success message is flashed by the back end    
+            }, function (response) {
+                swal({
+                    title: "Not deleted",
+                    text: response.data.error,
+                    type: "error",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                _this.revertButton(clickEvent, buttonTag);
+            });
+        },
+        revertButton: function revertButton(clickEvent, buttonTag) {
+            // enable, remove spinner and set tab to the one before
+            clickEvent.target.disabled = false;
+            clickEvent.target.innerHTML = buttonTag;
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<button class=\"btn btn-danger\" @click=\"destroy\">\n\t<i class=\"font-icon font-icon-close-2\"></i>\n    &nbsp;&nbsp;Delete\n</button>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-8c88fc1c", module.exports)
+  } else {
+    hotAPI.update("_v-8c88fc1c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"spin":166,"vue":180,"vue-hot-reload-api":177}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29358,7 +29466,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":202,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],197:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":203,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29390,7 +29498,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],198:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29422,7 +29530,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],199:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],200:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29554,7 +29662,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":190,"./dropzone.vue":197,"./photoList.vue":204,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],200:[function(require,module,exports){
+},{"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":205,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29575,7 +29683,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29639,9 +29747,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":200,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+},{"./notification.vue":201,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],203:[function(require,module,exports){
+},{}],204:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29920,7 +30028,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29971,7 +30079,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30102,7 +30210,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30155,7 +30263,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Buttons  -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Photos</label>\n\t<div class=\"col-sm-10\">\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"fa fa-camera\"></i>\n            &nbsp;&nbsp;&nbsp;Before Work\n\t\t</button>\n\n\t</div>\n</div>\n\n\n\n<!-- Modal for work order photos preview -->\n<div class=\"modal fade\" id=\"workOrderPhotosModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Edit Photos</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\n            <!-- Edit After Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\">\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/before'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<hr>\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n                \t\t<dropzone :url=\"dropzoneUrl\"><dropzone>\n\t\t\t\t\t</dropzone></dropzone></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Buttons  -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Photos</label>\n\t<div class=\"col-sm-10\">\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"fa fa-camera\"></i>\n            &nbsp;&nbsp;&nbsp;Before Work\n\t\t</button>\n\n\t</div>\n</div>\n\n<!-- Modal for work order photos preview -->\n<div class=\"modal fade\" id=\"workOrderPhotosModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Edit Photos</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\n            <!-- Edit After Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\">\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/before'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<hr>\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n                \t\t<dropzone :url=\"dropzoneUrl\"><dropzone>\n\t\t\t\t\t</dropzone></dropzone></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -30166,7 +30274,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":197,"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"./dropzone.vue":198,"./photoList.vue":205,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30246,7 +30354,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./photoList.vue":205,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30630,7 +30738,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":196,"spin":166,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":197,"spin":166,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30714,7 +30822,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -31606,6 +31714,7 @@ $(document).ready(function () {
     var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
     var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
     var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
+    var deleteButton = require('./components/deleteButton.vue');
     require('./components/checkboxList.vue');
 
     var mainVue = new Vue({
@@ -31787,7 +31896,8 @@ $(document).ready(function () {
             countries: countries,
             contract: contract,
             chemical: chemical,
-            routeTable: routeTable
+            routeTable: routeTable,
+            deleteButton: deleteButton
         },
         directives: {
             FormToAjax: FormToAjax
@@ -32134,13 +32244,6 @@ $(document).ready(function () {
         }
     };
 
-    // Dropzone.options.equipmentDropzone = {
-    //     paramName: 'photo',
-    // 	maxFilesize: 50,
-    // 	acceptedFiles: '.jpg, .jpeg, .png',
-    // }
-
-
     /* ==========================================================================
         Location Picker
         ========================================================================== */
@@ -32300,6 +32403,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/dropdown.vue":196,"./components/email.vue":198,"./components/finishWorkOrderButton.vue":199,"./components/notificationsWidget.vue":201,"./components/payments.vue":203,"./components/photoList.vue":204,"./components/routeTable.vue":205,"./components/workOrderPhotosEdit.vue":206,"./components/workOrderPhotosShow.vue":207,"./components/works.vue":208,"./directives/FormToAjax.vue":209,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,210]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/finishWorkOrderButton.vue":200,"./components/notificationsWidget.vue":202,"./components/payments.vue":204,"./components/photoList.vue":205,"./components/routeTable.vue":206,"./components/workOrderPhotosEdit.vue":207,"./components/workOrderPhotosShow.vue":208,"./components/works.vue":209,"./directives/FormToAjax.vue":210,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,211]);
 
 //# sourceMappingURL=bundle.js.map

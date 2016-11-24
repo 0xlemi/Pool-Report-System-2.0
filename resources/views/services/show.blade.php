@@ -142,10 +142,9 @@
 						<hr>
 
 						<p style="float: right;">
-							<a class="btn btn-danger"
-							data-method="delete" data-token="{{ csrf_token() }}"
-			        		data-confirm="Are you sure?" href="{{ url('/services/'.$service->seq_id) }}">
-							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
+							<delete-button url="services/" object-id="{{ $service->seq_id }}"
+											object-type="Service">
+							</delete-button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
 							href="{{ url('/services/'.$service->seq_id.'/edit') }}">
