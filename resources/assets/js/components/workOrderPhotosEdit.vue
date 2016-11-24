@@ -14,8 +14,6 @@
 	</div>
 </div>
 
-
-
 <!-- Modal for work order photos preview -->
 <div class="modal fade" id="workOrderPhotosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -41,7 +39,7 @@
 
 				<div class="row">
 					<div class="col-md-12">
-                        <!-- Dropzone -->
+                		<dropzone :url="dropzoneUrl"><dropzone>
 					</div>
 				</div>
 			</div>
@@ -58,17 +56,29 @@
 
 <script>
 import photoList from './photoList.vue';
+import dropzone from './dropzone.vue';
 
 export default {
     props: [ 'workOrderId' ],
     components: {
-        photoList
+        photoList,
+		dropzone
     },
     data(){
         return {
             photos: null,
         }
     },
+	computed:{
+		dropzoneUrl(){
+			return 'workorders/photos/before/'+this.workOrderId;
+		}
+	},
+	events: {
+		photoUploaded(){
+			this.refreshPhotos();
+		}
+	},
     methods:{
         refreshPhotos(){
             this.$http.get(Laravel.url+'workorders/photos/before/'+this.workOrderId).then((response) => {

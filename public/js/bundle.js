@@ -30113,12 +30113,17 @@ var _photoList = require('./photoList.vue');
 
 var _photoList2 = _interopRequireDefault(_photoList);
 
+var _dropzone = require('./dropzone.vue');
+
+var _dropzone2 = _interopRequireDefault(_dropzone);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     props: ['workOrderId'],
     components: {
-        photoList: _photoList2.default
+        photoList: _photoList2.default,
+        dropzone: _dropzone2.default
     },
     data: function data() {
         return {
@@ -30126,6 +30131,16 @@ exports.default = {
         };
     },
 
+    computed: {
+        dropzoneUrl: function dropzoneUrl() {
+            return 'workorders/photos/before/' + this.workOrderId;
+        }
+    },
+    events: {
+        photoUploaded: function photoUploaded() {
+            this.refreshPhotos();
+        }
+    },
     methods: {
         refreshPhotos: function refreshPhotos() {
             var _this = this;
@@ -30140,7 +30155,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Buttons  -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Photos</label>\n\t<div class=\"col-sm-10\">\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"fa fa-camera\"></i>\n            &nbsp;&nbsp;&nbsp;Before Work\n\t\t</button>\n\n\t</div>\n</div>\n\n\n\n<!-- Modal for work order photos preview -->\n<div class=\"modal fade\" id=\"workOrderPhotosModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Edit Photos</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\n            <!-- Edit After Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\">\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/before'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<hr>\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n                        <!-- Dropzone -->\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Buttons  -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Photos</label>\n\t<div class=\"col-sm-10\">\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#workOrderPhotosModal\">\n\t\t\t<i class=\"fa fa-camera\"></i>\n            &nbsp;&nbsp;&nbsp;Before Work\n\t\t</button>\n\n\t</div>\n</div>\n\n\n\n<!-- Modal for work order photos preview -->\n<div class=\"modal fade\" id=\"workOrderPhotosModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Edit Photos</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\n            <!-- Edit After Work is Done Photos -->\n\t\t\t<div class=\"col-md-12\">\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/before'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<hr>\n\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n                \t\t<dropzone :url=\"dropzoneUrl\"><dropzone>\n\t\t\t\t\t</dropzone></dropzone></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -30151,7 +30166,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"./dropzone.vue":197,"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
