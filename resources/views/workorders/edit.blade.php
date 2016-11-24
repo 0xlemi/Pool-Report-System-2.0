@@ -118,14 +118,9 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Photos</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-warning" @click="openPhotosModal(3)">
-										<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;Before Work
-									</button>
-								</div>
-							</div>
+
+							<work-order-photos-edit work-order-id="{{ $workOrder->seq_id }}">
+							</work-order-photos-edit>
 
 							<hr>
 							<p style="float: left;">
@@ -143,8 +138,5 @@
 			</section>
 		</div>
 	</div>
-
-@include('workorders.photos')
-
 </div>
 @endsection

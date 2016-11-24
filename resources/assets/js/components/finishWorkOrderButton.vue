@@ -94,7 +94,7 @@ export default {
 		}
 	},
 	events: {
-		workOrderPhotoUploaded(){
+		photoUploaded(){
 			this.refreshPhotos();
 		}
 	},

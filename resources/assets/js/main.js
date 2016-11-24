@@ -948,6 +948,7 @@ function isset(strVariableName) {
     let notificationsWidget     = require('./components/notificationsWidget.vue');
     let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
     let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
+    let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
     let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
     require('./components/checkboxList.vue');
 
@@ -973,6 +974,7 @@ function isset(strVariableName) {
             PhotoList,
             dropdown,
             workOrderPhotosShow,
+            workOrderPhotosEdit,
             finishWorkOrderButton,
             works
         },
@@ -1471,7 +1473,7 @@ function isset(strVariableName) {
     	acceptedFiles: '.jpg, .jpeg, .png',
         init: function() {
             this.on("success", function(file) {
-                this.options.vue.$broadcast('workOrderPhotoUploaded');
+                this.options.vue.$broadcast('photoUploaded');
             });
         }
     }
