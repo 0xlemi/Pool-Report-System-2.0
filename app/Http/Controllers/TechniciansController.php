@@ -220,15 +220,17 @@ class TechniciansController extends PageController
     public function destroy($seq_id)
     {
         $this->checkPermissions('destroy');
-
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
 
         if($technician->delete()){
-            flash()->success('Deleted', 'The technician was successfuly deleted');
-            return redirect('technicians');
+            flash()->success('Deleted', 'The technician successfully deleted.');
+            return response()->json([
+                'message' => 'The technician was deleted successfully.'
+            ]);
         }
-        flash()->error('Not Deleted', 'We could not delete the technician, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The technician was not deleted, please try again later.'
+            ], 500);
     }
 
     protected function checkPermissions($typePermission)

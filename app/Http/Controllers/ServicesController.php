@@ -211,7 +211,7 @@ class ServicesController extends PageController
             ]);
         }
         return response()->json([
-                'error' => 'The service was not deleted.'
+                'error' => 'The service was not deleted, please try again later.'
             ], 500);
     }
 

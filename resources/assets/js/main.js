@@ -974,6 +974,7 @@ function isset(strVariableName) {
         components: {
             PhotoList,
             dropdown,
+            deleteButton,
             workOrderPhotosShow,
             workOrderPhotosEdit,
             finishWorkOrderButton,
@@ -1000,7 +1001,10 @@ function isset(strVariableName) {
     // report Vue instance
     let reportVue = new Vue({
         el:'.reportVue',
-        components: { dropdown },
+        components: {
+            dropdown,
+            deleteButton,
+         },
         directives: { FormToAjax },
         data:{
             numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
@@ -1387,6 +1391,9 @@ function isset(strVariableName) {
 
     let supervisorVue = new Vue({
         el: '.supervisorVue',
+        components: {
+            deleteButton,
+        },
         data:{
             statusSwitch: true,
         },
@@ -1404,7 +1411,10 @@ function isset(strVariableName) {
 
     let technicianVue = new Vue({
         el: '.technicianVue',
-        components: { dropdown },
+        components: {
+            dropdown,
+            deleteButton,
+        },
         data:{
             statusSwitch: true,
             dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
@@ -1549,96 +1559,3 @@ function isset(strVariableName) {
 
 /* ========================================================================== */
 });
-
-/*
-Taken from: https://gist.github.com/soufianeEL/3f8483f0f3dc9e3ec5d9
-Modified by Ferri Sutanto
-- use promise for verifyConfirm
-Examples :
-<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}">
-- Or, request confirmation in the process -
-<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}" data-confirm="Are you sure?">
-*/
-
-(function(window, $, undefined) {
-
-    var Laravel = {
-        initialize: function() {
-            this.methodLinks = $('a[data-method]');
-            this.token = $('a[data-token]');
-            this.registerEvents();
-        },
-
-        registerEvents: function() {
-            this.methodLinks.on('click', this.handleMethod);
-        },
-
-        handleMethod: function(e) {
-            e.preventDefault()
-
-            var link = $(this)
-            var httpMethod = link.data('method').toUpperCase()
-            var form
-
-            // If the data-method attribute is not PUT or DELETE,
-            // then we don't know what to do. Just ignore.
-            if ($.inArray(httpMethod, ['PUT', 'DELETE']) === -1) {
-                return false
-            }
-
-            Laravel
-                .verifyConfirm(link)
-                .done(function () {
-                    form = Laravel.createForm(link)
-                    form.submit()
-                })
-        },
-
-        verifyConfirm: function(link) {
-            var confirm = new $.Deferred()
-            swal({
-                title: "Are you sure?",
-                text: "You will not be able to recover this!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                closeOnConfirm: false
-            },
-            function(){
-                confirm.resolve(link)
-            })
-
-            return confirm.promise()
-        },
-
-        createForm: function(link) {
-            var form =
-                $('<form>', {
-                    'method': 'POST',
-                    'action': link.attr('href')
-                });
-
-            var token =
-                $('<input>', {
-                    'type': 'hidden',
-                    'name': '_token',
-                    'value': link.data('token')
-                });
-
-            var hiddenInput =
-                $('<input>', {
-                    'name': '_method',
-                    'type': 'hidden',
-                    'value': link.data('method')
-                });
-
-            return form.append(token, hiddenInput)
-                .appendTo('body');
-        }
-    };
-
-    Laravel.initialize();
-
-})(window, jQuery);

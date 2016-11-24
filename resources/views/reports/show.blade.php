@@ -117,10 +117,8 @@
 							&nbsp;&nbsp;&nbsp;&nbsp;
 						</p>
 						<p style="float: right;display:inline;">
-							<a class="btn btn-danger"
-							data-method="delete" data-token="{{ csrf_token() }}"
-			        		data-confirm="Are you sure?" href="{{ url('/reports/'.$report->seq_id) }}">
-							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
+							<delete-button url="reports/" object-id="{{ $report->seq_id }}">
+							</delete-button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
 							href="{{ url('/reports/'.$report->seq_id.'/edit') }}">

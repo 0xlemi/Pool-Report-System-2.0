@@ -314,15 +314,17 @@ class ReportsController extends PageController
     public function destroy($seq_id)
     {
         $this->checkPermissions('destroy');
-
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
         if($report->delete()){
-            flash()->success('Deleted', 'The report was successfuly deleted');
-            return redirect('reports');
+            flash()->success('Deleted', 'The report successfully deleted.');
+            return response()->json([
+                'message' => 'The report was deleted successfully.'
+            ]);
         }
-        flash()->error('Nope', 'We could not delete the report, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The report was not deleted, please try again later.'
+            ], 500);
     }
 
     protected function checkPermissions($typePermission)

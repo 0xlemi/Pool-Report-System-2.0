@@ -29309,14 +29309,11 @@ exports.default = {
         objectId: {
             required: true
         },
-        objectType: {
-            required: true
-        },
         title: {
             default: "Are you sure?"
         },
         message: {
-            default: "You will not be able to this!"
+            default: "You will not be able to recover this!"
         },
         buttonTag: {
             default: "Yes, delete it!"
@@ -29367,7 +29364,7 @@ exports.default = {
             this.$http.delete(Laravel.url + this.url + this.objectId).then(function (response) {
                 // redirect to index
                 window.location = Laravel.url + _this.url;
-                // Note: the success message is flashed by the back end    
+                // Note: the success message is flashed by the back end
             }, function (response) {
                 swal({
                     title: "Not deleted",
@@ -31737,6 +31734,7 @@ $(document).ready(function () {
         components: {
             PhotoList: PhotoList,
             dropdown: dropdown,
+            deleteButton: deleteButton,
             workOrderPhotosShow: workOrderPhotosShow,
             workOrderPhotosEdit: workOrderPhotosEdit,
             finishWorkOrderButton: finishWorkOrderButton,
@@ -31763,7 +31761,10 @@ $(document).ready(function () {
     // report Vue instance
     var reportVue = new Vue({
         el: '.reportVue',
-        components: { dropdown: dropdown },
+        components: {
+            dropdown: dropdown,
+            deleteButton: deleteButton
+        },
         directives: { FormToAjax: FormToAjax },
         data: {
             numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
@@ -32160,6 +32161,9 @@ $(document).ready(function () {
 
     var supervisorVue = new Vue({
         el: '.supervisorVue',
+        components: {
+            deleteButton: deleteButton
+        },
         data: {
             statusSwitch: true
         },
@@ -32176,7 +32180,10 @@ $(document).ready(function () {
 
     var technicianVue = new Vue({
         el: '.technicianVue',
-        components: { dropdown: dropdown },
+        components: {
+            dropdown: dropdown,
+            deleteButton: deleteButton
+        },
         data: {
             statusSwitch: true,
             dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0
@@ -32317,91 +32324,6 @@ $(document).ready(function () {
 
     /* ========================================================================== */
 });
-
-/*
-Taken from: https://gist.github.com/soufianeEL/3f8483f0f3dc9e3ec5d9
-Modified by Ferri Sutanto
-- use promise for verifyConfirm
-Examples :
-<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}">
-- Or, request confirmation in the process -
-<a href="posts/2" data-method="delete" data-token="{{csrf_token()}}" data-confirm="Are you sure?">
-*/
-
-(function (window, $, undefined) {
-
-    var Laravel = {
-        initialize: function initialize() {
-            this.methodLinks = $('a[data-method]');
-            this.token = $('a[data-token]');
-            this.registerEvents();
-        },
-
-        registerEvents: function registerEvents() {
-            this.methodLinks.on('click', this.handleMethod);
-        },
-
-        handleMethod: function handleMethod(e) {
-            e.preventDefault();
-
-            var link = $(this);
-            var httpMethod = link.data('method').toUpperCase();
-            var form;
-
-            // If the data-method attribute is not PUT or DELETE,
-            // then we don't know what to do. Just ignore.
-            if ($.inArray(httpMethod, ['PUT', 'DELETE']) === -1) {
-                return false;
-            }
-
-            Laravel.verifyConfirm(link).done(function () {
-                form = Laravel.createForm(link);
-                form.submit();
-            });
-        },
-
-        verifyConfirm: function verifyConfirm(link) {
-            var confirm = new $.Deferred();
-            swal({
-                title: "Are you sure?",
-                text: "You will not be able to recover this!",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                closeOnConfirm: false
-            }, function () {
-                confirm.resolve(link);
-            });
-
-            return confirm.promise();
-        },
-
-        createForm: function createForm(link) {
-            var form = $('<form>', {
-                'method': 'POST',
-                'action': link.attr('href')
-            });
-
-            var token = $('<input>', {
-                'type': 'hidden',
-                'name': '_token',
-                'value': link.data('token')
-            });
-
-            var hiddenInput = $('<input>', {
-                'name': '_method',
-                'type': 'hidden',
-                'value': link.data('method')
-            });
-
-            return form.append(token, hiddenInput).appendTo('body');
-        }
-    };
-
-    Laravel.initialize();
-})(window, jQuery);
 
 },{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/finishWorkOrderButton.vue":200,"./components/notificationsWidget.vue":202,"./components/payments.vue":204,"./components/photoList.vue":205,"./components/routeTable.vue":206,"./components/workOrderPhotosEdit.vue":207,"./components/workOrderPhotosShow.vue":208,"./components/works.vue":209,"./directives/FormToAjax.vue":210,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,211]);
 

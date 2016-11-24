@@ -193,15 +193,17 @@ class SupervisorsController extends PageController
     public function destroy($seq_id)
     {
         $this->checkPermissions('destroy');
-
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         if($supervisor->delete()){
-            flash()->success('Deleted', 'The supervisor was successfuly deleted');
-            return redirect('supervisors');
+            flash()->success('Deleted', 'The supervisor successfully deleted.');
+            return response()->json([
+                'message' => 'The supervisor was deleted successfully.'
+            ]);
         }
-        flash()->error('Not Deleted', 'We could not delete the supervisor, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The supervisor was not deleted, please try again later.'
+            ], 500);
     }
 
     protected function checkPermissions($typePermission)

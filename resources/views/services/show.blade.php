@@ -142,8 +142,7 @@
 						<hr>
 
 						<p style="float: right;">
-							<delete-button url="services/" object-id="{{ $service->seq_id }}"
-											object-type="Service">
+							<delete-button url="services/" object-id="{{ $service->seq_id }}">
 							</delete-button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"

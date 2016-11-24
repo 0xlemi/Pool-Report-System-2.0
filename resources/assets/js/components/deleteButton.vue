@@ -16,14 +16,11 @@ export default {
         objectId: {
             required: true
         },
-        objectType: {
-            required: true
-        },
         title: {
             default: "Are you sure?"
         },
         message: {
-            default: "You will not be able to this!"
+            default: "You will not be able to recover this!"
         },
         buttonTag: {
             default: "Yes, delete it!"
@@ -71,7 +68,7 @@ export default {
             this.$http.delete(Laravel.url+this.url+this.objectId).then((response) => {
                 // redirect to index
                 window.location = Laravel.url+this.url;
-                // Note: the success message is flashed by the back end    
+                // Note: the success message is flashed by the back end
             }, (response) => {
                 swal({
             		title: "Not deleted",

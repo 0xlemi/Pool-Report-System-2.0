@@ -2,6 +2,7 @@
 
 @inject('technicianHelpers', 'App\PRS\Helpers\TechnicianHelpers')
 @section('content')
+<div class="technicianVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -124,10 +125,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger"
-							data-method="delete" data-token="{{ csrf_token() }}"
-			        		data-confirm="Are you sure?" href="{{ url('/technicians/'.$technician->seq_id) }}">
-							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
+							<delete-button url="technicians/" object-id="{{ $technician->seq_id }}">
+							</delete-button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
 							href="{{ url('/technicians/'.$technician->seq_id.'/edit') }}">
@@ -139,7 +138,5 @@
 			</section>
 		</div>
 	</div>
-	<div class="row">
-	</div>
-
+</div>
 @endsection

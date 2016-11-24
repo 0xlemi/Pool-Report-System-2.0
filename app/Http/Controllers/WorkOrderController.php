@@ -203,9 +203,7 @@ class WorkOrderController extends PageController
      */
     public function update(CreateWorkOrderRequest $request, $seq_id)
     {
-
         $admin = $this->loggedUserAdministrator();
-
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
         if($workOrder->end()->finished()){
@@ -268,9 +266,20 @@ class WorkOrderController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seq_id)
     {
-        //
+        $admin = $this->loggedUserAdministrator();
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        if($workOrder->delete()){
+            flash()->success('Deleted', 'The work order successfully deleted.');
+            return response()->json([
+                'message' => 'The work order was deleted successfully.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'The work order was not deleted, please try again later.'
+            ], 500);
     }
 
     private function getPhoto($id, $type)

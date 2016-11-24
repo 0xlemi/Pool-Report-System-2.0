@@ -2,6 +2,7 @@
 
 @inject('helper', 'App\PRS\Helpers\SupervisorHelpers')
 @section('content')
+<div class="supervisorVue">
 	<header class="section-header">
 		<div class="tbl">
 			<div class="tbl-row">
@@ -122,10 +123,8 @@
 						</form>
 						<hr>
 						<p style="float: right;">
-							<a class="btn btn-danger"
-							data-method="delete" data-token="{{ csrf_token() }}"
-			        		data-confirm="Are you sure?" href="{{ url('/supervisors/'.$supervisor->seq_id) }}">
-							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
+							<delete-button url="supervisors/" object-id="{{ $supervisor->seq_id }}">
+							</delete-button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
 							<a  class="btn btn-primary"
 							href="{{ url('/supervisors/'.$supervisor->seq_id.'/edit') }}">
@@ -137,7 +136,5 @@
 			</section>
 		</div>
 	</div>
-	<div class="row">
-	</div>
-
+</div>
 @endsection

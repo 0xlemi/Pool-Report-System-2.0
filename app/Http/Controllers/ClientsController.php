@@ -188,16 +188,17 @@ class ClientsController extends PageController
     public function destroy($seq_id)
     {
         $this->checkPermissions('destroy');
-
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
 
-
         if($client->delete()){
-            flash()->success('Deleted', 'The client was successfuly deleted');
-            return redirect('clients');
+            flash()->success('Deleted', 'The client successfully deleted.');
+            return response()->json([
+                'message' => 'The client was deleted successfully.'
+            ]);
         }
-        flash()->error('Not Deleted', 'We could not delete the client, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The client was not deleted, please try again later.'
+            ], 500);
     }
 
     protected function checkPermissions($typePermission)
