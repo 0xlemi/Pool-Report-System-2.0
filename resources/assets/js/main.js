@@ -1461,19 +1461,13 @@ function isset(strVariableName) {
 
     // Dropzone.autoDiscover = false;
     Dropzone.options.genericDropzone = {
-        paramName: 'photo',
-    	maxFilesize: 50,
-    	acceptedFiles: '.jpg, .jpeg, .png'
-    }
-
-    Dropzone.options.workOrderDropzone = {
-        vue: workOrderVue,
+        workOrderVue: workOrderVue,
         paramName: 'photo',
     	maxFilesize: 50,
     	acceptedFiles: '.jpg, .jpeg, .png',
         init: function() {
             this.on("success", function(file) {
-                this.options.vue.$broadcast('photoUploaded');
+                this.options.workOrderVue.$broadcast('photoUploaded');
             });
         }
     }

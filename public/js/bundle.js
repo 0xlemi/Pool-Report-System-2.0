@@ -29358,7 +29358,39 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":201,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],197:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":202,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],197:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['url'],
+    data: function data() {
+        return {
+            token: Laravel.csrfToken
+        };
+    },
+
+    computed: {
+        fullUrl: function fullUrl() {
+            return Laravel.url + this.url;
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"box-typical-upload box-typical-upload-in\">\n    <div class=\"drop-zone\">\n        <form id=\"genericDropzone\" action=\"{{ fullUrl }}\" method=\"POST\" class=\"dropzone\">\n\t\t\t<input type=\"hidden\" name=\"_token\" value=\"{{ token }}\">\n        \t<div class=\"dz-message\" data-dz-message=\"\"><span><i class=\"font-icon font-icon-cloud-upload-2\"></i>\n            <div class=\"drop-zone-caption\">Drag file or click to add photos</div></span></div>\n        </form>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1ecbe060", module.exports)
+  } else {
+    hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":180,"vue-hot-reload-api":177}],198:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29390,7 +29422,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],198:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29400,6 +29432,10 @@ Object.defineProperty(exports, "__esModule", {
 var _photoList = require('./photoList.vue');
 
 var _photoList2 = _interopRequireDefault(_photoList);
+
+var _dropzone = require('./dropzone.vue');
+
+var _dropzone2 = _interopRequireDefault(_dropzone);
 
 var _alert = require('./alert.vue');
 
@@ -29414,6 +29450,7 @@ exports.default = {
 	props: ['workOrderId'],
 	components: {
 		photoList: _photoList2.default,
+		dropzone: _dropzone2.default,
 		alert: _alert2.default,
 		VueDatetimePicker: VueDatetimePicker
 	},
@@ -29431,7 +29468,7 @@ exports.default = {
 
 	computed: {
 		dropzoneUrl: function dropzoneUrl() {
-			return Laravel.url + 'workorders/photos/after/' + this.workOrderId;
+			return 'workorders/photos/after/' + this.workOrderId;
 		}
 	},
 	events: {
@@ -29506,7 +29543,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<button class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#finishModal\">\n\t<i class=\"font-icon font-icon-ok\"></i>\n\t&nbsp;&nbsp;Finish Work Order\n</button>\n\n<!-- Modal for email preview -->\n<div class=\"modal fade\" id=\"finishModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Finish Work Order</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\t\t<div class=\"col-md-12\">\n\n\t\t\t<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/after'\">\n\t\t\t\t</photo-list>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\">\n                <!-- Dropzone -->\n\t\t\t\t<div class=\"box-typical-upload box-typical-upload-in\">\n                    <div class=\"drop-zone\">\n                        <form id=\"workOrderDropzone\" action=\"{{ dropzoneUrl }}\" method=\"POST\" class=\"dropzone\">\n\t\t\t\t\t\t\t<input type=\"hidden\" name=\"_token\" value=\"{{ token }}\">\n                        \t<div class=\"dz-message\" data-dz-message=\"\"><span><i class=\"font-icon font-icon-cloud-upload-2\"></i>\n                            <div class=\"drop-zone-caption\">Drag file or click to add photos</div></span></div>\n                        </form>\n                    </div>\n                </div><!-- End Dropzone -->\n\t\t\t</div>\n\n\t\t\t<hr>\n\n\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('end'))}\">\n\t\t\t\t<label class=\"col-sm-2 form-control-label\">Finished at</label>\n\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t<vue-datetime-picker class=\"\" name=\"date\" :model.sync=\"date\" type=\"datetime\" language=\"en\" date-format=\"LLL\">\n\t\t\t    \t</vue-datetime-picker>\n\t\t\t\t\t<small v-if=\"checkValidationError('end')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end[0] }}</small>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n        <button class=\"btn btn-success\" type=\"button\" @click=\"finish\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Mark as Finished</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<button class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#finishModal\">\n\t<i class=\"font-icon font-icon-ok\"></i>\n\t&nbsp;&nbsp;Finish Work Order\n</button>\n\n<!-- Modal for email preview -->\n<div class=\"modal fade\" id=\"finishModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Finish Work Order</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t<div class=\"row\">\n\t\t<div class=\"col-md-12\">\n\n\t\t\t<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t<div class=\"col-md-12\">\n\t\t\t\t<photo-list :data=\"photos\" :object-id=\"workOrderId\" :can-delete=\"true\" :photos-url=\"'workorders/photos/after'\">\n\t\t\t\t</photo-list>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\">\n                <dropzone :url=\"dropzoneUrl\"><dropzone>\n\t\t\t</dropzone></dropzone></div>\n\n\t\t\t<hr>\n\n\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('end'))}\">\n\t\t\t\t<label class=\"col-sm-2 form-control-label\">Finished at</label>\n\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t<vue-datetime-picker class=\"\" name=\"date\" :model.sync=\"date\" type=\"datetime\" language=\"en\" date-format=\"LLL\">\n\t\t\t    \t</vue-datetime-picker>\n\t\t\t\t\t<small v-if=\"checkValidationError('end')\" class=\"text-muted\" style=\"color:red;\">{{ validationErrors.end[0] }}</small>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t</div>\n\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n        <button class=\"btn btn-success\" type=\"button\" @click=\"finish\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Mark as Finished</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -29517,7 +29554,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":190,"./photoList.vue":203,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],199:[function(require,module,exports){
+},{"./alert.vue":190,"./dropzone.vue":197,"./photoList.vue":204,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],200:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29538,7 +29575,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],200:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29602,9 +29639,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":199,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"./notification.vue":200,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],202:[function(require,module,exports){
+},{}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29883,7 +29920,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29934,7 +29971,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30065,7 +30102,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30114,7 +30151,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":203,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30194,7 +30231,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":203,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"./photoList.vue":204,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30578,7 +30615,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":196,"spin":166,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":196,"spin":166,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30662,7 +30699,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -32071,19 +32108,13 @@ $(document).ready(function () {
 
     // Dropzone.autoDiscover = false;
     Dropzone.options.genericDropzone = {
-        paramName: 'photo',
-        maxFilesize: 50,
-        acceptedFiles: '.jpg, .jpeg, .png'
-    };
-
-    Dropzone.options.workOrderDropzone = {
-        vue: workOrderVue,
+        workOrderVue: workOrderVue,
         paramName: 'photo',
         maxFilesize: 50,
         acceptedFiles: '.jpg, .jpeg, .png',
         init: function init() {
             this.on("success", function (file) {
-                this.options.vue.$broadcast('photoUploaded');
+                this.options.workOrderVue.$broadcast('photoUploaded');
             });
         }
     };
@@ -32254,6 +32285,6 @@ Examples :
     Laravel.initialize();
 })(window, jQuery);
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/dropdown.vue":196,"./components/email.vue":197,"./components/finishWorkOrderButton.vue":198,"./components/notificationsWidget.vue":200,"./components/payments.vue":202,"./components/photoList.vue":203,"./components/routeTable.vue":204,"./components/workOrderPhotosEdit.vue":205,"./components/workOrderPhotosShow.vue":206,"./components/works.vue":207,"./directives/FormToAjax.vue":208,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,209]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/dropdown.vue":196,"./components/email.vue":198,"./components/finishWorkOrderButton.vue":199,"./components/notificationsWidget.vue":201,"./components/payments.vue":203,"./components/photoList.vue":204,"./components/routeTable.vue":205,"./components/workOrderPhotosEdit.vue":206,"./components/workOrderPhotosShow.vue":207,"./components/works.vue":208,"./directives/FormToAjax.vue":209,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,210]);
 
 //# sourceMappingURL=bundle.js.map

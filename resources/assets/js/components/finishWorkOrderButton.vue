@@ -25,16 +25,7 @@
 				</photo-list>
 			</div>
 			<div class="col-md-12">
-                <!-- Dropzone -->
-				<div class="box-typical-upload box-typical-upload-in">
-                    <div class="drop-zone">
-                        <form id="workOrderDropzone" action="{{ dropzoneUrl }}" method="POST" class="dropzone">
-							<input type="hidden" name="_token" value="{{ token }}">
-                        	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
-                            <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
-                        </form>
-                    </div>
-                </div><!-- End Dropzone -->
+                <dropzone :url="dropzoneUrl"><dropzone>
 			</div>
 
 			<hr>
@@ -65,6 +56,7 @@
 
 <script>
 import photoList from './photoList.vue';
+import dropzone from './dropzone.vue';
 import alert from'./alert.vue';
 
 var Spinner = require("spin");
@@ -74,6 +66,7 @@ export default {
 	props: [ 'workOrderId' ],
 	components: {
 		photoList,
+		dropzone,
 		alert,
 		VueDatetimePicker
 	},
@@ -90,7 +83,7 @@ export default {
 	},
 	computed: {
 		dropzoneUrl(){
-			return Laravel.url+'workorders/photos/after/'+this.workOrderId;
+			return 'workorders/photos/after/'+this.workOrderId;
 		}
 	},
 	events: {
