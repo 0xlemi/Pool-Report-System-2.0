@@ -24,21 +24,45 @@ class EquipmentController extends PageController
         $this->imageTransformer = $imageTransformer;
     }
 
+
+    public function index(Request $request, $service_seq_id)
+    {
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
+
+        $equipment = $service->equipment()
+                        ->get()
+                        ->transform(function($item){
+                            return (object) [
+                                'id' => $item->id,
+                                'kind' => '<strong>'.$item->kind.'</strong>',
+                                'type' => $item->type,
+                                'brand' => $item->brand,
+                                'model' => $item->model,
+                                'capacity' => $item->capacity.' '.$item->units,
+                            ];
+                        });
+
+        return response()->json($equipment);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateEquipmentRequest $request)
+    public function store(CreateEquipmentRequest $request, $service_seq_id)
     {
-        $equipment = Equipment::create(array_map('htmlentities', $request->all()));
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
+
+        $equipment = $service->equipment()->create(array_map('htmlentities', $request->all()));
+
         if($equipment){
-            return Response::json([
+            return response()->json([
                 'message' => 'Equipment was successfully created'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'Equipment was not created created'
             ], 500);
     }
@@ -49,20 +73,15 @@ class EquipmentController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Equipment $equipment)
     {
-        try {
-            $equipment = Equipment::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Equipment with that id, does not exist.');
-        }
+        // Check if it has authorization to see this
 
-        $this->imageTransformer->transformCollection($equipment->images()->get());
-        $photo = array(
+        $photo = [
             'photos' => $this->imageTransformer
                         ->transformCollection($equipment->images()->get())
-        );
-        return Response::json(array_merge($equipment->toArray(), $photo), 200);
+        ];
+        return response()->json(array_merge($equipment->toArray(), $photo));
     }
 
     /**
@@ -72,64 +91,53 @@ class EquipmentController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateEquipmentRequest $request, $id)
+    public function update(CreateEquipmentRequest $request, Equipment $equipment)
     {
-        try {
-            $equipment = Equipment::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Equipment with that id, does not exist.');
-        }
+        // Check if it has authorization to see this
 
         $equipment->fill(array_map('htmlentities', $request->except('service_id')));
 
         $equipment->save();
-        return Response::json([
+        return response()->json([
                 'message' => 'Equipment was successfully updated'
-            ], 200);
+            ]);
 
     }
 
 
-    public function addPhoto(Request $request, $id)
+    public function addPhoto(Request $request, Equipment $equipment)
     {
+        // return response()->json(null,500);
+        // Check if it has authorization to see this
+
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        try {
-            $equipment = Equipment::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Equipment with that id, does not exist.');
-        }
-
         $file = $request->file('photo');
         if($equipment->addImageFromForm($file)){
-            return Response::json([
+            return response()->json([
                 'message' => 'The photo was added to the equipment'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not added to the equipment'
             ], 500);
 
     }
 
-    public function removePhoto($id, $order)
+    public function removePhoto(Equipment $equipment, $order)
     {
-        try {
-            $equipment = Equipment::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Equipment with that id, does not exist.');
-        }
+        // return response()->json(null,500);
+        // Check if it has authorization to see this
 
         $image = $equipment->image($order, false);
-
         if($image->delete()){
-                return Response::json([
+                return response()->json([
                 'message' => 'The photo was deleted from the equipment'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not deleted from the equipment'
             ], 500);
     }
@@ -140,20 +148,17 @@ class EquipmentController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Equipment $equipment)
     {
-        try {
-            $equipment = Equipment::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Equipment with that id, does not exist.');
-        }
+        // Check if it has authorization to see this
+
         if($equipment->delete()){
-            return Response::json([
+            return response()->json([
                         'title' => 'Equipment Deleted',
                         'message' => 'The equipment was deleted successfully.'
-                    ], 200);
+                    ]);
         }
-        return Response::json([
+        return response()->json([
                         'title' => 'Not Deleted',
                         'message' => 'The equipment was not deleted.'
                     ], 500);

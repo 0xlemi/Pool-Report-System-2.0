@@ -101,14 +101,8 @@
 							    base-url="{{ url('chemicals').'/' }}">
 							</chemical>
 
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Equipment</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-primary"
-										@click="openEquimentList()">
-										<i class="glyphicon glyphicon-hdd"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>
-								</div>
-							</div>
+							<equipment service-id="{{ $service->seq_id }}">
+							</equipment>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Location</label>
@@ -156,8 +150,6 @@
 		</div>
 	</div>
 
-
-	@include('services.editEquipment')
 	@include('services.showMap')
 	@include('services.listClients')
 </div>

@@ -282,10 +282,10 @@
 
 <script>
 
-var alert = require('./alert.vue');
-var Spinner = require("spin");
+let alert = require('./alert.vue');
+let Spinner = require("spin");
 
-var VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js');
+let VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js');
 
 
   export default {

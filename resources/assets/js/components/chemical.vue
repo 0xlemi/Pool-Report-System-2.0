@@ -1,129 +1,128 @@
 <template>
 
-	<div class="form-group row">
-		<label class="col-sm-2 form-control-label">Chemicals</label>
-		<div class="col-sm-10">
-			<button type="button" class="btn btn-info" @click="getList"
-					data-toggle="modal" data-target="#chemicalModal">
-				<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals
-			</button>
-		</div>
+<!-- Button -->
+<div class="form-group row">
+	<label class="col-sm-2 form-control-label">Chemicals</label>
+	<div class="col-sm-10">
+		<button type="button" class="btn btn-info" @click="getList"
+				data-toggle="modal" data-target="#chemicalModal">
+			<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals
+		</button>
 	</div>
+</div>
 
-    <!-- Modal for Chemical preview -->
-	<div class="modal fade" id="chemicalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" :class="{'modal-lg' : (focus == 2)}" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
-	      </div>
-	      <div class="modal-body">
-				<div class="row">
+<!-- Modal for Chemical managment -->
+<div class="modal fade" id="chemicalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" :class="{'modal-lg' : (focus == 2)}" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+      </div>
+      <div class="modal-body">
+			<div class="row">
 
-                    <!-- Create new Chemical -->
-                    <div class="col-md-12" v-show="isFocus(1)">
+                <!-- Create new Chemical -->
+                <div class="col-md-12" v-show="isFocus(1)">
 
-						<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
+					<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
-						<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
-							<label class="col-sm-2 form-control-label">Name</label>
-							<div class="col-sm-10">
-								<input type="text" name="name" class="form-control" v-model="name">
-								<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
-							</div>
+					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
+						<label class="col-sm-2 form-control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" v-model="name">
+							<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
 						</div>
+					</div>
 
-                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
-							<label class="col-sm-2 form-control-label">Amount</label>
-							<div class="col-sm-10">
-								<input type="number" name="amount" class="form-control" v-model="amount">
-								<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-							</div>
+                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
+						<label class="col-sm-2 form-control-label">Amount</label>
+						<div class="col-sm-10">
+							<input type="number" name="amount" class="form-control" v-model="amount">
+							<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
 						</div>
+					</div>
 
-                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
-							<label class="col-sm-2 form-control-label">Units</label>
-							<div class="col-sm-10">
-								<input type="text" name="units" class="form-control"
-										placeholder="Example: PH, PPM, etc..." v-model="units">
-								<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
-							</div>
+                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
+						<label class="col-sm-2 form-control-label">Units</label>
+						<div class="col-sm-10">
+							<input type="text" name="units" class="form-control"
+									placeholder="Example: PH, PPM, etc..." v-model="units">
+							<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
 						</div>
+					</div>
 
-                    </div>
+                </div>
 
-                    <!-- Index Chemical -->
-                    <div class="col-md-12" v-show="isFocus(2)">
+                <!-- Index Chemical -->
+                <div class="col-md-12" v-show="isFocus(2)">
 
-						<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
+					<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-						<bootstrap-table :object-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+					<bootstrap-table :object-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
 
-                    </div>
+                </div>
 
-                    <!-- Edit Chemical -->
-                    <div class="col-md-12" v-show="isFocus(3)">
+                <!-- Edit Chemical -->
+                <div class="col-md-12" v-show="isFocus(3)">
 
-						<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
+					<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
 
-						<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
-							<label class="col-sm-2 form-control-label">Name</label>
-							<div class="col-sm-10">
-								<input type="text" name="name" class="form-control" v-model="name">
-								<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
-							</div>
+					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
+						<label class="col-sm-2 form-control-label">Name</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" v-model="name">
+							<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
 						</div>
+					</div>
 
-                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
-							<label class="col-sm-2 form-control-label">Amount</label>
-							<div class="col-sm-10">
-								<input type="number" name="amount" class="form-control" v-model="amount">
-								<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-							</div>
+                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
+						<label class="col-sm-2 form-control-label">Amount</label>
+						<div class="col-sm-10">
+							<input type="number" name="amount" class="form-control" v-model="amount">
+							<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
 						</div>
+					</div>
 
-                        <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
-							<label class="col-sm-2 form-control-label">Units</label>
-							<div class="col-sm-10">
-								<input type="text" name="units" class="form-control"
-										placeholder="Example: PH, PPM, etc..." v-model="units">
-								<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
-							</div>
+                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
+						<label class="col-sm-2 form-control-label">Units</label>
+						<div class="col-sm-10">
+							<input type="text" name="units" class="form-control"
+									placeholder="Example: PH, PPM, etc..." v-model="units">
+							<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
 						</div>
+					</div>
 
-                    </div>
+                </div>
 
-				</div>
-	      </div>
-	      <div class="modal-footer">
-			<p style="float: left;" v-if="isFocus(3)">
-				<button type="button" class="btn btn-danger" @click="destroy">
-					<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;Destroy
-				</button>
-			</p>
-
-	        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
-	        <!-- <button type="button" class="btn btn-default" data-dismiss="modal"  >test</button> -->
-
-			<button type="button" class="btn btn-warning" v-if="isFocus(3) || isFocus(1)" @click="changeFocus(2)">
-				<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
+			</div>
+      </div>
+      <div class="modal-footer">
+		<p style="float: left;" v-if="isFocus(3)">
+			<button type="button" class="btn btn-danger" @click="destroy">
+				<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;Destroy
 			</button>
+		</p>
 
-            <button type="button" class="btn btn-primary" v-if="isFocus(1)" @click="create">
-				Create
-			</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal"  >test</button> -->
 
-            <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
-				<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update
-			</button>
+		<button type="button" class="btn btn-warning" v-if="isFocus(3) || isFocus(1)" @click="changeFocus(2)">
+			<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
+		</button>
 
-	      </div>
-	    </div>
-	  </div>
-	</div>
+        <button type="button" class="btn btn-primary" v-if="isFocus(1)" @click="create">
+			Create
+		</button>
 
+        <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
+			<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update
+		</button>
 
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>

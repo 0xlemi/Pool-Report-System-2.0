@@ -54,8 +54,10 @@ Route::post('works/photos/{work}', 'WorkController@addPhoto');
 // Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
 
 // Equipment
-Route::post('equipment/photos/{id}', 'EquipmentController@addPhoto');
-Route::delete('equipment/photos/{id}/{order}', 'EquipmentController@removePhoto');
+Route::get('service/{service_seq_id}/equipment', 'EquipmentController@index');
+Route::post('service/{workOrderSeqId}/equipment', 'EquipmentController@store');
+Route::post('equipment/photos/{equipment}', 'EquipmentController@addPhoto');
+Route::delete('equipment/photos/{equipment}/{order}', 'EquipmentController@removePhoto');
 
 // Chemicals
 Route::get('chemicals/{serviceSeqId}', 'chemicalController@index');
@@ -85,7 +87,7 @@ Route::resource('works', 'WorkController', ['only' => [
 ]]);
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController', ['only' => [
-    'store', 'show', 'update', 'destroy'
+    'show', 'update', 'destroy'
 ]]);
 Route::resource('chemicals', 'chemicalController', ['only' => [
     'update', 'destroy'
@@ -125,7 +127,6 @@ Route::get('datatables/works/{workOrderSeqId}', 'DataTableController@works');
 Route::get('datatables/missingServices', 'DataTableController@missingServices');
 Route::get('datatables/missingServicesInfo', 'DataTableController@missingServicesInfo');
 Route::get('datatables/services', 'DataTableController@services');
-Route::get('datatables/equipment/{service_seq_id}', 'DataTableController@equipment');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');

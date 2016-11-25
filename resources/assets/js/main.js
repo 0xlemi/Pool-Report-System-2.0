@@ -711,122 +711,6 @@ function isset(strVariableName) {
         window.location.href = back.click_url+row.id;
     });
 
-    $('#worksTable').on( 'click-row.bs.table', function (e, row, $element) {
-        if ( $element.hasClass('table_active') ) {
-            $element.removeClass('table_active');
-        }
-        else {
-            worksTable.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        if(isset('worksUrl')){
-            $.ajax({
-                vue: workOrderVue,
-                worksTable: worksTable,
-                url:      back.worksUrl+row.id,
-                type:     'GET',
-                success: function(data, textStatus, xhr) {
-                    //called when successful
-                    this.vue.workId = data.id;
-                    this.vue.workTitle = data.title;
-                    this.vue.workDescription = data.description;
-                    this.vue.workQuantity = data.quantity;
-                    this.vue.workUnits = data.units;
-                    this.vue.workCost = data.cost;
-                    this.vue.workTechnician = data.technican;
-                    this.vue.workPhotos = data.photos;
-
-                    this.vue.openWorkModal(2);
-                    // remove dropzone instance
-                    Dropzone.forElement("#worksDropzone").destroy();
-
-                    if(isset('worksAddPhotoUrl')){
-                        // generating the dropzone dinamicly
-                        // in order to change the url
-                        $("#worksDropzone").dropzone({
-                                vue: this.vue,
-                                url: back.worksAddPhotoUrl+data.id,
-                                method: 'post',
-                                paramName: 'photo',
-                                maxFilesize: 50,
-                                acceptedFiles: '.jpg, .jpeg, .png',
-                                init: function() {
-                                    this.on("success", function(file) {
-                                        this.options.vue.$emit('workChanged');
-                                    });
-                                }
-                        });
-                    }
-                    // remove the selected color from the row
-                    this.worksTable.find('tr.table_active').removeClass('table_active');
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                    console.log('error');
-                }
-            });
-        }
-    });
-
-    $('#equipmentTable').on( 'click-row.bs.table', function (e, row, $element) {
-        if ( $element.hasClass('table_active') ) {
-            $element.removeClass('table_active');
-        }
-        else {
-            equipmentTable.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        if(isset('equipmentUrl')){
-            $.ajax({
-                vue: serviceVue,
-                equipmentTable: equipmentTable,
-                url:      back.equipmentUrl+row.id,
-                type:     'GET',
-                success: function(data, textStatus, xhr) {
-                    //called when successful
-                    this.vue.equipmentId = data.id;
-                    this.vue.equipmentKind = data.kind;
-                    this.vue.equipmentType = data.type;
-                    this.vue.equipmentBrand = data.brand;
-                    this.vue.equipmentModel = data.model;
-                    this.vue.equipmentCapacity = data.capacity;
-                    this.vue.equipmentUnits = data.units;
-                    this.vue.equipmentPhotos = data.photos;
-                    // remove dropzone instance
-                    Dropzone.forElement("#equipmentDropzone").destroy();
-
-                    if(isset('equipmentAddPhotoUrl')){
-                        // generating the dropzone dinamicly
-                        // in order to change the url
-                        $("#equipmentDropzone").dropzone({
-                                vue: this.vue,
-                                url: back.equipmentAddPhotoUrl+data.id,
-                                method: 'post',
-                                paramName: 'photo',
-                                maxFilesize: 50,
-                                acceptedFiles: '.jpg, .jpeg, .png',
-                                init: function() {
-                                    this.on("success", function(file) {
-                                        this.options.vue.$emit('equipmentChanged');
-                                    });
-                                }
-                        });
-                        // set the dropzone class for styling
-                        $( "#equipmentDropzone" ).addClass("dropzone");
-                    }
-                    // remove the selected color from the row
-                    this.equipmentTable.find('tr.table_active').removeClass('table_active');
-                    this.vue.equipmentTableFocus = false;
-                    this.vue.equipmentFocus = 4;
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                    console.log('error');
-                }
-            });
-        }
-    });
-
     $('#missingServices').on( 'click-row.bs.table', function (e, row, $element) {
         if ( $element.hasClass('table_active') ) {
             $element.removeClass('table_active');
@@ -942,6 +826,7 @@ function isset(strVariableName) {
     let billing       = require('./components/billing.vue');
     let contract       = require('./components/contract.vue');
     let chemical       = require('./components/chemical.vue');
+    let equipment       = require('./components/equipment.vue');
     let works       = require('./components/works.vue');
     let payments       = require('./components/payments.vue');
     let routeTable     = require('./components/routeTable.vue');
@@ -1135,6 +1020,7 @@ function isset(strVariableName) {
             countries,
             contract,
             chemical,
+            equipment,
             routeTable,
             deleteButton,
         },
@@ -1161,44 +1047,14 @@ function isset(strVariableName) {
             serviceCountry: (isset('country')) ? back.country : '',
             serviceLatitude: (isset('latitude')) ? back.latitude : null,
             serviceLongitude: (isset('longitude')) ? back.longitude : null,
-            // Equipment
-                equipmentTableFocus: true,
-                equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-                equipmentId: 0,
-                equipmentPhotos: [],
-                equipmentPhoto: '',
-                equipmentKind: '',
-                equipmentType: '',
-                equipmentBrand: '',
-                equipmentModel: '',
-                equipmentCapacity: '',
-                equipmentUnits: '',
             // chemicals
-                chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-                chemicalId: 0,
-                chemicalName: '',
-                chemicalAmount: '',
-                chemicalUnits: '',
+            chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+            chemicalId: 0,
+            chemicalName: '',
+            chemicalAmount: '',
+            chemicalUnits: '',
         },
         computed: {
-            equipmentModalTitle: function(){
-                switch (this.equipmentFocus){
-                    case 1:
-                    return 'Equipment List';
-                    break;
-                    case 2:
-                    return 'Add Equipment';
-                    break;
-                    case 3:
-                    return this.equipmentKind;
-                    break;
-                    case 4:
-                    return 'Edit Equipment';
-                    break;
-                    default:
-                    return 'Equipment';
-                }
-            },
             locationPickerTag(){
                 let attributes = {
                         'icon': 'font-icon font-icon-ok',
@@ -1215,149 +1071,15 @@ function isset(strVariableName) {
                 return attributes;
             },
         },
-        events: {
-            // when a photo is deleted from the equipment photo edit
-            equipmentChanged(){
-                this.getEquipment();
-            },
-        },
+        // events: {
+        //     // when a photo is deleted from the equipment photo edit
+        //     equipmentChanged(){
+        //         this.getEquipment();
+        //     },
+        // },
         methods: {
             checkValidationError($fildName){
                 return $fildName in this.validationErrors;
-            },
-            // Chemicals
-            // Equipment
-            destroyEquipment(){
-                if(isset('equipmentUrl')){
-                    let vue = this;
-                    swal({
-                        title: "Are you sure?",
-                        text: "You will not be able to recover this!",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: "Yes, delete it!",
-                        cancelButtonText: "No, cancel!",
-                        closeOnConfirm: true,
-                        closeOnCancel: true
-                    }, function(isConfirm){
-                        if(isConfirm){
-                            $.ajax({
-                                vue: vue,
-                                swal: swal,
-                                url: back.equipmentUrl+vue.equipmentId,
-                                type: 'DELETE',
-                                success: function(data, textStatus, xhr) {
-                                    // refresh equipment list
-                                    equipmentTable.bootstrapTable('refresh');
-
-                                    this.vue.openEquimentList();
-                                    // send success alert
-                                    this.swal({
-                                        title: data.title,
-                                        text: data.message,
-            		                    type: "success",
-                                        timer: 2000,
-                                        showConfirmButton: false
-                                    });
-                                },
-                                error: function(xhr, textStatus, errorThrown) {
-                                    // this.swal({
-                                    //     title: data.title,
-                                    //     text: data.message,
-            		                //     type: "error",
-                                    //     showConfirmButton: true
-                                    // });
-                                }
-                            });
-                        }
-                    });
-                }
-            },
-            getEquipment(){
-                if(isset('equipmentUrl')){
-                    $.ajax({
-                        vue: this,
-                        url:      back.equipmentUrl+this.equipmentId,
-                        type:     'GET',
-                        success: function(data, textStatus, xhr) {
-                            //called when successful
-                            this.vue.equipmentId = data.id;
-                            this.vue.equipmentKind = data.kind;
-                            this.vue.equipmentType = data.type;
-                            this.vue.equipmentBrand = data.brand;
-                            this.vue.equipmentModel = data.model;
-                            this.vue.equipmentCapacity = data.capacity;
-                            this.vue.equipmentUnits = data.units;
-                            this.vue.equipmentPhotos = data.photos;
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            //called when there is an error
-                            console.log('error');
-                        }
-                    });
-                }
-            },
-            sendEquipment(type){
-                let url = (isset('equipmentUrl')) ? back.equipmentUrl: '';
-                let requestType = 'POST';
-
-                if(type == 'edit'){
-                    url += this.equipmentId;
-                    requestType = 'PATCH';
-                }
-
-                if(url != ''){
-                    $.ajax({
-                        vue: this,
-                        url: url,
-                        type: requestType,
-                        dataType: 'json',
-                        data: {
-                            'photo': this.equipmentPhoto,
-                            'kind': this.equipmentKind,
-                            'type': this.equipmentType,
-                            'brand': this.equipmentBrand,
-                            'model': this.equipmentModel,
-                            'capacity': this.equipmentCapacity,
-                            'units': this.equipmentUnits,
-                            'service_id': this.serviceId,
-                        },
-                        success: function(data, textStatus, xhr) {
-                            // refresh equipment list
-                            equipmentTable.bootstrapTable('refresh');
-                            // send back to list
-                            this.vue.openEquimentList();
-                        },
-                        error: function(xhr, textStatus, errorThrown) {
-                            this.vue.validationErrors = xhr.responseJSON;
-                        }
-                    });
-                }
-            },
-            clearEquipment(){
-                this.equipmentKind = '';
-                this.equipmentType = '';
-                this.equipmentBrand = '';
-                this.equipmentModel = '';
-                this.equipmentCapacity = '';
-                this.equipmentUnits = '';
-                // clear the validation errors to
-                this.validationErrors = {};
-            },
-            setEquipmentFocus($num){
-                this.equipmentFocus = $num;
-            },
-            checkEquipmentFocusIs($num){
-                return (this.equipmentFocus == $num);
-            },
-            openEquimentList(clearEquipment = true){
-                this.equipmentTableFocus = true;
-                this.equipmentFocus = 1;
-                if(clearEquipment){
-                    this.clearEquipment();
-                }
-                $('#equipmentModal').modal('show');
             },
             // Location
             populateAddressFields(page){
@@ -1472,17 +1194,17 @@ function isset(strVariableName) {
     ========================================================================== */
 
     // Dropzone.autoDiscover = false;
-    Dropzone.options.genericDropzone = {
-        workOrderVue: workOrderVue,
-        paramName: 'photo',
-    	maxFilesize: 50,
-    	acceptedFiles: '.jpg, .jpeg, .png',
-        init: function() {
-            this.on("success", function(file) {
-                this.options.workOrderVue.$broadcast('photoUploaded');
-            });
-        }
-    }
+    // Dropzone.options.genericDropzone = {
+    //     workOrderVue: workOrderVue,
+    //     paramName: 'photo',
+    // 	maxFilesize: 50,
+    // 	acceptedFiles: '.jpg, .jpeg, .png',
+    //     init: function() {
+    //         this.on("success", function(file) {
+    //             this.options.workOrderVue.$broadcast('photoUploaded');
+    //         });
+    //     }
+    // }
 
 /* ==========================================================================
     Location Picker

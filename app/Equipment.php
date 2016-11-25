@@ -21,7 +21,6 @@ class Equipment extends Model
         'model',
         'capacity',
         'units',
-        'service_id'
 	];
 
 

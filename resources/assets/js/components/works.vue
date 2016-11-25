@@ -98,7 +98,7 @@
                     <!-- Show Work -->
                     <div class="col-md-12" v-show="isFocus(3)">
 
-						<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
+						<alert type="danger" :message="alertMessageShow" :active="alertActiveShow"></alert>
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Title</label>
@@ -216,11 +216,11 @@
 				</div>
 	      </div>
 	      <div class="modal-footer">
-			<p style="float: left;" v-if="isFocus(3)">
+			<span style="float: left;" v-if="isFocus(3)">
 				<button type="button" class="btn btn-danger" @click="destroy">
 					<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;Destroy
 				</button>
-			</p>
+			</span>
 
 	        <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(4)">Close</button>
 
@@ -527,7 +527,7 @@ var dropdown = require('./dropdown.vue');
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
-			this.resetAlert('list');
+			this.resetAlert('show');
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
@@ -542,8 +542,8 @@ var dropdown = require('./dropdown.vue');
 				// clear values
 				this.changeFocus(2);
             }, (response) => {
-				this.alertMessageEdit = "The work could not be destroyed, please try again.";
-				this.alertActiveEdit = true;
+				this.alertMessageShow = "The work could not be destroyed, please try again.";
+				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
 		},

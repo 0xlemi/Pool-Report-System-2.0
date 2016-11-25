@@ -212,29 +212,6 @@ class DataTableController extends PageController
         return Response::json($services, 200);
     }
 
-    public function equipment($service_seq_id)
-    {
-        try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Service with that id, does not exist.');
-        }
-
-        $equipment = $service->equipment()
-                        ->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                'id' => $item->id,
-                                'kind' => '<strong>'.$item->kind.'</strong>',
-                                'type' => $item->type,
-                                'brand' => $item->brand,
-                                'model' => $item->model,
-                                'capacity' => $item->capacity.' '.$item->units,
-                            );
-                        });
-        return Response::json($equipment, 200);
-    }
-
     public function clients()
     {
         $clients = $this->loggedUserAdministrator()

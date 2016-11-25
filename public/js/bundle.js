@@ -28870,7 +28870,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Chemical preview -->\n\t<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :object-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Edit Chemical -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\t        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Chemical managment -->\n<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :object-id.sync=\"chemicalId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                </div>\n\n                <!-- Edit Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -29463,12 +29463,16 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":203,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],198:[function(require,module,exports){
-'use strict';
+},{"./partials/basicNameIconOptionPartial.html":204,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],198:[function(require,module,exports){
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+
+var Dropzone = require("dropzone");
+
 exports.default = {
     props: ['url'],
     data: function data() {
@@ -29481,10 +29485,43 @@ exports.default = {
         fullUrl: function fullUrl() {
             return Laravel.url + this.url;
         }
+    },
+    watch: {
+        url: function url() {
+            Dropzone.forElement("#vueDropzone").destroy();
+            // generating the dropzone dinamicly
+            // in order to change the url
+            $("#vueDropzone").dropzone({
+                vue: this,
+                url: this.fullUrl,
+                method: 'post',
+                paramName: 'photo',
+                maxFilesize: 50,
+                acceptedFiles: '.jpg, .jpeg, .png',
+                init: function init() {
+                    this.on("success", function (file) {
+                        this.options.vue.$dispatch('photoUploaded');
+                    });
+                }
+            });
+        }
+    },
+    ready: function ready() {
+        Dropzone.options.vueDropzone = {
+            vue: this,
+            paramName: 'photo',
+            maxFilesize: 50,
+            acceptedFiles: '.jpg, .jpeg, .png',
+            init: function init() {
+                this.on("success", function (file) {
+                    this.options.vue.$dispatch('photoUploaded');
+                });
+            }
+        };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"box-typical-upload box-typical-upload-in\">\n    <div class=\"drop-zone\">\n        <form id=\"genericDropzone\" action=\"{{ fullUrl }}\" method=\"POST\" class=\"dropzone\">\n\t\t\t<input type=\"hidden\" name=\"_token\" value=\"{{ token }}\">\n        \t<div class=\"dz-message\" data-dz-message=\"\"><span><i class=\"font-icon font-icon-cloud-upload-2\"></i>\n            <div class=\"drop-zone-caption\">Drag file or click to add photos</div></span></div>\n        </form>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"box-typical-upload box-typical-upload-in\">\n    <div class=\"drop-zone\">\n        <form id=\"vueDropzone\" :action=\"fullUrl\" method=\"POST\" class=\"dropzone\">\n\t\t\t<input type=\"hidden\" name=\"_token\" value=\"{{ token }}\">\n        \t<div class=\"dz-message\" data-dz-message=\"\"><span><i class=\"font-icon font-icon-cloud-upload-2\"></i>\n            <div class=\"drop-zone-caption\">Drag file or click to add photos</div></span></div>\n        </form>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -29495,7 +29532,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
+},{"dropzone":82,"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29528,6 +29565,419 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],200:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+				value: true
+});
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _photoList = require('./photoList.vue');
+
+var _photoList2 = _interopRequireDefault(_photoList);
+
+var _dropzone = require('./dropzone.vue');
+
+var _dropzone2 = _interopRequireDefault(_dropzone);
+
+var _BootstrapTable = require('./BootstrapTable.vue');
+
+var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+				props: {
+								serviceId: {
+												required: true
+								}
+				},
+				components: {
+								alert: _alert2.default,
+								photoList: _photoList2.default,
+								dropzone: _dropzone2.default,
+								BootstrapTable: _BootstrapTable2.default
+				},
+				data: function data() {
+								return {
+												focus: 2, // 1=create, 2=list, 3=show, 4=edit
+												validationErrors: {},
+
+												id: 0,
+												kind: null,
+												type: null,
+												brand: null,
+												model: null,
+												capacity: null,
+												units: null,
+
+												showKind: null,
+												showType: null,
+												showBrand: null,
+												showModel: null,
+												showCapacity: null,
+
+												photos: {},
+
+												// alert
+												alertMessageCreate: '',
+												alertMessageList: '',
+												alertMessageShow: '',
+												alertMessageEdit: '',
+												alertActiveCreate: false,
+												alertActiveList: false,
+												alertActiveShow: false,
+												alertActiveEdit: false,
+
+												data: [],
+												columns: [{
+																field: 'id',
+																visible: false
+												}, {
+																field: 'kind',
+																title: 'Kind',
+																sortable: true
+												}, {
+																field: 'type',
+																title: 'Type',
+																sortable: true
+												}, {
+																field: 'brand',
+																title: 'Brand',
+																sortable: true
+												}, {
+																field: 'model',
+																title: 'Model',
+																sortable: true
+												}, {
+																field: 'capacity',
+																title: 'Capacity',
+																sortable: true
+												}],
+												options: {
+																iconsPrefix: 'font-icon',
+																toggle: 'table',
+																sidePagination: 'client',
+																pagination: 'true',
+																classes: 'table',
+																icons: {
+																				paginationSwitchDown: 'font-icon-arrow-square-down',
+																				paginationSwitchUp: 'font-icon-arrow-square-down up',
+																				refresh: 'font-icon-refresh',
+																				toggle: 'font-icon-list-square',
+																				columns: 'font-icon-list-rotate',
+																				export: 'font-icon-download'
+																},
+																paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+																paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+																pageSize: 5,
+																pageList: [5, 10],
+																search: true,
+																showExport: true,
+																exportTypes: ['excel', 'pdf'],
+																minimumCountColumns: 2,
+																showFooter: false,
+
+																uniqueId: 'id',
+																idField: 'id',
+
+																toolbarButton: true,
+																toolbarButtonText: 'Add Equipment'
+												}
+								};
+				},
+
+				computed: {
+								modalTitle: function modalTitle() {
+												switch (this.focus) {
+																case 1:
+																				return 'Add Equipment';
+																				break;
+																case 2:
+																				return 'Equipment List';
+																				break;
+																case 3:
+																				return this.kind;
+																				break;
+																case 4:
+																				return 'Edit Equipment';
+																				break;
+																default:
+																				return 'Equipment';
+												}
+								},
+								dropzoneUrl: function dropzoneUrl() {
+												return 'equipment/photos/' + this.id;
+								}
+				},
+				events: {
+								toolbarButtonClicked: function toolbarButtonClicked() {
+												this.clean();
+												this.changeFocus(1);
+								},
+								rowClicked: function rowClicked() {
+												this.getValues(this.id, true);
+								},
+								photoUploaded: function photoUploaded() {
+												this.getValues(this.id);
+								}
+				},
+				methods: {
+								getList: function getList() {
+												var _this = this;
+
+												this.$http.get(Laravel.url + 'service/' + this.serviceId + '/equipment').then(function (response) {
+																_this.data = response.data;
+																_this.validationErrors = {};
+																_this.$broadcast('refreshTable');
+												}, function (response) {
+																_this.focus = 2;
+																_this.alertMessageList = "The information could not be retrieved, please try again.";
+																_this.alertActiveList = true;
+												});
+								},
+								getValues: function getValues(id) {
+												var _this2 = this;
+
+												var changeFocus = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+												this.$http.get(Laravel.url + 'equipment/' + id).then(function (response) {
+																var data = response.data;
+
+																_this2.kind = data.kind;
+																_this2.type = data.type;
+																_this2.brand = data.brand;
+																_this2.model = data.model;
+																_this2.capacity = data.capacity;
+																_this2.units = data.units;
+
+																_this2.showKind = data.kind;
+																_this2.showType = data.type;
+																_this2.showBrand = data.brand;
+																_this2.showModel = data.model;
+																_this2.showCapacity = data.capacity + ' ' + data.units;
+
+																_this2.photos = data.photos;
+
+																if (changeFocus) {
+																				_this2.changeFocus(3);
+																}
+												}, function (response) {
+																_this2.focus = 2;
+																_this2.alertMessageList = "The information could not be retrieved, please try again.";
+																_this2.alertActiveList = true;
+												});
+								},
+								create: function create() {
+												var _this3 = this;
+
+												var clickEvent = event;
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('create');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.post(Laravel.url + 'service/' + this.serviceId + '/equipment', {
+																kind: this.kind,
+																type: this.type,
+																brand: this.brand,
+																model: this.model,
+																capacity: this.capacity,
+																units: this.units
+												}).then(function (response) {
+																_this3.changeFocus(2);
+																_this3.getList();
+												}, function (response) {
+																if (response.status == 422) {
+																				_this3.validationErrors = response.data;
+																				_this3.revertButton(clickEvent, buttonTag);
+																} else {
+																				_this3.alertMessageCreate = "The equipment could not be created, please try again.";
+																				_this3.alertActiveCreate = true;
+																				_this3.revertButton(clickEvent, buttonTag);
+																}
+												});
+								},
+								update: function update() {
+												var _this4 = this;
+
+												var clickEvent = event;
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('edit');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.patch(Laravel.url + 'equipment/' + this.id, {
+																kind: this.kind,
+																type: this.type,
+																brand: this.brand,
+																model: this.model,
+																capacity: this.capacity,
+																units: this.units
+												}).then(function (response) {
+																// refresh the information
+																_this4.getValues(_this4.id, true);
+												}, function (response) {
+																if (response.status == 422) {
+																				_this4.validationErrors = response.data;
+																				_this4.revertButton(clickEvent, buttonTag);
+																} else {
+																				_this4.alertMessageEdit = "The equipment could not be updated, please try again.";
+																				_this4.alertActiveEdit = true;
+																				_this4.revertButton(clickEvent, buttonTag);
+																}
+												});
+								},
+								destroy: function destroy() {
+												var vue = this;
+												var clickEvent = event;
+												swal({
+																title: "Are you sure?",
+																text: "Equipment is going to permanently deleted!",
+																type: "warning",
+																showCancelButton: true,
+																confirmButtonColor: "#DD6B55",
+																confirmButtonText: "Yes, delete it!",
+																cancelButtonText: "No, cancel!",
+																closeOnConfirm: true,
+																closeOnCancel: true
+												}, function (isConfirm) {
+																if (isConfirm) {
+																				vue.destroyRequest(clickEvent);
+																}
+												});
+								},
+								destroyRequest: function destroyRequest(clickEvent) {
+												var _this5 = this;
+
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('show');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.delete(Laravel.url + 'equipment/' + this.id).then(function (response) {
+																_this5.clean();
+																_this5.changeFocus(2);
+												}, function (response) {
+																_this5.alertMessageShow = "The equipment could not be destroyed, please try again.";
+																_this5.alertActiveShow = true;
+																_this5.revertButton(clickEvent, buttonTag);
+												});
+								},
+								clean: function clean() {
+												this.kind = '';
+												this.type = '';
+												this.brand = '';
+												this.model = '';
+												this.capacity = '';
+												this.units = '';
+
+												this.showKind = '';
+												this.showType = '';
+												this.showBrand = '';
+												this.showModel = '';
+												this.showCapacity = '';
+												this.showUnits = '';
+
+												this.photos = {};
+
+												this.validationErrors = {};
+								},
+								changeFocus: function changeFocus(num) {
+												if (num == 2) {
+																this.getList();
+												}
+												this.focus = num;
+								},
+								goBack: function goBack() {
+												switch (this.focus) {
+																case 1:
+																				this.changeFocus(2);
+																				break;
+																case 3:
+																				this.changeFocus(2);
+																				break;
+																case 4:
+																				this.changeFocus(3);
+																				break;
+												}
+								},
+								resetAlert: function resetAlert(alert) {
+												if (alert == 'create') {
+																this.alertMessageCreate = "";
+																this.alertActiveCreate = false;
+												} else if (alert == 'list') {
+																this.alertMessageList = "";
+																this.alertActiveList = false;
+												} else if (alert == 'show') {
+																this.alertMessageShow = "";
+																this.alertActiveShow = false;
+												} else if (alert == 'edit') {
+																this.alertMessageEdit = "";
+																this.alertActiveEdit = false;
+												}
+								},
+								isFocus: function isFocus(num) {
+												return this.focus == num;
+								},
+								checkValidationError: function checkValidationError($fildName) {
+												return $fildName in this.validationErrors;
+								},
+								revertButton: function revertButton(clickEvent, buttonTag) {
+												// enable, remove spinner and set tab to the one before
+												clickEvent.target.disabled = false;
+												clickEvent.target.innerHTML = buttonTag;
+								}
+				},
+				ready: function ready() {
+								this.getList();
+				}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Equipment</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#equipmentModal\">\n\t\t\t<i class=\"glyphicon glyphicon-hdd\"></i>&nbsp;&nbsp;&nbsp;Manage Equipment</button>\n\t</div>\n</div>\n\n\n<!-- Modal for equipment managment -->\n<div class=\"modal fade\" id=\"equipmentModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n\n                <!-- Create Equipment -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('kind'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Kind</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"kind\" class=\"form-control\" placeholder=\"Example: Pump, Solar Panels, Filter, etc...\" v-model=\"kind\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('kind')\" class=\"text-muted\">{{ validationErrors.kind[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" placeholder=\"Example: Single-speed, Varaible-speed, etc...\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('model'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Model</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"model\" class=\"form-control\" v-model=\"model\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('model')\" class=\"text-muted\">{{ validationErrors.model[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('capacity'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Capacity</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"capacity\" class=\"form-control\" v-model=\"capacity\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('capacity')\" class=\"text-muted\">{{ validationErrors.capacity[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: hp, kWh, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\n                <!-- List -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :object-id.sync=\"id\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n\t\t\t\t</div>\n\n\n                <!-- Show Equipment -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ showType }}\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ showBrand }}\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Model</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ showModel }}\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Capacity</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ showCapacity }}\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<br>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<h4>Equipment Photos</h4>\n\t\t\t\t\t\t<hr>\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"false\" :photos-url=\"'equipment/photos'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\n\t\t\t\t<!-- Edit Equipment -->\n                <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('kind'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Kind</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"kind\" class=\"form-control\" v-model=\"kind\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('kind')\" class=\"text-muted\">{{ validationErrors.kind[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('model'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Model</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"model\" class=\"form-control\" v-model=\"model\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('model')\" class=\"text-muted\">{{ validationErrors.model[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('capacity'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Capacity</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"capacity\" class=\"form-control\" v-model=\"capacity\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('capacity')\" class=\"text-muted\">{{ validationErrors.capacity[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<hr>\n\t\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"true\" :photos-url=\"'equipment/photos'\">\n\t\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div class=\"col-md-12\">\n                \t\t<dropzone :url=\"dropzoneUrl\"><dropzone>\n\t\t\t\t\t</dropzone></dropzone></div>\n\n                </div><!-- End Edit Equipment -->\n\n\t\t\t</div>\n        </div>\n      <div class=\"modal-footer\">\n\t\t<span style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button class=\"btn btn-danger\" type=\"button\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Delete</button>\n\t\t</span>\n\n        <button v-if=\"!isFocus(4)\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t\t<button v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back</button>\n        <button v-if=\"isFocus(1)\" class=\"btn btn-success\" type=\"button\" @click=\"create\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Add Equipment</button>\n\t\t<button v-if=\"isFocus(3)\" type=\"button\" class=\"btn btn-primary\" @click=\"changeFocus(4)\">\n\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit</button>\n        <button v-if=\"isFocus(4)\" class=\"btn btn-success\" type=\"button\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7561f529", module.exports)
+  } else {
+    hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":206,"spin":166,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29659,7 +30109,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":205,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":206,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29680,7 +30130,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29744,9 +30194,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":201,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"./notification.vue":202,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],204:[function(require,module,exports){
+},{}],205:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30025,7 +30475,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30076,7 +30526,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30207,7 +30657,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30271,7 +30721,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":198,"./photoList.vue":205,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./dropzone.vue":198,"./photoList.vue":206,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30351,7 +30801,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":205,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"./photoList.vue":206,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30641,7 +31091,7 @@ exports.default = {
 			// save button text for later
 			var buttonTag = clickEvent.target.innerHTML;
 
-			this.resetAlert('list');
+			this.resetAlert('show');
 			// Disable the submit button to prevent repeated clicks:
 			clickEvent.target.disabled = true;
 			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
@@ -30656,8 +31106,8 @@ exports.default = {
 				// clear values
 				_this5.changeFocus(2);
 			}, function (response) {
-				_this5.alertMessageEdit = "The work could not be destroyed, please try again.";
-				_this5.alertActiveEdit = true;
+				_this5.alertMessageShow = "The work could not be destroyed, please try again.";
+				_this5.alertActiveShow = true;
 				_this5.revertButton(clickEvent, buttonTag);
 			});
 		},
@@ -30724,7 +31174,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Works</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#workModal\">\n\t\t\t\t<i class=\"fa fa-suitcase\"></i>&nbsp;&nbsp;&nbsp;Manage Works\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Work preview -->\n\t<div class=\"modal fade\" id=\"workModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :object-id.sync=\"workId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Show Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" readonly=\"\" class=\"form-control\" value=\"{{showTitleName}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" style=\"text-indent: 40px;\" :value=\"showTechnician.fullName\">\n                            \t<img class=\"iconOption\" :src=\"showTechnician.icon\" alt=\"Technician Photo\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" readonly=\"\" class=\"form-control\" value=\"{{showQuantity}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" readonly=\"\" class=\"form-control\" value=\"{{showUnits}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" value=\"{{showCost+' '+currency}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"showDescription\" readonly=\"\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t\t<!-- Edit Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(4)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"!isFocus(2)\" @click=\"goBack\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(3)\" @click=\"changeFocus(4)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(4)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Works</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#workModal\">\n\t\t\t\t<i class=\"fa fa-suitcase\"></i>&nbsp;&nbsp;&nbsp;Manage Works\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Work preview -->\n\t<div class=\"modal fade\" id=\"workModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :object-id.sync=\"workId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n                    </div>\n\n                    <!-- Show Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" readonly=\"\" class=\"form-control\" value=\"{{showTitleName}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" style=\"text-indent: 40px;\" :value=\"showTechnician.fullName\">\n                            \t<img class=\"iconOption\" :src=\"showTechnician.icon\" alt=\"Technician Photo\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" readonly=\"\" class=\"form-control\" value=\"{{showQuantity}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" readonly=\"\" class=\"form-control\" value=\"{{showUnits}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" readonly=\"\" class=\"form-control\" value=\"{{showCost+' '+currency}}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"showDescription\" readonly=\"\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t\t<!-- Edit Work -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('title'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Title</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"title\" class=\"form-control\" v-model=\"titleName\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('title')\" class=\"text-muted\">{{ validationErrors.title[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('technician_id'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Technician</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"technician.id\" :options=\"technicians\" :name=\"'technician'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('technician_id')\" class=\"text-muted\">{{ validationErrors.technician_id[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('quantity'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Quantity</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"quantity\" class=\"form-control\" v-model=\"quantity\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('quantity')\" class=\"text-muted\">{{ validationErrors.quantity[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('cost'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Cost</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" name=\"coste\" class=\"form-control\" v-model=\"cost\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('cost')\" class=\"text-muted\">{{ validationErrors.cost[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('description'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Description</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<textarea rows=\"4\" class=\"form-control\" v-model=\"description\" placeholder=\"Describe the work done\">\t\t\t\t\t\t\t\t</textarea>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('description')\" class=\"text-muted\">{{ validationErrors.description[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<span style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</span>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(4)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"!isFocus(2)\" @click=\"goBack\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(3)\" @click=\"changeFocus(4)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Edit\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(4)\" @click=\"update\">\n\t\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -30735,7 +31185,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":197,"spin":166,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":197,"spin":166,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30819,7 +31269,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -30837,1494 +31287,1211 @@ var locationPicker = require("jquery-locationpicker");
 Vue.use(require('vue-resource'));
 
 $(document).ready(function () {
-    // var dateFormat = require('dateformat');
-
-    // set th CSRF_TOKEN for ajax requests
-    $.ajaxSetup({
-        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
-    });
-    Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
-
-    /* ==========================================================================
-       Custom functions
-       ========================================================================== */
-
-    /**
-     * Check if variable is instanciated
-     * @param  {string} strVariableName name of the variable to pass
-     * @return {boolean}
-     */
-    function isset(strVariableName) {
-        if (typeof back !== 'undefined') {
-            return typeof back[strVariableName] !== 'undefined';
-        }
-        return false;
-    }
-
-    /* ==========================================================================
-    	Billing Stripe
-    	========================================================================== */
-
-    /* ==========================================================================
-    	Scroll
-    	========================================================================== */
-
-    if (!("ontouchstart" in document.documentElement)) {
-
-        document.documentElement.className += " no-touch";
-
-        var jScrollOptions = {
-            autoReinitialise: true,
-            autoReinitialiseDelay: 100
-        };
-
-        $('.box-typical-body').jScrollPane(jScrollOptions);
-        $('.side-menu').jScrollPane(jScrollOptions);
-        //$('.side-menu-addl').jScrollPane(jScrollOptions);
-        $('.scrollable-block').jScrollPane(jScrollOptions);
-    }
-
-    /* ==========================================================================
-        Header search
-        ========================================================================== */
-
-    $('.site-header .site-header-search').each(function () {
-        var parent = $(this),
-            overlay = parent.find('.overlay');
-
-        overlay.click(function () {
-            parent.removeClass('closed');
-        });
-
-        parent.clickoutside(function () {
-            if (!parent.hasClass('closed')) {
-                parent.addClass('closed');
-            }
-        });
-    });
-
-    /* ==========================================================================
-        Header mobile menu
-        ========================================================================== */
-
-    // Dropdowns
-    $('.site-header-collapsed .dropdown').each(function () {
-        var parent = $(this),
-            btn = parent.find('.dropdown-toggle');
-
-        btn.click(function () {
-            if (parent.hasClass('mobile-opened')) {
-                parent.removeClass('mobile-opened');
-            } else {
-                parent.addClass('mobile-opened');
-            }
-        });
-    });
-
-    $('.dropdown-more').each(function () {
-        var parent = $(this),
-            more = parent.find('.dropdown-more-caption'),
-            classOpen = 'opened';
-
-        more.click(function () {
-            if (parent.hasClass(classOpen)) {
-                parent.removeClass(classOpen);
-            } else {
-                parent.addClass(classOpen);
-            }
-        });
-    });
-
-    // Left mobile menu
-    $('.hamburger').click(function () {
-        if ($('body').hasClass('menu-left-opened')) {
-            $(this).removeClass('is-active');
-            $('body').removeClass('menu-left-opened');
-            $('html').css('overflow', 'auto');
-        } else {
-            $(this).addClass('is-active');
-            $('body').addClass('menu-left-opened');
-            $('html').css('overflow', 'hidden');
-        }
-    });
-
-    $('.mobile-menu-left-overlay').click(function () {
-        $('.hamburger').removeClass('is-active');
-        $('body').removeClass('menu-left-opened');
-        $('html').css('overflow', 'auto');
-    });
-
-    // Right mobile menu
-    $('.site-header .burger-right').click(function () {
-        if ($('body').hasClass('menu-right-opened')) {
-            $('body').removeClass('menu-right-opened');
-            $('html').css('overflow', 'auto');
-        } else {
-            $('.hamburger').removeClass('is-active');
-            $('body').removeClass('menu-left-opened');
-            $('body').addClass('menu-right-opened');
-            $('html').css('overflow', 'hidden');
-        }
-    });
-
-    $('.mobile-menu-right-overlay').click(function () {
-        $('body').removeClass('menu-right-opened');
-        $('html').css('overflow', 'auto');
-    });
-
-    /* ==========================================================================
-        Header help
-        ========================================================================== */
-
-    $('.help-dropdown').each(function () {
-        var parent = $(this),
-            btn = parent.find('>button'),
-            popup = parent.find('.help-dropdown-popup'),
-            jscroll;
-
-        btn.click(function () {
-            if (parent.hasClass('opened')) {
-                parent.removeClass('opened');
-                jscroll.destroy();
-            } else {
-                parent.addClass('opened');
-
-                $('.help-dropdown-popup-cont, .help-dropdown-popup-side').matchHeight();
-
-                if (!("ontouchstart" in document.documentElement)) {
-                    setTimeout(function () {
-                        jscroll = parent.find('.jscroll').jScrollPane(jScrollOptions).data().jsp;
-                        //jscroll.reinitialise();
-                    }, 0);
-                }
-            }
-        });
-
-        $('html').click(function (event) {
-            if (!$(event.target).closest('.help-dropdown-popup').length && !$(event.target).closest('.help-dropdown>button').length && !$(event.target).is('.help-dropdown-popup') && !$(event.target).is('.help-dropdown>button')) {
-                if (parent.hasClass('opened')) {
-                    parent.removeClass('opened');
-                    jscroll.destroy();
-                }
-            }
-        });
-    });
-
-    /* ==========================================================================
-        Side menu list
-        ========================================================================== */
-
-    $('.side-menu-list li.with-sub').each(function () {
-        var parent = $(this),
-            clickLink = parent.find('>span'),
-            subMenu = parent.find('ul');
-
-        clickLink.click(function () {
-            if (parent.hasClass('opened')) {
-                parent.removeClass('opened');
-                subMenu.slideUp();
-            } else {
-                $('.side-menu-list li.with-sub').not(this).removeClass('opened').find('ul').slideUp();
-                parent.addClass('opened');
-                subMenu.slideDown();
-            }
-        });
-    });
-
-    /* ==========================================================================
-        Dashboard
-        ========================================================================== */
-
-    // Calculate height
-    function dashboardBoxHeight() {
-        $('.box-typical-dashboard').each(function () {
-            var parent = $(this),
-                header = parent.find('.box-typical-header'),
-                body = parent.find('.box-typical-body');
-            body.height(parent.outerHeight() - header.outerHeight());
-        });
-    }
-
-    dashboardBoxHeight();
-
-    $(window).resize(function () {
-        dashboardBoxHeight();
-    });
-
-    // Collapse box
-    $('.box-typical-dashboard').each(function () {
-        var parent = $(this),
-            btnCollapse = parent.find('.action-btn-collapse');
-
-        btnCollapse.click(function () {
-            if (parent.hasClass('box-typical-collapsed')) {
-                parent.removeClass('box-typical-collapsed');
-            } else {
-                parent.addClass('box-typical-collapsed');
-            }
-        });
-    });
-
-    // Full screen box
-    $('.box-typical-dashboard').each(function () {
-        var parent = $(this),
-            btnExpand = parent.find('.action-btn-expand'),
-            classExpand = 'box-typical-full-screen';
-
-        btnExpand.click(function () {
-            if (parent.hasClass(classExpand)) {
-                parent.removeClass(classExpand);
-                $('html').css('overflow', 'auto');
-            } else {
-                parent.addClass(classExpand);
-                $('html').css('overflow', 'hidden');
-            }
-            dashboardBoxHeight();
-        });
-    });
-
-    /* ==========================================================================
-    	Select
-    	========================================================================== */
-
-    // Bootstrap-select
-    $('.bootstrap-select').selectpicker({
-        style: '',
-        width: '100%',
-        size: 8
-    });
-
-    // Select2
-    $.fn.select2.defaults.set("minimumResultsForSearch", "Infinity");
-
-    $('.select2').select2();
-
-    function select2Icons(state) {
-        if (!state.id) {
-            return state.text;
-        }
-        var $state = $('<span class="font-icon ' + state.element.getAttribute('data-icon') + '"></span><span>' + state.text + '</span>');
-        return $state;
-    }
-
-    $(".select2-icon").select2({
-        templateSelection: select2Icons,
-        templateResult: select2Icons
-    });
-
-    $(".select2-arrow").select2({
-        theme: "arrow"
-    });
-
-    $(".select2-white").select2({
-        theme: "white"
-    });
-
-    function select2Photos(state) {
-        if (!state.id) {
-            return state.text;
-        }
-        var $state = $('<span class="user-item"><img src="' + state.element.getAttribute('data-photo') + '"/>' + state.text + '</span>');
-        return $state;
-    }
-
-    $(".select2-photo").select2({
-        templateSelection: select2Photos,
-        templateResult: select2Photos
-    });
-
-    /* ==========================================================================
-    	Datepicker
-    	========================================================================== */
-
-    $('.datetimepicker-1').datetimepicker({
-        widgetPositioning: {
-            horizontal: 'right'
-        },
-        debug: false
-    });
-
-    $('.datetimepicker-2').datetimepicker({
-        widgetPositioning: {
-            horizontal: 'right'
-        },
-        format: 'LT',
-        debug: false
-    });
-
-    /* ==========================================================================
-    	Tooltips
-    	========================================================================== */
-
-    // Tooltip
-    $('[data-toggle="tooltip"]').tooltip({
-        html: true
-    });
-
-    // Popovers
-    $('[data-toggle="popover"]').popover({
-        trigger: 'focus'
-    });
-
-    /* ==========================================================================
-    	Validation
-    	========================================================================== */
-
-    $('#form-signin_v1').validate({
-        submit: {
-            settings: {
-                inputContainer: '.form-group'
-            }
-        }
-    });
-
-    $('#form-signin_v2').validate({
-        submit: {
-            settings: {
-                inputContainer: '.form-group',
-                errorListClass: 'form-error-text-block',
-                display: 'block',
-                insertion: 'prepend'
-            }
-        }
-    });
-
-    $('#form-signup_v1').validate({
-        submit: {
-            settings: {
-                inputContainer: '.form-group',
-                errorListClass: 'form-tooltip-error'
-            }
-        }
-    });
-
-    $('#form-signup_v2').validate({
-        submit: {
-            settings: {
-                inputContainer: '.form-group',
-                errorListClass: 'form-tooltip-error'
-            }
-        }
-    });
-
-    /* ==========================================================================
-    	Sweet alerts
-    	========================================================================== */
-
-    $('.swal-btn-basic').click(function (e) {
-        // e.preventDefault();
-        swal("Here's a message!");
-    });
-
-    $('.swal-btn-text').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Here's a message!",
-            text: "It's pretty, isn't it?"
-        });
-    });
-
-    $('.swal-btn-success').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Good job!",
-            text: "You clicked the button!",
-            type: "success",
-            confirmButtonClass: "btn-success",
-            confirmButtonText: "Success"
-        });
-    });
-
-    $('.swal-btn-warning').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Are you sure?",
-            text: "Your will not be able to recover this imaginary file!",
-            type: "warning",
-            showCancelButton: true,
-            cancelButtonClass: "btn-default",
-            confirmButtonClass: "btn-warning",
-            confirmButtonText: "Warning",
-            closeOnConfirm: false
-        }, function () {
-            swal({
-                title: "Deleted!",
-                text: "Your imaginary file has been deleted.",
-                type: "success",
-                confirmButtonClass: "btn-success"
-            });
-        });
-    });
-
-    $('.swal-btn-cancel').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Are you sure?",
-            text: "You will not be able to recover this imaginary file!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel plx!",
-            closeOnConfirm: false,
-            closeOnCancel: false
-        }, function (isConfirm) {
-            if (isConfirm) {
-                swal({
-                    title: "Deleted!",
-                    text: "Your imaginary file has been deleted.",
-                    type: "success",
-                    confirmButtonClass: "btn-success"
-                });
-            } else {
-                swal({
-                    title: "Cancelled",
-                    text: "Your imaginary file is safe :)",
-                    type: "error",
-                    confirmButtonClass: "btn-danger"
-                });
-            }
-        });
-    });
-
-    $('.swal-btn-custom-img').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Sweet!",
-            text: "Here's a custom image.",
-            confirmButtonClass: "btn-success",
-            imageUrl: 'img/smile.png'
-        });
-    });
-
-    $('.swal-btn-info').click(function (e) {
-        e.preventDefault();
-        swal({
-            title: "Are you sure?",
-            text: "Your will not be able to recover this imaginary file!",
-            type: "info",
-            showCancelButton: true,
-            cancelButtonClass: "btn-default",
-            confirmButtonText: "Info",
-            confirmButtonClass: "btn-primary"
-        });
-    });
-
-    /* ==========================================================================
-    	Bar chart
-    	========================================================================== */
-
-    $(".bar-chart").peity("bar", {
-        delimiter: ",",
-        fill: ["#919fa9"],
-        height: 16,
-        max: null,
-        min: 0,
-        padding: 0.1,
-        width: 384
-    });
-
-    /* ==========================================================================
-    	Full height box
-    	========================================================================== */
-
-    function boxFullHeight() {
-        var sectionHeader = $('.section-header');
-        var sectionHeaderHeight = 0;
-
-        if (sectionHeader.size()) {
-            sectionHeaderHeight = parseInt(sectionHeader.height()) + parseInt(sectionHeader.css('padding-bottom'));
-        }
-
-        $('.box-typical-full-height').css('min-height', $(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - sectionHeaderHeight - parseInt($('.box-typical-full-height').css('margin-bottom')) - 2);
-        $('.box-typical-full-height>.tbl, .box-typical-full-height>.box-typical-center').height(parseInt($('.box-typical-full-height').css('min-height')));
-    }
-
-    boxFullHeight();
-
-    $(window).resize(function () {
-        boxFullHeight();
-    });
-
-    /* ==========================================================================
-    	Chat
-    	========================================================================== */
-
-    function chatHeights() {
-        $('.chat-dialog-area').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight() - $('.chat-area-bottom').outerHeight());
-        $('.chat-list-in').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight()).css('min-height', parseInt($('.chat-dialog-area').css('min-height')) + $('.chat-area-bottom').outerHeight());
-    }
-
-    chatHeights();
-
-    $(window).resize(function () {
-        chatHeights();
-    });
-
-    /* ==========================================================================
-    	Auto size for textarea
-    	========================================================================== */
-
-    autosize($('textarea[data-autosize]'));
-
-    /* ==========================================================================
-    	Pages center
-    	========================================================================== */
-
-    $('.page-center').matchHeight({
-        target: $('html')
-    });
-
-    $(window).resize(function () {
-        setTimeout(function () {
-            $('.page-center').matchHeight({ remove: true });
-            $('.page-center').matchHeight({
-                target: $('html')
-            });
-        }, 100);
-    });
-
-    /* ==========================================================================
-    	Cards user
-    	========================================================================== */
-
-    $('.card-user').matchHeight();
-
-    /* ==========================================================================
-    	Fancybox
-    	========================================================================== */
-
-    $(".fancybox").fancybox({
-        padding: 0,
-        openEffect: 'none',
-        closeEffect: 'none'
-    });
-
-    /* ==========================================================================
-    	Box typical full height with header
-    	========================================================================== */
-
-    function boxWithHeaderFullHeight() {
-        $('.box-typical-full-height-with-header').each(function () {
-            var box = $(this),
-                boxHeader = box.find('.box-typical-header'),
-                boxBody = box.find('.box-typical-body');
-
-            boxBody.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight());
-        });
-    }
-
-    boxWithHeaderFullHeight();
-
-    $(window).resize(function () {
-        boxWithHeaderFullHeight();
-    });
-
-    /* ==========================================================================
-    	Gallery
-    	========================================================================== */
-
-    $('.gallery-item').matchHeight({
-        target: $('.gallery-item .gallery-picture')
-    });
-
-    /* ==========================================================================
-    	Addl side menu
-    	========================================================================== */
-
-    setTimeout(function () {
-        if (!("ontouchstart" in document.documentElement)) {
-            $('.side-menu-addl').jScrollPane(jScrollOptions);
-        }
-    }, 1000);
-
-    /* ==========================================================================
-    	Tables
-    	========================================================================== */
-
-    var generic_table = $('.generic_table');
-    var equipmentTable = $('#equipmentTable');
-    var worksTable = $('#worksTable');
-    var missingServices = $('#missingServices');
-
-    var tableOptions = {
-        iconsPrefix: 'font-icon',
-        toggle: 'table',
-        sidePagination: 'client',
-        pagination: 'true',
-        icons: {
-            paginationSwitchDown: 'font-icon-arrow-square-down',
-            paginationSwitchUp: 'font-icon-arrow-square-down up',
-            refresh: 'font-icon-refresh',
-            toggle: 'font-icon-list-square',
-            columns: 'font-icon-list-rotate',
-            export: 'font-icon-download'
-        },
-        paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-        paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
-    };
-
-    generic_table.bootstrapTable(tableOptions);
-    equipmentTable.bootstrapTable(tableOptions);
-    worksTable.bootstrapTable(tableOptions);
-    missingServices.bootstrapTable(tableOptions);
-
-    $('.generic_table').on('click-row.bs.table', function (e, row, $element) {
-        if ($element.hasClass('table_active')) {
-            $element.removeClass('table_active');
-        } else {
-            generic_table.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        window.location.href = back.click_url + row.id;
-    });
-
-    $('#worksTable').on('click-row.bs.table', function (e, row, $element) {
-        if ($element.hasClass('table_active')) {
-            $element.removeClass('table_active');
-        } else {
-            worksTable.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        if (isset('worksUrl')) {
-            $.ajax({
-                vue: workOrderVue,
-                worksTable: worksTable,
-                url: back.worksUrl + row.id,
-                type: 'GET',
-                success: function success(data, textStatus, xhr) {
-                    //called when successful
-                    this.vue.workId = data.id;
-                    this.vue.workTitle = data.title;
-                    this.vue.workDescription = data.description;
-                    this.vue.workQuantity = data.quantity;
-                    this.vue.workUnits = data.units;
-                    this.vue.workCost = data.cost;
-                    this.vue.workTechnician = data.technican;
-                    this.vue.workPhotos = data.photos;
-
-                    this.vue.openWorkModal(2);
-                    // remove dropzone instance
-                    Dropzone.forElement("#worksDropzone").destroy();
-
-                    if (isset('worksAddPhotoUrl')) {
-                        // generating the dropzone dinamicly
-                        // in order to change the url
-                        $("#worksDropzone").dropzone({
-                            vue: this.vue,
-                            url: back.worksAddPhotoUrl + data.id,
-                            method: 'post',
-                            paramName: 'photo',
-                            maxFilesize: 50,
-                            acceptedFiles: '.jpg, .jpeg, .png',
-                            init: function init() {
-                                this.on("success", function (file) {
-                                    this.options.vue.$emit('workChanged');
-                                });
-                            }
-                        });
-                    }
-                    // remove the selected color from the row
-                    this.worksTable.find('tr.table_active').removeClass('table_active');
-                },
-                error: function error(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                    console.log('error');
-                }
-            });
-        }
-    });
-
-    $('#equipmentTable').on('click-row.bs.table', function (e, row, $element) {
-        if ($element.hasClass('table_active')) {
-            $element.removeClass('table_active');
-        } else {
-            equipmentTable.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        if (isset('equipmentUrl')) {
-            $.ajax({
-                vue: serviceVue,
-                equipmentTable: equipmentTable,
-                url: back.equipmentUrl + row.id,
-                type: 'GET',
-                success: function success(data, textStatus, xhr) {
-                    //called when successful
-                    this.vue.equipmentId = data.id;
-                    this.vue.equipmentKind = data.kind;
-                    this.vue.equipmentType = data.type;
-                    this.vue.equipmentBrand = data.brand;
-                    this.vue.equipmentModel = data.model;
-                    this.vue.equipmentCapacity = data.capacity;
-                    this.vue.equipmentUnits = data.units;
-                    this.vue.equipmentPhotos = data.photos;
-                    // remove dropzone instance
-                    Dropzone.forElement("#equipmentDropzone").destroy();
-
-                    if (isset('equipmentAddPhotoUrl')) {
-                        // generating the dropzone dinamicly
-                        // in order to change the url
-                        $("#equipmentDropzone").dropzone({
-                            vue: this.vue,
-                            url: back.equipmentAddPhotoUrl + data.id,
-                            method: 'post',
-                            paramName: 'photo',
-                            maxFilesize: 50,
-                            acceptedFiles: '.jpg, .jpeg, .png',
-                            init: function init() {
-                                this.on("success", function (file) {
-                                    this.options.vue.$emit('equipmentChanged');
-                                });
-                            }
-                        });
-                        // set the dropzone class for styling
-                        $("#equipmentDropzone").addClass("dropzone");
-                    }
-                    // remove the selected color from the row
-                    this.equipmentTable.find('tr.table_active').removeClass('table_active');
-                    this.vue.equipmentTableFocus = false;
-                    this.vue.equipmentFocus = 4;
-                },
-                error: function error(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                    console.log('error');
-                }
-            });
-        }
-    });
-
-    $('#missingServices').on('click-row.bs.table', function (e, row, $element) {
-        if ($element.hasClass('table_active')) {
-            $element.removeClass('table_active');
-        } else {
-            missingServices.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        window.location.href = back.click_missingServices_url + row.id;
-    });
-
-    /* ==========================================================================
-        Side datepicker
-        ========================================================================== */
-    if (isset('enabledDates')) {
-        $('#side-datetimepicker').datetimepicker({
-            inline: true,
-            enabledDates: back.enabledDates,
-            format: 'YYYY-MM-DD',
-            defaultDate: back.todayDate
-        });
-    }
-
-    if (isset('date_url')) {
-        $("#side-datetimepicker").on("dp.change", function (e) {
-            var date = new Date(e.date._d);
-            var date_selected = dateFormat(date, "yyyy-mm-dd");
-            var new_url = back.datatable_url + date_selected;
-            var new_missingServices_url = back.missingServices_url + date_selected;
-
-            generic_table.bootstrapTable('refresh', { url: new_url });
-            missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
-            if (isset('missingServicesInfo_url')) {
-                $.ajax({
-                    vue: reportVue,
-                    url: back.missingServicesInfo_url,
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {
-                        'date': date_selected
-                    },
-                    success: function success(data, textStatus, xhr) {
-                        //called when successful
-                        this.vue.numServicesDone = data.numServicesDone;
-                        this.vue.numServicesMissing = data.numServicesMissing;
-                        this.vue.numServicesToDo = data.numServicesToDo;
-                    },
-                    error: function error(xhr, textStatus, errorThrown) {
-                        //called when there is an error
-                        // console.log('error');
-                    }
-                });
-            }
-        });
-    }
-    if (isset('defaultDate')) {
-        $('#editGenericDatepicker').datetimepicker({
-            widgetPositioning: {
-                horizontal: 'right'
-            },
-            debug: false,
-            defaultDate: back.defaultDate
-        });
-    }
-
-    $('#genericDatepicker').datetimepicker({
-        widgetPositioning: {
-            horizontal: 'right'
-        },
-        debug: false,
-        useCurrent: true
-    });
-
-    /* ==========================================================================
-        Custom Slick Carousel
-        ========================================================================== */
-
-    $(".reports_slider").slick({
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        dots: true,
-        centerMode: true,
-        focusOnSelect: true
-    });
-
-    /* ==========================================================================
-        Clockpicker
-        ========================================================================== */
-
-    $(document).ready(function () {
-        $('.clockpicker').clockpicker({
-            autoclose: true,
-            donetext: 'Done',
-            'default': 'now'
-        });
-    });
-
-    /* ==========================================================================
-       VueJs code
-       ========================================================================== */
-
-    var Permissions = require('./components/Permissions.vue');
-    var PhotoList = require('./components/photoList.vue');
-    var emailPreference = require('./components/email.vue');
-    var FormToAjax = require('./directives/FormToAjax.vue');
-    var countries = require('./components/countries.vue');
-    var dropdown = require('./components/dropdown.vue');
-    var alert = require('./components/alert.vue');
-    var billing = require('./components/billing.vue');
-    var contract = require('./components/contract.vue');
-    var chemical = require('./components/chemical.vue');
-    var works = require('./components/works.vue');
-    var payments = require('./components/payments.vue');
-    var routeTable = require('./components/routeTable.vue');
-    var notificationsWidget = require('./components/notificationsWidget.vue');
-    var AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
-    var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
-    var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
-    var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
-    var deleteButton = require('./components/deleteButton.vue');
-    require('./components/checkboxList.vue');
-
-    var mainVue = new Vue({
-        el: '.site-header',
-        components: {
-            notificationsWidget: notificationsWidget
-        }
-    });
-
-    var notificationsVue = new Vue({
-        el: '.notificationsVue',
-        components: {
-            AllNotificationsAsReadButton: AllNotificationsAsReadButton
-        }
-    });
-
-    // workOrders Vue instance
-    var workOrderVue = new Vue({
-        el: '.workOrderVue',
-        components: {
-            PhotoList: PhotoList,
-            dropdown: dropdown,
-            deleteButton: deleteButton,
-            workOrderPhotosShow: workOrderPhotosShow,
-            workOrderPhotosEdit: workOrderPhotosEdit,
-            finishWorkOrderButton: finishWorkOrderButton,
-            works: works
-        },
-        data: {
-            // index
-            finishedSwitch: false,
-            // create edit
-            supervisorId: isset('supervisorId') ? back.supervisorId : 0,
-            serviceId: isset('serviceId') ? back.serviceId : 0
-        },
-        methods: {
-            changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {
-                var intFinished = !finished ? 1 : 0;
-                if (isset('workOrderTableUrl')) {
-                    var new_url = back.workOrderTableUrl + intFinished;
-                    generic_table.bootstrapTable('refresh', { url: new_url });
-                }
-            }
-        }
-    });
-
-    // report Vue instance
-    var reportVue = new Vue({
-        el: '.reportVue',
-        components: {
-            dropdown: dropdown,
-            deleteButton: deleteButton
-        },
-        directives: { FormToAjax: FormToAjax },
-        data: {
-            numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
-            numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
-            numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
-            reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
-            serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
-            technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
-        },
-        computed: {
-            missingServicesTag: function missingServicesTag() {
-                if (this.numServicesMissing < 1) {
-                    return 'All Services Done';
-                }
-                return 'Missing Services: ' + this.numServicesMissing;
-            }
-        },
-        methods: {
-            previewEmailReport: function previewEmailReport(id) {
-                // prevent the user from clicking more than once
-                event.target.disabled = true;
-                event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-                new Spinner({
-                    left: "90%",
-                    radius: 5,
-                    length: 4,
-                    width: 1
-                }).spin(event.target);
-                // HTTP Request or what ever to update the permission
-                $.ajax({
-                    vue: this,
-                    target: event.target,
-                    url: isset('emailPreview') ? back.emailPreview : '',
-                    type: 'GET',
-                    dataType: 'json',
-                    data: {
-                        'id': id
-                    },
-                    complete: function complete(xhr, textStatus) {
-                        this.target.disabled = false;
-                        this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-                    },
-                    success: function success(data, textStatus, xhr) {
-                        $('#emailPreview').modal('show');
-                        this.vue.reportEmailPreview = data.data.url;
-                    },
-                    error: function error(xhr, textStatus, errorThrown) {
-                        console.log('error');
-                    }
-                });
-            }
-        }
-    });
-
-    var settingsVue = new Vue({
-        el: '.settingsVue',
-        components: {
-            Permissions: Permissions,
-            emailPreference: emailPreference,
-            alert: alert,
-            billing: billing
-        },
-        directives: { FormToAjax: FormToAjax },
-        data: {
-            companyName: "",
-            website: "",
-            facebook: "",
-            twitter: "",
-            objectName: "",
-            objectLastName: "",
-            alertMessage: "Error",
-            alertOpen: false,
-            // billing
-            subscribed: isset('subscribed') ? back.subscribed : null,
-            plan: isset('plan') ? back.plan : null,
-            activeObjects: isset('activeObjects') ? back.activeObjects : null,
-            billableObjects: isset('billableObjects') ? back.billableObjects : null,
-            freeObjects: isset('freeObjects') ? back.freeObjects : null
-        },
-        methods: {
-            submitCreditCard: function submitCreditCard() {
-                var _this = this;
-
-                var $form = $('#payment-form');
-                var clickEvent = event;
-                var buttonTag = clickEvent.target.innerHTML;
-
-                // Disable the submit button to prevent repeated clicks:
-                clickEvent.target.disabled = true;
-                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
-
-                new Spinner({
-                    left: "90%",
-                    radius: 5,
-                    length: 4,
-                    width: 1
-                }).spin(clickEvent.target);
-
-                // Request a token from Stripe:
-                Stripe.card.createToken($form, function (status, response) {
-                    if (response.error) {
-                        // Problem!
-
-                        // Show the errors on the form:
-                        _this.alertMessage = response.error.message;
-                        _this.alertOpen = true;
-                        clickEvent.target.disabled = false; // Re-enable submission
-                        clickEvent.target.innerHTML = buttonTag;
-                    } else {
-                        // Token was created!
-
-                        // Get the token ID:
-                        var token = response.id;
-
-                        // Insert the token ID into the form so it gets submitted to the server:
-                        $form.append($('<input type="hidden" name="stripeToken">').val(token));
-
-                        // Submit the form:
-                        $form.get(0).submit();
-                    }
-                });
-            }
-        }
-    });
-
-    var serviceVue = new Vue({
-        el: '.serviceVue',
-        components: {
-            PhotoList: PhotoList,
-            countries: countries,
-            contract: contract,
-            chemical: chemical,
-            routeTable: routeTable,
-            deleteButton: deleteButton
-        },
-        directives: {
-            FormToAjax: FormToAjax
-        },
-        data: {
-            validationErrors: {},
-            statusSwitch: true,
-            serviceId: isset('serviceId') ? Number(back.serviceId) : 0,
-            // Location picker values
-            pickerServiceAddressLine1: '',
-            pickerServiceCity: '',
-            pickerServiceState: '',
-            pickerServicePostalCode: '',
-            pickerServiceCountry: '',
-            pickerServiceLatitude: '',
-            pickerServiceLongitude: '',
-            // form values
-            serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
-            serviceCity: isset('city') ? back.city : '',
-            serviceState: isset('state') ? back.state : '',
-            servicePostalCode: isset('postalCode') ? back.postalCode : '',
-            serviceCountry: isset('country') ? back.country : '',
-            serviceLatitude: isset('latitude') ? back.latitude : null,
-            serviceLongitude: isset('longitude') ? back.longitude : null,
-            // Equipment
-            equipmentTableFocus: true,
-            equipmentFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-            equipmentId: 0,
-            equipmentPhotos: [],
-            equipmentPhoto: '',
-            equipmentKind: '',
-            equipmentType: '',
-            equipmentBrand: '',
-            equipmentModel: '',
-            equipmentCapacity: '',
-            equipmentUnits: '',
-            // chemicals
-            chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-            chemicalId: 0,
-            chemicalName: '',
-            chemicalAmount: '',
-            chemicalUnits: ''
-        },
-        computed: {
-            equipmentModalTitle: function equipmentModalTitle() {
-                switch (this.equipmentFocus) {
-                    case 1:
-                        return 'Equipment List';
-                        break;
-                    case 2:
-                        return 'Add Equipment';
-                        break;
-                    case 3:
-                        return this.equipmentKind;
-                        break;
-                    case 4:
-                        return 'Edit Equipment';
-                        break;
-                    default:
-                        return 'Equipment';
-                }
-            },
-            locationPickerTag: function locationPickerTag() {
-                var attributes = {
-                    'icon': 'font-icon font-icon-ok',
-                    'text': 'Location Selected',
-                    'class': 'btn-success'
-                };
-                if (this.serviceLatitude == null) {
-                    attributes = {
-                        'icon': 'font-icon font-icon-pin-2',
-                        'text': 'Choose Location',
-                        'class': 'btn-primary'
-                    };
-                }
-                return attributes;
-            }
-        },
-        events: {
-            // when a photo is deleted from the equipment photo edit
-            equipmentChanged: function equipmentChanged() {
-                this.getEquipment();
-            }
-        },
-        methods: {
-            checkValidationError: function checkValidationError($fildName) {
-                return $fildName in this.validationErrors;
-            },
-
-            // Chemicals
-            // Equipment
-            destroyEquipment: function destroyEquipment() {
-                var _this2 = this;
-
-                if (isset('equipmentUrl')) {
-                    (function () {
-                        var vue = _this2;
-                        swal({
-                            title: "Are you sure?",
-                            text: "You will not be able to recover this!",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#DD6B55",
-                            confirmButtonText: "Yes, delete it!",
-                            cancelButtonText: "No, cancel!",
-                            closeOnConfirm: true,
-                            closeOnCancel: true
-                        }, function (isConfirm) {
-                            if (isConfirm) {
-                                $.ajax({
-                                    vue: vue,
-                                    swal: swal,
-                                    url: back.equipmentUrl + vue.equipmentId,
-                                    type: 'DELETE',
-                                    success: function success(data, textStatus, xhr) {
-                                        // refresh equipment list
-                                        equipmentTable.bootstrapTable('refresh');
-
-                                        this.vue.openEquimentList();
-                                        // send success alert
-                                        this.swal({
-                                            title: data.title,
-                                            text: data.message,
-                                            type: "success",
-                                            timer: 2000,
-                                            showConfirmButton: false
-                                        });
-                                    },
-                                    error: function error(xhr, textStatus, errorThrown) {
-                                        // this.swal({
-                                        //     title: data.title,
-                                        //     text: data.message,
-                                        //     type: "error",
-                                        //     showConfirmButton: true
-                                        // });
-                                    }
-                                });
-                            }
-                        });
-                    })();
-                }
-            },
-            getEquipment: function getEquipment() {
-                if (isset('equipmentUrl')) {
-                    $.ajax({
-                        vue: this,
-                        url: back.equipmentUrl + this.equipmentId,
-                        type: 'GET',
-                        success: function success(data, textStatus, xhr) {
-                            //called when successful
-                            this.vue.equipmentId = data.id;
-                            this.vue.equipmentKind = data.kind;
-                            this.vue.equipmentType = data.type;
-                            this.vue.equipmentBrand = data.brand;
-                            this.vue.equipmentModel = data.model;
-                            this.vue.equipmentCapacity = data.capacity;
-                            this.vue.equipmentUnits = data.units;
-                            this.vue.equipmentPhotos = data.photos;
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {
-                            //called when there is an error
-                            console.log('error');
-                        }
-                    });
-                }
-            },
-            sendEquipment: function sendEquipment(type) {
-                var url = isset('equipmentUrl') ? back.equipmentUrl : '';
-                var requestType = 'POST';
-
-                if (type == 'edit') {
-                    url += this.equipmentId;
-                    requestType = 'PATCH';
-                }
-
-                if (url != '') {
-                    $.ajax({
-                        vue: this,
-                        url: url,
-                        type: requestType,
-                        dataType: 'json',
-                        data: {
-                            'photo': this.equipmentPhoto,
-                            'kind': this.equipmentKind,
-                            'type': this.equipmentType,
-                            'brand': this.equipmentBrand,
-                            'model': this.equipmentModel,
-                            'capacity': this.equipmentCapacity,
-                            'units': this.equipmentUnits,
-                            'service_id': this.serviceId
-                        },
-                        success: function success(data, textStatus, xhr) {
-                            // refresh equipment list
-                            equipmentTable.bootstrapTable('refresh');
-                            // send back to list
-                            this.vue.openEquimentList();
-                        },
-                        error: function error(xhr, textStatus, errorThrown) {
-                            this.vue.validationErrors = xhr.responseJSON;
-                        }
-                    });
-                }
-            },
-            clearEquipment: function clearEquipment() {
-                this.equipmentKind = '';
-                this.equipmentType = '';
-                this.equipmentBrand = '';
-                this.equipmentModel = '';
-                this.equipmentCapacity = '';
-                this.equipmentUnits = '';
-                // clear the validation errors to
-                this.validationErrors = {};
-            },
-            setEquipmentFocus: function setEquipmentFocus($num) {
-                this.equipmentFocus = $num;
-            },
-            checkEquipmentFocusIs: function checkEquipmentFocusIs($num) {
-                return this.equipmentFocus == $num;
-            },
-            openEquimentList: function openEquimentList() {
-                var clearEquipment = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-
-                this.equipmentTableFocus = true;
-                this.equipmentFocus = 1;
-                if (clearEquipment) {
-                    this.clearEquipment();
-                }
-                $('#equipmentModal').modal('show');
-            },
-
-            // Location
-            populateAddressFields: function populateAddressFields(page) {
-                this.setLocation(page);
-                if (page == 'create') {
-                    this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-                    this.serviceCity = this.pickerServiceCity;
-                    this.servicePostalCode = this.pickerServicePostalCode;
-                    this.serviceState = this.pickerServiceState;
-                    this.serviceCountry = this.pickerServiceCountry;
-                }
-            },
-            setLocation: function setLocation(page) {
-                if (page == 'create') {
-                    this.serviceLongitude = this.pickerServiceLongitude;
-                    this.serviceLatitude = this.pickerServiceLatitude;
-                }
-            },
-
-            // Index
-            changeServiceListStatus: function changeServiceListStatus(status) {
-                var intStatus = !status ? 1 : 0;
-                if (isset('serviceTableUrl')) {
-                    var new_url = back.serviceTableUrl + intStatus;
-                    generic_table.bootstrapTable('refresh', { url: new_url });
-                }
-            }
-        }
-
-    });
-
-    var supervisorVue = new Vue({
-        el: '.supervisorVue',
-        components: {
-            deleteButton: deleteButton
-        },
-        data: {
-            statusSwitch: true
-        },
-        methods: {
-            changeSupervisorListStatus: function changeSupervisorListStatus(status) {
-                var intStatus = !status ? 1 : 0;
-                if (isset('supervisorTableUrl')) {
-                    var new_url = back.supervisorTableUrl + intStatus;
-                    generic_table.bootstrapTable('refresh', { url: new_url });
-                }
-            }
-        }
-    });
-
-    var technicianVue = new Vue({
-        el: '.technicianVue',
-        components: {
-            dropdown: dropdown,
-            deleteButton: deleteButton
-        },
-        data: {
-            statusSwitch: true,
-            dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0
-        },
-        methods: {
-            changeTechnicianListStatus: function changeTechnicianListStatus(status) {
-                var intStatus = !status ? 1 : 0;
-                if (isset('techniciansTableUrl')) {
-                    var new_url = back.techniciansTableUrl + intStatus;
-                    generic_table.bootstrapTable('refresh', { url: new_url });
-                }
-            }
-        }
-    });
-
-    var invoiceVue = new Vue({
-        el: '.invoiceVue',
-        components: { payments: payments },
-        data: {
-            statusSwitch: false
-        },
-        methods: {
-            changeStatus: function changeStatus(status) {
-                var intStatus = !status ? 1 : 0;
-                if (isset('invoicesTableUrl')) {
-                    var new_url = back.invoicesTableUrl + intStatus;
-                    generic_table.bootstrapTable('refresh', { url: new_url });
-                }
-            }
-        }
-    });
-
-    /* ==========================================================================
-        GMaps
-        ========================================================================== */
-    $('#mapModal').on('shown.bs.modal', function (e) {
-        if (isset('showLatitude') && isset('showLongitude')) {
-            var map = new Gmaps({
-                el: '#serviceMap',
-                lat: back.showLatitude,
-                lng: back.showLongitude
-            });
-
-            map.addMarker({
-                lat: back.showLatitude,
-                lng: back.showLongitude
-            });
-        }
-    });
-
-    /* ==========================================================================
-        Dropzone
-        ========================================================================== */
-
-    // Dropzone.autoDiscover = false;
-    Dropzone.options.genericDropzone = {
-        workOrderVue: workOrderVue,
-        paramName: 'photo',
-        maxFilesize: 50,
-        acceptedFiles: '.jpg, .jpeg, .png',
-        init: function init() {
-            this.on("success", function (file) {
-                this.options.workOrderVue.$broadcast('photoUploaded');
-            });
-        }
-    };
-
-    /* ==========================================================================
-        Location Picker
-        ========================================================================== */
-
-    var locPicker = $('#locationPicker').locationpicker({
-        vue: serviceVue,
-        location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
-        radius: 0,
-        inputBinding: {
-            latitudeInput: $('#serviceLatitude'),
-            longitudeInput: $('#serviceLongitude'),
-            locationNameInput: $('#serviceAddress')
-        },
-        enableAutocomplete: true,
-        onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
-            var addressComponents = $(this).locationpicker('map').location.addressComponents;
-            var vue = $(this).data("locationpicker").settings.vue;
-
-            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-            vue.pickerServiceCity = addressComponents.city;
-            vue.pickerServiceState = addressComponents.stateOrProvince;
-            vue.pickerServicePostalCode = addressComponents.postalCode;
-            vue.pickerServiceCountry = addressComponents.country;
-            vue.pickerServiceLongitude = currentLocation.longitude;
-            vue.pickerServiceLatitude = currentLocation.latitude;
-        },
-        oninitialized: function oninitialized(component) {
-            var addressComponents = $(component).locationpicker('map').location.addressComponents;
-            var startLocation = $(component).data("locationpicker").settings.location;
-            var vue = $(component).data("locationpicker").settings.vue;
-
-            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-            vue.pickerServiceCity = addressComponents.city;
-            vue.pickerServiceState = addressComponents.stateOrProvince;
-            vue.pickerServicePostalCode = addressComponents.postalCode;
-            vue.pickerServiceCountry = addressComponents.country;
-            vue.pickerServiceLongitude = startLocation.longitude;
-            vue.pickerServiceLatitude = startLocation.latitude;
-        }
-    });
-
-    $('#locationPickerModal').on('shown.bs.modal', function () {
-        $('#locationPicker').locationpicker('autosize');
-    });
-
-    /* ==========================================================================
-        Maxlenght and Hide Show Password
-        ========================================================================== */
-
-    $('input.maxlength-simple').maxlength();
-
-    $('input.maxlength-custom-message').maxlength({
-        threshold: 10,
-        warningClass: "label label-success",
-        limitReachedClass: "label label-danger",
-        separator: ' of ',
-        preText: 'You have ',
-        postText: ' chars remaining.',
-        validate: true
-    });
-
-    $('input.maxlength-always-show').maxlength({
-        alwaysShow: true
-    });
-
-    $('textarea.maxlength-simple').maxlength({
-        alwaysShow: true
-    });
-
-    $('.hide-show-password').password();
-
-    /* ========================================================================== */
+	// var dateFormat = require('dateformat');
+
+	// set th CSRF_TOKEN for ajax requests
+	$.ajaxSetup({
+		headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+	});
+	Vue.http.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+
+	/* ==========================================================================
+    Custom functions
+    ========================================================================== */
+
+	/**
+  * Check if variable is instanciated
+  * @param  {string} strVariableName name of the variable to pass
+  * @return {boolean}
+  */
+	function isset(strVariableName) {
+		if (typeof back !== 'undefined') {
+			return typeof back[strVariableName] !== 'undefined';
+		}
+		return false;
+	}
+
+	/* ==========================================================================
+ 	Billing Stripe
+ 	========================================================================== */
+
+	/* ==========================================================================
+ 	Scroll
+ 	========================================================================== */
+
+	if (!("ontouchstart" in document.documentElement)) {
+
+		document.documentElement.className += " no-touch";
+
+		var jScrollOptions = {
+			autoReinitialise: true,
+			autoReinitialiseDelay: 100
+		};
+
+		$('.box-typical-body').jScrollPane(jScrollOptions);
+		$('.side-menu').jScrollPane(jScrollOptions);
+		//$('.side-menu-addl').jScrollPane(jScrollOptions);
+		$('.scrollable-block').jScrollPane(jScrollOptions);
+	}
+
+	/* ==========================================================================
+     Header search
+     ========================================================================== */
+
+	$('.site-header .site-header-search').each(function () {
+		var parent = $(this),
+		    overlay = parent.find('.overlay');
+
+		overlay.click(function () {
+			parent.removeClass('closed');
+		});
+
+		parent.clickoutside(function () {
+			if (!parent.hasClass('closed')) {
+				parent.addClass('closed');
+			}
+		});
+	});
+
+	/* ==========================================================================
+     Header mobile menu
+     ========================================================================== */
+
+	// Dropdowns
+	$('.site-header-collapsed .dropdown').each(function () {
+		var parent = $(this),
+		    btn = parent.find('.dropdown-toggle');
+
+		btn.click(function () {
+			if (parent.hasClass('mobile-opened')) {
+				parent.removeClass('mobile-opened');
+			} else {
+				parent.addClass('mobile-opened');
+			}
+		});
+	});
+
+	$('.dropdown-more').each(function () {
+		var parent = $(this),
+		    more = parent.find('.dropdown-more-caption'),
+		    classOpen = 'opened';
+
+		more.click(function () {
+			if (parent.hasClass(classOpen)) {
+				parent.removeClass(classOpen);
+			} else {
+				parent.addClass(classOpen);
+			}
+		});
+	});
+
+	// Left mobile menu
+	$('.hamburger').click(function () {
+		if ($('body').hasClass('menu-left-opened')) {
+			$(this).removeClass('is-active');
+			$('body').removeClass('menu-left-opened');
+			$('html').css('overflow', 'auto');
+		} else {
+			$(this).addClass('is-active');
+			$('body').addClass('menu-left-opened');
+			$('html').css('overflow', 'hidden');
+		}
+	});
+
+	$('.mobile-menu-left-overlay').click(function () {
+		$('.hamburger').removeClass('is-active');
+		$('body').removeClass('menu-left-opened');
+		$('html').css('overflow', 'auto');
+	});
+
+	// Right mobile menu
+	$('.site-header .burger-right').click(function () {
+		if ($('body').hasClass('menu-right-opened')) {
+			$('body').removeClass('menu-right-opened');
+			$('html').css('overflow', 'auto');
+		} else {
+			$('.hamburger').removeClass('is-active');
+			$('body').removeClass('menu-left-opened');
+			$('body').addClass('menu-right-opened');
+			$('html').css('overflow', 'hidden');
+		}
+	});
+
+	$('.mobile-menu-right-overlay').click(function () {
+		$('body').removeClass('menu-right-opened');
+		$('html').css('overflow', 'auto');
+	});
+
+	/* ==========================================================================
+     Header help
+     ========================================================================== */
+
+	$('.help-dropdown').each(function () {
+		var parent = $(this),
+		    btn = parent.find('>button'),
+		    popup = parent.find('.help-dropdown-popup'),
+		    jscroll;
+
+		btn.click(function () {
+			if (parent.hasClass('opened')) {
+				parent.removeClass('opened');
+				jscroll.destroy();
+			} else {
+				parent.addClass('opened');
+
+				$('.help-dropdown-popup-cont, .help-dropdown-popup-side').matchHeight();
+
+				if (!("ontouchstart" in document.documentElement)) {
+					setTimeout(function () {
+						jscroll = parent.find('.jscroll').jScrollPane(jScrollOptions).data().jsp;
+						//jscroll.reinitialise();
+					}, 0);
+				}
+			}
+		});
+
+		$('html').click(function (event) {
+			if (!$(event.target).closest('.help-dropdown-popup').length && !$(event.target).closest('.help-dropdown>button').length && !$(event.target).is('.help-dropdown-popup') && !$(event.target).is('.help-dropdown>button')) {
+				if (parent.hasClass('opened')) {
+					parent.removeClass('opened');
+					jscroll.destroy();
+				}
+			}
+		});
+	});
+
+	/* ==========================================================================
+     Side menu list
+     ========================================================================== */
+
+	$('.side-menu-list li.with-sub').each(function () {
+		var parent = $(this),
+		    clickLink = parent.find('>span'),
+		    subMenu = parent.find('ul');
+
+		clickLink.click(function () {
+			if (parent.hasClass('opened')) {
+				parent.removeClass('opened');
+				subMenu.slideUp();
+			} else {
+				$('.side-menu-list li.with-sub').not(this).removeClass('opened').find('ul').slideUp();
+				parent.addClass('opened');
+				subMenu.slideDown();
+			}
+		});
+	});
+
+	/* ==========================================================================
+     Dashboard
+     ========================================================================== */
+
+	// Calculate height
+	function dashboardBoxHeight() {
+		$('.box-typical-dashboard').each(function () {
+			var parent = $(this),
+			    header = parent.find('.box-typical-header'),
+			    body = parent.find('.box-typical-body');
+			body.height(parent.outerHeight() - header.outerHeight());
+		});
+	}
+
+	dashboardBoxHeight();
+
+	$(window).resize(function () {
+		dashboardBoxHeight();
+	});
+
+	// Collapse box
+	$('.box-typical-dashboard').each(function () {
+		var parent = $(this),
+		    btnCollapse = parent.find('.action-btn-collapse');
+
+		btnCollapse.click(function () {
+			if (parent.hasClass('box-typical-collapsed')) {
+				parent.removeClass('box-typical-collapsed');
+			} else {
+				parent.addClass('box-typical-collapsed');
+			}
+		});
+	});
+
+	// Full screen box
+	$('.box-typical-dashboard').each(function () {
+		var parent = $(this),
+		    btnExpand = parent.find('.action-btn-expand'),
+		    classExpand = 'box-typical-full-screen';
+
+		btnExpand.click(function () {
+			if (parent.hasClass(classExpand)) {
+				parent.removeClass(classExpand);
+				$('html').css('overflow', 'auto');
+			} else {
+				parent.addClass(classExpand);
+				$('html').css('overflow', 'hidden');
+			}
+			dashboardBoxHeight();
+		});
+	});
+
+	/* ==========================================================================
+ 	Select
+ 	========================================================================== */
+
+	// Bootstrap-select
+	$('.bootstrap-select').selectpicker({
+		style: '',
+		width: '100%',
+		size: 8
+	});
+
+	// Select2
+	$.fn.select2.defaults.set("minimumResultsForSearch", "Infinity");
+
+	$('.select2').select2();
+
+	function select2Icons(state) {
+		if (!state.id) {
+			return state.text;
+		}
+		var $state = $('<span class="font-icon ' + state.element.getAttribute('data-icon') + '"></span><span>' + state.text + '</span>');
+		return $state;
+	}
+
+	$(".select2-icon").select2({
+		templateSelection: select2Icons,
+		templateResult: select2Icons
+	});
+
+	$(".select2-arrow").select2({
+		theme: "arrow"
+	});
+
+	$(".select2-white").select2({
+		theme: "white"
+	});
+
+	function select2Photos(state) {
+		if (!state.id) {
+			return state.text;
+		}
+		var $state = $('<span class="user-item"><img src="' + state.element.getAttribute('data-photo') + '"/>' + state.text + '</span>');
+		return $state;
+	}
+
+	$(".select2-photo").select2({
+		templateSelection: select2Photos,
+		templateResult: select2Photos
+	});
+
+	/* ==========================================================================
+ 	Datepicker
+ 	========================================================================== */
+
+	$('.datetimepicker-1').datetimepicker({
+		widgetPositioning: {
+			horizontal: 'right'
+		},
+		debug: false
+	});
+
+	$('.datetimepicker-2').datetimepicker({
+		widgetPositioning: {
+			horizontal: 'right'
+		},
+		format: 'LT',
+		debug: false
+	});
+
+	/* ==========================================================================
+ 	Tooltips
+ 	========================================================================== */
+
+	// Tooltip
+	$('[data-toggle="tooltip"]').tooltip({
+		html: true
+	});
+
+	// Popovers
+	$('[data-toggle="popover"]').popover({
+		trigger: 'focus'
+	});
+
+	/* ==========================================================================
+ 	Validation
+ 	========================================================================== */
+
+	$('#form-signin_v1').validate({
+		submit: {
+			settings: {
+				inputContainer: '.form-group'
+			}
+		}
+	});
+
+	$('#form-signin_v2').validate({
+		submit: {
+			settings: {
+				inputContainer: '.form-group',
+				errorListClass: 'form-error-text-block',
+				display: 'block',
+				insertion: 'prepend'
+			}
+		}
+	});
+
+	$('#form-signup_v1').validate({
+		submit: {
+			settings: {
+				inputContainer: '.form-group',
+				errorListClass: 'form-tooltip-error'
+			}
+		}
+	});
+
+	$('#form-signup_v2').validate({
+		submit: {
+			settings: {
+				inputContainer: '.form-group',
+				errorListClass: 'form-tooltip-error'
+			}
+		}
+	});
+
+	/* ==========================================================================
+ 	Sweet alerts
+ 	========================================================================== */
+
+	$('.swal-btn-basic').click(function (e) {
+		// e.preventDefault();
+		swal("Here's a message!");
+	});
+
+	$('.swal-btn-text').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Here's a message!",
+			text: "It's pretty, isn't it?"
+		});
+	});
+
+	$('.swal-btn-success').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Good job!",
+			text: "You clicked the button!",
+			type: "success",
+			confirmButtonClass: "btn-success",
+			confirmButtonText: "Success"
+		});
+	});
+
+	$('.swal-btn-warning').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Are you sure?",
+			text: "Your will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
+			cancelButtonClass: "btn-default",
+			confirmButtonClass: "btn-warning",
+			confirmButtonText: "Warning",
+			closeOnConfirm: false
+		}, function () {
+			swal({
+				title: "Deleted!",
+				text: "Your imaginary file has been deleted.",
+				type: "success",
+				confirmButtonClass: "btn-success"
+			});
+		});
+	});
+
+	$('.swal-btn-cancel').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this imaginary file!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "Yes, delete it!",
+			cancelButtonText: "No, cancel plx!",
+			closeOnConfirm: false,
+			closeOnCancel: false
+		}, function (isConfirm) {
+			if (isConfirm) {
+				swal({
+					title: "Deleted!",
+					text: "Your imaginary file has been deleted.",
+					type: "success",
+					confirmButtonClass: "btn-success"
+				});
+			} else {
+				swal({
+					title: "Cancelled",
+					text: "Your imaginary file is safe :)",
+					type: "error",
+					confirmButtonClass: "btn-danger"
+				});
+			}
+		});
+	});
+
+	$('.swal-btn-custom-img').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Sweet!",
+			text: "Here's a custom image.",
+			confirmButtonClass: "btn-success",
+			imageUrl: 'img/smile.png'
+		});
+	});
+
+	$('.swal-btn-info').click(function (e) {
+		e.preventDefault();
+		swal({
+			title: "Are you sure?",
+			text: "Your will not be able to recover this imaginary file!",
+			type: "info",
+			showCancelButton: true,
+			cancelButtonClass: "btn-default",
+			confirmButtonText: "Info",
+			confirmButtonClass: "btn-primary"
+		});
+	});
+
+	/* ==========================================================================
+ 	Bar chart
+ 	========================================================================== */
+
+	$(".bar-chart").peity("bar", {
+		delimiter: ",",
+		fill: ["#919fa9"],
+		height: 16,
+		max: null,
+		min: 0,
+		padding: 0.1,
+		width: 384
+	});
+
+	/* ==========================================================================
+ 	Full height box
+ 	========================================================================== */
+
+	function boxFullHeight() {
+		var sectionHeader = $('.section-header');
+		var sectionHeaderHeight = 0;
+
+		if (sectionHeader.size()) {
+			sectionHeaderHeight = parseInt(sectionHeader.height()) + parseInt(sectionHeader.css('padding-bottom'));
+		}
+
+		$('.box-typical-full-height').css('min-height', $(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - sectionHeaderHeight - parseInt($('.box-typical-full-height').css('margin-bottom')) - 2);
+		$('.box-typical-full-height>.tbl, .box-typical-full-height>.box-typical-center').height(parseInt($('.box-typical-full-height').css('min-height')));
+	}
+
+	boxFullHeight();
+
+	$(window).resize(function () {
+		boxFullHeight();
+	});
+
+	/* ==========================================================================
+ 	Chat
+ 	========================================================================== */
+
+	function chatHeights() {
+		$('.chat-dialog-area').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight() - $('.chat-area-bottom').outerHeight());
+		$('.chat-list-in').height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt($('.chat-container').css('margin-bottom')) - 2 - $('.chat-area-header').outerHeight()).css('min-height', parseInt($('.chat-dialog-area').css('min-height')) + $('.chat-area-bottom').outerHeight());
+	}
+
+	chatHeights();
+
+	$(window).resize(function () {
+		chatHeights();
+	});
+
+	/* ==========================================================================
+ 	Auto size for textarea
+ 	========================================================================== */
+
+	autosize($('textarea[data-autosize]'));
+
+	/* ==========================================================================
+ 	Pages center
+ 	========================================================================== */
+
+	$('.page-center').matchHeight({
+		target: $('html')
+	});
+
+	$(window).resize(function () {
+		setTimeout(function () {
+			$('.page-center').matchHeight({ remove: true });
+			$('.page-center').matchHeight({
+				target: $('html')
+			});
+		}, 100);
+	});
+
+	/* ==========================================================================
+ 	Cards user
+ 	========================================================================== */
+
+	$('.card-user').matchHeight();
+
+	/* ==========================================================================
+ 	Fancybox
+ 	========================================================================== */
+
+	$(".fancybox").fancybox({
+		padding: 0,
+		openEffect: 'none',
+		closeEffect: 'none'
+	});
+
+	/* ==========================================================================
+ 	Box typical full height with header
+ 	========================================================================== */
+
+	function boxWithHeaderFullHeight() {
+		$('.box-typical-full-height-with-header').each(function () {
+			var box = $(this),
+			    boxHeader = box.find('.box-typical-header'),
+			    boxBody = box.find('.box-typical-body');
+
+			boxBody.height($(window).height() - parseInt($('.page-content').css('padding-top')) - parseInt($('.page-content').css('padding-bottom')) - parseInt(box.css('margin-bottom')) - 2 - boxHeader.outerHeight());
+		});
+	}
+
+	boxWithHeaderFullHeight();
+
+	$(window).resize(function () {
+		boxWithHeaderFullHeight();
+	});
+
+	/* ==========================================================================
+ 	Gallery
+ 	========================================================================== */
+
+	$('.gallery-item').matchHeight({
+		target: $('.gallery-item .gallery-picture')
+	});
+
+	/* ==========================================================================
+ 	Addl side menu
+ 	========================================================================== */
+
+	setTimeout(function () {
+		if (!("ontouchstart" in document.documentElement)) {
+			$('.side-menu-addl').jScrollPane(jScrollOptions);
+		}
+	}, 1000);
+
+	/* ==========================================================================
+ 	Tables
+ 	========================================================================== */
+
+	var generic_table = $('.generic_table');
+	var equipmentTable = $('#equipmentTable');
+	var worksTable = $('#worksTable');
+	var missingServices = $('#missingServices');
+
+	var tableOptions = {
+		iconsPrefix: 'font-icon',
+		toggle: 'table',
+		sidePagination: 'client',
+		pagination: 'true',
+		icons: {
+			paginationSwitchDown: 'font-icon-arrow-square-down',
+			paginationSwitchUp: 'font-icon-arrow-square-down up',
+			refresh: 'font-icon-refresh',
+			toggle: 'font-icon-list-square',
+			columns: 'font-icon-list-rotate',
+			export: 'font-icon-download'
+		},
+		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
+	};
+
+	generic_table.bootstrapTable(tableOptions);
+	equipmentTable.bootstrapTable(tableOptions);
+	worksTable.bootstrapTable(tableOptions);
+	missingServices.bootstrapTable(tableOptions);
+
+	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
+		if ($element.hasClass('table_active')) {
+			$element.removeClass('table_active');
+		} else {
+			generic_table.find('tr.table_active').removeClass('table_active');
+			$element.addClass('table_active');
+		}
+		window.location.href = back.click_url + row.id;
+	});
+
+	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
+		if ($element.hasClass('table_active')) {
+			$element.removeClass('table_active');
+		} else {
+			missingServices.find('tr.table_active').removeClass('table_active');
+			$element.addClass('table_active');
+		}
+		window.location.href = back.click_missingServices_url + row.id;
+	});
+
+	/* ==========================================================================
+     Side datepicker
+     ========================================================================== */
+	if (isset('enabledDates')) {
+		$('#side-datetimepicker').datetimepicker({
+			inline: true,
+			enabledDates: back.enabledDates,
+			format: 'YYYY-MM-DD',
+			defaultDate: back.todayDate
+		});
+	}
+
+	if (isset('date_url')) {
+		$("#side-datetimepicker").on("dp.change", function (e) {
+			var date = new Date(e.date._d);
+			var date_selected = dateFormat(date, "yyyy-mm-dd");
+			var new_url = back.datatable_url + date_selected;
+			var new_missingServices_url = back.missingServices_url + date_selected;
+
+			generic_table.bootstrapTable('refresh', { url: new_url });
+			missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
+			if (isset('missingServicesInfo_url')) {
+				$.ajax({
+					vue: reportVue,
+					url: back.missingServicesInfo_url,
+					type: 'GET',
+					dataType: 'json',
+					data: {
+						'date': date_selected
+					},
+					success: function success(data, textStatus, xhr) {
+						//called when successful
+						this.vue.numServicesDone = data.numServicesDone;
+						this.vue.numServicesMissing = data.numServicesMissing;
+						this.vue.numServicesToDo = data.numServicesToDo;
+					},
+					error: function error(xhr, textStatus, errorThrown) {
+						//called when there is an error
+						// console.log('error');
+					}
+				});
+			}
+		});
+	}
+	if (isset('defaultDate')) {
+		$('#editGenericDatepicker').datetimepicker({
+			widgetPositioning: {
+				horizontal: 'right'
+			},
+			debug: false,
+			defaultDate: back.defaultDate
+		});
+	}
+
+	$('#genericDatepicker').datetimepicker({
+		widgetPositioning: {
+			horizontal: 'right'
+		},
+		debug: false,
+		useCurrent: true
+	});
+
+	/* ==========================================================================
+     Custom Slick Carousel
+     ========================================================================== */
+
+	$(".reports_slider").slick({
+		slidesToShow: 3,
+		slidesToScroll: 1,
+		dots: true,
+		centerMode: true,
+		focusOnSelect: true
+	});
+
+	/* ==========================================================================
+     Clockpicker
+     ========================================================================== */
+
+	$(document).ready(function () {
+		$('.clockpicker').clockpicker({
+			autoclose: true,
+			donetext: 'Done',
+			'default': 'now'
+		});
+	});
+
+	/* ==========================================================================
+    VueJs code
+    ========================================================================== */
+
+	var Permissions = require('./components/Permissions.vue');
+	var PhotoList = require('./components/photoList.vue');
+	var emailPreference = require('./components/email.vue');
+	var FormToAjax = require('./directives/FormToAjax.vue');
+	var countries = require('./components/countries.vue');
+	var dropdown = require('./components/dropdown.vue');
+	var alert = require('./components/alert.vue');
+	var billing = require('./components/billing.vue');
+	var contract = require('./components/contract.vue');
+	var chemical = require('./components/chemical.vue');
+	var equipment = require('./components/equipment.vue');
+	var works = require('./components/works.vue');
+	var payments = require('./components/payments.vue');
+	var routeTable = require('./components/routeTable.vue');
+	var notificationsWidget = require('./components/notificationsWidget.vue');
+	var AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+	var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
+	var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
+	var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
+	var deleteButton = require('./components/deleteButton.vue');
+	require('./components/checkboxList.vue');
+
+	var mainVue = new Vue({
+		el: '.site-header',
+		components: {
+			notificationsWidget: notificationsWidget
+		}
+	});
+
+	var notificationsVue = new Vue({
+		el: '.notificationsVue',
+		components: {
+			AllNotificationsAsReadButton: AllNotificationsAsReadButton
+		}
+	});
+
+	// workOrders Vue instance
+	var workOrderVue = new Vue({
+		el: '.workOrderVue',
+		components: {
+			PhotoList: PhotoList,
+			dropdown: dropdown,
+			deleteButton: deleteButton,
+			workOrderPhotosShow: workOrderPhotosShow,
+			workOrderPhotosEdit: workOrderPhotosEdit,
+			finishWorkOrderButton: finishWorkOrderButton,
+			works: works
+		},
+		data: {
+			// index
+			finishedSwitch: false,
+			// create edit
+			supervisorId: isset('supervisorId') ? back.supervisorId : 0,
+			serviceId: isset('serviceId') ? back.serviceId : 0
+		},
+		methods: {
+			changeWorkOrderListFinished: function changeWorkOrderListFinished(finished) {
+				var intFinished = !finished ? 1 : 0;
+				if (isset('workOrderTableUrl')) {
+					var new_url = back.workOrderTableUrl + intFinished;
+					generic_table.bootstrapTable('refresh', { url: new_url });
+				}
+			}
+		}
+	});
+
+	// report Vue instance
+	var reportVue = new Vue({
+		el: '.reportVue',
+		components: {
+			dropdown: dropdown,
+			deleteButton: deleteButton
+		},
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
+			numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
+			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
+			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
+			serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
+			technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
+		},
+		computed: {
+			missingServicesTag: function missingServicesTag() {
+				if (this.numServicesMissing < 1) {
+					return 'All Services Done';
+				}
+				return 'Missing Services: ' + this.numServicesMissing;
+			}
+		},
+		methods: {
+			previewEmailReport: function previewEmailReport(id) {
+				// prevent the user from clicking more than once
+				event.target.disabled = true;
+				event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
+				new Spinner({
+					left: "90%",
+					radius: 5,
+					length: 4,
+					width: 1
+				}).spin(event.target);
+				// HTTP Request or what ever to update the permission
+				$.ajax({
+					vue: this,
+					target: event.target,
+					url: isset('emailPreview') ? back.emailPreview : '',
+					type: 'GET',
+					dataType: 'json',
+					data: {
+						'id': id
+					},
+					complete: function complete(xhr, textStatus) {
+						this.target.disabled = false;
+						this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
+					},
+					success: function success(data, textStatus, xhr) {
+						$('#emailPreview').modal('show');
+						this.vue.reportEmailPreview = data.data.url;
+					},
+					error: function error(xhr, textStatus, errorThrown) {
+						console.log('error');
+					}
+				});
+			}
+		}
+	});
+
+	var settingsVue = new Vue({
+		el: '.settingsVue',
+		components: {
+			Permissions: Permissions,
+			emailPreference: emailPreference,
+			alert: alert,
+			billing: billing
+		},
+		directives: { FormToAjax: FormToAjax },
+		data: {
+			companyName: "",
+			website: "",
+			facebook: "",
+			twitter: "",
+			objectName: "",
+			objectLastName: "",
+			alertMessage: "Error",
+			alertOpen: false,
+			// billing
+			subscribed: isset('subscribed') ? back.subscribed : null,
+			plan: isset('plan') ? back.plan : null,
+			activeObjects: isset('activeObjects') ? back.activeObjects : null,
+			billableObjects: isset('billableObjects') ? back.billableObjects : null,
+			freeObjects: isset('freeObjects') ? back.freeObjects : null
+		},
+		methods: {
+			submitCreditCard: function submitCreditCard() {
+				var _this = this;
+
+				var $form = $('#payment-form');
+				var clickEvent = event;
+				var buttonTag = clickEvent.target.innerHTML;
+
+				// Disable the submit button to prevent repeated clicks:
+				clickEvent.target.disabled = true;
+				clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
+
+				new Spinner({
+					left: "90%",
+					radius: 5,
+					length: 4,
+					width: 1
+				}).spin(clickEvent.target);
+
+				// Request a token from Stripe:
+				Stripe.card.createToken($form, function (status, response) {
+					if (response.error) {
+						// Problem!
+
+						// Show the errors on the form:
+						_this.alertMessage = response.error.message;
+						_this.alertOpen = true;
+						clickEvent.target.disabled = false; // Re-enable submission
+						clickEvent.target.innerHTML = buttonTag;
+					} else {
+						// Token was created!
+
+						// Get the token ID:
+						var token = response.id;
+
+						// Insert the token ID into the form so it gets submitted to the server:
+						$form.append($('<input type="hidden" name="stripeToken">').val(token));
+
+						// Submit the form:
+						$form.get(0).submit();
+					}
+				});
+			}
+		}
+	});
+
+	var serviceVue = new Vue({
+		el: '.serviceVue',
+		components: {
+			PhotoList: PhotoList,
+			countries: countries,
+			contract: contract,
+			chemical: chemical,
+			equipment: equipment,
+			routeTable: routeTable,
+			deleteButton: deleteButton
+		},
+		directives: {
+			FormToAjax: FormToAjax
+		},
+		data: {
+			validationErrors: {},
+			statusSwitch: true,
+			serviceId: isset('serviceId') ? Number(back.serviceId) : 0,
+			// Location picker values
+			pickerServiceAddressLine1: '',
+			pickerServiceCity: '',
+			pickerServiceState: '',
+			pickerServicePostalCode: '',
+			pickerServiceCountry: '',
+			pickerServiceLatitude: '',
+			pickerServiceLongitude: '',
+			// form values
+			serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
+			serviceCity: isset('city') ? back.city : '',
+			serviceState: isset('state') ? back.state : '',
+			servicePostalCode: isset('postalCode') ? back.postalCode : '',
+			serviceCountry: isset('country') ? back.country : '',
+			serviceLatitude: isset('latitude') ? back.latitude : null,
+			serviceLongitude: isset('longitude') ? back.longitude : null,
+			// chemicals
+			chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
+			chemicalId: 0,
+			chemicalName: '',
+			chemicalAmount: '',
+			chemicalUnits: ''
+		},
+		computed: {
+			locationPickerTag: function locationPickerTag() {
+				var attributes = {
+					'icon': 'font-icon font-icon-ok',
+					'text': 'Location Selected',
+					'class': 'btn-success'
+				};
+				if (this.serviceLatitude == null) {
+					attributes = {
+						'icon': 'font-icon font-icon-pin-2',
+						'text': 'Choose Location',
+						'class': 'btn-primary'
+					};
+				}
+				return attributes;
+			}
+		},
+		// events: {
+		//     // when a photo is deleted from the equipment photo edit
+		//     equipmentChanged(){
+		//         this.getEquipment();
+		//     },
+		// },
+		methods: {
+			checkValidationError: function checkValidationError($fildName) {
+				return $fildName in this.validationErrors;
+			},
+
+			// Location
+			populateAddressFields: function populateAddressFields(page) {
+				this.setLocation(page);
+				if (page == 'create') {
+					this.serviceAddressLine1 = this.pickerServiceAddressLine1;
+					this.serviceCity = this.pickerServiceCity;
+					this.servicePostalCode = this.pickerServicePostalCode;
+					this.serviceState = this.pickerServiceState;
+					this.serviceCountry = this.pickerServiceCountry;
+				}
+			},
+			setLocation: function setLocation(page) {
+				if (page == 'create') {
+					this.serviceLongitude = this.pickerServiceLongitude;
+					this.serviceLatitude = this.pickerServiceLatitude;
+				}
+			},
+
+			// Index
+			changeServiceListStatus: function changeServiceListStatus(status) {
+				var intStatus = !status ? 1 : 0;
+				if (isset('serviceTableUrl')) {
+					var new_url = back.serviceTableUrl + intStatus;
+					generic_table.bootstrapTable('refresh', { url: new_url });
+				}
+			}
+		}
+
+	});
+
+	var supervisorVue = new Vue({
+		el: '.supervisorVue',
+		components: {
+			deleteButton: deleteButton
+		},
+		data: {
+			statusSwitch: true
+		},
+		methods: {
+			changeSupervisorListStatus: function changeSupervisorListStatus(status) {
+				var intStatus = !status ? 1 : 0;
+				if (isset('supervisorTableUrl')) {
+					var new_url = back.supervisorTableUrl + intStatus;
+					generic_table.bootstrapTable('refresh', { url: new_url });
+				}
+			}
+		}
+	});
+
+	var technicianVue = new Vue({
+		el: '.technicianVue',
+		components: {
+			dropdown: dropdown,
+			deleteButton: deleteButton
+		},
+		data: {
+			statusSwitch: true,
+			dropdownKey: isset('dropdownKey') ? Number(back.dropdownKey) : 0
+		},
+		methods: {
+			changeTechnicianListStatus: function changeTechnicianListStatus(status) {
+				var intStatus = !status ? 1 : 0;
+				if (isset('techniciansTableUrl')) {
+					var new_url = back.techniciansTableUrl + intStatus;
+					generic_table.bootstrapTable('refresh', { url: new_url });
+				}
+			}
+		}
+	});
+
+	var invoiceVue = new Vue({
+		el: '.invoiceVue',
+		components: { payments: payments },
+		data: {
+			statusSwitch: false
+		},
+		methods: {
+			changeStatus: function changeStatus(status) {
+				var intStatus = !status ? 1 : 0;
+				if (isset('invoicesTableUrl')) {
+					var new_url = back.invoicesTableUrl + intStatus;
+					generic_table.bootstrapTable('refresh', { url: new_url });
+				}
+			}
+		}
+	});
+
+	/* ==========================================================================
+     GMaps
+     ========================================================================== */
+	$('#mapModal').on('shown.bs.modal', function (e) {
+		if (isset('showLatitude') && isset('showLongitude')) {
+			var map = new Gmaps({
+				el: '#serviceMap',
+				lat: back.showLatitude,
+				lng: back.showLongitude
+			});
+
+			map.addMarker({
+				lat: back.showLatitude,
+				lng: back.showLongitude
+			});
+		}
+	});
+
+	/* ==========================================================================
+     Dropzone
+     ========================================================================== */
+
+	// Dropzone.autoDiscover = false;
+	// Dropzone.options.genericDropzone = {
+	//     workOrderVue: workOrderVue,
+	//     paramName: 'photo',
+	// 	maxFilesize: 50,
+	// 	acceptedFiles: '.jpg, .jpeg, .png',
+	//     init: function() {
+	//         this.on("success", function(file) {
+	//             this.options.workOrderVue.$broadcast('photoUploaded');
+	//         });
+	//     }
+	// }
+
+	/* ==========================================================================
+     Location Picker
+     ========================================================================== */
+
+	var locPicker = $('#locationPicker').locationpicker({
+		vue: serviceVue,
+		location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
+		radius: 0,
+		inputBinding: {
+			latitudeInput: $('#serviceLatitude'),
+			longitudeInput: $('#serviceLongitude'),
+			locationNameInput: $('#serviceAddress')
+		},
+		enableAutocomplete: true,
+		onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
+			var addressComponents = $(this).locationpicker('map').location.addressComponents;
+			var vue = $(this).data("locationpicker").settings.vue;
+
+			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+			vue.pickerServiceCity = addressComponents.city;
+			vue.pickerServiceState = addressComponents.stateOrProvince;
+			vue.pickerServicePostalCode = addressComponents.postalCode;
+			vue.pickerServiceCountry = addressComponents.country;
+			vue.pickerServiceLongitude = currentLocation.longitude;
+			vue.pickerServiceLatitude = currentLocation.latitude;
+		},
+		oninitialized: function oninitialized(component) {
+			var addressComponents = $(component).locationpicker('map').location.addressComponents;
+			var startLocation = $(component).data("locationpicker").settings.location;
+			var vue = $(component).data("locationpicker").settings.vue;
+
+			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+			vue.pickerServiceCity = addressComponents.city;
+			vue.pickerServiceState = addressComponents.stateOrProvince;
+			vue.pickerServicePostalCode = addressComponents.postalCode;
+			vue.pickerServiceCountry = addressComponents.country;
+			vue.pickerServiceLongitude = startLocation.longitude;
+			vue.pickerServiceLatitude = startLocation.latitude;
+		}
+	});
+
+	$('#locationPickerModal').on('shown.bs.modal', function () {
+		$('#locationPicker').locationpicker('autosize');
+	});
+
+	/* ==========================================================================
+     Maxlenght and Hide Show Password
+     ========================================================================== */
+
+	$('input.maxlength-simple').maxlength();
+
+	$('input.maxlength-custom-message').maxlength({
+		threshold: 10,
+		warningClass: "label label-success",
+		limitReachedClass: "label label-danger",
+		separator: ' of ',
+		preText: 'You have ',
+		postText: ' chars remaining.',
+		validate: true
+	});
+
+	$('input.maxlength-always-show').maxlength({
+		alwaysShow: true
+	});
+
+	$('textarea.maxlength-simple').maxlength({
+		alwaysShow: true
+	});
+
+	$('.hide-show-password').password();
+
+	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/finishWorkOrderButton.vue":200,"./components/notificationsWidget.vue":202,"./components/payments.vue":204,"./components/photoList.vue":205,"./components/routeTable.vue":206,"./components/workOrderPhotosEdit.vue":207,"./components/workOrderPhotosShow.vue":208,"./components/works.vue":209,"./directives/FormToAjax.vue":210,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,211]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/equipment.vue":200,"./components/finishWorkOrderButton.vue":201,"./components/notificationsWidget.vue":203,"./components/payments.vue":205,"./components/photoList.vue":206,"./components/routeTable.vue":207,"./components/workOrderPhotosEdit.vue":208,"./components/workOrderPhotosShow.vue":209,"./components/works.vue":210,"./directives/FormToAjax.vue":211,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,212]);
 
 //# sourceMappingURL=bundle.js.map
