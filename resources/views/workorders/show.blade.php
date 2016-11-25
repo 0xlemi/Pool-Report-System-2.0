@@ -86,9 +86,7 @@
 							</div>
 						@endif
 
-						<works work-order-id="{{ $workOrder->seq_id }}"
-								base-url="{{ url('/') }}"
-								:technicians="{{ $technicians }}">
+						<works work-order-id="{{ $workOrder->seq_id }}" :technicians="{{ $technicians }}">
 						</works>
 
 						<work-order-photos-show work-order-id="{{ $workOrder->seq_id }}" finished="{{ $workOrder->end()->finished() }}">

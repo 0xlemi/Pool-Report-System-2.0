@@ -51,7 +51,7 @@ Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@remov
 Route::get('service/{workOrderSeqId}/works', 'WorkController@index');
 Route::post('service/{workOrderSeqId}/works', 'WorkController@store');
 Route::post('works/photos/{work}', 'WorkController@addPhoto');
-// Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
+Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
 
 // Equipment
 Route::get('service/{service_seq_id}/equipment', 'EquipmentController@index');

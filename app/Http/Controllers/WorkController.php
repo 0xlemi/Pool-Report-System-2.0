@@ -11,21 +11,25 @@ use App\Http\Requests;
 use App\Http\Requests\CreateWorkRequest;
 use App\Work;
 use App\PRS\Transformers\WorkTransformer;
+use App\PRS\Transformers\ImageTransformer;
 
 class WorkController extends PageController
 {
 
     public $workTransformer;
+    public $imageTransformer;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(WorkTransformer $workTransformer)
+    public function __construct(WorkTransformer $workTransformer,
+                                ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->workTransformer = $workTransformer;
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -42,13 +46,13 @@ class WorkController extends PageController
                         ->get()
                         ->transform(function($item){
                             $technician = $item->technician();
-                            return (object) array(
+                            return (object) [
                                 'id' => $item->id,
                                 'title' => $item->title,
                                 'quantity' => "{$item->quantity} {$item->units}",
                                 'cost' => "{$item->cost} {$item->workOrder()->currency}",
                                 'technician' => "{$technician->name} {$technician->last_name}",
-                            );
+                            ];
                         });
         return response()->json([
             'list' => $works,
@@ -72,7 +76,7 @@ class WorkController extends PageController
         if($work){
             return response()->json([
                 'message' => 'The work was successfully created'
-            ], 200);
+            ]);
         }
         return response()->json([
                 'error' => 'The work was not created created, please try again.'
@@ -87,6 +91,8 @@ class WorkController extends PageController
      */
     public function show(Work $work)
     {
+        // Check if it has authorization to see this
+        
         $technician = $work->technician();
 
         return response()->json([
@@ -100,6 +106,8 @@ class WorkController extends PageController
                 'fullName' => "{$technician->name} {$technician->last_name}",
                 'icon' => url($technician->icon()),
             ],
+            'photos' => $this->imageTransformer
+                        ->transformCollection($work->images()->get())
         ]);
     }
 
@@ -112,27 +120,31 @@ class WorkController extends PageController
      */
     public function update(CreateWorkRequest $request, Work $work)
     {
+        // Check if it has authorization to see this
+
         $work->update(array_map('htmlentities', $request->except('work_order_id')));
 
-        return Response::json([
+        return response()->json([
                 'title' => 'Work Updated',
                 'message' => 'The work was successfully updated'
-            ], 200);
+            ]);
     }
 
     public function addPhoto(Request $request, Work $work)
     {
+        // Check if it has authorization to see this
+
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
         $file = $request->file('photo');
         if($work->addImageFromForm($file)){
-            return Response::json([
+            return response()->json([
                 'message' => 'The photo was added to the work'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not added to the work'
             ], 500);
 
@@ -140,14 +152,15 @@ class WorkController extends PageController
 
     public function removePhoto(Work $work, $order)
     {
-        $image = $work->image($order, false);
+        // Check if it has authorization to see this
 
+        $image = $work->image($order, false);
         if($image->delete()){
-                return Response::json([
+                return response()->json([
                 'message' => 'The photo was deleted from the work'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not deleted from the work'
             ], 500);
     }
@@ -160,10 +173,12 @@ class WorkController extends PageController
      */
     public function destroy(Work $work)
     {
+        // Check if it has authorization to see this
+
         if($work->delete()){
             return response()->json([
                         'message' => 'The work was deleted successfully.'
-                    ], 200);
+                    ]);
         }
         return response()->json([
                         'error' => 'The work was not deleted, please try again.'

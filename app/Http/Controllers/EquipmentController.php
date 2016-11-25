@@ -107,7 +107,6 @@ class EquipmentController extends PageController
 
     public function addPhoto(Request $request, Equipment $equipment)
     {
-        // return response()->json(null,500);
         // Check if it has authorization to see this
 
         $this->validate($request, [
@@ -128,7 +127,6 @@ class EquipmentController extends PageController
 
     public function removePhoto(Equipment $equipment, $order)
     {
-        // return response()->json(null,500);
         // Check if it has authorization to see this
 
         $image = $equipment->image($order, false);

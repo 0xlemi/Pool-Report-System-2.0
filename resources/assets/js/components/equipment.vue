@@ -124,8 +124,7 @@
 					<br>
 
 					<div v-show="photos.length > 0">
-						<h4>Equipment Photos</h4>
-						<hr>
+						<h5>Photos</h5>
 						<photo-list :data="photos" :object-id="id"
 									:can-delete="false" :photos-url="'equipment/photos'">
 						</photo-list>
@@ -194,9 +193,8 @@
 							</photo-list>
 						</div>
 					</div>
-
 					<div class="col-md-12">
-                		<dropzone :url="dropzoneUrl"><dropzone>
+	            		<dropzone :url="dropzoneUrl"><dropzone>
 					</div>
 
                 </div><!-- End Edit Equipment -->

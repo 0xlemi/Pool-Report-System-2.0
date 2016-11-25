@@ -672,8 +672,6 @@ function isset(strVariableName) {
 	========================================================================== */
 
 	var generic_table = $('.generic_table');
-	var equipmentTable = $('#equipmentTable');
-	var worksTable = $('#worksTable');
 	var missingServices = $('#missingServices');
 
 
@@ -695,8 +693,6 @@ function isset(strVariableName) {
 	}
 
 	generic_table.bootstrapTable(tableOptions);
-	equipmentTable.bootstrapTable(tableOptions);
-	worksTable.bootstrapTable(tableOptions);
 	missingServices.bootstrapTable(tableOptions);
 
 

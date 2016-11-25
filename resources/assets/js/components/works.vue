@@ -91,7 +91,7 @@
 
 						<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-						<bootstrap-table :object-id.sync="workId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+						<bootstrap-table :object-id.sync="id" :columns="columns" :data="data" :options="options"></bootstrap-table>
 
                     </div>
 
@@ -144,6 +144,13 @@
 										v-model="showDescription" readonly placeholder="Describe the work done">
 								</textarea>
 							</div>
+						</div>
+
+						<div v-show="photos.length > 0">
+							<h5>Photos</h5>
+							<photo-list :data="photos" :object-id="id"
+										:can-delete="false" :photos-url="'works/photos'">
+							</photo-list>
 						</div>
 
                     </div>
@@ -211,6 +218,18 @@
 							</div>
 						</div>
 
+						<div v-show="photos.length > 0">
+							<hr>
+							<div class="col-md-12">
+								<photo-list :data="photos" :object-id="id"
+											:can-delete="true" :photos-url="'works/photos'">
+								</photo-list>
+							</div>
+						</div>
+						<div class="col-md-12">
+		            		<dropzone :url="dropzoneUrl"><dropzone>
+						</div>
+
                     </div>
 
 				</div>
@@ -249,23 +268,27 @@
 </template>
 
 <script>
+import alert from './alert.vue';
+import photoList from './photoList.vue';
+import dropzone from './dropzone.vue';
+import dropdown from './dropdown.vue';
+import BootstrapTable from './BootstrapTable.vue';
 
-var alert = require('./alert.vue');
 var Spinner = require("spin");
-var BootstrapTable = require('./BootstrapTable.vue');
-var dropdown = require('./dropdown.vue');
 
   export default {
-    props: ['workOrderId', 'baseUrl', 'technicians'],
+    props: ['workOrderId', 'technicians'],
 	components: {
 		alert,
-		BootstrapTable,
-		dropdown
+		photoList,
+		dropzone,
+		dropdown,
+		BootstrapTable
 	},
     data () {
         return {
             focus: 2, // 1=create, 2=index, 3=show, 4=edit
-            workId: 0,
+            id: 0,
             validationErrors: {},
 			currency: '',
 
@@ -292,6 +315,8 @@ var dropdown = require('./dropdown.vue');
 			showUnits: '',
 			showCost: '',
 			showDescription: '',
+
+            photos: {},
 
 			columns: [
 		      {
@@ -355,12 +380,6 @@ var dropdown = require('./dropdown.vue');
         }
     },
     computed: {
-        workOrderUrl: function(){
-            return this.baseUrl+'/service/'+this.workOrderId+'/works';
-        },
-		workUrl: function(){
-            return this.baseUrl+'/works/'+this.workId;
-		},
 		modalTitle: function(){
             switch (this.focus){
                 case 1:
@@ -378,7 +397,10 @@ var dropdown = require('./dropdown.vue');
                 default:
                 	return 'Works';
             }
-        }
+        },
+		dropzoneUrl(){
+			return 'works/photos/'+this.id;
+		}
     },
 	events: {
 		toolbarButtonClicked(){
@@ -386,13 +408,16 @@ var dropdown = require('./dropdown.vue');
 			this.changeFocus(1);
 		},
 		rowClicked(){
-			this.getValues(this.chemicalId);
+			this.getValues(this.id, true);
+		},
+		photoUploaded(){
+			this.getValues(this.id);
 		}
 	},
     methods: {
         getList(){
 			this.resetAlert('list');
-			this.$http.get(this.workOrderUrl).then((response) => {
+			this.$http.get(Laravel.url+'/service/'+this.workOrderId+'/works').then((response) => {
 				let data = response.data;
 				this.data = data.list;
 				this.currency = data.currency;
@@ -404,9 +429,8 @@ var dropdown = require('./dropdown.vue');
 				this.alertActiveList = true;
             });
         },
-		getValues(workId){
-			this.$http.get(this.workUrl).then((response) => {
-				console.log( response.data);
+		getValues(id, changeFocus = false){
+			this.$http.get(Laravel.url+'/works/'+id).then((response) => {
 				let data = response.data;
 				this.titleName = data.title;
 				this.quantity = data.quantity;
@@ -422,7 +446,11 @@ var dropdown = require('./dropdown.vue');
 				this.showDescription = data.description;
 				this.showTechnician = data.technician;
 
-				this.changeFocus(3);
+				this.photos = data.photos;
+
+				if(changeFocus){
+					this.changeFocus(3);
+				}
             }, (response) => {
 				this.focus = 2;
 				this.alertMessageList = "The information could not be retrieved, please try again.";
@@ -445,7 +473,7 @@ var dropdown = require('./dropdown.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-			this.$http.post(this.workOrderUrl, {
+			this.$http.post(Laravel.url+'/service/'+this.workOrderId+'/works', {
 				title : this.titleName,
 				technician_id: this.technician.id,
 				quantity: this.quantity,
@@ -482,7 +510,7 @@ var dropdown = require('./dropdown.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-            this.$http.patch(this.workUrl, {
+            this.$http.patch(Laravel.url+'/works/'+this.id, {
         		title : this.titleName,
 				technician_id: this.technician.id,
 				quantity: this.quantity,
@@ -491,8 +519,7 @@ var dropdown = require('./dropdown.vue');
 				description: this.description,
             }).then((response) => {
 				// refresh the information
-                this.changeFocus(3);
-				this.getValues(this.workId);
+				this.getValues(this.id, true);
             }, (response) => {
 				if(response.status == 422){
 					this.validationErrors = response.data;
@@ -538,7 +565,7 @@ var dropdown = require('./dropdown.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-            this.$http.delete(this.workUrl).then((response) => {
+            this.$http.delete(Laravel.url+'/works/'+this.id).then((response) => {
 				// clear values
 				this.changeFocus(2);
             }, (response) => {
