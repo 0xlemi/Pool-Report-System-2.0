@@ -2,7 +2,10 @@
 
 <!-- Button -->
 <div class="form-group row">
-	<div class="col-sm-2">Location:</div>
+	<div class="col-sm-2"
+		:class="{'red': errors.hasOwnProperty('latitude') || errors.hasOwnProperty('longitude') }">
+		Location:
+	</div>
 	<div class="col-sm-10">
 		<button type="button" class="btn btn-primary" data-toggle="modal"
 			:class="locationPickerTag.class"
@@ -10,7 +13,8 @@
 			<i class="{{ locationPickerTag.icon }}"></i>&nbsp;&nbsp;&nbsp;
 			{{ locationPickerTag.text }}
 		</button>
-		<!-- <small class="text-muted">Location is required</small> -->
+		<small v-if="errors.hasOwnProperty('latitude') || errors.hasOwnProperty('longitude')"
+				class="text-muted red">Location is required</small>
 	</div>
 </div>
 
@@ -68,7 +72,7 @@
 let locationPicker  = require("jquery-locationpicker");
 
 export default {
-	props: ['latitude', 'longitude'],
+	props: ['latitude', 'longitude', 'errors'],
     data(){
         return {
             pickerAddressLine1: null,
@@ -161,3 +165,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.red {
+	color: #FA424A;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
 
-<location-picker :latitude="latitude" :longitude="longitude">
+<location-picker :latitude="latitude" :longitude="longitude" :errors="errors">
 </location-picker>
 
 <div class="form-group row" :class="[(errors.hasOwnProperty('address_line')) ? 'form-group-error': '']">
