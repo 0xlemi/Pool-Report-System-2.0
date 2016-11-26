@@ -832,6 +832,7 @@ function isset(strVariableName) {
     let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
     let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
     let deleteButton = require('./components/deleteButton.vue');
+    let locationPicker = require('./components/locationPicker.vue');
     require('./components/checkboxList.vue');
 
 
@@ -1019,6 +1020,7 @@ function isset(strVariableName) {
             equipment,
             routeTable,
             deleteButton,
+            locationPicker,
         },
         directives: {
             FormToAjax
@@ -1027,73 +1029,26 @@ function isset(strVariableName) {
             validationErrors: {},
             statusSwitch: true,
             serviceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-            // Location picker values
-            pickerServiceAddressLine1: '',
-            pickerServiceCity: '',
-            pickerServiceState: '',
-            pickerServicePostalCode: '',
-            pickerServiceCountry: '',
-            pickerServiceLatitude: '',
-            pickerServiceLongitude: '',
+
             // form values
-            serviceAddressLine1: (isset('addressLine')) ? back.addressLine : '',
-            serviceCity: (isset('city')) ? back.city : '',
-            serviceState: (isset('state')) ? back.state : '',
-            servicePostalCode: (isset('postalCode')) ? back.postalCode : '',
-            serviceCountry: (isset('country')) ? back.country : '',
-            serviceLatitude: (isset('latitude')) ? back.latitude : null,
-            serviceLongitude: (isset('longitude')) ? back.longitude : null,
-            // chemicals
-            chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-            chemicalId: 0,
-            chemicalName: '',
-            chemicalAmount: '',
-            chemicalUnits: '',
+            addressLine1: null,
+            city: null,
+            state: null,
+            postalCode: null,
+            country: null,
         },
-        computed: {
-            locationPickerTag(){
-                let attributes = {
-                        'icon': 'font-icon font-icon-ok',
-                        'text': 'Location Selected',
-                        'class': 'btn-success'
-                    };
-                if(this.serviceLatitude == null ){
-                    attributes = {
-                        'icon': 'font-icon font-icon-pin-2',
-                        'text': 'Choose Location',
-                        'class': 'btn-primary'
-                    };
-                }
-                return attributes;
-            },
+        events: {
+            addressChanged(address){
+                this.addressLine1 = address.addressLine1;
+                this.city = address.city;
+                this.state = address.state;
+                this.postalCode = address.postalCode;
+                this.country = address.country;
+            }
         },
-        // events: {
-        //     // when a photo is deleted from the equipment photo edit
-        //     equipmentChanged(){
-        //         this.getEquipment();
-        //     },
-        // },
         methods: {
             checkValidationError($fildName){
                 return $fildName in this.validationErrors;
-            },
-            // Location
-            populateAddressFields(page){
-                this.setLocation(page);
-                if(page == 'create'){
-                    this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-                    this.serviceCity = this.pickerServiceCity;
-                    this.servicePostalCode = this.pickerServicePostalCode;
-                    this.serviceState = this.pickerServiceState;
-                    this.serviceCountry = this.pickerServiceCountry;
-                }
-
-            },
-            setLocation(page){
-                if(page == 'create'){
-                    this.serviceLongitude = this.pickerServiceLongitude;
-                    this.serviceLatitude = this.pickerServiceLatitude;
-                }
             },
             // Index
             changeServiceListStatus(status){

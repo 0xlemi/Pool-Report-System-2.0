@@ -29463,7 +29463,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":204,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],198:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":205,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],198:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29977,7 +29977,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":206,"spin":166,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":207,"spin":166,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30109,7 +30109,118 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":206,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+},{"./alert.vue":190,"./dropzone.vue":198,"./photoList.vue":207,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+
+var locationPicker = require("jquery-locationpicker");
+
+exports.default = {
+    data: function data() {
+        return {
+            pickerAddressLine1: null,
+            pickerCity: null,
+            pickerState: null,
+            pickerPostalCode: null,
+            pickerCountry: null,
+            pickerLatitude: null,
+            pickerLongitude: null,
+
+            latitude: null,
+            longitude: null
+        };
+    },
+
+    computed: {
+        locationPickerTag: function locationPickerTag() {
+            var attributes = {
+                'icon': 'font-icon font-icon-ok',
+                'text': 'Location Selected',
+                'class': 'btn-success'
+            };
+            if (this.latitude == null || this.longitude == null) {
+                attributes = {
+                    'icon': 'font-icon font-icon-pin-2',
+                    'text': 'Choose Location',
+                    'class': 'btn-primary'
+                };
+            }
+            return attributes;
+        }
+    },
+    methods: {
+        setAddressFields: function setAddressFields() {
+            this.setLocation();
+            var address = {
+                addressLine1: this.pickerAddressLine1,
+                city: this.pickerCity,
+                postalCode: this.pickerPostalCode,
+                state: this.pickerState,
+                country: this.pickerCountry
+            };
+            this.$dispatch('addressChanged', address);
+        },
+        setLocation: function setLocation() {
+            this.longitude = this.pickerLongitude;
+            this.latitude = this.pickerLatitude;
+        }
+    },
+    ready: function ready() {
+        var locPicker = $('#locationPicker').locationpicker({
+            vue: this,
+            location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
+            radius: 0,
+            inputBinding: {
+                latitudeInput: $('#latitude'),
+                longitudeInput: $('#longitude'),
+                locationNameInput: $('#addressField')
+            },
+            enableAutocomplete: true,
+            onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
+                var addressComponents = $(this).locationpicker('map').location.addressComponents;
+                var vue = $(this).data("locationpicker").settings.vue;
+
+                vue.pickerAddressLine1 = addressComponents.addressLine1;
+                vue.pickerCity = addressComponents.city;
+                vue.pickerState = addressComponents.stateOrProvince;
+                vue.pickerPostalCode = addressComponents.postalCode;
+                vue.pickerCountry = addressComponents.country;
+                vue.pickerLongitude = currentLocation.longitude;
+                vue.pickerLatitude = currentLocation.latitude;
+            },
+            oninitialized: function oninitialized(component) {
+                var addressComponents = $(component).locationpicker('map').location.addressComponents;
+                var startLocation = $(component).data("locationpicker").settings.location;
+                var vue = $(component).data("locationpicker").settings.vue;
+
+                vue.pickerAddressLine1 = addressComponents.addressLine1;
+                vue.pickerCity = addressComponents.city;
+                vue.pickerState = addressComponents.stateOrProvince;
+                vue.pickerPostalCode = addressComponents.postalCode;
+                vue.pickerCountry = addressComponents.country;
+                vue.pickerLongitude = startLocation.longitude;
+                vue.pickerLatitude = startLocation.latitude;
+            }
+        });
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<div class=\"col-sm-2\">Location:</div>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" :class=\"locationPickerTag.class\" data-target=\"#locationPickerModal\">\n\t\t\t<i class=\"{{ locationPickerTag.icon }}\"></i>&nbsp;&nbsp;&nbsp;\n\t\t\t{{ locationPickerTag.text }}\n\t\t</button>\n\t\t<!-- <small class=\"text-muted\">Location is required</small> -->\n\t</div>\n</div>\n\n<!-- Hidden inputs for regular request -->\n<input type=\"hidden\" name=\"latitude\" :value=\"latitude\">\n<input type=\"hidden\" name=\"longitude\" :value=\"longitude\">\n\n<!-- Modal for Lacation picker -->\n<div class=\"modal fade\" id=\"locationPickerModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Choose Service Location</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Search:</label>\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" id=\"addressField\" name=\"addressField\">\n\t\t\t\t</div>\n\n\t\t\t\t<br><br><br>\n\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t<div id=\"locationPicker\" style=\"width: 650px; height: 450px;\"></div>\n\t\t\t\t</div>\n\n\t\t\t\t<br>\n\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Latitude</label>\n\t\t\t\t\t<input type=\"text\" class=\"form-control\" id=\"latitude\">\n\n\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Longitude</label>\n\t\t\t\t\t<input type=\"text\" class=\"form-control\" id=\"longitude\">\n\t\t\t\t</div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n        <button type=\"button\" class=\"btn btn-info\" @click=\"setLocation('create')\" data-dismiss=\"modal\">\n\t\t\t<i class=\"font-icon font-icon-pin-2\"></i>&nbsp;&nbsp;Only Set Location\n\t\t</button>\n        <button type=\"button\" class=\"btn btn-success\" @click=\"setAddressFields('create')\" data-dismiss=\"modal\">\n\t\t\t<i class=\"font-icon font-icon-map\"></i>&nbsp;&nbsp;Set Location and Address Fields\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-57881798", module.exports)
+  } else {
+    hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"jquery-locationpicker":85,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30130,7 +30241,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30194,9 +30305,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":202,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
+},{"./notification.vue":203,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],205:[function(require,module,exports){
+},{}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30475,7 +30586,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"spin":166,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30526,7 +30637,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30657,7 +30768,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30721,7 +30832,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":198,"./photoList.vue":206,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"./dropzone.vue":198,"./photoList.vue":207,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30801,7 +30912,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":206,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"./photoList.vue":207,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31211,7 +31322,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":197,"./dropzone.vue":198,"./photoList.vue":206,"spin":166,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":190,"./dropdown.vue":197,"./dropzone.vue":198,"./photoList.vue":207,"spin":166,"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31295,7 +31406,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -32071,6 +32182,7 @@ $(document).ready(function () {
 	var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
 	var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
 	var deleteButton = require('./components/deleteButton.vue');
+	var locationPicker = require('./components/locationPicker.vue');
 	require('./components/checkboxList.vue');
 
 	var mainVue = new Vue({
@@ -32258,7 +32370,8 @@ $(document).ready(function () {
 			chemical: chemical,
 			equipment: equipment,
 			routeTable: routeTable,
-			deleteButton: deleteButton
+			deleteButton: deleteButton,
+			locationPicker: locationPicker
 		},
 		directives: {
 			FormToAjax: FormToAjax
@@ -32267,73 +32380,26 @@ $(document).ready(function () {
 			validationErrors: {},
 			statusSwitch: true,
 			serviceId: isset('serviceId') ? Number(back.serviceId) : 0,
-			// Location picker values
-			pickerServiceAddressLine1: '',
-			pickerServiceCity: '',
-			pickerServiceState: '',
-			pickerServicePostalCode: '',
-			pickerServiceCountry: '',
-			pickerServiceLatitude: '',
-			pickerServiceLongitude: '',
+
 			// form values
-			serviceAddressLine1: isset('addressLine') ? back.addressLine : '',
-			serviceCity: isset('city') ? back.city : '',
-			serviceState: isset('state') ? back.state : '',
-			servicePostalCode: isset('postalCode') ? back.postalCode : '',
-			serviceCountry: isset('country') ? back.country : '',
-			serviceLatitude: isset('latitude') ? back.latitude : null,
-			serviceLongitude: isset('longitude') ? back.longitude : null,
-			// chemicals
-			chemicalFocus: 1, // 1=table, 2=new, 3=show, 4=edit
-			chemicalId: 0,
-			chemicalName: '',
-			chemicalAmount: '',
-			chemicalUnits: ''
+			addressLine1: null,
+			city: null,
+			state: null,
+			postalCode: null,
+			country: null
 		},
-		computed: {
-			locationPickerTag: function locationPickerTag() {
-				var attributes = {
-					'icon': 'font-icon font-icon-ok',
-					'text': 'Location Selected',
-					'class': 'btn-success'
-				};
-				if (this.serviceLatitude == null) {
-					attributes = {
-						'icon': 'font-icon font-icon-pin-2',
-						'text': 'Choose Location',
-						'class': 'btn-primary'
-					};
-				}
-				return attributes;
+		events: {
+			addressChanged: function addressChanged(address) {
+				this.addressLine1 = address.addressLine1;
+				this.city = address.city;
+				this.state = address.state;
+				this.postalCode = address.postalCode;
+				this.country = address.country;
 			}
 		},
-		// events: {
-		//     // when a photo is deleted from the equipment photo edit
-		//     equipmentChanged(){
-		//         this.getEquipment();
-		//     },
-		// },
 		methods: {
 			checkValidationError: function checkValidationError($fildName) {
 				return $fildName in this.validationErrors;
-			},
-
-			// Location
-			populateAddressFields: function populateAddressFields(page) {
-				this.setLocation(page);
-				if (page == 'create') {
-					this.serviceAddressLine1 = this.pickerServiceAddressLine1;
-					this.serviceCity = this.pickerServiceCity;
-					this.servicePostalCode = this.pickerServicePostalCode;
-					this.serviceState = this.pickerServiceState;
-					this.serviceCountry = this.pickerServiceCountry;
-				}
-			},
-			setLocation: function setLocation(page) {
-				if (page == 'create') {
-					this.serviceLongitude = this.pickerServiceLongitude;
-					this.serviceLatitude = this.pickerServiceLatitude;
-				}
 			},
 
 			// Index
@@ -32514,6 +32580,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/equipment.vue":200,"./components/finishWorkOrderButton.vue":201,"./components/notificationsWidget.vue":203,"./components/payments.vue":205,"./components/photoList.vue":206,"./components/routeTable.vue":207,"./components/workOrderPhotosEdit.vue":208,"./components/workOrderPhotosShow.vue":209,"./components/works.vue":210,"./directives/FormToAjax.vue":211,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,212]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/alert.vue":190,"./components/billing.vue":191,"./components/checkboxList.vue":192,"./components/chemical.vue":193,"./components/contract.vue":194,"./components/countries.vue":195,"./components/deleteButton.vue":196,"./components/dropdown.vue":197,"./components/email.vue":199,"./components/equipment.vue":200,"./components/finishWorkOrderButton.vue":201,"./components/locationPicker.vue":202,"./components/notificationsWidget.vue":204,"./components/payments.vue":206,"./components/photoList.vue":207,"./components/routeTable.vue":208,"./components/workOrderPhotosEdit.vue":209,"./components/workOrderPhotosShow.vue":210,"./components/works.vue":211,"./directives/FormToAjax.vue":212,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,213]);
 
 //# sourceMappingURL=bundle.js.map
