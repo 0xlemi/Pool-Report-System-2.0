@@ -24,8 +24,10 @@
 					</header>
 					<div class="card-block">
 						<form method="POST" action="{{ url('services/'.$service->seq_id) }}" enctype="multipart/form-data">
+
 							{{ csrf_field() }}
 							{{ method_field('PATCH') }}
+
 							<div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Name:</label>
 								<div class="col-sm-10">
@@ -37,61 +39,17 @@
 								</div>
 							</div>
 
-							<location-picker></location-picker>
 
-							<div class="form-group row {{($errors->has('address_line'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Street and number:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="address_line" maxlength="50" :value="addressLine1">
-									@if ($errors->has('address_line'))
-										<small class="text-muted">{{ $errors->first('address_line') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('city'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">City:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="city" maxlength="30" :value="city">
-									@if ($errors->has('city'))
-										<small class="text-muted">{{ $errors->first('city') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('state'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">State:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="state" maxlength="30" :value="state">
-									@if ($errors->has('state'))
-										<small class="text-muted">{{ $errors->first('state') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('postal_code'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Postal Code:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="postal_code" maxlength="15" :value="postalCode">
-									@if ($errors->has('postal_code'))
-										<small class="text-muted">{{ $errors->first('postal_code') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('country'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Country:</label>
-								<div class="col-sm-10">
-										<countries :code.sync="country" ></countries>
-									@if ($errors->has('country'))
-										<small class="text-muted">{{ $errors->first('country') }}</small>
-									@endif
-								</div>
-							</div>
+							<address-fields
+								address-line="{{ $service->address_line }}"
+								city="{{ $service->city }}"
+								state="{{ $service->state }}"
+								postal-code="{{ $service->postal_code }}"
+								country="{{ $service->country }}"
+								latitude="{{ $service->latitude }}"
+								longitude="{{ $service->longitude }}"
+								:errors="{{ json_encode($errors->toArray()) }}">
+							</address-fields>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Photo</label>
@@ -100,7 +58,7 @@
 					                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
 					                  <img src="{{ url($service->thumbnail()) }}" alt="Placeholder" /></div>
 					                  <div class="fileupload-preview fileupload-exists thumbnail"
-					                   		style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+					                   	style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
 					                  @if ($errors->has('photo'))
 					                  	<br>
 										<span class="label label-danger">{{ $errors->first('photo') }}</span>
@@ -146,7 +104,5 @@
 			</section>
 		</div>
 	</div>
-
-	@include('services.locationPicker')
 </div>
 @endsection

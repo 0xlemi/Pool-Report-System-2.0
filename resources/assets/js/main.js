@@ -832,7 +832,7 @@ function isset(strVariableName) {
     let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
     let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
     let deleteButton = require('./components/deleteButton.vue');
-    let locationPicker = require('./components/locationPicker.vue');
+    let addressFields = require('./components/addressFields.vue');
     require('./components/checkboxList.vue');
 
 
@@ -1020,36 +1020,16 @@ function isset(strVariableName) {
             equipment,
             routeTable,
             deleteButton,
-            locationPicker,
+            addressFields,
         },
         directives: {
             FormToAjax
         },
         data: {
-            validationErrors: {},
             statusSwitch: true,
             serviceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-
-            // form values
-            addressLine1: null,
-            city: null,
-            state: null,
-            postalCode: null,
-            country: null,
-        },
-        events: {
-            addressChanged(address){
-                this.addressLine1 = address.addressLine1;
-                this.city = address.city;
-                this.state = address.state;
-                this.postalCode = address.postalCode;
-                this.country = address.country;
-            }
         },
         methods: {
-            checkValidationError($fildName){
-                return $fildName in this.validationErrors;
-            },
             // Index
             changeServiceListStatus(status){
                 var intStatus = (!status) ? 1 : 0;

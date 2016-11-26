@@ -36,77 +36,14 @@
 								</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('longitude') || $errors->has('latitude'))? 'form-group-error':''}}">
-								<div class="col-sm-2">Location:</div>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-primary" data-toggle="modal"
-										:class="locationPickerTag.class"
-										data-target="#locationPickerModal">
-										<i class="@{{ locationPickerTag.icon }}"></i>&nbsp;&nbsp;&nbsp;
-										@{{ locationPickerTag.text }}
-									</button>
-									<input type="hidden" name="latitude" :value="serviceLatitude">
-									<input type="hidden" name="longitude" :value="serviceLongitude">
-									@if ($errors->has('latitude') || $errors->has('longitude'))
-										<small class="text-muted">Location is required</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('address_line'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Street and number:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="address_line" maxlength="50" :value="serviceAddressLine1" >
-									@if ($errors->has('address_line'))
-										<small class="text-muted">{{ $errors->first('address_line') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('city'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">City:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="city" maxlength="30" :value="serviceCity" >
-									@if ($errors->has('city'))
-										<small class="text-muted">{{ $errors->first('city') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('state'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">State:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="state" maxlength="30" :value="serviceState" >
-									@if ($errors->has('state'))
-										<small class="text-muted">{{ $errors->first('state') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('postal_code'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Postal Code:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="postal_code" maxlength="15" :value="servicePostalCode" >
-									@if ($errors->has('postal_code'))
-										<small class="text-muted">{{ $errors->first('postal_code') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('country'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Country:</label>
-								<div class="col-sm-10">
-										<countries country="{{ old('country') }}" ></countries>
-										<input type="hidden" name="country" :value="serviceCountry">
-									@if ($errors->has('country'))
-										<small class="text-muted">{{ $errors->first('country') }}</small>
-									@endif
-								</div>
-							</div>
+							<address-fields
+								address-line="{{ old('address_line') }}"
+								city="{{ old('city') }}"
+								state="{{ old('state') }}"
+								postal-code="{{ old('postal_code') }}"
+								country="{{ old('country') }}"
+								:errors="{{ json_encode($errors->toArray()) }}">
+							</address-fields>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Service Photo</label>
@@ -161,7 +98,5 @@
 			</section>
 		</div>
 	</div>
-
-	@include('services.locationPicker')
 </div>
 @endsection

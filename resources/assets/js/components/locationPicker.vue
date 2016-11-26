@@ -31,9 +31,7 @@
 
 				<div class="col-md-12">
 					<label class="col-sm-2 form-control-label">Search:</label>
-						<input type="text" class="form-control"
-											id="addressField"
-											name="addressField">
+						<input type="text" class="form-control" id="addressField" name="addressField">
 				</div>
 
 				<br><br><br>
@@ -70,7 +68,7 @@
 let locationPicker  = require("jquery-locationpicker");
 
 export default {
-
+	props: ['latitude', 'longitude'],
     data(){
         return {
             pickerAddressLine1: null,
@@ -80,9 +78,6 @@ export default {
             pickerCountry: null,
             pickerLatitude: null,
             pickerLongitude: null,
-
-            latitude: null,
-            longitude: null,
         }
     },
     computed: {
@@ -101,6 +96,12 @@ export default {
             }
             return attributes;
         },
+		startPosition(){
+			return {
+				latitude: (this.latitude) ? this.latitude: Laravel.startLocation.latitude,
+				longitude: (this.longitude) ? this.longitude: Laravel.startLocation.longitude,
+			}
+		}
     },
     methods: {
         setAddressFields(){
@@ -122,7 +123,7 @@ export default {
     ready(){
         let locPicker = $('#locationPicker').locationpicker({
             vue: this,
-            location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
+            location: {latitude: this.startPosition.latitude, longitude: this.startPosition.longitude},
             radius: 0,
             inputBinding: {
             	latitudeInput: $('#latitude'),

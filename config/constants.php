@@ -15,4 +15,9 @@ return [
         'EUR',
     ],
 
+    'startLocation' => [
+        'latitude' => '23.0446032',
+        'longitude' => '-109.705866',
+    ]
+
 ];
