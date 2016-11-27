@@ -672,7 +672,6 @@ function isset(strVariableName) {
 	========================================================================== */
 
 	var generic_table = $('.generic_table');
-	var missingServices = $('#missingServices');
 
 
     let tableOptions = {
@@ -693,7 +692,6 @@ function isset(strVariableName) {
 	}
 
 	generic_table.bootstrapTable(tableOptions);
-	missingServices.bootstrapTable(tableOptions);
 
 
     $('.generic_table').on( 'click-row.bs.table', function (e, row, $element) {
@@ -705,17 +703,6 @@ function isset(strVariableName) {
             $element.addClass('table_active');
         }
         window.location.href = back.click_url+row.id;
-    });
-
-    $('#missingServices').on( 'click-row.bs.table', function (e, row, $element) {
-        if ( $element.hasClass('table_active') ) {
-            $element.removeClass('table_active');
-        }
-        else {
-            missingServices.find('tr.table_active').removeClass('table_active');
-            $element.addClass('table_active');
-        }
-        window.location.href = back.click_missingServices_url+row.id;
     });
 
 /* ==========================================================================
@@ -738,28 +725,7 @@ function isset(strVariableName) {
             var new_missingServices_url = back.missingServices_url+date_selected;
 
             generic_table.bootstrapTable('refresh', {url: new_url});
-            missingServices.bootstrapTable('refresh', {url: new_missingServices_url});
-            if(isset('missingServicesInfo_url')){
-                $.ajax({
-                    vue: reportVue,
-                    url:      back.missingServicesInfo_url,
-                    type:     'GET',
-                    dataType: 'json',
-                    data: {
-                            'date': date_selected
-                        },
-                    success: function(data, textStatus, xhr) {
-                        //called when successful
-                        this.vue.numServicesDone =  data.numServicesDone;
-                        this.vue.numServicesMissing =  data.numServicesMissing;
-                        this.vue.numServicesToDo =  data.numServicesToDo;
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        //called when there is an error
-                        // console.log('error');
-                    }
-                });
-            }
+            reportVue.$broadcast('datePickerClicked', date_selected);
 	    });
    }
    	if(isset('defaultDate')){
@@ -833,6 +799,7 @@ function isset(strVariableName) {
     let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
     let deleteButton = require('./components/deleteButton.vue');
     let addressFields = require('./components/addressFields.vue');
+    let missingServices = require('./components/missingServices.vue');
     require('./components/checkboxList.vue');
 
 
@@ -885,60 +852,15 @@ function isset(strVariableName) {
         el:'.reportVue',
         components: {
             dropdown,
+            missingServices,
             deleteButton,
          },
         directives: { FormToAjax },
         data:{
-            numServicesMissing: (isset('numServicesMissing')) ? back.numServicesMissing : '',
-            numServicesToDo:    (isset('numServicesToDo')) ? back.numServicesToDo : '',
-            numServicesDone:    (isset('numServicesDone')) ? back.numServicesDone : '',
             reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
             serviceKey:         (isset('serviceKey')) ? Number(back.serviceKey) : 0,
             technicianKey:      (isset('technicianKey')) ? Number(back.technicianKey) : 0,
-        },
-        computed:{
-            missingServicesTag: function () {
-                    if(this.numServicesMissing < 1){
-                        return 'All Services Done';
-                    }
-                    return 'Missing Services: '+this.numServicesMissing;
-                },
-        },
-        methods:{
-            previewEmailReport(id){
-                // prevent the user from clicking more than once
-                event.target.disabled = true;
-                event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-                new Spinner({
-                    left: "90%",
-                    radius: 5,
-                    length: 4,
-                    width: 1,
-                }).spin(event.target);
-                // HTTP Request or what ever to update the permission
-                $.ajax({
-                    vue: this,
-                    target: event.target,
-                    url:      (isset('emailPreview')) ? back.emailPreview : '',
-                    type:     'GET',
-                    dataType: 'json',
-                    data: {
-                            'id': id
-                        },
-                    complete: function(xhr, textStatus) {
-                        this.target.disabled = false;
-                        this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-                    },
-                    success: function(data, textStatus, xhr) {
-                        $('#emailPreview').modal('show');
-                        this.vue.reportEmailPreview = data.data.url;
-                    },
-                    error: function(xhr, textStatus, errorThrown) {
-                        console.log('error');
-                    }
-                });
-            }
-        },
+        }
     });
 
     let settingsVue = new Vue({

@@ -48,36 +48,22 @@ class ReportsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
         $today = Carbon::today($admin->timezone);
-        $today_utc = Carbon::today('UTC');
 
-        $default_table_url = url('datatables/reports').'?date='.$today->toDateString();
-        $default_missing_table_url = url('datatables/missingServices').'?date='.$today->toDateString();
-
-        $numServicesMissing = $admin->numberServicesMissing($today_utc);
-        $numServicesToDo = $admin->numberServicesDoIn($today_utc);
-        $numServicesDone = $numServicesToDo - $numServicesMissing;
+        $defaultTableUrl = url('datatables/reports').'?date='.$today->toDateString();
 
         JavaScript::put([
             'date_url' => url('reports/date').'/',
             'datatable_url' => url('datatables/reports').'?date=',
+            'click_url' => url('reports').'/',
+
             'missingServices_url' => url('datatables/missingServices').'?date=',
             'missingServicesInfo_url' => url('datatables/missingServicesInfo'),
-
-            'click_url' => url('reports').'/',
-            'click_missingServices_url' => url('services').'/',
-
-            'numServicesMissing' => $numServicesMissing,
-            'numServicesToDo' => $numServicesToDo,
-            'numServicesDone' => $numServicesDone,
 
             'enabledDates' => $admin->datesWithReport(),
             'todayDate' => $today->toDateString(),
         ]);
 
-        return view('reports.index',compact(
-                            'default_table_url',
-                            'default_missing_table_url'
-                        ));
+        return view('reports.index',compact('defaultTableUrl'));
     }
 
     /**

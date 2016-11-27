@@ -31,18 +31,13 @@
 						<i class="font-icon font-icon-page"></i>&nbsp;&nbsp;&nbsp;New Report
 					</a>
 					&nbsp;&nbsp;
-					<button class="btn btn-warning" data-toggle="modal"
-								data-target="#missingServicesModal"
-								:class="( numServicesMissing < 1 ) ? 'btn-success' : 'btn-warning'"
-								:disabled="( numServicesMissing < 1 )">
-						<i class="glyphicon glyphicon-home"></i>&nbsp;&nbsp;
-						@{{ missingServicesTag }}
-					</button>
+					<missing-services>
+					</missing-services>
 				</div>
 				<div class="table-responsive">
 					<table class="generic_table"
 						   data-toolbar="#toolbar"
-						   data-url='{{ $default_table_url }}'
+						   data-url='{{ $defaultTableUrl }}'
 						   data-page-list='[5, 10, 20, 50, 100, 200]'
 						   data-search='true'
 						   data-show-export="true"
@@ -63,53 +58,5 @@
 			</section><!--.box-typical-->
 		</div>
 	</div><!--.row-->
-
-	<!-- Modal for email preview -->
-	<div class="modal fade" id="missingServicesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-	  <div class="modal-dialog modal-lg" role="document">
-	    <div class="modal-content">
-		    <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Missing Services</h4>
-			</div>
-			<div id="missingServicesToolbar">
-				<div class="progress-steps-caption">@{{ numServicesDone }}/@{{ numServicesToDo }}&nbsp; Services Completed</div>
-			</div>
-	    	<div class="modal-body">
-				<div class="row">
-					<div class="col-md-12">
-						<section class="box-typical">
-							<div class="table-responsive">
-								<table id="missingServices"
-				   					   data-toolbar="#missingServicesToolbar"
-									   data-url='{{ $default_missing_table_url }}'
-									   data-page-list='[5, 10, 20, 50, 100, 200]'
-									   data-search='true'
-									   data-show-export="true"
-									   data-export-types="['excel', 'pdf']"
-									   data-minimum-count-columns="2"
-									   data-show-footer="false"
-									   >
-						            <thead>
-								        <tr>
-								            <th data-field="id" data-sortable="true">#</th>
-									        <th data-field="name" data-sortable="true">Name</th>
-									        <th data-field="address" data-sortable="true">Address</th>
-									        <th data-field="type" data-sortable="true">Type</th>
-									        <th data-field="price" data-sortable="true">Price</th>
-								        </tr>
-						            </thead>
-						        </table>
-							</div>
-						</section><!--.box-typical-->
-					</div>
-				</div>
-	    	</div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
 </div>
 @endsection

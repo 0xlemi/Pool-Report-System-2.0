@@ -85,55 +85,6 @@ class DataTableController extends PageController
         return Response::json($reports, 200);
     }
 
-    public function missingServices(Request $request)
-    {
-        if(!validateDate($request->date))
-        {
-            return Response::json('Date is not valid', 422);
-        }
-
-        $services = $this->loggedUserAdministrator()
-                        ->servicesDoIn((new Carbon($request->date)))
-                        ->transform(function($service){
-                            return (object) array(
-                                'id' => $service->seq_id,
-                                'name' => $service->name,
-                                'address' => $service->address_line,
-                                'serviceDays' => $service->serviceContract->serviceDays()->shortNamesStyled(),
-                                'price' => $service->serviceContract->amount.' <strong>'.$service->serviceContract->currency.'</strong>',
-                            );
-                        })
-                        ->flatten(1);
-
-        return Response::json($services, 200);
-
-    }
-
-    public function missingServicesInfo(Request $request)
-    {
-        if(!validateDate($request->date))
-        {
-            return Response::json('Date is not valid', 422);
-        }
-
-        $admin = $this->loggedUserAdministrator();
-
-        $date = (new Carbon($request->date));
-
-        $numServicesMissing = $admin->numberServicesMissing($date);
-        $numServicesToDo = $admin->numberServicesDoIn($date);
-        $numServicesDone = $numServicesToDo - $numServicesMissing;
-
-        $result = (object) array(
-            'numServicesMissing' => $numServicesMissing,
-            'numServicesToDo' => $numServicesToDo,
-            'numServicesDone' => $numServicesDone,
-        );
-
-        return Response::json($result, 200);
-
-    }
-
     public function workOrders(Request $request)
     {
         $validator = Validator::make($request->all(), [

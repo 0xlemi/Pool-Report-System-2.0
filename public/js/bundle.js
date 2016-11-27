@@ -29509,7 +29509,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":206,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],199:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":207,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],199:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -30023,7 +30023,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":191,"./dropzone.vue":199,"./photoList.vue":208,"spin":166,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":191,"./dropzone.vue":199,"./photoList.vue":209,"spin":166,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30155,7 +30155,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":191,"./dropzone.vue":199,"./photoList.vue":208,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"./alert.vue":191,"./dropzone.vue":199,"./photoList.vue":209,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -30282,6 +30282,148 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _BootstrapTable = require('./BootstrapTable.vue');
+
+var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: {
+        alert: _alert2.default,
+        BootstrapTable: _BootstrapTable2.default
+    },
+    data: function data() {
+        return {
+            serviceId: 2,
+            numServicesDone: 0,
+            numServicesMissing: 0,
+
+            alertMessage: "",
+            alertActive: false,
+
+            data: [],
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'name',
+                title: 'Name',
+                sortable: true
+            }, {
+                field: 'address',
+                title: 'Address',
+                sortable: true
+            }, {
+                field: 'price',
+                title: 'Price',
+                sortable: true
+            }],
+            options: {
+                iconsPrefix: 'font-icon',
+                toggle: 'table',
+                sidePagination: 'client',
+                pagination: 'true',
+                classes: 'table',
+                icons: {
+                    paginationSwitchDown: 'font-icon-arrow-square-down',
+                    paginationSwitchUp: 'font-icon-arrow-square-down up',
+                    refresh: 'font-icon-refresh',
+                    toggle: 'font-icon-list-square',
+                    columns: 'font-icon-list-rotate',
+                    export: 'font-icon-download'
+                },
+                paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+                paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+                pageSize: 5,
+                pageList: [5, 10],
+                search: true,
+                showExport: true,
+                exportTypes: ['excel', 'pdf'],
+                minimumCountColumns: 2,
+                showFooter: false,
+
+                uniqueId: 'id',
+                idField: 'id',
+
+                toolbarButton: false
+            }
+        };
+    },
+
+    computed: {
+        button: function button() {
+            if (this.numServicesMissing < 1) {
+                return {
+                    tag: 'All Services Done',
+                    class: 'btn-success'
+                };
+            }
+            return {
+                tag: 'Missing Services: ' + this.numServicesMissing,
+                class: 'btn-warning'
+            };
+        }
+    },
+    events: {
+        datePickerClicked: function datePickerClicked(date) {
+            this.getList(date);
+        }
+    },
+    methods: {
+        getList: function getList(date) {
+            var _this = this;
+
+            this.$http.get(Laravel.url + 'missingservices', {
+                date: date
+            }).then(function (response) {
+                var data = response.data;
+
+                _this.data = data.services;
+                _this.numServicesMissing = data.numServicesMissing;
+                _this.numServicesDone = data.numServicesDone;
+                _this.validationErrors = {};
+                _this.$broadcast('refreshTable');
+            }, function (response) {
+                _this.focus = 2;
+                _this.alertMessage = "The information could not be retrieved, please try again.";
+                _this.alertActive = true;
+            });
+        },
+        resetAlert: function resetAlert() {
+            this.alertMessage = "";
+            this.alertActive = false;
+        }
+    },
+    ready: function ready() {
+        this.getList();
+        this.getList();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#missingServicesModal\" :class=\"button.class\" :disabled=\"( numServicesMissing < 1 )\">\n\t\t<i class=\"glyphicon glyphicon-home\"></i>&nbsp;&nbsp;\n\t\t{{ button.tag }}\n\t</button>\n\n    <!-- Modal for Missing Services preview -->\n\t<div class=\"modal fade\" id=\"missingServicesModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog modal-lg\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t\t    <div class=\"modal-header\">\n\t\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Missing Services</h4>\n\t\t\t</div>\n\t\t\t<div id=\"toolbar\">\n\t\t\t\t<div class=\"progress-steps-caption\">{{ numServicesDone }}/{{ numServicesDone+numServicesMissing }}&nbsp; Services Completed</div>\n\t\t\t</div>\n\t    \t<div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\n                        <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t\t\t    <bootstrap-table :object-id.sync=\"serviceId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t    \t</div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-7e05d63f", module.exports)
+  } else {
+    hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":188,"./alert.vue":191,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 exports.default = {
     props: ['data']
 };
@@ -30297,7 +30439,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30361,9 +30503,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":204,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./notification.vue":205,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],207:[function(require,module,exports){
+},{}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30642,7 +30784,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":191,"spin":166,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":191,"spin":166,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30693,7 +30835,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30824,7 +30966,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":191,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":191,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30888,7 +31030,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":199,"./photoList.vue":208,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
+},{"./dropzone.vue":199,"./photoList.vue":209,"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30968,7 +31110,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":208,"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
+},{"./photoList.vue":209,"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31378,7 +31520,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":191,"./dropdown.vue":198,"./dropzone.vue":199,"./photoList.vue":208,"spin":166,"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":191,"./dropdown.vue":198,"./dropzone.vue":199,"./photoList.vue":209,"spin":166,"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31462,7 +31604,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],215:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -32086,7 +32228,6 @@ $(document).ready(function () {
  	========================================================================== */
 
 	var generic_table = $('.generic_table');
-	var missingServices = $('#missingServices');
 
 	var tableOptions = {
 		iconsPrefix: 'font-icon',
@@ -32106,7 +32247,6 @@ $(document).ready(function () {
 	};
 
 	generic_table.bootstrapTable(tableOptions);
-	missingServices.bootstrapTable(tableOptions);
 
 	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
 		if ($element.hasClass('table_active')) {
@@ -32116,16 +32256,6 @@ $(document).ready(function () {
 			$element.addClass('table_active');
 		}
 		window.location.href = back.click_url + row.id;
-	});
-
-	$('#missingServices').on('click-row.bs.table', function (e, row, $element) {
-		if ($element.hasClass('table_active')) {
-			$element.removeClass('table_active');
-		} else {
-			missingServices.find('tr.table_active').removeClass('table_active');
-			$element.addClass('table_active');
-		}
-		window.location.href = back.click_missingServices_url + row.id;
 	});
 
 	/* ==========================================================================
@@ -32148,28 +32278,7 @@ $(document).ready(function () {
 			var new_missingServices_url = back.missingServices_url + date_selected;
 
 			generic_table.bootstrapTable('refresh', { url: new_url });
-			missingServices.bootstrapTable('refresh', { url: new_missingServices_url });
-			if (isset('missingServicesInfo_url')) {
-				$.ajax({
-					vue: reportVue,
-					url: back.missingServicesInfo_url,
-					type: 'GET',
-					dataType: 'json',
-					data: {
-						'date': date_selected
-					},
-					success: function success(data, textStatus, xhr) {
-						//called when successful
-						this.vue.numServicesDone = data.numServicesDone;
-						this.vue.numServicesMissing = data.numServicesMissing;
-						this.vue.numServicesToDo = data.numServicesToDo;
-					},
-					error: function error(xhr, textStatus, errorThrown) {
-						//called when there is an error
-						// console.log('error');
-					}
-				});
-			}
+			reportVue.$broadcast('datePickerClicked', date_selected);
 		});
 	}
 	if (isset('defaultDate')) {
@@ -32239,6 +32348,7 @@ $(document).ready(function () {
 	var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
 	var deleteButton = require('./components/deleteButton.vue');
 	var addressFields = require('./components/addressFields.vue');
+	var missingServices = require('./components/missingServices.vue');
 	require('./components/checkboxList.vue');
 
 	var mainVue = new Vue({
@@ -32290,59 +32400,14 @@ $(document).ready(function () {
 		el: '.reportVue',
 		components: {
 			dropdown: dropdown,
+			missingServices: missingServices,
 			deleteButton: deleteButton
 		},
 		directives: { FormToAjax: FormToAjax },
 		data: {
-			numServicesMissing: isset('numServicesMissing') ? back.numServicesMissing : '',
-			numServicesToDo: isset('numServicesToDo') ? back.numServicesToDo : '',
-			numServicesDone: isset('numServicesDone') ? back.numServicesDone : '',
 			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
 			serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
 			technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
-		},
-		computed: {
-			missingServicesTag: function missingServicesTag() {
-				if (this.numServicesMissing < 1) {
-					return 'All Services Done';
-				}
-				return 'Missing Services: ' + this.numServicesMissing;
-			}
-		},
-		methods: {
-			previewEmailReport: function previewEmailReport(id) {
-				// prevent the user from clicking more than once
-				event.target.disabled = true;
-				event.target.innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Generating email";
-				new Spinner({
-					left: "90%",
-					radius: 5,
-					length: 4,
-					width: 1
-				}).spin(event.target);
-				// HTTP Request or what ever to update the permission
-				$.ajax({
-					vue: this,
-					target: event.target,
-					url: isset('emailPreview') ? back.emailPreview : '',
-					type: 'GET',
-					dataType: 'json',
-					data: {
-						'id': id
-					},
-					complete: function complete(xhr, textStatus) {
-						this.target.disabled = false;
-						this.target.innerHTML = "<i class=\"font-icon font-icon-mail\"></i>&nbsp;&nbsp;Preview email";
-					},
-					success: function success(data, textStatus, xhr) {
-						$('#emailPreview').modal('show');
-						this.vue.reportEmailPreview = data.data.url;
-					},
-					error: function error(xhr, textStatus, errorThrown) {
-						console.log('error');
-					}
-				});
-			}
 		}
 	});
 
@@ -32615,6 +32680,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":190,"./components/alert.vue":191,"./components/billing.vue":192,"./components/checkboxList.vue":193,"./components/chemical.vue":194,"./components/contract.vue":195,"./components/countries.vue":196,"./components/deleteButton.vue":197,"./components/dropdown.vue":198,"./components/email.vue":200,"./components/equipment.vue":201,"./components/finishWorkOrderButton.vue":202,"./components/notificationsWidget.vue":205,"./components/payments.vue":207,"./components/photoList.vue":208,"./components/routeTable.vue":209,"./components/workOrderPhotosEdit.vue":210,"./components/workOrderPhotosShow.vue":211,"./components/works.vue":212,"./directives/FormToAjax.vue":213,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,214]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":190,"./components/alert.vue":191,"./components/billing.vue":192,"./components/checkboxList.vue":193,"./components/chemical.vue":194,"./components/contract.vue":195,"./components/countries.vue":196,"./components/deleteButton.vue":197,"./components/dropdown.vue":198,"./components/email.vue":200,"./components/equipment.vue":201,"./components/finishWorkOrderButton.vue":202,"./components/missingServices.vue":204,"./components/notificationsWidget.vue":206,"./components/payments.vue":208,"./components/photoList.vue":209,"./components/routeTable.vue":210,"./components/workOrderPhotosEdit.vue":211,"./components/workOrderPhotosShow.vue":212,"./components/works.vue":213,"./directives/FormToAjax.vue":214,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,215]);
 
 //# sourceMappingURL=bundle.js.map

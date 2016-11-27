@@ -70,6 +70,9 @@ Route::patch('servicecontracts/{serviceSeqId}', 'ServiceContractsController@upda
 Route::post('servicecontracts/{serviceSeqId}/active', 'ServiceContractsController@toggleActivation');
 Route::delete('servicecontracts/{serviceSeqId}', 'ServiceContractsController@destroy');
 
+// Missing Services
+Route::get('missingservices', 'MissingServicesController@index');
+
 // Payments
 Route::get('invoices/{invoiceSeqId}/payments', 'PaymentController@index');
 Route::post('invoices/{invoiceSeqId}/payments', 'PaymentController@store');
@@ -124,8 +127,6 @@ Route::get('datatables/todaysroute', 'DataTableController@todaysroute');
 Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/workorders', 'DataTableController@workOrders');
 Route::get('datatables/works/{workOrderSeqId}', 'DataTableController@works');
-Route::get('datatables/missingServices', 'DataTableController@missingServices');
-Route::get('datatables/missingServicesInfo', 'DataTableController@missingServicesInfo');
 Route::get('datatables/services', 'DataTableController@services');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
