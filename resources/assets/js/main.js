@@ -800,6 +800,7 @@ function isset(strVariableName) {
     let deleteButton = require('./components/deleteButton.vue');
     let addressFields = require('./components/addressFields.vue');
     let missingServices = require('./components/missingServices.vue');
+    let settings = require('./components/settings.vue');
     require('./components/checkboxList.vue');
 
 
@@ -870,6 +871,7 @@ function isset(strVariableName) {
             emailPreference,
             alert,
             billing,
+            settings,
         },
         directives: { FormToAjax },
         data:{
