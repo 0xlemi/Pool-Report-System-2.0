@@ -28442,7 +28442,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4aa75e68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./countries.vue":199,"./locationPicker.vue":206,"vue":180,"vue-hot-reload-api":177}],192:[function(require,module,exports){
+},{"./countries.vue":199,"./locationPicker.vue":207,"vue":180,"vue-hot-reload-api":177}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28479,11 +28479,19 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _creditCard = require('./creditCard.vue');
+
+var _creditCard2 = _interopRequireDefault(_creditCard);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Spinner = require("spin");
 
 exports.default = {
-    props: ['subscribed', 'plan', 'activeObjects', 'billableObjects', 'freeObjects'],
+    props: ['subscribed', 'lastFour', 'plan', 'activeObjects', 'billableObjects', 'freeObjects'],
+    components: {
+        creditCard: _creditCard2.default
+    },
     data: function data() {
         return {};
     },
@@ -28491,8 +28499,6 @@ exports.default = {
     methods: {
         downgradeSubscription: function downgradeSubscription() {
             var vue = this;
-            // I need to check the that downgradeSubscriptionUrl is defined
-            var downgradeSubscriptionUrl = back.downgradeSubscriptionUrl;
             swal({
                 title: "Are you sure?",
                 text: "Your technicians and supervisors will become inactive!",
@@ -28505,7 +28511,7 @@ exports.default = {
                 showLoaderOnConfirm: true
             }, function (isConfirm) {
                 if (isConfirm) {
-                    vue.$http.post(downgradeSubscriptionUrl).then(function (response) {
+                    vue.$http.post(Laravel.url + 'settings/downgradeSubscription').then(function (response) {
                         vue.plan = 'free';
                         vue.activeObjects = 0;
                         swal("Downgraded to free", "You account is set to free.", "success");
@@ -28524,8 +28530,6 @@ exports.default = {
 
             var vue = this;
             var clickEvent = event;
-            // I need to check the that upgradeSubscriptionUrl is defined
-            var upgradeSubscriptionUrl = back.upgradeSubscriptionUrl;
             var buttonTag = clickEvent.target.innerHTML;
 
             // Disable the submit button to prevent repeated clicks:
@@ -28538,7 +28542,7 @@ exports.default = {
                 width: 1
             }).spin(clickEvent.target);
 
-            vue.$http.post(upgradeSubscriptionUrl).then(function (response) {
+            vue.$http.post(Laravel.url + 'settings/upgradeSubscription').then(function (response) {
                 clickEvent.target.disabled = false;
                 _this.plan = 'pro';
                 swal("Upgrated to Pro", "You account is set to pro.", "success");
@@ -28555,7 +28559,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-12\" v-if=\"subscribed\">\n        <h4 class=\"semibold\">Payment method</h4>\n        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#creditCardModal\">\n\t\t\t<i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;&nbsp;&nbsp;\n\t\t\tUpdate Credit Card\n\t\t</button>\n        <hr>\n\t</div>\n\n    <div class=\"col-md-12\">\n        <h4 class=\"semibold\">Subscription</h4>\n        <div v-if=\"plan == 'pro'\">\n            <p>\n                Your account is on a <strong>Pro</strong>\n                subscription for {{ billableObjects }} users\n            </p>\n            <br>\n            <button type=\"button\" class=\"btn btn-danger\" @click=\"downgradeSubscription\">\n        \t\t<i class=\"glyphicon glyphicon-arrow-down\"></i>&nbsp;&nbsp;&nbsp;\n        \t    Downgrade to Free\n        \t</button>\n            <small class=\"text-muted\">\n                Downgrading will not delete any data,\n                but your supervisors and technicians<br>\n                are going to be set to inactive.\n            </small>\n        </div>\n\n        <!-- Is unsubscribed or in a free subscription -->\n        <div v-else=\"\">\n            <p>\n                Your account is on a <strong>free</strong> subscription.<br>\n                Using {{ activeObjects }} out of your {{ freeObjects  }} free users.\n            </p>\n            <br>\n            <div v-if=\"subscribed\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"upgradeSubscription\">\n            \t\t<i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \t    Upgrade to Pro\n            \t</button>\n            </div>\n            <div v-else=\"\">\n                <button type=\"button\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#creditCardModal\">\n            \t\t<i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \t    Upgrade to Pro\n            \t</button>\n            </div>\n            <small class=\"text-muted\">\n                You are not going to be changed if you dont go passed your {{ freeObjects }} free users.\n            </small>\n        </div>\n    </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"col-md-12\" v-if=\"subscribed\">\n        <h4 class=\"semibold\">Payment method</h4>\n        <credit-card :last-four=\"lastFour\">\n        </credit-card>\n        <hr>\n\t</div>\n\n\n\n    <div class=\"col-md-12\">\n        <h4 class=\"semibold\">Subscription</h4>\n\n\t\t<!-- Is on a pro subscription -->\n        <div v-if=\"plan == 'pro'\">\n            <p>\n                Your account is on a <strong>Pro</strong>\n                subscription for {{ billableObjects }} users\n            </p>\n            <br>\n            <button type=\"button\" class=\"btn btn-danger\" @click=\"downgradeSubscription\">\n        \t\t<i class=\"glyphicon glyphicon-arrow-down\"></i>&nbsp;&nbsp;&nbsp;\n        \t    Downgrade to Free\n        \t</button>\n            <small class=\"text-muted\">\n                Downgrading will not delete any data,\n                but your supervisors and technicians<br>\n                are going to be set to inactive.\n            </small>\n        </div>\n\n        <!-- Is unsubscribed or in a free subscription -->\n        <div v-else=\"\">\n            <p>\n                Your account is on a <strong>free</strong> subscription.<br>\n                Using {{ activeObjects }} out of your {{ freeObjects  }} free users.\n            </p>\n            <br>\n            <div v-if=\"subscribed\">\n                <button type=\"button\" class=\"btn btn-success\" @click=\"upgradeSubscription\">\n            \t\t<i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \t    Upgrade to Pro\n            \t</button>\n            </div>\n            <div v-else=\"\">\n                <credit-card :last-four=\"lastFour\">\n                </credit-card>\n            </div>\n            <small class=\"text-muted\">\n                You are not going to be changed if you dont go passed your {{ freeObjects }} free users.\n            </small>\n        </div>\n\n    </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28566,7 +28570,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d571856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":166,"vue":180,"vue-hot-reload-api":177}],194:[function(require,module,exports){
+},{"./creditCard.vue":200,"spin":166,"vue":180,"vue-hot-reload-api":177}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28574,7 +28578,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#changeEmailModal\">\n\t\t<i class=\"fa fa-envelope\"></i>&nbsp;&nbsp;&nbsp;Change Email\n\t</button>\n</div>\n\n<!-- Modal for Change Email Settings -->\n<div class=\"modal fade\" id=\"changeEmailModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Email</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n\t\t\t\t\t<fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your current password\">\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your new email\">\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#changeEmailModal\">\n\t\t<i class=\"fa fa-envelope\"></i>&nbsp;&nbsp;&nbsp;Change Email\n\t</button>\n</div>\n\n<!-- Modal for Change Email Settings -->\n<div class=\"modal fade\" id=\"changeEmailModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Email</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n\t\t\t\t\t<fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your current password\">\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your new email\">\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -29395,6 +29399,108 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],200:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+    props: ['lastFour'],
+    components: {
+        alert: _alert2.default
+    },
+    data: function data() {
+        return {
+            date: new Date(),
+            token: Laravel.csrfToken,
+            url: Laravel.url + 'settings/subscribe',
+
+            alertMessage: '',
+            alertOpen: false
+        };
+    },
+
+    computed: {
+        button: function button() {
+            if (this.lastFour) {
+                return {
+                    tag: 'Update Credit Card',
+                    class: 'primary'
+                };
+            }
+            return {
+                tag: 'Upgrade to Pro',
+                class: 'success'
+            };
+        }
+    },
+    methods: {
+        submitCreditCard: function submitCreditCard() {
+            var _this = this;
+
+            var $form = $('#payment-form');
+            var clickEvent = event;
+            var buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
+
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            // Request a token from Stripe:
+            Stripe.card.createToken($form, function (status, response) {
+                if (response.error) {
+                    // Problem!
+
+                    // Show the errors on the form:
+                    _this.alertMessage = response.error.message;
+                    _this.alertOpen = true;
+                    clickEvent.target.disabled = false; // Re-enable submission
+                    clickEvent.target.innerHTML = buttonTag;
+                } else {
+                    // Token was created!
+
+                    // Get the token ID:
+                    var token = response.id;
+
+                    // Insert the token ID into the form so it gets submitted to the server:
+                    $form.append($('<input type="hidden" name="stripeToken">').val(token));
+
+                    // Submit the form:
+                    $form.get(0).submit();
+                }
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn\" :class=\"button.class\" data-toggle=\"modal\" data-target=\"#creditCardModal\">\n\t\t\t<i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;&nbsp;&nbsp;\n            {{ button.tag }}\n\t</button>\n\n    <!-- Modal for Credit Card form -->\n    <div class=\"modal fade\" id=\"creditCardModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n      <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n            <h4 class=\"modal-title\" id=\"myModalLabel\">Credit Card</h4>\n          </div>\n          <div class=\"modal-body\">\n    \t\t\t<div class=\"row\">\n                    <div class=\"col-md-12\">\n                        <form action=\"{{ url }}\" method=\"POST\" id=\"payment-form\">\n\t\t\t                <input type=\"hidden\" name=\"_token\" value=\"{{ token }}\">\n\n                            <alert :type=\"'danger'\" :message.sync=\"alertMessage\" :active.sync=\"alertOpen\"></alert>\n\n                            <fieldset class=\"form-group\">\n                        \t\t<label class=\"form-label semibold\">Card Number</label>\n                                <div class=\"row\">\n                                    <div class=\"col-md-6\">\n                        \t\t        <input type=\"text\" size=\"20\" data-stripe=\"number\" class=\"form-control\" placeholder=\"xxxx xxxx xxxx {{ (lastFour) ? lastFour: 'xxxx' }}\">\n                                    </div>\n                                </div>\n                        \t</fieldset>\n\n                            <fieldset class=\"form-group\">\n                        \t\t<label class=\"form-label semibold\">Expiration Date</label>\n                                <div class=\"row\">\n                                    <div class=\"col-md-3\">\n                                    \t<select class=\"form-control\" data-stripe=\"exp_month\">\n                                            <option value=\"01\">01 Janaury</option>\n                                            <option value=\"02\">02 February</option>\n                                            <option value=\"03\">03 March</option>\n                                            <option value=\"04\">04 April</option>\n                                            <option value=\"05\">05 May</option>\n                                            <option value=\"06\">06 June</option>\n                                            <option value=\"07\">07 July</option>\n                                            <option value=\"08\">08 August</option>\n                                            <option value=\"09\">09 September</option>\n                                            <option value=\"10\">10 October</option>\n                                            <option value=\"11\">11 November</option>\n                                            <option value=\"12\">12 December</option>\n                                    \t</select>\n                                    </div>\n                                    <div class=\"col-md-3\">\n                                    \t<select class=\"form-control\" data-stripe=\"exp_year\">\n                                            <option v-for=\"n in 20\" value=\"{{ date.getFullYear()+n }}\">{{ date.getFullYear()+n }}</option>\n                                    \t</select>\n                                    </div>\n                                </div>\n                        \t</fieldset>\n\n                            <fieldset class=\"form-group\">\n                        \t\t<label class=\"form-label semibold\">CVC Number</label>\n                                <div class=\"row\">\n                                    <div class=\"col-md-3\">\n                                \t    <input type=\"text\" size=\"4\" data-stripe=\"cvc\" class=\"form-control\" placeholder=\"CVC\">\n                                    </div>\n                                </div>\n                        \t\t<small class=\"text-muted\">The number on the back of the card.</small>\n                        \t</fieldset>\n                        </form>\n                    </div>\n                </div>\n          </div>\n          <div class=\"modal-footer\">\n            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\n            <button v-if=\"lastFour\" type=\"button\" class=\"btn btn-primary\" @click=\"submitCreditCard\">\n                Update Credit Card\n            </button>\n            <button v-else=\"\" type=\"button\" class=\"btn btn-success\" @click=\"submitCreditCard\">\n                <i class=\"glyphicon glyphicon-arrow-up\"></i>&nbsp;&nbsp;&nbsp;\n            \tUpgrade to Pro\n            </button>\n\n\n          </div>\n        </div>\n      </div>\n    </div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-3c764fc4", module.exports)
+  } else {
+    hotAPI.update("_v-3c764fc4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29499,7 +29605,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8c88fc1c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":166,"vue":180,"vue-hot-reload-api":177}],201:[function(require,module,exports){
+},{"spin":166,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29566,7 +29672,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":210,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],202:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":211,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29635,7 +29741,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"dropzone":82,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"dropzone":82,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29667,7 +29773,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],204:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],205:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30080,7 +30186,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":202,"./photoList.vue":212,"spin":166,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":203,"./photoList.vue":213,"spin":166,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30212,7 +30318,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":192,"./dropzone.vue":202,"./photoList.vue":212,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./alert.vue":192,"./dropzone.vue":203,"./photoList.vue":213,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -30333,7 +30439,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"jquery-locationpicker":85,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],207:[function(require,module,exports){
+},{"jquery-locationpicker":85,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30475,7 +30581,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30496,7 +30602,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30560,9 +30666,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":208,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"./notification.vue":209,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],211:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30841,7 +30947,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30892,7 +30998,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31023,7 +31129,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31042,18 +31148,24 @@ var _changePassword = require('./changePassword.vue');
 
 var _changePassword2 = _interopRequireDefault(_changePassword);
 
+var _billing = require('./billing.vue');
+
+var _billing2 = _interopRequireDefault(_billing);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+    props: ['billing'],
     components: {
         accountSettings: _accountSettings2.default,
         changeEmail: _changeEmail2.default,
-        changePassword: _changePassword2.default
+        changePassword: _changePassword2.default,
+        billing: _billing2.default
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings></account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                    <br>\n                    <br>\n                </div>\n            </div>\n        </div>\n\n        <!-- System Settings -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-2\">\n\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings></account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                    <br>\n                    <br>\n                </div>\n            </div>\n        </div>\n\n        <!-- System Settings -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-2\">\n\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <br>\n                <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                </billing>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31064,7 +31176,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./accountSettings.vue":190,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],215:[function(require,module,exports){
+},{"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31128,7 +31240,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":202,"./photoList.vue":212,"vue":180,"vue-hot-reload-api":177}],216:[function(require,module,exports){
+},{"./dropzone.vue":203,"./photoList.vue":213,"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31208,7 +31320,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":212,"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
+},{"./photoList.vue":213,"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31618,7 +31730,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":201,"./dropzone.vue":202,"./photoList.vue":212,"spin":166,"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":202,"./dropzone.vue":203,"./photoList.vue":213,"spin":166,"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31702,7 +31814,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],220:[function(require,module,exports){
 'use strict';
 
 var dateFormat = require('dateformat');
@@ -32519,67 +32631,7 @@ $(document).ready(function () {
 			billing: billing,
 			settings: settings
 		},
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			companyName: "",
-			website: "",
-			facebook: "",
-			twitter: "",
-			objectName: "",
-			objectLastName: "",
-			alertMessage: "Error",
-			alertOpen: false,
-			// billing
-			subscribed: isset('subscribed') ? back.subscribed : null,
-			plan: isset('plan') ? back.plan : null,
-			activeObjects: isset('activeObjects') ? back.activeObjects : null,
-			billableObjects: isset('billableObjects') ? back.billableObjects : null,
-			freeObjects: isset('freeObjects') ? back.freeObjects : null
-		},
-		methods: {
-			submitCreditCard: function submitCreditCard() {
-				var _this = this;
-
-				var $form = $('#payment-form');
-				var clickEvent = event;
-				var buttonTag = clickEvent.target.innerHTML;
-
-				// Disable the submit button to prevent repeated clicks:
-				clickEvent.target.disabled = true;
-				clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
-
-				new Spinner({
-					left: "90%",
-					radius: 5,
-					length: 4,
-					width: 1
-				}).spin(clickEvent.target);
-
-				// Request a token from Stripe:
-				Stripe.card.createToken($form, function (status, response) {
-					if (response.error) {
-						// Problem!
-
-						// Show the errors on the form:
-						_this.alertMessage = response.error.message;
-						_this.alertOpen = true;
-						clickEvent.target.disabled = false; // Re-enable submission
-						clickEvent.target.innerHTML = buttonTag;
-					} else {
-						// Token was created!
-
-						// Get the token ID:
-						var token = response.id;
-
-						// Insert the token ID into the form so it gets submitted to the server:
-						$form.append($('<input type="hidden" name="stripeToken">').val(token));
-
-						// Submit the form:
-						$form.get(0).submit();
-					}
-				});
-			}
-		}
+		directives: { FormToAjax: FormToAjax }
 	});
 
 	var serviceVue = new Vue({
@@ -32780,6 +32832,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/checkboxList.vue":196,"./components/chemical.vue":197,"./components/contract.vue":198,"./components/countries.vue":199,"./components/deleteButton.vue":200,"./components/dropdown.vue":201,"./components/email.vue":203,"./components/equipment.vue":204,"./components/finishWorkOrderButton.vue":205,"./components/missingServices.vue":207,"./components/notificationsWidget.vue":209,"./components/payments.vue":211,"./components/photoList.vue":212,"./components/routeTable.vue":213,"./components/settings.vue":214,"./components/workOrderPhotosEdit.vue":215,"./components/workOrderPhotosShow.vue":216,"./components/works.vue":217,"./directives/FormToAjax.vue":218,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,219]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/checkboxList.vue":196,"./components/chemical.vue":197,"./components/contract.vue":198,"./components/countries.vue":199,"./components/deleteButton.vue":201,"./components/dropdown.vue":202,"./components/email.vue":204,"./components/equipment.vue":205,"./components/finishWorkOrderButton.vue":206,"./components/missingServices.vue":208,"./components/notificationsWidget.vue":210,"./components/payments.vue":212,"./components/photoList.vue":213,"./components/routeTable.vue":214,"./components/settings.vue":215,"./components/workOrderPhotosEdit.vue":216,"./components/workOrderPhotosShow.vue":217,"./components/works.vue":218,"./directives/FormToAjax.vue":219,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,220]);
 
 //# sourceMappingURL=bundle.js.map

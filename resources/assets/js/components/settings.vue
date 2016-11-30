@@ -91,7 +91,12 @@
 
         <!-- Billing -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-4">
-
+            <div class="row">
+                <br>
+                <billing :subscribed="billing.subscribed" :last-four="billing.lastFour" :plan="billing.plan" :active-objects="billing.activeObjects"
+                            :billable-objects="billing.billableObjects" :free-objects="billing.freeObjects">
+                </billing>
+            </div>
         </div>
 
         <!-- Permissions -->
@@ -109,11 +114,15 @@ import accountSettings from './accountSettings.vue';
 import changeEmail from './changeEmail.vue';
 import changePassword from './changePassword.vue';
 
+import billing from './billing.vue';
+
 export default {
+    props: ['billing'],
     components: {
         accountSettings,
         changeEmail,
-        changePassword
+        changePassword,
+        billing
     }
 
 }

@@ -1,16 +1,17 @@
 <template>
 	<div class="col-md-12" v-if="subscribed">
         <h4 class="semibold">Payment method</h4>
-        <button type="button" class="btn btn-primary" data-toggle="modal"
-			data-target="#creditCardModal">
-			<i class="glyphicon glyphicon-credit-card"></i>&nbsp;&nbsp;&nbsp;
-			Update Credit Card
-		</button>
+        <credit-card :last-four="lastFour">
+        </credit-card>
         <hr>
 	</div>
 
+
+
     <div class="col-md-12">
         <h4 class="semibold">Subscription</h4>
+
+		<!-- Is on a pro subscription -->
         <div v-if="plan == 'pro'">
             <p>
                 Your account is on a <strong>Pro</strong>
@@ -42,27 +43,29 @@
             	</button>
             </div>
             <div v-else>
-                <button type="button" class="btn btn-success" data-toggle="modal"
-			            data-target="#creditCardModal">
-            		<i class="glyphicon glyphicon-arrow-up"></i>&nbsp;&nbsp;&nbsp;
-            	    Upgrade to Pro
-            	</button>
+                <credit-card :last-four="lastFour">
+                </credit-card>
             </div>
             <small class="text-muted">
                 You are not going to be changed if you dont go passed your {{ freeObjects }} free users.
             </small>
         </div>
+
     </div>
 </template>
 
 
 
 <script>
+import creditCard from './creditCard.vue';
 
 var Spinner = require("spin");
 
   export default {
-    props: ['subscribed', 'plan', 'activeObjects', 'billableObjects', 'freeObjects'],
+    props: ['subscribed', 'lastFour', 'plan', 'activeObjects', 'billableObjects', 'freeObjects'],
+	components:{
+		creditCard
+	},
     data () {
         return {
 
@@ -71,8 +74,6 @@ var Spinner = require("spin");
     methods: {
         downgradeSubscription(){
                 let vue = this;
-                // I need to check the that downgradeSubscriptionUrl is defined
-                let downgradeSubscriptionUrl = back.downgradeSubscriptionUrl;
                 swal({
                     title: "Are you sure?",
                     text: "Your technicians and supervisors will become inactive!",
@@ -85,7 +86,7 @@ var Spinner = require("spin");
                     showLoaderOnConfirm: true,
                 }, function(isConfirm){
                         if (isConfirm) {
-                            vue.$http.post(downgradeSubscriptionUrl).then((response) => {
+                            vue.$http.post(Laravel.url+'settings/downgradeSubscription').then((response) => {
                                 vue.plan = 'free';
 								vue.activeObjects = 0;
                                 swal("Downgraded to free", "You account is set to free.", "success");
@@ -102,8 +103,6 @@ var Spinner = require("spin");
             upgradeSubscription(){
                 let vue = this;
                 let clickEvent = event;
-                // I need to check the that upgradeSubscriptionUrl is defined
-                let upgradeSubscriptionUrl = back.upgradeSubscriptionUrl;
                 let buttonTag = clickEvent.target.innerHTML;
 
                 // Disable the submit button to prevent repeated clicks:
@@ -116,7 +115,7 @@ var Spinner = require("spin");
                     width: 1,
                 }).spin(clickEvent.target);
 
-                vue.$http.post(upgradeSubscriptionUrl).then((response) => {
+                vue.$http.post(Laravel.url+'settings/upgradeSubscription').then((response) => {
                     clickEvent.target.disabled = false;
                     this.plan = 'pro';
                     swal("Upgrated to Pro", "You account is set to pro.", "success");

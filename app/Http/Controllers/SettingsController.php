@@ -47,24 +47,22 @@ class SettingsController extends PageController
         $admin = $user->admin();
         $setting = Setting::class;
 
-
-        JavaScript::put([
-            'downgradeSubscriptionUrl' => url('settings/downgradeSubscription'),
-            'upgradeSubscriptionUrl' => url('settings/upgradeSubscription'),
+        $billing = (object)[
             'subscribed' => $admin->subscribed('main'),
+            'lastFour' => $admin->card_last_four,
             'plan' => ($admin->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
             'activeObjects' => $admin->objectActiveCount(),
             'billableObjects' => $admin->billableObjects(),
             'freeObjects' => $admin->free_objects,
-        ]);
+        ];
 
         $timezones = $this->getTimezone();
-        $url = (object) array(
+        $url = (object)[
             'permissions' => url('settings/permissions'),
             'email' => url('settings/email'),
-        );
+        ];
 
-        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url'));
+        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url', 'billing'));
     }
 
     public function account(Request $request)
@@ -299,7 +297,7 @@ class SettingsController extends PageController
         if ($admin->subscribedToPlan('pro', 'main')) {
             $result = $admin->subscription('main')->swap('free');
             if($result){
-                return (string) $admin->setBillibleUsersAsInactive();    
+                return (string) $admin->setBillibleUsersAsInactive();
             }
         }elseif($admin->subscribedToPlan('free', 'main')){
             return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);

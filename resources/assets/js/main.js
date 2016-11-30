@@ -3,7 +3,6 @@ var dateFormat 		= require('dateformat');
 // Vue imports
 var Vue 			= require('vue');
 
-
 var Spinner         = require("spin");
 var Gmaps           = require("gmaps.core");
 require("gmaps.markers");
@@ -874,64 +873,6 @@ function isset(strVariableName) {
             settings,
         },
         directives: { FormToAjax },
-        data:{
-            companyName: "",
-            website: "",
-            facebook: "",
-            twitter: "",
-            objectName: "",
-            objectLastName: "",
-            alertMessage: "Error",
-            alertOpen: false,
-            // billing
-            subscribed: isset('subscribed') ? back.subscribed : null,
-            plan: isset('plan') ? back.plan : null,
-            activeObjects: isset('activeObjects') ? back.activeObjects : null,
-            billableObjects: isset('billableObjects') ? back.billableObjects : null,
-            freeObjects: isset('freeObjects') ? back.freeObjects : null,
-        },
-        methods:{
-            submitCreditCard(){
-                let $form = $('#payment-form');
-                let clickEvent = event;
-                let buttonTag = clickEvent.target.innerHTML;
-
-                // Disable the submit button to prevent repeated clicks:
-                clickEvent.target.disabled = true;
-                clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Checking Credit Card';
-
-                new Spinner({
-                    left: "90%",
-                    radius: 5,
-                    length: 4,
-                    width: 1,
-                }).spin(clickEvent.target);
-
-                // Request a token from Stripe:
-                Stripe.card.createToken($form, (status, response) => {
-                    if (response.error) { // Problem!
-
-                        // Show the errors on the form:
-                        this.alertMessage = response.error.message;
-                        this.alertOpen = true;
-                        clickEvent.target.disabled = false; // Re-enable submission
-                        clickEvent.target.innerHTML = buttonTag;
-
-                    } else { // Token was created!
-
-                        // Get the token ID:
-                        var token = response.id;
-
-                        // Insert the token ID into the form so it gets submitted to the server:
-                        $form.append($('<input type="hidden" name="stripeToken">').val(token));
-
-                        // Submit the form:
-                        $form.get(0).submit();
-                    }
-                });
-            },
-
-        },
     });
 
     let serviceVue = new Vue({
