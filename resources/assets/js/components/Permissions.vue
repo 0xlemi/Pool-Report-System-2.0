@@ -1,16 +1,21 @@
 <template>
 
-  <checkbox-list :header="'Reports'" :data="permission_reports" :url="url"></checkbox-list>
-  <checkbox-list :header="'Services'" :data="permission_services" :url="url"></checkbox-list>
-  <checkbox-list :header="'Clients'" :data="permission_clients" :url="url"></checkbox-list>
-  <checkbox-list :header="'Supervisors'" :data="permission_supervisors" :url="url"></checkbox-list>
-  <checkbox-list :header="'Technicians'" :data="permission_technicians" :url="url"></checkbox-list>
+  <checkbox-list :header="'Reports'" :data="permission_reports"></checkbox-list>
+  <checkbox-list :header="'Services'" :data="permission_services"></checkbox-list>
+  <checkbox-list :header="'Clients'" :data="permission_clients"></checkbox-list>
+  <checkbox-list :header="'Supervisors'" :data="permission_supervisors"></checkbox-list>
+  <checkbox-list :header="'Technicians'" :data="permission_technicians"></checkbox-list>
 
 </template>
 
 <script>
+import checkboxList from './checkboxList.vue';
+
   export default {
-    props: ['admin', 'permissionType', 'url'],
+    props: ['admin', 'permissionType'],
+    components: {
+        checkboxList    
+    },
     data () {
       return {
         permission_reports: [

@@ -28351,18 +28351,28 @@ var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: r
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
+
+var _checkboxList = require('./checkboxList.vue');
+
+var _checkboxList2 = _interopRequireDefault(_checkboxList);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 exports.default = {
-  props: ['admin', 'permissionType', 'url'],
-  data: function data() {
-    return {
-      permission_reports: [{ id: this.permissionType + "_report_index", name: "View List Reports", checked: this.admin[this.permissionType + '_report_index'] }, { id: this.permissionType + "_report_create", name: "Create New Report", checked: this.admin[this.permissionType + '_report_create'] }, { id: this.permissionType + "_report_show", name: "Show Report Details", checked: this.admin[this.permissionType + '_report_show'] }, { id: this.permissionType + "_report_edit", name: "Edit Reports", checked: this.admin[this.permissionType + '_report_edit'] }, { id: this.permissionType + "_report_addPhoto", name: "Add Photos from Reports", checked: this.admin[this.permissionType + '_report_addPhoto'] }, { id: this.permissionType + "_report_removePhoto", name: "Remove Photos from Reports", checked: this.admin[this.permissionType + '_report_removePhoto'] }, { id: this.permissionType + "_report_destroy", name: "Delete Report", checked: this.admin[this.permissionType + '_report_destroy'] }], permission_services: [{ id: this.permissionType + "_service_index", name: "View List Services", checked: this.admin[this.permissionType + '_service_index'] }, { id: this.permissionType + "_service_create", name: "Create New Service", checked: this.admin[this.permissionType + '_service_create'] }, { id: this.permissionType + "_service_show", name: "Show Service Details", checked: this.admin[this.permissionType + '_service_show'] }, { id: this.permissionType + "_service_edit", name: "Edit Services", checked: this.admin[this.permissionType + '_service_edit'] }, { id: this.permissionType + "_service_destroy", name: "Delete Service", checked: this.admin[this.permissionType + '_service_destroy'] }], permission_clients: [{ id: this.permissionType + "_client_index", name: "View List Clients", checked: this.admin[this.permissionType + '_client_index'] }, { id: this.permissionType + "_client_create", name: "Create New Client", checked: this.admin[this.permissionType + '_client_create'] }, { id: this.permissionType + "_client_show", name: "Show Client Details", checked: this.admin[this.permissionType + '_client_show'] }, { id: this.permissionType + "_client_edit", name: "Edit Clients", checked: this.admin[this.permissionType + '_client_edit'] }, { id: this.permissionType + "_client_destroy", name: "Delete Client", checked: this.admin[this.permissionType + '_client_destroy'] }], permission_supervisors: [{ id: this.permissionType + "_supervisor_index", name: "View List Supervisors", checked: this.admin[this.permissionType + '_supervisor_index'] }, { id: this.permissionType + "_supervisor_create", name: "Create New Supervisor", checked: this.admin[this.permissionType + '_supervisor_create'] }, { id: this.permissionType + "_supervisor_show", name: "Show Supervisor Details", checked: this.admin[this.permissionType + '_supervisor_show'] }, { id: this.permissionType + "_supervisor_edit", name: "Edit Supervisors", checked: this.admin[this.permissionType + '_supervisor_edit'] }, { id: this.permissionType + "_supervisor_destroy", name: "Delete Supervisor", checked: this.admin[this.permissionType + '_supervisor_destroy'] }], permission_technicians: [{ id: this.permissionType + "_technician_index", name: "View List Technicians", checked: this.admin[this.permissionType + '_technician_index'] }, { id: this.permissionType + "_technician_create", name: "Create New Technician", checked: this.admin[this.permissionType + '_technician_create'] }, { id: this.permissionType + "_technician_show", name: "Show Technician Details", checked: this.admin[this.permissionType + '_technician_show'] }, { id: this.permissionType + "_technician_edit", name: "Edit Technicians", checked: this.admin[this.permissionType + '_technician_edit'] }, { id: this.permissionType + "_technician_destroy", name: "Delete Technician", checked: this.admin[this.permissionType + '_technician_destroy'] }]
-    };
-  }
+    props: ['admin', 'permissionType'],
+    components: {
+        checkboxList: _checkboxList2.default
+    },
+    data: function data() {
+        return {
+            permission_reports: [{ id: this.permissionType + "_report_index", name: "View List Reports", checked: this.admin[this.permissionType + '_report_index'] }, { id: this.permissionType + "_report_create", name: "Create New Report", checked: this.admin[this.permissionType + '_report_create'] }, { id: this.permissionType + "_report_show", name: "Show Report Details", checked: this.admin[this.permissionType + '_report_show'] }, { id: this.permissionType + "_report_edit", name: "Edit Reports", checked: this.admin[this.permissionType + '_report_edit'] }, { id: this.permissionType + "_report_addPhoto", name: "Add Photos from Reports", checked: this.admin[this.permissionType + '_report_addPhoto'] }, { id: this.permissionType + "_report_removePhoto", name: "Remove Photos from Reports", checked: this.admin[this.permissionType + '_report_removePhoto'] }, { id: this.permissionType + "_report_destroy", name: "Delete Report", checked: this.admin[this.permissionType + '_report_destroy'] }], permission_services: [{ id: this.permissionType + "_service_index", name: "View List Services", checked: this.admin[this.permissionType + '_service_index'] }, { id: this.permissionType + "_service_create", name: "Create New Service", checked: this.admin[this.permissionType + '_service_create'] }, { id: this.permissionType + "_service_show", name: "Show Service Details", checked: this.admin[this.permissionType + '_service_show'] }, { id: this.permissionType + "_service_edit", name: "Edit Services", checked: this.admin[this.permissionType + '_service_edit'] }, { id: this.permissionType + "_service_destroy", name: "Delete Service", checked: this.admin[this.permissionType + '_service_destroy'] }], permission_clients: [{ id: this.permissionType + "_client_index", name: "View List Clients", checked: this.admin[this.permissionType + '_client_index'] }, { id: this.permissionType + "_client_create", name: "Create New Client", checked: this.admin[this.permissionType + '_client_create'] }, { id: this.permissionType + "_client_show", name: "Show Client Details", checked: this.admin[this.permissionType + '_client_show'] }, { id: this.permissionType + "_client_edit", name: "Edit Clients", checked: this.admin[this.permissionType + '_client_edit'] }, { id: this.permissionType + "_client_destroy", name: "Delete Client", checked: this.admin[this.permissionType + '_client_destroy'] }], permission_supervisors: [{ id: this.permissionType + "_supervisor_index", name: "View List Supervisors", checked: this.admin[this.permissionType + '_supervisor_index'] }, { id: this.permissionType + "_supervisor_create", name: "Create New Supervisor", checked: this.admin[this.permissionType + '_supervisor_create'] }, { id: this.permissionType + "_supervisor_show", name: "Show Supervisor Details", checked: this.admin[this.permissionType + '_supervisor_show'] }, { id: this.permissionType + "_supervisor_edit", name: "Edit Supervisors", checked: this.admin[this.permissionType + '_supervisor_edit'] }, { id: this.permissionType + "_supervisor_destroy", name: "Delete Supervisor", checked: this.admin[this.permissionType + '_supervisor_destroy'] }], permission_technicians: [{ id: this.permissionType + "_technician_index", name: "View List Technicians", checked: this.admin[this.permissionType + '_technician_index'] }, { id: this.permissionType + "_technician_create", name: "Create New Technician", checked: this.admin[this.permissionType + '_technician_create'] }, { id: this.permissionType + "_technician_show", name: "Show Technician Details", checked: this.admin[this.permissionType + '_technician_show'] }, { id: this.permissionType + "_technician_edit", name: "Edit Technicians", checked: this.admin[this.permissionType + '_technician_edit'] }, { id: this.permissionType + "_technician_destroy", name: "Delete Technician", checked: this.admin[this.permissionType + '_technician_destroy'] }]
+        };
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :header=\"'Reports'\" :data=\"permission_reports\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Services'\" :data=\"permission_services\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Clients'\" :data=\"permission_clients\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Supervisors'\" :data=\"permission_supervisors\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Technicians'\" :data=\"permission_technicians\" :url=\"url\" _v-22ce5c3f=\"\"></checkbox-list>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<checkbox-list :header=\"'Reports'\" :data=\"permission_reports\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Services'\" :data=\"permission_services\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Clients'\" :data=\"permission_clients\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Supervisors'\" :data=\"permission_supervisors\" _v-22ce5c3f=\"\"></checkbox-list>\n<checkbox-list :header=\"'Technicians'\" :data=\"permission_technicians\" _v-22ce5c3f=\"\"></checkbox-list>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28377,7 +28387,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],190:[function(require,module,exports){
+},{"./checkboxList.vue":196,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],190:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28614,48 +28624,22 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-
-var Vue = require('vue');
-
-exports.default = Vue.component('checkbox-list', {
-    props: ['header', 'data', 'url'],
-
-    data: function data() {
-        return {
-            debug: {}
-        };
-    },
-
-
+exports.default = {
+    props: ['header', 'data'],
     methods: {
         sendRequest: function sendRequest(permission) {
-            // HTTP Request or what ever to update the permission
-            $.ajax({
-                url: this.url,
-                type: 'PATCH',
-                dataType: 'json',
-                data: {
-                    'id': permission.id,
-                    'checked': !permission.checked ? true : false,
-                    'name': permission.name
-                },
-                complete: function complete(xhr, textStatus) {
-                    //called when complete
-                    // console.log('complete');
-                },
-                success: function success(data, textStatus, xhr) {
-                    //called when successful
-                    // console.log('success');
-                },
-                error: function error(xhr, textStatus, errorThrown) {
-                    //called when there is an error
-                    // console.log('error');
-                }
+            this.$http.patch(Laravel.url + 'settings/permissions', {
+                'id': permission.id,
+                'checked': !permission.checked ? true : false,
+                'name': permission.name
+            }).then(function (response) {
+                // if success do nothing
+            }, function (response) {
+                // throw error
             });
         }
     }
-});
+};
 if (module.exports.__esModule) module.exports = module.exports.default
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<header class=\"box-typical-header-sm\" v-if=\"header\">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:\n</header>\n\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-sm-1\">\n    </div>\n    <div class=\"col-sm-11\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;permission.id }}\" v-model=\"permission.checked\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;permission.id }}\">{{&nbsp;permission.name }}</label>\n\t\t</div>\n    </div>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
@@ -31152,20 +31136,25 @@ var _billing = require('./billing.vue');
 
 var _billing2 = _interopRequireDefault(_billing);
 
+var _Permissions = require('./Permissions.vue');
+
+var _Permissions2 = _interopRequireDefault(_Permissions);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['billing'],
+    props: ['billing', 'permissions'],
     components: {
         accountSettings: _accountSettings2.default,
         changeEmail: _changeEmail2.default,
         changePassword: _changePassword2.default,
-        billing: _billing2.default
+        billing: _billing2.default,
+        Permissions: _Permissions2.default
     }
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings></account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                    <br>\n                    <br>\n                </div>\n            </div>\n        </div>\n\n        <!-- System Settings -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-2\">\n\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <br>\n                <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                </billing>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings></account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                    <br>\n                    <br>\n                </div>\n            </div>\n        </div>\n\n        <!-- System Settings -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-2\">\n\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <br>\n                <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                </billing>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div class=\"row\">\n                <header class=\"box-typical-header-sm\">Supervisor Permissions:</header>\n                <permissions :admin=\"permissions.admin\" :permission-type=\"'sup'\"></permissions>\n\n                <header class=\"box-typical-header-sm\">Technician Permissions:</header>\n                <permissions :admin=\"permissions.admin\" :permission-type=\"'tech'\"></permissions>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31176,7 +31165,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],216:[function(require,module,exports){
+},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32560,7 +32549,6 @@ $(document).ready(function () {
 	var addressFields = require('./components/addressFields.vue');
 	var missingServices = require('./components/missingServices.vue');
 	var settings = require('./components/settings.vue');
-	require('./components/checkboxList.vue');
 
 	var mainVue = new Vue({
 		el: '.site-header',
@@ -32832,6 +32820,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/checkboxList.vue":196,"./components/chemical.vue":197,"./components/contract.vue":198,"./components/countries.vue":199,"./components/deleteButton.vue":201,"./components/dropdown.vue":202,"./components/email.vue":204,"./components/equipment.vue":205,"./components/finishWorkOrderButton.vue":206,"./components/missingServices.vue":208,"./components/notificationsWidget.vue":210,"./components/payments.vue":212,"./components/photoList.vue":213,"./components/routeTable.vue":214,"./components/settings.vue":215,"./components/workOrderPhotosEdit.vue":216,"./components/workOrderPhotosShow.vue":217,"./components/works.vue":218,"./directives/FormToAjax.vue":219,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,220]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/contract.vue":198,"./components/countries.vue":199,"./components/deleteButton.vue":201,"./components/dropdown.vue":202,"./components/email.vue":204,"./components/equipment.vue":205,"./components/finishWorkOrderButton.vue":206,"./components/missingServices.vue":208,"./components/notificationsWidget.vue":210,"./components/payments.vue":212,"./components/photoList.vue":213,"./components/routeTable.vue":214,"./components/settings.vue":215,"./components/workOrderPhotosEdit.vue":216,"./components/workOrderPhotosShow.vue":217,"./components/works.vue":218,"./directives/FormToAjax.vue":219,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,220]);
 
 //# sourceMappingURL=bundle.js.map

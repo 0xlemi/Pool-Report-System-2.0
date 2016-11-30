@@ -19,44 +19,20 @@
 </template>
 
 <script>
-  var Vue = require('vue');
-
-  export default Vue.component('checkbox-list', {
-    props: ['header', 'data', 'url'],
-
-    data() {
-      return {
-        debug: {}
-      }
-    },
-
+export default{
+    props: ['header', 'data'],
     methods: {
-      sendRequest(permission) {
-        // HTTP Request or what ever to update the permission
-        $.ajax({
-            url:      this.url,
-            type:     'PATCH',
-            dataType: 'json',
-            data: {
-                    'id': permission.id,
-                    'checked': (!permission.checked) ? true : false,
-                    'name': permission.name,
-                },
-            complete: function(xhr, textStatus) {
-                //called when complete
-                // console.log('complete');
-            },
-            success: function(data, textStatus, xhr) {
-                //called when successful
-                // console.log('success');
-            },
-            error: function(xhr, textStatus, errorThrown) {
-                //called when there is an error
-                // console.log('error');
-            }
-        });
-      }
+        sendRequest(permission){
+            this.$http.patch(Laravel.url+'settings/permissions', {
+                'id': permission.id,
+                'checked': (!permission.checked) ? true : false,
+                'name': permission.name,
+            }).then((response) => {
+                // if success do nothing
+            }, (response) => {
+                // throw error
+            });
+        }
     }
-  })
-
+}
 </script>

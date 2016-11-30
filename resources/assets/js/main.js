@@ -800,7 +800,6 @@ function isset(strVariableName) {
     let addressFields = require('./components/addressFields.vue');
     let missingServices = require('./components/missingServices.vue');
     let settings = require('./components/settings.vue');
-    require('./components/checkboxList.vue');
 
 
     let mainVue = new Vue({

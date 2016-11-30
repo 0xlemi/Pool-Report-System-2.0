@@ -101,7 +101,13 @@
 
         <!-- Permissions -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
+            <div class="row">
+                <header class="box-typical-header-sm">Supervisor Permissions:</header>
+                <permissions :admin="permissions.admin" :permission-type="'sup'"></permissions>
 
+                <header class="box-typical-header-sm">Technician Permissions:</header>
+                <permissions :admin="permissions.admin" :permission-type="'tech'"></permissions>
+            </div>
         </div>
 
     </div><!--.tab-content-->
@@ -115,14 +121,16 @@ import changeEmail from './changeEmail.vue';
 import changePassword from './changePassword.vue';
 
 import billing from './billing.vue';
+import Permissions from './Permissions.vue';
 
 export default {
-    props: ['billing'],
+    props: ['billing', 'permissions'],
     components: {
         accountSettings,
         changeEmail,
         changePassword,
-        billing
+        billing,
+        Permissions
     }
 
 }

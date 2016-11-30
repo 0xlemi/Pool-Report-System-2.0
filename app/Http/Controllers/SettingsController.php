@@ -55,14 +55,16 @@ class SettingsController extends PageController
             'billableObjects' => $admin->billableObjects(),
             'freeObjects' => $admin->free_objects,
         ];
+        $permissions = (object)[
+            'admin' => $admin,
+        ];
 
         $timezones = $this->getTimezone();
         $url = (object)[
-            'permissions' => url('settings/permissions'),
             'email' => url('settings/email'),
         ];
 
-        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url', 'billing'));
+        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url', 'billing', 'permissions'));
     }
 
     public function account(Request $request)
