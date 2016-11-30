@@ -73,40 +73,50 @@
                 <div class="col-md-12">
                     <br>
                     <change-password></change-password>
-                    <br>
-                    <br>
                 </div>
             </div>
         </div>
 
-        <!-- System Settings -->
-        <div role="tabpanel" class="tab-pane fade in active" id="tabs-1-tab-2">
-
+        <!-- Costumization -->
+        <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-2">
+            Costumization
         </div>
 
         <!-- Notifications -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
-
+            notifications
         </div>
 
         <!-- Billing -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-4">
             <div class="row">
-                <br>
-                <billing :subscribed="billing.subscribed" :last-four="billing.lastFour" :plan="billing.plan" :active-objects="billing.activeObjects"
-                            :billable-objects="billing.billableObjects" :free-objects="billing.freeObjects">
-                </billing>
+                <div class="col-md-12">
+                    <br>
+                    <billing :subscribed="billing.subscribed" :last-four="billing.lastFour" :plan="billing.plan" :active-objects="billing.activeObjects"
+                                :billable-objects="billing.billableObjects" :free-objects="billing.freeObjects">
+                    </billing>
+                </div>
             </div>
         </div>
 
         <!-- Permissions -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
             <div class="row">
-                <header class="box-typical-header-sm">Supervisor Permissions:</header>
-                <permissions :admin="permissions.admin" :permission-type="'sup'"></permissions>
-
-                <header class="box-typical-header-sm">Technician Permissions:</header>
-                <permissions :admin="permissions.admin" :permission-type="'tech'"></permissions>
+                <div class="col-md-12">
+                    <br>
+                    <div class="form-group">
+                        <permissions :admin="permissions.admin"
+                                    :button="{ tag: 'Supervisor Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}"
+                                    permission-type="sup" tabs-number="2">
+                        </permissions>
+                    </div>
+                    <div class="form-group">
+                        <permissions :admin="permissions.admin"
+                                    :button="{ tag: 'Technicians Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}"
+                                    permission-type="tech" tabs-number="3">
+                        </permissions>
+                    </div>
+                </div>
             </div>
         </div>
 

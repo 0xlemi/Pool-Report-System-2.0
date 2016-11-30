@@ -1,26 +1,17 @@
 <template>
-
-    <header class="box-typical-header-sm" v-if="header">
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ header }}:
-    </header>
-
-    <div class="form-group row" v-for="permission in data">
-        <div class="col-sm-1">
-        </div>
-        <div class="col-sm-11">
-            <div class="checkbox-toggle">
-    			<input type="checkbox" id="{{ permission.id }}" v-model="permission.checked" @click="sendRequest(permission)"/>
-    			<label for="{{ permission.id }}">{{ permission.name }}</label>
-    		</div>
-        </div>
+<div class="form-group row" v-for="permission in data">
+    <div class="col-md-12">
+        <div class="checkbox-toggle">
+			<input type="checkbox" id="{{ permission.id }}" v-model="permission.checked" @click="sendRequest(permission)"/>
+			<label for="{{ permission.id }}">{{ permission.name }}</label>
+		</div>
     </div>
-
-
+</div>
 </template>
 
 <script>
 export default{
-    props: ['header', 'data'],
+    props: ['data'],
     methods: {
         sendRequest(permission){
             this.$http.patch(Laravel.url+'settings/permissions', {
