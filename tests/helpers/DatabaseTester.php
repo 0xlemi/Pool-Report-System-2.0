@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 /**
  * parent class for testnig models
  */
-abstract class ModelTester extends TestCase
+abstract class DatabaseTester extends TestCase
 {
     use TesterTrait;
     use FactoryTrait;

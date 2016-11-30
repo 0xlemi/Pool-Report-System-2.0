@@ -9,7 +9,7 @@ use App\Client;
 use App\Image;
 use App\Service;
 
-class ClientsTest extends ModelTester
+class ClientsTest extends DatabaseTester
 {
 
     /** @test */

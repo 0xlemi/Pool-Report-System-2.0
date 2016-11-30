@@ -8,7 +8,7 @@ use App\Technician;
 use App\User;
 use App\Image;
 
-class TechnicianTest extends ModelTester
+class TechnicianTest extends DatabaseTester
 {
 
     /** @test */

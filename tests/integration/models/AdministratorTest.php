@@ -11,7 +11,7 @@ use App\Image;
 
 use Carbon\Carbon;
 
-class AdministratorTest extends ModelTester
+class AdministratorTest extends DatabaseTester
 {
     /** @test */
     public function it_gets_user()

@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\ServiceContract;
 
-class ServiceContractTest extends ModelTester
+class ServiceContractTest extends DatabaseTester
 {
 
     /** @test */

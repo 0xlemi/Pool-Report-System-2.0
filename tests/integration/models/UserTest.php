@@ -10,7 +10,7 @@ use App\User;
 use App\Supervisor;
 use App\Technician;
 
-class UserTest extends ModelTester
+class UserTest extends DatabaseTester
 {
 
     /** @test */

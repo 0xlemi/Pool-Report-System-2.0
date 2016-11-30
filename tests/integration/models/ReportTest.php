@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Image;
 
-class ReportTest extends ModelTester
+class ReportTest extends DatabaseTester
 {
 
     /** @test */

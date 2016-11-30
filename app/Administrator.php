@@ -318,6 +318,11 @@ class Administrator extends Model
                         $this->saltTags());
     }
 
+    public function permissions()
+    {
+        return new Permissions($this);
+    }
+
 
     //******** MISCELLANEOUS ********
 

@@ -24,12 +24,12 @@ trait FactoryTrait
 
     public function createAdministrator()
     {
-        $admin = factory(Administrator::class)->create();
+        $adminId = factory(Administrator::class)->create()->id;
         $user = factory(User::class)->create([
-            'userable_id' => $admin->id,
+            'userable_id' => $adminId,
             'userable_type' => 'App\Administrator',
         ]);
-        return $admin;
+        return Administrator::find($adminId);
     }
 
     /**

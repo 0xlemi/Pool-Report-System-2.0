@@ -9,7 +9,7 @@ use App\Supervisor;
 use App\User;
 use App\Image;
 
-class SupervisorTest extends ModelTester
+class SupervisorTest extends DatabaseTester
 {
 
     /** @test */

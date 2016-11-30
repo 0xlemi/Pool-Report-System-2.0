@@ -9,7 +9,7 @@ use App\Service;
 use App\ServiceContract;
 use Carbon\Carbon;
 
-class ServiceTest extends ModelTester
+class ServiceTest extends DatabaseTester
 {
 
     /** @test */
