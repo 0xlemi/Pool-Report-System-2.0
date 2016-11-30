@@ -64,11 +64,7 @@ class TechnicianPolicy
                 return $api_user->userable()->admin()->sup_technician_create;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_technician_create;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_technician_create;
-            }
+            return false;    
         }
         return false;
     }
@@ -106,11 +102,7 @@ class TechnicianPolicy
                 return $api_user->userable()->admin()->sup_technician_edit;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_technician_edit;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_technician_edit;
-            }
+            return false;
         }
         return false;
     }
@@ -127,11 +119,7 @@ class TechnicianPolicy
                 return $api_user->userable()->admin()->sup_technician_destroy;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_technician_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_technician_destroy;
-            }
+            return false;
         }
         return false;
     }

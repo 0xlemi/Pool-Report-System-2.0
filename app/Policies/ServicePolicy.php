@@ -126,11 +126,7 @@ class ServicePolicy
                 return $api_user->userable()->admin()->sup_service_destroy;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_service_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_service_destroy;
-            }
+            return false;   
         }
         return false;
     }

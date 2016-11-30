@@ -64,11 +64,7 @@ class SupervisorPolicy
                 return $api_user->userable()->admin()->sup_supervisor_create;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_supervisor_create;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_supervisor_create;
-            }
+            return false;
         }
         return false;
     }
@@ -106,11 +102,7 @@ class SupervisorPolicy
                 return $api_user->userable()->admin()->sup_supervisor_edit;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_supervisor_edit;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_supervisor_edit;
-            }
+            return false;
         }
         return false;
     }
@@ -127,11 +119,7 @@ class SupervisorPolicy
                 return $api_user->userable()->admin()->sup_supervisor_destroy;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_supervisor_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_supervisor_destroy;
-            }
+            return false;
         }
         return false;
     }

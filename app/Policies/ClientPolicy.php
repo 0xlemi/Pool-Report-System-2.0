@@ -65,11 +65,7 @@ class ClientPolicy
                 return $api_user->userable()->admin()->sup_client_create;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_client_create;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_client_create;
-            }
+            return false;
         }
         return false;
     }
@@ -109,11 +105,7 @@ class ClientPolicy
                 return $api_user->userable()->admin()->sup_client_edit;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_client_edit;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_client_edit;
-            }
+            return false;
         }
         return false;
     }
@@ -131,11 +123,7 @@ class ClientPolicy
                 return $api_user->userable()->admin()->sup_client_destroy;
             }
         }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_client_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_client_destroy;
-            }
+            return false;
         }
         return false;
     }

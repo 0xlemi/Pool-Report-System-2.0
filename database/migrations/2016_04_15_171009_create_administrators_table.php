@@ -95,7 +95,8 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('sup_client_show')->default(1);
                 $table->boolean('sup_client_edit')->default(1);
                 $table->boolean('sup_client_destroy')->default(1);
-                $table->boolean('tech_client_index')->default(1);
+                $table->boolean('tech_client_index')->default(0);
+                $table->boolean('tech_client_show')->default(0);
                 // Supervisors
                 $table->boolean('sup_supervisor_index')->default(1);
                 $table->boolean('sup_supervisor_create')->default(1);
