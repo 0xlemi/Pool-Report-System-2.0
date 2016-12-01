@@ -29,7 +29,7 @@
                     			</li>
                     			<li class="nav-item">
                     				<a class="nav-link" href="#tabs-{{ tabsNumber }}-tab-2" role="tab" data-toggle="tab">
-                    					Orders
+                    					Work Orders
                     				</a>
                     			</li>
                     			<li class="nav-item">
