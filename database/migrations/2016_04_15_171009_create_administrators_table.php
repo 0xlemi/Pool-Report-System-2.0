@@ -64,6 +64,7 @@ class CreateAdministratorsTable extends Migration
                 $table->string('card_last_four')->nullable();
                 $table->timestamp('trial_ends_at')->nullable();
             // Permissions
+
                 // Report
                 $table->boolean('sup_report_index')->default(1);
                 $table->boolean('sup_report_create')->default(1);
@@ -80,6 +81,41 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_report_addPhoto')->default(0);
                 $table->boolean('tech_report_removePhoto')->default(0);
                 $table->boolean('tech_report_destroy')->default(0);
+
+                // Work Orders
+                $table->boolean('sup_workorder_index')->default(1);
+                $table->boolean('sup_workorder_create')->default(1);
+                $table->boolean('sup_workorder_show')->default(1);
+                $table->boolean('sup_workorder_edit')->default(1);
+                $table->boolean('sup_workorder_finish')->default(1);
+                $table->boolean('tech_workorder_addPhoto')->default(1);
+                $table->boolean('tech_workorder_removePhoto')->default(1);
+                $table->boolean('sup_workorder_destroy')->default(1);
+
+                $table->boolean('tech_workorder_index')->default(1);
+                $table->boolean('tech_workorder_create')->default(1);
+                $table->boolean('tech_workorder_show')->default(1);
+                $table->boolean('tech_workorder_edit')->default(0);
+                $table->boolean('tech_workorder_finish')->default(1);
+                $table->boolean('tech_workorder_addPhoto')->default(0);
+                $table->boolean('tech_workorder_removePhoto')->default(0);
+                    // Works
+                    $table->boolean('sup_work_index')->default(1);
+                    $table->boolean('sup_work_create')->default(1);
+                    $table->boolean('sup_work_show')->default(1);
+                    $table->boolean('sup_work_edit')->default(1);
+                    $table->boolean('sup_work_addPhoto')->default(1);
+                    $table->boolean('sup_work_removePhoto')->default(1);
+                    $table->boolean('sup_work_destroy')->default(1);
+
+                    $table->boolean('tech_work_index')->default(1);
+                    $table->boolean('tech_work_create')->default(1);
+                    $table->boolean('tech_work_show')->default(1);
+                    $table->boolean('tech_work_edit')->default(0);
+                    $table->boolean('tech_work_addPhoto')->default(1);
+                    $table->boolean('tech_work_removePhoto')->default(0);
+                    $table->boolean('tech_work_destroy')->default(0);
+
                 // Services
                 $table->boolean('sup_service_index')->default(1);
                 $table->boolean('sup_service_create')->default(1);
@@ -91,6 +127,49 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_service_create')->default(0);
                 $table->boolean('tech_service_show')->default(1);
                 $table->boolean('tech_service_edit')->default(0);
+                    // Contract
+                    $table->boolean('sup_contract_create')->default(1);
+                    $table->boolean('sup_contract_show')->default(1);
+                    $table->boolean('sup_contract_edit')->default(1);
+                    $table->boolean('sup_contract_deactivate')->default(1);
+                    $table->boolean('sup_contract_destroy')->default(1);
+
+                    $table->boolean('tech_contract_create')->default(0);
+                    $table->boolean('tech_contract_show')->default(0);
+                    $table->boolean('tech_contract_edit')->default(0);
+                    $table->boolean('tech_contract_deactivate')->default(0);
+                    $table->boolean('tech_contract_destroy')->default(0);
+
+                    // Chemicals
+                    $table->boolean('sup_chemical_index')->default(1);
+                    $table->boolean('sup_chemical_create')->default(1);
+                    $table->boolean('sup_chemical_show')->default(1);
+                    $table->boolean('sup_chemical_edit')->default(1);
+                    $table->boolean('sup_chemical_destroy')->default(1);
+
+                    $table->boolean('tech_chemical_index')->default(1);
+                    $table->boolean('tech_chemical_create')->default(1);
+                    $table->boolean('tech_chemical_show')->default(1);
+                    $table->boolean('tech_chemical_edit')->default(0);
+                    $table->boolean('tech_chemical_destroy')->default(0);
+
+                    // Equipment
+                    $table->boolean('sup_equipment_index')->default(1);
+                    $table->boolean('sup_equipment_create')->default(1);
+                    $table->boolean('sup_equipment_show')->default(1);
+                    $table->boolean('sup_equipment_edit')->default(1);
+                    $table->boolean('sup_equipment_addPhoto')->default(1);
+                    $table->boolean('sup_equipment_removePhoto')->default(1);
+                    $table->boolean('sup_equipment_destroy')->default(1);
+
+                    $table->boolean('tech_equipment_index')->default(1);
+                    $table->boolean('tech_equipment_create')->default(1);
+                    $table->boolean('tech_equipment_show')->default(1);
+                    $table->boolean('tech_equipment_edit')->default(0);
+                    $table->boolean('tech_equipment_addPhoto')->default(1);
+                    $table->boolean('tech_equipment_removePhoto')->default(0);
+                    $table->boolean('tech_equipment_destroy')->default(0);
+
                 // Client
                 $table->boolean('sup_client_index')->default(1);
                 $table->boolean('sup_client_create')->default(1);
@@ -100,6 +179,7 @@ class CreateAdministratorsTable extends Migration
 
                 $table->boolean('tech_client_index')->default(0);
                 $table->boolean('tech_client_show')->default(0);
+
                 // Supervisors
                 $table->boolean('sup_supervisor_index')->default(1);
                 $table->boolean('sup_supervisor_create')->default(1);
@@ -109,6 +189,7 @@ class CreateAdministratorsTable extends Migration
 
                 $table->boolean('tech_supervisor_index')->default(1);
                 $table->boolean('tech_supervisor_show')->default(0);
+
                 // Technicians
                 $table->boolean('sup_technician_index')->default(1);
                 $table->boolean('sup_technician_create')->default(1);
@@ -118,6 +199,23 @@ class CreateAdministratorsTable extends Migration
 
                 $table->boolean('tech_technician_index')->default(1);
                 $table->boolean('tech_technician_show')->default(0);
+
+                // Invoices
+                $table->boolean('sup_invoice_index')->default(1);
+                $table->boolean('sup_invoice_show')->default(1);
+                $table->boolean('sup_invoice_destroy')->default(0);
+
+                $table->boolean('tech_invoice_index')->default(0);
+                $table->boolean('tech_invoice_show')->default(0);
+
+                    // payments
+                    $table->boolean('sup_payment_index')->default(1);
+                    $table->boolean('sup_payment_show')->default(1);
+                    $table->boolean('sup_payment_destroy')->default(0);
+
+                    $table->boolean('tech_payment_index')->default(0);
+                    $table->boolean('tech_payment_show')->default(0);
+
 
             $table->softDeletes();
             $table->timestamps();
