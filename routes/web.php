@@ -121,7 +121,7 @@ Route::patch('settings/email', 'SettingsController@email');
 Route::post('settings/subscribe', 'SettingsController@subscribe');
 Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
 Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
-Route::patch('settings/permissions', 'SettingsController@permissions');
+Route::patch('settings/permissions1', 'SettingsController@permissions');
 
 Route::get('datatables/todaysroute', 'DataTableController@todaysroute');
 Route::get('datatables/reports', 'DataTableController@reports');

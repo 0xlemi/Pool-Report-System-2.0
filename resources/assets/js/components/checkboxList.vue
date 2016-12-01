@@ -14,6 +14,7 @@ export default{
     props: ['data'],
     methods: {
         sendRequest(permission){
+            this.$dispatch('clearError');
             this.$http.patch(Laravel.url+'settings/permissions', {
                 'id': permission.name,
                 'checked': (!permission.checked) ? true : false,
@@ -21,7 +22,7 @@ export default{
             }).then((response) => {
                 // if success do nothing
             }, (response) => {
-                // throw error
+                this.$dispatch('permissionError');
             });
         }
     }

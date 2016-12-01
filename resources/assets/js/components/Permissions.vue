@@ -16,6 +16,9 @@
       <div class="modal-body">
 			<div class="row">
                 <div class="col-md-12">
+
+					<alert type="danger" :message="alertMessage" :active="alertActive"></alert>
+
                     <section class="tabs-section">
                     	<div class="tabs-section-nav tabs-section-nav-inline">
                     		<ul class="nav" role="tablist">
@@ -26,7 +29,7 @@
                     			</li>
                     			<li class="nav-item">
                     				<a class="nav-link" href="#tabs-{{ tabsNumber }}-tab-2" role="tab" data-toggle="tab">
-                    					Work Orders
+                    					Orders
                     				</a>
                     			</li>
                     			<li class="nav-item">
@@ -47,6 +50,11 @@
                     			<li class="nav-item">
                     				<a class="nav-link" href="#tabs-{{ tabsNumber }}-tab-6" role="tab" data-toggle="tab">
                     					Technicians
+                    				</a>
+                    			</li>
+								<li class="nav-item">
+                    				<a class="nav-link" href="#tabs-{{ tabsNumber }}-tab-7" role="tab" data-toggle="tab">
+                    					Invoices & Payments
                     				</a>
                     			</li>
                     		</ul>
@@ -83,6 +91,11 @@
                                 <br>
                                 <checkbox-list :data="permissions.technician"></checkbox-list>
                             </div>
+
+							<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-7">
+                                <br>
+                                invoices permissions
+                            </div>
                     	</div><!--.tab-content-->
                     </section><!--.tabs-section-->
                 </div>
@@ -101,13 +114,31 @@
 
 <script>
 import checkboxList from './checkboxList.vue';
+import alert from './alert.vue';
 
-  export default {
-    props: ['permissions', 'button', 'tabsNumber'],
-    components: {
-        checkboxList
-    },
-  }
+export default {
+	props: ['permissions', 'button', 'tabsNumber'],
+	components: {
+	    checkboxList,
+		alert
+	},
+	data(){
+		return {
+			alertMessage: '',
+			alertActive: false,
+		}
+	},
+	events: {
+		clearError(){
+			this.alertMessage = '';
+			this.alertActive = false;
+		},
+		permissionError(){
+			this.alertMessage = "The permission was not updated, please try again."
+			this.alertActive = true;
+		}
+	}
+}
 </script>
 
 <style scoped>

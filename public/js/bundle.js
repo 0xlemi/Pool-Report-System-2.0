@@ -28351,23 +28351,45 @@ var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: r
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 
 var _checkboxList = require('./checkboxList.vue');
 
 var _checkboxList2 = _interopRequireDefault(_checkboxList);
 
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-  props: ['permissions', 'button', 'tabsNumber'],
-  components: {
-    checkboxList: _checkboxList2.default
-  }
+	props: ['permissions', 'button', 'tabsNumber'],
+	components: {
+		checkboxList: _checkboxList2.default,
+		alert: _alert2.default
+	},
+	data: function data() {
+		return {
+			alertMessage: '',
+			alertActive: false
+		};
+	},
+
+	events: {
+		clearError: function clearError() {
+			this.alertMessage = '';
+			this.alertActive = false;
+		},
+		permissionError: function permissionError() {
+			this.alertMessage = "The permission was not updated, please try again.";
+			this.alertActive = true;
+		}
+	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<button type=\"button\" class=\"btn\" :class=\"button.class\" data-toggle=\"modal\" data-target=\"#{{'permissionsModal'+tabsNumber}}\" _v-22ce5c3f=\"\">\n\t\t<i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;&nbsp;\n        {{ button.tag }}\n</button>\n\n<!-- Modal for Permissions -->\n<div class=\"modal fade\" id=\"{{'permissionsModal'+tabsNumber}}\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" _v-22ce5c3f=\"\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\" _v-22ce5c3f=\"\">\n    <div class=\"modal-content\" _v-22ce5c3f=\"\">\n      <div class=\"modal-header\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" _v-22ce5c3f=\"\"><span aria-hidden=\"true\" _v-22ce5c3f=\"\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\" _v-22ce5c3f=\"\"><i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;{{ button.tag }}</h4>\n      </div>\n      <div class=\"modal-body\" _v-22ce5c3f=\"\">\n\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n                <div class=\"col-md-12\" _v-22ce5c3f=\"\">\n                    <section class=\"tabs-section\" _v-22ce5c3f=\"\">\n                    \t<div class=\"tabs-section-nav tabs-section-nav-inline\" _v-22ce5c3f=\"\">\n                    \t\t<ul class=\"nav\" role=\"tablist\" _v-22ce5c3f=\"\">\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link active\" href=\"#tabs-{{ tabsNumber }}-tab-1\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tReports\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-2\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tWork Orders\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-3\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tServices\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-4\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tClients\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-5\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tSupervisors\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-6\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tTechnicians\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t</ul>\n                    \t</div><!--.tabs-section-nav-->\n\n                    \t<div class=\"tab-content\" _v-22ce5c3f=\"\">\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-{{ tabsNumber }}-tab-1\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.report\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-2\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                workOrder permissions\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-3\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.service\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-4\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.client\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-5\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.supervisor\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-6\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.technician\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n                    \t</div><!--.tab-content-->\n                    </section><!--.tabs-section-->\n                </div>\n            </div>\n      </div>\n      <div class=\"modal-footer\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-22ce5c3f=\"\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<button type=\"button\" class=\"btn\" :class=\"button.class\" data-toggle=\"modal\" data-target=\"#{{'permissionsModal'+tabsNumber}}\" _v-22ce5c3f=\"\">\n\t\t<i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;&nbsp;\n        {{ button.tag }}\n</button>\n\n<!-- Modal for Permissions -->\n<div class=\"modal fade\" id=\"{{'permissionsModal'+tabsNumber}}\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" _v-22ce5c3f=\"\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\" _v-22ce5c3f=\"\">\n    <div class=\"modal-content\" _v-22ce5c3f=\"\">\n      <div class=\"modal-header\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" _v-22ce5c3f=\"\"><span aria-hidden=\"true\" _v-22ce5c3f=\"\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\" _v-22ce5c3f=\"\"><i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;{{ button.tag }}</h4>\n      </div>\n      <div class=\"modal-body\" _v-22ce5c3f=\"\">\n\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n                <div class=\"col-md-12\" _v-22ce5c3f=\"\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\" _v-22ce5c3f=\"\"></alert>\n\n                    <section class=\"tabs-section\" _v-22ce5c3f=\"\">\n                    \t<div class=\"tabs-section-nav tabs-section-nav-inline\" _v-22ce5c3f=\"\">\n                    \t\t<ul class=\"nav\" role=\"tablist\" _v-22ce5c3f=\"\">\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link active\" href=\"#tabs-{{ tabsNumber }}-tab-1\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tReports\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-2\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tOrders\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-3\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tServices\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-4\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tClients\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-5\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tSupervisors\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-6\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tTechnicians\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n\t\t\t\t\t\t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-7\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tInvoices &amp; Payments\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t</ul>\n                    \t</div><!--.tabs-section-nav-->\n\n                    \t<div class=\"tab-content\" _v-22ce5c3f=\"\">\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-{{ tabsNumber }}-tab-1\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.report\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-2\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                workOrder permissions\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-3\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.service\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-4\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.client\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-5\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.supervisor\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-6\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                <checkbox-list :data=\"permissions.technician\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n\t\t\t\t\t\t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-7\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n                                invoices permissions\n                            </div>\n                    \t</div><!--.tab-content-->\n                    </section><!--.tabs-section-->\n                </div>\n            </div>\n      </div>\n      <div class=\"modal-footer\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-22ce5c3f=\"\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28382,7 +28404,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./checkboxList.vue":196,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],190:[function(require,module,exports){
+},{"./alert.vue":192,"./checkboxList.vue":196,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],190:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28623,6 +28645,9 @@ exports.default = {
     props: ['data'],
     methods: {
         sendRequest: function sendRequest(permission) {
+            var _this = this;
+
+            this.$dispatch('clearError');
             this.$http.patch(Laravel.url + 'settings/permissions', {
                 'id': permission.name,
                 'checked': !permission.checked ? true : false,
@@ -28630,7 +28655,7 @@ exports.default = {
             }).then(function (response) {
                 // if success do nothing
             }, function (response) {
-                // throw error
+                _this.$dispatch('permissionError');
             });
         }
     }
