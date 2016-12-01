@@ -105,15 +105,13 @@
                 <div class="col-md-12">
                     <br>
                     <div class="form-group">
-                        <permissions :admin="permissions.admin"
-                                    :button="{ tag: 'Supervisor Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}"
-                                    permission-type="sup" tabs-number="2">
+                        <permissions :permissions="permissions.supervisor" tabs-number="2"
+                                    :button="{ tag: 'Supervisor Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}">
                         </permissions>
                     </div>
                     <div class="form-group">
-                        <permissions :admin="permissions.admin"
-                                    :button="{ tag: 'Technicians Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}"
-                                    permission-type="tech" tabs-number="3">
+                        <permissions :permissions="permissions.technician" tabs-number="3"
+                                    :button="{ tag: 'Technicians Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}">
                         </permissions>
                     </div>
                 </div>

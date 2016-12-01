@@ -56,7 +56,8 @@ class SettingsController extends PageController
             'freeObjects' => $admin->free_objects,
         ];
         $permissions = (object)[
-            'admin' => $admin,
+            'supervisor' => $admin->permissions()->permissionsDivided('sup'),
+            'technician' => $admin->permissions()->permissionsDivided('tech'),
         ];
 
         $timezones = $this->getTimezone();

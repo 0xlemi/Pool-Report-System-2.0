@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\PRS\Traits\Model\ImageTrait;
 
 use App\PRS\ValueObjects\Administrator\Tags;
+use App\PRS\ValueObjects\Administrator\Permissions;
 use App\PRS\ValueObjects\Administrator\TagTurbidity;
 use App\PRS\ValueObjects\Administrator\Tag;
 

@@ -2,8 +2,8 @@
 <div class="form-group row" v-for="permission in data">
     <div class="col-md-12">
         <div class="checkbox-toggle">
-			<input type="checkbox" id="{{ permission.id }}" v-model="permission.checked" @click="sendRequest(permission)"/>
-			<label for="{{ permission.id }}">{{ permission.name }}</label>
+			<input type="checkbox" id="{{ permission.name }}" v-model="permission.checked" @click="sendRequest(permission)"/>
+			<label for="{{ permission.name }}">{{ permission.tag }}</label>
 		</div>
     </div>
 </div>
@@ -15,9 +15,9 @@ export default{
     methods: {
         sendRequest(permission){
             this.$http.patch(Laravel.url+'settings/permissions', {
-                'id': permission.id,
+                'id': permission.name,
                 'checked': (!permission.checked) ? true : false,
-                'name': permission.name,
+                'name': permission.tag,
             }).then((response) => {
                 // if success do nothing
             }, (response) => {
