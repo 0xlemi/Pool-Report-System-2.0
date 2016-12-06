@@ -50,7 +50,7 @@ class WorkOrderController extends PageController
      */
     public function index()
     {
-        // check permissions
+        $this->authorize('list', WorkOrder::class);
 
         $default_table_url = url('datatables/workorders?finished=0');
 
@@ -69,7 +69,7 @@ class WorkOrderController extends PageController
      */
     public function create()
     {
-        // check permissions
+        $this->authorize('create', WorkOrder::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -87,7 +87,7 @@ class WorkOrderController extends PageController
      */
     public function store(CreateWorkOrderRequest $request)
     {
-        // check permissions
+        $this->authorize('create', WorkOrder::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -124,6 +124,8 @@ class WorkOrderController extends PageController
      */
     public function show($seq_id)
     {
+        $this->authorize('view', WorkOrder::class);
+
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
@@ -149,6 +151,8 @@ class WorkOrderController extends PageController
 
     public function finish(Request $request, $seq_id)
     {
+        $this->authorize('finish', WorkOrder::class);
+
         $this->validate($request, [
             'end' => 'required|date'
         ]);
@@ -172,6 +176,7 @@ class WorkOrderController extends PageController
      */
     public function edit($seq_id)
     {
+        $this->authorize('edit', WorkOrder::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -203,6 +208,8 @@ class WorkOrderController extends PageController
      */
     public function update(CreateWorkOrderRequest $request, $seq_id)
     {
+        $this->authorize('edit', WorkOrder::class);
+
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
@@ -229,36 +236,43 @@ class WorkOrderController extends PageController
         return redirect('workorders/'.$workOrder->seq_id);
     }
 
-    public function getPhotosBefore($id)
-    {
-        return $this->getPhoto($id, 'before');
-    }
+    // change this
+        public function getPhotosBefore($id)
+        {
+            $this->authorize('view', WorkOrder::class);
+            return $this->getPhoto($id, 'before');
+        }
 
-    public function getPhotosAfter($id)
-    {
-        return $this->getPhoto($id, 'after');
-    }
+        public function getPhotosAfter($id)
+        {
+            $this->authorize('view', WorkOrder::class);
+            return $this->getPhoto($id, 'after');
+        }
 
 
-    public function addPhotoBefore(Request $request, $id)
-    {
-        return $this->addPhoto($request, $id, 1);
-    }
+        public function addPhotoBefore(Request $request, $id)
+        {
+            $this->authorize('edit', WorkOrder::class);
+            return $this->addPhoto($request, $id, 1);
+        }
 
-    public function addPhotoAfter(Request $request, $id)
-    {
-        return $this->addPhoto($request, $id, 2);
-    }
+        public function addPhotoAfter(Request $request, $id)
+        {
+            $this->authorize('finish', WorkOrder::class);
+            return $this->addPhoto($request, $id, 2);
+        }
 
-    public function removePhotoBefore($id, $order)
-    {
-        return $this->removePhoto($id, $order, 1);
-    }
+        public function removePhotoBefore($id, $order)
+        {
+            $this->authorize('edit', WorkOrder::class);
+            return $this->removePhoto($id, $order, 1);
+        }
 
-    public function removePhotoAfter($id, $order)
-    {
-        return $this->removePhoto($id, $order, 2);
-    }
+        public function removePhotoAfter($id, $order)
+        {
+            $this->authorize('finish', WorkOrder::class);
+            return $this->removePhoto($id, $order, 2);
+        }
 
     /**
      * Remove the specified resource from storage.
@@ -268,6 +282,8 @@ class WorkOrderController extends PageController
      */
     public function destroy($seq_id)
     {
+        $this->authorize('delete', WorkOrder::class);
+
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
