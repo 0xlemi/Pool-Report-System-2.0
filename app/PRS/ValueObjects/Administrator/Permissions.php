@@ -165,13 +165,13 @@ class Permissions {
                 (object)[ 'tag' => "Create New Contract" , 'checked' => $admin->sup_contract_create, 'name' => 'sup_contract_create'],
                 (object)[ 'tag' => "Show Contract Details" , 'checked' => $admin->sup_contract_show, 'name' => 'sup_contract_show'],
                 (object)[ 'tag' => "Edit Contract" , 'checked' => $admin->sup_contract_edit, 'name' => 'sup_contract_edit'],
-                (object)[ 'tag' => "Deactivate Contract" , 'checked' => $admin->sup_contract_deactivate, 'name' => 'sup_contract_deactivate'],
+                (object)[ 'tag' => "Toggle Contract Activation" , 'checked' => $admin->sup_contract_deactivate, 'name' => 'sup_contract_deactivate'],
                 (object)[ 'tag' => "Delete Contract" , 'checked' => $admin->sup_contract_destroy, 'name' => 'sup_contract_destroy'],
 
                 (object)[ 'tag' => "Create New Contract" , 'checked' => $admin->tech_contract_create, 'name' => 'tech_contract_create'],
                 (object)[ 'tag' => "Show Contract Details" , 'checked' => $admin->tech_contract_show, 'name' => 'tech_contract_show'],
                 (object)[ 'tag' => "Edit Contract" , 'checked' => $admin->tech_contract_edit, 'name' => 'tech_contract_edit'],
-                (object)[ 'tag' => "Deactivate Contract" , 'checked' => $admin->tech_contract_deactivate, 'name' => 'tech_contract_deactivate'],
+                (object)[ 'tag' => "Toggle Contract Activation" , 'checked' => $admin->tech_contract_deactivate, 'name' => 'tech_contract_deactivate'],
                 (object)[ 'tag' => "Delete Contract" , 'checked' => $admin->tech_contract_destroy, 'name' => 'tech_contract_destroy'],
 
                 // Chemicals

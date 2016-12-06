@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Requests\ServiceContractRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\ContractHelpers;
+use App\ServiceContract;
 
 class ServiceContractsController extends PageController
 {
@@ -26,17 +27,6 @@ class ServiceContractsController extends PageController
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -44,6 +34,8 @@ class ServiceContractsController extends PageController
      */
     public function store(ServiceContractRequest $request, $serviceSeqId)
     {
+        $this->authorize('create', ServiceContract::class);
+
         $admin = $this->loggedUserAdministrator();
         $service = $admin->serviceBySeqId($serviceSeqId);
 
@@ -75,6 +67,8 @@ class ServiceContractsController extends PageController
      */
     public function show($serviceSeqId)
     {
+        $this->authorize('view', ServiceContract::class);
+
         $admin = $this->loggedUserAdministrator();
         $service = $admin->serviceBySeqId($serviceSeqId);
 
@@ -107,6 +101,8 @@ class ServiceContractsController extends PageController
      */
     public function update(ServiceContractRequest $request, $serviceSeqId)
     {
+        $this->authorize('update', ServiceContract::class);
+
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
 
@@ -128,6 +124,8 @@ class ServiceContractsController extends PageController
 
     public function toggleActivation($serviceSeqId)
     {
+        $this->authorize('toggleActivation', ServiceContract::class);
+
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
 
@@ -149,6 +147,8 @@ class ServiceContractsController extends PageController
      */
     public function destroy($serviceSeqId)
     {
+        $this->authorize('delete', ServiceContract::class);
+
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
         if($serviceContract->delete()){

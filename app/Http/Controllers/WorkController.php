@@ -124,7 +124,7 @@ class WorkController extends PageController
      */
     public function update(CreateWorkRequest $request, Work $work)
     {
-        $this->authorize('edit', Work::class);
+        $this->authorize('update', Work::class);
 
         $work->update(array_map('htmlentities', $request->except('work_order_id')));
 

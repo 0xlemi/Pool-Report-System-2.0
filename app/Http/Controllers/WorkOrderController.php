@@ -176,7 +176,7 @@ class WorkOrderController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('edit', WorkOrder::class);
+        $this->authorize('update', WorkOrder::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -208,7 +208,7 @@ class WorkOrderController extends PageController
      */
     public function update(CreateWorkOrderRequest $request, $seq_id)
     {
-        $this->authorize('edit', WorkOrder::class);
+        $this->authorize('update', WorkOrder::class);
 
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);

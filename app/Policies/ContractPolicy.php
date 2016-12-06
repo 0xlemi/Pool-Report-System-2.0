@@ -70,7 +70,7 @@ class ContractPolicy
         return false;
     }
 
-    public function deactivate(User $user)
+    public function toggleActivation(User $user)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_contract_deactivate;
