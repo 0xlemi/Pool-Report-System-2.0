@@ -244,10 +244,12 @@ class Permissions {
 
                 // Payments
                 (object)[ 'tag' => "View List Payments", 'checked' => $admin->sup_payment_index, 'name' => 'sup_payment_index'],
+                (object)[ 'tag' => "Create New Payment" , 'checked' => $admin->sup_payment_create, 'name' => 'sup_payment_create'],
                 (object)[ 'tag' => "Show Payments Details" , 'checked' => $admin->sup_payment_show, 'name' => 'sup_payment_show'],
                 (object)[ 'tag' => "Delete Inovices" , 'checked' => $admin->sup_payment_destroy, 'name' => 'sup_payment_destroy'],
 
                 (object)[ 'tag' => "View List Payments", 'checked' => $admin->tech_payment_index, 'name' => 'tech_payment_index'],
+                (object)[ 'tag' => "Create New Payment" , 'checked' => $admin->tech_payment_create, 'name' => 'tech_payment_create'],
                 (object)[ 'tag' => "Show Payments Details" , 'checked' => $admin->tech_payment_show, 'name' => 'tech_payment_show'],
 
         ];

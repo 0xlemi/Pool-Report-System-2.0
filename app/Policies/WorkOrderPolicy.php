@@ -129,7 +129,7 @@ class WorkOrderPolicy
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_destroy;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_destroy;
+            return false;
         }
         return false;
     }

@@ -99,7 +99,7 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_workorder_finish')->default(1);
                 $table->boolean('tech_workorder_addPhoto')->default(0);
                 $table->boolean('tech_workorder_removePhoto')->default(0);
-                
+
                     // Works
                     $table->boolean('sup_work_index')->default(1);
                     $table->boolean('sup_work_create')->default(1);
@@ -212,10 +212,12 @@ class CreateAdministratorsTable extends Migration
 
                     // payments
                     $table->boolean('sup_payment_index')->default(1);
+                    $table->boolean('sup_payment_create')->default(1);
                     $table->boolean('sup_payment_show')->default(1);
                     $table->boolean('sup_payment_destroy')->default(0);
 
                     $table->boolean('tech_payment_index')->default(0);
+                    $table->boolean('tech_payment_create')->default(0);
                     $table->boolean('tech_payment_show')->default(0);
 
 

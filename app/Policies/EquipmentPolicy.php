@@ -115,6 +115,5 @@ class EquipmentPolicy
             return $user->userable()->admin()->tech_equipment_destroy;
         }
         return false;
-        //
     }
 }
