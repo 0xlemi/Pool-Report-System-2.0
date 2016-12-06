@@ -40,6 +40,8 @@ class WorkController extends PageController
      */
     public function index($workOrderSeqId)
     {
+        $this->authorize('list', Work::class);
+
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
 
         $works = $workOrder->works()
@@ -69,6 +71,8 @@ class WorkController extends PageController
      */
     public function store(CreateWorkRequest $request, $workOrderSeqId)
     {
+        $this->authorize('create', Work::class);
+
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
 
         $work = $workOrder->works()->create(array_map('htmlentities', $request->all()));
@@ -91,8 +95,8 @@ class WorkController extends PageController
      */
     public function show(Work $work)
     {
-        // Check if it has authorization to see this
-        
+        $this->authorize('view', Work::class);
+
         $technician = $work->technician();
 
         return response()->json([
@@ -120,7 +124,7 @@ class WorkController extends PageController
      */
     public function update(CreateWorkRequest $request, Work $work)
     {
-        // Check if it has authorization to see this
+        $this->authorize('edit', Work::class);
 
         $work->update(array_map('htmlentities', $request->except('work_order_id')));
 
@@ -132,7 +136,7 @@ class WorkController extends PageController
 
     public function addPhoto(Request $request, Work $work)
     {
-        // Check if it has authorization to see this
+        $this->authorize('addPhoto', Work::class);
 
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
@@ -152,7 +156,7 @@ class WorkController extends PageController
 
     public function removePhoto(Work $work, $order)
     {
-        // Check if it has authorization to see this
+        $this->authorize('removePhoto', Work::class);
 
         $image = $work->image($order, false);
         if($image->delete()){
@@ -173,7 +177,7 @@ class WorkController extends PageController
      */
     public function destroy(Work $work)
     {
-        // Check if it has authorization to see this
+        $this->authorize('delete', Work::class);
 
         if($work->delete()){
             return response()->json([

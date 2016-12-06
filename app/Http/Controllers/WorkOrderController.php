@@ -252,7 +252,7 @@ class WorkOrderController extends PageController
 
         public function addPhotoBefore(Request $request, $id)
         {
-            $this->authorize('edit', WorkOrder::class);
+            $this->authorize('addPhoto', WorkOrder::class);
             return $this->addPhoto($request, $id, 1);
         }
 
@@ -264,7 +264,7 @@ class WorkOrderController extends PageController
 
         public function removePhotoBefore($id, $order)
         {
-            $this->authorize('edit', WorkOrder::class);
+            $this->authorize('removePhoto', WorkOrder::class);
             return $this->removePhoto($id, $order, 1);
         }
 
