@@ -67,7 +67,6 @@ class Permissions {
      * Get all the permissions devided into sections
      * @param  string $user   the role that has the permission
      * @return array
-     * tested
      */
     public function permissionsDivided($user)
     {
