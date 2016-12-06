@@ -64,37 +64,76 @@
 
                     		<div role="tabpanel" class="tab-pane fade in active" id="tabs-{{ tabsNumber }}-tab-1">
                                 <br>
+								<h5><strong>Reports:</strong></h5>
                                 <checkbox-list :data="permissions.report"></checkbox-list>
                             </div>
 
                     		<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-2">
-                                <br>
-                                workOrder permissions
+								<div class="row">
+	                                <br>
+									<div class="col-md-6">
+										<h5><strong>Work Orders:</strong></h5>
+		                                <checkbox-list :data="permissions.workorder.this"></checkbox-list>
+									</div>
+									<div class="col-md-6">
+										<h5><strong>Works:</strong></h5>
+		                                <checkbox-list :data="permissions.workorder.work"></checkbox-list>
+									</div>
+								</div>
                             </div>
 
                     		<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-3">
-                                <br>
-                                <checkbox-list :data="permissions.service"></checkbox-list>
+								<div class="row">
+	                                <br>
+									<div class="col-md-6">
+										<h5><strong>Services:</strong></h5>
+	                                	<checkbox-list :data="permissions.service.this"></checkbox-list>
+									</div>
+									<div class="col-md-6">
+										<h5><strong>Contract:</strong></h5>
+	                                	<checkbox-list :data="permissions.service.contract"></checkbox-list>
+									</div>
+									<div class="col-md-6">
+										<h5><strong>Chemical:</strong></h5>
+	                                	<checkbox-list :data="permissions.service.chemical"></checkbox-list>
+									</div>
+									<div class="col-md-6">
+										<h5><strong>Equipment:</strong></h5>
+	                                	<checkbox-list :data="permissions.service.equipment"></checkbox-list>
+									</div>
+								</div>
                             </div>
 
                     		<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-4">
                                 <br>
+								<h5><strong>Clients:</strong></h5>
                                 <checkbox-list :data="permissions.client"></checkbox-list>
                             </div>
 
                     		<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-5">
                                 <br>
+								<h5><strong>Supervisors:</strong></h5>
                                 <checkbox-list :data="permissions.supervisor"></checkbox-list>
                             </div>
 
                     		<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-6">
                                 <br>
+								<h5><strong>Technicians:</strong></h5>
                                 <checkbox-list :data="permissions.technician"></checkbox-list>
                             </div>
 
 							<div role="tabpanel" class="tab-pane fade" id="tabs-{{ tabsNumber }}-tab-7">
-                                <br>
-                                invoices permissions
+								<div class="row">
+	                                <br>
+									<div class="col-md-6">
+										<h5><strong>Invoices:</strong></h5>
+		                                <checkbox-list :data="permissions.invoice.this"></checkbox-list>
+									</div>
+									<div class="col-md-6">
+										<h5><strong>Payments:</strong></h5>
+		                                <checkbox-list :data="permissions.invoice.payments"></checkbox-list>
+									</div>
+								</div>
                             </div>
                     	</div><!--.tab-content-->
                     </section><!--.tabs-section-->

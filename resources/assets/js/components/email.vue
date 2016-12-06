@@ -1,6 +1,6 @@
 <template>
 
-  <checkbox-list  :data="permission_reports" :url="url"></checkbox-list>
+  <checkbox-list  :data="permission_reports"></checkbox-list>
 
 </template>
 

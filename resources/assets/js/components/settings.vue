@@ -104,14 +104,17 @@
             <div class="row">
                 <div class="col-md-12">
                     <br>
-                    <div class="form-group">
+    	                <div class="form-group">
+						<h5 class="semibold">Supervisor Permissions:</h5>
                         <permissions :permissions="permissions.supervisor" tabs-number="2"
-                                    :button="{ tag: 'Supervisor Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}">
+                                    :button="{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}">
                         </permissions>
                     </div>
+                    <br>
                     <div class="form-group">
+						<h5 class="semibold">Technician Permissions:</h5>
                         <permissions :permissions="permissions.technician" tabs-number="3"
-                                    :button="{ tag: 'Technicians Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}">
+                                    :button="{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}">
                         </permissions>
                     </div>
                 </div>

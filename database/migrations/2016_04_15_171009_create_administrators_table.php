@@ -88,8 +88,8 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('sup_workorder_show')->default(1);
                 $table->boolean('sup_workorder_edit')->default(1);
                 $table->boolean('sup_workorder_finish')->default(1);
-                $table->boolean('tech_workorder_addPhoto')->default(1);
-                $table->boolean('tech_workorder_removePhoto')->default(1);
+                $table->boolean('sup_workorder_addPhoto')->default(1);
+                $table->boolean('sup_workorder_removePhoto')->default(1);
                 $table->boolean('sup_workorder_destroy')->default(1);
 
                 $table->boolean('tech_workorder_index')->default(1);
@@ -99,6 +99,7 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_workorder_finish')->default(1);
                 $table->boolean('tech_workorder_addPhoto')->default(0);
                 $table->boolean('tech_workorder_removePhoto')->default(0);
+                
                     // Works
                     $table->boolean('sup_work_index')->default(1);
                     $table->boolean('sup_work_create')->default(1);
@@ -127,6 +128,7 @@ class CreateAdministratorsTable extends Migration
                 $table->boolean('tech_service_create')->default(0);
                 $table->boolean('tech_service_show')->default(1);
                 $table->boolean('tech_service_edit')->default(0);
+
                     // Contract
                     $table->boolean('sup_contract_create')->default(1);
                     $table->boolean('sup_contract_show')->default(1);
