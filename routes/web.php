@@ -40,12 +40,12 @@ Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto'
 
 // Work Orders
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
-Route::get('workorders/photos/before/{id}', 'WorkOrderController@getPhotosBefore');
-Route::get('workorders/photos/after/{id}', 'WorkOrderController@getPhotosAfter');
-Route::post('workorders/photos/before/{id}', 'WorkOrderController@addPhotoBefore');
-Route::post('workorders/photos/after/{id}', 'WorkOrderController@addPhotoAfter');
-Route::delete('workorders/photos/before/{id}/{order}', 'WorkOrderController@removePhotoBefore');
-Route::delete('workorders/photos/after/{id}/{order}', 'WorkOrderController@removePhotoAfter');
+Route::get('workorders/photos/before/{seq_id}', 'WorkOrderController@getPhotosBefore');
+Route::get('workorders/photos/after/{seq_id}', 'WorkOrderController@getPhotosAfter');
+Route::post('workorders/photos/before/{seq_id}', 'WorkOrderController@addPhotoBefore');
+Route::post('workorders/photos/after/{seq_id}', 'WorkOrderController@addPhotoAfter');
+Route::delete('workorders/photos/before/{seq_id}/{order}', 'WorkOrderController@removePhotoBefore');
+Route::delete('workorders/photos/after/{seq_id}/{order}', 'WorkOrderController@removePhotoAfter');
 
 // Works
 Route::get('service/{workOrderSeqId}/works', 'WorkController@index');

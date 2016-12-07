@@ -20,6 +20,16 @@ class WorkOrderPolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_workorder_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_workorder_view;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can view the WorkOrder.
      *
@@ -87,7 +97,7 @@ class WorkOrderPolicy
         return false;
     }
 
-    public function addPhoto(User $user)
+    public function addPhoto(User $user, WorkOrder $WorkOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_addPhoto;
@@ -97,7 +107,7 @@ class WorkOrderPolicy
         return false;
     }
 
-    public function removePhoto(User $user)
+    public function removePhoto(User $user, WorkOrder $WorkOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_removePhoto;

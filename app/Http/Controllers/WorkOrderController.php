@@ -50,7 +50,7 @@ class WorkOrderController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', WorkOrder::class);
+        $this->authorize('list', WorkOrder::class);
 
         $default_table_url = url('datatables/workorders?finished=0');
 
@@ -124,10 +124,11 @@ class WorkOrderController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', WorkOrder::class);
-
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $this->authorize('view', $workOrder);
+
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
@@ -151,21 +152,21 @@ class WorkOrderController extends PageController
 
     public function finish(Request $request, $seq_id)
     {
-        $this->authorize('finish', WorkOrder::class);
-
         $this->validate($request, [
             'end' => 'required|date'
         ]);
         $admin = $this->loggedUserAdministrator();
-
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $this->authorize('finish', $workOrder);
+
         $workOrder->end = (new Carbon($request->end, $admin->timezone))->setTimezone('UTC');
         $workOrder->save();
 
-        return Response::json([
+        return response()->json([
                 'title' => 'Work Order Finished',
                 'message' => 'The work order has been finalized successfully.'
-            ], 200);
+            ]);
     }
 
     /**
@@ -176,11 +177,10 @@ class WorkOrderController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', WorkOrder::class);
-
         $admin = $this->loggedUserAdministrator();
-
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $this->authorize('update', $workOrder);
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
@@ -208,10 +208,10 @@ class WorkOrderController extends PageController
      */
     public function update(CreateWorkOrderRequest $request, $seq_id)
     {
-        $this->authorize('update', WorkOrder::class);
-
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $this->authorize('update', $workOrder);
 
         if($workOrder->end()->finished()){
             return $this->respondWithValidationError('Work Order can\'t be changed once finilized.');
@@ -236,56 +236,61 @@ class WorkOrderController extends PageController
         return redirect('workorders/'.$workOrder->seq_id);
     }
 
-    // change this
-        public function getPhotosBefore($id)
-        {
-            $this->authorize('view', WorkOrder::class);
-            return $this->getPhoto($id, 'before');
-        }
+    public function getPhotosBefore($seq_id)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('view', $workOrder);
+        return $this->getPhoto($workOrder, 'before');
+    }
 
-        public function getPhotosAfter($id)
-        {
-            $this->authorize('view', WorkOrder::class);
-            return $this->getPhoto($id, 'after');
-        }
+    public function getPhotosAfter($seq_id)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('view', $workOrder);
+        return $this->getPhoto($workOrder, 'after');
+    }
 
 
-        public function addPhotoBefore(Request $request, $id)
-        {
-            $this->authorize('addPhoto', WorkOrder::class);
-            return $this->addPhoto($request, $id, 1);
-        }
+    public function addPhotoBefore(Request $request, $seq_id)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('addPhoto', $workOrder);
+        return $this->addPhoto($request, $workOrder, 1);
+    }
 
-        public function addPhotoAfter(Request $request, $id)
-        {
-            $this->authorize('finish', WorkOrder::class);
-            return $this->addPhoto($request, $id, 2);
-        }
+    public function addPhotoAfter(Request $request, $seq_id)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('finish', $workOrder);
+        return $this->addPhoto($request, $workOrder, 2);
+    }
 
-        public function removePhotoBefore($id, $order)
-        {
-            $this->authorize('removePhoto', WorkOrder::class);
-            return $this->removePhoto($id, $order, 1);
-        }
+    public function removePhotoBefore($seq_id, $order)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('removePhoto', $workOrder);
+        return $this->removePhoto($workOrder, $order, 1);
+    }
 
-        public function removePhotoAfter($id, $order)
-        {
-            $this->authorize('finish', WorkOrder::class);
-            return $this->removePhoto($id, $order, 2);
-        }
+    public function removePhotoAfter($seq_id, $order)
+    {
+        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $this->authorize('finish', $workOrder);
+        return $this->removePhoto($workOrder, $order, 2);
+    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $seq_id
      * @return \Illuminate\Http\Response
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', WorkOrder::class);
-
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $this->authorize('delete', $workOrder);
 
         if($workOrder->delete()){
             flash()->success('Deleted', 'The work order successfully deleted.');
@@ -298,63 +303,44 @@ class WorkOrderController extends PageController
             ], 500);
     }
 
-    private function getPhoto($id, $type)
+    private function getPhoto(WorkOrder $workOrder, $type)
     {
-        try{
-            $workOrder = WorkOrder::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work Order with that id, does not exist.');
-        }
-
         if($type == 'after'){
             return $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
         }
         return $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
     }
 
-    private function addPhoto(Request $request, $id, $type)
+    private function addPhoto(Request $request, WorkOrder $workOrder, $type)
     {
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        // refactor this
-        try {
-            $workOrder = WorkOrder::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work Order with that id, does not exist.');
-        }
-
         $file = $request->file('photo');
         if($image = $workOrder->addImageFromForm($file)){
             $image->type = $type;
             $image->save();
-            return Response::json([
+            return response()->json([
                 'message' => 'The photo was added to the work order'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not added to the work order'
             ], 500);
 
     }
 
-    private function removePhoto($id, $order, $type)
+    private function removePhoto(WorkOrder $workOrder, $order, $type)
     {
-        try {
-            $workOrder = WorkOrder::findOrFail($id);
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('Work with that id, does not exist.');
-        }
-
         $image = $workOrder->image($order, false, $type);
 
         if($image->delete()){
-                return Response::json([
+                return response()->json([
                 'message' => 'The photo was deleted from the work order'
-            ], 200);
+            ]);
         }
-        return Response::json([
+        return response()->json([
                 'error' => 'The photo could not deleted from the work order'
             ], 500);
     }
