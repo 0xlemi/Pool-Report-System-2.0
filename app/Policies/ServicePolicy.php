@@ -5,8 +5,6 @@ namespace App\Policies;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\User;
 
-use Auth;
-
 class ServicePolicy
 {
     use HandlesAuthorization;

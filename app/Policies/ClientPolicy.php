@@ -3,22 +3,11 @@
 namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-
-use Auth;
+use App\User;
 
 class ClientPolicy
 {
     use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Administrator has all permissions
@@ -30,7 +19,6 @@ class ClientPolicy
         }
     }
 
-    // tested (api)
     public function create(User $user)
     {
         if($user->isSupervisor()){
@@ -41,7 +29,6 @@ class ClientPolicy
         return false;
     }
 
-    // tested (api)
     public function view(User $user)
     {
         if($user->isSupervisor()){
@@ -52,7 +39,6 @@ class ClientPolicy
         return false;
     }
 
-    // tested (api)
     public function update(User $user)
     {
         if($user->isSupervisor()){
@@ -63,7 +49,6 @@ class ClientPolicy
         return false;
     }
 
-    // tested (api)
     public function delete(User $user)
     {
         if($user->isSupervisor()){
