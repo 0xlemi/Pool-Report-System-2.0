@@ -25,6 +25,8 @@ class PaymentController extends PageController
      */
     public function index($invoiceSeqId)
     {
+        $this->authorize('list', Payment::class);
+
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
 
         $payments = $invoice->payments
@@ -50,6 +52,8 @@ class PaymentController extends PageController
      */
     public function store(Request $request, $invoiceSeqId)
     {
+        $this->authorize('create', Payment::class);
+
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
         ]);
@@ -75,6 +79,8 @@ class PaymentController extends PageController
      */
     public function show($paymentSeqId)
     {
+        $this->authorize('view', Payment::class);
+
         $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
 
         return response()->json([
@@ -91,6 +97,8 @@ class PaymentController extends PageController
      */
     public function destroy($paymentSeqId)
     {
+        $this->authorize('destroy', Payment::class);
+
         $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
 
         if($payment->delete()){

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use JavaScript;
+use App\Invoice;
 
 class InvoiceController extends PageController
 {
@@ -26,8 +27,9 @@ class InvoiceController extends PageController
      */
     public function index()
     {
-        $defaultTableUrl = url('datatables/invoices?closed=0');
+        $this->authorize('list', Invoice::class);
 
+        $defaultTableUrl = url('datatables/invoices?closed=0');
         JavaScript::put([
             'invoicesTableUrl' => url('datatables/invoices?closed='),
             'click_url' => url('invoices').'/',
@@ -44,6 +46,8 @@ class InvoiceController extends PageController
      */
     public function show($seqId)
     {
+        $this->authorize('view', Invoice::class);
+
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
         $service = $invoice->invoiceable->service;
 
@@ -58,6 +62,8 @@ class InvoiceController extends PageController
      */
     public function destroy($seqId)
     {
+        $this->authorize('delete', Invoice::class);
+
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
 
         if($invoice->delete()){

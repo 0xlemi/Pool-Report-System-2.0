@@ -27,6 +27,8 @@ class EquipmentController extends PageController
 
     public function index(Request $request, $service_seq_id)
     {
+        $this->authorize('list', Equipment::class);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
 
         $equipment = $service->equipment()
@@ -53,6 +55,8 @@ class EquipmentController extends PageController
      */
     public function store(CreateEquipmentRequest $request, $service_seq_id)
     {
+        $this->authorize('create', Equipment::class);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
 
         $equipment = $service->equipment()->create(array_map('htmlentities', $request->all()));
@@ -75,7 +79,7 @@ class EquipmentController extends PageController
      */
     public function show(Equipment $equipment)
     {
-        // Check if it has authorization to see this
+        $this->authorize('view', Equipment::class);
 
         $photo = [
             'photos' => $this->imageTransformer
@@ -93,7 +97,7 @@ class EquipmentController extends PageController
      */
     public function update(CreateEquipmentRequest $request, Equipment $equipment)
     {
-        // Check if it has authorization to see this
+        $this->authorize('update', Equipment::class);
 
         $equipment->fill(array_map('htmlentities', $request->except('service_id')));
 
@@ -107,7 +111,7 @@ class EquipmentController extends PageController
 
     public function addPhoto(Request $request, Equipment $equipment)
     {
-        // Check if it has authorization to see this
+        $this->authorize('addPhoto', App\Equipment::class);
 
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
@@ -127,7 +131,7 @@ class EquipmentController extends PageController
 
     public function removePhoto(Equipment $equipment, $order)
     {
-        // Check if it has authorization to see this
+        $this->authorize('removePhoto', Equipment::class);
 
         $image = $equipment->image($order, false);
         if($image->delete()){
@@ -148,7 +152,7 @@ class EquipmentController extends PageController
      */
     public function destroy(Equipment $equipment)
     {
-        // Check if it has authorization to see this
+        $this->authorize('delete', Equipment::class);
 
         if($equipment->delete()){
             return response()->json([

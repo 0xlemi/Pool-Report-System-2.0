@@ -30,6 +30,8 @@ class chemicalController extends PageController
      */
     public function index($serviceSeqId)
     {
+        $this->authorize('list', Chemical::class);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
         $chemicals = $service->chemicals()
@@ -55,6 +57,8 @@ class chemicalController extends PageController
      */
     public function store(CreateChemicalRequest $request, $serviceSeqId)
     {
+        $this->authorize('create', Chemical::class);
+
         $admin = $this->loggedUserAdministrator();
         $service = $admin->serviceBySeqId($serviceSeqId);
 
@@ -81,6 +85,8 @@ class chemicalController extends PageController
      */
     public function update(CreateChemicalRequest $request, Chemical $chemical)
     {
+        $this->authorize('update', Chemical::class);
+
         $chemical->update($request->all());
 
         return response()->json([
@@ -96,6 +102,8 @@ class chemicalController extends PageController
      */
     public function destroy(Chemical $chemical)
     {
+        $this->authorize('delete', Chemical::class);
+
         if($chemical->delete()){
             return response()->json([
                 'message' => 'Chemical was successfully deleted.'
