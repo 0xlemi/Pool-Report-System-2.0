@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\User;
+use App\Technician;
 
 class TechnicianPolicy
 {
@@ -19,7 +20,17 @@ class TechnicianPolicy
         }
     }
 
-    public function view(User $user)
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_technician_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_technician_view;
+        }
+        return false;
+    }
+
+    public function view(User $user, Technician $technician)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_technician_view;
@@ -39,7 +50,7 @@ class TechnicianPolicy
         return false;
     }
 
-    public function update(User $user)
+    public function update(User $user, Technician $technician)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_technician_update;
@@ -49,7 +60,7 @@ class TechnicianPolicy
         return false;
     }
 
-    public function delete(User $user)
+    public function delete(User $user, Technician $technician)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_technician_delete;

@@ -20,6 +20,16 @@ class EquipmentPolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_equipment_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_equipment_view;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can view the Equipment.
      *
@@ -70,7 +80,7 @@ class EquipmentPolicy
         return false;
     }
 
-    public function addPhoto(User $user)
+    public function addPhoto(User $user, Equipment $equipment)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_equipment_addPhoto;
@@ -80,7 +90,7 @@ class EquipmentPolicy
         return false;
     }
 
-    public function removePhoto(User $user)
+    public function removePhoto(User $user, Equipment $equipment)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_equipment_removePhoto;

@@ -20,6 +20,16 @@ class ChemicalPolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_chemical_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_chemical_view;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can view the chemical.
      *

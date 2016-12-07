@@ -19,7 +19,17 @@ class ServicePolicy
         }
     }
 
-    public function view(User $user)
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_service_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_service_view;
+        }
+        return false;
+    }
+
+    public function view(User $user, Service $service)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_service_view;
@@ -39,7 +49,7 @@ class ServicePolicy
         return false;
     }
 
-    public function update(User $user)
+    public function update(User $user, Service $service)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_service_update;
@@ -49,7 +59,7 @@ class ServicePolicy
         return false;
     }
 
-    public function delete(User $user)
+    public function delete(User $user, Service $service)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_service_delete;

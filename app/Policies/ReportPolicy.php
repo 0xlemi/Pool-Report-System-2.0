@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\User;
+use App\Report;
 
 class ReportPolicy
 {
@@ -19,7 +20,17 @@ class ReportPolicy
         }
     }
 
-    public function view(User $user)
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_report_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_report_view;
+        }
+        return false;
+    }
+
+    public function view(User $user, Report $report)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_report_view;
@@ -39,7 +50,7 @@ class ReportPolicy
         return false;
     }
 
-    public function update(User $user)
+    public function update(User $user, Report $report)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_report_update;
@@ -49,7 +60,7 @@ class ReportPolicy
         return false;
     }
 
-    public function addPhoto(User $user)
+    public function addPhoto(User $user, Report $report)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_report_addPhoto;
@@ -59,7 +70,7 @@ class ReportPolicy
         return false;
     }
 
-    public function removePhoto(User $user)
+    public function removePhoto(User $user, Report $report)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_report_removePhoto;
@@ -69,7 +80,7 @@ class ReportPolicy
         return false;
     }
 
-    public function delete(User $user)
+    public function delete(User $user, Report $report)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_report_delete;

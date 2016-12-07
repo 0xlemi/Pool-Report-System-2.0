@@ -20,6 +20,16 @@ class InvoicePolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_invoice_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_invoice_view;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can view the invoice.
      *

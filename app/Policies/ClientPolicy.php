@@ -19,6 +19,26 @@ class ClientPolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_client_view;
+        }
+        return false;
+    }
+
+    public function view(User $user, Client $client)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_client_view;
+        }
+        return false;
+    }
+
     public function create(User $user)
     {
         if($user->isSupervisor()){
@@ -29,17 +49,7 @@ class ClientPolicy
         return false;
     }
 
-    public function view(User $user)
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_client_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_client_view;
-        }
-        return false;
-    }
-
-    public function update(User $user)
+    public function update(User $user, Client $client)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_client_update;
@@ -49,7 +59,7 @@ class ClientPolicy
         return false;
     }
 
-    public function delete(User $user)
+    public function delete(User $user, Client $client)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_client_delete;

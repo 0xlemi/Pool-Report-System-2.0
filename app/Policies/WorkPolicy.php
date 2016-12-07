@@ -20,6 +20,16 @@ class WorkPolicy
         }
     }
 
+    public function list(User $user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_work_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_work_view;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can view the work.
      *
@@ -70,7 +80,7 @@ class WorkPolicy
         return false;
     }
 
-    public function addPhoto(User $user)
+    public function addPhoto(User $user, Work $work)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_work_addPhoto;
@@ -80,7 +90,7 @@ class WorkPolicy
         return false;
     }
 
-    public function removePhoto(User $user)
+    public function removePhoto(User $user, Work $work)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_work_removePhoto;
