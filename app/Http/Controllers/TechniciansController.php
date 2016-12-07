@@ -39,7 +39,7 @@ class TechniciansController extends PageController
      */
     public function index()
     {
-        $this->checkPermissions('index');
+        $this->authorize('view', Technician::class);
 
         $default_table_url = url('datatables/technicians?status=1');
 
@@ -58,7 +58,7 @@ class TechniciansController extends PageController
      */
     public function create(Request $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Technician::class);
 
         $supervisors = $this->supervisorHelpers->transformForDropdown(
                     $this->loggedUserAdministrator()
@@ -80,7 +80,7 @@ class TechniciansController extends PageController
      */
     public function store(CreateTechnicianRequest $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Technician::class);
 
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
@@ -128,7 +128,7 @@ class TechniciansController extends PageController
      */
     public function show($seq_id)
     {
-        $this->checkPermissions('show');
+        $this->authorize('view', Technician::class);
 
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
 
@@ -143,7 +143,7 @@ class TechniciansController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Technician::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -166,7 +166,7 @@ class TechniciansController extends PageController
      */
     public function update(CreateTechnicianRequest $request, $seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Technician::class);
 
         $admin = $this->loggedUserAdministrator();
         $technician = $admin->technicianBySeqId($seq_id);
@@ -219,7 +219,8 @@ class TechniciansController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->checkPermissions('destroy');
+        $this->authorize('delete', Technician::class);
+
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
 
         if($technician->delete()){
@@ -231,15 +232,6 @@ class TechniciansController extends PageController
         return response()->json([
                 'error' => 'The technician was not deleted, please try again later.'
             ], 500);
-    }
-
-    protected function checkPermissions($typePermission)
-    {
-        $user = Auth::user();
-        if($user->cannot($typePermission, Technician::class))
-        {
-            abort(403, 'If you really need to see this. Ask system administrator for access.');
-        }
     }
 
 }

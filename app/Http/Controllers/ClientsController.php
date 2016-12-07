@@ -34,7 +34,7 @@ class ClientsController extends PageController
      */
     public function index()
     {
-        $this->checkPermissions('index');
+        $this->authorize('view', Client::class);
 
         $default_table_url = url('datatables/clients');
 
@@ -52,7 +52,7 @@ class ClientsController extends PageController
      */
     public function create()
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Client::class);
 
         $services = $this->loggedUserAdministrator()->servicesInOrder()->get();
 
@@ -67,7 +67,7 @@ class ClientsController extends PageController
      */
     public function store(CreateClientRequest $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Client::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -111,7 +111,7 @@ class ClientsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->checkPermissions('show');
+        $this->authorize('view', Client::class);
 
         JavaScript::put([
             'click_url' => url('services').'/',
@@ -131,7 +131,7 @@ class ClientsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Client::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -150,7 +150,7 @@ class ClientsController extends PageController
      */
     public function update(CreateClientRequest $request, $seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Client::class);
 
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
         $user  = $client->user();
@@ -187,7 +187,8 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->checkPermissions('destroy');
+        $this->authorize('delete', Client::class);
+
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
 
         if($client->delete()){
@@ -199,15 +200,6 @@ class ClientsController extends PageController
         return response()->json([
                 'error' => 'The client was not deleted, please try again later.'
             ], 500);
-    }
-
-    protected function checkPermissions($typePermission)
-    {
-        $user = Auth::user();
-        if($user->cannot($typePermission, Client::class))
-        {
-            abort(403, 'If you really need to see this. Ask system administrator for access.');
-        }
     }
 
 }

@@ -25,7 +25,7 @@ class PaymentController extends PageController
      */
     public function index($invoiceSeqId)
     {
-        $this->authorize('list', Payment::class);
+        $this->authorize('view', Payment::class);
 
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
 

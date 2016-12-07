@@ -33,7 +33,7 @@ class SupervisorsController extends PageController
      */
     public function index()
     {
-        $this->checkPermissions('index');
+        $this->authorize('view', Supervisor::class);
 
         $default_table_url = url('datatables/supervisors?status=1');
 
@@ -52,7 +52,7 @@ class SupervisorsController extends PageController
      */
     public function create()
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Supervisor::class);
 
         return view('supervisors.create');
     }
@@ -65,7 +65,7 @@ class SupervisorsController extends PageController
      */
     public function store(CreateSupervisorRequest $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Supervisor::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -112,7 +112,7 @@ class SupervisorsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->checkPermissions('show');
+        $this->authorize('view', Supervisor::class);
 
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
@@ -127,7 +127,7 @@ class SupervisorsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Supervisor::class);
 
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
@@ -143,7 +143,7 @@ class SupervisorsController extends PageController
      */
     public function update(CreateSupervisorRequest $request, $seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Supervisor::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -192,7 +192,8 @@ class SupervisorsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->checkPermissions('destroy');
+        $this->authorize('delete', Supervisor::class);
+
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         if($supervisor->delete()){
@@ -204,15 +205,6 @@ class SupervisorsController extends PageController
         return response()->json([
                 'error' => 'The supervisor was not deleted, please try again later.'
             ], 500);
-    }
-
-    protected function checkPermissions($typePermission)
-    {
-        $user = Auth::user();
-        if($user->cannot($typePermission, Supervisor::class))
-        {
-            abort(403, 'If you really need to see this. Ask system administrator for access.');
-        }
     }
 
 }

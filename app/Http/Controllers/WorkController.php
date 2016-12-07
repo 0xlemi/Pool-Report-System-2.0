@@ -40,7 +40,7 @@ class WorkController extends PageController
      */
     public function index($workOrderSeqId)
     {
-        $this->authorize('list', Work::class);
+        $this->authorize('view', Work::class);
 
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
 

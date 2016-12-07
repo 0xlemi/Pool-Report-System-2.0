@@ -27,7 +27,7 @@ class EquipmentController extends PageController
 
     public function index(Request $request, $service_seq_id)
     {
-        $this->authorize('list', Equipment::class);
+        $this->authorize('view', Equipment::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
 

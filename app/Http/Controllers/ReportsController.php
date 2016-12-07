@@ -44,7 +44,7 @@ class ReportsController extends PageController
      */
     public function index()
     {
-        $this->checkPermissions('index');
+        $this->authorize('view', Report::class);
 
         $admin = $this->loggedUserAdministrator();
         $today = Carbon::today($admin->timezone);
@@ -73,7 +73,7 @@ class ReportsController extends PageController
      */
     public function create(Request $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Report::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -97,7 +97,7 @@ class ReportsController extends PageController
      */
     public function store(CreateReportRequest $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Report::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -154,7 +154,7 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->checkPermissions('show');
+        $this->authorize('view', Report::class);
 
         // set the generate email url
         JavaScript::put([
@@ -194,7 +194,7 @@ class ReportsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Report::class);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -217,7 +217,7 @@ class ReportsController extends PageController
 
     public function addPhoto(Request $request, $seq_id)
     {
-        $this->checkPermissions('addPhoto');
+        $this->authorize('addPhoto', Report::class);
 
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
@@ -232,7 +232,7 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $this->checkPermissions('removePhoto');
+        $this->authorize('removePhoto', Report::class);
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
@@ -251,7 +251,7 @@ class ReportsController extends PageController
      */
     public function update(Request $request, $seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Report::class);
 
         $this->validate($request, [
             'service' => 'required|integer|min:1',
@@ -299,7 +299,8 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->checkPermissions('destroy');
+        $this->authorize('delete', Report::class);
+
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
         if($report->delete()){
@@ -313,12 +314,4 @@ class ReportsController extends PageController
             ], 500);
     }
 
-    protected function checkPermissions($typePermission)
-    {
-        $user = Auth::user();
-        if($user->cannot($typePermission, Report::class))
-        {
-            abort(403, 'If you really need to see this. Ask system administrator for access.');
-        }
-    }
 }

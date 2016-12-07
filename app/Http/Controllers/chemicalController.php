@@ -30,7 +30,7 @@ class chemicalController extends PageController
      */
     public function index($serviceSeqId)
     {
-        $this->authorize('list', Chemical::class);
+        $this->authorize('view', Chemical::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 

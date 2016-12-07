@@ -38,7 +38,7 @@ class ServicesController extends PageController
      */
     public function index()
     {
-        $this->checkPermissions('index');
+        $this->authorize('view', Service::class);
 
         $default_table_url = url('datatables/services?status=1');
 
@@ -57,7 +57,7 @@ class ServicesController extends PageController
      */
     public function create(Request $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Service::class);
 
         JavaScript::put([
             'latitude' => $request->old('latitude'),
@@ -80,7 +80,7 @@ class ServicesController extends PageController
      */
     public function store(CreateServiceRequest $request)
     {
-        $this->checkPermissions('create');
+        $this->authorize('create', Service::class);
 
         $admin  = $this->loggedUserAdministrator();
 
@@ -116,7 +116,7 @@ class ServicesController extends PageController
      */
     public function show($seq_id)
     {
-        $this->checkPermissions('show');
+        $this->authorize('view', Service::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
@@ -144,7 +144,7 @@ class ServicesController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Service::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
@@ -172,7 +172,7 @@ class ServicesController extends PageController
      */
     public function update(CreateServiceRequest $request, $seq_id)
     {
-        $this->checkPermissions('edit');
+        $this->authorize('update', Service::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
@@ -201,7 +201,8 @@ class ServicesController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->checkPermissions('destroy');
+        $this->authorize('delete', Service::class);
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 
         if($service->delete()){
@@ -213,15 +214,6 @@ class ServicesController extends PageController
         return response()->json([
                 'error' => 'The service was not deleted, please try again later.'
             ], 500);
-    }
-
-    protected function checkPermissions($typePermission)
-    {
-        $user = Auth::user();
-        if($user->cannot($typePermission, Service::class))
-        {
-            abort(403, 'If you really need to see this. Ask system administrator for access.');
-        }
     }
 
 }

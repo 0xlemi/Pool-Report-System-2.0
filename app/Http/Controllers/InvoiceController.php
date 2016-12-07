@@ -27,7 +27,7 @@ class InvoiceController extends PageController
      */
     public function index()
     {
-        $this->authorize('list', Invoice::class);
+        $this->authorize('view', Invoice::class);
 
         $defaultTableUrl = url('datatables/invoices?closed=0');
         JavaScript::put([

@@ -50,7 +50,7 @@ class WorkOrderController extends PageController
      */
     public function index()
     {
-        $this->authorize('list', WorkOrder::class);
+        $this->authorize('view', WorkOrder::class);
 
         $default_table_url = url('datatables/workorders?finished=0');
 
