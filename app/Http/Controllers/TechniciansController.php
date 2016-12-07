@@ -39,7 +39,7 @@ class TechniciansController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Technician::class);
+        $this->authorize('list', Technician::class);
 
         $default_table_url = url('datatables/technicians?status=1');
 
@@ -128,9 +128,9 @@ class TechniciansController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', Technician::class);
-
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+
+        $this->authorize('view', $technician);
 
         return view('technicians.show', compact('technician'));
     }
@@ -143,11 +143,11 @@ class TechniciansController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', Technician::class);
-
         $admin = $this->loggedUserAdministrator();
-
         $technician = $admin->technicianBySeqId($seq_id);
+
+        $this->authorize('update', $technician);
+
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $supervisorSelected = Supervisor::find($technician->supervisor_id);
         JavaScript::put([
@@ -166,10 +166,11 @@ class TechniciansController extends PageController
      */
     public function update(CreateTechnicianRequest $request, $seq_id)
     {
-        $this->authorize('update', Technician::class);
-
         $admin = $this->loggedUserAdministrator();
         $technician = $admin->technicianBySeqId($seq_id);
+
+        $this->authorize('update', $technician);
+
         $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
         $user = $technician->user();
@@ -199,7 +200,6 @@ class TechniciansController extends PageController
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
 
-
         $userSaved = $user->save();
         $technicianSaved = $technician->save();
 
@@ -219,9 +219,9 @@ class TechniciansController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', Technician::class);
-
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+
+        $this->authorize('delete', $technician);
 
         if($technician->delete()){
             flash()->success('Deleted', 'The technician successfully deleted.');

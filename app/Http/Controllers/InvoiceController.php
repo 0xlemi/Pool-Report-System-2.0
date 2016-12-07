@@ -27,7 +27,7 @@ class InvoiceController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Invoice::class);
+        $this->authorize('list', Invoice::class);
 
         $defaultTableUrl = url('datatables/invoices?closed=0');
         JavaScript::put([
@@ -46,11 +46,11 @@ class InvoiceController extends PageController
      */
     public function show($seqId)
     {
-        $this->authorize('view', Invoice::class);
-
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
-        $service = $invoice->invoiceable->service;
 
+        $this->authorize('view', $invoice);
+
+        $service = $invoice->invoiceable->service;
         return view('invoices.show', compact('invoice', 'service'));
     }
 
@@ -62,9 +62,9 @@ class InvoiceController extends PageController
      */
     public function destroy($seqId)
     {
-        $this->authorize('delete', Invoice::class);
-
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+
+        $this->authorize('delete', $invoice);
 
         if($invoice->delete()){
             flash()->success('Deleted', 'The invoice was successfuly deleted');

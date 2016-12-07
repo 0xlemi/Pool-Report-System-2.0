@@ -44,7 +44,7 @@ class ReportsController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Report::class);
+        $this->authorize('list', Report::class);
 
         $admin = $this->loggedUserAdministrator();
         $today = Carbon::today($admin->timezone);
@@ -154,7 +154,9 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', Report::class);
+        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('view', $report);
 
         // set the generate email url
         JavaScript::put([
@@ -162,13 +164,10 @@ class ReportsController extends PageController
             'emailPreviewNoImage' => url('img/no_image.png'),
         ]);
 
-        $admin = $this->loggedUserAdministrator();
-
-        $report = $admin->reportsBySeqId($seq_id);
-
         return view('reports.show', compact('report'));
     }
 
+    // check this
     public function emailPreview(Request $request)
     {
         $report = $this->loggedUserAdministrator()->reportsBySeqId($request->id);
@@ -194,11 +193,11 @@ class ReportsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', Report::class);
-
         $admin = $this->loggedUserAdministrator();
-
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('update', $report);
+
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();
@@ -217,13 +216,13 @@ class ReportsController extends PageController
 
     public function addPhoto(Request $request, $seq_id)
     {
-        $this->authorize('addPhoto', Report::class);
-
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('addPhoto', $report);
 
         $file = $request->file('photo');
         $report->addImageFromForm($file);
@@ -232,9 +231,9 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $this->authorize('removePhoto', Report::class);
-
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('removePhoto', $report);
 
         $image = $report->image($order, false);
         if($image->delete()){
@@ -251,8 +250,6 @@ class ReportsController extends PageController
      */
     public function update(Request $request, $seq_id)
     {
-        $this->authorize('update', Report::class);
-
         $this->validate($request, [
             'service' => 'required|integer|min:1',
             'technician' => 'required|integer|min:1',
@@ -266,6 +263,9 @@ class ReportsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
         $report = $admin->reportsBySeqId($seq_id);
+
+        $this->authorize('update', $report);
+
         $service = $admin->serviceBySeqId($request->service);
         $technician = $admin->technicianBySeqId($request->technician);
 
@@ -299,9 +299,9 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', Report::class);
-
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('delete', $report);
 
         if($report->delete()){
             flash()->success('Deleted', 'The report successfully deleted.');

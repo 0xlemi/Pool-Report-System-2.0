@@ -34,7 +34,7 @@ class ClientsController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Client::class);
+        $this->authorize('list', Client::class);
 
         $default_table_url = url('datatables/clients');
 
@@ -111,14 +111,14 @@ class ClientsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', Client::class);
+        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
 
+        $this->authorize('view', $client);
+
+        $services = $client->services()->get();
         JavaScript::put([
             'click_url' => url('services').'/',
         ]);
-
-        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
-        $services = $client->services()->get();
 
         return view('clients.show',compact('client', 'services'));
     }
@@ -131,11 +131,11 @@ class ClientsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', Client::class);
-
         $admin = $this->loggedUserAdministrator();
-
         $client = $admin->clientsBySeqId($seq_id);
+
+        $this->authorize('update', $client);
+
         $services = $admin->servicesInOrder()->get();
 
         return view('clients.edit',compact('client', 'services'));
@@ -150,15 +150,14 @@ class ClientsController extends PageController
      */
     public function update(CreateClientRequest $request, $seq_id)
     {
-        $this->authorize('update', Client::class);
-
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
-        $user  = $client->user();
 
+        $this->authorize('update', $client);
+
+        $user  = $client->user();
         $user->email = htmlentities($request->email);
 
         $client->fill(array_map('htmlentities', $request->except(['admin_id', 'services'])));
-
         $client->setServices($request->services);
 
         $photo = false;
@@ -187,9 +186,9 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', Client::class);
-
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+
+        $this->authorize('delete', $client);
 
         if($client->delete()){
             flash()->success('Deleted', 'The client successfully deleted.');

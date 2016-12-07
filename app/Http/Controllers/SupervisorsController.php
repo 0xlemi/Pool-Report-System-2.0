@@ -33,7 +33,7 @@ class SupervisorsController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Supervisor::class);
+        $this->authorize('list', Supervisor::class);
 
         $default_table_url = url('datatables/supervisors?status=1');
 
@@ -112,9 +112,9 @@ class SupervisorsController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', Supervisor::class);
-
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+
+        $this->authorize('view', $supervisor);
 
         return view('supervisors.show', compact('supervisor'));
     }
@@ -127,9 +127,9 @@ class SupervisorsController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', Supervisor::class);
-
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+
+        $this->authorize('update', $supervisor);
 
         return view('supervisors.edit', compact('supervisor'));
     }
@@ -143,14 +143,12 @@ class SupervisorsController extends PageController
      */
     public function update(CreateSupervisorRequest $request, $seq_id)
     {
-        $this->authorize('update', Supervisor::class);
-
         $admin = $this->loggedUserAdministrator();
-
         $supervisor = $admin->supervisorBySeqId($seq_id);
 
-        $user = $supervisor->user();
+        $this->authorize('update', $supervisor);
 
+        $user = $supervisor->user();
         $user->email = htmlentities($request->email);
 
         $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
@@ -192,9 +190,9 @@ class SupervisorsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', Supervisor::class);
-
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+
+        $this->authorize('delete', $supervisor);
 
         if($supervisor->delete()){
             flash()->success('Deleted', 'The supervisor successfully deleted.');

@@ -38,7 +38,7 @@ class ServicesController extends PageController
      */
     public function index()
     {
-        $this->authorize('view', Service::class);
+        $this->authorize('list', Service::class);
 
         $default_table_url = url('datatables/services?status=1');
 
@@ -116,9 +116,9 @@ class ServicesController extends PageController
      */
     public function show($seq_id)
     {
-        $this->authorize('view', Service::class);
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
+        $this->authorize('view', $service);
 
         JavaScript::put([
             'showLatitude' => $service->latitude,
@@ -144,9 +144,9 @@ class ServicesController extends PageController
      */
     public function edit($seq_id)
     {
-        $this->authorize('update', Service::class);
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
+        $this->authorize('update', $service);
 
         JavaScript::put([
             'latitude' => $service->latitude,
@@ -172,9 +172,9 @@ class ServicesController extends PageController
      */
     public function update(CreateServiceRequest $request, $seq_id)
     {
-        $this->authorize('update', Service::class);
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
+        $this->authorize('update', $service);
 
         $service->fill(array_map('htmlentities', $request->except('admin_id')));
 
@@ -201,9 +201,9 @@ class ServicesController extends PageController
      */
     public function destroy($seq_id)
     {
-        $this->authorize('delete', Service::class);
-
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+
+        $this->authorize('delete', $service);
 
         if($service->delete()){
             flash()->success('Deleted', 'The service successfully deleted.');

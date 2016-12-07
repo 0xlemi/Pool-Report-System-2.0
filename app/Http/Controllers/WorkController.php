@@ -40,7 +40,7 @@ class WorkController extends PageController
      */
     public function index($workOrderSeqId)
     {
-        $this->authorize('view', Work::class);
+        $this->authorize('list', Work::class);
 
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
 
@@ -95,7 +95,7 @@ class WorkController extends PageController
      */
     public function show(Work $work)
     {
-        $this->authorize('view', Work::class);
+        $this->authorize('view', $work);
 
         $technician = $work->technician();
 
@@ -124,7 +124,7 @@ class WorkController extends PageController
      */
     public function update(CreateWorkRequest $request, Work $work)
     {
-        $this->authorize('update', Work::class);
+        $this->authorize('update', $work);
 
         $work->update(array_map('htmlentities', $request->except('work_order_id')));
 
@@ -136,7 +136,7 @@ class WorkController extends PageController
 
     public function addPhoto(Request $request, Work $work)
     {
-        $this->authorize('addPhoto', Work::class);
+        $this->authorize('addPhoto', $work);
 
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
@@ -156,7 +156,7 @@ class WorkController extends PageController
 
     public function removePhoto(Work $work, $order)
     {
-        $this->authorize('removePhoto', Work::class);
+        $this->authorize('removePhoto', $work);
 
         $image = $work->image($order, false);
         if($image->delete()){
@@ -177,7 +177,7 @@ class WorkController extends PageController
      */
     public function destroy(Work $work)
     {
-        $this->authorize('delete', Work::class);
+        $this->authorize('delete', $work);
 
         if($work->delete()){
             return response()->json([

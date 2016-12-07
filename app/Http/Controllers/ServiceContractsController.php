@@ -67,8 +67,6 @@ class ServiceContractsController extends PageController
      */
     public function show($serviceSeqId)
     {
-        $this->authorize('view', ServiceContract::class);
-
         $admin = $this->loggedUserAdministrator();
         $service = $admin->serviceBySeqId($serviceSeqId);
 
@@ -77,6 +75,9 @@ class ServiceContractsController extends PageController
         ];
         if($service->hasServiceContract()){
             $serviceContract = $service->serviceContract;
+
+            $this->authorize('view', $serviceContract );
+
             $data = [
                 'object' => $serviceContract,
                 'start' => $serviceContract->start()->datePickerValue(),
@@ -101,10 +102,10 @@ class ServiceContractsController extends PageController
      */
     public function update(ServiceContractRequest $request, $serviceSeqId)
     {
-        $this->authorize('update', ServiceContract::class);
-
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
+
+        $this->authorize('update', $serviceContract);
 
         // get the service days number 0-127
         $serviceDays = $this->contractHelpers->serviceDaysToNum($request->serviceDays);
@@ -124,10 +125,10 @@ class ServiceContractsController extends PageController
 
     public function toggleActivation($serviceSeqId)
     {
-        $this->authorize('toggleActivation', ServiceContract::class);
-
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
+
+        $this->authorize('toggleActivation', $serviceContract);
 
         $active = !$serviceContract->active;
         $serviceContract->active = $active;
@@ -147,10 +148,11 @@ class ServiceContractsController extends PageController
      */
     public function destroy($serviceSeqId)
     {
-        $this->authorize('delete', ServiceContract::class);
-
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;
+
+        $this->authorize('delete', $serviceContract);
+
         if($serviceContract->delete()){
             return response()->json([
                 'message' => 'Service Contract Successfuly destroyed',

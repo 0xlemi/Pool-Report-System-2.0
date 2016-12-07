@@ -27,7 +27,7 @@ class EquipmentController extends PageController
 
     public function index(Request $request, $service_seq_id)
     {
-        $this->authorize('view', Equipment::class);
+        $this->authorize('list', Equipment::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
 
@@ -79,7 +79,7 @@ class EquipmentController extends PageController
      */
     public function show(Equipment $equipment)
     {
-        $this->authorize('view', Equipment::class);
+        $this->authorize('view', $equipment);
 
         $photo = [
             'photos' => $this->imageTransformer
@@ -97,7 +97,7 @@ class EquipmentController extends PageController
      */
     public function update(CreateEquipmentRequest $request, Equipment $equipment)
     {
-        $this->authorize('update', Equipment::class);
+        $this->authorize('update', $equipment);
 
         $equipment->fill(array_map('htmlentities', $request->except('service_id')));
 
@@ -111,7 +111,7 @@ class EquipmentController extends PageController
 
     public function addPhoto(Request $request, Equipment $equipment)
     {
-        $this->authorize('addPhoto', App\Equipment::class);
+        $this->authorize('addPhoto', $equipment);
 
         $this->validate($request, [
             'photo' => 'required|mimes:jpg,jpeg,png'
@@ -131,7 +131,7 @@ class EquipmentController extends PageController
 
     public function removePhoto(Equipment $equipment, $order)
     {
-        $this->authorize('removePhoto', Equipment::class);
+        $this->authorize('removePhoto', $equipment);
 
         $image = $equipment->image($order, false);
         if($image->delete()){
@@ -152,7 +152,7 @@ class EquipmentController extends PageController
      */
     public function destroy(Equipment $equipment)
     {
-        $this->authorize('delete', Equipment::class);
+        $this->authorize('delete', $equipment);
 
         if($equipment->delete()){
             return response()->json([
