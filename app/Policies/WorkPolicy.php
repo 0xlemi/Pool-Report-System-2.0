@@ -20,16 +20,6 @@ class WorkPolicy
         }
     }
 
-    public function list(User $user)
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the work.
      *
@@ -40,9 +30,9 @@ class WorkPolicy
     public function view(User $user, Work $work)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_show;
+            return $user->userable()->admin()->sup_work_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_show;
+            return $user->userable()->admin()->tech_work_view;
         }
         return false;
     }
@@ -73,9 +63,9 @@ class WorkPolicy
     public function update(User $user, Work $work)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_edit;
+            return $user->userable()->admin()->sup_work_update;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_edit;
+            return $user->userable()->admin()->tech_work_update;
         }
         return false;
     }
@@ -110,9 +100,9 @@ class WorkPolicy
     public function delete(User $user, Work $work)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_destroy;
+            return $user->userable()->admin()->sup_work_delete;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_destroy;
+            return $user->userable()->admin()->tech_work_delete;
         }
         return false;
     }

@@ -23,106 +23,52 @@ class ClientPolicy
     /**
      * Administrator has all permissions
      */
-    public function before($type)
+    public function before(User $user)
     {
-        if($type->isAdministrator()){
+        if($user->isAdministrator()){
             return true;
         }
     }
 
     // tested (api)
-    public function index($type)
+    public function create(User $user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_client_index;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_client_index;
-            }
-        }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_client_index;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_client_index;
-            }
-        }
-        return false;
-    }
-
-    // tested (api)
-    public function create($type)
-    {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_client_create;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_client_create;
-            }
-        }elseif($type->isTechnician()){
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_create;
+        }elseif($user->isTechnician()){
             return false;
         }
         return false;
     }
 
     // tested (api)
-    public function show($type)
+    public function view(User $user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_client_show;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_client_show;
-            }
-        }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_client_show;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_client_show;
-            }
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_client_view;
         }
         return false;
     }
 
     // tested (api)
-    public function edit($type)
+    public function update(User $user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_client_edit;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_client_edit;
-            }
-        }elseif($type->isTechnician()){
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_update;
+        }elseif($user->isTechnician()){
             return false;
         }
         return false;
     }
 
     // tested (api)
-    public function destroy($type)
+    public function delete(User $user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_client_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_client_destroy;
-            }
-        }elseif($type->isTechnician()){
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_client_delete;
+        }elseif($user->isTechnician()){
             return false;
         }
         return false;

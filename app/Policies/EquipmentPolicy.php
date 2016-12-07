@@ -20,16 +20,6 @@ class EquipmentPolicy
         }
     }
 
-    public function list(User $user)
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the Equipment.
      *
@@ -40,9 +30,9 @@ class EquipmentPolicy
     public function view(User $user, Equipment $equipment)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_show;
+            return $user->userable()->admin()->sup_equipment_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_show;
+            return $user->userable()->admin()->tech_equipment_view;
         }
         return false;
     }
@@ -73,9 +63,9 @@ class EquipmentPolicy
     public function update(User $user, Equipment $equipment)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_edit;
+            return $user->userable()->admin()->sup_equipment_update;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_edit;
+            return $user->userable()->admin()->tech_equipment_update;
         }
         return false;
     }
@@ -110,9 +100,9 @@ class EquipmentPolicy
     public function delete(User $user, Equipment $equipment)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_destroy;
+            return $user->userable()->admin()->sup_equipment_delete;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_destroy;
+            return $user->userable()->admin()->tech_equipment_delete;
         }
         return false;
     }

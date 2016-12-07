@@ -20,16 +20,6 @@ class ChemicalPolicy
         }
     }
 
-    public function list(User $user)
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the chemical.
      *
@@ -40,9 +30,9 @@ class ChemicalPolicy
     public function view(User $user, Chemical $chemical)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_show;
+            return $user->userable()->admin()->sup_chemical_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_show;
+            return $user->userable()->admin()->tech_chemical_view;
         }
         return false;
     }
@@ -73,9 +63,9 @@ class ChemicalPolicy
     public function update(User $user, Chemical $chemical)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_edit;
+            return $user->userable()->admin()->sup_chemical_update;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_edit;
+            return $user->userable()->admin()->tech_chemical_update;
         }
         return false;
     }
@@ -90,9 +80,9 @@ class ChemicalPolicy
     public function delete(User $user, Chemical $chemical)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_destroy;
+            return $user->userable()->admin()->sup_chemical_delete;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_destroy;
+            return $user->userable()->admin()->tech_chemical_delete;
         }
         return false;
     }

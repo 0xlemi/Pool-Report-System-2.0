@@ -11,114 +11,50 @@ class TechnicianPolicy
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Administrator has all permissions
      */
-    public function before($type)
+    public function before($user)
     {
-        if($type->isAdministrator()){
+        if($user->isAdministrator()){
             return true;
         }
     }
 
-
-    public function index($type)
+    public function view($user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_technician_index;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_technician_index;
-            }
-        }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_technician_index;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_technician_index;
-            }
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_technician_view;
+        }elseif($user->isTechnician()){
+            return $user->userable()->admin()->tech_technician_view;
         }
         return false;
     }
 
-    public function create($type)
+    public function create($user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_technician_create;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_technician_create;
-            }
-        }elseif($type->isTechnician()){
-            return false;    
-        }
-        return false;
-    }
-
-    public function show($type)
-    {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_technician_show;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_technician_show;
-            }
-        }elseif($type->isTechnician()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->tech_technician_show;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->tech_technician_show;
-            }
-        }
-        return false;
-    }
-
-    public function edit($type)
-    {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
-
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_technician_edit;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_technician_edit;
-            }
-        }elseif($type->isTechnician()){
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_technician_create;
+        }elseif($user->isTechnician()){
             return false;
         }
         return false;
     }
 
-    public function destroy($type)
+    public function update($user)
     {
-        $session_user = Auth::user();
-        $api_user = Auth::guard('api')->user();
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_technician_update;
+        }elseif($user->isTechnician()){
+            return false;
+        }
+        return false;
+    }
 
-        if($type->isSupervisor()){
-            if(isset($session_user)){
-                return $session_user->userable()->admin()->sup_technician_destroy;
-            }elseif(isset($api_user)){
-                return $api_user->userable()->admin()->sup_technician_destroy;
-            }
-        }elseif($type->isTechnician()){
+    public function delete($user)
+    {
+        if($user->isSupervisor()){
+            return $user->userable()->admin()->sup_technician_delete;
+        }elseif($user->isTechnician()){
             return false;
         }
         return false;

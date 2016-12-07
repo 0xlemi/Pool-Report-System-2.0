@@ -20,16 +20,6 @@ class PaymentPolicy
         }
     }
 
-    public function list()
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_payment_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the payment.
      *
@@ -40,9 +30,9 @@ class PaymentPolicy
     public function view(User $user, Payment $payment)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_show;
+            return $user->userable()->admin()->sup_payment_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_payment_show;
+            return $user->userable()->admin()->tech_payment_view;
         }
         return false;
     }
@@ -73,7 +63,7 @@ class PaymentPolicy
     public function delete(User $user, Payment $payment)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_destroy;
+            return $user->userable()->admin()->sup_payment_delete;
         }elseif($user->isTechnician()){
             return false;
         }

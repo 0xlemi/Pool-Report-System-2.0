@@ -66,159 +66,137 @@ class CreateAdministratorsTable extends Migration
             // Permissions
 
                 // Report
-                $table->boolean('sup_report_index')->default(1);
+                $table->boolean('sup_report_view')->default(1);
                 $table->boolean('sup_report_create')->default(1);
-                $table->boolean('sup_report_show')->default(1);
-                $table->boolean('sup_report_edit')->default(1);
+                $table->boolean('sup_report_update')->default(1);
                 $table->boolean('sup_report_addPhoto')->default(1);
                 $table->boolean('sup_report_removePhoto')->default(1);
-                $table->boolean('sup_report_destroy')->default(1);
+                $table->boolean('sup_report_delete')->default(1);
 
-                $table->boolean('tech_report_index')->default(1);
+                $table->boolean('tech_report_view')->default(1);
                 $table->boolean('tech_report_create')->default(1);
-                $table->boolean('tech_report_show')->default(1);
-                $table->boolean('tech_report_edit')->default(0);
+                $table->boolean('tech_report_update')->default(0);
                 $table->boolean('tech_report_addPhoto')->default(0);
                 $table->boolean('tech_report_removePhoto')->default(0);
-                $table->boolean('tech_report_destroy')->default(0);
+                $table->boolean('tech_report_delete')->default(0);
 
                 // Work Orders
-                $table->boolean('sup_workorder_index')->default(1);
+                $table->boolean('sup_workorder_view')->default(1);
                 $table->boolean('sup_workorder_create')->default(1);
-                $table->boolean('sup_workorder_show')->default(1);
-                $table->boolean('sup_workorder_edit')->default(1);
+                $table->boolean('sup_workorder_update')->default(1);
                 $table->boolean('sup_workorder_finish')->default(1);
                 $table->boolean('sup_workorder_addPhoto')->default(1);
                 $table->boolean('sup_workorder_removePhoto')->default(1);
-                $table->boolean('sup_workorder_destroy')->default(1);
+                $table->boolean('sup_workorder_delete')->default(1);
 
-                $table->boolean('tech_workorder_index')->default(1);
+                $table->boolean('tech_workorder_view')->default(1);
                 $table->boolean('tech_workorder_create')->default(1);
-                $table->boolean('tech_workorder_show')->default(1);
-                $table->boolean('tech_workorder_edit')->default(0);
+                $table->boolean('tech_workorder_update')->default(0);
                 $table->boolean('tech_workorder_finish')->default(1);
                 $table->boolean('tech_workorder_addPhoto')->default(0);
                 $table->boolean('tech_workorder_removePhoto')->default(0);
 
                     // Works
-                    $table->boolean('sup_work_index')->default(1);
+                    $table->boolean('sup_work_view')->default(1);
                     $table->boolean('sup_work_create')->default(1);
-                    $table->boolean('sup_work_show')->default(1);
-                    $table->boolean('sup_work_edit')->default(1);
+                    $table->boolean('sup_work_update')->default(1);
                     $table->boolean('sup_work_addPhoto')->default(1);
                     $table->boolean('sup_work_removePhoto')->default(1);
-                    $table->boolean('sup_work_destroy')->default(1);
+                    $table->boolean('sup_work_delete')->default(1);
 
-                    $table->boolean('tech_work_index')->default(1);
+                    $table->boolean('tech_work_view')->default(1);
                     $table->boolean('tech_work_create')->default(1);
-                    $table->boolean('tech_work_show')->default(1);
-                    $table->boolean('tech_work_edit')->default(0);
+                    $table->boolean('tech_work_update')->default(0);
                     $table->boolean('tech_work_addPhoto')->default(1);
                     $table->boolean('tech_work_removePhoto')->default(0);
-                    $table->boolean('tech_work_destroy')->default(0);
+                    $table->boolean('tech_work_delete')->default(0);
 
                 // Services
-                $table->boolean('sup_service_index')->default(1);
+                $table->boolean('sup_service_view')->default(1);
                 $table->boolean('sup_service_create')->default(1);
-                $table->boolean('sup_service_show')->default(1);
-                $table->boolean('sup_service_edit')->default(1);
-                $table->boolean('sup_service_destroy')->default(1);
+                $table->boolean('sup_service_update')->default(1);
+                $table->boolean('sup_service_delete')->default(1);
 
-                $table->boolean('tech_service_index')->default(1);
+                $table->boolean('tech_service_view')->default(1);
                 $table->boolean('tech_service_create')->default(0);
-                $table->boolean('tech_service_show')->default(1);
-                $table->boolean('tech_service_edit')->default(0);
+                $table->boolean('tech_service_update')->default(0);
 
                     // Contract
+                    $table->boolean('sup_contract_view')->default(1);
                     $table->boolean('sup_contract_create')->default(1);
-                    $table->boolean('sup_contract_show')->default(1);
-                    $table->boolean('sup_contract_edit')->default(1);
+                    $table->boolean('sup_contract_update')->default(1);
                     $table->boolean('sup_contract_deactivate')->default(1);
-                    $table->boolean('sup_contract_destroy')->default(1);
+                    $table->boolean('sup_contract_delete')->default(1);
 
+                    $table->boolean('tech_contract_view')->default(0);
                     $table->boolean('tech_contract_create')->default(0);
-                    $table->boolean('tech_contract_show')->default(0);
-                    $table->boolean('tech_contract_edit')->default(0);
+                    $table->boolean('tech_contract_update')->default(0);
                     $table->boolean('tech_contract_deactivate')->default(0);
-                    $table->boolean('tech_contract_destroy')->default(0);
+                    $table->boolean('tech_contract_delete')->default(0);
 
                     // Chemicals
-                    $table->boolean('sup_chemical_index')->default(1);
+                    $table->boolean('sup_chemical_view')->default(1);
                     $table->boolean('sup_chemical_create')->default(1);
-                    $table->boolean('sup_chemical_show')->default(1);
-                    $table->boolean('sup_chemical_edit')->default(1);
-                    $table->boolean('sup_chemical_destroy')->default(1);
+                    $table->boolean('sup_chemical_update')->default(1);
+                    $table->boolean('sup_chemical_delete')->default(1);
 
-                    $table->boolean('tech_chemical_index')->default(1);
+                    $table->boolean('tech_chemical_view')->default(1);
                     $table->boolean('tech_chemical_create')->default(1);
-                    $table->boolean('tech_chemical_show')->default(1);
-                    $table->boolean('tech_chemical_edit')->default(0);
-                    $table->boolean('tech_chemical_destroy')->default(0);
+                    $table->boolean('tech_chemical_update')->default(0);
+                    $table->boolean('tech_chemical_delete')->default(0);
 
                     // Equipment
-                    $table->boolean('sup_equipment_index')->default(1);
+                    $table->boolean('sup_equipment_view')->default(1);
                     $table->boolean('sup_equipment_create')->default(1);
-                    $table->boolean('sup_equipment_show')->default(1);
-                    $table->boolean('sup_equipment_edit')->default(1);
+                    $table->boolean('sup_equipment_update')->default(1);
                     $table->boolean('sup_equipment_addPhoto')->default(1);
                     $table->boolean('sup_equipment_removePhoto')->default(1);
-                    $table->boolean('sup_equipment_destroy')->default(1);
+                    $table->boolean('sup_equipment_delete')->default(1);
 
-                    $table->boolean('tech_equipment_index')->default(1);
+                    $table->boolean('tech_equipment_view')->default(1);
                     $table->boolean('tech_equipment_create')->default(1);
-                    $table->boolean('tech_equipment_show')->default(1);
-                    $table->boolean('tech_equipment_edit')->default(0);
+                    $table->boolean('tech_equipment_update')->default(0);
                     $table->boolean('tech_equipment_addPhoto')->default(1);
                     $table->boolean('tech_equipment_removePhoto')->default(0);
-                    $table->boolean('tech_equipment_destroy')->default(0);
+                    $table->boolean('tech_equipment_delete')->default(0);
 
                 // Client
-                $table->boolean('sup_client_index')->default(1);
+                $table->boolean('sup_client_view')->default(1);
                 $table->boolean('sup_client_create')->default(1);
-                $table->boolean('sup_client_show')->default(1);
-                $table->boolean('sup_client_edit')->default(1);
-                $table->boolean('sup_client_destroy')->default(1);
+                $table->boolean('sup_client_update')->default(1);
+                $table->boolean('sup_client_delete')->default(1);
 
-                $table->boolean('tech_client_index')->default(0);
-                $table->boolean('tech_client_show')->default(0);
+                $table->boolean('tech_client_view')->default(0);
 
                 // Supervisors
-                $table->boolean('sup_supervisor_index')->default(1);
+                $table->boolean('sup_supervisor_view')->default(1);
                 $table->boolean('sup_supervisor_create')->default(1);
-                $table->boolean('sup_supervisor_show')->default(1);
-                $table->boolean('sup_supervisor_edit')->default(0);
-                $table->boolean('sup_supervisor_destroy')->default(0);
+                $table->boolean('sup_supervisor_update')->default(0);
+                $table->boolean('sup_supervisor_delete')->default(0);
 
-                $table->boolean('tech_supervisor_index')->default(1);
-                $table->boolean('tech_supervisor_show')->default(0);
+                $table->boolean('tech_supervisor_view')->default(0);
 
                 // Technicians
-                $table->boolean('sup_technician_index')->default(1);
+                $table->boolean('sup_technician_view')->default(1);
                 $table->boolean('sup_technician_create')->default(1);
-                $table->boolean('sup_technician_show')->default(1);
-                $table->boolean('sup_technician_edit')->default(1);
-                $table->boolean('sup_technician_destroy')->default(1);
+                $table->boolean('sup_technician_update')->default(1);
+                $table->boolean('sup_technician_delete')->default(1);
 
-                $table->boolean('tech_technician_index')->default(1);
-                $table->boolean('tech_technician_show')->default(0);
+                $table->boolean('tech_technician_view')->default(0);
 
                 // Invoices
-                $table->boolean('sup_invoice_index')->default(1);
-                $table->boolean('sup_invoice_show')->default(1);
-                $table->boolean('sup_invoice_destroy')->default(0);
+                $table->boolean('sup_invoice_view')->default(1);
+                $table->boolean('sup_invoice_delete')->default(0);
 
-                $table->boolean('tech_invoice_index')->default(0);
-                $table->boolean('tech_invoice_show')->default(0);
+                $table->boolean('tech_invoice_view')->default(0);
 
                     // payments
-                    $table->boolean('sup_payment_index')->default(1);
+                    $table->boolean('sup_payment_view')->default(1);
                     $table->boolean('sup_payment_create')->default(1);
-                    $table->boolean('sup_payment_show')->default(1);
-                    $table->boolean('sup_payment_destroy')->default(0);
+                    $table->boolean('sup_payment_delete')->default(0);
 
-                    $table->boolean('tech_payment_index')->default(0);
+                    $table->boolean('tech_payment_view')->default(0);
                     $table->boolean('tech_payment_create')->default(0);
-                    $table->boolean('tech_payment_show')->default(0);
 
 
             $table->softDeletes();

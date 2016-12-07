@@ -20,16 +20,6 @@ class WorkOrderPolicy
         }
     }
 
-    public function list(User $user)
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the WorkOrder.
      *
@@ -40,9 +30,9 @@ class WorkOrderPolicy
     public function view(User $user, WorkOrder $WorkOrder)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_show;
+            return $user->userable()->admin()->sup_workorder_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_show;
+            return $user->userable()->admin()->tech_workorder_view;
         }
         return false;
     }
@@ -73,9 +63,9 @@ class WorkOrderPolicy
     public function update(User $user, WorkOrder $WorkOrder)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_edit;
+            return $user->userable()->admin()->sup_workorder_update;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_edit;
+            return $user->userable()->admin()->tech_workorder_update;
         }
         return false;
     }
@@ -127,7 +117,7 @@ class WorkOrderPolicy
     public function delete(User $user, WorkOrder $WorkOrder)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_destroy;
+            return $user->userable()->admin()->sup_workorder_delete;
         }elseif($user->isTechnician()){
             return false;
         }

@@ -20,16 +20,6 @@ class InvoicePolicy
         }
     }
 
-    public function list()
-    {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_index;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_invoice_index;
-        }
-        return false;
-    }
-
     /**
      * Determine whether the user can view the invoice.
      *
@@ -40,9 +30,9 @@ class InvoicePolicy
     public function view(User $user, Invoice $invoice)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_show;
+            return $user->userable()->admin()->sup_invoice_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_invoice_show;
+            return $user->userable()->admin()->tech_invoice_view;
         }
         return false;
     }
@@ -57,7 +47,7 @@ class InvoicePolicy
     public function delete(User $user, Invoice $invoice)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_destroy;
+            return $user->userable()->admin()->sup_invoice_delete;
         }elseif($user->isTechnician()){
             return false;
         }

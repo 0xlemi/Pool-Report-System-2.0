@@ -30,9 +30,9 @@ class ContractPolicy
     public function view(User $user, ServiceContract $serviceContract)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_show;
+            return $user->userable()->admin()->sup_contract_view;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_show;
+            return $user->userable()->admin()->tech_contract_view;
         }
         return false;
     }
@@ -63,9 +63,9 @@ class ContractPolicy
     public function update(User $user, ServiceContract $serviceContract)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_edit;
+            return $user->userable()->admin()->sup_contract_update;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_edit;
+            return $user->userable()->admin()->tech_contract_update;
         }
         return false;
     }
@@ -90,9 +90,9 @@ class ContractPolicy
     public function delete(User $user, ServiceContract $serviceContract)
     {
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_destroy;
+            return $user->userable()->admin()->sup_contract_delete;
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_destroy;
+            return $user->userable()->admin()->tech_contract_delete;
         }
         return false;
     }
