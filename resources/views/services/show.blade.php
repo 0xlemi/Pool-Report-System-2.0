@@ -99,16 +99,12 @@
 								</contract>
 							@endcan
 
-        					@can('list', App\Chemical::class)
-								<chemical service-id="{{ $service->seq_id }}"
-								    base-url="{{ url('chemicals').'/' }}">
-								</chemical>
-							@endcan
+							<chemical service-id="{{ $service->seq_id }}"
+							    base-url="{{ url('chemicals').'/' }}">
+							</chemical>
 
-        					@can('list', App\Equipment::class)
-								<equipment service-id="{{ $service->seq_id }}">
-								</equipment>
-							@endcan
+							<equipment service-id="{{ $service->seq_id }}">
+							</equipment>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Location</label>
@@ -120,15 +116,17 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Clients</label>
-								<div class="col-sm-10">
-									<button type="button" class="btn btn-warning"
-										data-toggle="modal"
-										data-target="#clientsModal">
-										<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>
+        					@can('list', App\Client::class)
+								<div class="form-group row">
+									<label class="col-sm-2 form-control-label">Clients</label>
+									<div class="col-sm-10">
+										<button type="button" class="btn btn-warning"
+											data-toggle="modal"
+											data-target="#clientsModal">
+											<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>
+									</div>
 								</div>
-							</div>
+							@endcan
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Comments</label>
