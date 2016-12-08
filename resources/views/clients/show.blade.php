@@ -142,14 +142,18 @@
 						</div>
 
 						<hr>
-						<p style="float: right;">
-							<delete-button url="clients/" object-id="{{ $client->seq_id }}">
-							</delete-button>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a  class="btn btn-primary"
-							href="{{ url('/clients/'.$client->seq_id.'/edit') }}">
-							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Client</a>
-						</p>
+						<span style="float: right;">
+        					@can('delete', $client)
+								<delete-button url="clients/" object-id="{{ $client->seq_id }}">
+								</delete-button>
+        					@endcan
+        					@can('update', $client)
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<a  class="btn btn-primary"
+								href="{{ url('/clients/'.$client->seq_id.'/edit') }}">
+								<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Client</a>
+        					@endcan
+						</span>
 						<br>
 						<br>
 					</div>

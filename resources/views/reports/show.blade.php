@@ -110,20 +110,24 @@
                             @endforeach
 						</div>
 						<hr>
-						<p style="float: left;display:inline;">
+						<span style="float: left;display:inline;">
 							<button  class="btn btn-info"
 							 data-toggle="modal" @click="previewEmailReport({{ $report->seq_id }})" >
 							<i class="font-icon font-icon-mail"></i>&nbsp;&nbsp;Preview email</button>
 							&nbsp;&nbsp;&nbsp;&nbsp;
-						</p>
-						<p style="float: right;display:inline;">
-							<delete-button url="reports/" object-id="{{ $report->seq_id }}">
-							</delete-button>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a  class="btn btn-primary"
-							href="{{ url('/reports/'.$report->seq_id.'/edit') }}">
-							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Report</a>
-						</p>
+						</span>
+						<span style="float: right;display:inline;">
+        					@can('delete', $report)
+								<delete-button url="reports/" object-id="{{ $report->seq_id }}">
+								</delete-button>
+        					@endcan
+        					@can('update', $report)
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<a  class="btn btn-primary"
+								href="{{ url('/reports/'.$report->seq_id.'/edit') }}">
+								<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Report</a>
+							@endcan
+						</span>
 						<br>
 						<br>
 					</div>

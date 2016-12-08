@@ -32716,7 +32716,10 @@ $(document).ready(function () {
 
 	var invoiceVue = new Vue({
 		el: '.invoiceVue',
-		components: { payments: payments },
+		components: {
+			payments: payments,
+			deleteButton: deleteButton
+		},
 		data: {
 			statusSwitch: false
 		},

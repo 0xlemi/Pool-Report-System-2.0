@@ -949,7 +949,10 @@ function isset(strVariableName) {
 
     let invoiceVue = new Vue({
         el: '.invoiceVue',
-        components: { payments },
+        components: {
+            payments,
+            deleteButton,
+        },
         data:{
             statusSwitch: false,
         },

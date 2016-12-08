@@ -34,10 +34,10 @@ class WorkOrderPolicy
      * Determine whether the user can view the WorkOrder.
      *
      * @param  \App\User  $user
-     * @param  \App\WorkOrder  $WorkOrder
+     * @param  \App\WorkOrder  $workOrder
      * @return mixed
      */
-    public function view(User $user, WorkOrder $WorkOrder)
+    public function view(User $user, WorkOrder $workOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_view;
@@ -67,15 +67,18 @@ class WorkOrderPolicy
      * Determine whether the user can update the WorkOrder.
      *
      * @param  \App\User  $user
-     * @param  \App\WorkOrder  $WorkOrder
+     * @param  \App\WorkOrder  $workOrder
      * @return mixed
      */
-    public function update(User $user, WorkOrder $WorkOrder)
+    public function update(User $user, WorkOrder $workOrder)
     {
+        $isNotFinished = !$workOrder->end()->finished();
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_update;
+            $permission = $user->userable()->admin()->sup_workorder_update;
+            return ($permission && $isNotFinished);
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_update;
+            $permission = $user->userable()->admin()->tech_workorder_update;
+            return ($permission && $isNotFinished);
         }
         return false;
     }
@@ -84,20 +87,23 @@ class WorkOrderPolicy
      * Determine whether the user can finish the WorkOrder.
      *
      * @param  \App\User  $user
-     * @param  \App\WorkOrder  $WorkOrder
+     * @param  \App\WorkOrder  $workOrder
      * @return mixed
      */
-    public function finish(User $user, WorkOrder $WorkOrder)
+    public function finish(User $user, WorkOrder $workOrder)
     {
+        $isNotFinished = !$workOrder->end()->finished();
         if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_finish;
+            $permission = $user->userable()->admin()->sup_workorder_finish;
+            return ($permission && $isNotFinished);
         }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_finish;
+            $permission = $user->userable()->admin()->tech_workorder_finish;
+            return ($permission && $isNotFinished);
         }
         return false;
     }
 
-    public function addPhoto(User $user, WorkOrder $WorkOrder)
+    public function addPhoto(User $user, WorkOrder $workOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_addPhoto;
@@ -107,7 +113,7 @@ class WorkOrderPolicy
         return false;
     }
 
-    public function removePhoto(User $user, WorkOrder $WorkOrder)
+    public function removePhoto(User $user, WorkOrder $workOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_removePhoto;
@@ -121,10 +127,10 @@ class WorkOrderPolicy
      * Determine whether the user can delete the WorkOrder.
      *
      * @param  \App\User  $user
-     * @param  \App\WorkOrder  $WorkOrder
+     * @param  \App\WorkOrder  $workOrder
      * @return mixed
      */
-    public function delete(User $user, WorkOrder $WorkOrder)
+    public function delete(User $user, WorkOrder $workOrder)
     {
         if($user->isSupervisor()){
             return $user->userable()->admin()->sup_workorder_delete;

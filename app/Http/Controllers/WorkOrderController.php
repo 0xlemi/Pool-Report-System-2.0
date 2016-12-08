@@ -213,10 +213,6 @@ class WorkOrderController extends PageController
 
         $this->authorize('update', $workOrder);
 
-        if($workOrder->end()->finished()){
-            return $this->respondWithValidationError('Work Order can\'t be changed once finilized.');
-        }
-
         $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);

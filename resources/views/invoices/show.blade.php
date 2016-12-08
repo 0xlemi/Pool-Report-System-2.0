@@ -71,12 +71,14 @@
 						    base-url="{{ url('/') }}">
 						</payments>
 
-
 						<hr>
-							<a class="btn btn-danger"
-							data-method="delete" data-token="{{ csrf_token() }}"
-			        		data-confirm="Are you sure?" href="{{ url('/invoices/'.$invoice->seq_id) }}">
-							<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;Delete</a>
+						<span style="float: right;">
+        					@can('delete', $invoice)
+								<delete-button url="invoices/" object-id="{{ $invoice->seq_id }}">
+								</delete-button>
+        					@endcan
+						</span>
+						<br>
 						<br>
 					</div>
 			</section>

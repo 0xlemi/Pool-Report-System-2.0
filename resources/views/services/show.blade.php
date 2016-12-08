@@ -92,17 +92,23 @@
 								</div>
 							</div>
 
-							<contract service-id="{{ $service->seq_id }}"
-						        service-contract-url="{{ url('servicecontracts').'/' }}"
-						        :currencies="{{ json_encode(config('constants.currencies')) }}">
-							</contract>
+        					@can('view', $service->serviceContract)
+								<contract service-id="{{ $service->seq_id }}"
+							        service-contract-url="{{ url('servicecontracts').'/' }}"
+							        :currencies="{{ json_encode(config('constants.currencies')) }}">
+								</contract>
+							@endcan
 
-							<chemical service-id="{{ $service->seq_id }}"
-							    base-url="{{ url('chemicals').'/' }}">
-							</chemical>
+        					@can('list', App\Chemical::class)
+								<chemical service-id="{{ $service->seq_id }}"
+								    base-url="{{ url('chemicals').'/' }}">
+								</chemical>
+							@endcan
 
-							<equipment service-id="{{ $service->seq_id }}">
-							</equipment>
+        					@can('list', App\Equipment::class)
+								<equipment service-id="{{ $service->seq_id }}">
+								</equipment>
+							@endcan
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Location</label>
@@ -135,14 +141,18 @@
 						</form>
 						<hr>
 
-						<p style="float: right;">
-							<delete-button url="services/" object-id="{{ $service->seq_id }}">
-							</delete-button>
-							&nbsp;&nbsp;&nbsp;&nbsp;
-							<a  class="btn btn-primary"
-							href="{{ url('/services/'.$service->seq_id.'/edit') }}">
-							<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Service</a>
-						</p>
+						<span style="float: right;">
+        					@can('delete', $service)
+								<delete-button url="services/" object-id="{{ $service->seq_id }}">
+								</delete-button>
+        					@endcan
+        					@can('update', $service)
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<a  class="btn btn-primary"
+								href="{{ url('/services/'.$service->seq_id.'/edit') }}">
+								<i class="font-icon font-icon-pencil"></i>&nbsp;&nbsp;Edit Service</a>
+							@endcan
+						</span>
 						<br>
 						<br>
 					</div>

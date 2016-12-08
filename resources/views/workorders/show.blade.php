@@ -103,26 +103,26 @@
 								@endif
 							</div>
 						</div>
-
 						<hr>
-						<p style="float: right;display:inline;">
-
+        				@can('delete', $workOrder)
 							<delete-button url="workorders/" object-id="{{ $workOrder->seq_id }}">
 							</delete-button>
-							@if(!$workOrder->end()->finished())
+        				@endcan
+						<span style="float: right;display:inline;">
+    						@can('update', $workOrder)
 								<a class="btn btn-primary"
 										href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
 									<i class="font-icon font-icon-pencil"></i>
 									&nbsp;&nbsp;Edit Work Order
 								</a>
-
+    						@endcan
+    						@can('finish', $workOrder)
 								<finish-work-order-button work-order-id="{{ $workOrder->seq_id }}">
 								</finish-work-order-button>
-
-							@endif
-
-						</p>
-						<br><br>
+    						@endcan
+						</span>
+						<br>
+						<br>
 					</div>
 			</section>
 		</div>
