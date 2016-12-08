@@ -800,6 +800,7 @@ function isset(strVariableName) {
     let addressFields = require('./components/addressFields.vue');
     let missingServices = require('./components/missingServices.vue');
     let settings = require('./components/settings.vue');
+    let workOrderTable = require('./components/workOrderTable.vue');
 
 
     let mainVue = new Vue({
@@ -820,6 +821,7 @@ function isset(strVariableName) {
     let workOrderVue = new Vue({
         el:'.workOrderVue',
         components: {
+            workOrderTable,
             PhotoList,
             dropdown,
             deleteButton,
@@ -829,20 +831,9 @@ function isset(strVariableName) {
             works
         },
         data:{
-            // index
-            finishedSwitch: false,
             // create edit
             supervisorId: (isset('supervisorId')) ? back.supervisorId : 0,
             serviceId: (isset('serviceId')) ? back.serviceId : 0,
-        },
-        methods:{
-            changeWorkOrderListFinished(finished){
-                var intFinished = (!finished) ? 1 : 0;
-                if(isset('workOrderTableUrl')){
-                    let new_url = back.workOrderTableUrl+intFinished;
-                    generic_table.bootstrapTable('refresh', {url:new_url});
-            	}
-            }
         },
     });
 
