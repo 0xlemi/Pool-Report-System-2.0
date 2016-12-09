@@ -801,6 +801,7 @@ function isset(strVariableName) {
     let missingServices = require('./components/missingServices.vue');
     let settings = require('./components/settings.vue');
     let workOrderTable = require('./components/workOrderTable.vue');
+    let serviceTable = require('./components/serviceTable.vue');
 
 
     let mainVue = new Vue({
@@ -829,11 +830,6 @@ function isset(strVariableName) {
             workOrderPhotosEdit,
             finishWorkOrderButton,
             works
-        },
-        data:{
-            // create edit
-            supervisorId: (isset('supervisorId')) ? back.supervisorId : 0,
-            serviceId: (isset('serviceId')) ? back.serviceId : 0,
         },
     });
 
@@ -868,6 +864,7 @@ function isset(strVariableName) {
     let serviceVue = new Vue({
         el: '.serviceVue',
         components: {
+            serviceTable,
             PhotoList,
             countries,
             contract,
@@ -880,21 +877,6 @@ function isset(strVariableName) {
         directives: {
             FormToAjax
         },
-        data: {
-            statusSwitch: true,
-            serviceId: (isset('serviceId')) ? Number(back.serviceId) : 0,
-        },
-        methods: {
-            // Index
-            changeServiceListStatus(status){
-                var intStatus = (!status) ? 1 : 0;
-                if(isset('serviceTableUrl')){
-                    let new_url = back.serviceTableUrl+intStatus;
-                    generic_table.bootstrapTable('refresh', {url:new_url});
-            	}
-            },
-        },
-
     });
 
     let supervisorVue = new Vue({

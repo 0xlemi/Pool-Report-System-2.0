@@ -581,13 +581,6 @@ var BootstrapTable = {
         options: {
             type: Object,
             default: function () { return DEFAULTS; }
-        },
-        objectId: {
-            type: Number,
-            required: true
-        },
-        buttonValue: {
-            default: null
         }
     },
     data: function () {
@@ -786,7 +779,7 @@ var BootstrapTable = {
         },
         selectId(id){
             this.objectId = id;
-			this.$dispatch('rowClicked');
+			this.$dispatch('rowClicked', id);
         },
         clearRowClasses(rows){
             for (let row of rows) {

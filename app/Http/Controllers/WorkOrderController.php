@@ -52,14 +52,7 @@ class WorkOrderController extends PageController
     {
         $this->authorize('list', WorkOrder::class);
 
-        $default_table_url = url('datatables/workorders?finished=0');
-
-        JavaScript::put([
-            'workOrderTableUrl' => url('datatables/workorders?finished='),
-            'click_url' => url('workorders').'/',
-        ]);
-
-        return view('workorders.index', compact('default_table_url'));
+        return view('workorders.index');
     }
 
     /**
@@ -184,17 +177,6 @@ class WorkOrderController extends PageController
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
-        $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
-
-        $startDate = (new Carbon($workOrder->start, 'UTC'))->setTimezone($admin->timezone);
-        JavaScript::put([
-            'defaultDate' => $startDate,
-            'serviceId' => $workOrder->service->seq_id,
-            'supervisorId' => $workOrder->supervisor->seq_id,
-            'workOrderId' => $workOrder->id,
-            'workOrderPhotoBeforeUrl' => url('workorders/photos/before/'.$workOrder->id),
-            'workOrderBeforePhotos' => $imagesBeforeWork,
-        ]);
 
         return view('workorders.edit', compact('workOrder', 'services', 'supervisors'));
     }

@@ -120,20 +120,9 @@ class ServicesController extends PageController
 
         $this->authorize('view', $service);
 
-        JavaScript::put([
-            'showLatitude' => $service->latitude,
-            'showLongitude' => $service->longitude,
-            'hasContract' => $service->hasServiceContract(),
-            'equipmentUrl' => url('/equipment').'/',
-            'equipmentAddPhotoUrl' => url('/equipment/photos').'/',
-            'serviceId' => $service->id,
-            'click_url' => url('clients').'/',
-        ]);
-
         $clients = $service->clients()->get();
-        $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;
 
-        return view('services.show', compact('service', 'clients', 'default_table_url'));
+        return view('services.show', compact('service', 'clients'));
     }
 
     /**
@@ -148,19 +137,7 @@ class ServicesController extends PageController
 
         $this->authorize('update', $service);
 
-        JavaScript::put([
-            'latitude' => $service->latitude,
-            'longitude' => $service->longitude,
-            'addressLine' => $service->address_line,
-            'city' => $service->city,
-            'state' => $service->state,
-            'postalCode' => $service->postal_code,
-            'country' => $service->country,
-        ]);
-
-        $default_table_url = url('/datatables/equipment').'/'.$service->seq_id;
-
-        return view('services.edit',compact('service', 'default_table_url'));
+        return view('services.edit',compact('service'));
     }
 
     /**
