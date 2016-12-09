@@ -10,7 +10,7 @@
 
         <div v-if="toolbarSwitch" class="checkbox-toggle" style="display:inline;left:30px;" >
 			<input type="checkbox" id="toolbarSwitch" v-model="toolbarSwitch.checked"
-					@click="getList(toolbarSwitch.checked)">
+					@click="getList(!toolbarSwitch.checked)">
 			<label for="toolbarSwitch">{{ toolbarSwitch.name }}</label>
 		</div>
 
@@ -71,8 +71,12 @@ export default {
 	},
     methods: {
         getList(finished){
+			let listUrl = Laravel.url+this.tableUrl;
+			if(this.toolbarSwitch){
+				listUrl = Laravel.url+this.tableUrl+(finished ? 1 : 0);
+			}
 			this.$broadcast('disableTable');
-            this.$http.get(Laravel.url+this.tableUrl+(finished ? 0 : 1)).then((response) => {
+            this.$http.get(listUrl).then((response) => {
 				this.data = response.data;
 				this.validationErrors = {};
 				this.$broadcast('refreshTable');
@@ -88,8 +92,13 @@ export default {
         },
     },
     ready(){
-        this.getList(!this.toolbarSwitch.checked);
-        this.getList(!this.toolbarSwitch.checked);
+		if(this.toolbarSwitch){
+	        this.getList(this.toolbarSwitch.checked);
+	        this.getList(this.toolbarSwitch.checked);
+		}else{
+	        this.getList();
+	        this.getList();
+		}
     }
 }
 </script>

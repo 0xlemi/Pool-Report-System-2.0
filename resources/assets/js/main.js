@@ -802,6 +802,7 @@ function isset(strVariableName) {
     let settings = require('./components/settings.vue');
     let workOrderTable = require('./components/workOrderTable.vue');
     let serviceTable = require('./components/serviceTable.vue');
+    let clientTable = require('./components/clientTable.vue');
 
 
     let mainVue = new Vue({
@@ -882,6 +883,7 @@ function isset(strVariableName) {
     let supervisorVue = new Vue({
         el: '.supervisorVue',
         components: {
+            clientTable,
             deleteButton,
         },
         data:{
