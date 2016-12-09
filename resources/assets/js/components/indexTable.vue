@@ -1,7 +1,6 @@
 <template>
 
 	<bootstrap-table :columns="columns" :data="data" :options="tableOptions">
-
 	    <alert type="danger" :message="alertMessage" :active="alertActive"></alert>
 
         <button v-if="button" type="button" class="btn btn-primary" @click="goToCreate" >
@@ -13,7 +12,6 @@
 					@click="getList(!toolbarSwitch.checked)">
 			<label for="toolbarSwitch">{{ toolbarSwitch.name }}</label>
 		</div>
-
     </bootstrap-table>
 
 </template>

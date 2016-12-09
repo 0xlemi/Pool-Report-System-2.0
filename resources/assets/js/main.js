@@ -805,6 +805,7 @@ function isset(strVariableName) {
     let clientTable = require('./components/clientTable.vue');
     let supervisorTable = require('./components/supervisorTable.vue');
     let technicianTable = require('./components/technicianTable.vue');
+    let invoiceTable = require('./components/invoiceTable.vue');
 
 
     let mainVue = new Vue({
@@ -888,18 +889,6 @@ function isset(strVariableName) {
             clientTable,
             supervisorTable,
             deleteButton,
-        },
-        data:{
-            statusSwitch: true,
-        },
-        methods:{
-            changeSupervisorListStatus(status){
-                var intStatus = (!status) ? 1 : 0;
-                if(isset('supervisorTableUrl')){
-                    let new_url = back.supervisorTableUrl+intStatus;
-                    generic_table.bootstrapTable('refresh', {url:new_url});
-            	}
-            }
         }
     });
 
@@ -910,39 +899,15 @@ function isset(strVariableName) {
             technicianTable,
             dropdown,
             deleteButton,
-        },
-        data:{
-            statusSwitch: true,
-            dropdownKey: (isset('dropdownKey')) ? Number(back.dropdownKey) : 0,
-        },
-        methods:{
-            changeTechnicianListStatus(status){
-                var intStatus = (!status) ? 1 : 0;
-                if(isset('techniciansTableUrl')){
-                    let new_url = back.techniciansTableUrl+intStatus;
-                    generic_table.bootstrapTable('refresh', {url:new_url});
-            	}
-            }
         }
     });
 
     let invoiceVue = new Vue({
         el: '.invoiceVue',
         components: {
+            invoiceTable,
             payments,
             deleteButton,
-        },
-        data:{
-            statusSwitch: false,
-        },
-        methods:{
-            changeStatus(status){
-                var intStatus = (!status) ? 1 : 0;
-                if(isset('invoicesTableUrl')){
-                    let new_url = back.invoicesTableUrl+intStatus;
-                    generic_table.bootstrapTable('refresh', {url:new_url});
-            	}
-            }
         }
     });
 
