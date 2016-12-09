@@ -614,7 +614,11 @@ var BootstrapTable = {
     // lem93
     events: {
         refreshTable(){
-            this.updatePagination();
+            let currentTable = this;
+            setTimeout(function(){
+                currentTable.updatePagination();
+                currentTable.disabledTable = false;
+            }, 10);
         },
         disableTable(){
             this.disabledTable = true;
@@ -1340,7 +1344,7 @@ BootstrapTable.locales = LOCALES;
 module.exports = BootstrapTable;
 </script>
 
-<style>
+<style scoped>
 /*added by lem93*/
 .disable-table{
     pointer-events:none;

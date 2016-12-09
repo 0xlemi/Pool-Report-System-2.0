@@ -80,7 +80,6 @@ export default {
 				this.data = response.data;
 				this.validationErrors = {};
 				this.$broadcast('refreshTable');
-			    this.$broadcast('enableTable');
             }, (response) => {
 				this.alertMessage = "The information could not be retrieved, please try again."
 				this.alertActive = true;
