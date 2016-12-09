@@ -31223,122 +31223,52 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+    value: true
 });
 
-var _alert = require('./alert.vue');
+var _indexTable = require('./indexTable.vue');
 
-var _alert2 = _interopRequireDefault(_alert);
-
-var _BootstrapTable = require('./BootstrapTable.vue');
-
-var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+var _indexTable2 = _interopRequireDefault(_indexTable);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-		components: {
-				alert: _alert2.default,
-				BootstrapTable: _BootstrapTable2.default
-		},
-		data: function data() {
-				return {
-						id: 0,
-						status: false,
-
-						// alert
-						alertMessage: '',
-						alertActive: false,
-
-						data: [],
-						columns: [{
-								field: 'id',
-								title: '#',
-								sortable: true
-						}, {
-								field: 'name',
-								title: 'Name',
-								sortable: true
-						}, {
-								field: 'address',
-								title: 'Address',
-								sortable: true
-						}, {
-								field: 'serviceDays',
-								title: 'Service Days',
-								sortable: true
-						}, {
-								field: 'chemicals',
-								title: 'Chemicals',
-								sortable: true
-						}, {
-								field: 'price',
-								title: 'Price',
-								sortable: true,
-								visible: true
-						}],
-						options: {
-								iconsPrefix: 'font-icon',
-								toggle: 'table',
-								sidePagination: 'client',
-								pagination: 'true',
-								classes: 'table',
-								icons: {
-										paginationSwitchDown: 'font-icon-arrow-square-down',
-										paginationSwitchUp: 'font-icon-arrow-square-down up',
-										refresh: 'font-icon-refresh',
-										toggle: 'font-icon-list-square',
-										columns: 'font-icon-list-rotate',
-										export: 'font-icon-download'
-								},
-								paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-								paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
-								pageSize: 10,
-								pageList: [5, 10, 20],
-								search: true,
-								showExport: true,
-								exportTypes: ['excel', 'pdf'],
-								minimumCountColumns: 2,
-								showFooter: false,
-
-								uniqueId: 'id',
-								idField: 'id'
-						}
-				};
-		},
-
-		events: {
-				rowClicked: function rowClicked() {
-						window.location = Laravel.url + 'services/' + this.id;
-				}
-		},
-		methods: {
-				getList: function getList(finished) {
-						var _this = this;
-
-						this.$broadcast('disableTable');
-						this.$http.get(Laravel.url + 'datatables/services?status=' + (finished ? 0 : 1)).then(function (response) {
-								_this.data = response.data;
-								_this.validationErrors = {};
-								_this.$broadcast('refreshTable');
-								_this.$broadcast('enableTable');
-						}, function (response) {
-								_this.alertMessage = "The information could not be retrieved, please try again.";
-								_this.alertActive = true;
-								_this.$broadcast('enableTable');
-						});
-				},
-				goToCreate: function goToCreate() {
-						window.location = Laravel.url + 'services/create';
-				}
-		},
-		ready: function ready() {
-				this.getList(!this.finished);
-				this.getList(!this.finished);
-		}
+    components: {
+        indexTable: _indexTable2.default
+    },
+    data: function data() {
+        return {
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'name',
+                title: 'Name',
+                sortable: true
+            }, {
+                field: 'address',
+                title: 'Address',
+                sortable: true
+            }, {
+                field: 'serviceDays',
+                title: 'Service Days',
+                sortable: true
+            }, {
+                field: 'chemicals',
+                title: 'Chemicals',
+                sortable: true
+            }, {
+                field: 'price',
+                title: 'Price',
+                sortable: true,
+                visible: true
+            }]
+        };
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<bootstrap-table :object-id.sync=\"id\" :columns=\"columns\" :data=\"data\" :options=\"options\">\n\n\t    <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n        <button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t<i class=\"font-icon font-icon-home\"></i>&nbsp;&nbsp;&nbsp;New Service\n\t\t</button>\n\n        <div class=\"checkbox-toggle\" style=\"display:inline;left:30px;\">\n\t\t\t<input type=\"checkbox\" id=\"toolbarSwitch\" v-model=\"status\" @click=\"getList(status)\">\n\t\t\t<label for=\"toolbarSwitch\">status</label>\n\t\t</div>\n\n    </bootstrap-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', name: 'New Service' }\" :toolbar-switch=\"{ checked: true, name: 'Status' }\" click-url=\"services/\" table-url=\"datatables/services?status=\">\n    </index-table>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31349,7 +31279,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
+},{"./indexTable.vue":207,"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31549,7 +31479,7 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+    value: true
 });
 
 var _indexTable = require('./indexTable.vue');
@@ -31559,42 +31489,42 @@ var _indexTable2 = _interopRequireDefault(_indexTable);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-		components: {
-				indexTable: _indexTable2.default
-		},
-		data: function data() {
-				return {
-						columns: [{
-								field: 'id',
-								title: '#',
-								sortable: true
-						}, {
-								field: 'service',
-								title: 'Service',
-								sortable: true
-						}, {
-								field: 'supervisor',
-								title: 'Supervisor',
-								sortable: true
-						}, {
-								field: 'start',
-								title: 'Start at',
-								sortable: true
-						}, {
-								field: 'end',
-								title: 'End at',
-								sortable: true
-						}, {
-								field: 'price',
-								title: 'Price',
-								sortable: true,
-								visible: true
-						}]
-				};
-		}
+    components: {
+        indexTable: _indexTable2.default
+    },
+    data: function data() {
+        return {
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'service',
+                title: 'Service',
+                sortable: true
+            }, {
+                field: 'supervisor',
+                title: 'Supervisor',
+                sortable: true
+            }, {
+                field: 'start',
+                title: 'Start at',
+                sortable: true
+            }, {
+                field: 'end',
+                title: 'End at',
+                sortable: true
+            }, {
+                field: 'price',
+                title: 'Price',
+                sortable: true,
+                visible: true
+            }]
+        };
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-briefcase', name: 'New Work Order' }\" :toolbar-switch=\"{ checked: false, name: 'finished' }\" click-url=\"workorders/\" ,=\"\" table-url=\"datatables/workorders?finished=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-briefcase', name: 'New Work Order' }\" :toolbar-switch=\"{ checked: false, name: 'Finished' }\" click-url=\"workorders/\" table-url=\"datatables/workorders?finished=\">\n    </index-table>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

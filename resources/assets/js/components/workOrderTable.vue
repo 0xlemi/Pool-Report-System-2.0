@@ -3,10 +3,9 @@
 	<index-table
         :columns="columns"
         :button="{ icon: 'glyphicon glyphicon-briefcase', name: 'New Work Order' }"
-        :toolbar-switch="{ checked: false, name: 'finished' }"
-        click-url="workorders/",
-        table-url="datatables/workorders?finished=",
-    >
+        :toolbar-switch="{ checked: false, name: 'Finished' }"
+        click-url="workorders/"
+        table-url="datatables/workorders?finished=">
     </index-table>
 
 </template>
@@ -21,37 +20,37 @@ export default {
     data() {
         return {
             columns: [
-		    {
-		        field: 'id',
-		        title: '#',
-				sortable: true,
-		    },
-		    {
-		        field: 'service',
-		        title: 'Service',
-				sortable: true,
-		    },
-			{
-		        field: 'supervisor',
-		        title: 'Supervisor',
-				sortable: true,
-			},
-			{
-		        field: 'start',
-		        title: 'Start at',
-				sortable: true,
-            },
-			{
-		        field: 'end',
-		        title: 'End at',
-				sortable: true,
-            },
-			{
-		        field: 'price',
-		        title: 'Price',
-				sortable: true,
-				visible: true,
-		    }
+    		    {
+    		        field: 'id',
+    		        title: '#',
+    				sortable: true,
+    		    },
+    		    {
+    		        field: 'service',
+    		        title: 'Service',
+    				sortable: true,
+    		    },
+    			{
+    		        field: 'supervisor',
+    		        title: 'Supervisor',
+    				sortable: true,
+    			},
+    			{
+    		        field: 'start',
+    		        title: 'Start at',
+    				sortable: true,
+                },
+    			{
+    		        field: 'end',
+    		        title: 'End at',
+    				sortable: true,
+                },
+    			{
+    		        field: 'price',
+    		        title: 'Price',
+    				sortable: true,
+    				visible: true,
+    		    }
 		    ],
         }
     }
