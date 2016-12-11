@@ -1,7 +1,14 @@
 <template>
     <div>
-    	<bootstrap-table :object-id.sync="serviceId" :button-value.sync="buttonValue"
-                            :columns="columns" :data="data" :options="options">
+    	<bootstrap-table :columns="columns" :data="data" :options="options">
+            <div>
+                <span v-for="button in buttons">
+                    <button type="button" class="btn" :class="(buttonValue == button.value ) ? button.classSelected : button.class"
+                            @click="changeButtonValue(button.value)">
+            			{{ button.text }}
+            		</button>
+                </span>
+            </div>
         </bootstrap-table>
     </div>
 </template>
@@ -12,14 +19,13 @@ var alert = require('./alert.vue');
 var BootstrapTable = require('./BootstrapTable.vue');
 
   export default {
-    props: ['url', 'clickUrl'],
+    props: ['buttons'],
     components: {
         alert,
         BootstrapTable
     },
     data () {
         return {
-            serviceId: 0,
             buttonValue: 0,
 
             columns: [
@@ -39,8 +45,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
                     sortable: true,
                 },
                 {
-                    field: 'type',
-                    title: 'type',
+                    field: 'chemicals',
+                    title: 'Chemicals',
                     sortable: true,
                 },
                 {
@@ -81,17 +87,12 @@ var BootstrapTable = require('./BootstrapTable.vue');
 
 				uniqueId: 'id',
 				idField: 'id',
-
-                toolbarGroupButtons: (back.buttons) ? back.buttons : {},
 		    }
         }
     },
-    watch: {
-        buttonValue: function(val){
-            this.getList(val);
-        },
-        serviceId: function(val){
-            window.location = this.clickUrl+this.serviceId;
+    events:{
+		rowClicked(id){
+            window.location = Larvel.url+'todaysroute/report/'+id;
         }
     },
     methods: {
@@ -99,7 +100,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			this.resetAlert();
 			this.$broadcast('disableTable');
 
-			this.$http.get(this.url, {
+			this.$http.get(Laravel.url+'datatables/todaysroute', {
                 daysFromToday: val
             }).then((response) => {
 				let data = response.data;
@@ -112,6 +113,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.alertActiveList = true;
 			    this.$broadcast('enableTable');
             });
+        },
+        changeButtonValue(val){
+            this.buttonValue = val;
+            this.getList(val);
         },
         resetAlert(){
 			this.alertMessageList = ""

@@ -28,8 +28,6 @@ class TodaysRouteController extends PageController
 
     public function index()
     {
-        $defaultTableUrl = url('datatables/todaysroute');
-        $clickUrl = url('todaysroute/report/').'/';
         $buttonsTags = [
             (object)[
                         'text' => 'Today',
@@ -75,11 +73,7 @@ class TodaysRouteController extends PageController
                     ],
         ];
 
-        JavaScript::put([
-            'buttons' => $buttonsTags,
-        ]);
-
-        return view('todaysroute.index', compact('defaultTableUrl', 'clickUrl'));
+        return view('todaysroute.index', compact('buttonsTags'));
     }
 
     public function createReport(Request $request, int $service_seq_id)
@@ -88,11 +82,6 @@ class TodaysRouteController extends PageController
 
         $service_id = $service_seq_id;
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-
-        JavaScript::put([
-            // 'dropdownKey' => $request->old('service'),
-            'dropdownKey2' => $request->old('technician'),
-        ]);
 
         return view('todaysroute.createReport', compact('technicians', 'service_id'));
     }

@@ -18,7 +18,7 @@
 	<div class="row">
 		<div class="col-xl-12">
 			<section class="box-typical">
-				<route-table url="{{ $defaultTableUrl }}" click-url="{{ $clickUrl }}" ></route-table>
+				<route-table :buttons="{{ json_encode($buttonsTags) }}"></route-table>
 			</section><!--.box-typical-->
 		</div>
 	</div><!--.row-->

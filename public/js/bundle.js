@@ -31224,14 +31224,13 @@ var alert = require('./alert.vue');
 var BootstrapTable = require('./BootstrapTable.vue');
 
 exports.default = {
-    props: ['url', 'clickUrl'],
+    props: ['buttons'],
     components: {
         alert: alert,
         BootstrapTable: BootstrapTable
     },
     data: function data() {
         return {
-            serviceId: 0,
             buttonValue: 0,
 
             columns: [{
@@ -31247,8 +31246,8 @@ exports.default = {
                 title: 'Address',
                 sortable: true
             }, {
-                field: 'type',
-                title: 'type',
+                field: 'chemicals',
+                title: 'Chemicals',
                 sortable: true
             }, {
                 field: 'endTime',
@@ -31285,19 +31284,14 @@ exports.default = {
                 showFooter: false,
 
                 uniqueId: 'id',
-                idField: 'id',
-
-                toolbarGroupButtons: back.buttons ? back.buttons : {}
+                idField: 'id'
             }
         };
     },
 
-    watch: {
-        buttonValue: function buttonValue(val) {
-            this.getList(val);
-        },
-        serviceId: function serviceId(val) {
-            window.location = this.clickUrl + this.serviceId;
+    events: {
+        rowClicked: function rowClicked(id) {
+            window.location = Larvel.url + 'todaysroute/report/' + id;
         }
     },
     methods: {
@@ -31307,7 +31301,7 @@ exports.default = {
             this.resetAlert();
             this.$broadcast('disableTable');
 
-            this.$http.get(this.url, {
+            this.$http.get(Laravel.url + 'datatables/todaysroute', {
                 daysFromToday: val
             }).then(function (response) {
                 var data = response.data;
@@ -31321,6 +31315,10 @@ exports.default = {
                 _this.$broadcast('enableTable');
             });
         },
+        changeButtonValue: function changeButtonValue(val) {
+            this.buttonValue = val;
+            this.getList(val);
+        },
         resetAlert: function resetAlert() {
             this.alertMessageList = "";
             this.alertActiveList = false;
@@ -31332,7 +31330,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<bootstrap-table :object-id.sync=\"serviceId\" :button-value.sync=\"buttonValue\" :columns=\"columns\" :data=\"data\" :options=\"options\">\n    </bootstrap-table>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div>\n\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n        <div>\n            <span v-for=\"button in buttons\">\n                <button type=\"button\" class=\"btn\" :class=\"(buttonValue == button.value ) ? button.classSelected : button.class\" @click=\"changeButtonValue(button.value)\">\n        \t\t\t{{ button.text }}\n        \t\t</button>\n            </span>\n        </div>\n    </bootstrap-table>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

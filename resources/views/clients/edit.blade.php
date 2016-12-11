@@ -158,14 +158,14 @@
 							</div>
 
 							<hr>
-							<p style="float: left;">
-								<a  class="btn btn-danger"
+							<span style="float:right;">
+								<a  class="btn btn-warning"
 								href="{{ url('clients/'.$client->seq_id) }}">
 								<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
 								<button  class="btn btn-success"
 								type='submit'>
 								<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Edit Client</button>
-							</p>
+							</span>
 							<br>
 							<br>
 						</form>
