@@ -161,6 +161,9 @@ export default {
                 vue.pickerLatitude      = startLocation.latitude;
             }
         });
+		$('#locationPickerModal').on('shown.bs.modal', function () {
+	        $('#locationPicker').locationpicker('autosize');
+	    });
 
     }
 }

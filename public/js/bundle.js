@@ -30633,6 +30633,9 @@ exports.default = {
                 vue.pickerLatitude = startLocation.latitude;
             }
         });
+        $('#locationPickerModal').on('shown.bs.modal', function () {
+            $('#locationPicker').locationpicker('autosize');
+        });
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
@@ -32881,41 +32884,6 @@ $(document).ready(function () {
 	}, 1000);
 
 	/* ==========================================================================
- 	Tables
- 	========================================================================== */
-
-	var generic_table = $('.generic_table');
-
-	var tableOptions = {
-		iconsPrefix: 'font-icon',
-		toggle: 'table',
-		sidePagination: 'client',
-		pagination: 'true',
-		icons: {
-			paginationSwitchDown: 'font-icon-arrow-square-down',
-			paginationSwitchUp: 'font-icon-arrow-square-down up',
-			refresh: 'font-icon-refresh',
-			toggle: 'font-icon-list-square',
-			columns: 'font-icon-list-rotate',
-			export: 'font-icon-download'
-		},
-		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
-	};
-
-	generic_table.bootstrapTable(tableOptions);
-
-	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
-		if ($element.hasClass('table_active')) {
-			$element.removeClass('table_active');
-		} else {
-			generic_table.find('tr.table_active').removeClass('table_active');
-			$element.addClass('table_active');
-		}
-		window.location.href = back.click_url + row.id;
-	});
-
-	/* ==========================================================================
      Side datepicker
      ========================================================================== */
 	if (isset('enabledDates')) {
@@ -33067,69 +33035,6 @@ $(document).ready(function () {
 			});
 		}
 	});
-
-	/* ==========================================================================
-     Dropzone
-     ========================================================================== */
-
-	// Dropzone.autoDiscover = false;
-	// Dropzone.options.genericDropzone = {
-	//     workOrderVue: workOrderVue,
-	//     paramName: 'photo',
-	// 	maxFilesize: 50,
-	// 	acceptedFiles: '.jpg, .jpeg, .png',
-	//     init: function() {
-	//         this.on("success", function(file) {
-	//             this.options.workOrderVue.$broadcast('photoUploaded');
-	//         });
-	//     }
-	// }
-
-	/* ==========================================================================
-     Location Picker
-     ========================================================================== */
-
-	// let locPicker = $('#locationPicker').locationpicker({
-	//     vue: mainVue,
-	//     location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
-	//     radius: 0,
-	//     inputBinding: {
-	//     	latitudeInput: $('#serviceLatitude'),
-	//     	longitudeInput: $('#serviceLongitude'),
-	//     	locationNameInput: $('#serviceAddress')
-	//     },
-	//     enableAutocomplete: true,
-	//     onchanged: function (currentLocation, radius, isMarkerDropped) {
-	//         let addressComponents = $(this).locationpicker('map').location.addressComponents;
-	//         let vue = $(this).data("locationpicker").settings.vue;
-	//
-	//         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-	//         vue.pickerServiceCity         = addressComponents.city;
-	//         vue.pickerServiceState        = addressComponents.stateOrProvince;
-	//         vue.pickerServicePostalCode   = addressComponents.postalCode;
-	//         vue.pickerServiceCountry      = addressComponents.country;
-	//         vue.pickerServiceLongitude      = currentLocation.longitude;
-	//         vue.pickerServiceLatitude      = currentLocation.latitude;
-	//     },
-	//     oninitialized: function(component) {
-	//         let addressComponents = $(component).locationpicker('map').location.addressComponents;
-	//         let startLocation = $(component).data("locationpicker").settings.location;
-	//         let vue = $(component).data("locationpicker").settings.vue;
-	//
-	//         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-	//         vue.pickerServiceCity         = addressComponents.city;
-	//         vue.pickerServiceState        = addressComponents.stateOrProvince;
-	//         vue.pickerServicePostalCode   = addressComponents.postalCode;
-	//         vue.pickerServiceCountry      = addressComponents.country;
-	//         vue.pickerServiceLongitude      = startLocation.longitude;
-	//         vue.pickerServiceLatitude      = startLocation.latitude;
-	//     }
-	// });
-	//
-	// $('#locationPickerModal').on('shown.bs.modal', function () {
-	//     $('#locationPicker').locationpicker('autosize');
-	// });
-
 
 	/* ==========================================================================
      Maxlenght and Hide Show Password
