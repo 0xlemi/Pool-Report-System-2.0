@@ -39,12 +39,127 @@ function isset(strVariableName) {
  }
 
 
-/* ==========================================================================
-	Billing Stripe
+ /* ==========================================================================
+    VueJs code
+    ========================================================================== */
+
+    let Permissions 	 = require('./components/Permissions.vue');
+    let PhotoList 	     = require('./components/photoList.vue');
+    let emailPreference  = require('./components/email.vue');
+    let FormToAjax   	= require('./directives/FormToAjax.vue');
+    let countries       = require('./components/countries.vue');
+    let dropdown       = require('./components/dropdown.vue');
+    let alert       = require('./components/alert.vue');
+    let billing       = require('./components/billing.vue');
+    let contract       = require('./components/contract.vue');
+    let chemical       = require('./components/chemical.vue');
+    let equipment       = require('./components/equipment.vue');
+    let works       = require('./components/works.vue');
+    let payments       = require('./components/payments.vue');
+    let routeTable     = require('./components/routeTable.vue');
+    let notificationsWidget     = require('./components/notificationsWidget.vue');
+    let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+    let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
+    let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
+    let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
+    let deleteButton = require('./components/deleteButton.vue');
+    let addressFields = require('./components/addressFields.vue');
+    let missingServices = require('./components/missingServices.vue');
+    let settings = require('./components/settings.vue');
+    let workOrderTable = require('./components/workOrderTable.vue');
+    let serviceTable = require('./components/serviceTable.vue');
+    let clientTable = require('./components/clientTable.vue');
+    let supervisorTable = require('./components/supervisorTable.vue');
+    let technicianTable = require('./components/technicianTable.vue');
+    let invoiceTable = require('./components/invoiceTable.vue');
+
+
+    let mainVue = new Vue({
+        el: 'body',
+        components: {
+            // header
+            notificationsWidget,
+            // generic
+            alert,
+            dropdown,
+            PhotoList,
+            deleteButton,
+            // notifications
+            AllNotificationsAsReadButton,
+            // settings
+            Permissions,
+            emailPreference,
+            billing,
+            settings,
+            // work orders
+            workOrderTable,
+            workOrderPhotosShow,
+            workOrderPhotosEdit,
+            finishWorkOrderButton,
+            works,
+            // report
+            missingServices,
+            // service
+            serviceTable,
+            countries,
+            contract,
+            chemical,
+            equipment,
+            routeTable,
+            deleteButton,
+            addressFields,
+            // client
+            clientTable,
+            // supervisor
+            supervisorTable,
+            // technician
+            technicianTable,
+            // invoice
+            invoiceTable,
+            payments,
+
+        },
+        directives: { FormToAjax },
+    });
+
+
+    /* ==========================================================================
+	Tables
 	========================================================================== */
 
+	var generic_table = $('.generic_table');
 
 
+    let tableOptions = {
+		iconsPrefix: 'font-icon',
+        toggle:'table',
+        sidePagination:'client',
+        pagination:'true',
+		icons: {
+			paginationSwitchDown:'font-icon-arrow-square-down',
+			paginationSwitchUp: 'font-icon-arrow-square-down up',
+			refresh: 'font-icon-refresh',
+			toggle: 'font-icon-list-square',
+			columns: 'font-icon-list-rotate',
+			export: 'font-icon-download'
+		},
+		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+	}
+
+	generic_table.bootstrapTable(tableOptions);
+
+
+    $('.generic_table').on( 'click-row.bs.table', function (e, row, $element) {
+        if ( $element.hasClass('table_active') ) {
+            $element.removeClass('table_active');
+        }
+        else {
+            generic_table.find('tr.table_active').removeClass('table_active');
+            $element.addClass('table_active');
+        }
+        window.location.href = back.click_url+row.id;
+    });
 
 /* ==========================================================================
 	Scroll
@@ -685,7 +800,7 @@ function isset(strVariableName) {
             var new_missingServices_url = back.missingServices_url+date_selected;
 
             generic_table.bootstrapTable('refresh', {url: new_url});
-            reportVue.$broadcast('datePickerClicked', date_selected);
+            mainVue.$broadcast('datePickerClicked', date_selected);
 	    });
    }
    	if(isset('defaultDate')){
@@ -732,90 +847,6 @@ function isset(strVariableName) {
 	    });
 	});
 
-
-
- /* ==========================================================================
-    VueJs code
-    ========================================================================== */
-
-    let Permissions 	 = require('./components/Permissions.vue');
-    let PhotoList 	     = require('./components/photoList.vue');
-    let emailPreference  = require('./components/email.vue');
-    let FormToAjax   	= require('./directives/FormToAjax.vue');
-    let countries       = require('./components/countries.vue');
-    let dropdown       = require('./components/dropdown.vue');
-    let alert       = require('./components/alert.vue');
-    let billing       = require('./components/billing.vue');
-    let contract       = require('./components/contract.vue');
-    let chemical       = require('./components/chemical.vue');
-    let equipment       = require('./components/equipment.vue');
-    let works       = require('./components/works.vue');
-    let payments       = require('./components/payments.vue');
-    let routeTable     = require('./components/routeTable.vue');
-    let notificationsWidget     = require('./components/notificationsWidget.vue');
-    let AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
-    let workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
-    let workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
-    let finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
-    let deleteButton = require('./components/deleteButton.vue');
-    let addressFields = require('./components/addressFields.vue');
-    let missingServices = require('./components/missingServices.vue');
-    let settings = require('./components/settings.vue');
-    let workOrderTable = require('./components/workOrderTable.vue');
-    let serviceTable = require('./components/serviceTable.vue');
-    let clientTable = require('./components/clientTable.vue');
-    let supervisorTable = require('./components/supervisorTable.vue');
-    let technicianTable = require('./components/technicianTable.vue');
-    let invoiceTable = require('./components/invoiceTable.vue');
-
-
-    let mainVue = new Vue({
-        el: 'body',
-        components: {
-            // header
-            notificationsWidget,
-            // generic
-            alert,
-            dropdown,
-            PhotoList,
-            deleteButton,
-            // notifications
-            AllNotificationsAsReadButton,
-            // settings
-            Permissions,
-            emailPreference,
-            billing,
-            settings,
-            // work orders
-            workOrderTable,
-            workOrderPhotosShow,
-            workOrderPhotosEdit,
-            finishWorkOrderButton,
-            works,
-            // report
-            missingServices,
-            // service
-            serviceTable,
-            countries,
-            contract,
-            chemical,
-            equipment,
-            routeTable,
-            deleteButton,
-            addressFields,
-            // client
-            clientTable,
-            // supervisor
-            supervisorTable,
-            // technician
-            technicianTable,
-            // invoice
-            invoiceTable,
-            payments,
-
-        },
-        directives: { FormToAjax },
-    });
 
 /* ==========================================================================
     GMaps

@@ -14,16 +14,17 @@
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		        <h4 class="modal-title" id="myModalLabel">Missing Services</h4>
 			</div>
-			<div id="toolbar">
-				<div class="progress-steps-caption">{{ numServicesDone }}/{{ numServicesDone+numServicesMissing }}&nbsp; Services Completed</div>
-			</div>
 	    	<div class="modal-body">
 				<div class="row">
 					<div class="col-md-12">
 
                         <alert type="danger" :message="alertMessage" :active="alertActive"></alert>
 
-					    <bootstrap-table :object-id.sync="serviceId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+					    <bootstrap-table :columns="columns" :data="data" :options="options">
+				            <span class="progress-steps-caption">
+                                {{ numServicesDone }}/{{ numServicesDone+numServicesMissing }}&nbsp; Services Completed
+                            </span>
+                        </bootstrap-table>
 
 					</div>
 				</div>
@@ -48,7 +49,6 @@ export default {
     },
     data(){
         return {
-            serviceId: 2,
             numServicesDone: 0,
             numServicesMissing: 0,
 

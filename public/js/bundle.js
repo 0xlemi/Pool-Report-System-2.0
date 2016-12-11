@@ -30678,7 +30678,6 @@ exports.default = {
     },
     data: function data() {
         return {
-            serviceId: 2,
             numServicesDone: 0,
             numServicesMissing: 0,
 
@@ -30785,7 +30784,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#missingServicesModal\" :class=\"button.class\" :disabled=\"( numServicesMissing < 1 )\">\n\t\t<i class=\"glyphicon glyphicon-home\"></i>&nbsp;&nbsp;\n\t\t{{ button.tag }}\n\t</button>\n\n    <!-- Modal for Missing Services preview -->\n\t<div class=\"modal fade\" id=\"missingServicesModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog modal-lg\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t\t    <div class=\"modal-header\">\n\t\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Missing Services</h4>\n\t\t\t</div>\n\t\t\t<div id=\"toolbar\">\n\t\t\t\t<div class=\"progress-steps-caption\">{{ numServicesDone }}/{{ numServicesDone+numServicesMissing }}&nbsp; Services Completed</div>\n\t\t\t</div>\n\t    \t<div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\n                        <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t\t\t    <bootstrap-table :object-id.sync=\"serviceId\" :columns=\"columns\" :data=\"data\" :options=\"options\"></bootstrap-table>\n\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t    \t</div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#missingServicesModal\" :class=\"button.class\" :disabled=\"( numServicesMissing < 1 )\">\n\t\t<i class=\"glyphicon glyphicon-home\"></i>&nbsp;&nbsp;\n\t\t{{ button.tag }}\n\t</button>\n\n    <!-- Modal for Missing Services preview -->\n\t<div class=\"modal fade\" id=\"missingServicesModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog modal-lg\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t\t    <div class=\"modal-header\">\n\t\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t\t        <h4 class=\"modal-title\" id=\"myModalLabel\">Missing Services</h4>\n\t\t\t</div>\n\t    \t<div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\t\t\t\t\t<div class=\"col-md-12\">\n\n                        <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t\t\t    <bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t            <span class=\"progress-steps-caption\">\n                                {{ numServicesDone }}/{{ numServicesDone+numServicesMissing }}&nbsp; Services Completed\n                            </span>\n                        </bootstrap-table>\n\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t    \t</div>\n\t      <div class=\"modal-footer\">\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -32307,8 +32306,109 @@ $(document).ready(function () {
 	}
 
 	/* ==========================================================================
- 	Billing Stripe
- 	========================================================================== */
+    VueJs code
+    ========================================================================== */
+
+	var Permissions = require('./components/Permissions.vue');
+	var PhotoList = require('./components/photoList.vue');
+	var emailPreference = require('./components/email.vue');
+	var FormToAjax = require('./directives/FormToAjax.vue');
+	var countries = require('./components/countries.vue');
+	var dropdown = require('./components/dropdown.vue');
+	var alert = require('./components/alert.vue');
+	var billing = require('./components/billing.vue');
+	var contract = require('./components/contract.vue');
+	var chemical = require('./components/chemical.vue');
+	var equipment = require('./components/equipment.vue');
+	var works = require('./components/works.vue');
+	var payments = require('./components/payments.vue');
+	var routeTable = require('./components/routeTable.vue');
+	var notificationsWidget = require('./components/notificationsWidget.vue');
+	var AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
+	var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
+	var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
+	var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
+	var deleteButton = require('./components/deleteButton.vue');
+	var addressFields = require('./components/addressFields.vue');
+	var missingServices = require('./components/missingServices.vue');
+	var settings = require('./components/settings.vue');
+	var workOrderTable = require('./components/workOrderTable.vue');
+	var serviceTable = require('./components/serviceTable.vue');
+	var clientTable = require('./components/clientTable.vue');
+	var supervisorTable = require('./components/supervisorTable.vue');
+	var technicianTable = require('./components/technicianTable.vue');
+	var invoiceTable = require('./components/invoiceTable.vue');
+
+	var mainVue = new Vue({
+		el: 'body',
+		components: (_components = {
+			// header
+			notificationsWidget: notificationsWidget,
+			// generic
+			alert: alert,
+			dropdown: dropdown,
+			PhotoList: PhotoList,
+			deleteButton: deleteButton,
+			// notifications
+			AllNotificationsAsReadButton: AllNotificationsAsReadButton,
+			// settings
+			Permissions: Permissions,
+			emailPreference: emailPreference,
+			billing: billing,
+			settings: settings,
+			// work orders
+			workOrderTable: workOrderTable,
+			workOrderPhotosShow: workOrderPhotosShow,
+			workOrderPhotosEdit: workOrderPhotosEdit,
+			finishWorkOrderButton: finishWorkOrderButton,
+			works: works,
+			// report
+			missingServices: missingServices,
+			// service
+			serviceTable: serviceTable,
+			countries: countries,
+			contract: contract,
+			chemical: chemical,
+			equipment: equipment,
+			routeTable: routeTable
+		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
+		directives: { FormToAjax: FormToAjax }
+	});
+
+	/* ==========================================================================
+ Tables
+ ========================================================================== */
+
+	var generic_table = $('.generic_table');
+
+	var tableOptions = {
+		iconsPrefix: 'font-icon',
+		toggle: 'table',
+		sidePagination: 'client',
+		pagination: 'true',
+		icons: {
+			paginationSwitchDown: 'font-icon-arrow-square-down',
+			paginationSwitchUp: 'font-icon-arrow-square-down up',
+			refresh: 'font-icon-refresh',
+			toggle: 'font-icon-list-square',
+			columns: 'font-icon-list-rotate',
+			export: 'font-icon-download'
+		},
+		paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+		paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>'
+	};
+
+	generic_table.bootstrapTable(tableOptions);
+
+	$('.generic_table').on('click-row.bs.table', function (e, row, $element) {
+		if ($element.hasClass('table_active')) {
+			$element.removeClass('table_active');
+		} else {
+			generic_table.find('tr.table_active').removeClass('table_active');
+			$element.addClass('table_active');
+		}
+		window.location.href = back.click_url + row.id;
+	});
 
 	/* ==========================================================================
  	Scroll
@@ -32903,7 +33003,7 @@ $(document).ready(function () {
 			var new_missingServices_url = back.missingServices_url + date_selected;
 
 			generic_table.bootstrapTable('refresh', { url: new_url });
-			reportVue.$broadcast('datePickerClicked', date_selected);
+			mainVue.$broadcast('datePickerClicked', date_selected);
 		});
 	}
 	if (isset('defaultDate')) {
@@ -32946,76 +33046,6 @@ $(document).ready(function () {
 			donetext: 'Done',
 			'default': 'now'
 		});
-	});
-
-	/* ==========================================================================
-    VueJs code
-    ========================================================================== */
-
-	var Permissions = require('./components/Permissions.vue');
-	var PhotoList = require('./components/photoList.vue');
-	var emailPreference = require('./components/email.vue');
-	var FormToAjax = require('./directives/FormToAjax.vue');
-	var countries = require('./components/countries.vue');
-	var dropdown = require('./components/dropdown.vue');
-	var alert = require('./components/alert.vue');
-	var billing = require('./components/billing.vue');
-	var contract = require('./components/contract.vue');
-	var chemical = require('./components/chemical.vue');
-	var equipment = require('./components/equipment.vue');
-	var works = require('./components/works.vue');
-	var payments = require('./components/payments.vue');
-	var routeTable = require('./components/routeTable.vue');
-	var notificationsWidget = require('./components/notificationsWidget.vue');
-	var AllNotificationsAsReadButton = require('./components/AllNotificationsAsReadButton.vue');
-	var workOrderPhotosShow = require('./components/workOrderPhotosShow.vue');
-	var workOrderPhotosEdit = require('./components/workOrderPhotosEdit.vue');
-	var finishWorkOrderButton = require('./components/finishWorkOrderButton.vue');
-	var deleteButton = require('./components/deleteButton.vue');
-	var addressFields = require('./components/addressFields.vue');
-	var missingServices = require('./components/missingServices.vue');
-	var settings = require('./components/settings.vue');
-	var workOrderTable = require('./components/workOrderTable.vue');
-	var serviceTable = require('./components/serviceTable.vue');
-	var clientTable = require('./components/clientTable.vue');
-	var supervisorTable = require('./components/supervisorTable.vue');
-	var technicianTable = require('./components/technicianTable.vue');
-	var invoiceTable = require('./components/invoiceTable.vue');
-
-	var mainVue = new Vue({
-		el: 'body',
-		components: (_components = {
-			// header
-			notificationsWidget: notificationsWidget,
-			// generic
-			alert: alert,
-			dropdown: dropdown,
-			PhotoList: PhotoList,
-			deleteButton: deleteButton,
-			// notifications
-			AllNotificationsAsReadButton: AllNotificationsAsReadButton,
-			// settings
-			Permissions: Permissions,
-			emailPreference: emailPreference,
-			billing: billing,
-			settings: settings,
-			// work orders
-			workOrderTable: workOrderTable,
-			workOrderPhotosShow: workOrderPhotosShow,
-			workOrderPhotosEdit: workOrderPhotosEdit,
-			finishWorkOrderButton: finishWorkOrderButton,
-			works: works,
-			// report
-			missingServices: missingServices,
-			// service
-			serviceTable: serviceTable,
-			countries: countries,
-			contract: contract,
-			chemical: chemical,
-			equipment: equipment,
-			routeTable: routeTable
-		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
-		directives: { FormToAjax: FormToAjax }
 	});
 
 	/* ==========================================================================
