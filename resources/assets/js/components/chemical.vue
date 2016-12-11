@@ -59,7 +59,11 @@
 
 					<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-					<bootstrap-table :object-id.sync="chemicalId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+					<bootstrap-table :columns="columns" :data="data" :options="options">
+						<button type="button" class="btn btn-primary" @click="goToCreate" >
+							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Chemical
+						</button>
+					</bootstrap-table>
 
                 </div>
 
@@ -235,18 +239,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
             }
         }
     },
-	watch: {
-		// chemicalId: function (val) {
-		// 	this.getValues(val);
-	    // },
-	},
 	events: {
-		toolbarButtonClicked(){
-			this.clean();
-			this.changeFocus(1);
-		},
-		rowClicked(){
-			this.getValues(this.chemicalId);
+		rowClicked(id){
+			this.chemicalId = id;
+			this.getValues(id);
 		}
 	},
     methods: {
@@ -381,6 +377,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.alertActiveEdit = true;
 				this.revertButton(clickEvent, buttonTag);
             });
+		},
+		goToCreate(){
+			this.clean();
+			this.changeFocus(1);
 		},
         checkValidationError($fildName){
             return $fildName in this.validationErrors;

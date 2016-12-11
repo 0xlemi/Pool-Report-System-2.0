@@ -91,7 +91,11 @@
 
 						<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-						<bootstrap-table :object-id.sync="id" :columns="columns" :data="data" :options="options"></bootstrap-table>
+						<bootstrap-table :columns="columns" :data="data" :options="options">
+							<button type="button" class="btn btn-primary" @click="goToCreate" >
+								<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Work
+							</button>
+						</bootstrap-table>
 
                     </div>
 
@@ -403,12 +407,9 @@ var Spinner = require("spin");
 		}
     },
 	events: {
-		toolbarButtonClicked(){
-			this.clean();
-			this.changeFocus(1);
-		},
-		rowClicked(){
-			this.getValues(this.id, true);
+		rowClicked(id){
+			this.id = id;
+			this.getValues(id, true);
 		},
 		photoUploaded(){
 			this.getValues(this.id);
@@ -573,6 +574,10 @@ var Spinner = require("spin");
 				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
+		},
+		goToCreate(){
+			this.clean();
+			this.changeFocus(1);
 		},
         checkValidationError($fildName){
             return $fildName in this.validationErrors;

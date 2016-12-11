@@ -45,7 +45,11 @@
 
 						<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-						<bootstrap-table :object-id.sync="paymentId" :columns="columns" :data="data" :options="options"></bootstrap-table>
+						<bootstrap-table :columns="columns" :data="data" :options="options">
+							<button type="button" class="btn btn-primary" @click="goToCreate" >
+								<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Payment
+							</button>
+						</bootstrap-table>
 
                     </div>
 
@@ -204,12 +208,9 @@ var BootstrapTable = require('./BootstrapTable.vue');
         }
     },
 	events: {
-		toolbarButtonClicked(){
-			this.clean();
-			this.changeFocus(1);
-		},
-		rowClicked(){
-			this.getValues(this.paymentId);
+		rowClicked(id){
+			this.paymentId = id;
+			this.getValues(id);
 		}
 	},
     methods: {
@@ -315,6 +316,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
+		},
+		goToCreate(){
+			this.clean();
+			this.changeFocus(1);
 		},
         checkValidationError($fildName){
             return $fildName in this.validationErrors;

@@ -87,7 +87,11 @@
 
 					<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
-					<bootstrap-table :object-id.sync="id" :columns="columns" :data="data" :options="options"></bootstrap-table>
+					<bootstrap-table :columns="columns" :data="data" :options="options">
+						<button type="button" class="btn btn-primary" @click="goToCreate" >
+							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Equipment
+						</button>
+					</bootstrap-table>
 
 				</div>
 
@@ -333,9 +337,6 @@ export default {
 
 				uniqueId: 'id',
 				idField: 'id',
-
-				toolbarButton: true,
-				toolbarButtonText: 'Add Equipment',
 		    }
         }
     },
@@ -363,12 +364,9 @@ export default {
 		}
     },
     events: {
-		toolbarButtonClicked(){
-			this.clean();
-			this.changeFocus(1);
-		},
-		rowClicked(){
-			this.getValues(this.id, true);
+		rowClicked(id){
+			this.id = id;
+			this.getValues(id, true);
 		},
 		photoUploaded(){
 			this.getValues(this.id);
@@ -530,6 +528,10 @@ export default {
 				this.alertActiveShow = true;
 				this.revertButton(clickEvent, buttonTag);
             });
+		},
+		goToCreate(){
+			this.clean();
+			this.changeFocus(1);
 		},
         clean(){
             this.kind = '';
