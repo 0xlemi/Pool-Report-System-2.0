@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="supervisorVue">
 <header class="section-header">
 	<div class="tbl">
 		<div class="tbl-row">
@@ -17,9 +16,8 @@
 <div class="row">
 	<div class="col-xl-12">
 		<section class="box-typical">
-			<client-table></client-table>	
+			<client-table></client-table>
 		</section><!--.box-typical-->
 	</div>
 </div><!--.row-->
-</div>
 @endsection

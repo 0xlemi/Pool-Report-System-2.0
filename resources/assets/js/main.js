@@ -809,67 +809,32 @@ function isset(strVariableName) {
 
 
     let mainVue = new Vue({
-        el: '.site-header',
+        el: 'body',
         components: {
-            notificationsWidget
-        }
-    });
-
-    let notificationsVue = new Vue({
-        el: '.notificationsVue',
-        components: {
-            AllNotificationsAsReadButton
-        }
-    });
-
-    // workOrders Vue instance
-    let workOrderVue = new Vue({
-        el:'.workOrderVue',
-        components: {
-            workOrderTable,
-            PhotoList,
+            // header
+            notificationsWidget,
+            // generic
+            alert,
             dropdown,
+            PhotoList,
             deleteButton,
+            // notifications
+            AllNotificationsAsReadButton,
+            // settings
+            Permissions,
+            emailPreference,
+            billing,
+            settings,
+            // work orders
+            workOrderTable,
             workOrderPhotosShow,
             workOrderPhotosEdit,
             finishWorkOrderButton,
-            works
-        },
-    });
-
-    // report Vue instance
-    let reportVue = new Vue({
-        el:'.reportVue',
-        components: {
-            dropdown,
+            works,
+            // report
             missingServices,
-            deleteButton,
-         },
-        directives: { FormToAjax },
-        data:{
-            reportEmailPreview: (isset('emailPreviewNoImage')) ? back.emailPreviewNoImage : '',
-            serviceKey:         (isset('serviceKey')) ? Number(back.serviceKey) : 0,
-            technicianKey:      (isset('technicianKey')) ? Number(back.technicianKey) : 0,
-        }
-    });
-
-    let settingsVue = new Vue({
-        el: '.settingsVue',
-        components:{
-            Permissions,
-            emailPreference,
-            alert,
-            billing,
-            settings,
-        },
-        directives: { FormToAjax },
-    });
-
-    let serviceVue = new Vue({
-        el: '.serviceVue',
-        components: {
+            // service
             serviceTable,
-            PhotoList,
             countries,
             contract,
             chemical,
@@ -877,40 +842,19 @@ function isset(strVariableName) {
             routeTable,
             deleteButton,
             addressFields,
-        },
-        directives: {
-            FormToAjax
-        },
-    });
-
-    let supervisorVue = new Vue({
-        el: '.supervisorVue',
-        components: {
+            // client
             clientTable,
+            // supervisor
             supervisorTable,
-            deleteButton,
-        }
-    });
-
-
-    let technicianVue = new Vue({
-        el: '.technicianVue',
-        components: {
+            // technician
             technicianTable,
-            dropdown,
-            deleteButton,
-        }
-    });
-
-    let invoiceVue = new Vue({
-        el: '.invoiceVue',
-        components: {
+            // invoice
             invoiceTable,
             payments,
-            deleteButton,
-        }
-    });
 
+        },
+        directives: { FormToAjax },
+    });
 
 /* ==========================================================================
     GMaps
@@ -953,46 +897,46 @@ function isset(strVariableName) {
     ========================================================================== */
 
 
-    let locPicker = $('#locationPicker').locationpicker({
-        vue: serviceVue,
-        location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
-        radius: 0,
-        inputBinding: {
-        	latitudeInput: $('#serviceLatitude'),
-        	longitudeInput: $('#serviceLongitude'),
-        	locationNameInput: $('#serviceAddress')
-        },
-        enableAutocomplete: true,
-        onchanged: function (currentLocation, radius, isMarkerDropped) {
-            let addressComponents = $(this).locationpicker('map').location.addressComponents;
-            let vue = $(this).data("locationpicker").settings.vue;
-
-            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-            vue.pickerServiceCity         = addressComponents.city;
-            vue.pickerServiceState        = addressComponents.stateOrProvince;
-            vue.pickerServicePostalCode   = addressComponents.postalCode;
-            vue.pickerServiceCountry      = addressComponents.country;
-            vue.pickerServiceLongitude      = currentLocation.longitude;
-            vue.pickerServiceLatitude      = currentLocation.latitude;
-        },
-        oninitialized: function(component) {
-            let addressComponents = $(component).locationpicker('map').location.addressComponents;
-            let startLocation = $(component).data("locationpicker").settings.location;
-            let vue = $(component).data("locationpicker").settings.vue;
-
-            vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-            vue.pickerServiceCity         = addressComponents.city;
-            vue.pickerServiceState        = addressComponents.stateOrProvince;
-            vue.pickerServicePostalCode   = addressComponents.postalCode;
-            vue.pickerServiceCountry      = addressComponents.country;
-            vue.pickerServiceLongitude      = startLocation.longitude;
-            vue.pickerServiceLatitude      = startLocation.latitude;
-        }
-    });
-
-    $('#locationPickerModal').on('shown.bs.modal', function () {
-        $('#locationPicker').locationpicker('autosize');
-    });
+    // let locPicker = $('#locationPicker').locationpicker({
+    //     vue: mainVue,
+    //     location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
+    //     radius: 0,
+    //     inputBinding: {
+    //     	latitudeInput: $('#serviceLatitude'),
+    //     	longitudeInput: $('#serviceLongitude'),
+    //     	locationNameInput: $('#serviceAddress')
+    //     },
+    //     enableAutocomplete: true,
+    //     onchanged: function (currentLocation, radius, isMarkerDropped) {
+    //         let addressComponents = $(this).locationpicker('map').location.addressComponents;
+    //         let vue = $(this).data("locationpicker").settings.vue;
+    //
+    //         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+    //         vue.pickerServiceCity         = addressComponents.city;
+    //         vue.pickerServiceState        = addressComponents.stateOrProvince;
+    //         vue.pickerServicePostalCode   = addressComponents.postalCode;
+    //         vue.pickerServiceCountry      = addressComponents.country;
+    //         vue.pickerServiceLongitude      = currentLocation.longitude;
+    //         vue.pickerServiceLatitude      = currentLocation.latitude;
+    //     },
+    //     oninitialized: function(component) {
+    //         let addressComponents = $(component).locationpicker('map').location.addressComponents;
+    //         let startLocation = $(component).data("locationpicker").settings.location;
+    //         let vue = $(component).data("locationpicker").settings.vue;
+    //
+    //         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+    //         vue.pickerServiceCity         = addressComponents.city;
+    //         vue.pickerServiceState        = addressComponents.stateOrProvince;
+    //         vue.pickerServicePostalCode   = addressComponents.postalCode;
+    //         vue.pickerServiceCountry      = addressComponents.country;
+    //         vue.pickerServiceLongitude      = startLocation.longitude;
+    //         vue.pickerServiceLatitude      = startLocation.latitude;
+    //     }
+    // });
+    //
+    // $('#locationPickerModal').on('shown.bs.modal', function () {
+    //     $('#locationPicker').locationpicker('autosize');
+    // });
 
 
 /* ==========================================================================

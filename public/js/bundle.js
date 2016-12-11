@@ -32260,6 +32260,8 @@ if (module.hot) {(function () {  module.hot.accept()
 },{"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
 'use strict';
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var dateFormat = require('dateformat');
 
 // Vue imports
@@ -32275,6 +32277,8 @@ var locationPicker = require("jquery-locationpicker");
 Vue.use(require('vue-resource'));
 
 $(document).ready(function () {
+	var _components;
+
 	// var dateFormat = require('dateformat');
 
 	// set th CSRF_TOKEN for ajax requests
@@ -33011,105 +33015,39 @@ $(document).ready(function () {
 	var invoiceTable = require('./components/invoiceTable.vue');
 
 	var mainVue = new Vue({
-		el: '.site-header',
-		components: {
-			notificationsWidget: notificationsWidget
-		}
-	});
-
-	var notificationsVue = new Vue({
-		el: '.notificationsVue',
-		components: {
-			AllNotificationsAsReadButton: AllNotificationsAsReadButton
-		}
-	});
-
-	// workOrders Vue instance
-	var workOrderVue = new Vue({
-		el: '.workOrderVue',
-		components: {
-			workOrderTable: workOrderTable,
-			PhotoList: PhotoList,
+		el: 'body',
+		components: (_components = {
+			// header
+			notificationsWidget: notificationsWidget,
+			// generic
+			alert: alert,
 			dropdown: dropdown,
+			PhotoList: PhotoList,
 			deleteButton: deleteButton,
+			// notifications
+			AllNotificationsAsReadButton: AllNotificationsAsReadButton,
+			// settings
+			Permissions: Permissions,
+			emailPreference: emailPreference,
+			billing: billing,
+			settings: settings,
+			// work orders
+			workOrderTable: workOrderTable,
 			workOrderPhotosShow: workOrderPhotosShow,
 			workOrderPhotosEdit: workOrderPhotosEdit,
 			finishWorkOrderButton: finishWorkOrderButton,
-			works: works
-		}
-	});
-
-	// report Vue instance
-	var reportVue = new Vue({
-		el: '.reportVue',
-		components: {
-			dropdown: dropdown,
+			works: works,
+			// report
 			missingServices: missingServices,
-			deleteButton: deleteButton
-		},
-		directives: { FormToAjax: FormToAjax },
-		data: {
-			reportEmailPreview: isset('emailPreviewNoImage') ? back.emailPreviewNoImage : '',
-			serviceKey: isset('serviceKey') ? Number(back.serviceKey) : 0,
-			technicianKey: isset('technicianKey') ? Number(back.technicianKey) : 0
-		}
-	});
-
-	var settingsVue = new Vue({
-		el: '.settingsVue',
-		components: {
-			Permissions: Permissions,
-			emailPreference: emailPreference,
-			alert: alert,
-			billing: billing,
-			settings: settings
-		},
-		directives: { FormToAjax: FormToAjax }
-	});
-
-	var serviceVue = new Vue({
-		el: '.serviceVue',
-		components: {
+			// service
 			serviceTable: serviceTable,
-			PhotoList: PhotoList,
 			countries: countries,
 			contract: contract,
 			chemical: chemical,
 			equipment: equipment,
-			routeTable: routeTable,
-			deleteButton: deleteButton,
-			addressFields: addressFields
-		},
-		directives: {
-			FormToAjax: FormToAjax
-		}
-	});
-
-	var supervisorVue = new Vue({
-		el: '.supervisorVue',
-		components: {
-			clientTable: clientTable,
-			supervisorTable: supervisorTable,
-			deleteButton: deleteButton
-		}
-	});
-
-	var technicianVue = new Vue({
-		el: '.technicianVue',
-		components: {
-			technicianTable: technicianTable,
-			dropdown: dropdown,
-			deleteButton: deleteButton
-		}
-	});
-
-	var invoiceVue = new Vue({
-		el: '.invoiceVue',
-		components: {
-			invoiceTable: invoiceTable,
-			payments: payments,
-			deleteButton: deleteButton
-		}
+			routeTable: routeTable
+		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
+		directives: { FormToAjax: FormToAjax }
 	});
 
 	/* ==========================================================================
@@ -33151,46 +33089,47 @@ $(document).ready(function () {
      Location Picker
      ========================================================================== */
 
-	var locPicker = $('#locationPicker').locationpicker({
-		vue: serviceVue,
-		location: { latitude: 23.04457265331633, longitude: -109.70587883663177 },
-		radius: 0,
-		inputBinding: {
-			latitudeInput: $('#serviceLatitude'),
-			longitudeInput: $('#serviceLongitude'),
-			locationNameInput: $('#serviceAddress')
-		},
-		enableAutocomplete: true,
-		onchanged: function onchanged(currentLocation, radius, isMarkerDropped) {
-			var addressComponents = $(this).locationpicker('map').location.addressComponents;
-			var vue = $(this).data("locationpicker").settings.vue;
+	// let locPicker = $('#locationPicker').locationpicker({
+	//     vue: mainVue,
+	//     location: {latitude: 23.04457265331633, longitude: -109.70587883663177},
+	//     radius: 0,
+	//     inputBinding: {
+	//     	latitudeInput: $('#serviceLatitude'),
+	//     	longitudeInput: $('#serviceLongitude'),
+	//     	locationNameInput: $('#serviceAddress')
+	//     },
+	//     enableAutocomplete: true,
+	//     onchanged: function (currentLocation, radius, isMarkerDropped) {
+	//         let addressComponents = $(this).locationpicker('map').location.addressComponents;
+	//         let vue = $(this).data("locationpicker").settings.vue;
+	//
+	//         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+	//         vue.pickerServiceCity         = addressComponents.city;
+	//         vue.pickerServiceState        = addressComponents.stateOrProvince;
+	//         vue.pickerServicePostalCode   = addressComponents.postalCode;
+	//         vue.pickerServiceCountry      = addressComponents.country;
+	//         vue.pickerServiceLongitude      = currentLocation.longitude;
+	//         vue.pickerServiceLatitude      = currentLocation.latitude;
+	//     },
+	//     oninitialized: function(component) {
+	//         let addressComponents = $(component).locationpicker('map').location.addressComponents;
+	//         let startLocation = $(component).data("locationpicker").settings.location;
+	//         let vue = $(component).data("locationpicker").settings.vue;
+	//
+	//         vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
+	//         vue.pickerServiceCity         = addressComponents.city;
+	//         vue.pickerServiceState        = addressComponents.stateOrProvince;
+	//         vue.pickerServicePostalCode   = addressComponents.postalCode;
+	//         vue.pickerServiceCountry      = addressComponents.country;
+	//         vue.pickerServiceLongitude      = startLocation.longitude;
+	//         vue.pickerServiceLatitude      = startLocation.latitude;
+	//     }
+	// });
+	//
+	// $('#locationPickerModal').on('shown.bs.modal', function () {
+	//     $('#locationPicker').locationpicker('autosize');
+	// });
 
-			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-			vue.pickerServiceCity = addressComponents.city;
-			vue.pickerServiceState = addressComponents.stateOrProvince;
-			vue.pickerServicePostalCode = addressComponents.postalCode;
-			vue.pickerServiceCountry = addressComponents.country;
-			vue.pickerServiceLongitude = currentLocation.longitude;
-			vue.pickerServiceLatitude = currentLocation.latitude;
-		},
-		oninitialized: function oninitialized(component) {
-			var addressComponents = $(component).locationpicker('map').location.addressComponents;
-			var startLocation = $(component).data("locationpicker").settings.location;
-			var vue = $(component).data("locationpicker").settings.vue;
-
-			vue.pickerServiceAddressLine1 = addressComponents.addressLine1;
-			vue.pickerServiceCity = addressComponents.city;
-			vue.pickerServiceState = addressComponents.stateOrProvince;
-			vue.pickerServicePostalCode = addressComponents.postalCode;
-			vue.pickerServiceCountry = addressComponents.country;
-			vue.pickerServiceLongitude = startLocation.longitude;
-			vue.pickerServiceLatitude = startLocation.latitude;
-		}
-	});
-
-	$('#locationPickerModal').on('shown.bs.modal', function () {
-		$('#locationPicker').locationpicker('autosize');
-	});
 
 	/* ==========================================================================
      Maxlenght and Hide Show Password
