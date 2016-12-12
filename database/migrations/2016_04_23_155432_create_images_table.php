@@ -24,9 +24,10 @@ class CreateImagesTable extends Migration
             $table->integer('client_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('service_id')->unsigned()->index()->nullable()->default(null);
             $table->integer('equipment_id')->unsigned()->index()->nullable()->default(null);
-            $table->string('normal_path'); // full resolution
-            $table->string('thumbnail_path');   // 300x* image
-            $table->string('icon_path'); // 64x64 image
+            $table->string('big'); // 1200x* image
+            $table->string('medium'); // 600x* image
+            $table->string('thumbnail');   // 250x* image
+            $table->string('icon'); // 64x64 image
             $table->smallInteger('order')->default(1);
             $table->smallInteger('type')->default(1); // main use is in Work orders
             $table->timestamps();

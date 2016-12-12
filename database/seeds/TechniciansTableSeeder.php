@@ -26,7 +26,7 @@ class TechniciansTableSeeder extends Seeder
     {
         for ($i=0; $i < $this->number_of_technicians; $i++) {
         	// generate and save image and tn_image
-			$img = $this->seederHelper->get_random_image('technician', 'technician', rand(1, 20));
+			$img = $this->seederHelper->get_random_image('technician', 20);
 
             // get a random admin_id that exists in database
             $supervisorId = $this->seederHelper->getRandomObject('supervisors');
@@ -47,12 +47,12 @@ class TechniciansTableSeeder extends Seeder
             ]);
 
     		// create images link it to technician
-    		Image::create([
-    			'technician_id' => $technician->id,
-    			'normal_path' => $img['img_path'],
-                'thumbnail_path' => $img['tn_img_path'],
-                'icon_path' => $img['xs_img_path'],
-    		]);
+            $technician->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+            ]);
         }
     }
 }

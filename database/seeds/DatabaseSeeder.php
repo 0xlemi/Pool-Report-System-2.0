@@ -37,8 +37,6 @@ class DatabaseSeeder extends Seeder
     {
     	// cleaning up
     	$this->truncate_tables();
-    	$this->delete_in_public_storage();
-
 
     	$this->call(AdministratorsSeeder::class);
     	$this->call(ServicesTableSeeder::class);
@@ -52,29 +50,15 @@ class DatabaseSeeder extends Seeder
     }
 
 
-
 	/**
 	 * Cleans the tables
 	 */
-	function truncate_tables(){
+	protected function truncate_tables(){
 		DB::unprepared('SET FOREIGN_KEY_CHECKS = 0;');
 		foreach($this->toTruncate as $table){
 			DB::table($table)->truncate();
 		}
 		DB::unprepared('SET FOREIGN_KEY_CHECKS = 1;');
-	}
-
-	/**
-	 * Cleans old photos by deleting the folder.
-	 */
-	function delete_in_public_storage(){
-		foreach ($this->foldersToDelete as $folder) {
-			$files = glob(public_path('storage/images/'.$folder.'/*')); // get all file names
-			foreach($files as $file){ // iterate files
-			  if(is_file($file))
-			    unlink($file); // delete file
-			}
-		}
 	}
 
 }

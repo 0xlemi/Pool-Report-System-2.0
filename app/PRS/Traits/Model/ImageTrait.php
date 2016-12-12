@@ -8,6 +8,7 @@ use Intervention;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\Image;
+use Storage;
 
 trait ImageTrait{
 
@@ -16,25 +17,52 @@ trait ImageTrait{
      */
 	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
 		//generate image names
-        $name = get_random_name('normal_'.$this->id, $file->guessExtension());
-        $name_thumbnail = get_random_name('tn_'.$this->id, $file->guessExtension());
-        $name_icon = get_random_name('xs_'.$this->id, $file->guessExtension());
+        $randomName = str_random(50);
+        $nameBig = 'bg_'.$randomName.$file->guessExtension();
+        $nameMedium = 'md_'.$randomName.$file->guessExtension();
+        $nameThumbnail = 'sm_'.$randomName.$file->guessExtension();
+        $nameIcon = 'ic_'.$randomName.$file->guessExtension();
 
-        // save normal image in folder
-        $file->move(public_path( env('FOLDER_IMG').'client/' ), $name);
+        // Stream file directly to S3.
+        $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
 
-        // make and save thumbnail
-        $img = Intervention::make(public_path( env('FOLDER_IMG').'client/'.$name));
-        $img->fit(300)->save(public_path( env('FOLDER_IMG').'client/'.$name_thumbnail));
+        // get the contents back from S3 temp
+        $contents = Storage::get($tempFilePath);
 
-         // make and save icon
-        $img->fit(64)->save(public_path( env('FOLDER_IMG').'client/'.$name_icon));
+        // Process image to get different sizes
+        $img = Intervention::make($contents);
+        // big
+        $streamBig = $img->fit(1200, null, function ($constraint) {
+                $constraint->upsize();
+            })->stream('jpg');
+        // medium
+        $streamMedium = $img->fit(700, null, function ($constraint) {
+                $constraint->upsize();
+            })->stream('jpg');
+        // thumbnail
+        $streamThumbnail = $img->fit(300, null, function ($constraint) {
+                $constraint->upsize();
+            })->stream('jpg');
+        // icon
+        $streamIcon = $img->fit(64, null, function ($constraint) {
+                $constraint->upsize();
+            })->stream('jpg');
 
-        // add image
+        // Store final Images in S3
+        $pathBig = Storage::put('images/'.$nameBig , $streamBig, 'public');
+        $pathMedium = Storage::put('images/'.$nameMedium , $streamMedium, 'public');
+        $pathThumbnail = Storage::put('images/'.$nameThumbnail , $streamThumbnail, 'public');
+        $pathIcon = Storage::put('images/'.$nameIcon , $streamIcon, 'public');
+
+        // Finaly delete temp file
+        Storage::delete($tempFilePath);
+
+        // Set image paths in database
         $image = new Image;
-        $image->normal_path = env('FOLDER_IMG').'client/'.$name;
-        $image->thumbnail_path = env('FOLDER_IMG').'client/'.$name_thumbnail;
-        $image->icon_path = env('FOLDER_IMG').'client/'.$name_icon;
+        $image->big = $pathBig;
+        $image->medium = $pathMedium;
+        $image->thumbnail = $pathThumbnail;
+        $image->icon = $pathIcon;
 
         if($order){
             $image->order = $order;
@@ -156,7 +184,7 @@ trait ImageTrait{
             if(!$image){
                 return 'img/no_image.png';
             }
-            return $image->normal_path;
+            return $image->big;
         }
         return $image;
     }
@@ -178,7 +206,7 @@ trait ImageTrait{
         if(!$image){
             return 'img/no_image.png';
         }
-        return $image->normal_path;
+        return $image->medium;
     }
 
     /**

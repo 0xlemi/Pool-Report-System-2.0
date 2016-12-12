@@ -27,7 +27,7 @@ class SupervisorsTableSeeder extends Seeder
     {
         for ($i=0; $i < $this->number_of_supervisors; $i++) {
         	// generate and save image and tn_image
-    		$img = $this->seederHelper->get_random_image('supervisor', 'supervisor', rand(1, 5));
+    		$img = $this->seederHelper->get_random_image('supervisor', 5);
 
             // get a random admin_id that exists in database
             // $adminId = $this->seederHelper->getRandomObject('administrators');
@@ -49,13 +49,13 @@ class SupervisorsTableSeeder extends Seeder
                 'userable_type' => 'App\Supervisor',
             ]);
 
-    		// create images link it to supervisor
-    		Image::create([
-    			'supervisor_id' => $supervisor->id,
-    			'normal_path' => $img['img_path'],
-                'thumbnail_path' => $img['tn_img_path'],
-                'icon_path' => $img['xs_img_path'],
-    		]);
+    		// create images link it to supervisors
+            $supervisor->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+            ]);
         }
     }
 }

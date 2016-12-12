@@ -3,6 +3,7 @@
 namespace App\PRS\Transformers;
 
 use App\Image;
+use Storage;
 
 /**
  * Transformer for the image class
@@ -19,9 +20,10 @@ class ImageTransformer extends Transformer
     public function transform(Image $image)
     {
         return [
-            'full_size' => url($image->normal_path),
-            'thumbnail' => url($image->thumbnail_path),
-            'icon' => url($image->icon_path),
+            'big' => Storage::url($image->big),
+            'medium' =>  Storage::url($image->medium),
+            'thumbnail' =>  Storage::url($image->thumbnail),
+            'icon' =>  Storage::url($image->icon),
             'order' => $image->order,
             'title' => 'Photo title',
         ];

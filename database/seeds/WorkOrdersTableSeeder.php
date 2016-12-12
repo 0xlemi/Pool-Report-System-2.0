@@ -80,24 +80,24 @@ class WorkOrdersTableSeeder extends Seeder
                 }
 
             // add image
-            $img = $this->seederHelper->get_random_image('workOrder', 'pool_photo_3' , rand(1, 50));
-			Image::create([
-				'work_order_id' => $workOrder->id,
-				'normal_path' => $img['img_path'],
-                'thumbnail_path' => $img['tn_img_path'],
-                'icon_path' => $img['xs_img_path'],
+            $img = $this->seederHelper->get_random_image('report/3', 50);
+            $workOrder->images()->create([
+				'big' => $img->big,
+                'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
 				'order' => 1,
                 'type' => 1, // Photo before the workOrder has started
 			]);
 
             for ($e=2; $e < rand(3,5); $e++) {
-                $img = $this->seederHelper->get_random_image('workOrder', 'pool_photo_1' , rand(1, 50));
-    			Image::create([
-    				'work_order_id' => $workOrder->id,
-    				'normal_path' => $img['img_path'],
-                    'thumbnail_path' => $img['tn_img_path'],
-                    'icon_path' => $img['xs_img_path'],
-    				'order' => $e,
+                $img = $this->seederHelper->get_random_image('report/1', 50);
+                $workOrder->images()->create([
+    				'big' => $img->big,
+                    'medium' => $img->medium,
+                    'thumbnail' => $img->thumbnail,
+                    'icon' => $img->icon,
+            	    'order' => $e,
                     'type' => 2, // Photo after the work Order has been finished
     			]);
             }

@@ -34,7 +34,7 @@ class ClientsTableSeeder extends Seeder
 			$gender = (rand(0,1)) ? 'male':'female';
 
         	// generate and save image and tn_image
-			$img = $this->seederHelper->get_random_image('client', 'client/'.$gender, rand(1, 20));
+			$img = $this->seederHelper->get_random_image('client/'.$gender, 20);
 
             // get the service id for the pivot table
             $serviceId = $this->seederHelper->getRandomObject('services');
@@ -62,13 +62,13 @@ class ClientsTableSeeder extends Seeder
                 'service_id' => $serviceId,
             ]);
 
-    		// create images link it to technician
-    		Image::create([
-    			'client_id' => $client->id,
-    			'normal_path' => $img['img_path'],
-                'thumbnail_path' => $img['tn_img_path'],
-                'icon_path' => $img['xs_img_path'],
-    		]);
+    		// create images link it to client
+            $client->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+            ]);
     	}
     }
 }

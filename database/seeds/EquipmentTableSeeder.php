@@ -39,7 +39,7 @@ class EquipmentTableSeeder extends Seeder
             $kind = $kinds[rand(0,6)];
 
 		    // generate and save image and tn_image
-			$img = $this->seederHelper->get_random_image('equipment', 'equipment/'.$kind['folder'], rand(1, 5));
+			$img = $this->seederHelper->get_random_image('equipment/'.$kind['folder'], 5);
 
             // get a random admin_id that exists in database
         	$serviceId = $this->seederHelper->getRandomObject('services');
@@ -54,14 +54,13 @@ class EquipmentTableSeeder extends Seeder
                 $equipment->service()->admin()->user()->notify(new AddedEquipmentNotification($equipment, $admin->user()));
             }
 
-    		// create images link it to equipment id
-    		// normal image
-    		Image::create([
-    			'equipment_id' => $equipment->id,
-    			'normal_path' => $img['img_path'],
-                'thumbnail_path' => $img['tn_img_path'],
-                'icon_path' => $img['xs_img_path'],
-    		]);
+            // create images link it to equipment
+            $equipment->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+            ]);
     	}
     }
 }

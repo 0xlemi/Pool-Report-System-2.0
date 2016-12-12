@@ -12,9 +12,10 @@ class Image extends Model
     	'supervisor_id',
     	'client_id',
     	'service_id',
-    	'normal_path',
-        'thumbnail_path',
-        'icon_path',
+        'big',
+    	'medium',
+        'thumbnail',
+        'icon',
         'type',
     	'order',
     ];

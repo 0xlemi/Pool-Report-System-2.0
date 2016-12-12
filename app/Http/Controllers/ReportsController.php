@@ -79,12 +79,7 @@ class ReportsController extends PageController
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-        $tags = $admin->tags();
-
-        JavaScript::put([
-            'dropdownKey' => $request->old('service'),
-            'dropdownKey2' => $request->old('technician'),
-        ]);
+        $tags = $admin->tags();;
 
         return view('reports.create', compact('services', 'technicians', 'tags'));
     }
