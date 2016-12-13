@@ -22,7 +22,7 @@ class TechnicianHelpers
                     return (object) array(
                         'key' => $item->seq_id,
                         'label' => $item->name.' '.$item->last_name,
-                        'icon' => url($item->icon()),
+                        'icon' => \Storage::url($item->icon()),
                     );
                 });
     }

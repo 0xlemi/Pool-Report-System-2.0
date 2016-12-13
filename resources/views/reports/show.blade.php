@@ -91,12 +91,12 @@
                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
                                 <div class="gallery-col">
 									<article class="gallery-item">
-										<img class="gallery-picture" src="{{ url($image->thumbnail_path) }}" alt="" height="158">
+										<img class="gallery-picture" src="{{ \Storage::url($image->thumbnail) }}" alt="" height="158">
 										<div class="gallery-hover-layout">
 											<div class="gallery-hover-layout-in">
 												<p class="gallery-item-title">{{ get_image_tag($image->order) }}</p>
 												<div class="btn-group">
-													<a class="fancybox btn" href="{{ url($image->normal_path) }}" title="{{ get_image_tag($image->order) }}">
+													<a class="fancybox btn" href="{{ \Storage::url($image->big) }}" title="{{ get_image_tag($image->order) }}">
 														<i class="font-icon font-icon-eye"></i>
 													</a>
 												</div>

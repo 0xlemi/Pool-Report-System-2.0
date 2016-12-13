@@ -32,19 +32,19 @@ trait ImageTrait{
         // Process image to get different sizes
         $img = Intervention::make($contents);
         // big
-        $streamBig = $img->fit(1200, null, function ($constraint) {
+        $streamBig = (string) $img->fit(1200, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
         // medium
-        $streamMedium = $img->fit(700, null, function ($constraint) {
+        $streamMedium = (string) $img->fit(700, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
         // thumbnail
-        $streamThumbnail = $img->fit(300, null, function ($constraint) {
+        $streamThumbnail = (string) $img->fit(300, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
         // icon
-        $streamIcon = $img->fit(64, null, function ($constraint) {
+        $streamIcon = (string) $img->fit(64, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
 
@@ -222,7 +222,7 @@ trait ImageTrait{
     public function thumbnail(){
         if($this->numImages() > 0){
             return $this->images()
-                ->first()->thumbnail_path;
+                ->first()->thumbnail;
         }
         return 'img/no_image.png';
     }
@@ -240,7 +240,7 @@ trait ImageTrait{
     public function icon(){
         if($this->numImages() > 0){
             return $this->images()
-                ->first()->icon_path;
+                ->first()->icon;
         }
         return 'img/avatar-2-48.png';
     }

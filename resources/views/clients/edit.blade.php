@@ -31,7 +31,7 @@
 								<div class="col-sm-10">
 					                <div class="fileupload fileupload-new" data-provides="fileupload">
 					                  <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-					                  <img src="{{ url($client->thumbnail()) }}" alt="Placeholder" /></div>
+					                  <img src="{{ \Storage::url($client->thumbnail()) }}" alt="Placeholder" /></div>
 					                  <div class="fileupload-preview fileupload-exists thumbnail"
 					                   		style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
 					                  @if ($errors->has('photo'))
