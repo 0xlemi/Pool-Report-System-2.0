@@ -52,6 +52,7 @@ class TechniciansTableSeeder extends Seeder
     			'medium' => $img->medium,
                 'thumbnail' => $img->thumbnail,
                 'icon' => $img->icon,
+                'processing' => 0,
             ]);
         }
     }

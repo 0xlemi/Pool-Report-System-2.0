@@ -62,14 +62,6 @@ return [
             'bucket' => env('S3_BUCKET'),
         ],
 
-        's3Dev' => [
-            'driver' => 's3',
-            'key' => env('S3_KEY'),
-            'secret' => env('S3_SECRET'),
-            'region' => env('S3_REGION'),
-            'bucket' => env('S3_BUCKET_DEV'),
-        ],
-
         's3BackUp' => [
             'driver' => 's3',
             'key' => env('S3_KEY'),

@@ -50,6 +50,7 @@ class ReportsTableSeeder extends Seeder
                     'thumbnail' => $img->thumbnail,
                     'icon' => $img->icon,
 					'order' => $e,
+                    'processing' => 0,
 				]);
     		}
     	}

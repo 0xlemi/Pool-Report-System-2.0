@@ -158,10 +158,10 @@ class ServicesController extends PageController
         $photo = true;
         if($request->photo){
             $service->images()->delete();
-            $photo = $service->addImageFromForm($request->file('photo'));
+            $service->addImageFromForm($request->file('photo'));
         }
 
-        if($service->save() && $photo){
+        if($service->save()){
             flash()->success('Updated', 'New service successfully updated.');
             return redirect('services/'.$seq_id);
         }

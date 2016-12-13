@@ -88,6 +88,7 @@ class WorkOrdersTableSeeder extends Seeder
                 'icon' => $img->icon,
 				'order' => 1,
                 'type' => 1, // Photo before the workOrder has started
+                'processing' => 0,
 			]);
 
             for ($e=2; $e < rand(3,5); $e++) {
@@ -99,6 +100,7 @@ class WorkOrdersTableSeeder extends Seeder
                     'icon' => $img->icon,
             	    'order' => $e,
                     'type' => 2, // Photo after the work Order has been finished
+                    'processing' => 0,
     			]);
             }
 

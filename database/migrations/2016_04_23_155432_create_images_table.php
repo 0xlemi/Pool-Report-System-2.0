@@ -30,6 +30,7 @@ class CreateImagesTable extends Migration
             $table->string('icon'); // 64x64 image
             $table->smallInteger('order')->default(1);
             $table->smallInteger('type')->default(1); // main use is in Work orders
+            $table->boolean('processing')->default(1);
             $table->timestamps();
             $table->softDeletes();
         });

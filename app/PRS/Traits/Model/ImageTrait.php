@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use App\Image;
 use Storage;
+use App\Jobs\ProcessImage;
 
 trait ImageTrait{
 
@@ -17,63 +18,15 @@ trait ImageTrait{
      */
 	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
 
+        $image = $this->images()->create([
+            'order' => ($this->type)?: $this->numImages()+1,
+            'type' => ($this->type)?: 1,
+        ]);
 
         // Stream file directly to S3.
         $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
 
-        // get the contents back from S3 temp
-        $contents = Storage::get($tempFilePath);
-
-        // Process image to get different sizes
-        $img = Intervention::make($contents);
-        // big
-        $streamBig = (string) $img->fit(1200, null, function ($constraint) {
-                $constraint->upsize();
-            })->stream('jpg');
-        // medium
-        $streamMedium = (string) $img->fit(600, null, function ($constraint) {
-                $constraint->upsize();
-            })->stream('jpg');
-        // thumbnail
-        $streamThumbnail = (string) $img->fit(250, null, function ($constraint) {
-                $constraint->upsize();
-            })->stream('jpg');
-        // icon
-        $streamIcon = (string) $img->fit(64, null, function ($constraint) {
-                $constraint->upsize();
-            })->stream('jpg');
-
-        $storageFolder = 'images/'.strtolower(substr(get_class($this), 4));
-
-        //generate image names
-        $randomName = str_random(50);
-        // Store final Images in S3
-        Storage::put("{$storageFolder}/bg_{$randomName}.jpg", $streamBig, 'public');
-        Storage::put("{$storageFolder}/md_{$randomName}.jpg", $streamMedium, 'public');
-        Storage::put("{$storageFolder}/sm_{$randomName}.jpg", $streamThumbnail, 'public');
-        Storage::put("{$storageFolder}/ic_{$randomName}.jpg", $streamIcon, 'public');
-
-        // Finaly delete temp file
-        Storage::delete($tempFilePath);
-
-        // Set image paths in database
-        $image = new Image;
-        $image->big = "{$storageFolder}/bg_{$randomName}.jpg";
-        $image->medium = "{$storageFolder}/md_{$randomName}.jpg";
-        $image->thumbnail = "{$storageFolder}/sm_{$randomName}.jpg";
-        $image->icon = "{$storageFolder}/ic_{$randomName}.jpg";
-
-        if($order){
-            $image->order = $order;
-        }else{
-            $image->order = $this->numImages() + 1;
-        }
-        if($type){
-            $image->type = $type;
-        }
-
-        // presist image to the database
-        return $this->addImage($image);
+        dispatch(new ProcessImage($this, $image, $tempFilePath));
 	}
 
 	 /**
