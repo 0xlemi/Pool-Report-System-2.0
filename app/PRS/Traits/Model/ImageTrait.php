@@ -31,11 +31,11 @@ trait ImageTrait{
                 $constraint->upsize();
             })->stream('jpg');
         // medium
-        $streamMedium = (string) $img->fit(700, null, function ($constraint) {
+        $streamMedium = (string) $img->fit(600, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
         // thumbnail
-        $streamThumbnail = (string) $img->fit(300, null, function ($constraint) {
+        $streamThumbnail = (string) $img->fit(250, null, function ($constraint) {
                 $constraint->upsize();
             })->stream('jpg');
         // icon
