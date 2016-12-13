@@ -16,12 +16,7 @@ trait ImageTrait{
      * add a image from form information
      */
 	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
-		//generate image names
-        $randomName = str_random(50);
-        $nameBig = 'bg_'.$randomName.$file->guessExtension();
-        $nameMedium = 'md_'.$randomName.$file->guessExtension();
-        $nameThumbnail = 'sm_'.$randomName.$file->guessExtension();
-        $nameIcon = 'ic_'.$randomName.$file->guessExtension();
+
 
         // Stream file directly to S3.
         $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
@@ -48,21 +43,25 @@ trait ImageTrait{
                 $constraint->upsize();
             })->stream('jpg');
 
+        $storageFolder = 'images/'.strtolower(substr(get_class($this), 4));
+
+        //generate image names
+        $randomName = str_random(50);
         // Store final Images in S3
-        $pathBig = Storage::put('images/'.$nameBig , $streamBig, 'public');
-        $pathMedium = Storage::put('images/'.$nameMedium , $streamMedium, 'public');
-        $pathThumbnail = Storage::put('images/'.$nameThumbnail , $streamThumbnail, 'public');
-        $pathIcon = Storage::put('images/'.$nameIcon , $streamIcon, 'public');
+        Storage::put("{$storageFolder}/bg_{$randomName}.jpg", $streamBig, 'public');
+        Storage::put("{$storageFolder}/md_{$randomName}.jpg", $streamMedium, 'public');
+        Storage::put("{$storageFolder}/sm_{$randomName}.jpg", $streamThumbnail, 'public');
+        Storage::put("{$storageFolder}/ic_{$randomName}.jpg", $streamIcon, 'public');
 
         // Finaly delete temp file
         Storage::delete($tempFilePath);
 
         // Set image paths in database
         $image = new Image;
-        $image->big = $pathBig;
-        $image->medium = $pathMedium;
-        $image->thumbnail = $pathThumbnail;
-        $image->icon = $pathIcon;
+        $image->big = "{$storageFolder}/bg_{$randomName}.jpg";
+        $image->medium = "{$storageFolder}/md_{$randomName}.jpg";
+        $image->thumbnail = "{$storageFolder}/sm_{$randomName}.jpg";
+        $image->icon = "{$storageFolder}/ic_{$randomName}.jpg";
 
         if($order){
             $image->order = $order;

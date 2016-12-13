@@ -103,8 +103,8 @@ class ReportsController extends PageController
         $on_time = $this->reportHelpers->checkOnTimeValue(
 // ****** check the timezoen for check on time
                 $completed_at,
-                $service->start_time,
-                $service->end_time,
+                $service->serviceContract->start_time,
+                $service->serviceContract->end_time,
                 $admin->timezone
             );
 
