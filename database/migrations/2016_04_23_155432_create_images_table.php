@@ -23,6 +23,8 @@ class CreateImagesTable extends Migration
             $table->smallInteger('order')->default(1);
             $table->smallInteger('type')->default(1); // main use is in Work orders
             $table->boolean('processing')->default(1);
+            // protect for not having the same order more than once
+            $table->unique(['imageable_type', 'imageable_id', 'order']);
             $table->timestamps();
             $table->softDeletes();
         });

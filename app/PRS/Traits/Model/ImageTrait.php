@@ -20,15 +20,25 @@ trait ImageTrait{
 	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
 
         $image = $this->images()->create([
-            'order' => ($this->type)?: $this->numImages()+1,
-            'type' => ($this->type)?: 1,
+            'order' => ($order)?: $this->lastOrderNum()+1,
+            'type' => ($type)?: 1,
         ]);
 
         // Stream file directly to S3.
         $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
 
         dispatch(new ProcessImage($this, $image, $tempFilePath));
+
+        return $image;
 	}
+
+    public function lastOrderNum()
+    {
+        if($this->images()->count() > 0){
+            return $this->images()->orderBy('order', 'desc')->first()->order;
+        }
+        return 0;
+    }
 
     public function modelName()
     {
@@ -39,7 +49,7 @@ trait ImageTrait{
     {
         // go through all images that the model has
         foreach ($this->images as $image) {
-            // Delete the image files from s3
+            // Delete the image files from s3 too
             dispatch(new DeleteImage($image->big, $image->medium, $image->thumbnail, $image->icon));
         }
         return parent::delete();
@@ -103,7 +113,7 @@ trait ImageTrait{
      */
     public function imagesByType($type)
     {
-        return $this->images()->where('type', $type)->get();
+        return $this->images()->where('images.type', $type)->get();
     }
 
      /**
@@ -133,7 +143,7 @@ trait ImageTrait{
     public function imageExists($order = 1)
     {
         if($this->images()
-                    ->where('order', '=', $order)
+                    ->where('images.order', '=', $order)
                     ->count() < 1){
             return false;
         }
@@ -145,8 +155,8 @@ trait ImageTrait{
      */
     public function image($order = 1, $getUrl = true, $type = 1){
         $image = $this->images()
-            ->where('order', '=', $order)
-            ->where('type', '=', $type)
+            ->where('images.order', '=', $order)
+            ->where('images.type', '=', $type)
             ->first();
         if($getUrl){
             if(!$image){
@@ -169,7 +179,7 @@ trait ImageTrait{
      */
     public function normalImage($order = 1){
         $image = $this->images()
-            ->where('order', '=', $order)
+            ->where('images.order', '=', $order)
             ->firstOrFail();
         if(!$image){
             return 'img/no_image.png';

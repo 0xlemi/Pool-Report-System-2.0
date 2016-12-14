@@ -46,7 +46,7 @@ class WorksTableSeeder extends Seeder
             }
 
             // add image
-            for ($e=0; $e < rand(1,4); $e++) {
+            for ($e=1; $e < rand(2,5); $e++) {
             $img = $this->seederHelper->get_random_image('report/3', 50);
                 $work->images()->create([
     				'big' => $img->big,

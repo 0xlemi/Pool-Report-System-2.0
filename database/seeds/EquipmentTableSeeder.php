@@ -60,6 +60,7 @@ class EquipmentTableSeeder extends Seeder
     			'medium' => $img->medium,
                 'thumbnail' => $img->thumbnail,
                 'icon' => $img->icon,
+                'order' => 1,
                 'processing' => 0,
             ]);
     	}
