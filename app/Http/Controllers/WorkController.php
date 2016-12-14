@@ -160,6 +160,7 @@ class WorkController extends PageController
         $this->authorize('removePhoto', $work);
 
         $image = $work->image($order, false);
+
         if($image->delete()){
                 return response()->json([
                 'message' => 'The photo was deleted from the work'

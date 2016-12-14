@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 use App\Image;
 use Storage;
+use App\Jobs\DeleteImage;
 use App\Jobs\ProcessImage;
 
 trait ImageTrait{
@@ -32,6 +33,16 @@ trait ImageTrait{
     public function modelName()
     {
         return class_basename(get_class($this));
+    }
+
+    public function delete()
+    {
+        // go through all images that the model has
+        foreach ($this->images as $image) {
+            // Delete the image files from s3
+            dispatch(new DeleteImage($image->big, $image->medium, $image->thumbnail, $image->icon));
+        }
+        return parent::delete();
     }
 
 	 /**

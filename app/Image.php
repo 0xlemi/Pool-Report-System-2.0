@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Jobs\DeleteImage;
 
 class Image extends Model
 {
@@ -23,6 +24,13 @@ class Image extends Model
     public function imageable()
     {
         return $this->morphTo();
+    }
+
+    public function delete()
+    {
+        // Delete the image files from s3
+        dispatch(new DeleteImage($this->big, $this->medium, $this->thumbnail, $this->icon));
+        return parent::delete();
     }
 
 }
