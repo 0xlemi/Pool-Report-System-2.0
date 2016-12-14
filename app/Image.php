@@ -20,4 +20,9 @@ class Image extends Model
     	'order',
     ];
 
+    public function imageable()
+    {
+        return $this->morphTo();
+    }
+
 }

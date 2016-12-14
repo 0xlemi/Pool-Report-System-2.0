@@ -19,12 +19,27 @@ class ImageTransformer extends Transformer
      */
     public function transform(Image $image)
     {
-        $title = "Photo";
+        $name = title_case(str_replace('_', ' ', snake_case($image->imageable->modelName())));
+        if($image->imageable->modelName() == 'report'){
+            switch ($image->order) {
+                case '1':
+                    $name = "Main Pool";
+                    break;
+                case '2':
+                    $name = "Water Quality";
+                    break;
+                case '3':
+                    $name = "Engine Room";
+                    break;
+            }
+        }
+        $title = "{$name} Photo";
+
         if($image->processing){
             return [
                 'processing' => $image->processing,
                 'order' => $image->order,
-                'title' => 'Photo title',
+                'title' => $title ,
             ];
         }
         return [
@@ -33,7 +48,7 @@ class ImageTransformer extends Transformer
             'thumbnail' =>  Storage::url($image->thumbnail),
             'icon' =>  Storage::url($image->icon),
             'order' => $image->order,
-            'title' => 'Photo title',
+            'title' => $title ,
         ];
     }
 

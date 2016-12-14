@@ -31,7 +31,7 @@ trait ImageTrait{
 
     public function modelName()
     {
-        return substr(get_class($this), 4);    
+        return class_basename(get_class($this));
     }
 
 	 /**
@@ -82,7 +82,7 @@ trait ImageTrait{
      * Report:
      */
     public function images(){
-        return $this->hasMany('App\Image');
+        return $this->morphMany('App\Image', 'imageable');
     }
 
     /**
