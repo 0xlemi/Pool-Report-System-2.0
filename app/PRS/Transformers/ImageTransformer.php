@@ -19,6 +19,14 @@ class ImageTransformer extends Transformer
      */
     public function transform(Image $image)
     {
+        $title = "Photo";
+        if($image->processing){
+            return [
+                'processing' => $image->processing,
+                'order' => $image->order,
+                'title' => 'Photo title',
+            ];
+        }
         return [
             'big' => Storage::url($image->big),
             'medium' =>  Storage::url($image->medium),

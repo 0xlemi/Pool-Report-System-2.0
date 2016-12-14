@@ -72,6 +72,7 @@ function isset(strVariableName) {
     let supervisorTable = require('./components/supervisorTable.vue');
     let technicianTable = require('./components/technicianTable.vue');
     let invoiceTable = require('./components/invoiceTable.vue');
+    let photo = require('./components/photo.vue');
 
 
     let mainVue = new Vue({
@@ -83,6 +84,7 @@ function isset(strVariableName) {
             alert,
             dropdown,
             PhotoList,
+            photo,
             deleteButton,
             // notifications
             AllNotificationsAsReadButton,

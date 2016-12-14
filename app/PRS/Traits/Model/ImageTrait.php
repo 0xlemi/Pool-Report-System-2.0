@@ -29,6 +29,11 @@ trait ImageTrait{
         dispatch(new ProcessImage($this, $image, $tempFilePath));
 	}
 
+    public function modelName()
+    {
+        return substr(get_class($this), 4);    
+    }
+
 	 /**
      * Add a image to this client
      * @return Image

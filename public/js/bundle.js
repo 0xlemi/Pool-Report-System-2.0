@@ -31178,7 +31178,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <section v-if=\"image.processing\" class=\"widget widget-simple-sm-fill grey\">\n\t\t<div class=\"widget-simple-sm-icon\">\n\t\t\t<i class=\"font-icon font-icon-picture-double\"></i>\n\t\t</div>\n\t\t<div class=\"widget-simple-sm-fill-caption\">Processing Image</div>\n\t</section><!--.widget-simple-sm-fill-->\n    <div v-else=\"\" class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -32354,6 +32354,7 @@ $(document).ready(function () {
 	var supervisorTable = require('./components/supervisorTable.vue');
 	var technicianTable = require('./components/technicianTable.vue');
 	var invoiceTable = require('./components/invoiceTable.vue');
+	var photo = require('./components/photo.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -32364,6 +32365,7 @@ $(document).ready(function () {
 			alert: alert,
 			dropdown: dropdown,
 			PhotoList: PhotoList,
+			photo: photo,
 			deleteButton: deleteButton,
 			// notifications
 			AllNotificationsAsReadButton: AllNotificationsAsReadButton,
@@ -33111,6 +33113,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":202,"./components/dropdown.vue":203,"./components/email.vue":205,"./components/equipment.vue":206,"./components/finishWorkOrderButton.vue":207,"./components/invoiceTable.vue":209,"./components/missingServices.vue":211,"./components/notificationsWidget.vue":213,"./components/payments.vue":215,"./components/photoList.vue":217,"./components/routeTable.vue":218,"./components/serviceTable.vue":219,"./components/settings.vue":220,"./components/supervisorTable.vue":221,"./components/technicianTable.vue":222,"./components/workOrderPhotosEdit.vue":223,"./components/workOrderPhotosShow.vue":224,"./components/workOrderTable.vue":225,"./components/works.vue":226,"./directives/FormToAjax.vue":227,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,228]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":202,"./components/dropdown.vue":203,"./components/email.vue":205,"./components/equipment.vue":206,"./components/finishWorkOrderButton.vue":207,"./components/invoiceTable.vue":209,"./components/missingServices.vue":211,"./components/notificationsWidget.vue":213,"./components/payments.vue":215,"./components/photo.vue":216,"./components/photoList.vue":217,"./components/routeTable.vue":218,"./components/serviceTable.vue":219,"./components/settings.vue":220,"./components/supervisorTable.vue":221,"./components/technicianTable.vue":222,"./components/workOrderPhotosEdit.vue":223,"./components/workOrderPhotosShow.vue":224,"./components/workOrderTable.vue":225,"./components/works.vue":226,"./directives/FormToAjax.vue":227,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,228]);
 
 //# sourceMappingURL=bundle.js.map

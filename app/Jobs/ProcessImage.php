@@ -60,7 +60,7 @@ class ProcessImage implements ShouldQueue
                 $constraint->upsize();
             })->stream('jpg');
 
-        $storageFolder = 'images/'.strtolower(substr(get_class($this->object), 4));
+        $storageFolder = 'images/'.strtolower($this->object->modelName());
 
         //generate image names
         $randomName = str_random(50);

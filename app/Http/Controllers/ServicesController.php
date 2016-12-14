@@ -124,9 +124,9 @@ class ServicesController extends PageController
         $this->authorize('view', $service);
 
         $clients = $service->clients()->get();
-        $images = $this->imageTransformer->transformCollection($service->images);
+        $image = $this->imageTransformer->transform($service->images->first());
 
-        return view('services.show', compact('service', 'clients', 'images'));
+        return view('services.show', compact('service', 'clients', 'image'));
     }
 
     /**

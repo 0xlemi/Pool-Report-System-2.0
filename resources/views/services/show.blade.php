@@ -24,12 +24,18 @@
 				</header>
 				<div class="card-block">
 					<form>
+
+						@if($service->images->count() > 0)
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Service photo</label>
 							<div class="col-sm-10">
-								<photo-list :data="{{ json_encode($images) }}" :can-delete="false"></photo-list>
+								<div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
+									<photo :image="{{ json_encode($image) }}" :can-delete="false"></photo>
+								</div>
 							</div>
 						</div>
+						@endif
+
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">ID</label>
 							<div class="col-sm-10">

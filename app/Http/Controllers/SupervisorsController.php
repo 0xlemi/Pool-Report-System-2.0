@@ -13,17 +13,22 @@ use App\User;
 use App\Http\Requests\CreateSupervisorRequest;
 use App\Http\Requests;
 use App\Http\Controllers\PageController;
+use App\PRS\Transformers\ImageTransformer;
 
 class SupervisorsController extends PageController
 {
+
+    protected $imageTransformer;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -115,8 +120,9 @@ class SupervisorsController extends PageController
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         $this->authorize('view', $supervisor);
+        $image = $this->imageTransformer->transform($supervisor->images->first());
 
-        return view('supervisors.show', compact('supervisor'));
+        return view('supervisors.show', compact('supervisor', 'image'));
     }
 
     /**

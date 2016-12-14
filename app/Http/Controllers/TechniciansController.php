@@ -15,21 +15,25 @@ use App\Http\Requests;
 use App\Http\Requests\CreateTechnicianRequest;
 use App\Http\Controllers\PageController;
 use App\PRS\Helpers\SupervisorHelpers;
+use App\PRS\Transformers\ImageTransformer;
 
 class TechniciansController extends PageController
 {
 
     private $supervisorHelpers;
+    protected $imageTransformer;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(SupervisorHelpers $supervisorHelpers)
+    public function __construct(SupervisorHelpers $supervisorHelpers,
+                                ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->supervisorHelpers = $supervisorHelpers;
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -131,8 +135,9 @@ class TechniciansController extends PageController
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
 
         $this->authorize('view', $technician);
+        $image = $this->imageTransformer->transform($technician->images->first());
 
-        return view('technicians.show', compact('technician'));
+        return view('technicians.show', compact('technician', 'image'));
     }
 
     /**

@@ -23,30 +23,18 @@
 					</header>
 					<div class="card-block">
 						<form>
-							@if($client->numImages() > 0)
-								<div class="form-group row">
-									<label class="col-sm-2 form-control-label">Client photo</label>
-									<div class="col-sm-10">
-										<div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
-			                                <div class="gallery-col">
-												<article class="gallery-item">
-													<img class="gallery-picture" src="{{ \Storage::url($client->thumbnail()) }}" alt="" height="158">
-													<div class="gallery-hover-layout">
-														<div class="gallery-hover-layout-in">
-															<p class="gallery-item-title">Client Photo</p>
-															<div class="btn-group">
-																<a class="fancybox btn" href="{{ \Storage::url($client->image()) }}" title="Client Photo">
-																	<i class="font-icon font-icon-eye"></i>
-																</a>
-															</div>
-														</div>
-													</div>
-												</article>
-											</div><!--.gallery-col-->
-			                            </div><!--.col-->
+
+							@if($client->images->count() > 0)
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Client photo</label>
+								<div class="col-sm-10">
+									<div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
+										<photo :image="{{ json_encode($image) }}" :can-delete="false"></photo>
 									</div>
 								</div>
+							</div>
 							@endif
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">ID</label>
 								<div class="col-sm-10">

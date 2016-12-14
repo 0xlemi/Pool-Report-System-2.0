@@ -13,18 +13,22 @@ use App\User;
 use App\Http\Requests;
 
 use App\Http\Requests\CreateClientRequest;
+use App\PRS\Transformers\ImageTransformer;
 
 class ClientsController extends PageController
 {
+
+    protected $imageTransformer;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -116,11 +120,9 @@ class ClientsController extends PageController
         $this->authorize('view', $client);
 
         $services = $client->services()->get();
-        JavaScript::put([
-            'click_url' => url('services').'/',
-        ]);
+        $image = $this->imageTransformer->transform($client->images->first());
 
-        return view('clients.show',compact('client', 'services'));
+        return view('clients.show',compact('client', 'services', 'image'));
     }
 
     /**
