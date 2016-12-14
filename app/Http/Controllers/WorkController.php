@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Response;
+use Storage;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateWorkRequest;
@@ -108,7 +109,7 @@ class WorkController extends PageController
             'technician' => (object)[
                 'id' => $technician->seq_id,
                 'fullName' => "{$technician->name} {$technician->last_name}",
-                'icon' => url($technician->icon()),
+                'icon' => Storage::url($technician->icon()),
             ],
             'photos' => $this->imageTransformer
                         ->transformCollection($work->images()->get())

@@ -9,6 +9,7 @@ use JavaScript;
 
 use App\Service;
 use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Transformers\ImageTransformer;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateServiceRequest;
@@ -19,15 +20,17 @@ class ServicesController extends PageController
 {
 
     protected $serviceHelpers;
+    protected $imageTransformer;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(serviceHelpers $serviceHelpers)
+    public function __construct(serviceHelpers $serviceHelpers, ImageTransformer $imageTransformer)
     {
         $this->serviceHelpers = $serviceHelpers;
+        $this->imageTransformer = $imageTransformer;
         $this->middleware('auth');
     }
 
@@ -121,8 +124,9 @@ class ServicesController extends PageController
         $this->authorize('view', $service);
 
         $clients = $service->clients()->get();
+        $images = $this->imageTransformer->transformCollection($service->images);
 
-        return view('services.show', compact('service', 'clients'));
+        return view('services.show', compact('service', 'clients', 'images'));
     }
 
     /**

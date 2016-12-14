@@ -30227,7 +30227,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":216,"spin":166,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":217,"spin":166,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30359,7 +30359,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":216,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":217,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31163,40 +31163,62 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['data', 'objectId', 'canDelete', 'photosUrl'],
-    data: function data() {
-        return {
-            debug: {}
-        };
-    },
-
-    computed: {
-        deleteUrl: function deleteUrl() {
-            return Laravel.url + this.photosUrl + '/' + this.objectId + '/';
-        }
-    },
+    props: ['image', 'canDelete', 'objectId', 'photosUrl'],
     methods: {
         deletePhoto: function deletePhoto(order) {
-            $.ajax({
-                vue: this,
-                url: this.deleteUrl + order,
-                type: 'DELETE',
-                success: function success(data, textStatus, xhr) {
-                    // remove the just deleted photo from options
-                    var index = this.vue.data.findIndex(function (data) {
-                        return data.order === order;
-                    });
-                    this.vue.data = this.vue.data.splice(index, 1);
-                },
-                error: function error(xhr, textStatus, errorThrown) {
-                    console.log('image was not deleted');
-                }
+            var _this = this;
+
+            this.$http.delete(Laravel.url + this.photosUrl + '/' + this.objectId + '/' + order).then(function (response) {
+                // remove the just deleted photo from options
+                _this.$dispatch('removePhoto', order);
+            }, function (response) {
+                console.log('image was not deleted');
             });
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n        <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n    </div><!--.col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1168d54d", module.exports)
+  } else {
+    hotAPI.update("_v-1168d54d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _photo = require('./photo.vue');
+
+var _photo2 = _interopRequireDefault(_photo);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    props: ['data', 'canDelete', 'objectId', 'photosUrl'],
+    components: {
+        photo: _photo2.default
+    },
+    events: {
+        removePhoto: function removePhoto(order) {
+            // remove the just deleted photo from options
+            var index = this.data.findIndex(function (data) {
+                return data.order === order;
+            });
+            this.data = this.data.splice(index, 1);
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n    <photo :image=\"image\" :can-delete=\"canDelete\" :object-id=\"objectId\" :photos-url=\"photosUrl\"></photo>\n</div><!--.col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31207,7 +31229,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
+},{"./photo.vue":216,"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31336,7 +31358,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31396,7 +31418,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
+},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31448,7 +31470,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],220:[function(require,module,exports){
+},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31499,7 +31521,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],221:[function(require,module,exports){
+},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31554,7 +31576,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],222:[function(require,module,exports){
+},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31618,7 +31640,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":204,"./photoList.vue":216,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
+},{"./dropzone.vue":204,"./photoList.vue":217,"vue":180,"vue-hot-reload-api":177}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31698,7 +31720,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":216,"vue":180,"vue-hot-reload-api":177}],224:[function(require,module,exports){
+},{"./photoList.vue":217,"vue":180,"vue-hot-reload-api":177}],225:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31758,7 +31780,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],225:[function(require,module,exports){
+},{"./indexTable.vue":208,"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32169,7 +32191,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":203,"./dropzone.vue":204,"./photoList.vue":216,"spin":166,"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":203,"./dropzone.vue":204,"./photoList.vue":217,"spin":166,"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32253,7 +32275,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],228:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -33089,6 +33111,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":202,"./components/dropdown.vue":203,"./components/email.vue":205,"./components/equipment.vue":206,"./components/finishWorkOrderButton.vue":207,"./components/invoiceTable.vue":209,"./components/missingServices.vue":211,"./components/notificationsWidget.vue":213,"./components/payments.vue":215,"./components/photoList.vue":216,"./components/routeTable.vue":217,"./components/serviceTable.vue":218,"./components/settings.vue":219,"./components/supervisorTable.vue":220,"./components/technicianTable.vue":221,"./components/workOrderPhotosEdit.vue":222,"./components/workOrderPhotosShow.vue":223,"./components/workOrderTable.vue":224,"./components/works.vue":225,"./directives/FormToAjax.vue":226,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,227]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":202,"./components/dropdown.vue":203,"./components/email.vue":205,"./components/equipment.vue":206,"./components/finishWorkOrderButton.vue":207,"./components/invoiceTable.vue":209,"./components/missingServices.vue":211,"./components/notificationsWidget.vue":213,"./components/payments.vue":215,"./components/photoList.vue":217,"./components/routeTable.vue":218,"./components/serviceTable.vue":219,"./components/settings.vue":220,"./components/supervisorTable.vue":221,"./components/technicianTable.vue":222,"./components/workOrderPhotosEdit.vue":223,"./components/workOrderPhotosShow.vue":224,"./components/workOrderTable.vue":225,"./components/works.vue":226,"./directives/FormToAjax.vue":227,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,228]);
 
 //# sourceMappingURL=bundle.js.map
