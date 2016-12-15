@@ -35,6 +35,7 @@ Route::post('todaysroute/report', 'TodaysRouteController@storeReport');
 
 // Reports
 Route::get('reports/emailPreview', 'ReportsController@emailPreview');
+Route::get('reports/photos/{seq_id}', 'ReportsController@getPhoto');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 

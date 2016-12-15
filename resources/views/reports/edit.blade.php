@@ -165,29 +165,7 @@
 					<br>
 					<br>
 					<hr>
-					<h4>Photos</h4>
-					<br>
-					<div class="row">
-						<div class="col-md-12">
-                            <photo-list :data="{{ json_encode($images) }}" :object-id="{{ $report->seq_id }}"
-								:can-delete="true" photos-url="reports/photos" list-class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md">
-							</photo-list>
-						</div>
-					</div>
-                    <br>
-					<div class="row">
-                        <div class="col-sm-12">
-                            <div class="box-typical-upload box-typical-upload-in">
-                                <div class="drop-zone">
-                                    <form id="genericDropzone" action="{{ url('reports/photos/'.$report->seq_id)}}" method="POST" class="dropzone">
-                                    	{{ csrf_field() }}
-                                    	<div class="dz-message" data-dz-message><span><i class="font-icon font-icon-cloud-upload-2"></i>
-                                        <div class="drop-zone-caption">Drag file or click to add photos</div></span></div>
-                                    </form>
-                                </div><!--.drop-zone-->
-                            </div>
-                        </div><!--.col-->
-                    </div><!--.row-->
+					<edit-report-photos :id="{{ $report->seq_id }}"></edit-report-photos>	
 				</div>
 		</section>
 	</div>

@@ -73,6 +73,7 @@ function isset(strVariableName) {
     let technicianTable = require('./components/technicianTable.vue');
     let invoiceTable = require('./components/invoiceTable.vue');
     let photo = require('./components/photo.vue');
+    let editReportPhotos = require('./components/editReportPhotos.vue');
 
 
     let mainVue = new Vue({
@@ -101,6 +102,7 @@ function isset(strVariableName) {
             works,
             // report
             missingServices,
+            editReportPhotos,
             // service
             serviceTable,
             countries,

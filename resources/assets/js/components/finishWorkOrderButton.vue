@@ -25,7 +25,7 @@
 				</photo-list>
 			</div>
 			<div class="col-md-12">
-                <dropzone :url="dropzoneUrl"><dropzone>
+                <dropzone :url="dropzoneUrl"></dropzone>
 			</div>
 
 			<hr>

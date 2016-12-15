@@ -199,17 +199,25 @@ class ReportsController extends PageController
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();
 
-        $images = $this->imageTransformer->transformCollection($report->images);
-
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'services', 'technicians', 'tags', 'images'));
+        return view('reports.edit', compact('report', 'services', 'technicians', 'tags'));
     }
 
+    public function getPhoto(Request $request, $seq_id)
+    {
+        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+
+        $this->authorize('view', $report);
+
+        $images = $this->imageTransformer->transformCollection($report->images);
+
+        return response()->json($images);
+    }
 
     public function addPhoto(Request $request, $seq_id)
     {
