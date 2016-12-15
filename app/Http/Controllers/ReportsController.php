@@ -16,11 +16,15 @@ use Auth;
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Transformers\ImageTransformer;
 use App\Service;
 use App\Notifications\ReportCreatedNotification;
 class ReportsController extends PageController
 {
     protected $reportHelpers;
+    protected $serviceHelpers;
+    protected $technicianHelpers;
+    protected $imageTransformer;
 
     /**
      * Create a new controller instance.
@@ -29,12 +33,14 @@ class ReportsController extends PageController
      */
     public function __construct(ReportHelpers $reportHelpers,
                                 ServiceHelpers $serviceHelpers,
-                                TechnicianHelpers $technicianHelpers)
+                                TechnicianHelpers $technicianHelpers,
+                                ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->reportHelpers = $reportHelpers;
         $this->serviceHelpers = $serviceHelpers;
         $this->technicianHelpers = $technicianHelpers;
+        $this->imageTransformer = $imageTransformer;
     }
 
     /**
@@ -153,14 +159,9 @@ class ReportsController extends PageController
         $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
 
         $this->authorize('view', $report);
+        $images = $this->imageTransformer->transformCollection($report->images);
 
-        // set the generate email url
-        JavaScript::put([
-            'emailPreview' => url('reports/emailPreview'),
-            'emailPreviewNoImage' => url('img/no_image.png'),
-        ]);
-
-        return view('reports.show', compact('report'));
+        return view('reports.show', compact('report', 'images'));
     }
 
     // check this
@@ -198,13 +199,15 @@ class ReportsController extends PageController
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();
 
+        $images = $this->imageTransformer->transformCollection($report->images);
+
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($admin->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'services', 'technicians', 'tags'));
+        return view('reports.edit', compact('report', 'services', 'technicians', 'tags', 'images'));
     }
 
 
@@ -231,8 +234,13 @@ class ReportsController extends PageController
 
         $image = $report->image($order, false);
         if($image->delete()){
-            return redirect()->back();
+                return response()->json([
+                'message' => 'The photo was deleted from the report'
+            ]);
         }
+        return response()->json([
+                'error' => 'The photo could not deleted from the report'
+            ], 500);
     }
 
     /**

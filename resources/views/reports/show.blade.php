@@ -87,26 +87,10 @@
 					<h4>Pool Photos</h4>
 					<hr>
 					<div class="row">
-						@foreach($report->images as $image)
-                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
-                                <div class="gallery-col">
-									<article class="gallery-item">
-										<img class="gallery-picture" src="{{ \Storage::url($image->thumbnail) }}" alt="" height="158">
-										<div class="gallery-hover-layout">
-											<div class="gallery-hover-layout-in">
-												<p class="gallery-item-title">{{ get_image_tag($image->order) }}</p>
-												<div class="btn-group">
-													<a class="fancybox btn" href="{{ \Storage::url($image->big) }}" title="{{ get_image_tag($image->order) }}">
-														<i class="font-icon font-icon-eye"></i>
-													</a>
-												</div>
-												<p>Photo number {{ $image->order }}</p>
-											</div>
-										</div>
-									</article>
-								</div><!--.gallery-col-->
-                            </div><!--.col-->
-                        @endforeach
+						<div class="col-md-12">
+                            <photo-list :data="{{ json_encode($images) }}" :can-delete="false" list-class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md">
+							</photo-list>
+						</div>
 					</div>
 					<hr>
 					<span style="float: left;display:inline;">

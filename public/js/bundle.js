@@ -31170,7 +31170,7 @@ exports.default = {
 
             this.$http.delete(Laravel.url + this.photosUrl + '/' + this.objectId + '/' + order).then(function (response) {
                 // remove the just deleted photo from options
-                _this.$dispatch('removePhoto', order);
+                _this.$dispatch('photoRemoved', order);
             }, function (response) {
                 console.log('image was not deleted');
             });
@@ -31178,7 +31178,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <section v-if=\"image.processing\" class=\"widget widget-simple-sm-fill grey\">\n\t\t<div class=\"widget-simple-sm-icon\">\n\t\t\t<i class=\"font-icon font-icon-picture-double\"></i>\n\t\t</div>\n\t\t<div class=\"widget-simple-sm-fill-caption\">Processing Image</div>\n\t</section><!--.widget-simple-sm-fill-->\n    <div v-else=\"\" class=\"gallery-col\">\n        \t<article class=\"gallery-item\">\n        \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n        \t\t<div class=\"gallery-hover-layout\">\n        \t\t\t<div class=\"gallery-hover-layout-in\">\n        \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n        \t\t\t\t<div class=\"btn-group\">\n        \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n        \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n        \t\t\t\t\t</a>\n                            <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t\t</a>\n        \t\t\t\t</div>\n        \t\t\t\t<p>Photo number {{ image.order }}</p>\n        \t\t\t</div>\n        \t\t</div>\n        \t</article>\n        </div><!--.gallery-col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <section v-if=\"image.processing\" class=\"widget widget-simple-sm-fill grey\">\n\t\t<div class=\"widget-simple-sm-icon\">\n\t\t\t<i class=\"font-icon font-icon-picture-double\"></i>\n\t\t</div>\n\t\t<div class=\"widget-simple-sm-fill-caption\">Processing Image</div>\n\t</section><!--.widget-simple-sm-fill-->\n    <div v-else=\"\" class=\"gallery-col\">\n    \t<article class=\"gallery-item\">\n    \t\t<img class=\"gallery-picture\" :src=\"image.thumbnail\" alt=\"\" height=\"127\">\n    \t\t<div class=\"gallery-hover-layout\">\n    \t\t\t<div class=\"gallery-hover-layout-in\">\n    \t\t\t\t<p class=\"gallery-item-title\">{{ image.title }}</p>\n    \t\t\t\t<div class=\"btn-group\">\n    \t\t\t\t\t<a class=\"fancybox btn\" href=\"{{ image.big }}\" title=\"{{ image.title }}\">\n    \t\t\t\t\t\t<i class=\"font-icon font-icon-eye\"></i>\n    \t\t\t\t\t</a>\n                        <a v-if=\"canDelete\" @click=\"deletePhoto(image.order)\" class=\"btn\">\n\t\t\t\t\t\t\t<i class=\"font-icon font-icon-trash\"></i>\n\t\t\t\t\t\t</a>\n    \t\t\t\t</div>\n    \t\t\t\t<p>Photo number {{ image.order }}</p>\n    \t\t\t</div>\n    \t\t</div>\n    \t</article>\n    </div><!--.gallery-col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31190,35 +31190,44 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _photo = require('./photo.vue');
+var _photo = require("./photo.vue");
 
 var _photo2 = _interopRequireDefault(_photo);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['data', 'canDelete', 'objectId', 'photosUrl'],
+    props: {
+        data: null,
+        canDelete: null,
+        objectId: Number,
+        photosUrl: String,
+        listClass: {
+            type: String,
+            default: "col-md-4 m-b-md"
+        }
+    },
     components: {
         photo: _photo2.default
     },
     events: {
-        removePhoto: function removePhoto(order) {
+        photoRemoved: function photoRemoved(order) {
             // remove the just deleted photo from options
             var index = this.data.findIndex(function (data) {
                 return data.order === order;
             });
-            this.data = this.data.splice(index, 1);
+            this.data.splice(index, 1);
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-4 m-b-md\" v-for=\"image in data\">\n    <photo :image=\"image\" :can-delete=\"canDelete\" :object-id=\"objectId\" :photos-url=\"photosUrl\"></photo>\n</div><!--.col-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div :class=\"listClass\" v-for=\"image in data\">\n    <photo :image=\"image\" :can-delete=\"canDelete\" :object-id=\"objectId\" :photos-url=\"photosUrl\"></photo>\n</div><!--.col-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

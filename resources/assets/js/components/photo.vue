@@ -34,7 +34,7 @@ export default {
         deletePhoto(order){
             this.$http.delete(Laravel.url+this.photosUrl+'/'+this.objectId+'/'+order).then((response) => {
                 // remove the just deleted photo from options
-                this.$dispatch('removePhoto', order);
+                this.$dispatch('photoRemoved', order);
             }, (response) => {
                 console.log('image was not deleted');
             });

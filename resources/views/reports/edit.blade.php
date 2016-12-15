@@ -168,31 +168,12 @@
 					<h4>Photos</h4>
 					<br>
 					<div class="row">
-						@foreach($report->images as $image)
-                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-5 m-b-md">
-                                <div class="gallery-col">
-									<article class="gallery-item">
-										<img class="gallery-picture" src="{{ \Storage::url($image->thumbnail) }}" alt="" height="158">
-										<div class="gallery-hover-layout">
-											<div class="gallery-hover-layout-in">
-												<p class="gallery-item-title">{{ get_image_tag($image->order) }}</p>
-												<div class="btn-group">
-													<a class="fancybox btn" href="{{ \Storage::url($image->big) }}" title="{{ get_image_tag($image->order) }}">
-														<i class="font-icon font-icon-eye"></i>
-													</a>
-													<a href="{{ url('reports/photos/'.$report->seq_id.'/'.$image->order) }}"
-														data-method="delete" data-token="{{ csrf_token() }}"  class="btn">
-														<i class="font-icon font-icon-trash"></i>
-													</a>
-												</div>
-												<p>Photo number {{ $image->order }}</p>
-											</div>
-										</div>
-									</article>
-								</div><!--.gallery-col-->
-                            </div><!--.col-->
-                        @endforeach
-                    </div><!--.row-->
+						<div class="col-md-12">
+                            <photo-list :data="{{ json_encode($images) }}" :object-id="{{ $report->seq_id }}"
+								:can-delete="true" photos-url="reports/photos" list-class="col-xxl-3 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md">
+							</photo-list>
+						</div>
+					</div>
                     <br>
 					<div class="row">
                         <div class="col-sm-12">
