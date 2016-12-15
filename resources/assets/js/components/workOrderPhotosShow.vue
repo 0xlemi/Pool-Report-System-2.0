@@ -7,7 +7,7 @@
 
 		<button type="button" class="btn btn-warning" @click="changeFocus(1)"
                 data-toggle="modal" data-target="#workOrderPhotosModal">
-			<i class="fa fa-camera"></i>
+			<i class="font-icon font-icon-picture-2"></i>
             &nbsp;&nbsp;&nbsp;Before Work
 		</button>
 

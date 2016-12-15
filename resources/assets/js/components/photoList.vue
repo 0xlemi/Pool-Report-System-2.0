@@ -11,7 +11,7 @@ export default {
     props: {
         data: null,
         canDelete: null,
-        objectId: Number,
+        objectId: null,
         photosUrl: String,
         listClass:{
             type: String,
