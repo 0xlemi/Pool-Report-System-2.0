@@ -120,6 +120,11 @@ class User extends Authenticatable
 
     //******** Relationships ********
 
+    public function activationToken()
+    {
+        return $this->hasOne(ActivationToken::class);
+    }
+
     public function admin()
     {
         if($this->isAdministrator()){

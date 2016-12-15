@@ -3,6 +3,7 @@
   <div class="main-container" id="page">
 @include('landing.header')
 
+@include('extras.notifications')
 
 @yield('content')
 

@@ -19,7 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('userable_type');
             $table->integer('userable_id')->unsigned();
-            $table->boolean('active')->default(true);
+            $table->boolean('active')->default(true); // Been payed for
+            $table->boolean('activated')->default(false); // Activated the account via email
             $table->softDeletes();
             $table->rememberToken();
             $table->string('api_token', 60)->unique();
