@@ -20,7 +20,7 @@ class ImageTransformer extends Transformer
     public function transform(Image $image)
     {
         $name = title_case(str_replace('_', ' ', snake_case($image->imageable->modelName())));
-        if($image->imageable->modelName() == 'report'){
+        if($image->imageable->modelName() == 'Report'){
             switch ($image->order) {
                 case '1':
                     $name = "Main Pool";
