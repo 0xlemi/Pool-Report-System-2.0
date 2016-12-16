@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
+use Auth;
+
 class LoginController extends Controller
 {
     /*
@@ -46,7 +48,27 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-        return array_merge($request->only($this->username(), 'password'), ['active' => 1]);
+        return [
+            $this->username() => $request->input($this->username()),
+            'password' => $request->input('password'),
+            'active' => 1,
+        ];
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        if(!$user->activated){
+            Auth::logout();
+
+            return redirect('/login')->withError('Please activate your account. <a href="#">Resend</a>');
+        }
     }
 
 }

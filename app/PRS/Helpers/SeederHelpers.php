@@ -56,7 +56,7 @@ class SeederHelpers
     {
         switch ($possibleUsers) {
             case '1':
-                return $admin->user();
+                return $admin->user;
                 break;
             case '2':
                 return Supervisor::findOrFail(

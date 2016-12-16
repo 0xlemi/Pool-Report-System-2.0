@@ -24,7 +24,7 @@ class AdministratorTest extends DatabaseTester
         ]);
 
         // When
-        $user = $admin->user();
+        $user = $admin->user;
 
         // Then
         $this->assertSameObject($user_original, $user);

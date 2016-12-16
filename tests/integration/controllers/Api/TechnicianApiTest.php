@@ -27,7 +27,7 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', '/api/v1/technicians', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonStructure([
             'data' => [
                 '*' => [
@@ -74,7 +74,7 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('POST', '/api/v1/technicians',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'name'  => 'Luis',
             'last_name' => 'Espinosa',
             'cellphone' => '123456789',
@@ -122,7 +122,7 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', '/api/v1/technicians/2',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' =>
                 $technicianTransformer->transform($tech2)
@@ -148,7 +148,7 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('PATCH', 'api/v1/technicians/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'name'  => 'Luis',
             'last_name' => 'Espinosa',
             'cellphone' => '123456789',
@@ -188,7 +188,7 @@ class TechnicianApiTest extends ApiTester
 
         // When
         $this->json('DELETE', 'api/v1/technicians/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         // Then

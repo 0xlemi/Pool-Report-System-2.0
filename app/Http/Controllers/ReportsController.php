@@ -136,10 +136,10 @@ class ReportsController extends PageController
             // notify report was made
                 // notify the clients
                 foreach ($service->clients()->get() as $client) {
-                    $client->user()->notify(new ReportCreatedNotification($report));
+                    $client->user->notify(new ReportCreatedNotification($report));
                 }
                 // notify the supervisor
-                $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
+                $report->supervisor()->user->notify(new ReportCreatedNotification($report));
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');

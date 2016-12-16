@@ -24,7 +24,7 @@ class SupervisorApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', '/api/v1/supervisors', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonStructure([
             'data' => [
                 '*' => [
@@ -57,7 +57,7 @@ class SupervisorApiTest extends ApiTester
         // When
         // Then
         $this->json('POST', '/api/v1/supervisors',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'name'  => 'Luis',
             'last_name' => 'Espinosa',
             'cellphone' => '123456789',
@@ -100,13 +100,13 @@ class SupervisorApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', 'api/v1/supervisors/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' => $supervisorTransformer->transform($sup1)
         ]);
 
         $this->json('GET', 'api/v1/supervisors/2', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' => $supervisorTransformer->transform($sup2)
         ]);
@@ -114,7 +114,7 @@ class SupervisorApiTest extends ApiTester
         $this->assertResponseOk();
 
         $this->json('GET', 'api/v1/services/3', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         $this->assertResponseStatus(404);
@@ -135,7 +135,7 @@ class SupervisorApiTest extends ApiTester
         // When
         // Then
         $this->json('PATCH', 'api/v1/supervisors/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'name'  => 'Luis',
             'last_name' => 'Espinosa',
             'cellphone' => '123456789',
@@ -171,7 +171,7 @@ class SupervisorApiTest extends ApiTester
 
         // When
         $this->json('DELETE', 'api/v1/supervisors/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         // Then

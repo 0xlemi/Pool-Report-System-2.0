@@ -33,7 +33,7 @@ class ReportsApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', '/api/v1/reports', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'limit' => rand(1,25),
         ])->seeJsonStructure([
             'data' => [
@@ -102,7 +102,7 @@ class ReportsApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', '/api/v1/reports',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'date' => Carbon::today()->toDateString(),
         ])->seeJsonEquals([
             'data' => [
@@ -112,7 +112,7 @@ class ReportsApiTest extends ApiTester
         ]);
 
         $this->json('GET', '/api/v1/reports',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'date' => Carbon::tomorrow()->toDateString(),
         ])->seeJsonEquals([
             'data' => [
@@ -121,7 +121,7 @@ class ReportsApiTest extends ApiTester
         ]);
 
         $this->json('GET', '/api/v1/reports',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'date' => Carbon::yesterday()->toDateString(),
         ])->seeJsonEquals([
             'data' => []
@@ -147,7 +147,7 @@ class ReportsApiTest extends ApiTester
         // When
         // Then
         $this->json('POST', '/api/v1/reports',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'completed' => '2016-06-25 8:23:00',
             'ph' => 2,
             'chlorine' => 4,
@@ -206,13 +206,13 @@ class ReportsApiTest extends ApiTester
         // Then
 
         $this->json('GET', 'api/v1/reports/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' => $reportTransformer->transform($rep1)
         ]);
 
         $this->json('GET', 'api/v1/reports/2', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' => $reportTransformer->transform($rep2)
         ]);
@@ -220,7 +220,7 @@ class ReportsApiTest extends ApiTester
         $this->assertResponseOk();
 
         $this->json('GET', 'api/v1/reports/3', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         $this->assertResponseStatus(404);
@@ -249,7 +249,7 @@ class ReportsApiTest extends ApiTester
         // When
         // Then
         $this->json('PATCH', 'api/v1/reports/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
             'completed' => '2016-06-25 10:23:00',
             'ph' => 2,
             'chlorine' => 4,
@@ -300,7 +300,7 @@ class ReportsApiTest extends ApiTester
 
         // When
         $this->json('DELETE', 'api/v1/reports/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         // Then

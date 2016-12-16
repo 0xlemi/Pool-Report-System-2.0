@@ -45,7 +45,7 @@ class ServicesTableSeeder extends Seeder
             ])->id;
             $service = Service::findOrFail($serviceId);
             if($this->withNotifications){
-                $admin->user()->notify(new NewServiceNotification($service, $admin->user()));
+                $admin->user->notify(new NewServiceNotification($service, $admin->user));
             }
 
             if(rand(0,1)){
@@ -54,7 +54,7 @@ class ServicesTableSeeder extends Seeder
                 ]);
                 $contract = ServiceContract::findOrFail($serviceId);
                 if($this->withNotifications){
-                    $admin->user()->notify(new AddedContractNotification($contract, $admin->user()));
+                    $admin->user->notify(new AddedContractNotification($contract, $admin->user));
                 }
                 // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
@@ -66,7 +66,7 @@ class ServicesTableSeeder extends Seeder
                     ])->id;
                     $invoice = Invoice::findOrFail($invoiceId);
                     if($this->withNotifications){
-                        $admin->user()->notify(new NewInvoiceNotification($invoice));
+                        $admin->user->notify(new NewInvoiceNotification($invoice));
                     }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
@@ -75,7 +75,7 @@ class ServicesTableSeeder extends Seeder
                         ])->id;
                         $payment = Payment::findOrFail($paymentId);
                         if($this->withNotifications){
-                            $admin->user()->notify(new NewPaymentNotification($payment));
+                            $admin->user->notify(new NewPaymentNotification($payment));
                         }
                     }
                 }

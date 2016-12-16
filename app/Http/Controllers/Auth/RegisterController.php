@@ -6,6 +6,7 @@ use App\User;
 use Validator;
 use Auth;
 use App\Http\Controllers\Controller;
+use App\Administrator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 
@@ -64,8 +65,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $administrator = Administrator::create([
             'name' => $data['name'],
+            // 'company_name' => $data['company_name'],
+        ]);
+        return $administrator->user()->create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
 			'api_token' => str_random(60),

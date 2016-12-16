@@ -42,7 +42,7 @@ class WorksTableSeeder extends Seeder
             ])->id;
             $work = Work::findOrFail($workId);
             if($this->withNotifications){
-                $admin->user()->notify(new AddedWorkNotification($work, $this->seederHelper->getRandomUser($admin, rand(1,4))));
+                $admin->user->notify(new AddedWorkNotification($work, $this->seederHelper->getRandomUser($admin, rand(1,4))));
             }
 
             // add image

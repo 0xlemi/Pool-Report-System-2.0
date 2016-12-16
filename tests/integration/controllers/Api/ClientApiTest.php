@@ -28,7 +28,7 @@ public function it_can_show_list_clients()
     // When
     // Then
     $this->json('GET', '/api/v1/clients', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonStructure([
             'data' => [
                 '*' => [
@@ -90,7 +90,7 @@ public function it_can_show_list_clients_no_services()
     // When
     // Then
     $this->json('GET', '/api/v1/clients', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonStructure([
             'data' => [
                 '*' => [
@@ -128,7 +128,7 @@ public function it_can_store_clients()
     // When
     // Then
     $this->json('POST', '/api/v1/clients',[
-        'api_token' => $admin->user()->api_token,
+        'api_token' => $admin->user->api_token,
         'name'  => 'Luis',
         'last_name' => 'Espinosa',
         'cellphone' => '123456789',
@@ -182,7 +182,7 @@ public function in_can_show_client()
     // When
     // Then
     $this->json('GET', '/api/v1/clients/1',[
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ])->seeJsonEquals([
             'data' =>
                 $clientTransformer->transform($client)
@@ -215,7 +215,7 @@ public function it_can_update_client()
     // When
     // Then
     $this->json('PATCH', 'api/v1/clients/1', [
-        'api_token' => $admin->user()->api_token,
+        'api_token' => $admin->user->api_token,
         'name'  => 'Luis',
         'last_name' => 'Espinosa',
         'cellphone' => '123456789',
@@ -258,7 +258,7 @@ public function it_can_update_client()
 
         // When
         $this->json('DELETE', 'api/v1/clients/1', [
-            'api_token' => $admin->user()->api_token,
+            'api_token' => $admin->user->api_token,
         ]);
 
         // Then

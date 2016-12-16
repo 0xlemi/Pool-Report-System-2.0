@@ -6,7 +6,7 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
-			{{ session()->get('error') }}
+			{!! session()->get('error') !!}
 		</div>
         @endif
         @if(session()->has('info'))
@@ -14,7 +14,7 @@
 			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
 				<span aria-hidden="true">×</span>
 			</button>
-			{{ session()->get('info') }}
+			{!! session()->get('info') !!}
 		</div>
         @endif
     </div>

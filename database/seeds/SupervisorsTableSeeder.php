@@ -40,7 +40,7 @@ class SupervisorsTableSeeder extends Seeder
 
             $supervisor = Supervisor::findOrFail($supervisorId);
             if($this->withNotifications){
-                $admin->user()->notify(new NewSupervisorNotification($supervisor, $admin->user()));
+                $admin->user->notify(new NewSupervisorNotification($supervisor, $admin->user));
             }
 
             factory(App\User::class)->create([

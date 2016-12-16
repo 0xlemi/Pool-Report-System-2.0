@@ -36,7 +36,7 @@ class TechniciansTableSeeder extends Seeder
             ])->id;
             $technician = Technician::findOrFail($technicianId);
             if($this->withNotifications){
-                $technician->admin()->user()->notify(new NewTechnicianNotification($technician, $this->seederHelper->getRandomUser($technician->admin(), rand(1,2))));
+                $technician->admin()->user->notify(new NewTechnicianNotification($technician, $this->seederHelper->getRandomUser($technician->admin(), rand(1,2))));
             }
 
             factory(App\User::class)->create([

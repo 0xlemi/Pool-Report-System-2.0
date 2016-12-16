@@ -21,7 +21,7 @@ class AdministratorTransformer extends Transformer
 
         $adminInfo = [
             'name' => $admin->name,
-            'email' => $admin->user()->email,
+            'email' => $admin->user->email,
             'companyName' => $admin->company_name,
             'website' => $admin->website,
             'facebook' => $admin->facebook,
