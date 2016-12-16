@@ -67,7 +67,8 @@ class LoginController extends Controller
         if(!$user->activated){
             Auth::logout();
 
-            return redirect('/login')->withError('Please activate your account. <a href="#">Resend</a>');
+            return redirect('/login')
+                ->withError('Please activate your account. <a href="'.route('auth.activate.resend').'?email='.$user->email.'">Resend</a>');
         }
     }
 

@@ -22,6 +22,10 @@ Route::get('/home', 'HomeController@index');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
+// Activation
+Route::get('activate/token/{token}', 'Auth\ActivationController@activate')->name('auth.activate');
+Route::get('activate/resend', 'Auth\ActivationController@resend')->name('auth.activate.resend');
+
 // change email settings from link
 Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::get('/unsubscribe/{token}', 'HomeController@emailOptions');
