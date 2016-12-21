@@ -15,6 +15,8 @@ return [
         'EUR',
     ],
 
+    'timezones' =>  DateTimeZone::listIdentifiers(DateTimeZone::ALL),
+
     'startLocation' => [
         'latitude' => '23.0446032',
         'longitude' => '-109.705866',

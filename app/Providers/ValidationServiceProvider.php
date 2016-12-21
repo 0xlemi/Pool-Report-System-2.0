@@ -17,6 +17,10 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Validation condition to timezone is supported
+        Validator::extend('ValidTimezone', 'App\PRS\Validators\ValidTimezone@validate');
+        Validator::replacer('ValidTimezone', 'App\PRS\Validators\ValidTimezone@message');
+
         // Validation condition to currency is supported
         Validator::extend('validCurrency', 'App\PRS\Validators\ValidCurrency@validate');
         Validator::replacer('validCurrency', 'App\PRS\Validators\ValidCurrency@message');
