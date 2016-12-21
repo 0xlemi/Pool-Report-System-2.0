@@ -1,8 +1,6 @@
 <?php
 use Illuminate\Http\Request;
 
-dd(config('constants.timezones'));
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
