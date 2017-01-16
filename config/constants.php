@@ -15,6 +15,11 @@ return [
         'EUR',
     ],
 
+    'languages' => [
+        'en',
+        'es'
+    ],
+
     'timezones' =>  DateTimeZone::listIdentifiers(DateTimeZone::ALL),
 
     'startLocation' => [

@@ -7,8 +7,8 @@ class ValidTimezone
 
     public function validate($attribute, $value)
     {
-        $validCurrencies = config('constants.timezones');
-        return in_array($value, $validCurrencies);
+        $validTimezones = config('constants.timezones');
+        return in_array($value, $validTimezones);
     }
 
     public function message($message, $attribute)

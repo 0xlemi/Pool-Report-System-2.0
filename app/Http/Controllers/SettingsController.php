@@ -43,10 +43,20 @@ class SettingsController extends PageController
     public function index()
     {
         $user = $this->getUser();
-        // SECURITY BUG, YOU SHOULD NOT SEND ALL THE ADMIN INFORMATION
         $admin = $user->admin();
-        $setting = Setting::class;
 
+        $profile = (object)[
+            'name' => $user->userable()->name,
+            'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
+        ];
+        $customization = (object)[
+            'companyName' => $admin->company_name,
+            'timezone' => $admin->timezone,
+            'website' => $admin->website,
+            'facebook' => $admin->facebook,
+            'twitter' => $admin->twitter,
+            'timezoneList' => $this->getTimezone(),
+        ];
         $billing = (object)[
             'subscribed' => $admin->subscribed('main'),
             'lastFour' => $admin->card_last_four,
@@ -61,70 +71,31 @@ class SettingsController extends PageController
         ];
 
         $timezones = $this->getTimezone();
-        $url = (object)[
-            'email' => url('settings/email'),
-        ];
 
-        return view('settings.index', compact('user', 'admin', 'timezones', 'setting', 'url', 'billing', 'permissions'));
+        return view('settings.index', compact('profile', 'customization', 'billing', 'permissions'));
     }
 
-    public function account(Request $request)
+    public function profile(Request $request)
     {
 
-        if($this->getUser()->cannot('account', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
-
-        // needs refactor
-        $user = $this->getUser();
-        if($user->isAdministrator())
-        {
-            $this->validate($request, [
-                'timezone' => 'required|string|between:3,255',
-            ]);
-            $object = $user->userable();
-            $object->timezone = htmlentities($request->timezone);
-
-        }elseif($user->isSupervisor())
-        {
-            $this->validate($request, [
-                'last_name' => 'required|string|between:2,45',
-            ]);
-            $object = $user->userable();
-            $object->last_name = htmlentities($request->last_name);
-
-        }elseif($user->isTechnician())
-        {
-            $this->validate($request, [
-                'last_name' => 'required|string|between:2,45',
-            ]);
-            $object = $user->userable();
-            $object->last_name = htmlentities($request->last_name);
-
-        }
+        // check permissions
 
         $this->validate($request, [
-            'name' => 'required|between:2,45',
-            'language' => 'required|string|size:2',
+            'name' => 'required|string|max:50',
+            'last_name' => 'string|max:50',
         ]);
 
+        $object = $request->user()->userable();
 
-        $object->name = htmlentities($request->name);
-        $object->language = htmlentities($request->language);
-
-        if($object->save()){
-            return $this->respondWithSuccess('Account information was updated successfully.');
+        if($object->update(array_map('htmlentities', $request->only(['name', 'last_name'])))){
+            return $this->respondWithSuccess('Profile settings was updated successfully.');
         }
-        return $this->respondInternalError('Account information was not updated, Please try again later.');
-   }
+        return $this->respondInternalError('Profile settings was not updated, Please try again later.');
+    }
 
     public function changeEmail(Request $request){
 
-        if($this->getUser()->cannot('changeEmail', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
+        // check permissions
 
         $user = $this->getUser();
         $this->validate($request, [
@@ -143,6 +114,8 @@ class SettingsController extends PageController
     }
 
     public function changePassword(Request $request){
+
+        // check permissions
 
         if($this->getUser()->cannot('changePassword', Setting::class))
         {
@@ -166,63 +139,65 @@ class SettingsController extends PageController
          return $this->respondWithValidationError('Password not updated , the information is wrong');
     }
 
-    public function company(Request $request){
+    public function customization(Request $request){
 
-        if($this->getUser()->cannot('company', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
+        // check permissions
 
         $this->validate($request, [
-            'company_name' => 'required|between:2,30',
+            'company_name' => 'required|string|between:2,30',
+            'timezone' => 'required|string|validTimezone',
             'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
             'facebook' => 'string|max:50',
             'twitter' => 'string|max:15',
         ]);
+
         $admin = $this->loggedUserAdministrator();
 
-        $admin->fill(array_map('htmlentities', $request->except('timezone')));
+        $saved = $admin->update(array_map('htmlentities', $request->only([
+            'company_name',
+            'language',
+            'timezone',
+            'website',
+            'facebook',
+            'twitter',
+        ])));
 
-        if($admin->save()){
+        if($saved){
             return $this->respondWithSuccess('Company information was updated successfully.');
         }
         return $this->respondInternalError('Company information was not updated, Please try again later.');
 
     }
 
-    public function email(Request $request)
+    public function notifications(Request $request)
     {
-        if($this->getUser()->cannot('email', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
-
-        $this->validate($request, [
-            'id' => [
-                'required',
-                'max:255',
-                'regex:/\w+\_\w+\_\w+/',
-                ],
-        ]);
-
-        $person = $this->getUser()->userable();
-        $attributes = $person->getAttributes();
-
-        $columnName = $request->id;
-        $checked_value = strtolower($request->checked);
-        $checked = ($checked_value  == 'true' || $checked_value  == '1') ? true : false;
-
-        //check whether the id they are sending us is a real email preference
-        if(isset($attributes[$columnName]))
-        {
-            $person->$columnName = $checked;
-            if($person->save()){
-                $checkedAfter = ($person->$columnName) ? 'active' : 'inactive';
-                return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
-            }
-            return $this->respondInternalError('Error while persisting the permission');
-        }
-        return $this->respondNotFound('There is no permission with that id');
+        //
+        // $this->validate($request, [
+        //     'id' => [
+        //         'required',
+        //         'max:255',
+        //         'regex:/\w+\_\w+\_\w+/',
+        //         ],
+        // ]);
+        //
+        // $person = $this->getUser()->userable();
+        // $attributes = $person->getAttributes();
+        //
+        // $columnName = $request->id;
+        // $checked_value = strtolower($request->checked);
+        // $checked = ($checked_value  == 'true' || $checked_value  == '1') ? true : false;
+        //
+        // //check whether the id they are sending us is a real email preference
+        // if(isset($attributes[$columnName]))
+        // {
+        //     $person->$columnName = $checked;
+        //     if($person->save()){
+        //         $checkedAfter = ($person->$columnName) ? 'active' : 'inactive';
+        //         return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
+        //     }
+        //     return $this->respondInternalError('Error while persisting the permission');
+        // }
+        // return $this->respondNotFound('There is no permission with that id');
 
 
     }
@@ -306,7 +281,6 @@ class SettingsController extends PageController
             return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
         }
         // return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
-        dd('nothing');
     }
 
     private function getTimezone()

@@ -28393,14 +28393,96 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./alert.vue":192,"./checkboxList.vue":196,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],190:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
-exports.default = {};
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+	props: ['name', 'lastName'],
+	components: {
+		alert: _alert2.default
+	},
+	data: function data() {
+		return {
+			alertMessage: '',
+			alertActive: false,
+			alertType: 'danger',
+			validationErrors: {}
+		};
+	},
+
+	methods: {
+		save: function save() {
+			var _this = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert();
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			// clear the validation errors
+			this.validationErrors = {};
+
+			var data = {
+				name: this.name
+			};
+			if (this.lastName) {
+				data['last_name'] = this.lastName;
+			}
+
+			this.$http.post(Laravel.url + 'settings/profile', data).then(function (response) {
+				_this.alertMessage = "The profile settings were updated successfully.";
+				_this.alertActive = true;
+				_this.alertType = "success";
+				_this.revertButton(clickEvent, buttonTag);
+			}, function (response) {
+				if (response.status == 422) {
+					_this.validationErrors = response.data;
+				} else {
+					_this.alertMessage = "The profile settings could not be updated, please try again.";
+					_this.alertActive = true;
+					_this.alertType = "danger";
+				}
+				_this.revertButton(clickEvent, buttonTag);
+			});
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		},
+		resetAlert: function resetAlert() {
+			this.alertMessage = "";
+			this.alertActive = false;
+			this.alertType = "danger";
+		},
+		checkValidationError: function checkValidationError(fildName) {
+			return fildName in this.validationErrors;
+		}
+	}
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Name</label>\n\t<input type=\"text\" class=\"form-control\">\n</fieldset>\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Last name</label>\n\t<input type=\"text\" class=\"form-control\">\n</fieldset>\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Company Name</label>\n\t<input type=\"text\" class=\"form-control\">\n</fieldset>\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Website</label>\n\t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\">\n        </div>\n</fieldset>\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Facebook</label>\n\t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\">\n        </div>\n</fieldset>\n\n<fieldset class=\"form-group\">\n\t<label class=\"form-label semibold\">Twitter</label>\n\t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\">\n        </div>\n</fieldset>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n<fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t<label class=\"form-label semibold\">Name</label>\n\t<input type=\"text\" class=\"form-control\" v-model=\"name\">\n\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n</fieldset>\n\n<fieldset v-if=\"lastName\" class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('last_name'))}\">\n\t<label class=\"form-label semibold\">Last name</label>\n\t<input type=\"text\" class=\"form-control\" v-model=\"lastName\">\n\t<small v-if=\"checkValidationError('last_name')\" class=\"text-muted\">{{ validationErrors.last_name[0] }}</small>\n</fieldset>\n\n<button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n\t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n</button>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28411,7 +28493,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-0a012dcb", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],191:[function(require,module,exports){
+},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28457,7 +28539,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4aa75e68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./countries.vue":200,"./locationPicker.vue":211,"vue":180,"vue-hot-reload-api":177}],192:[function(require,module,exports){
+},{"./countries.vue":200,"./locationPicker.vue":212,"vue":180,"vue-hot-reload-api":177}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29031,7 +29113,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-508d771e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29544,6 +29626,107 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],202:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+	props: ['companyName', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList'],
+	components: {
+		alert: _alert2.default
+	},
+	data: function data() {
+		return {
+			alertMessage: '',
+			alertActive: false,
+			alertType: 'danger',
+			validationErrors: {}
+		};
+	},
+
+	methods: {
+		save: function save() {
+			var _this = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert();
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			// clear the validation errors
+			this.validationErrors = {};
+
+			this.$http.post(Laravel.url + 'settings/customization', {
+				company_name: this.companyName,
+				timezone: this.timezone,
+				language: this.language,
+				website: this.website,
+				facebook: this.facebook,
+				twitter: this.twitter
+			}).then(function (response) {
+				_this.alertMessage = "The customization settings were updated successfully.";
+				_this.alertActive = true;
+				_this.alertType = "success";
+				_this.revertButton(clickEvent, buttonTag);
+			}, function (response) {
+				if (response.status == 422) {
+					_this.validationErrors = response.data;
+				} else {
+					_this.alertMessage = "The customization settings could not be updated, please try again.";
+					_this.alertActive = true;
+					_this.alertType = "danger";
+				}
+				_this.revertButton(clickEvent, buttonTag);
+			});
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		},
+		resetAlert: function resetAlert() {
+			this.alertMessage = "";
+			this.alertActive = false;
+			this.alertType = "danger";
+		},
+		checkValidationError: function checkValidationError(fildName) {
+			return fildName in this.validationErrors;
+		}
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('company_name'))}\">\n    \t<label class=\"form-label semibold\">Company Name</label>\n    \t<input type=\"text\" class=\"form-control\" v-model=\"companyName\">\n\t    <small v-if=\"checkValidationError('company_name')\" class=\"text-muted\">{{ validationErrors.company_name[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('timezone'))}\">\n    \t<label class=\"form-label semibold\">Timezone</label>\n        <select class=\"bootstrap-select bootstrap-select-arrow\" v-model=\"timezone\" name=\"timezone\" data-live-search=\"true\">\n            <optgroup v-for=\"(region, list) in timezoneList\" :label=\"region\">\n                <option v-for=\"(currentTimezone, name) in list\" :value=\"currentTimezone\">\n                    {{ name }}\n                </option>\n            </optgroup>\n        </select>\n\t    <small v-if=\"checkValidationError('timezone')\" class=\"text-muted\">{{ validationErrors.timezone[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('website'))}\">\n    \t<label class=\"form-label semibold\">Website</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"website\">\n        </div>\n\t    <small v-if=\"checkValidationError('website')\" class=\"text-muted\">{{ validationErrors.website[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('facebook'))}\">\n    \t<label class=\"form-label semibold\">Facebook</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"facebook\">\n        </div>\n\t    <small v-if=\"checkValidationError('facebook')\" class=\"text-muted\">{{ validationErrors.facebook[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('twitter'))}\">\n    \t<label class=\"form-label semibold\">Twitter</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"twitter\">\n        </div>\n\t    <small v-if=\"checkValidationError('twitter')\" class=\"text-muted\">{{ validationErrors.twitter[0] }}</small>\n    </fieldset>\n\n    <button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n    \t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n    </button>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-3bc3379e", module.exports)
+  } else {
+    hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29648,7 +29831,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8c88fc1c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"spin":166,"vue":180,"vue-hot-reload-api":177}],204:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29715,7 +29898,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":215,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],204:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":216,"vue":180,"vue-hot-reload-api":177,"vue-multiselect":178}],205:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29784,7 +29967,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"dropzone":82,"vue":180,"vue-hot-reload-api":177}],205:[function(require,module,exports){
+},{"dropzone":82,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29853,7 +30036,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2bc03898", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":218,"vue":180,"vue-hot-reload-api":177}],206:[function(require,module,exports){
+},{"./alert.vue":192,"./dropzone.vue":205,"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],207:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-7b51c492] {\n  color: red;\n}\n")
 'use strict';
@@ -29885,7 +30068,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7b51c492", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],207:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],208:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30296,7 +30479,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":218,"spin":166,"vue":180,"vue-hot-reload-api":177}],208:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropzone.vue":205,"./photoList.vue":219,"spin":166,"vue":180,"vue-hot-reload-api":177}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30428,7 +30611,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":192,"./dropzone.vue":204,"./photoList.vue":218,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],209:[function(require,module,exports){
+},{"./alert.vue":192,"./dropzone.vue":205,"./photoList.vue":219,"spin":166,"vue":180,"vue-datetime-picker/src/vue-datetime-picker.js":176,"vue-hot-reload-api":177}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30538,7 +30721,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],210:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30593,7 +30776,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-75470054", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],211:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],212:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -30717,7 +30900,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"jquery-locationpicker":85,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],212:[function(require,module,exports){
+},{"jquery-locationpicker":85,"vue":180,"vue-hot-reload-api":177,"vueify/lib/insert-css":181}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30858,7 +31041,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],213:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30879,7 +31062,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],214:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30943,9 +31126,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":213,"vue":180,"vue-hot-reload-api":177}],215:[function(require,module,exports){
+},{"./notification.vue":214,"vue":180,"vue-hot-reload-api":177}],216:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],216:[function(require,module,exports){
+},{}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31225,7 +31408,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],217:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31258,7 +31441,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1168d54d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],218:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31307,7 +31490,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photo.vue":217,"vue":180,"vue-hot-reload-api":177}],219:[function(require,module,exports){
+},{"./photo.vue":218,"vue":180,"vue-hot-reload-api":177}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31436,7 +31619,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],220:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"vue":180,"vue-hot-reload-api":177}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31496,7 +31679,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],221:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31515,6 +31698,10 @@ var _changePassword = require('./changePassword.vue');
 
 var _changePassword2 = _interopRequireDefault(_changePassword);
 
+var _customizationSettings = require('./customizationSettings.vue');
+
+var _customizationSettings2 = _interopRequireDefault(_customizationSettings);
+
 var _billing = require('./billing.vue');
 
 var _billing2 = _interopRequireDefault(_billing);
@@ -31526,9 +31713,10 @@ var _Permissions2 = _interopRequireDefault(_Permissions);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['billing', 'permissions'],
+    props: ['profile', 'customization', 'billing', 'permissions'],
     components: {
         accountSettings: _accountSettings2.default,
+        customizationSettings: _customizationSettings2.default,
         changeEmail: _changeEmail2.default,
         changePassword: _changePassword2.default,
         billing: _billing2.default,
@@ -31537,7 +31725,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings></account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            Costumization\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            notifications\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings :name=\"profile.name\" :last-name=\"profile.lastName\">\n                        </account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <customization-settings :company-name=\"customization.companyName\" :timezone=\"customization.timezone\" :website=\"customization.website\" :facebook=\"customization.facebook\" :twitter=\"customization.twitter\" :timezone-list=\"customization.timezoneList\">\n                    </customization-settings>\n                </div>\n            </div>\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            notifications\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31548,7 +31736,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"vue":180,"vue-hot-reload-api":177}],222:[function(require,module,exports){
+},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"./customizationSettings.vue":202,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31599,7 +31787,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31654,7 +31842,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],224:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],225:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31718,7 +31906,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":204,"./photoList.vue":218,"vue":180,"vue-hot-reload-api":177}],225:[function(require,module,exports){
+},{"./dropzone.vue":205,"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31798,7 +31986,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":218,"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
+},{"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31858,7 +32046,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":209,"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],228:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32269,7 +32457,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":203,"./dropzone.vue":204,"./photoList.vue":218,"spin":166,"vue":180,"vue-hot-reload-api":177}],228:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":204,"./dropzone.vue":205,"./photoList.vue":219,"spin":166,"vue":180,"vue-hot-reload-api":177}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32353,7 +32541,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],229:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],230:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -33193,6 +33381,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":202,"./components/dropdown.vue":203,"./components/editReportPhotos.vue":205,"./components/email.vue":206,"./components/equipment.vue":207,"./components/finishWorkOrderButton.vue":208,"./components/invoiceTable.vue":210,"./components/missingServices.vue":212,"./components/notificationsWidget.vue":214,"./components/payments.vue":216,"./components/photo.vue":217,"./components/photoList.vue":218,"./components/routeTable.vue":219,"./components/serviceTable.vue":220,"./components/settings.vue":221,"./components/supervisorTable.vue":222,"./components/technicianTable.vue":223,"./components/workOrderPhotosEdit.vue":224,"./components/workOrderPhotosShow.vue":225,"./components/workOrderTable.vue":226,"./components/works.vue":227,"./directives/FormToAjax.vue":228,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,229]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":203,"./components/dropdown.vue":204,"./components/editReportPhotos.vue":206,"./components/email.vue":207,"./components/equipment.vue":208,"./components/finishWorkOrderButton.vue":209,"./components/invoiceTable.vue":211,"./components/missingServices.vue":213,"./components/notificationsWidget.vue":215,"./components/payments.vue":217,"./components/photo.vue":218,"./components/photoList.vue":219,"./components/routeTable.vue":220,"./components/serviceTable.vue":221,"./components/settings.vue":222,"./components/supervisorTable.vue":223,"./components/technicianTable.vue":224,"./components/workOrderPhotosEdit.vue":225,"./components/workOrderPhotosShow.vue":226,"./components/workOrderTable.vue":227,"./components/works.vue":228,"./directives/FormToAjax.vue":229,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,230]);
 
 //# sourceMappingURL=bundle.js.map

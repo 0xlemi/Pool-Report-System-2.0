@@ -136,9 +136,9 @@ class ServiceApiTest extends ApiTester
                 'end_time' => '14:35:00',
                 'status' => true,
                 'comments' => 'This are the test comments',
-                "icon_photo" => "http://localhost/img/avatar-2-48.png",
-                "thumbnail_photo" => "http://localhost/img/no_image.png",
-                "normal_photo" => "http://localhost/img/no_image.png"
+                "icon_photo" => "https://localhost/img/avatar-2-48.png",
+                "thumbnail_photo" => "https://localhost/img/no_image.png",
+                "normal_photo" => "https://localhost/img/no_image.png"
             ]
         ]);
     }
@@ -242,9 +242,9 @@ class ServiceApiTest extends ApiTester
                 'end_time' => '14:35:00',
                 'status' => true,
                 'comments' => 'This are the test comments',
-                "icon_photo" => "http://localhost/img/avatar-2-48.png",
-                "thumbnail_photo" => "http://localhost/img/no_image.png",
-                "normal_photo" => "http://localhost/img/no_image.png"
+                "icon_photo" => "https://localhost/img/avatar-2-48.png",
+                "thumbnail_photo" => "https://localhost/img/no_image.png",
+                "normal_photo" => "https://localhost/img/no_image.png"
             ]
         ]);
 

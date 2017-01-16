@@ -7,9 +7,11 @@
 
     <div class="col-lg-9 col-md-12 col-sm-12">
         <settings
-        :billing="{{ json_encode($billing) }}"
-        :permissions="{{ json_encode($permissions) }}">
-    </settings>
+            :profile="{{ json_encode($profile) }}"
+            :customization="{{ json_encode($customization) }}"
+            :billing="{{ json_encode($billing) }}"
+            :permissions="{{ json_encode($permissions) }}">
+        </settings>
     </div><!--.col- -->
 
 

@@ -117,17 +117,24 @@ Route::post(
     '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
 );
 
+// Settings
 Route::get('settings', 'SettingsController@index');
-Route::patch('settings/account', 'SettingsController@account');
-Route::patch('settings/changeEmail', 'SettingsController@changeEmail');
-Route::patch('settings/changePassword', 'SettingsController@changePassword');
-Route::patch('settings/company', 'SettingsController@company');
-Route::patch('settings/email', 'SettingsController@email');
+
+Route::post('settings/profile', 'SettingsController@profile');
+Route::post('settings/changeEmail', 'SettingsController@changeEmail');
+Route::post('settings/changePassword', 'SettingsController@changePassword');
+
+Route::post('settings/customization', 'SettingsController@customization');
+
+Route::post('settings/notifications', 'SettingsController@notifications');
+
 Route::post('settings/subscribe', 'SettingsController@subscribe');
 Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
 Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
-Route::patch('settings/permissions', 'SettingsController@permissions');
 
+Route::post('settings/permissions', 'SettingsController@permissions');
+
+// Datatables
 Route::get('datatables/todaysroute', 'DataTableController@todaysroute');
 Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/workorders', 'DataTableController@workOrders');

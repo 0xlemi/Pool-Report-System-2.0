@@ -63,7 +63,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-12">
-                        <account-settings></account-settings>
+                        <account-settings :name="profile.name" :last-name="profile.lastName">
+                        </account-settings>
                     </div>
                 </div>
                 <div class="col-md-12">
@@ -79,7 +80,18 @@
 
         <!-- Costumization -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-2">
-            Costumization
+            <div class="row">
+                <div class="col-md-12">
+                    <customization-settings
+                        :company-name="customization.companyName"
+                        :timezone="customization.timezone"
+                        :website="customization.website"
+                        :facebook="customization.facebook"
+                        :twitter="customization.twitter"
+                        :timezone-list="customization.timezoneList">
+                    </customization-settings>
+                </div>
+            </div>
         </div>
 
         <!-- Notifications -->
@@ -130,14 +142,15 @@
 import accountSettings from './accountSettings.vue';
 import changeEmail from './changeEmail.vue';
 import changePassword from './changePassword.vue';
-
+import customizationSettings from './customizationSettings.vue';
 import billing from './billing.vue';
 import Permissions from './Permissions.vue';
 
 export default {
-    props: ['billing', 'permissions'],
+    props: ['profile', 'customization', 'billing', 'permissions'],
     components: {
         accountSettings,
+        customizationSettings,
         changeEmail,
         changePassword,
         billing,
