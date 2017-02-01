@@ -1,6 +1,6 @@
 <template>
 
-        <!-- Button to activate the modal -->
+<!-- Button to activate the modal -->
 <div class="col-sm-10">
 	<button type="button" class="btn btn-warning"
 			data-toggle="modal" data-target="#changePasswordModal">
