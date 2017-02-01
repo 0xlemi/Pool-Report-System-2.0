@@ -76,11 +76,11 @@ class ReportHelpers
     public function checkOnTimeValue(Carbon $completedDate, string $startTime, string $endTime, string $timesTimezone)
     {
         if($this->checkIsOnTime($completedDate, $startTime, $endTime, $timesTimezone)){
-            return 1; // onTime
+            return 'onTime'; // onTime
         }elseif($this->checkIsLate($completedDate, $endTime, $timesTimezone)){
-            return 2; // late
+            return 'late'; // late
         }elseif($this->checkIsEarly($completedDate, $startTime, $timesTimezone)){
-            return 3; //early
+            return 'early'; //early
         }
         return 0; //unknown
     }

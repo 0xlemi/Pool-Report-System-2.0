@@ -106,14 +106,17 @@ class ReportsController extends PageController
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
-        $on_time = $this->reportHelpers->checkOnTimeValue(
-// ****** check the timezoen for check on time
-                $completed_at,
-                // bug if a service dosn't have contract
-                $service->serviceContract->start_time,
-                $service->serviceContract->end_time,
-                $admin->timezone
-            );
+        $on_time = 'onTime';
+        if($service->hasServiceContract()){
+            $on_time = $this->reportHelpers->checkOnTimeValue(
+                // ****** check the timezone for check on time
+                    $completed_at,
+                    // bug if a service dosn't have contract
+                    $service->serviceContract->start_time,
+                    $service->serviceContract->end_time,
+                    $admin->timezone
+                );
+        }
 
         $report = Report::create([
             'service_id' => $service->id,
@@ -135,11 +138,11 @@ class ReportsController extends PageController
         if($report && $image1 && $image2 && $image3){
             // notify report was made
                 // notify the clients
-                foreach ($service->clients()->get() as $client) {
-                    $client->user->notify(new ReportCreatedNotification($report));
+                foreach ($service->clients as $client) {
+                    $client->user()->notify(new ReportCreatedNotification($report));
                 }
                 // notify the supervisor
-                $report->supervisor()->user->notify(new ReportCreatedNotification($report));
+                $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');
