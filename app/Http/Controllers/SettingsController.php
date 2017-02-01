@@ -117,26 +117,28 @@ class SettingsController extends PageController
     public function changePassword(Request $request){
         // check permissions
 
-        if($this->getUser()->cannot('changePassword', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        }
+        // if($this->getUser()->cannot('changePassword', Setting::class))
+        // {
+        //     return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+        // }
 
         $this->validate($request, [
-          'old_password' => 'required|string|max:255',
-          'new_password' => 'required|string|between:6,255',
-          'confirm_password' => 'required|string|between:6,255|same:new_password',
+          'oldPassword' => 'required|string|max:255',
+          'newPassword' => 'required|string|between:6,255',
+          'confirmPassword' => 'required|string|between:6,255|same:newPassword',
         ]);
 
             $user = $this->getUser();
-            if($user->checkPassword($request->old_password)){
-                $user->password = bcrypt($request->new_password);
+            if($user->checkPassword($request->oldPassword)){
+                $user->password = bcrypt($request->newPassword);
                 if($user->save()){
-                    return $this->respondWithSuccess('Password was updated');
+                    return response('Password was updated');
                 }
-            return $this->respondInternalError('Password not updated, there was an error.');
+            return response('Password was not updated, there was an error.', 500);
          }
-         return $this->respondWithValidationError('Password not updated , the information is wrong');
+        // avoid password fishing
+        sleep(2);
+        return response('Password was not updated, the password is wrong', 400);
     }
 
     public function customization(Request $request){

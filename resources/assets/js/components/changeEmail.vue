@@ -68,6 +68,7 @@ export default {
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert();
             // Disable the submit button to prevent repeated clicks:
             clickEvent.target.disabled = true;
             clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';

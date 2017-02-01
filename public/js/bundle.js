@@ -28703,6 +28703,7 @@ exports.default = {
 			// save button text for later
 			var buttonTag = clickEvent.target.innerHTML;
 
+			this.resetAlert();
 			// Disable the submit button to prevent repeated clicks:
 			clickEvent.target.disabled = true;
 			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
@@ -28775,14 +28776,105 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],195:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
-exports.default = {};
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+	components: { alert: _alert2.default },
+	data: function data() {
+		return {
+			oldPassword: '',
+			newPassword: '',
+			confirmPassword: '',
+			alertMessage: '',
+			alertActive: false,
+			alertType: 'danger',
+			validationErrors: {}
+		};
+	},
+
+	methods: {
+		change: function change() {
+			var _this = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert();
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			// clear the validation errors
+			this.validationErrors = {};
+
+			this.$http.post(Laravel.url + 'settings/changePassword', {
+				oldPassword: this.oldPassword,
+				newPassword: this.newPassword,
+				confirmPassword: this.confirmPassword
+			}).then(function (response) {
+				_this.revertButton(clickEvent, buttonTag);
+				swal({
+					title: 'Changed',
+					text: response.data,
+					type: 'success',
+					timer: 2000,
+					showConfirmButton: false
+				});
+				_this.clean();
+			}, function (response) {
+				if (response.status == 422) {
+					_this.validationErrors = response.data;
+				} else {
+					_this.alertMessage = response.data;
+					_this.alertActive = true;
+					_this.alertType = "danger";
+				}
+				_this.revertButton(clickEvent, buttonTag);
+			});
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		},
+		resetAlert: function resetAlert() {
+			this.alertMessage = "";
+			this.alertActive = false;
+			this.alertType = "danger";
+		},
+		checkValidationError: function checkValidationError(fildName) {
+			return fildName in this.validationErrors;
+		},
+		clean: function clean() {
+			this.oldPassword = '';
+			this.newPassword = '';
+			this.confirmPassword = '';
+			this.resetAlert();
+			$('#changePasswordModal').modal('hide');
+		}
+	}
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n        <!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changePasswordModal\">\n\t\t<i class=\"fa fa-key\"></i>&nbsp;&nbsp;&nbsp;Change Password\n\t</button>\n</div>\n\n<!-- Modal for Change Password Settings -->\n<div class=\"modal fade\" id=\"changePasswordModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Password</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n                    <fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"password\" class=\"form-control\" placeholder=\"Your current password\">\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"password\" class=\"form-control\" placeholder=\"Your new password\">\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n        <!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-warning\" data-toggle=\"modal\" data-target=\"#changePasswordModal\">\n\t\t<i class=\"fa fa-key\"></i>&nbsp;&nbsp;&nbsp;Change Password\n\t</button>\n</div>\n\n<!-- Modal for Change Password Settings -->\n<div class=\"modal fade\" id=\"changePasswordModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Password</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n\t\t\t\t\t<alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n                    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('oldPassword'))}\">\n\t\t\t\t\t\t<input type=\"text\" v-model=\"oldPassword\" class=\"form-control\" placeholder=\"Your current password\">\n\t\t\t\t\t\t<small v-if=\"checkValidationError('oldPassword')\" class=\"text-muted\">{{ validationErrors.oldPassword[0] }}</small>\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('newPassword'))}\">\n\t\t\t\t\t\t<input type=\"text\" v-model=\"newPassword\" class=\"form-control\" placeholder=\"Your new password\">\n\t\t\t\t\t\t<small v-if=\"checkValidationError('newPassword')\" class=\"text-muted\">{{ validationErrors.newPassword[0] }}</small>\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('confirmPassword'))}\">\n\t\t\t\t\t\t<input type=\"text\" v-model=\"confirmPassword\" class=\"form-control\" placeholder=\"Confirm the new password\">\n\t\t\t\t\t\t<small v-if=\"checkValidationError('confirmPassword')\" class=\"text-muted\">{{ validationErrors.confirmPassword[0] }}</small>\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button @click=\"change\" type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28793,7 +28885,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e4b78540", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],196:[function(require,module,exports){
+},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
