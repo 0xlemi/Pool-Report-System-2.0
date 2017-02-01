@@ -28668,14 +28668,102 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./creditCard.vue":201,"spin":166,"vue":180,"vue-hot-reload-api":177}],194:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
-exports.default = {};
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+	components: { alert: _alert2.default },
+	data: function data() {
+		return {
+			email: '',
+			password: '',
+			alertMessage: '',
+			alertActive: false,
+			alertType: 'danger',
+			validationErrors: {}
+		};
+	},
+
+	methods: {
+		change: function change() {
+			var _this = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			// clear the validation errors
+			this.validationErrors = {};
+
+			this.$http.post(Laravel.url + 'settings/changeEmail', {
+				email: this.email,
+				password: this.password
+			}).then(function (response) {
+				_this.revertButton(clickEvent, buttonTag);
+				swal({
+					title: 'Changed',
+					text: response.data,
+					type: 'success',
+					timer: 2000,
+					showConfirmButton: false
+				});
+				_this.clean();
+			}, function (response) {
+				if (response.status == 422) {
+					_this.validationErrors = response.data;
+				} else {
+					_this.alertMessage = response.data;
+					_this.alertActive = true;
+					_this.alertType = "danger";
+				}
+				_this.revertButton(clickEvent, buttonTag);
+			});
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		},
+		resetAlert: function resetAlert() {
+			this.alertMessage = "";
+			this.alertActive = false;
+			this.alertType = "danger";
+		},
+		checkValidationError: function checkValidationError(fildName) {
+			return fildName in this.validationErrors;
+		},
+		clean: function clean() {
+			this.password = '';
+			this.email = '';
+			this.resetAlert();
+			$('#changeEmailModal').modal('hide');
+		}
+	}
+
+};
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#changeEmailModal\">\n\t\t<i class=\"fa fa-envelope\"></i>&nbsp;&nbsp;&nbsp;Change Email\n\t</button>\n</div>\n\n<!-- Modal for Change Email Settings -->\n<div class=\"modal fade\" id=\"changeEmailModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Email</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n\t\t\t\t\t<fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your current password\">\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Your new email\">\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button to activate the modal -->\n<div class=\"col-sm-10\">\n\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#changeEmailModal\">\n\t\t<i class=\"fa fa-envelope\"></i>&nbsp;&nbsp;&nbsp;Change Email\n\t</button>\n</div>\n\n<!-- Modal for Change Email Settings -->\n<div class=\"modal fade\" id=\"changeEmailModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog modal-sm\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">Change Email</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n                <div class=\"col-md-12\">\n\n\t\t\t\t\t<alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n\t\t\t\t\t<fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('password'))}\">\n\t\t\t\t\t\t<input type=\"password\" class=\"form-control\" v-model=\"password\" placeholder=\"Your current password\">\n\t\t\t\t\t\t<small v-if=\"checkValidationError('password')\" class=\"text-muted\">{{ validationErrors.password[0] }}</small>\n\t\t\t\t\t</fieldset>\n\n                    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('email'))}\">\n\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" v-model=\"email\" placeholder=\"Your new email\">\n\t\t\t\t\t\t<small v-if=\"checkValidationError('email')\" class=\"text-muted\">{{ validationErrors.email[0] }}</small>\n\t\t\t\t\t</fieldset>\n\n                </div>\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n        <button @click=\"change\" type=\"button\" class=\"btn btn-success\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n\t\t</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28686,7 +28774,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2c97e1a7", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],195:[function(require,module,exports){
+},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -28718,7 +28806,7 @@ exports.default = {
             var _this = this;
 
             this.$dispatch('clearError');
-            this.$http.patch(Laravel.url + 'settings/permissions', {
+            this.$http.post(Laravel.url + 'settings/permissions', {
                 'id': permission.name,
                 'checked': !permission.checked ? true : false,
                 'name': permission.tag

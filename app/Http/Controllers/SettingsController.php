@@ -94,27 +94,27 @@ class SettingsController extends PageController
     }
 
     public function changeEmail(Request $request){
-
         // check permissions
 
         $user = $this->getUser();
         $this->validate($request, [
-            'old_password' => 'required|string|max:255',
-            'new_email' => 'required|email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
+            'password' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
         ]);
 
-        if($user->checkPassword($request->old_password)){
-            $user->email = htmlentities($request->new_email);
+        if($user->checkPassword($request->password)){
+            $user->email = htmlentities($request->email);
             if($user->save()){
-                return $this->respondWithSuccess('Email was updated');
+                return response('Email was updated');
             }
-            return $this->respondInternalError('Email was not updated, there was an error.');
+            return response('Email was not updated, there was an error.', 500);
         }
-        return $this->respondWithValidationError('Email was not updated, the information is wrong');
+        // avoid password fishing
+        sleep(2);
+        return response('Email was not updated, the password is wrong', 400);
     }
 
     public function changePassword(Request $request){
-
         // check permissions
 
         if($this->getUser()->cannot('changePassword', Setting::class))

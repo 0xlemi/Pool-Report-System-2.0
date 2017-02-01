@@ -15,7 +15,7 @@ export default{
     methods: {
         sendRequest(permission){
             this.$dispatch('clearError');
-            this.$http.patch(Laravel.url+'settings/permissions', {
+            this.$http.post(Laravel.url+'settings/permissions', {
                 'id': permission.name,
                 'checked': (!permission.checked) ? true : false,
                 'name': permission.tag,
