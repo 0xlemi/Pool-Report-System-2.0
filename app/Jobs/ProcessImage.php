@@ -15,8 +15,9 @@ class ProcessImage implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $object;
     protected $image;
+    protected $storageFolder;
+    protected $randomName;
     protected $tempFilePath;
 
     /**
@@ -24,10 +25,11 @@ class ProcessImage implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Model $object, Image $image, string $tempFilePath)
+    public function __construct(Image $image, string $storageFolder, string $randomName, string $tempFilePath)
     {
-        $this->object = $object;
         $this->image = $image;
+        $this->storageFolder = $storageFolder;
+        $this->randomName = $randomName;
         $this->tempFilePath = $tempFilePath;
     }
 
@@ -60,24 +62,16 @@ class ProcessImage implements ShouldQueue
                 $constraint->upsize();
             })->stream('jpg');
 
-        $storageFolder = 'images/'.strtolower($this->object->modelName());
-
-        //generate image names
-        $randomName = str_random(50);
         // Store final Images in S3
-        Storage::put("{$storageFolder}/bg_{$randomName}.jpg", $streamBig, 'public');
-        Storage::put("{$storageFolder}/md_{$randomName}.jpg", $streamMedium, 'public');
-        Storage::put("{$storageFolder}/sm_{$randomName}.jpg", $streamThumbnail, 'public');
-        Storage::put("{$storageFolder}/ic_{$randomName}.jpg", $streamIcon, 'public');
+        Storage::put("{$this->storageFolder}/bg_{$this->randomName}.jpg", $streamBig, 'public');
+        Storage::put("{$this->storageFolder}/md_{$this->randomName}.jpg", $streamMedium, 'public');
+        Storage::put("{$this->storageFolder}/sm_{$this->randomName}.jpg", $streamThumbnail, 'public');
+        Storage::put("{$this->storageFolder}/ic_{$this->randomName}.jpg", $streamIcon, 'public');
 
         // Finaly delete temp file
         Storage::delete($this->tempFilePath);
 
         // Set image paths in database
-        $this->image->big = "{$storageFolder}/bg_{$randomName}.jpg";
-        $this->image->medium = "{$storageFolder}/md_{$randomName}.jpg";
-        $this->image->thumbnail = "{$storageFolder}/sm_{$randomName}.jpg";
-        $this->image->icon = "{$storageFolder}/ic_{$randomName}.jpg";
         $this->image->processing = 0;
         $this->image->save();
     }

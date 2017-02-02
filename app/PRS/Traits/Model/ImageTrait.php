@@ -27,7 +27,19 @@ trait ImageTrait{
         // Stream file directly to S3.
         $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
 
-        dispatch(new ProcessImage($this, $image, $tempFilePath));
+        $storageFolder = 'images/'.strtolower($this->modelName());
+
+        //generate image names
+        $randomName = str_random(50);
+
+        dispatch(new ProcessImage($image, $storageFolder, $randomName, $tempFilePath));
+
+        // Set image paths in database
+        $image->big = "{$storageFolder}/bg_{$randomName}.jpg";
+        $image->medium = "{$storageFolder}/md_{$randomName}.jpg";
+        $image->thumbnail = "{$storageFolder}/sm_{$randomName}.jpg";
+        $image->icon = "{$storageFolder}/ic_{$randomName}.jpg";
+        $image->save();
 
         return $image;
 	}

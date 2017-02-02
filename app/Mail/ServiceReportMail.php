@@ -10,6 +10,7 @@ use App\User;
 use App\Report;
 use App\PRS\Classes\UrlSigner;
 use Carbon\Carbon;
+use Storage;
 
 class ServiceReportMail extends Mailable
 {
@@ -51,9 +52,9 @@ class ServiceReportMail extends Mailable
             'name' => $name,
             'address' => $this->report->service()->address_line,
             'time' => $time,
-            'photo1' => url($this->report->image(1)),
-            'photo2' => url($this->report->image(2)),
-            'photo3' => url($this->report->image(3)),
+            'photo1' => Storage::url($this->report->image(1)),
+            'photo2' => Storage::url($this->report->image(2)),
+            'photo3' => Storage::url($this->report->image(3)),
             'unsubscribeLink' => url('/unsubscribe').'/'.$token,
         );
 
