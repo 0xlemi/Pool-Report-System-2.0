@@ -11,7 +11,7 @@ use App\Channels\RealMailChannel;
 use App\Report;
 
 
-class ReportCreatedNotification extends Notification 
+class ReportCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
