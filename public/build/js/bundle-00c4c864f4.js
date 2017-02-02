@@ -29816,6 +29816,10 @@ var _alert = require('./alert.vue');
 
 var _alert2 = _interopRequireDefault(_alert);
 
+var _timezoneDropdown = require('./timezoneDropdown.vue');
+
+var _timezoneDropdown2 = _interopRequireDefault(_timezoneDropdown);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Spinner = require("spin");
@@ -29823,7 +29827,8 @@ var Spinner = require("spin");
 exports.default = {
 	props: ['companyName', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList'],
 	components: {
-		alert: _alert2.default
+		alert: _alert2.default,
+		timezoneDropdown: _timezoneDropdown2.default
 	},
 	data: function data() {
 		return {
@@ -29895,7 +29900,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('company_name'))}\">\n    \t<label class=\"form-label semibold\">Company Name</label>\n    \t<input type=\"text\" class=\"form-control\" v-model=\"companyName\">\n\t    <small v-if=\"checkValidationError('company_name')\" class=\"text-muted\">{{ validationErrors.company_name[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('timezone'))}\">\n    \t<label class=\"form-label semibold\">Timezone</label>\n        <select class=\"bootstrap-select bootstrap-select-arrow\" v-model=\"timezone\" name=\"timezone\" data-live-search=\"true\">\n            <optgroup v-for=\"(region, list) in timezoneList\" :label=\"region\">\n                <option v-for=\"(currentTimezone, name) in list\" :value=\"currentTimezone\">\n                    {{ name }}\n                </option>\n            </optgroup>\n        </select>\n\t    <small v-if=\"checkValidationError('timezone')\" class=\"text-muted\">{{ validationErrors.timezone[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('website'))}\">\n    \t<label class=\"form-label semibold\">Website</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"website\">\n        </div>\n\t    <small v-if=\"checkValidationError('website')\" class=\"text-muted\">{{ validationErrors.website[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('facebook'))}\">\n    \t<label class=\"form-label semibold\">Facebook</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"facebook\">\n        </div>\n\t    <small v-if=\"checkValidationError('facebook')\" class=\"text-muted\">{{ validationErrors.facebook[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('twitter'))}\">\n    \t<label class=\"form-label semibold\">Twitter</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"twitter\">\n        </div>\n\t    <small v-if=\"checkValidationError('twitter')\" class=\"text-muted\">{{ validationErrors.twitter[0] }}</small>\n    </fieldset>\n\n    <button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n    \t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n    </button>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('company_name'))}\">\n    \t<label class=\"form-label semibold\">Company Name</label>\n    \t<input type=\"text\" class=\"form-control\" v-model=\"companyName\">\n\t    <small v-if=\"checkValidationError('company_name')\" class=\"text-muted\">{{ validationErrors.company_name[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('timezone'))}\">\n    \t<label class=\"form-label semibold\">Timezone</label>\n        <timezone-dropdown class=\"bootstrap-select bootstrap-select-arrow\" :timezone.sync=\"timezone\" :timezone-list=\"timezoneList\"></timezone-dropdown>    \n\t    <small v-if=\"checkValidationError('timezone')\" class=\"text-muted\">{{ validationErrors.timezone[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('website'))}\">\n    \t<label class=\"form-label semibold\">Website</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"website\">\n        </div>\n\t    <small v-if=\"checkValidationError('website')\" class=\"text-muted\">{{ validationErrors.website[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('facebook'))}\">\n    \t<label class=\"form-label semibold\">Facebook</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"facebook\">\n        </div>\n\t    <small v-if=\"checkValidationError('facebook')\" class=\"text-muted\">{{ validationErrors.facebook[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('twitter'))}\">\n    \t<label class=\"form-label semibold\">Twitter</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"twitter\">\n        </div>\n\t    <small v-if=\"checkValidationError('twitter')\" class=\"text-muted\">{{ validationErrors.twitter[0] }}</small>\n    </fieldset>\n\n    <button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n    \t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n    </button>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -29906,7 +29911,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":192,"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
+},{"./alert.vue":192,"./timezoneDropdown.vue":225,"spin":166,"vue":180,"vue-hot-reload-api":177}],203:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32028,6 +32033,27 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = {
+    props: ['class', 'timezone', 'timezoneList']
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<select :class=\"class\" v-model=\"timezone\" name=\"timezone\" data-live-search=\"true\">\n    <optgroup v-for=\"(region, list) in timezoneList\" :label=\"region\">\n        <option v-for=\"(currentTimezone, name) in list\" :value=\"currentTimezone\">\n            {{ name }}\n        </option>\n    </optgroup>\n</select>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-8165b142", module.exports)
+  } else {
+    hotAPI.update("_v-8165b142", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _photoList = require('./photoList.vue');
 
@@ -32086,7 +32112,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":205,"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],226:[function(require,module,exports){
+},{"./dropzone.vue":205,"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32166,7 +32192,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],227:[function(require,module,exports){
+},{"./photoList.vue":219,"vue":180,"vue-hot-reload-api":177}],228:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32226,7 +32252,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],228:[function(require,module,exports){
+},{"./indexTable.vue":210,"vue":180,"vue-hot-reload-api":177}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32637,7 +32663,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":204,"./dropzone.vue":205,"./photoList.vue":219,"spin":166,"vue":180,"vue-hot-reload-api":177}],229:[function(require,module,exports){
+},{"./BootstrapTable.vue":188,"./alert.vue":192,"./dropdown.vue":204,"./dropzone.vue":205,"./photoList.vue":219,"spin":166,"vue":180,"vue-hot-reload-api":177}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32721,7 +32747,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":180,"vue-hot-reload-api":177}],230:[function(require,module,exports){
+},{"vue":180,"vue-hot-reload-api":177}],231:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -32802,6 +32828,7 @@ $(document).ready(function () {
 	var invoiceTable = require('./components/invoiceTable.vue');
 	var photo = require('./components/photo.vue');
 	var editReportPhotos = require('./components/editReportPhotos.vue');
+	var timezoneDropdown = require('./components/timezoneDropdown.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -32814,6 +32841,7 @@ $(document).ready(function () {
 			PhotoList: PhotoList,
 			photo: photo,
 			deleteButton: deleteButton,
+			timezoneDropdown: timezoneDropdown,
 			// notifications
 			AllNotificationsAsReadButton: AllNotificationsAsReadButton,
 			// settings
@@ -33561,6 +33589,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":203,"./components/dropdown.vue":204,"./components/editReportPhotos.vue":206,"./components/email.vue":207,"./components/equipment.vue":208,"./components/finishWorkOrderButton.vue":209,"./components/invoiceTable.vue":211,"./components/missingServices.vue":213,"./components/notificationsWidget.vue":215,"./components/payments.vue":217,"./components/photo.vue":218,"./components/photoList.vue":219,"./components/routeTable.vue":220,"./components/serviceTable.vue":221,"./components/settings.vue":222,"./components/supervisorTable.vue":223,"./components/technicianTable.vue":224,"./components/workOrderPhotosEdit.vue":225,"./components/workOrderPhotosShow.vue":226,"./components/workOrderTable.vue":227,"./components/works.vue":228,"./directives/FormToAjax.vue":229,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,230]);
+},{"./components/AllNotificationsAsReadButton.vue":187,"./components/Permissions.vue":189,"./components/addressFields.vue":191,"./components/alert.vue":192,"./components/billing.vue":193,"./components/chemical.vue":197,"./components/clientTable.vue":198,"./components/contract.vue":199,"./components/countries.vue":200,"./components/deleteButton.vue":203,"./components/dropdown.vue":204,"./components/editReportPhotos.vue":206,"./components/email.vue":207,"./components/equipment.vue":208,"./components/finishWorkOrderButton.vue":209,"./components/invoiceTable.vue":211,"./components/missingServices.vue":213,"./components/notificationsWidget.vue":215,"./components/payments.vue":217,"./components/photo.vue":218,"./components/photoList.vue":219,"./components/routeTable.vue":220,"./components/serviceTable.vue":221,"./components/settings.vue":222,"./components/supervisorTable.vue":223,"./components/technicianTable.vue":224,"./components/timezoneDropdown.vue":225,"./components/workOrderPhotosEdit.vue":226,"./components/workOrderPhotosShow.vue":227,"./components/workOrderTable.vue":228,"./components/works.vue":229,"./directives/FormToAjax.vue":230,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":180,"vue-resource":179}]},{},[185,183,182,184,186,231]);
 
 //# sourceMappingURL=bundle.js.map

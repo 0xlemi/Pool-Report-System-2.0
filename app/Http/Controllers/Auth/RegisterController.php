@@ -86,7 +86,8 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('auth.register');
+        $timezoneList = timezoneList();
+        return view('auth.register', compact('timezoneList'));
     }
 
 /**

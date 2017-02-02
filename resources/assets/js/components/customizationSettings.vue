@@ -10,13 +10,7 @@
 
     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('timezone'))}">
     	<label class="form-label semibold">Timezone</label>
-        <select class="bootstrap-select bootstrap-select-arrow" v-model="timezone" name="timezone" data-live-search="true">
-            <optgroup v-for="(region, list) in timezoneList" :label="region">
-                <option v-for="(currentTimezone, name) in list" :value="currentTimezone">
-                    {{ name }}
-                </option>
-            </optgroup>
-        </select>
+        <timezone-dropdown class="bootstrap-select bootstrap-select-arrow" :timezone.sync="timezone" :timezone-list="timezoneList"></timezone-dropdown>    
 	    <small v-if="checkValidationError('timezone')" class="text-muted">{{ validationErrors.timezone[0] }}</small>
     </fieldset>
 
@@ -55,12 +49,14 @@
 
 <script>
 import alert from './alert.vue';
+import timezoneDropdown from './timezoneDropdown.vue';
 var Spinner = require("spin");
 
 export default {
     props: ['companyName', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList' ],
 	components:{
-		alert
+		alert,
+        timezoneDropdown
 	},
 	data(){
 		return {

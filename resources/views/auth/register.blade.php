@@ -51,7 +51,7 @@
 
                     <div class="form-group{{ $errors->has('timezone') ? ' has-error' : '' }}">
                         <label for="timezone" class="text-edit">Timezone</label>
-                        <input type="text" class="form-control" name="timezone" placeholder="Enter your Timezone" required>
+                        <timezone-dropdown class="form-control" :timezone="hello" :timezone-list="{{ json_encode($timezoneList) }}"></timezone-dropdown>
                         @if ($errors->has('timezone'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('timezone') }}</strong>

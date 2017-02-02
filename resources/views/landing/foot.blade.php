@@ -17,6 +17,8 @@
 <script src="{{ url('js/plugins/wow.min.js') }}"></script>
 <script src="{{ url('js/plugins/picker.js') }}"></script>
 <script src="{{ url('js/plugins/picker.date.js') }}"></script>
+
+<script src="{{ elixir('js/bundle.js') }}"></script>
 <!-- Custom Script -->
 <script src="{{ url('js/custom.js') }}"></script>
 
