@@ -32034,7 +32034,12 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['class', 'timezone', 'timezoneList']
+    props: ['class', 'timezone', 'timezoneList'],
+    ready: function ready() {
+        if (this.timezone == null) {
+            this.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        }
+    }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
 ;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<select :class=\"class\" v-model=\"timezone\" name=\"timezone\" data-live-search=\"true\">\n    <optgroup v-for=\"(region, list) in timezoneList\" :label=\"region\">\n        <option v-for=\"(currentTimezone, name) in list\" :value=\"currentTimezone\">\n            {{ name }}\n        </option>\n    </optgroup>\n</select>\n"

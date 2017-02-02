@@ -12,5 +12,13 @@
 
 export default {
     props: ['class', 'timezone', 'timezoneList'],
+    ready(){
+        if(this.timezone == null)
+        {
+            this.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;    
+        }
+    }
 }
+
+
 </script>

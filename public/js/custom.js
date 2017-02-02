@@ -4,7 +4,7 @@ $(document).ready(function() {
 
 
 /* =================================
-   LOADER                     
+   LOADER
 =================================== */
 // makes sure the whole site is loaded
 $(window).on('load', function() {
@@ -105,16 +105,16 @@ $back_to_top.on('click', function(event){
 
 
 /* ===========================================================
-    WOW ANIMATIONS                   
+    WOW ANIMATIONS
 ============================================================== */
 new WOW().init();
 
 
 /* ===========================================================
-   HIDE MOBILE MENU AFTER CLICKING 
+   HIDE MOBILE MENU AFTER CLICKING
 ============================================================== */
 $('.navbar-nav>li>a:not(#dLabel)').on('click', function(){
-    $('#navbar-collapse').removeClass("in").addClass("collapse"); 
+    $('#navbar-collapse').removeClass("in").addClass("collapse");
 });
 
 
@@ -161,7 +161,7 @@ if( $('.counter').length ) {
             if(elemPosBottom > winScrollTop){
                 if (cc < 2){
                     cc = cc + 2;
-                    o.countTo();                    
+                    o.countTo();
                 }
             }
         }
@@ -188,8 +188,8 @@ $('.features-tab .tab-title').on('click', function(e) {
 ==============================================================  */
 var mQ = window.matchMedia('(max-width: 767px)');
 mQ.addListener(tabScrolling);
-  
-function tabScrolling(mQ) {    
+
+function tabScrolling(mQ) {
     if (mQ.matches) {
         $('.features-tab .tab-title').on('click', function(event) {
             var $anchor = $(this);
@@ -198,9 +198,9 @@ function tabScrolling(mQ) {
             }, 500, 'easeInOutExpo');
             event.preventDefault();
         });
-    }    
+    }
 }
-  
+
 tabScrolling(mQ);
 
 
@@ -218,7 +218,7 @@ function handleTweets(tweets) {
     }
     html += '</div>';
     element.innerHTML = html;
-        
+
     /* Twits attached to owl-carousel */
     $("#twitter-feed .slides").owlCarousel({
         slideSpeed : 300,
@@ -230,7 +230,7 @@ function handleTweets(tweets) {
     });
 }
 
-if( $('#twitter-feed').length ) {   
+if( $('#twitter-feed').length ) {
     var widgetId = $('#twitter-feed').attr('data-widget-id');
 
     var config_feed = {
@@ -305,7 +305,7 @@ if( $('.countdown').length ) {
    MAILCHIMP
 ============================================================== */
 if( $('#mailchimpForm').length ) {
-    $("#mailchimpForm").formchimp(); 
+    $("#mailchimpForm").formchimp();
 }
 
 
@@ -345,7 +345,7 @@ function isValidPhoneNumber(phoneNumber) {
    CONTACT FORM
 ============================================= */
 $("#contactForm").on('submit', function(e) {
-    
+
     e.preventDefault();
     var data = {
         name: $("#cfName").val(),
@@ -528,7 +528,7 @@ $("#subscribeForm").on('submit', function(e) {
     var data = {
         email: $("#sfEmail").val()
     };
-        
+
     if ( isValidEmail(data['email']) ) {
         $.ajax({
             type: "POST",
@@ -557,7 +557,7 @@ $("#subscribeForm2").on('submit', function(e) {
         name: $("#sf2Name").val(),
         email: $("#sf2Email").val()
     };
-        
+
     if ( isValidEmail(data['email']) && (data['name'].length > 1) ) {
         $.ajax({
             type: "POST",
@@ -578,7 +578,7 @@ $("#subscribeForm2").on('submit', function(e) {
 
 
 /* ===========================================================
-   BOOTSTRAP FIX FOR IE10 in Windows 8 and Windows Phone 8  
+   BOOTSTRAP FIX FOR IE10 in Windows 8 and Windows Phone 8
 ============================================================== */
 if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
     var msViewportStyle = document.createElement('style');
