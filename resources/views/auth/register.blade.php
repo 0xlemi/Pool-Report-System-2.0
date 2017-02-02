@@ -1,82 +1,73 @@
-@extends('layouts.landing')
-
+@extends('landing.main')
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
-                        {!! csrf_field() !!}
+<section id="login" class="login  bg-color">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 text-center subscription">
+                <h4 class="m-t-lg m-b-0 text-left center-md">Let's get started</h4>
+                <p class="lead text-left m-b-md center-md">Signin up for Pool Report System is free</p>
+                <form class="form-horizontal" method="POST" action="{{ url('/register') }}">
+                  {!! csrf_field() !!}
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Name</label>
+                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                        <label for="name" class="text-edit">Full Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter your Full Name" required>
+                        @if ($errors->has('name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                        <label for="email" class="text-edit">Email Address</label>
+                        <input type="email" class="form-control" name="email" placeholder="Enter your Email" required>
+                        @if ($errors->has('email'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <label for="password" class="text-edit">Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Enter your Password" required>
+                        @if ($errors->has('password'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">E-Mail Address</label>
+                    <div class="form-group{{ $errors->has('company_name') ? ' has-error' : '' }}">
+                        <label for="company_name" class="text-edit">Company Name</label>
+                        <input type="text" class="form-control" name="company_name" placeholder="Enter your Company Name" required>
+                        @if ($errors->has('company_name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('company_name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="{{ old('email') }}">
+                    <div class="form-group{{ $errors->has('timezone') ? ' has-error' : '' }}">
+                        <label for="timezone" class="text-edit">Timezone</label>
+                        <input type="text" class="form-control" name="timezone" placeholder="Enter your Timezone" required>
+                        @if ($errors->has('timezone'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('timezone') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-blue">SIGN UP</button>
+                    </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password">
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input type="password" class="form-control" name="password_confirmation">
-
-                                @if ($errors->has('password_confirmation'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-user"></i>Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                </form>
+                <p class="terms m-t">By clicking Signup you agree to the <a href="" class="f-w-700">Terms</a> and <a href="" class="f-w-700">Privacy Policy</a>.</p>
+                <p class="terms"> Already have a GetLeads account? <a href="" class="f-w-700">Sign in</a>.</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 @endsection

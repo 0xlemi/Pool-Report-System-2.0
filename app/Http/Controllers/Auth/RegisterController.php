@@ -52,8 +52,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
+            'company_name' => 'required|max:255',
+            'timezone' => 'required|validTimezone',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:6',
         ]);
     }
 
@@ -67,13 +69,24 @@ class RegisterController extends Controller
     {
         $administrator = Administrator::create([
             'name' => $data['name'],
-            // 'company_name' => $data['company_name'],
+            'company_name' => $data['company_name'],
+            'timezone' => $data['timezone'],
         ]);
         return $administrator->user()->create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
 			'api_token' => str_random(60),
         ]);
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register');
     }
 
 /**
