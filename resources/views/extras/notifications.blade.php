@@ -20,3 +20,12 @@
     </div>
 </div>
 @endif
+@if (session('status'))
+<div class="row">
+    <div class="col-md-4 col-md-offset-4 m-t-md">
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    </div>
+</div>
+@endif
