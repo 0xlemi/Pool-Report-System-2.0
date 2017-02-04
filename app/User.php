@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
 
 use Hash;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -46,6 +47,16 @@ class User extends Authenticatable
     ];
 
 
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
     /**
      * Is this user an administrator ?

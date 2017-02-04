@@ -58,7 +58,7 @@ class ServiceReportMail extends Mailable
             'unsubscribeLink' => url('/unsubscribe').'/'.$token,
         );
 
-        return $this->from('service@poolreportsystem.com')
+        return $this->from('no-reply@poolreportsystem.com')
                     ->subject('Your pool is clean '.$name)
                     ->view('emails.serviceReport')
                     ->with($data);
