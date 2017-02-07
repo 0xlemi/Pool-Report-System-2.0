@@ -28,7 +28,7 @@ class TechnicianTest extends DatabaseTester
         ]);
 
         // When
-        $user = $technician->user();
+        $user = $technician->user;
 
         // Then
         $this->assertSameObject($original_user, $user);

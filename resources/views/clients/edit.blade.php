@@ -77,7 +77,7 @@
 								<label class="col-sm-2 form-control-label">Email:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control"
-											name="email" value="{{ $client->user()->email }}">
+											name="email" value="{{ $client->user->email }}">
 									@if ($errors->has('email'))
 										<small class="text-muted">{{ $errors->first('email') }}</small>
 									@endif

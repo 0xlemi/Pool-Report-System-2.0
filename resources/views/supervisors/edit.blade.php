@@ -78,7 +78,7 @@
 								<label class="col-sm-2 form-control-label">Email:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control"
-											name="email" value="{{ $supervisor->user()->email }}">
+											name="email" value="{{ $supervisor->user->email }}">
 									@if ($errors->has('email'))
 										<small class="text-muted">{{ $errors->first('email') }}</small>
 									@endif
@@ -113,7 +113,7 @@
 								<input type="checkbox" data-toggle="toggle"
 										data-on="Active" data-off="Not Active"
 										data-onstyle="success" data-offstyle="danger"
-										data-size="small" name="status" {{ ($supervisor->user()->active) ? 'checked':'' }}>
+										data-size="small" name="status" {{ ($supervisor->user->active) ? 'checked':'' }}>
 								<small class="text-muted">You are only charged for active supervisors.</small>
 								</div>
 							</div>

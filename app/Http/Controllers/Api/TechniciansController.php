@@ -201,7 +201,7 @@ class TechniciansController extends ApiController
             // checking core attributes
             $this->validateTechnicianRequestUpdate(
                             $request,
-                            $technician->user()->id
+                            $technician->user->id
                         );
             // checking the supervisor_seqid and getting the real id
             try {
@@ -225,7 +225,7 @@ class TechniciansController extends ApiController
             if(isset($request->getReportsEmails)){ $technician->user->receive_report = $request->getReportsEmails; }
 
             // update user
-            $user = $technician->user();
+            $user = $technician->user;
             if($request->has('username')){ $user->email = htmlentities($request->username); }
             if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }

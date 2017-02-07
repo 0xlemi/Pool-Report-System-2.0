@@ -43,7 +43,7 @@ class SupervisorTest extends DatabaseTester
         ]);
 
         // When
-        $user = $supervisor->user();
+        $user = $supervisor->user;
 
         // Then
         $this->assertSameObject($original_user, $user);

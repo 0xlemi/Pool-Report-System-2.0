@@ -92,7 +92,7 @@
 								<label class="col-sm-2 form-control-label">Username:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="username" maxlength="25" value="{{ $technician->user()->email }}">
+											name="username" maxlength="25" value="{{ $technician->user->email }}">
 									@if ($errors->has('username'))
 										<small class="text-muted">{{ $errors->first('username') }}</small>
 									@endif
@@ -127,7 +127,7 @@
 								<input type="checkbox" data-toggle="toggle"
 										data-on="Active" data-off="Not Active"
 										data-onstyle="success" data-offstyle="danger"
-										data-size="small" name="status" {{ ($technician->user()->active) ? 'checked':'' }}>
+										data-size="small" name="status" {{ ($technician->user->active) ? 'checked':'' }}>
 								<small class="text-muted">You are only charged for active technicians.</small>
 								</div>
 							</div>

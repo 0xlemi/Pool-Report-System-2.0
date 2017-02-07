@@ -156,7 +156,7 @@ class ClientsController extends PageController
 
         $this->authorize('update', $client);
 
-        $user  = $client->user();
+        $user  = $client->user;
         $user->email = htmlentities($request->email);
 
         $client->fill(array_map('htmlentities', $request->except(['admin_id', 'services'])));

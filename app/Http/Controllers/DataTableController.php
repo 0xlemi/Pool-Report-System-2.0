@@ -172,7 +172,7 @@ class DataTableController extends PageController
                             return (object) array(
                                 'id' => $item->seq_id,
                                 'name' => $item->name.' '.$item->last_name,
-                                'email' => $item->user()->email,
+                                'email' => $item->user->email,
                                 'type' => $this->clientHelpers->styledType($item->type, true, false),
                                 'cellphone' => $item->cellphone,
                             );
@@ -192,7 +192,7 @@ class DataTableController extends PageController
                             return (object) array(
                                 'id' => $item->seq_id,
                                 'name' => $item->name.' '.$item->last_name,
-                                'email' => $item->user()->email,
+                                'email' => $item->user->email,
                                 'cellphone' => $item->cellphone,
                             );
                         })
@@ -213,7 +213,7 @@ class DataTableController extends PageController
                                 return (object) array(
                                     'id' =>  $item->seq_id,
                                     'name' => $item->name.' '.$item->last_name,
-                                    'username' => $item->user()->email,
+                                    'username' => $item->user->email,
                                     'cellphone' => $item->cellphone,
                                     'supervisor' => $supervisor->name.' '.$supervisor->last_name,
                                 );

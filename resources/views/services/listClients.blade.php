@@ -37,7 +37,7 @@
 										<tr>
 											<td>{{ $client->seq_id }}</td>
 											<td>{{ $client->name.' '.$client->last_name }}</td>
-											<td>{{ $client->user()->email }}</td>
+											<td>{{ $client->user->email }}</td>
 											<td>{!! $clientHelpers->styledType($client->type, true, false) !!}</td>
 										</tr>
 									@endforeach

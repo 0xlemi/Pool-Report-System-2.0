@@ -44,7 +44,7 @@ class ClientTransformer extends Transformer
             'id' => $client->seq_id,
             'name' => $client->name,
             'last_name' => $client->last_name,
-            'email' => $client->user()->email,
+            'email' => $client->user->email,
             'cellphone' => $client->cellphone,
             'type' => ($client->type == 1) ? 'Owner' : 'House Admin',
             'language' => $client->language,

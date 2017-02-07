@@ -54,7 +54,7 @@ class ClientsTest extends DatabaseTester
         ]);
 
         // When
-        $user = $client->user();
+        $user = $client->user;
 
         // Then
         $this->assertSameObject($original_user, $user);

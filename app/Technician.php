@@ -16,7 +16,7 @@ class Technician extends Model
     use ImageTrait;
 
     // not using timestamps because trows a bug when you try to run
-    // $admin->setTechniciansAsInactive() updated_at field is 
+    // $admin->setTechniciansAsInactive() updated_at field is
     public $timestamps = false;
 
     /**
@@ -47,7 +47,7 @@ class Technician extends Model
      */
     public function user()
     {
-      return $this->morphOne('App\User', 'userable')->first();
+      return $this->morphOne('App\User', 'userable');
     }
 
 	/**

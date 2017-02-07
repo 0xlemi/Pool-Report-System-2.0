@@ -35,7 +35,11 @@ class ReportCreatedNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [RealMailChannel::class];
+        $channels = [];
+        if($notifiable->receive_report){
+        $channels[] = RealMailChannel::class;
+        }
+        return $channels;
     }
 
     /**

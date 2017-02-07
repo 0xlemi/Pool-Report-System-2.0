@@ -175,7 +175,7 @@ class ClientsController extends ApiController
                 return $this->respondNotFound('Client with that id, does not exist.');
             }
             // validate core values
-            $this->validateClientUpdate($request, $client->user()->id);
+            $this->validateClientUpdate($request, $client->user->id);
             // get real ids, because we were sent seq_ids arrays
             $add_service_ids = $this->getAddServicesIds($request->add_service_ids, $admin, $client);
             $remove_service_ids = $this->getRemoveServicesIds($request->remove_service_ids, $admin);
@@ -190,7 +190,7 @@ class ClientsController extends ApiController
             if(isset($request->getReportsEmails)){ $client->user->receive_report = $request->getReportsEmails; }
 
             // set user values
-            $user = $client->user();
+            $user = $client->user;
             if(isset($request->email)){ $user->email = htmlentities($request->email); }
             if(isset($request->password)){ $user->password = bcrypt($request->password); }
 

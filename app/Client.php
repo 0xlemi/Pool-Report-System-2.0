@@ -55,7 +55,7 @@ class Client extends Model
 	 */
 	public function user()
     {
-      return $this->morphOne('App\User', 'userable')->first();
+      return $this->morphOne('App\User', 'userable');
     }
 
 	/*

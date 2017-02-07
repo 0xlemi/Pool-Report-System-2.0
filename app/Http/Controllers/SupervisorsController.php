@@ -154,7 +154,7 @@ class SupervisorsController extends PageController
 
         $this->authorize('update', $supervisor);
 
-        $user = $supervisor->user();
+        $user = $supervisor->user;
         $user->email = htmlentities($request->email);
 
         $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));

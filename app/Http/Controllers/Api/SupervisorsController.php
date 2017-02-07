@@ -200,7 +200,7 @@ class SupervisorsController extends ApiController
                 return $this->respondNotFound('Supervisor with that id, does not exist.');
             }
             // validate the core attributes
-            $this->validateSupervisorRequestUpdate($request, $supervisor->user()->id);
+            $this->validateSupervisorRequestUpdate($request, $supervisor->user->id);
 
 
         // ***** Persiting *****
@@ -212,7 +212,7 @@ class SupervisorsController extends ApiController
             if(isset($request->getReportsEmails)){ $supervisor->user->receive_report = $request->getReportsEmails; }
 
             // update the user
-            $user = $supervisor->user();
+            $user = $supervisor->user;
             if($request->has('email')){ $user->email = htmlentities($request->email); }
             if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }

@@ -39,7 +39,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status:</label>
 								<div class="col-sm-10">
-									{!! $technicianHelpers->styleStatus($technician->user()->active) !!}
+									{!! $technicianHelpers->styleStatus($technician->user->active) !!}
 								</div>
 							</div>
 
@@ -74,7 +74,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Username</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->user()->email }}">
+									<input type="text" readonly class="form-control" value="{{ $technician->user->email }}">
 								</div>
 							</div>
 

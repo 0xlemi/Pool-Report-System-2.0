@@ -178,7 +178,7 @@ class TechniciansController extends PageController
 
         $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
-        $user = $technician->user();
+        $user = $technician->user;
 
         $user->email = htmlentities($request->username);
 

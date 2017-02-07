@@ -56,7 +56,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->user()->email }}">
+									<input type="text" readonly class="form-control" value="{{ $client->user->email }}">
 								</div>
 							</div>
 							<div class="form-group row">

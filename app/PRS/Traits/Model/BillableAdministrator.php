@@ -27,7 +27,7 @@ trait BillableAdministrator{
     {
         $supervisors = $this->supervisors()->get();
         foreach ($supervisors as $supervisor) {
-            $user = $supervisor->user();
+            $user = $supervisor->user;
             $user->active = 0;
             $user->save();
         }
@@ -40,7 +40,7 @@ trait BillableAdministrator{
     {
         $technicians = $this->technicians()->get();
         foreach ($technicians as $technician) {
-            $user = $technician->user();
+            $user = $technician->user;
             $user->active = 0;
             $user->save();
         }
@@ -90,7 +90,7 @@ trait BillableAdministrator{
         $isActive = ($active)? 1:0;
         return $this->techniciansInOrder()->get()
                     ->filter(function($item) use ($isActive){
-                        return ($item->user()->active == $isActive);
+                        return ($item->user->active == $isActive);
                     });
     }
 
@@ -104,7 +104,7 @@ trait BillableAdministrator{
         $isActive = ($active)? 1:0;
         return $this->supervisorsInOrder()->get()
                     ->filter(function($item) use ($isActive){
-                        return ($item->user()->active == $isActive);
+                        return ($item->user->active == $isActive);
                     });
     }
 
