@@ -220,12 +220,12 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', 'api/v1/technicians', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('GET', 'api/v1/technicians', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -234,12 +234,12 @@ class TechnicianApiTest extends ApiTester
         $admin->save();
 
         $this->json('GET', 'api/v1/technicians', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('GET', 'api/v1/technicians', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -265,12 +265,12 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('POST', 'api/v1/technicians', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('POST', 'api/v1/technicians', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -279,12 +279,12 @@ class TechnicianApiTest extends ApiTester
         $admin->save();
 
         $this->json('POST', 'api/v1/technicians', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(422);
 
         $this->json('POST', 'api/v1/technicians', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(422);
 
@@ -310,12 +310,12 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('GET', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('GET', 'api/v1/technicians/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -324,12 +324,12 @@ class TechnicianApiTest extends ApiTester
         $admin->save();
 
         $this->json('GET', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('GET', 'api/v1/technicians/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -355,12 +355,12 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('PATCH', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('PATCH', 'api/v1/technicians/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -369,12 +369,12 @@ class TechnicianApiTest extends ApiTester
         $admin->save();
 
         $this->json('PATCH', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('PATCH', 'api/v1/technicians/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -402,12 +402,12 @@ class TechnicianApiTest extends ApiTester
         // When
         // Then
         $this->json('DELETE', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('DELETE', 'api/v1/technicians/2', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -416,12 +416,12 @@ class TechnicianApiTest extends ApiTester
         $admin->save();
 
         $this->json('DELETE', 'api/v1/technicians/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('DELETE', 'api/v1/technicians/2', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 

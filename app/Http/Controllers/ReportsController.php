@@ -142,7 +142,7 @@ class ReportsController extends PageController
                     $client->user->notify(new ReportCreatedNotification($report));
                 }
                 // notify the supervisor
-                $report->supervisor()->user()->notify(new ReportCreatedNotification($report));
+                $report->supervisor()->user->notify(new ReportCreatedNotification($report));
 
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');

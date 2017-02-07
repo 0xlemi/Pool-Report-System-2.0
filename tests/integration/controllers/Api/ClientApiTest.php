@@ -293,12 +293,12 @@ public function it_can_update_client()
         // When
         // Then
         $this->json('GET', 'api/v1/clients', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('GET', 'api/v1/clients', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -307,12 +307,12 @@ public function it_can_update_client()
         $admin->save();
 
         $this->json('GET', 'api/v1/clients', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('GET', 'api/v1/clients', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -340,12 +340,12 @@ public function it_can_update_client()
         // When
         // Then
         $this->json('POST', 'api/v1/clients', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('POST', 'api/v1/clients', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -354,12 +354,12 @@ public function it_can_update_client()
         $admin->save();
 
         $this->json('POST', 'api/v1/clients', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(422);
 
         $this->json('POST', 'api/v1/clients', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(422);
 
@@ -389,12 +389,12 @@ public function it_can_update_client()
         // When
         // Then
         $this->json('GET', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('GET', 'api/v1/clients/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -403,12 +403,12 @@ public function it_can_update_client()
         $admin->save();
 
         $this->json('GET', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('GET', 'api/v1/clients/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -438,12 +438,12 @@ public function it_can_update_client()
         // When
         // Then
         $this->json('PATCH', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('PATCH', 'api/v1/clients/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -452,12 +452,12 @@ public function it_can_update_client()
         $admin->save();
 
         $this->json('PATCH', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('PATCH', 'api/v1/clients/1', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
@@ -488,12 +488,12 @@ public function it_can_update_client()
         // When
         // Then
         $this->json('DELETE', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
         $this->json('DELETE', 'api/v1/clients/2', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(403);
 
@@ -502,12 +502,12 @@ public function it_can_update_client()
         $admin->save();
 
         $this->json('DELETE', 'api/v1/clients/1', [
-            'api_token' => $sup->user()->api_token,
+            'api_token' => $sup->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
         $this->json('DELETE', 'api/v1/clients/2', [
-            'api_token' => $tech->user()->api_token,
+            'api_token' => $tech->user->api_token,
         ]);
         $this->assertResponseStatus(200);
 
