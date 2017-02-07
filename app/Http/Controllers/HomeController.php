@@ -47,7 +47,7 @@ class HomeController extends PageController
                 return redirect('/settings');
             }
 
-            $getReportsEmails = $user->userable()->get_reports_emails;
+            $getReportsEmails = $user->receive_report;
 
             return view('extras.emailSettings', compact('getReportsEmails', 'token'));
         }
@@ -57,10 +57,10 @@ class HomeController extends PageController
     public function changeEmailOptions(Request $request)
     {
         if($object = $this->urlSigner->validateToken($request->token)){
-            $person = User::where('email', $object->email)->get()->first()->userable();
+            $user = User::where('email', $object->email)->get()->first();
 
-            $person->get_reports_emails = ($request->get_reports_emails) ? true : false;
-            if($person->save()){
+            $user->receive_report = ($request->get_reports_emails) ? true : false;
+            if($user->save()){
                 $title = 'Email Settings Changed!';
                 $isSuccess = true;
                 return view('extras.showMessage', compact('title', 'isSuccess'));

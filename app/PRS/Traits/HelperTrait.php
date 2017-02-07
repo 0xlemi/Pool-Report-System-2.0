@@ -14,11 +14,11 @@ trait HelperTrait{
                 ->format('l jS \\of F Y h:i:s A');
     }
 
-    function styleEmailPermissions($person)
+    function styleEmailPermissions($user)
     {
         $result = '';
         $num = 0;
-        if($person->get_reports_emails){
+        if($user->receive_report){
             $result .= '<span class="label label-primary">New Report is Created</span><br>';
             $num++;
         }

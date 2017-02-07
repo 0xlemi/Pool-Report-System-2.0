@@ -123,7 +123,7 @@ class TechniciansController extends ApiController
             );
 
             // Optional values
-            if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $technician->user->receive_report = $request->getReportsEmails; }
             $technician->save();
 
             // create User
@@ -222,7 +222,7 @@ class TechniciansController extends ApiController
                                 array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor_id ]
                             ));
-            if(isset($request->getReportsEmails)){ $technician->get_reports_emails = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $technician->user->receive_report = $request->getReportsEmails; }
 
             // update user
             $user = $technician->user();

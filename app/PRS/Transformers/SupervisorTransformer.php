@@ -42,7 +42,7 @@ class SupervisorTransformer extends Transformer
             'address' => $supervisor->address,
             'language' => $supervisor->language,
             'status' => $supervisor->user()->active,
-            'getReportsEmails' => $supervisor->get_reports_emails,
+            'getReportsEmails' => $supervisor->user->receive_report,
             'comments' => $supervisor->comments,
             'photo' => $photo,
         ];

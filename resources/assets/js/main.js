@@ -45,7 +45,6 @@ function isset(strVariableName) {
 
     let Permissions 	 = require('./components/Permissions.vue');
     let PhotoList 	     = require('./components/photoList.vue');
-    let emailPreference  = require('./components/email.vue');
     let FormToAjax   	= require('./directives/FormToAjax.vue');
     let countries       = require('./components/countries.vue');
     let dropdown       = require('./components/dropdown.vue');
@@ -88,12 +87,11 @@ function isset(strVariableName) {
             PhotoList,
             photo,
             deleteButton,
-            timezoneDropdown, 
+            timezoneDropdown,
             // notifications
             AllNotificationsAsReadButton,
             // settings
             Permissions,
-            emailPreference,
             billing,
             settings,
             // work orders

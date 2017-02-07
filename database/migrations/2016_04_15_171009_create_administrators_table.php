@@ -54,8 +54,6 @@ class CreateAdministratorsTable extends Migration
                 $table->string('salt_perfect')->default('Perfect'); // 3
                 $table->string('salt_high')->default('High'); // 4
                 $table->string('salt_very_high')->default('Very High'); // 5
-            // Email Preferences
-                $table->boolean('get_reports_emails')->default(0);
             // Billing
                 $table->integer('free_objects')->default(3);
                 // Stripe

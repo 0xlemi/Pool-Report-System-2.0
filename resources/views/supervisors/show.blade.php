@@ -86,7 +86,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Receives email</label>
 							<div class="col-sm-10">
-								{!! $helper->styleEmailPermissions($supervisor) !!}
+								{!! $helper->styleEmailPermissions($supervisor->user) !!}
 							</div>
 						</div>
 

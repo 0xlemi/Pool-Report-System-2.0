@@ -67,7 +67,7 @@ class AdministratorsController extends ApiController
             );
 
             // Optional values
-            if(isset($request->getReportsEmails)){ $admin->get_reports_emails = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $admin->user->receive_report = $request->getReportsEmails; }
             $admin->save();
 
             // create User
@@ -156,7 +156,7 @@ class AdministratorsController extends ApiController
                                 array_map('htmlentities', $request->all()),
                                 [ 'company_name' => $request->company ]
                             ));
-                if(isset($request->getReportsEmails)){ $admin->get_reports_emails = $request->getReportsEmails; }
+                if(isset($request->getReportsEmails)){ $admin->user->receive_report = $request->getReportsEmails; }
 
                 if(isset($request->email)){ $user->email = htmlentities($request->email); }
                 if(isset($request->password)){ $user->password = bcrypt($request->password); }

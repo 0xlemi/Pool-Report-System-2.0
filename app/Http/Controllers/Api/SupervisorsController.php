@@ -125,7 +125,7 @@ class SupervisorsController extends ApiController
             );
 
             // Optional values
-            if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $supervisor->user->receive_report = $request->getReportsEmails; }
             $supervisor->save();
 
             // create User
@@ -209,7 +209,7 @@ class SupervisorsController extends ApiController
 
             $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
 
-            if(isset($request->getReportsEmails)){ $supervisor->get_reports_emails = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $supervisor->user->receive_report = $request->getReportsEmails; }
 
             // update the user
             $user = $supervisor->user();
