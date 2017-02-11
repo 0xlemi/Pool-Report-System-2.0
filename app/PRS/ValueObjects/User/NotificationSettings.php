@@ -38,18 +38,15 @@ class NotificationSettings {
                         )
                     )
                 );
-        return [
-            (object)[
-                'type' => 'database',
-                'icon'  => 'font-icon font-icon-alarm',
-                'value'  => $notify[0],
-            ],
-            (object)[
-                'type' => 'mail',
-                'icon'  => 'font-icon font-icon-mail',
-                'value'  => $notify[1],
-            ],
-        ];
+        $result = [];
+        foreach (config('constants.notificationTypes') as $type => $icon) {
+            $result[] = (object)[
+                'type' => $type,
+                'icon'  => $icon,
+                'value'  => array_shift($notify),
+            ];
+        }
+        return $result;
     }
 
     private function buildSettings(User $user)

@@ -28,8 +28,8 @@ return [
     ],
 
     'notificationTypes' => [
-        'database',
-        'mail'    
+        'database' => "font-icon font-icon-alarm",
+        'mail' => "font-icon font-icon-mail",
     ],
 
     'notifications' => [
