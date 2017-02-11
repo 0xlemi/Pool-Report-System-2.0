@@ -72,7 +72,7 @@ class RegisterController extends Controller
             'company_name' => $data['company_name'],
             'timezone' => $data['timezone'],
         ]);
-        return $administrator->user->create([
+        return $administrator->user()->create([
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
 			'api_token' => str_random(60),

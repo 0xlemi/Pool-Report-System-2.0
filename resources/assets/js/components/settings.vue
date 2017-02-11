@@ -96,7 +96,11 @@
 
         <!-- Notifications -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
-            notifications
+            <div class="row">
+                <div class="col-md-12">
+                    <notification-settings :settings="notifications.settings"></notification-settings>
+                </div>
+            </div>
         </div>
 
         <!-- Billing -->
@@ -140,6 +144,7 @@
 
 <script>
 import accountSettings from './accountSettings.vue';
+import notificationSettings from './notificationSettings.vue';
 import changeEmail from './changeEmail.vue';
 import changePassword from './changePassword.vue';
 import customizationSettings from './customizationSettings.vue';
@@ -147,10 +152,11 @@ import billing from './billing.vue';
 import Permissions from './Permissions.vue';
 
 export default {
-    props: ['profile', 'customization', 'billing', 'permissions'],
+    props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
     components: {
         accountSettings,
         customizationSettings,
+        notificationSettings,
         changeEmail,
         changePassword,
         billing,

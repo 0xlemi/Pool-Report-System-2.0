@@ -66,7 +66,7 @@ class SeederHelpers
                             ->pluck('id')
                             ->all()
                         )
-                    )->user();
+                    )->user;
                 break;
             case '3':
                 return Technician::findOrFail(
@@ -76,7 +76,7 @@ class SeederHelpers
                             ->pluck('id')
                             ->all()
                         )
-                    )->user();
+                    )->user;
                 break;
             case '4':
                 return Client::findOrFail(
@@ -86,7 +86,7 @@ class SeederHelpers
                             ->pluck('id')
                             ->all()
                         )
-                    )->user();
+                    )->user;
                 break;
         }
 

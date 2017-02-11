@@ -51,7 +51,7 @@ class TechnicianTransformer extends Transformer
             'address' => $technician->address,
             'language' => $technician->language,
             'status' => $technician->user->active,
-            'getReportsEmails' => $technician->user->receive_report,
+            'getReportsEmails' => $technician->user->notify_report_created,
             'comments' => $technician->comments,
             'photo' => $photo,
             'supervisor' => $this->supervisorPreviewTransformer->transform($technician->supervisor()),

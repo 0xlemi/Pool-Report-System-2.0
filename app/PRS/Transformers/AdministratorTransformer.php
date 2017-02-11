@@ -26,7 +26,7 @@ class AdministratorTransformer extends Transformer
             'website' => $admin->website,
             'facebook' => $admin->facebook,
             'twitter' => $admin->twitter,
-            'getReportsEmails' => $admin->user->receive_report,
+            'getReportsEmails' => $admin->user->notify_report_created,
             'photo' => $photo,
         ];
         $permissions = [

@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
+use App\PRS\ValueObjects\User\NotificationSettings;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
@@ -126,6 +127,11 @@ class User extends Authenticatable
     public function type()
     {
         return new Type($this->userable_type);
+    }
+
+    public function notificationSettings()
+    {
+        return new notificationSettings($this);
     }
 
 

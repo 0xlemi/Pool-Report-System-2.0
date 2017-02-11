@@ -18,7 +18,7 @@ trait HelperTrait{
     {
         $result = '';
         $num = 0;
-        if($user->receive_report){
+        if($user->notify_report_created){
             $result .= '<span class="label label-primary">New Report is Created</span><br>';
             $num++;
         }

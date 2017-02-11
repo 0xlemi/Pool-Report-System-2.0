@@ -57,6 +57,9 @@ class SettingsController extends PageController
             'twitter' => $admin->twitter,
             'timezoneList' => timezoneList(),
         ];
+        $notifications = (object)[
+            'settings' => $user->notificationSettings()->settings()
+        ];
         $billing = (object)[
             'subscribed' => $admin->subscribed('main'),
             'lastFour' => $admin->card_last_four,
@@ -69,8 +72,7 @@ class SettingsController extends PageController
             'supervisor' => $admin->permissions()->permissionsDivided('sup'),
             'technician' => $admin->permissions()->permissionsDivided('tech'),
         ];
-
-        return view('settings.index', compact('profile', 'customization', 'billing', 'permissions'));
+        return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
 
     public function profile(Request $request)
@@ -171,14 +173,14 @@ class SettingsController extends PageController
 
     public function notifications(Request $request)
     {
-        //
-        // $this->validate($request, [
-        //     'id' => [
-        //         'required',
-        //         'max:255',
-        //         'regex:/\w+\_\w+\_\w+/',
-        //         ],
-        // ]);
+
+        $this->validate($request, [
+            'id' => [
+                'required',
+                'max:255',
+                'regex:/\w+\_\w+\_\w+/',
+                ],
+        ]);
         //
         // $person = $this->getUser()->userable();
         // $attributes = $person->getAttributes();

@@ -47,7 +47,7 @@ class HomeController extends PageController
                 return redirect('/settings');
             }
 
-            $getReportsEmails = $user->receive_report;
+            $getReportsEmails = $user->notify_report_created;
 
             return view('extras.emailSettings', compact('getReportsEmails', 'token'));
         }
@@ -59,7 +59,7 @@ class HomeController extends PageController
         if($object = $this->urlSigner->validateToken($request->token)){
             $user = User::where('email', $object->email)->get()->first();
 
-            $user->receive_report = ($request->get_reports_emails) ? true : false;
+            $user->notify_report_created = ($request->get_reports_emails) ? true : false;
             if($user->save()){
                 $title = 'Email Settings Changed!';
                 $isSuccess = true;

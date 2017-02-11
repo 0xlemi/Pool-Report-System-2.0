@@ -9,6 +9,7 @@
         <settings
             :profile="{{ json_encode($profile) }}"
             :customization="{{ json_encode($customization) }}"
+            :notifications="{{ json_encode($notifications) }}"
             :billing="{{ json_encode($billing) }}"
             :permissions="{{ json_encode($permissions) }}">
         </settings>

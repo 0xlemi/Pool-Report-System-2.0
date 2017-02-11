@@ -35,7 +35,7 @@ class AdministratorsSeeder extends Seeder
     		'timezone' => 'America/Mazatlan',
     	]);
 
-        $admin1->user->create([
+        $admin1->user()->create([
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
             'activated' => 1,
@@ -52,7 +52,7 @@ class AdministratorsSeeder extends Seeder
     		'timezone' => 'America/Mazatlan',
     	]);
 
-    	$admin2->user->create([
+    	$admin2->user()->create([
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
             'activated' => 1,

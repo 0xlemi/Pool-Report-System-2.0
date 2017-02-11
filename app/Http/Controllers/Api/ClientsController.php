@@ -94,7 +94,7 @@ class ClientsController extends ApiController
             );
 
             // Optional values
-            if(isset($request->getReportsEmails)){ $client->user->receive_report = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $client->user->notify_report_created = $request->getReportsEmails; }
             $client->save();
 
             // Crete the User
@@ -187,7 +187,7 @@ class ClientsController extends ApiController
             // set client values
             $client->fill(array_map('htmlentities', $request->except('admin_id','add_service_ids', 'remove_service_ids')));
 
-            if(isset($request->getReportsEmails)){ $client->user->receive_report = $request->getReportsEmails; }
+            if(isset($request->getReportsEmails)){ $client->user->notify_report_created = $request->getReportsEmails; }
 
             // set user values
             $user = $client->user;

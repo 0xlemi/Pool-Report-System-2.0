@@ -48,7 +48,7 @@ class ClientTransformer extends Transformer
             'cellphone' => $client->cellphone,
             'type' => ($client->type == 1) ? 'Owner' : 'House Admin',
             'language' => $client->language,
-            'getReportsEmails' => $client->user->receive_report,
+            'getReportsEmails' => $client->user->notify_report_created,
             'comments' => $client->comments,
             'photo' => $photo,
             'services' => $services,
