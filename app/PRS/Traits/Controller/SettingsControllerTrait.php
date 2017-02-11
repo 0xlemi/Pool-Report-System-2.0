@@ -17,11 +17,7 @@ trait SettingsControllerTrait{
         }
 
         $this->validate($request, [
-            'id' => [
-                'required',
-                'max:255',
-                'regex:/\w+\_\w+\_\w+/',
-                ],
+            'id' => 'required|max:255|validPermission',
             'checked' => 'required',
         ]);
 

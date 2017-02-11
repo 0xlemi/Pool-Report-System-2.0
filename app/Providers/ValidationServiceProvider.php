@@ -18,6 +18,10 @@ class ValidationServiceProvider extends ServiceProvider
     public function boot()
     {
         // Validation condition to language is supported
+        Validator::extend('validPermission', 'App\PRS\Validators\ValidPermission@validate');
+        Validator::replacer('validPermission', 'App\PRS\Validators\ValidPermission@message');
+
+        // Validation condition to language is supported
         Validator::extend('validLanguage', 'App\PRS\Validators\ValidLanguage@validate');
         Validator::replacer('validLanguage', 'App\PRS\Validators\ValidLanguage@message');
 
