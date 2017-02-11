@@ -173,13 +173,10 @@ class SettingsController extends PageController
 
     public function notifications(Request $request)
     {
-
         $this->validate($request, [
-            'id' => [
-                'required',
-                'max:255',
-                'regex:/\w+\_\w+\_\w+/',
-                ],
+            'name' => 'required|max:255|validNotification',
+            'type' => 'required|max:255|validNotificationType',
+            'value' => 'required|boolean'
         ]);
         //
         // $person = $this->getUser()->userable();

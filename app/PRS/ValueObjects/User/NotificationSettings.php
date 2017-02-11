@@ -54,9 +54,12 @@ class NotificationSettings {
 
     private function buildSettings(User $user)
     {
-        return [
-            (object)[ 'label' => "Report Created" , 'name' => 'notify_report_created', 'buttons' => $this->getButtons($user->notify_report_created) ],
-        ];
+        $notifications = config('constants.notifications');
+        $result = [];
+        foreach($notifications as $name => $tag) {
+            $result[] = (object)[ 'tag' => $tag , 'name' => $name, 'buttons' => $this->getButtons($user->$name)];
+        }
+        return $result;
 
     }
 

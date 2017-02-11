@@ -1,6 +1,6 @@
 <template>
 <div class="form-group row" v-for="setting in settings">
-    <label class="col-sm-2 form-control-label semibold">{{ setting.label }}</label>
+    <label class="col-sm-2 form-control-label semibold">{{ setting.tag }}</label>
     <div class="col-sm-10">
         <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
             <button v-for="button in setting.buttons"

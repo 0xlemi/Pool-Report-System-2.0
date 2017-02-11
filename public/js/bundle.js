@@ -31224,18 +31224,21 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
     props: ['settings'],
     methods: {
-        changeButtonValue: function changeButtonValue(name, button, value) {
-            button.value = !value;
-            // // get the Selected Setting
-            // let selectedSetting = this.settings.find(settings => settings.name === name)
-            // let selectedSettingId = this.settings.indexOf(selectedSetting);
-            //
-            // // find what button was clicked in that setting
-            // let selectedButton = selectedSetting.buttons.find(button => button.type === type)
-            // let selectedButtonId = selectedSetting.buttons.indexOf(selectedButton);
-            //
-            // // toggle button class selection
-            // this.settings[selectedSettingId].buttons[selectedButtonId].value = value;
+        changeButtonValue: function changeButtonValue(name, type, value) {
+            // get the Selected Setting
+            var selectedSetting = this.settings.find(function (settings) {
+                return settings.name === name;
+            });
+            var selectedSettingId = this.settings.indexOf(selectedSetting);
+
+            // find what button was clicked in that setting
+            var selectedButton = selectedSetting.buttons.find(function (button) {
+                return button.type === type;
+            });
+            var selectedButtonId = selectedSetting.buttons.indexOf(selectedButton);
+
+            // toggle button class selection
+            this.settings[selectedSettingId].buttons[selectedButtonId].value = value;
         },
         sendRequest: function sendRequest(name, type, value) {
             var _this = this;
@@ -31250,14 +31253,13 @@ exports.default = {
                 // if success do nothing
             }, function (response) {
                 _this.changeButtonValue(name, type, value);
-                // this.$dispatch('permissionError');
-                console.log("There was an error");
+                // this.$dispatch('notificationError');
             });
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"setting in settings\">\n    <label class=\"col-sm-2 form-control-label semibold\">{{ setting.label }}</label>\n    <div class=\"col-sm-10\">\n        <div class=\"btn-group btn-group-sm\" role=\"group\" aria-label=\"Basic example\">\n            <button v-for=\"button in setting.buttons\" @click=\"sendRequest(setting.name, button, button.value)\" type=\"button\" class=\"btn\" :class=\"(button.value) ? 'btn-default' : 'btn-default-outline'\">\n                <span :class=\"button.icon\"></span>\n            </button>\n\t\t</div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"setting in settings\">\n    <label class=\"col-sm-2 form-control-label semibold\">{{ setting.tag }}</label>\n    <div class=\"col-sm-10\">\n        <div class=\"btn-group btn-group-sm\" role=\"group\" aria-label=\"Basic example\">\n            <button v-for=\"button in setting.buttons\" @click=\"sendRequest(setting.name, button.type, button.value)\" type=\"button\" class=\"btn\" :class=\"(button.value) ? 'btn-default' : 'btn-default-outline'\">\n                <span :class=\"button.icon\"></span>\n            </button>\n\t\t</div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

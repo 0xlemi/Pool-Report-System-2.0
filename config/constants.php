@@ -27,6 +27,15 @@ return [
         'longitude' => '-109.705866',
     ],
 
+    'notificationTypes' => [
+        'database',
+        'mail'    
+    ],
+
+    'notifications' => [
+        'notify_report_created' => "Report is Created",
+    ],
+
     'permissions' => [
         'sup_report_view' => "Show Reports",
         'sup_report_create' => "Create New Report",

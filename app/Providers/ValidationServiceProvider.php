@@ -17,7 +17,15 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // Validation condition to language is supported
+        // Validation condition to check if notification type is vaild
+        Validator::extend('validNotificationType', 'App\PRS\Validators\ValidNotificationType@validate');
+        Validator::replacer('validNotificationType', 'App\PRS\Validators\ValidNotificationType@message');
+
+        // Validation condition to check if notification is vaild
+        Validator::extend('validNotification', 'App\PRS\Validators\ValidNotification@validate');
+        Validator::replacer('validNotification', 'App\PRS\Validators\ValidNotification@message');
+
+        // Validation condition to check if permission is vaild
         Validator::extend('validPermission', 'App\PRS\Validators\ValidPermission@validate');
         Validator::replacer('validPermission', 'App\PRS\Validators\ValidPermission@message');
 
