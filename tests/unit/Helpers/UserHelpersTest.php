@@ -30,6 +30,44 @@ class UserHelpersTest extends TestCase
     }
 
     /** @test */
+    public function checkIfItHasPermissinGivenTheNameAndType()
+    {
+        // Given
+        $mockUser = Mockery::mock(App\User::class);
+        $mockUser->shouldReceive('getAttribute')->with('notify_random_0')->andReturn(0);
+        $mockUser->shouldReceive('getAttribute')->with('notify_random_1')->andReturn(1);
+        $mockUser->shouldReceive('getAttribute')->with('notify_random_2')->andReturn(2);
+        $mockUser->shouldReceive('getAttribute')->with('notify_random_3')->andReturn(3);
+        $name0 = 'notify_random_0';
+        $name1 = 'notify_random_1';
+        $name2 = 'notify_random_2';
+        $name3 = 'notify_random_3';
+        $type0 = 'database';
+        $type1 = 'mail';
+
+        // When
+        $userHelpers = new UserHelpers;
+        $false1 = $userHelpers->hasPermission($mockUser, $name0, 'database');
+        $false2 = $userHelpers->hasPermission($mockUser, $name0, 'mail');
+        $true1 = $userHelpers->hasPermission($mockUser, $name1, 'database');
+        $false3 = $userHelpers->hasPermission($mockUser, $name1, 'mail');
+        $false4 = $userHelpers->hasPermission($mockUser, $name2, 'database');
+        $true2 = $userHelpers->hasPermission($mockUser, $name2, 'mail');
+        $true3 = $userHelpers->hasPermission($mockUser, $name3, 'database');
+        $true4 = $userHelpers->hasPermission($mockUser, $name3, 'mail');
+
+        // Then
+        $this->assertTrue($true1);
+        $this->assertTrue($true2);
+        $this->assertTrue($true3);
+        $this->assertTrue($true4);
+        $this->assertFalse($false1);
+        $this->assertFalse($false2);
+        $this->assertFalse($false3);
+        $this->assertFalse($false4);
+    }
+
+    /** @test */
     public function getNotficationPermissionsNumberFromArray()
     {
         // Given

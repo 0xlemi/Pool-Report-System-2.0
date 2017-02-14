@@ -55,6 +55,13 @@ class UserHelpers
         return $this->notificationPermissionToNum($notificationPermissonsArray);
     }
 
+    public function hasPermission(User $user, string $name, string $type)
+    {
+        $notificationPermissonsArray = $this->notificationPermissonToArray($user->$name);
+        $positonOfType = $this->notificationTypePosition($type);
+        return (bool) $notificationPermissonsArray[$positonOfType];
+    }
+
     // get the notifacations that are permited in array format from integer
     public function notificationPermissonToArray(int $num)
     {
