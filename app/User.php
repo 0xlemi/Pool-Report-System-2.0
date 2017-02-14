@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
 use App\PRS\ValueObjects\User\NotificationSettings;
+use App\PRS\Helpers\UserHelpers;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
@@ -131,7 +132,7 @@ class User extends Authenticatable
 
     public function notificationSettings()
     {
-        return new notificationSettings($this);
+        return new notificationSettings($this, resolve(UserHelpers::class));
     }
 
 

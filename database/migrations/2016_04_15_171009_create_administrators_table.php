@@ -62,6 +62,7 @@ class CreateAdministratorsTable extends Migration
                 $table->string('card_last_four')->nullable();
                 $table->timestamp('trial_ends_at')->nullable();
             // Permissions
+            // IMPORTANT: should be synced with the constants
 
                 // Report
                 $table->boolean('sup_report_view')->default(1);

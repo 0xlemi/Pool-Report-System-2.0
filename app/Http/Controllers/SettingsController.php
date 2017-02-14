@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 
 use App\PRS\Traits\Controller\SettingsControllerTrait;
+use App\PRS\Helpers\UserHelpers;
 
 use JavaScript;
 use Schema;
@@ -58,7 +59,7 @@ class SettingsController extends PageController
             'timezoneList' => timezoneList(),
         ];
         $notifications = (object)[
-            'settings' => $user->notificationSettings()->settings()
+            'settings' => $user->notificationSettings()->getAll()
         ];
         $billing = (object)[
             'subscribed' => $admin->subscribed('main'),
@@ -171,34 +172,28 @@ class SettingsController extends PageController
 
     }
 
-    public function notifications(Request $request)
+    public function notifications(Request $request, UserHelpers $userHelper)
     {
         $this->validate($request, [
             'name' => 'required|max:255|validNotification',
             'type' => 'required|max:255|validNotificationType',
             'value' => 'required|boolean'
         ]);
-        //
-        // $person = $this->getUser()->userable();
-        // $attributes = $person->getAttributes();
-        //
-        // $columnName = $request->id;
-        // $checked_value = strtolower($request->checked);
-        // $checked = ($checked_value  == 'true' || $checked_value  == '1') ? true : false;
-        //
-        // //check whether the id they are sending us is a real email preference
-        // if(isset($attributes[$columnName]))
-        // {
-        //     $person->$columnName = $checked;
-        //     if($person->save()){
-        //         $checkedAfter = ($person->$columnName) ? 'active' : 'inactive';
-        //         return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
-        //     }
-        //     return $this->respondInternalError('Error while persisting the permission');
-        // }
-        // return $this->respondNotFound('There is no permission with that id');
 
-
+        // $user = $request->user();
+        // $name = $request->name;
+        // $type = $request->type;
+        // $value = !$request->value; // the value is backwards
+        //
+        // $newNotificationNumber = $userHelper->notificationChanged($user, $name, $type, $value);
+        //
+        // $user->$name = $newNotificationNumber;
+        // $user->save();
+        //
+        // $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
+        // $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
+        //
+        // return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
     }
 
     public function subscribe(Request $request)

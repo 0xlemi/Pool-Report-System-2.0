@@ -2,42 +2,35 @@
 
 namespace App\PRS\ValueObjects\User;
 use App\User;
+use App\PRS\Helpers\UserHelpers;
 
 
 class NotificationSettings {
 
 
     protected $settings;
+    protected $userHelper;
 
-    public function __construct(User $user)
+    public function __construct(User $user, UserHelpers $userHelper)
     {
+        $this->userHelper = $userHelper;
         $this->settings = $this->buildSettings($user);
     }
 
-    public function settings()
+    public function getAll()
     {
         return $this->settings;
+    }
+
+    public function get($name)
+    {
+        return $this->getButtons($user->$name);
     }
 
     // Get buttons settings from integer
     protected function getButtons($num)
     {
-        // Transform ints to booleans
-        $notify = array_map(function($num){
-                    return (boolean) $num;
-                },
-                    // reverse the order so it starts at monday
-                    array_reverse(
-                        // make it an array
-                        str_split(
-                            // fill missing zeros
-                            sprintf( "%07d",
-                                // transform num to binary
-                                decbin($num)
-                            )
-                        )
-                    )
-                );
+        $notify = $this->userHelper->notificationPermissonToArray($num);
         $result = [];
         foreach (config('constants.notificationTypes') as $type => $icon) {
             $result[] = (object)[
