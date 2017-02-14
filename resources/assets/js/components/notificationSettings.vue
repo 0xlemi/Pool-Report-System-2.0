@@ -2,7 +2,7 @@
 <div class="form-group row" v-for="setting in settings">
     <label class="col-sm-2 form-control-label semibold">{{ setting.tag }}</label>
     <div class="col-sm-10">
-        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+        <div class="btn-group btn-group-sm" id="notificationButtons" role="group" aria-label="Basic example">
             <button v-for="button in setting.buttons"
                 @click="sendRequest(setting.name, button.type, button.value)"
                 type="button" class="btn"
@@ -33,16 +33,17 @@ export default {
         },
         sendRequest(name, type, value){
             // this.$dispatch('clearError');
+            $("#notificationButtons").children().prop('disabled',true);
             this.changeButtonValue(name, type, !value);
             this.$http.post(Laravel.url+'settings/notifications', {
                 'name': name,
                 'type': type,
                 'value': value,
             }).then((response) => {
-                // if success do nothing
+                $("#notificationButtons").children().prop('disabled',false);
             }, (response) => {
                 this.changeButtonValue(name, type, value);
-                // this.$dispatch('notificationError');
+                $("#notificationButtons").children().prop('disabled',false);
             });
         }
     }

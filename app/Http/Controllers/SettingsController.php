@@ -180,20 +180,20 @@ class SettingsController extends PageController
             'value' => 'required|boolean'
         ]);
 
-        // $user = $request->user();
-        // $name = $request->name;
-        // $type = $request->type;
-        // $value = !$request->value; // the value is backwards
-        //
-        // $newNotificationNumber = $userHelper->notificationChanged($user, $name, $type, $value);
-        //
-        // $user->$name = $newNotificationNumber;
-        // $user->save();
-        //
-        // $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
-        // $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
-        //
-        // return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
+        $user = $request->user();
+        $name = $request->name;
+        $type = $request->type;
+        $value = !$request->value; // the value is backwards
+
+        $newNotificationNumber = $userHelper->notificationChanged($user, $name, $type, $value);
+
+        $user->$name = $newNotificationNumber;
+        $user->save();
+
+        $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
+        $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
+
+        return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
     }
 
     public function subscribe(Request $request)

@@ -39,11 +39,19 @@ class UserHelpers
         }
     }
 
+    /**
+     * Get the number of the notification setting if you only change one type
+     * @param  User   $user
+     * @param  string $name  The notification setting
+     * @param  string $type  notification type
+     * @param  bool   $value
+     * @return int
+     */
     public function notificationChanged(User $user, string $name, string $type, bool $value)
     {
         $notificationPermissonsArray  = $this->notificationPermissonToArray($user->$name);
         $positonOfTypeToChange = $this->notificationTypePosition($type);
-        $notificationPermissonsArray[$positonOfTypeToChange] = $value;
+        $notificationPermissonsArray[$positonOfTypeToChange] = (int) $value;
         return $this->notificationPermissionToNum($notificationPermissonsArray);
     }
 
@@ -54,7 +62,7 @@ class UserHelpers
         $numOfTypes = count(config('constants.notificationTypes'));
         // Transform ints to booleans
         return array_map(function($num){
-                    return (boolean) $num;
+                    return (int) $num;
                 },
                     // reverse the order so it starts at monday
                     array_reverse(
@@ -70,12 +78,25 @@ class UserHelpers
                 );
     }
 
+    /**
+     * Get the index possition of the type depending on
+     * the config constant notifacation types array
+     * @param  string $type
+     * @return integer        The index
+     * tested
+     */
     public function notificationTypePosition(string $type)
     {
         return array_search($type ,array_keys(config('constants.notificationTypes')));
     }
 
-    protected function notificationPermissionToNum(array $array)
+    /**
+     * Transform binary array to number
+     * @param  array  $array
+     * @return int
+     * tested
+     */
+    public function notificationPermissionToNum(array $array)
     {
         $binaryNumber = implode('', array_reverse($array));
         return bindec($binaryNumber);

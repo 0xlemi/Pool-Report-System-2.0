@@ -98,7 +98,9 @@
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
             <div class="row">
                 <div class="col-md-12">
-                    <notification-settings :settings="notifications.settings"></notification-settings>
+                    <div class="col-md-12">
+                        <notification-settings :settings="notifications.settings"></notification-settings>
+                    </div>
                 </div>
             </div>
         </div>
