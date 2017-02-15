@@ -35,7 +35,11 @@ class NewServiceNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_service_created', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

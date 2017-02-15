@@ -33,7 +33,11 @@ class NewPaymentNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_payment_created', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

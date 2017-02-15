@@ -35,7 +35,11 @@ class AddedEquipmentNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_equipment_added', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

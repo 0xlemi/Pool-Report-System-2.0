@@ -35,7 +35,11 @@ class AddedWorkNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_work_added', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

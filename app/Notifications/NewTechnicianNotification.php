@@ -35,7 +35,11 @@ class NewTechnicianNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_technician_created', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

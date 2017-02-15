@@ -35,7 +35,11 @@ class NewWorkOrderNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_workorder_created', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

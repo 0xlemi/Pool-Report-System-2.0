@@ -33,7 +33,11 @@ class NewInvoiceNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_invoice_created', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**

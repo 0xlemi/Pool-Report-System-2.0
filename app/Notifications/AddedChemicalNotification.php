@@ -35,7 +35,11 @@ class AddedChemicalNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $channels = [];
+        if($notifiable->notificationSettings->hasPermission('notify_chemical_added', 'database')){
+        $channels[] = 'database';
+        }
+        return $channels;
     }
 
     /**
