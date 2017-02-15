@@ -18,7 +18,7 @@ trait HelperTrait{
     {
         $result = '';
         $num = 0;
-        if($user->notify_report_created){
+        if($user->notificationSettings->hasPermission('notify_report_created', 'mail')){
             $result .= '<span class="label label-primary">New Report is Created</span><br>';
             $num++;
         }

@@ -66,10 +66,6 @@ class AdministratorsController extends ApiController
                     )
             );
 
-            // Optional values
-            if(isset($request->getReportsEmails)){ $admin->user->notify_report_created = $request->getReportsEmails; }
-            $admin->save();
-
             // create User
             $user = User::create([
                 'email' => htmlentities($request->email),
@@ -78,6 +74,15 @@ class AdministratorsController extends ApiController
                 'userable_type' => 'App\Administrator',
                 'userable_id' => $admin->id,
             ]);
+
+            // Optional values
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // add photo
             if($request->photo){
@@ -156,13 +161,17 @@ class AdministratorsController extends ApiController
                                 array_map('htmlentities', $request->all()),
                                 [ 'company_name' => $request->company ]
                             ));
-                if(isset($request->getReportsEmails)){ $admin->user->notify_report_created = $request->getReportsEmails; }
+                $admin->save();
 
                 if(isset($request->email)){ $user->email = htmlentities($request->email); }
                 if(isset($request->password)){ $user->password = bcrypt($request->password); }
-
-                $admin->save();
-                $user->save();
+                if(isset($request->getReportsEmails))
+                {
+                    $value = $request->getReportsEmails;
+                    $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                    $user->notify_report_created = $newNotificationNumber;
+                    $user->save();
+                }
 
                 // add photo
                 if($request->photo){

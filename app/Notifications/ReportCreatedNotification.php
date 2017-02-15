@@ -36,7 +36,7 @@ class ReportCreatedNotification extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         $channels = [];
-        if($notifiable->notify_report_created){
+        if($notifiable->notificationSettings->hasPermission('notify_report_created', 'mail')){
         $channels[] = RealMailChannel::class;
         }
         return $channels;

@@ -11,6 +11,7 @@ use DB;
 use Carbon\Carbon;
 use App\User;
 use App\PRS\Classes\UrlSigner;
+use App\PRS\Helpers\UserHelpers;
 
 class HomeController extends PageController
 {
@@ -47,19 +48,21 @@ class HomeController extends PageController
                 return redirect('/settings');
             }
 
-            $getReportsEmails = $user->notify_report_created;
+            $getReportsEmails = $user->notificationSettings->hasPermission('notify_report_created', 'mail');
 
             return view('extras.emailSettings', compact('getReportsEmails', 'token'));
         }
         return redirect('/login');
     }
 
-    public function changeEmailOptions(Request $request)
+    public function changeEmailOptions(Request $request, UserHelpers $userHelpers)
     {
         if($object = $this->urlSigner->validateToken($request->token)){
             $user = User::where('email', $object->email)->get()->first();
 
-            $user->notify_report_created = ($request->get_reports_emails) ? true : false;
+            $value = ($request->get_reports_emails) ? true : false;
+            $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+            $user->notify_report_created = $newNotificationNumber;
             if($user->save()){
                 $title = 'Email Settings Changed!';
                 $isSuccess = true;

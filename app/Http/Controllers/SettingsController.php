@@ -185,8 +185,7 @@ class SettingsController extends PageController
         $type = $request->type;
         $value = !$request->value; // the value is backwards
 
-        $newNotificationNumber = $userHelper->notificationChanged($user, $name, $type, $value);
-
+        $newNotificationNumber = $user->notificationSettings->notificationChanged($name, $type, $value);
         $user->$name = $newNotificationNumber;
         $user->save();
 

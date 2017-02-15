@@ -122,10 +122,6 @@ class TechniciansController extends ApiController
                     )
             );
 
-            // Optional values
-            if(isset($request->getReportsEmails)){ $technician->user->notify_report_created = $request->getReportsEmails; }
-            $technician->save();
-
             // create User
             $technician_id = $admin->techniciansInOrder('desc')->first()->id;
             $user = User::create([
@@ -135,6 +131,15 @@ class TechniciansController extends ApiController
                 'userable_type' => 'App\Technician',
                 'userable_id' => $technician_id,
             ]);
+
+            // Optional values
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // add photo
             if($request->photo){
@@ -222,13 +227,19 @@ class TechniciansController extends ApiController
                                 array_map('htmlentities', $request->all()),
                                 [ 'supervisor_id' => $supervisor_id ]
                             ));
-            if(isset($request->getReportsEmails)){ $technician->user->notify_report_created = $request->getReportsEmails; }
 
             // update user
             $user = $technician->user;
             if($request->has('username')){ $user->email = htmlentities($request->username); }
             if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // persist
             $technician->save();

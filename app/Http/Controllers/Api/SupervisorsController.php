@@ -124,10 +124,6 @@ class SupervisorsController extends ApiController
                         )
             );
 
-            // Optional values
-            if(isset($request->getReportsEmails)){ $supervisor->user->notify_report_created = $request->getReportsEmails; }
-            $supervisor->save();
-
             // create User
             $supervisor_id = $admin->supervisorsInOrder('desc')->first()->id;
             $user = User::create([
@@ -137,6 +133,15 @@ class SupervisorsController extends ApiController
                 'userable_type' => 'App\Supervisor',
                 'userable_id' => $supervisor_id,
             ]);
+
+            // Optional values
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // add photo
             if($request->photo){
@@ -209,13 +214,19 @@ class SupervisorsController extends ApiController
 
             $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
 
-            if(isset($request->getReportsEmails)){ $supervisor->user->notify_report_created = $request->getReportsEmails; }
-
             // update the user
             $user = $supervisor->user;
             if($request->has('email')){ $user->email = htmlentities($request->email); }
             if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
+
 
             $supervisor->save();
             $user->save();

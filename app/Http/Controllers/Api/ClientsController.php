@@ -93,10 +93,6 @@ class ClientsController extends ApiController
                     )
             );
 
-            // Optional values
-            if(isset($request->getReportsEmails)){ $client->user->notify_report_created = $request->getReportsEmails; }
-            $client->save();
-
             // Crete the User
             $client_id = $admin->clientsInOrder('desc')->first()->id;
             $user = User::create([
@@ -106,6 +102,15 @@ class ClientsController extends ApiController
                 'userable_type' => 'App\Client',
                 'userable_id' => $client_id,
             ]);
+
+            // Optional values
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // Add Photo to Client
             if($request->photo){
@@ -187,12 +192,17 @@ class ClientsController extends ApiController
             // set client values
             $client->fill(array_map('htmlentities', $request->except('admin_id','add_service_ids', 'remove_service_ids')));
 
-            if(isset($request->getReportsEmails)){ $client->user->notify_report_created = $request->getReportsEmails; }
-
             // set user values
             $user = $client->user;
             if(isset($request->email)){ $user->email = htmlentities($request->email); }
             if(isset($request->password)){ $user->password = bcrypt($request->password); }
+            if(isset($request->getReportsEmails))
+            {
+                $value = $request->getReportsEmails;
+                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
+                $user->notify_report_created = $newNotificationNumber;
+                $user->save();
+            }
 
             // set photo
             if($request->photo){
