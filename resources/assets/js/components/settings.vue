@@ -98,6 +98,7 @@
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
             <div class="row">
                 <div class="col-md-12">
+					<alert type="danger" :message="notificationAlertMessage" :active="notificationAlertActive"></alert>
                     <div class="col-md-12">
                         <notification-settings :settings="notifications.settings"></notification-settings>
                     </div>
@@ -152,6 +153,7 @@ import changePassword from './changePassword.vue';
 import customizationSettings from './customizationSettings.vue';
 import billing from './billing.vue';
 import Permissions from './Permissions.vue';
+import alert from './alert.vue';
 
 export default {
     props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
@@ -162,8 +164,25 @@ export default {
         changeEmail,
         changePassword,
         billing,
-        Permissions
-    }
+        Permissions,
+        alert
+    },
+    data(){
+		return {
+			notificationAlertMessage : '',
+			notificationAlertActive : false,
+		}
+	},
+    events: {
+		notificationClearError(){
+			this.notificationAlertMessage = '';
+			this.notificationAlertActive = false;
+		},
+		notificationPermissionError(){
+			this.notificationAlertMessage = "The notification setting was not updated, please try again."
+			this.notificationAlertActive = true;
+		}
+	}
 
 }
 </script>

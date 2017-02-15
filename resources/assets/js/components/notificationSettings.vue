@@ -32,7 +32,7 @@ export default {
             this.settings[selectedSettingId].buttons[selectedButtonId].value = value;
         },
         sendRequest(name, type, value){
-            // this.$dispatch('clearError');
+            this.$dispatch('notificationClearError');
             $("#notificationButtons"+name).children().prop('disabled',true);
             this.changeButtonValue(name, type, !value);
             this.$http.post(Laravel.url+'settings/notifications', {
@@ -42,6 +42,7 @@ export default {
             }).then((response) => {
                 $("#notificationButtons"+name).children().prop('disabled',false);
             }, (response) => {
+                this.$dispatch('notificationPermissionError');
                 this.changeButtonValue(name, type, value);
                 $("#notificationButtons"+name).children().prop('disabled',false);
             });

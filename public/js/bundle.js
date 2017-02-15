@@ -31243,7 +31243,7 @@ exports.default = {
         sendRequest: function sendRequest(name, type, value) {
             var _this = this;
 
-            // this.$dispatch('clearError');
+            this.$dispatch('notificationClearError');
             $("#notificationButtons" + name).children().prop('disabled', true);
             this.changeButtonValue(name, type, !value);
             this.$http.post(Laravel.url + 'settings/notifications', {
@@ -31253,6 +31253,7 @@ exports.default = {
             }).then(function (response) {
                 $("#notificationButtons" + name).children().prop('disabled', false);
             }, function (response) {
+                _this.$dispatch('notificationPermissionError');
                 _this.changeButtonValue(name, type, value);
                 $("#notificationButtons" + name).children().prop('disabled', false);
             });
@@ -31892,7 +31893,7 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 
 var _accountSettings = require('./accountSettings.vue');
@@ -31923,23 +31924,45 @@ var _Permissions = require('./Permissions.vue');
 
 var _Permissions2 = _interopRequireDefault(_Permissions);
 
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
-    components: {
-        accountSettings: _accountSettings2.default,
-        customizationSettings: _customizationSettings2.default,
-        notificationSettings: _notificationSettings2.default,
-        changeEmail: _changeEmail2.default,
-        changePassword: _changePassword2.default,
-        billing: _billing2.default,
-        Permissions: _Permissions2.default
-    }
+	props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
+	components: {
+		accountSettings: _accountSettings2.default,
+		customizationSettings: _customizationSettings2.default,
+		notificationSettings: _notificationSettings2.default,
+		changeEmail: _changeEmail2.default,
+		changePassword: _changePassword2.default,
+		billing: _billing2.default,
+		Permissions: _Permissions2.default,
+		alert: _alert2.default
+	},
+	data: function data() {
+		return {
+			notificationAlertMessage: '',
+			notificationAlertActive: false
+		};
+	},
+
+	events: {
+		notificationClearError: function notificationClearError() {
+			this.notificationAlertMessage = '';
+			this.notificationAlertActive = false;
+		},
+		notificationPermissionError: function notificationPermissionError() {
+			this.notificationAlertMessage = "The notification setting was not updated, please try again.";
+			this.notificationAlertActive = true;
+		}
+	}
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings :name=\"profile.name\" :last-name=\"profile.lastName\">\n                        </account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <customization-settings :company-name=\"customization.companyName\" :timezone=\"customization.timezone\" :website=\"customization.website\" :facebook=\"customization.facebook\" :twitter=\"customization.twitter\" :timezone-list=\"customization.timezoneList\">\n                    </customization-settings>\n                </div>\n            </div>\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <notification-settings :settings=\"notifications.settings\"></notification-settings>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings :name=\"profile.name\" :last-name=\"profile.lastName\">\n                        </account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <customization-settings :company-name=\"customization.companyName\" :timezone=\"customization.timezone\" :website=\"customization.website\" :facebook=\"customization.facebook\" :twitter=\"customization.twitter\" :timezone-list=\"customization.timezoneList\">\n                    </customization-settings>\n                </div>\n            </div>\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n\t\t\t\t\t<alert type=\"danger\" :message=\"notificationAlertMessage\" :active=\"notificationAlertActive\"></alert>\n                    <div class=\"col-md-12\">\n                        <notification-settings :settings=\"notifications.settings\"></notification-settings>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31950,7 +31973,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":189,"./accountSettings.vue":190,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"./customizationSettings.vue":202,"./notificationSettings.vue":214,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
+},{"./Permissions.vue":189,"./accountSettings.vue":190,"./alert.vue":192,"./billing.vue":193,"./changeEmail.vue":194,"./changePassword.vue":195,"./customizationSettings.vue":202,"./notificationSettings.vue":214,"vue":180,"vue-hot-reload-api":177}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
