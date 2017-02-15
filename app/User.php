@@ -130,7 +130,7 @@ class User extends Authenticatable
         return new Type($this->userable_type);
     }
 
-    public function notificationSettings()
+    public function getNotificationSettingsAttribute()
     {
         return new notificationSettings($this, resolve(UserHelpers::class));
     }

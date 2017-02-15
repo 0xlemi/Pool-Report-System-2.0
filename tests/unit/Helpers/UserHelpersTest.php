@@ -30,44 +30,6 @@ class UserHelpersTest extends TestCase
     }
 
     /** @test */
-    public function checkIfItHasPermissinGivenTheNameAndType()
-    {
-        // Given
-        $mockUser = Mockery::mock(App\User::class);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_0')->andReturn(0);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_1')->andReturn(1);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_2')->andReturn(2);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_3')->andReturn(3);
-        $name0 = 'notify_random_0';
-        $name1 = 'notify_random_1';
-        $name2 = 'notify_random_2';
-        $name3 = 'notify_random_3';
-        $type0 = 'database';
-        $type1 = 'mail';
-
-        // When
-        $userHelpers = new UserHelpers;
-        $false1 = $userHelpers->hasPermission($mockUser, $name0, 'database');
-        $false2 = $userHelpers->hasPermission($mockUser, $name0, 'mail');
-        $true1 = $userHelpers->hasPermission($mockUser, $name1, 'database');
-        $false3 = $userHelpers->hasPermission($mockUser, $name1, 'mail');
-        $false4 = $userHelpers->hasPermission($mockUser, $name2, 'database');
-        $true2 = $userHelpers->hasPermission($mockUser, $name2, 'mail');
-        $true3 = $userHelpers->hasPermission($mockUser, $name3, 'database');
-        $true4 = $userHelpers->hasPermission($mockUser, $name3, 'mail');
-
-        // Then
-        $this->assertTrue($true1);
-        $this->assertTrue($true2);
-        $this->assertTrue($true3);
-        $this->assertTrue($true4);
-        $this->assertFalse($false1);
-        $this->assertFalse($false2);
-        $this->assertFalse($false3);
-        $this->assertFalse($false4);
-    }
-
-    /** @test */
     public function getNotficationPermissionsNumberFromArray()
     {
         // Given
@@ -104,40 +66,32 @@ class UserHelpersTest extends TestCase
     }
 
     /** @test */
-    public function getNotificationPermissionFinalDatabaseNumberFromNotifacationChangeVariables()
+    public function getNotificationPermissionsArrayFromNumber()
     {
         // Given
-        $mockUser = Mockery::mock(App\User::class);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_0')->andReturn(0);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_1')->andReturn(1);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_2')->andReturn(2);
-        $mockUser->shouldReceive('getAttribute')->with('notify_random_3')->andReturn(3);
-        $name0 = 'notify_random_0';
-        $name1 = 'notify_random_1';
-        $name2 = 'notify_random_2';
-        $name3 = 'notify_random_3';
-        $type0 = 'database';
-        $type1 = 'mail';
-
         // When
         $userHelpers = new UserHelpers;
-        $zero_1 = $userHelpers->notificationChanged($mockUser, $name0, 'mail', false);
-        $one_1 = $userHelpers->notificationChanged($mockUser, $name0, 'database', true);
-        $one_2 = $userHelpers->notificationChanged($mockUser, $name3, 'mail', false);
-        $two_1 = $userHelpers->notificationChanged($mockUser, $name0, 'mail', true);
-        $two_2 = $userHelpers->notificationChanged($mockUser, $name3, 'database', false);
-        $three_1 = $userHelpers->notificationChanged($mockUser, $name1, 'mail', true);
-        $three_2 = $userHelpers->notificationChanged($mockUser, $name3, 'database', true);
+        $array_0 = $userHelpers->notificationPermissonToArray(0);
+        $array_1 = $userHelpers->notificationPermissonToArray(1);
+        $array_2 = $userHelpers->notificationPermissonToArray(2);
+        $array_3 = $userHelpers->notificationPermissonToArray(3);
+        $array_4 = $userHelpers->notificationPermissonToArray(4);
+        $array_5 = $userHelpers->notificationPermissonToArray(5);
+        $array_6 = $userHelpers->notificationPermissonToArray(6);
+        $array_7 = $userHelpers->notificationPermissonToArray(7);
 
         // Then
-        $this->assertEquals(0, $zero_1);
-        $this->assertEquals(1, $one_1);
-        $this->assertEquals(1, $one_2);
-        $this->assertEquals(2, $two_1);
-        $this->assertEquals(2, $two_2);
-        $this->assertEquals(3, $three_1);
-        $this->assertEquals(3, $three_1);
+        $this->assertEquals([0, 0], $array_0);
+        $this->assertEquals([1, 0], $array_1);
+        $this->assertEquals([0, 1], $array_2);
+        $this->assertEquals([1, 1], $array_3);
+        $this->assertEquals([0, 0, 1], $array_4);
+        $this->assertEquals([1, 0, 1], $array_5);
+        $this->assertEquals([0, 1, 1], $array_6);
+        $this->assertEquals([1, 1, 1], $array_7);
+
 
     }
+
 
 }

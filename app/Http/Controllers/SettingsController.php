@@ -59,7 +59,7 @@ class SettingsController extends PageController
             'timezoneList' => timezoneList(),
         ];
         $notifications = (object)[
-            'settings' => $user->notificationSettings()->getAll()
+            'settings' => $user->notificationSettings->getAll()
         ];
         $billing = (object)[
             'subscribed' => $admin->subscribed('main'),

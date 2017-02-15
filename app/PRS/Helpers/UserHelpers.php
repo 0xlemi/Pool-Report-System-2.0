@@ -40,29 +40,11 @@ class UserHelpers
     }
 
     /**
-     * Get the number of the notification setting if you only change one type
-     * @param  User   $user
-     * @param  string $name  The notification setting
-     * @param  string $type  notification type
-     * @param  bool   $value
-     * @return int
+     * get the notifications that are permited in array format from integer
+     * @param  int    $num  integer from the database
+     * @return array      
+     * tested
      */
-    public function notificationChanged(User $user, string $name, string $type, bool $value)
-    {
-        $notificationPermissonsArray  = $this->notificationPermissonToArray($user->$name);
-        $positonOfTypeToChange = $this->notificationTypePosition($type);
-        $notificationPermissonsArray[$positonOfTypeToChange] = (int) $value;
-        return $this->notificationPermissionToNum($notificationPermissonsArray);
-    }
-
-    public function hasPermission(User $user, string $name, string $type)
-    {
-        $notificationPermissonsArray = $this->notificationPermissonToArray($user->$name);
-        $positonOfType = $this->notificationTypePosition($type);
-        return (bool) $notificationPermissonsArray[$positonOfType];
-    }
-
-    // get the notifacations that are permited in array format from integer
     public function notificationPermissonToArray(int $num)
     {
         // depending on the notifaation types is the ammount of zeros to fill
