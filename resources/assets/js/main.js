@@ -65,6 +65,7 @@ function isset(strVariableName) {
     let addressFields = require('./components/addressFields.vue');
     let missingServices = require('./components/missingServices.vue');
     let settings = require('./components/settings.vue');
+    let profile = require('./components/profile.vue');
     let workOrderTable = require('./components/workOrderTable.vue');
     let serviceTable = require('./components/serviceTable.vue');
     let clientTable = require('./components/clientTable.vue');
@@ -94,6 +95,7 @@ function isset(strVariableName) {
             Permissions,
             billing,
             settings,
+            profile,
             // work orders
             workOrderTable,
             workOrderPhotosShow,

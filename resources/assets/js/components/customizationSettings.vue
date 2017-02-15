@@ -10,7 +10,7 @@
 
     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('timezone'))}">
     	<label class="form-label semibold">Timezone</label>
-        <timezone-dropdown class="bootstrap-select bootstrap-select-arrow" :timezone.sync="timezone" :timezone-list="timezoneList"></timezone-dropdown>    
+        <timezone-dropdown class="bootstrap-select bootstrap-select-arrow" :timezone.sync="timezone" :timezone-list="timezoneList"></timezone-dropdown>
 	    <small v-if="checkValidationError('timezone')" class="text-muted">{{ validationErrors.timezone[0] }}</small>
     </fieldset>
 

@@ -49,6 +49,7 @@ class SettingsController extends PageController
         $profile = (object)[
             'name' => $user->userable()->name,
             'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
+            'email' => $user->email,
         ];
         $customization = (object)[
             'companyName' => $admin->company_name,
