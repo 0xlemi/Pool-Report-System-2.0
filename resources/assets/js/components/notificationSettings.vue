@@ -1,8 +1,8 @@
 <template>
 <div class="form-group row" v-for="setting in settings">
-    <label class="col-sm-2 form-control-label semibold">{{ setting.tag }}</label>
-    <div class="col-sm-10">
-        <div class="btn-group btn-group-sm" id="notificationButtons" role="group" aria-label="Basic example">
+    <label class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6 form-control-label semibold">{{ setting.tag }}</label>
+    <div class="col-xxl-8 col-xl-6 col-lg-6 col-md-6 col-sm-6">
+        <div class="btn-group btn-group-sm" id="notificationButtons{{setting.name}}" role="group" aria-label="Basic example">
             <button v-for="button in setting.buttons"
                 @click="sendRequest(setting.name, button.type, button.value)"
                 type="button" class="btn"
@@ -33,17 +33,17 @@ export default {
         },
         sendRequest(name, type, value){
             // this.$dispatch('clearError');
-            $("#notificationButtons").children().prop('disabled',true);
+            $("#notificationButtons"+name).children().prop('disabled',true);
             this.changeButtonValue(name, type, !value);
             this.$http.post(Laravel.url+'settings/notifications', {
                 'name': name,
                 'type': type,
                 'value': value,
             }).then((response) => {
-                $("#notificationButtons").children().prop('disabled',false);
+                $("#notificationButtons"+name).children().prop('disabled',false);
             }, (response) => {
                 this.changeButtonValue(name, type, value);
-                $("#notificationButtons").children().prop('disabled',false);
+                $("#notificationButtons"+name).children().prop('disabled',false);
             });
         }
     }

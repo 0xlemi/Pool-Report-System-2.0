@@ -34,6 +34,17 @@ return [
 
     'notifications' => [
         'notify_report_created' => "Report is Created",
+        'notify_workorder_created' => "Work Order is Created",
+        'notify_service_created' => "Service is Created",
+        'notify_client_created' => "Client is Created",
+        'notify_supervisor_created' => "Supervisor is Created",
+        'notify_technician_created' => "Technician is Created",
+        'notify_invoice_created' => "Invoice is Created",
+        'notify_payment_created' => "Payment is Created",
+        'notify_work_added' => "Work is added to Work Order",
+        'notify_chemical_added' => "Chemical is added to Service",
+        'notify_equipment_added' => "Equipment is added to Service",
+        'notify_contract_added' => "Equipment is added to Service",
     ],
 
     'permissions' => [

@@ -31244,23 +31244,23 @@ exports.default = {
             var _this = this;
 
             // this.$dispatch('clearError');
-            $("#notificationButtons").children().prop('disabled', true);
+            $("#notificationButtons" + name).children().prop('disabled', true);
             this.changeButtonValue(name, type, !value);
             this.$http.post(Laravel.url + 'settings/notifications', {
                 'name': name,
                 'type': type,
                 'value': value
             }).then(function (response) {
-                $("#notificationButtons").children().prop('disabled', false);
+                $("#notificationButtons" + name).children().prop('disabled', false);
             }, function (response) {
                 _this.changeButtonValue(name, type, value);
-                $("#notificationButtons").children().prop('disabled', false);
+                $("#notificationButtons" + name).children().prop('disabled', false);
             });
         }
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"setting in settings\">\n    <label class=\"col-sm-2 form-control-label semibold\">{{ setting.tag }}</label>\n    <div class=\"col-sm-10\">\n        <div class=\"btn-group btn-group-sm\" id=\"notificationButtons\" role=\"group\" aria-label=\"Basic example\">\n            <button v-for=\"button in setting.buttons\" @click=\"sendRequest(setting.name, button.type, button.value)\" type=\"button\" class=\"btn\" :class=\"(button.value) ? 'btn-default' : 'btn-default-outline'\">\n                <span :class=\"button.icon\"></span>\n            </button>\n\t\t</div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"setting in settings\">\n    <label class=\"col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6 form-control-label semibold\">{{ setting.tag }}</label>\n    <div class=\"col-xxl-8 col-xl-6 col-lg-6 col-md-6 col-sm-6\">\n        <div class=\"btn-group btn-group-sm\" id=\"notificationButtons{{setting.name}}\" role=\"group\" aria-label=\"Basic example\">\n            <button v-for=\"button in setting.buttons\" @click=\"sendRequest(setting.name, button.type, button.value)\" type=\"button\" class=\"btn\" :class=\"(button.value) ? 'btn-default' : 'btn-default-outline'\">\n                <span :class=\"button.icon\"></span>\n            </button>\n\t\t</div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
