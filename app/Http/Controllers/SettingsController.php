@@ -180,8 +180,6 @@ class SettingsController extends PageController
             'value' => 'required|boolean'
         ]);
 
-        return response('hello',500);
-
         $user = $request->user();
         $name = $request->name;
         $type = $request->type;
