@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Service;
 
 class MissingServicesController extends PageController
 {
 
     public function index(Request $request)
     {
+        $this->authorize('list', Service::class);
+
         $this->validate($request,[
             'date' => 'date_format:Y-m-d',
         ]);

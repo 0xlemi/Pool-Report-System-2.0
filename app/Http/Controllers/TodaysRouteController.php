@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
+use App\Service;
 use App\Report;
 
 class TodaysRouteController extends PageController
@@ -28,6 +29,7 @@ class TodaysRouteController extends PageController
 
     public function index()
     {
+        $this->authorize('list', Service::class);
         $buttonsTags = [
             (object)[
                         'text' => 'Today',
@@ -78,6 +80,8 @@ class TodaysRouteController extends PageController
 
     public function createReport(Request $request, int $service_seq_id)
     {
+        $this->authorize('create', Report::class);
+
         $admin = $this->loggedUserAdministrator();
 
         $service_id = $service_seq_id;
@@ -88,6 +92,8 @@ class TodaysRouteController extends PageController
 
     public function storeReport(Request $request)
     {
+        $this->authorize('create', Report::class);
+
         $admin = $this->loggedUserAdministrator();
 
         $completed_at = Carbon::now($admin->timezone);
