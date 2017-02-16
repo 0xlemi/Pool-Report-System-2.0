@@ -39,7 +39,6 @@ class ClientTransformer extends Transformer
         if($client->imageExists()){
             $photo = $this->imageTransformer->transform($client->image(1, false));
         }
-
         return [
             'id' => $client->seq_id,
             'name' => $client->name,
@@ -48,12 +47,12 @@ class ClientTransformer extends Transformer
             'cellphone' => $client->cellphone,
             'type' => ($client->type == 1) ? 'Owner' : 'House Admin',
             'language' => $client->language,
-            'notification_settings' => [
-                'notify_report_created' => $client->user->notificationSettings->hasPermission('notify_report_created', 'mail')
-            ],
             'comments' => $client->comments,
             'photo' => $photo,
             'services' => $services,
+            'notification_settings' => [
+                $client->user->notificationSettings->getAll()
+            ],
         ];
     }
 

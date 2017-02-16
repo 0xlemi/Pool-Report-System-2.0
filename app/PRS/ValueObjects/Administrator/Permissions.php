@@ -14,6 +14,11 @@ class Permissions {
         $this->permissions = $this->buildPermissions($admin);
     }
 
+    public function getAll()
+    {
+        return $this->permissions;    
+    }
+
     /**
      * Get the permissions that consern the supervisor role
      * @param  string $object permission over what object

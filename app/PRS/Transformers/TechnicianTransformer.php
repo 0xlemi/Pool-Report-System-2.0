@@ -51,10 +51,12 @@ class TechnicianTransformer extends Transformer
             'address' => $technician->address,
             'language' => $technician->language,
             'status' => $technician->user->active,
-            'getReportsEmails' => $technician->user->notificationSettings->hasPermission('notify_report_created', 'mail'),
             'comments' => $technician->comments,
             'photo' => $photo,
             'supervisor' => $this->supervisorPreviewTransformer->transform($technician->supervisor()),
+            'notification_settings' => [
+                $technician->user->notificationSettings->getAll()
+            ],
         ];
     }
 
