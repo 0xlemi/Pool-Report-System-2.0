@@ -6,7 +6,7 @@
         <div class="tbl">
             <ul class="nav" role="tablist">
 
-                <li class="nav-item">
+                <li v-if="profile" class="nav-item">
                     <a class="nav-link active" href="#tabs-1-tab-1" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="font-icon font-icon-user"></i>&nbsp;
@@ -15,7 +15,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li v-if="customization" class="nav-item">
                     <a class="nav-link" href="#tabs-1-tab-2" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="font-icon font-icon-build"></i>&nbsp;
@@ -24,7 +24,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li v-if="notifications" class="nav-item">
                     <a class="nav-link" href="#tabs-1-tab-3" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="font-icon font-icon-mail"></i>&nbsp;
@@ -33,7 +33,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li v-if="billing" class="nav-item">
                     <a class="nav-link" href="#tabs-1-tab-4" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="glyphicon glyphicon-credit-card"></i>&nbsp;
@@ -42,7 +42,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li v-if="permissions" class="nav-item">
                     <a class="nav-link" href="#tabs-1-tab-5" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="font-icon font-icon-lock"></i>&nbsp;
@@ -60,7 +60,7 @@
 
         <!-- Profile -->
         <div role="tabpanel" class="tab-pane fade in active" id="tabs-1-tab-1">
-            <div class="row">
+            <div v-if="profile" class="row">
                 <div class="col-md-12">
                     <div class="col-md-12">
                         <account-settings :name="profile.name" :last-name="profile.lastName">
@@ -80,7 +80,7 @@
 
         <!-- Costumization -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-2">
-            <div class="row">
+            <div v-if="customization" class="row">
                 <div class="col-md-12">
                     <customization-settings
                         :company-name="customization.companyName"
@@ -96,7 +96,7 @@
 
         <!-- Notifications -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-3">
-            <div class="row">
+            <div v-if="notifications" class="row">
                 <div class="col-md-12">
 					<alert type="danger" :message="notificationAlertMessage" :active="notificationAlertActive"></alert>
                     <div class="col-md-12">
@@ -108,7 +108,7 @@
 
         <!-- Billing -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-4">
-            <div class="row">
+            <div v-if="billing" class="row">
                 <div class="col-md-12">
                     <br>
                     <billing :subscribed="billing.subscribed" :last-four="billing.lastFour" :plan="billing.plan" :active-objects="billing.activeObjects"
@@ -120,7 +120,7 @@
 
         <!-- Permissions -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
-            <div class="row">
+            <div v-if="permissions" class="row">
                 <div class="col-md-12">
                     <br>
     	                <div class="form-group">

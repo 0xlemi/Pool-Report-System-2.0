@@ -77,7 +77,7 @@ class ClientsController extends PageController
 
         $client = Client::create(
                             array_merge(
-                                array_map('htmlentities', $request->all()),
+                                array_map('htmlentities', $request->except('services')),
                                 [
                                     'admin_id' => $admin->id,
                                 ]

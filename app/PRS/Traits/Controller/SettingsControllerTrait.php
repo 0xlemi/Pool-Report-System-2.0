@@ -10,11 +10,7 @@ trait SettingsControllerTrait{
 
     public function permissions(Request $request)
     {
-
-        if($this->getUser()->cannot('permissions', Setting::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access. This is only for system administrators.');
-        }
+        $this->authorize('permissions', Setting::class);
 
         $this->validate($request, [
             'id' => 'required|max:255|validPermission',

@@ -5,12 +5,12 @@
 
     <div class="col-lg-3 col-md-6 col-sm-12">
         <profile
-            name="{{ $profile->name }}"
-            company-name="{{ $customization->companyName }}"
-            email="{{ $profile->email }}"
-            website="{{ $customization->website }}"
-            facebook="{{ $customization->facebook }}"
-            twitter="{{ $customization->twitter }}">
+            name="{{ ($profile) ? $profile->name : '' }}"
+            company-name="{{ ($customization) ? $customization->companyName : '' }}"
+            email="{{ ($profile) ?  $profile->email : '' }}"
+            website="{{ ($customization) ? $customization->website : '' }}"
+            facebook="{{ ($customization) ? $customization->facebook : '' }}"
+            twitter="{{ ($customization) ? $customization->twitter : '' }}">
         </profile>
     </div><!--.col- -->
 

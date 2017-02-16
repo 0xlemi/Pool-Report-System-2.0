@@ -9,12 +9,14 @@
             </a>
         </li>
 
+        @can('list', App\Service::class)
         <li class="grey {{ Request::is('todaysroute*')? 'opened':'' }}">
             <a href="{{ url('/todaysroute') }}">
                 <i class="glyphicon glyphicon-road"></i>
                 <span class="lbl">Today's Route</span>
             </a>
         </li>
+        @endcan
 
         @can('list', App\Report::class)
             <li class="brown {{ Request::is('reports*')? 'opened':'' }}">

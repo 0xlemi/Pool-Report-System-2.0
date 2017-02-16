@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
+use App\User;
 
 class SettingPolicy
 {
@@ -21,46 +22,46 @@ class SettingPolicy
     /**
      * Administrator has all permissions
      */
-    public function before($type)
+    public function before(User $user)
     {
-        if($type->isAdministrator()){
+        if($user->isAdministrator()){
             return true;
         }
     }
 
-    public function account($type)
+    public function profile(User $user)
     {
-        if($type->isAdministrator() || $type->isSupervisor() || $type->isTechnician()){
-            return true;
-        }
-        return false;
-    }
-
-    public function changeEmail($type)
-    {
-        if($type->isSupervisor() || $type->isTechnician()){
+        if($user->isSupervisor() || $user->isTechnician() || $user->isClient()){
             return true;
         }
         return false;
     }
 
-    public function changePassword($type)
+    public function changeEmail(User $user)
     {
-        if($type->isSupervisor() || $type->isTechnician()){
+        if($user->isSupervisor() || $user->isTechnician() || $user->isClient()){
             return true;
         }
         return false;
     }
 
-    public function company($type)
+    public function changePassword(User $user)
+    {
+        if($user->isSupervisor() || $user->isTechnician() || $user->isClient()){
+            return true;
+        }
+        return false;
+    }
+
+    public function customization()
     {
         return false;
     }
 
 
-    public function email($type)
+    public function notifications(User $user)
     {
-        if($type->isSupervisor() || $type->isTechnician()){
+        if($user->isSupervisor() || $user->isTechnician()){
             return true;
         }
         return false;

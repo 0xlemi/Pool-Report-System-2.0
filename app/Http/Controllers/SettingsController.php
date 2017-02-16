@@ -46,41 +46,60 @@ class SettingsController extends PageController
         $user = $this->getUser();
         $admin = $user->admin();
 
-        $profile = (object)[
-            'name' => $user->userable()->name,
-            'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
-            'email' => $user->email,
-        ];
-        $customization = (object)[
-            'companyName' => $admin->company_name,
-            'timezone' => $admin->timezone,
-            'website' => $admin->website,
-            'facebook' => $admin->facebook,
-            'twitter' => $admin->twitter,
-            'timezoneList' => timezoneList(),
-        ];
-        $notifications = (object)[
-            'settings' => $user->notificationSettings->getAll()
-        ];
-        $billing = (object)[
-            'subscribed' => $admin->subscribed('main'),
-            'lastFour' => $admin->card_last_four,
-            'plan' => ($admin->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
-            'activeObjects' => $admin->objectActiveCount(),
-            'billableObjects' => $admin->billableObjects(),
-            'freeObjects' => $admin->free_objects,
-        ];
-        $permissions = (object)[
-            'supervisor' => $admin->permissions()->permissionsDivided('sup'),
-            'technician' => $admin->permissions()->permissionsDivided('tech'),
-        ];
+        $profile = null;
+        if ($user->can('profile', Setting::class)) {
+            $profile = (object)[
+                'name' => $user->userable()->name,
+                'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
+                'email' => $user->email,
+            ];
+        }
+
+        $customization = null;
+        if ($user->can('customization', Setting::class)) {
+            $customization = (object)[
+                'companyName' => $admin->company_name,
+                'timezone' => $admin->timezone,
+                'website' => $admin->website,
+                'facebook' => $admin->facebook,
+                'twitter' => $admin->twitter,
+                'timezoneList' => timezoneList(),
+            ];
+        }
+
+        $notifications = null;
+        if ($user->can('notifications', Setting::class)) {
+            $notifications = (object)[
+                'settings' => $user->notificationSettings->getAll()
+            ];
+        }
+
+        $billing = null;
+        if ($user->can('billing', Setting::class)) {
+            $billing = (object)[
+                'subscribed' => $admin->subscribed('main'),
+                'lastFour' => $admin->card_last_four,
+                'plan' => ($admin->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
+                'activeObjects' => $admin->objectActiveCount(),
+                'billableObjects' => $admin->billableObjects(),
+                'freeObjects' => $admin->free_objects,
+            ];
+        }
+
+        $permissions = null;
+        if ($user->can('permissions', Setting::class)) {
+            $permissions = (object)[
+                'supervisor' => $admin->permissions()->permissionsDivided('sup'),
+                'technician' => $admin->permissions()->permissionsDivided('tech'),
+            ];
+        }
+        
         return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
 
     public function profile(Request $request)
     {
-
-        // check permissions
+        $this->authorize('profile', Setting::class);
 
         $this->validate($request, [
             'name' => 'required|string|max:50',
@@ -95,8 +114,9 @@ class SettingsController extends PageController
         return $this->respondInternalError('Profile settings was not updated, Please try again later.');
     }
 
-    public function changeEmail(Request $request){
-        // check permissions
+    public function changeEmail(Request $request)
+    {
+        $this->authorize('changeEmail', Setting::class);
 
         $user = $this->getUser();
         $this->validate($request, [
@@ -116,8 +136,9 @@ class SettingsController extends PageController
         return response('Email was not updated, the password is wrong', 400);
     }
 
-    public function changePassword(Request $request){
-        // check permissions
+    public function changePassword(Request $request)
+    {
+        $this->authorize('changePassword', Setting::class);
 
         // if($this->getUser()->cannot('changePassword', Setting::class))
         // {
@@ -143,9 +164,9 @@ class SettingsController extends PageController
         return response('Password was not updated, the password is wrong', 400);
     }
 
-    public function customization(Request $request){
-
-        // check permissions
+    public function customization(Request $request)
+    {
+        $this->authorize('customization', Setting::class);
 
         $this->validate($request, [
             'company_name' => 'required|string|between:2,30',
@@ -175,8 +196,8 @@ class SettingsController extends PageController
 
     public function notifications(Request $request, UserHelpers $userHelper)
     {
-        // check permissions
-        
+        $this->authorize('notifications', Setting::class);
+
         $this->validate($request, [
             'name' => 'required|max:255|validNotification',
             'type' => 'required|max:255|validNotificationType',
@@ -200,11 +221,9 @@ class SettingsController extends PageController
 
     public function subscribe(Request $request)
     {
-        $user = Auth::user();
-        if(!$user->isAdministrator()){
-            return response()->json(['message' => 'You are not logged in as administrator'], 422);
-        }
-        $admin = $user->userable();
+        $this->authorize('billing', Setting::class);
+
+        $admin = $request->user()->userable();
 
         // Admin is upgrading the credit card.
         if ($admin->subscribed('main')) {
@@ -243,13 +262,11 @@ class SettingsController extends PageController
         return redirect()->back();
     }
 
-    public function upgradeSubscription()
+    public function upgradeSubscription(Request $request)
     {
-        $user = Auth::user();
-        if(!$user->isAdministrator()){
-            return response()->json(['message' => 'You are not logged in as administrator'], 422);
-        }
-        $admin = $user->userable();
+        $this->authorize('billing', Setting::class);
+
+        $admin = $request->user()->userable();
 
         if($admin->subscribedToPlan('free', 'main')) {
             return $admin->subscription('main')
@@ -260,13 +277,11 @@ class SettingsController extends PageController
 
     }
 
-    public function downgradeSubscription()
+    public function downgradeSubscription(Request $request)
     {
-        $user = Auth::user();
-        if(!$user->isAdministrator()){
-            return response()->json(['message' => 'You are not logged in as administrator'], 422);
-        }
-        $admin = $user->userable();
+        $this->authorize('billing', Setting::class);
+
+        $admin = $request->user()->userable();
 
         if ($admin->subscribedToPlan('pro', 'main')) {
             $result = $admin->subscription('main')->swap('free');
