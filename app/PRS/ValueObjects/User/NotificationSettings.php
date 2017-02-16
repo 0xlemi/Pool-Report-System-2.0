@@ -8,7 +8,6 @@ use App\PRS\Helpers\UserHelpers;
 class NotificationSettings {
 
 
-    protected $settings;
     protected $user;
     protected $userHelper;
 
@@ -16,12 +15,11 @@ class NotificationSettings {
     {
         $this->userHelper = $userHelper;
         $this->user = $user;
-        $this->settings = $this->buildSettings($user);
     }
 
     public function getAll()
     {
-        return $this->settings;
+        return $this->buildSettings();
     }
 
     public function get($name)
@@ -59,6 +57,11 @@ class NotificationSettings {
         return $this->userHelper->notificationPermissionToNum($notificationPermissonsArray);
     }
 
+    public function validNames()
+    {
+        return config('constants.notifications'.$this->user->type);
+    }
+
     // Get buttons settings from integer
     protected function getButtons(int $num, string $name)
     {
@@ -76,13 +79,13 @@ class NotificationSettings {
         return $result;
     }
 
-    private function buildSettings(User $user)
+    private function buildSettings()
     {
-        $notificationsForUser = config('constants.notifications'.$user->type);
+        $notificationsForUser = $this->validNames();
         $notificationsInfo = config('constants.notifications');
         $result = [];
         foreach($notificationsForUser as $name) {
-            $result[] = (object)[ 'tag' => $notificationsInfo->$name->tag , 'name' => $name, 'buttons' => $this->getButtons($user->$name, $name)];
+            $result[] = (object)[ 'tag' => $notificationsInfo->$name->tag , 'name' => $name, 'buttons' => $this->getButtons($this->user->$name, $name)];
         }
         return $result;
 

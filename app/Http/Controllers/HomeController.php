@@ -59,7 +59,7 @@ class HomeController extends PageController
         if($object = $this->urlSigner->validateToken($request->token)){
             $user = User::where('email', $object->email)->get()->first();
 
-            $validNames = array_keys(config('constants.notifications'));
+            $validNames = $user->notificationSettings->validNames();
             $requestNames = array_keys($request->except('token','_token'));
 
             // validate that the names sent are real notification settings

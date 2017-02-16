@@ -59,6 +59,8 @@
                     <!-- List group -->
                     <ul class="list-group">
                         @foreach($notifications as $notification)
+                            <!-- check that the notification has email opiton -->
+                            @if(count($notification->buttons) > 1)
                             <li class="list-group-item">
                                 <label>{{$notification->tag}}</label>
                                 <div class="material-switch pull-right">
@@ -69,6 +71,7 @@
                                     <label for="switch{{$notification->name}}" class="label-success"></label>
                                 </div>
                             </li>
+                            @endif
                         @endforeach
                     </ul>
                     <br>
