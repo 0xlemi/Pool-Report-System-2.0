@@ -65,6 +65,7 @@ class HomeController extends PageController
             // validate that the names sent are real notification settings
             foreach ($requestNames as $name) {
                 if(!in_array($name, $validNames)){
+                    $this->urlSigner->removeSigner($request->token);
                     return response("Something funny is going on, go away.", 422);
                 }
             }

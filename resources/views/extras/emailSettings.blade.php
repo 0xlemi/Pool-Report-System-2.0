@@ -70,15 +70,6 @@
                                 </div>
                             </li>
                         @endforeach
-                        <li class="list-group-item">
-                                <label>hello</label>
-                                <div class="material-switch pull-right">
-                                    <input id="switch"
-                                            name="hello"
-                                            type="checkbox">
-                                    <label for="switch" class="label-success"></label>
-                                </div>
-                            </li>
                     </ul>
                     <br>
                     <button type="sumbit" class="btn btn-blue text-edit">Change Settings</button>

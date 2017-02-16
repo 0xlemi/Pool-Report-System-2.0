@@ -14,6 +14,13 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\ClientHelpers;
 
 use App\Http\Requests;
+use App\Supervisor;
+use App\Technician;
+use App\Service;
+use App\Invoice;
+use App\Report;
+use App\Client;
+use App\WorkOrder;
 
 class DataTableController extends PageController
 {
@@ -59,6 +66,8 @@ class DataTableController extends PageController
 
     public function reports(Request $request)
     {
+        $this->authorize('list', Report::class);
+
         if(!validateDate($request->date))
         {
             return Response::json('Date is not valid', 422);
@@ -87,6 +96,8 @@ class DataTableController extends PageController
 
     public function workOrders(Request $request)
     {
+        $this->authorize('list', WorkOrder::class);
+
         $validator = Validator::make($request->all(), [
             'finished' => 'required|boolean',
         ]);
@@ -122,6 +133,8 @@ class DataTableController extends PageController
 
     public function services(Request $request)
     {
+        $this->authorize('list', Service::class);
+
         $validator = Validator::make($request->all(), [
             'status' => 'required|boolean',
         ]);
@@ -165,6 +178,8 @@ class DataTableController extends PageController
 
     public function clients()
     {
+        $this->authorize('list', Client::class);
+
         $clients = $this->loggedUserAdministrator()
                         ->clientsInOrder()
                         ->get()
@@ -182,6 +197,8 @@ class DataTableController extends PageController
 
     public function supervisors(Request $request)
     {
+        $this->authorize('list', Supervisor::class);
+
         $this->validate($request, [
             'status' => 'required|boolean',
         ]);
@@ -202,6 +219,8 @@ class DataTableController extends PageController
 
     public function technicians(Request $request)
     {
+        $this->authorize('list', Technician::class);
+
         $this->validate($request, [
             'status' => 'required|boolean',
         ]);
@@ -224,6 +243,8 @@ class DataTableController extends PageController
 
     public function invoices(Request $request)
     {
+        $this->authorize('list', Invoice::class);
+
         $validator = Validator::make($request->all(), [
             'closed' => 'required|boolean',
         ]);
