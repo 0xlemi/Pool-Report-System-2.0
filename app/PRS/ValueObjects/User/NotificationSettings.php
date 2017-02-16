@@ -26,7 +26,7 @@ class NotificationSettings {
 
     public function get($name)
     {
-        return $this->getButtons($user->$name);
+        return $this->getButtons($user->$name, $name);
     }
 
     /**
@@ -60,14 +60,16 @@ class NotificationSettings {
     }
 
     // Get buttons settings from integer
-    protected function getButtons($num)
+    protected function getButtons(int $num, string $name)
     {
+        $notificationInfo = config('constants.notifications')->$name;
+        $notificationTypesInfo = config('constants.notificationTypes');
         $notify = $this->userHelper->notificationPermissonToArray($num);
         $result = [];
-        foreach (config('constants.notificationTypes') as $type => $icon) {
+        foreach ($notificationInfo->types as $type) {
             $result[] = (object)[
                 'type' => $type,
-                'icon'  => $icon,
+                'icon'  => $notificationTypesInfo->$type ,
                 'value'  => array_shift($notify),
             ];
         }
@@ -76,10 +78,11 @@ class NotificationSettings {
 
     private function buildSettings(User $user)
     {
-        $notifications = config('constants.notifications');
+        $notificationsForUser = config('constants.notifications'.$user->type);
+        $notificationsInfo = config('constants.notifications');
         $result = [];
-        foreach($notifications as $name => $tag) {
-            $result[] = (object)[ 'tag' => $tag , 'name' => $name, 'buttons' => $this->getButtons($user->$name)];
+        foreach($notificationsForUser as $name) {
+            $result[] = (object)[ 'tag' => $notificationsInfo->$name->tag , 'name' => $name, 'buttons' => $this->getButtons($user->$name, $name)];
         }
         return $result;
 

@@ -42,13 +42,13 @@ class UserHelpers
     /**
      * get the notifications that are permited in array format from integer
      * @param  int    $num  integer from the database
-     * @return array      
+     * @return array
      * tested
      */
     public function notificationPermissonToArray(int $num)
     {
         // depending on the notifaation types is the ammount of zeros to fill
-        $numOfTypes = count(config('constants.notificationTypes'));
+        $numOfTypes = count((array)config('constants.notificationTypes'));
         // Transform ints to booleans
         return array_map(function($num){
                     return (int) $num;
@@ -76,7 +76,7 @@ class UserHelpers
      */
     public function notificationTypePosition(string $type)
     {
-        return array_search($type ,array_keys(config('constants.notificationTypes')));
+        return array_search($type ,array_keys((array)config('constants.notificationTypes')));
     }
 
     /**

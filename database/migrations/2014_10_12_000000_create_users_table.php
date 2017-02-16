@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->boolean('activated')->default(false); // Activated the account via email
             // Email Preferences  Order: database, mail.
             // IMPORTANT: should be synced with the constants
-            $table->integer('notify_report_created')->default(2); // default only mail
+            $table->integer('notify_report_created')->default(3); // default database and mail
             $table->integer('notify_workorder_created')->default(3); // default database and mail
             $table->integer('notify_service_created')->default(1); // default only database
             $table->integer('notify_client_created')->default(1); // default only database

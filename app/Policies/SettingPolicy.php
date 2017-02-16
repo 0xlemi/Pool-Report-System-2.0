@@ -61,7 +61,7 @@ class SettingPolicy
 
     public function notifications(User $user)
     {
-        if($user->isSupervisor() || $user->isTechnician()){
+        if($user->isSupervisor() || $user->isTechnician() || $user->isClient()){
             return true;
         }
         return false;

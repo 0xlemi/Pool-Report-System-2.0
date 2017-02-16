@@ -52,7 +52,7 @@ class AddedChemicalNotification extends Notification
     {
         $service = $this->chemical->service;
         $userable = $this->user->userable();
-        $type = $this->user->type();
+        $type = $this->user->type;
         $urlName = $type->url();
 
         $person =  "<strong>System Administrator</strong>";

@@ -52,7 +52,7 @@ class AddedContractNotification extends Notification
     {
         $service = $this->contract->service;
         $userable = $this->user->userable();
-        $type = $this->user->type();
+        $type = $this->user->type;
         $urlName = $type->url();
 
         $person =  "<strong>System Administrator</strong>";

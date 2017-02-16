@@ -125,7 +125,7 @@ class User extends Authenticatable
 
     //******** VALUE OBJECTS ********
 
-    public function type()
+    public function getTypeAttribute()
     {
         return new Type($this->userable_type);
     }

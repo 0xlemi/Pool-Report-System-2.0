@@ -27,24 +27,134 @@ return [
         'longitude' => '-109.705866',
     ],
 
-    'notificationTypes' => [
+    'notificationsAdministrator' => [
+        'notify_report_created',
+        'notify_workorder_created',
+        'notify_service_created',
+        'notify_client_created',
+        'notify_supervisor_created',
+        'notify_technician_created',
+        'notify_invoice_created',
+        'notify_payment_created',
+        'notify_work_added',
+        'notify_chemical_added',
+        'notify_equipment_added',
+        'notify_contract_added'
+    ],
+    'notificationsSupervisor' => [
+        'notify_report_created',
+        'notify_workorder_created',
+        'notify_service_created',
+        'notify_client_created',
+        'notify_supervisor_created',
+        'notify_technician_created',
+        'notify_invoice_created',
+        'notify_payment_created',
+        'notify_work_added',
+        'notify_chemical_added',
+        'notify_equipment_added',
+        'notify_contract_added'
+    ],
+    'notificationsTechnician' => [
+        'notify_report_created',
+        'notify_workorder_created',
+        'notify_service_created',
+        'notify_work_added',
+        'notify_chemical_added',
+        'notify_equipment_added',
+        'notify_contract_added'
+    ],
+    'notificationsClient' => [
+        'notify_report_created',
+        'notify_workorder_created'
+    ],
+
+    'notificationTypes' => (object)[
         'database' => "font-icon font-icon-alarm",
         'mail' => "font-icon font-icon-mail",
     ],
 
-    'notifications' => [
-        'notify_report_created' => "Report is Created",
-        'notify_workorder_created' => "Work Order is Created",
-        'notify_service_created' => "Service is Created",
-        'notify_client_created' => "Client is Created",
-        'notify_supervisor_created' => "Supervisor is Created",
-        'notify_technician_created' => "Technician is Created",
-        'notify_invoice_created' => "Invoice is Created",
-        'notify_payment_created' => "Payment is Created",
-        'notify_work_added' => "Work is added to Work Order",
-        'notify_chemical_added' => "Chemical is added to Service",
-        'notify_equipment_added' => "Equipment is added to Service",
-        'notify_contract_added' => "Equipment is added to Service",
+    'notifications' => (object)[
+        'notify_report_created' => (object)[
+            'tag' => "Report is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_workorder_created' => (object)[
+            'tag' => "Work Order is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_service_created' => (object)[
+            'tag' => "Service is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_client_created' => (object)[
+            'tag' => "Client is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_supervisor_created' => (object)[
+            'tag' => "Supervisor is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_technician_created' => (object)[
+            'tag' => "Technician is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_invoice_created' => (object)[
+            'tag' => "Invoice is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_payment_created' => (object)[
+            'tag' => "Payment is Created",
+            'types' => [
+                'database',
+                'mail'
+            ]
+        ],
+        'notify_work_added' => (object)[
+            'tag' => "Work is added to Work Order",
+            'types' => [
+                'database',
+            ]
+        ],
+        'notify_chemical_added' => (object)[
+            'tag' => "Chemical is added to Service",
+            'types' => [
+                'database',
+            ]
+        ],
+        'notify_equipment_added' => (object)[
+            'tag' => "Equipment is added to Service",
+            'types' => [
+                'database',
+            ]
+        ],
+        'notify_contract_added' => (object)[
+            'tag' => "Contract is added to Service",
+            'types' => [
+                'database',
+            ]
+        ],
     ],
 
     'permissions' => [

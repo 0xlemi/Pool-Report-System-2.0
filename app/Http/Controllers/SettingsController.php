@@ -93,7 +93,7 @@ class SettingsController extends PageController
                 'technician' => $admin->permissions()->permissionsDivided('tech'),
             ];
         }
-        
+
         return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
 
