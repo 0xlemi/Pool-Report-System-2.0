@@ -58,16 +58,27 @@
                     <input type="hidden" name='token' value={{ $token }} >
                     <!-- List group -->
                     <ul class="list-group">
+                        @foreach($notifications as $notification)
+                            <li class="list-group-item">
+                                <label>{{$notification->tag}}</label>
+                                <div class="material-switch pull-right">
+                                    <input id="switch{{$notification->name}}"
+                                            name="{{ $notification->name }}"
+                                            type="checkbox"
+                                            {{ ($notification->buttons[1]->value) ? 'checked' : '' }}>
+                                    <label for="switch{{$notification->name}}" class="label-success"></label>
+                                </div>
+                            </li>
+                        @endforeach
                         <li class="list-group-item">
-                            <label>when my pool is cleaned</label>
-                            <div class="material-switch pull-right">
-                                <input id="someSwitchOptionSuccess"
-                                        name="get_reports_emails"
-                                        type="checkbox"
-                                        {{ ($getReportsEmails) ? 'checked' : '' }}>
-                                <label for="someSwitchOptionSuccess" class="label-success"></label>
-                            </div>
-                        </li>
+                                <label>hello</label>
+                                <div class="material-switch pull-right">
+                                    <input id="switch"
+                                            name="hello"
+                                            type="checkbox">
+                                    <label for="switch" class="label-success"></label>
+                                </div>
+                            </li>
                     </ul>
                     <br>
                     <button type="sumbit" class="btn btn-blue text-edit">Change Settings</button>

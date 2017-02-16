@@ -175,6 +175,8 @@ class SettingsController extends PageController
 
     public function notifications(Request $request, UserHelpers $userHelper)
     {
+        // check permissions
+        
         $this->validate($request, [
             'name' => 'required|max:255|validNotification',
             'type' => 'required|max:255|validNotificationType',

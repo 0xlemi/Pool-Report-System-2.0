@@ -47,10 +47,9 @@ class HomeController extends PageController
             if($user == Auth::user()){
                 return redirect('/settings');
             }
+            $notifications = $user->notificationSettings->getAll();
 
-            $getReportsEmails = $user->notificationSettings->hasPermission('notify_report_created', 'mail');
-
-            return view('extras.emailSettings', compact('getReportsEmails', 'token'));
+            return view('extras.emailSettings', compact('notifications', 'token'));
         }
         return redirect('/login');
     }
@@ -60,12 +59,27 @@ class HomeController extends PageController
         if($object = $this->urlSigner->validateToken($request->token)){
             $user = User::where('email', $object->email)->get()->first();
 
-            $value = ($request->get_reports_emails) ? true : false;
-            $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-            $user->notify_report_created = $newNotificationNumber;
+            $validNames = array_keys(config('constants.notifications'));
+            $requestNames = array_keys($request->except('token','_token'));
+            
+            // validate that the names sent are real notification settings
+            foreach ($requestNames as $name) {
+                if(!in_array($name, $validNames)){
+                    return response("Something funny is going on, go away.", 422);
+                }
+            }
+            // run though all the valid notification
+            // set true or false depending if was sent in the request
+            foreach ($validNames as $validName) {
+                $value = in_array($validName, $requestNames);
+                $newNumber = $user->notificationSettings->notificationChanged($validName, 'mail', $value);
+                $user->$validName = $newNumber;
+            }
+
             if($user->save()){
                 $title = 'Email Settings Changed!';
                 $isSuccess = true;
+                // delete the token from database
                 return view('extras.showMessage', compact('title', 'isSuccess'));
             }
             $title = 'Email Settings Where Not Changed!';
