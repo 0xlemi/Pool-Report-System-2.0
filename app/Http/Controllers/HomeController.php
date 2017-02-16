@@ -61,7 +61,7 @@ class HomeController extends PageController
 
             $validNames = array_keys(config('constants.notifications'));
             $requestNames = array_keys($request->except('token','_token'));
-            
+
             // validate that the names sent are real notification settings
             foreach ($requestNames as $name) {
                 if(!in_array($name, $validNames)){
@@ -79,7 +79,7 @@ class HomeController extends PageController
             if($user->save()){
                 $title = 'Email Settings Changed!';
                 $isSuccess = true;
-                // delete the token from database
+                $this->urlSigner->removeSigner($request->token);
                 return view('extras.showMessage', compact('title', 'isSuccess'));
             }
             $title = 'Email Settings Where Not Changed!';

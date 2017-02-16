@@ -19,7 +19,7 @@ class UrlSigner{
     }
 
     public function removeSigner(string $token){
-        DB::table('url_signers')->where('token', '=' , $token);
+        DB::table('url_signers')->where('token', '=' , $token)->delete();
     }
 
     public function create(User $user, int $daysUntilExpiration){
