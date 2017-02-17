@@ -85,9 +85,28 @@ class Client extends Model
 	public function setServices(array $seq_ids)
 	{
 	    foreach ($seq_ids as $seq_id) {
-			$service_id = $this->admin()->serviceBySeqId($seq_id)->id;
-			if(!$this->hasService($seq_id)){
-				$this->services()->attach($service_id);
+			if($service = $this->admin()->serviceBySeqId($seq_id)){
+				$service_id = $service->id;
+				if(!$this->hasService($seq_id)){
+					$this->services()->attach($service_id);
+				}
+			}
+	    }
+	}
+
+	/**
+	 * remove services with an array of seq_ids
+	 * tested
+	 * @param array $seq_ids
+	 */
+	public function unsetServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			if($service = $this->admin()->serviceBySeqId($seq_id)){
+				$service_id = $service->id;
+				if($this->hasService($seq_id)){
+					$this->services()->detach($service_id);
+				}
 			}
 	    }
 	}
