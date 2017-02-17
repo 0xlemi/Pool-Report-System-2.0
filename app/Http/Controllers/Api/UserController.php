@@ -13,6 +13,7 @@ use App\PRS\Helpers\UserHelpers;
 use App\User;
 use Auth;
 use Validator;
+use App\Service;
 use Carbon\Carbon;
 
 class UserController extends ApiController
@@ -82,6 +83,11 @@ class UserController extends ApiController
 
     public function todaysRoute()
     {
+        if($this->getUser()->cannot('list', Service::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $user = $this->getUser();
         if(!($user->isAdministrator() || $user->isTechnician() || $user->isSupervisor())){
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
