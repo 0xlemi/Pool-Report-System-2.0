@@ -79,7 +79,7 @@ class EquipmentController extends ApiController
         $equipment = DB::transaction(function () use($request, $service){
 
             $equipment = Equipment::create(array_merge(
-                                $request->all(),
+                                $request->except('photos'),
                                 [
                                     'service_id' => $service->id,
                                 ]
@@ -144,8 +144,8 @@ class EquipmentController extends ApiController
             'model' => 'string|max:255',
             'capacity' => 'numeric',
             'units' => 'string|max:255',
-            'photos.*' => 'mimes:jpg,jpeg,png',
-            'photosDelete.*' => 'integer|min:1',
+            'add_photos.*' => 'mimes:jpg,jpeg,png',
+            'remove_photos.*' => 'integer|min:1',
         ]);
 
         // ***** Persisting *****
@@ -154,15 +154,15 @@ class EquipmentController extends ApiController
             $equipment->update($request->except('service_id'));
 
             //Delete Photos
-            if(isset($request->photosDelete) && $this->getUser()->can('removePhoto', $equipment)){
-                foreach ($request->photosDelete as $order) {
+            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $equipment)){
+                foreach ($request->remove_photos as $order) {
                     $equipment->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photos) && $this->getUser()->can('addPhoto', $equipment)){
-                foreach ($request->photos as $photo) {
+            if(isset($request->add_photos) && $this->getUser()->can('addPhoto', $equipment)){
+                foreach ($request->add_photos as $photo) {
                     $equipment->addImageFromForm($photo);
                 }
             }

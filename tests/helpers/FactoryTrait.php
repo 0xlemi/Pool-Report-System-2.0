@@ -22,6 +22,27 @@ trait FactoryTrait
         $this->seederHelper = new SeederHelpers();
     }
 
+    public function createEquipment($service)
+    {
+        return $service->equipment()->create([
+            'kind' => 'Pump',
+            'type' => 'Double Motor',
+            'brand' => 'Pentair',
+            'model' => 'ABC',
+            'capacity' => 2,
+            'units' => 'hp',
+        ]);
+    }
+
+    public function createChemical($service)
+    {
+        return $service->chemicals()->create([
+            'name' => 'Some Chemical',
+            'amount' => 25,
+            'units' => 'grams',
+        ]);
+    }
+
     public function createAdministrator()
     {
         $adminId = factory(Administrator::class)->create()->id;
