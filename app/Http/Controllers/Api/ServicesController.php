@@ -50,7 +50,7 @@ class ServicesController extends ApiController
     */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('index', Service::class))
+        if($this->getUser()->cannot('list', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -109,14 +109,23 @@ class ServicesController extends ApiController
     */
     public function store(Request $request)
     {
-        // check that the user has permissions
         if($this->getUser()->cannot('create', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        // validation
-        $this->validateServiceCreate($request);
+        $this->validate($request, [
+            'name' => 'required|string|max:20',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'address_line' => 'required|string|max:50',
+            'city' => 'required|string|max:30',
+            'state' => 'required|string|max:30',
+            'postal_code' => 'required|string|max:15',
+            'country' => 'required|string|size:2',
+            'comments' => 'string|max:750',
+            'photo' => 'mimes:jpg,jpeg,png',
+        ]);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -156,15 +165,15 @@ class ServicesController extends ApiController
     */
     public function show($seq_id)
     {
-        if($this->getUser()->cannot('show', Service::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $service))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($service){
@@ -185,20 +194,29 @@ class ServicesController extends ApiController
     */
     public function update(Request $request, $seq_id)
     {
-        // check that user has permission
-        if($this->getUser()->cannot('edit', Service::class))
+        try{
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('update', $service))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        // Validate
-            $this->validateServiceUpdate($request);
-            // getting and validating service
-            try{
-                $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Service with that id, does not exist.');
-            }
+        $this->validate($request, [
+            'name' => 'string|max:20',
+            'latitude' => 'numeric|between:-90,90',
+            'longitude' => 'numeric|between:-180,180',
+            'address_line' => 'string|max:50',
+            'city' => 'string|max:30',
+            'state' => 'string|max:30',
+            'postal_code' => 'string|max:15',
+            'country' => 'string|size:2',
+            'comments' => 'string|max:750',
+            'photo' => 'mimes:jpg,jpeg,png',
+        ]);
 
         // ***** Persist *****
         $transaction = DB::transaction(function () use($request, $service) {
@@ -235,15 +253,15 @@ class ServicesController extends ApiController
     */
     public function destroy($seq_id)
     {
-        if($this->getUser()->cannot('destroy', Service::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try{
             $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $service))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($service->delete()){
@@ -252,38 +270,6 @@ class ServicesController extends ApiController
 
         return $this->respondNotFound('Service with that id, does not exist.');
 
-    }
-
-    protected function validateServiceCreate(Request $request)
-    {
-        return $this->validate($request, [
-            'name' => 'required|string|max:20',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'address_line' => 'required|string|max:50',
-            'city' => 'required|string|max:30',
-            'state' => 'required|string|max:30',
-            'postal_code' => 'required|string|max:15',
-            'country' => 'required|string|size:2',
-            'comments' => 'string|max:750',
-            'photo' => 'mimes:jpg,jpeg,png',
-        ]);
-    }
-
-    protected function validateServiceUpdate(Request $request)
-    {
-        return $this->validate($request, [
-            'name' => 'string|max:20',
-            'latitude' => 'numeric|between:-90,90',
-            'longitude' => 'numeric|between:-180,180',
-            'address_line' => 'string|max:50',
-            'city' => 'string|max:30',
-            'state' => 'string|max:30',
-            'postal_code' => 'string|max:15',
-            'country' => 'string|size:2',
-            'comments' => 'string|max:750',
-            'photo' => 'mimes:jpg,jpeg,png',
-        ]);
     }
 
 }

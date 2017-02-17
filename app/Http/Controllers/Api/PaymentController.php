@@ -24,6 +24,11 @@ class PaymentController extends ApiController
      */
     public function index(Request $request, $invoiceSeqId)
     {
+        if($this->getUser()->cannot('list', Payment::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
@@ -46,7 +51,11 @@ class PaymentController extends ApiController
      */
     public function store(Request $request, $invoiceSeqId)
     {
-        // validation
+        if($this->getUser()->cannot('create', Payment::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
         ]);
@@ -72,7 +81,16 @@ class PaymentController extends ApiController
      */
     public function show($seqId)
     {
-        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+        try {
+            $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Payment with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $payment))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         return $this->respond([
             'data' => $this->paymentTrasformer->transform($payment)
@@ -87,7 +105,16 @@ class PaymentController extends ApiController
      */
     public function destroy($seqId)
     {
-        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+        try {
+            $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Payment with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $payment))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         if($payment->delete()){
             return response()->json([

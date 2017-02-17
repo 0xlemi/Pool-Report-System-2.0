@@ -23,6 +23,11 @@ class InvoiceController extends ApiController
      */
     public function index(Request $request)
     {
+        if($this->getUser()->cannot('list', Invoice::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
@@ -45,6 +50,11 @@ class InvoiceController extends ApiController
      */
     public function show($seqId)
     {
+        if($this->getUser()->cannot('view', Invoice::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
 
         return $this->respond([
@@ -60,6 +70,11 @@ class InvoiceController extends ApiController
      */
     public function destroy($seqId)
     {
+        if($this->getUser()->cannot('delete', Invoice::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
 
         if($invoice->delete()){

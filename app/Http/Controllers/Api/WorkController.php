@@ -28,6 +28,11 @@ class WorkController extends ApiController
      */
     public function index(Request $request, $workOrderSeqId)
     {
+        if($this->getUser()->cannot('list', Work::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
@@ -51,7 +56,11 @@ class WorkController extends ApiController
      */
     public function store(Request $request, $workOrderSeqId)
     {
-        // validation
+        if($this->getUser()->cannot('create', Work::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -103,6 +112,11 @@ class WorkController extends ApiController
      */
     public function show(Work $work)
     {
+        if($this->getUser()->cannot('view', $work))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         return $this->respond([
             'data' => $this->workTransformer->transform($work)
         ]);
@@ -117,7 +131,11 @@ class WorkController extends ApiController
      */
     public function update(Request $request, Work $work)
     {
-        // validation
+        if($this->getUser()->cannot('update', $work))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'title' => 'string|max:255',
             'description' => 'string',
@@ -142,14 +160,14 @@ class WorkController extends ApiController
             ));
 
             //Delete Photos
-            if(isset($request->photosDelete)){
+            if(isset($request->photosDelete) && $this->getUser()->can('removePhoto', $work)){
                 foreach ($request->photosDelete as $order) {
                     $work->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photos)){
+            if(isset($request->photos) && $this->getUser()->can('addPhoto', $work)){
                 foreach ($request->photos as $photo) {
                     $work->addImageFromForm($photo);
                 }
@@ -172,6 +190,11 @@ class WorkController extends ApiController
      */
     public function destroy(Work $work)
     {
+        if($this->getUser()->cannot('delete', $work))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         if($work->delete()){
             return response()->json([
                 'message' => 'Work deleted successfully.',

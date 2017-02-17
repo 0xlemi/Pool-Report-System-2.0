@@ -136,15 +136,15 @@ class ClientsController extends ApiController
      */
     public function show($seq_id)
     {
-        if($this->getUser()->cannot('show', Client::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Client with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $client))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($client){
@@ -164,22 +164,19 @@ class ClientsController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
-        // checks that the user has permission
-        if($this->getUser()->cannot('update', Client::class))
+        try {
+            $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Client with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('update', $client))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         $admin = $this->loggedUserAdministrator();
-
         // ***** Validation *****
-            // validation for the $seq_id
-            try {
-                $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Client with that id, does not exist.');
-            }
-            // validate core values
             $this->validate($request, [
                     'name' => 'string|max:25',
                     'last_name' => 'string|max:40',
@@ -232,15 +229,15 @@ class ClientsController extends ApiController
      */
     public function destroy($seq_id)
     {
-        if($this->getUser()->cannot('destroy', Client::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Client with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $client))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($client->delete()){

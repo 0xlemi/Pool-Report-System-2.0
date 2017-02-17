@@ -38,7 +38,7 @@ class TechniciansController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('index', Technician::class))
+        if($this->getUser()->cannot('list', Technician::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -95,7 +95,6 @@ class TechniciansController extends ApiController
      */
     public function store(Request $request)
     {
-        // check that the user has permission
         if($this->getUser()->cannot('create', Technician::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
@@ -104,12 +103,24 @@ class TechniciansController extends ApiController
         $admin = $this->loggedUserAdministrator();
 
         // Validation
-            $this->validateTechnicianRequestCreate($request);
-            try {
-                $supervisor_id = $admin->supervisorBySeqId($request->supervisor)->id;
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('There is no supervisor with that supervisor_id.');
-            }
+        $this->validate($request, [
+            'name' => 'required|string|max:25',
+            'last_name' => 'required|string|max:40',
+            'supervisor' => 'required|integer|min:1',
+            'username' => 'required|alpha_dash|between:4,25|unique:users,email',
+            'password' => 'required|alpha_dash|between:6,40',
+            'cellphone' => 'required|string|max:20',
+            'address'   => 'string|max:100',
+            'language' => 'required|string|max:2',
+            'getReportsEmails' => 'boolean',
+            'photo' => 'mimes:jpg,jpeg,png',
+            'comments' => 'string|max:1000',
+        ]);
+        try {
+            $supervisor_id = $admin->supervisorBySeqId($request->supervisor)->id;
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('There is no supervisor with that supervisor_id.');
+        }
 
         // ***** Persisting *****
         $transaction = DB::transaction(function () use($request, $admin, $supervisor_id) {
@@ -161,15 +172,15 @@ class TechniciansController extends ApiController
      */
     public function show($seq_id, $checkPermission = true)
     {
-        if($checkPermission && $this->getUser()->cannot('show', Technician::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Technician with that id, does not exist.');
+        }
+
+        if($checkPermission && $this->getUser()->cannot('view', $technician))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($technician){
@@ -190,24 +201,33 @@ class TechniciansController extends ApiController
      */
     public function update(Request $request, $seq_id, $checkPermission = true)
     {
-        // check that the user has permissions
-        if($checkPermission && $this->getUser()->cannot('edit', Technician::class))
+        try {
+            $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Technician with that id, does not exist.');
+        }
+
+        if($checkPermission && $this->getUser()->cannot('update', $techinican))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         // ***** Validation *****
-            // checking seq_id
-            try {
-                $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Technician with that id, does not exist.');
-            }
             // checking core attributes
-            $this->validateTechnicianRequestUpdate(
-                            $request,
-                            $technician->user->id
-                        );
+            $this->validate($request, [
+                'name' => 'string|max:25',
+                'last_name' => 'string|max:40',
+                'supervisor' => 'integer|min:1',
+                'username' => 'alpha_dash|between:4,25|unique:users,email,'.$technician->user->id.',id',
+                'password' => 'alpha_dash|between:6,40',
+                'cellphone' => 'string|max:20',
+                'address'   => 'max:100',
+                'language' => 'string|max:2',
+                'status' => 'boolean',
+                'getReportsEmails' => 'boolean',
+                'photo' => 'mimes:jpg,jpeg,png',
+                'comments' => 'string|max:1000',
+            ]);
             // checking the supervisor_seqid and getting the real id
             try {
                 $supervisor_id = $technician->supervisor_id;
@@ -270,15 +290,15 @@ class TechniciansController extends ApiController
      */
     public function destroy($seq_id)
     {
-        if($this->getUser()->cannot('destroy', Technician::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Technician with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $technican))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($technician->delete()){
@@ -286,41 +306,6 @@ class TechniciansController extends ApiController
         }
 
         return $this->respondNotFound('Technician with that id, does not exist.');
-    }
-
-    protected function validateTechnicianRequestCreate(Request $request)
-    {
-        return $this->validate($request, [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
-            'supervisor' => 'required|integer|min:1',
-            'username' => 'required|alpha_dash|between:4,25|unique:users,email',
-            'password' => 'required|alpha_dash|between:6,40',
-            'cellphone' => 'required|string|max:20',
-            'address'   => 'string|max:100',
-            'language' => 'required|string|max:2',
-            'getReportsEmails' => 'boolean',
-            'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
-        ]);
-    }
-
-    protected function validateTechnicianRequestUpdate(Request $request, $id)
-    {
-        return $this->validate($request, [
-            'name' => 'string|max:25',
-            'last_name' => 'string|max:40',
-            'supervisor' => 'integer|min:1',
-            'username' => 'alpha_dash|between:4,25|unique:users,email,'.$id.',id',
-            'password' => 'alpha_dash|between:6,40',
-            'cellphone' => 'string|max:20',
-            'address'   => 'max:100',
-            'language' => 'string|max:2',
-            'status' => 'boolean',
-            'getReportsEmails' => 'boolean',
-            'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
-        ]);
     }
 
 }

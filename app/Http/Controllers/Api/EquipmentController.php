@@ -28,6 +28,11 @@ class EquipmentController extends ApiController
      */
     public function index(Request $request, $serviceSeqId)
     {
+        if($this->getUser()->cannot('list', Equipment::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
@@ -52,6 +57,11 @@ class EquipmentController extends ApiController
      */
     public function store(Request $request, $serviceSeqId)
     {
+        if($this->getUser()->cannot('create', Equipment::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
         // validation
@@ -102,6 +112,11 @@ class EquipmentController extends ApiController
      */
     public function show(Equipment $equipment)
     {
+        if($this->getUser()->cannot('view', $equipment))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         return $this->respond([
             'data' =>$this->equipmentTransformer->transform($equipment)
         ]);
@@ -116,6 +131,10 @@ class EquipmentController extends ApiController
      */
     public function update(Request $request, Equipment $equipment)
     {
+        if($this->getUser()->cannot('update', $equipment))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         // validation
         $this->validate($request, [
@@ -135,14 +154,14 @@ class EquipmentController extends ApiController
             $equipment->update($request->except('service_id'));
 
             //Delete Photos
-            if(isset($request->photosDelete)){
+            if(isset($request->photosDelete) && $this->getUser()->can('removePhoto', $equipment)){
                 foreach ($request->photosDelete as $order) {
                     $equipment->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photos)){
+            if(isset($request->photos) && $this->getUser()->can('addPhoto', $equipment)){
                 foreach ($request->photos as $photo) {
                     $equipment->addImageFromForm($photo);
                 }
@@ -163,6 +182,11 @@ class EquipmentController extends ApiController
      */
     public function destroy(Equipment $equipment)
     {
+        if($this->getUser()->cannot('delete', $equipment))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         if($equipment->delete()) {
             return response()->json(['message' => 'Equipment was deleted.'] , 200);
         }

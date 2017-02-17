@@ -28,6 +28,11 @@ class WorkOrderController extends ApiController
      */
     public function index(Request $request)
     {
+        if($this->getUser()->cannot('list', WorkOrder::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25',
             'finished' => 'boolean',
@@ -61,7 +66,11 @@ class WorkOrderController extends ApiController
      */
     public function store(Request $request)
     {
-        // validation
+        if($this->getUser()->cannot('create', WorkOrder::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request,[
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -123,7 +132,16 @@ class WorkOrderController extends ApiController
      */
     public function show($seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        try{
+            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('WorkOrder with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $workOrder))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         return $this->respond([
             'data' => $this->workOrderTransformer->transform($workOrder),
@@ -140,7 +158,18 @@ class WorkOrderController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
-        // validation
+        $admin = $this->loggedUserAdministrator();
+        try{
+            $workOrder = $admin->workOrderBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('WorkOrder with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('update', $workOrder))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request,[
             'title' => 'string|max:255',
             'description' => 'string',
@@ -152,11 +181,6 @@ class WorkOrderController extends ApiController
             'photosBeforeWork.*' => 'mimes:jpg,jpeg,png',
             'photosBeforeWorkDelete.*' => 'integer|min:1',
         ]);
-
-
-        $admin = $this->loggedUserAdministrator();
-        // send json friendly message if not found
-        $workOrder = $admin->workOrderBySeqId($seq_id);
 
         // check that work order is not marked as finished
         if($workOrder->end()->finished()){
@@ -193,14 +217,14 @@ class WorkOrderController extends ApiController
             }
 
             //Delete Photos
-            if(isset($request->photosBeforeWorkDelete)){
+            if(isset($request->photosBeforeWorkDelete) && $this->getUser()->can('removePhoto', $workOrder)){
                 foreach ($request->photosBeforeWorkDelete as $order) {
                     $workOrder->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photosBeforeWork)){
+            if(isset($request->photosBeforeWork) && $this->getUser()->can('addPhoto', $workOrder)){
                 foreach ($request->photosBeforeWork as $photo) {
                     $workOrder->addImageFromForm($photo);
                 }
@@ -223,10 +247,17 @@ class WorkOrderController extends ApiController
      */
     public function finish(Request $request, $seq_id)
     {
-
         $admin = $this->loggedUserAdministrator();
-        // send json friendly message if not found
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        try{
+            $workOrder = $admin->workOrderBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('WorkOrder with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('finish', $workOrder))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         // check that work order is not marked as finished
         if($workOrder->end()->finished()){
@@ -272,7 +303,16 @@ class WorkOrderController extends ApiController
      */
     public function destroy($seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        try{
+            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('WorkOrder with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $workOrder))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         if($workOrder->delete()){
             return response()->json([

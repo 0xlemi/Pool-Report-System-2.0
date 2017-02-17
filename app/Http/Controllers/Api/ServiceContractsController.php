@@ -50,7 +50,11 @@ class ServiceContractsController extends ApiController
      */
     public function show($serviceSeqId)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         if(!$service->hasServiceContract()){
             return response()->json([
@@ -58,8 +62,15 @@ class ServiceContractsController extends ApiController
             ], 422);
         }
 
+        $serviceContract = $service->serviceContract;
+        if($this->getUser()->cannot('view', $serviceContract))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
+
         return $this->respond([
-            'data' =>$this->contractTransformer->transform($service->serviceContract),
+            'data' =>$this->contractTransformer->transform($serviceContract),
         ]);
     }
 
@@ -71,7 +82,11 @@ class ServiceContractsController extends ApiController
      */
     public function destroy($serviceSeqId)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         if(!$service->hasServiceContract()){
             return response()->json([
@@ -79,7 +94,13 @@ class ServiceContractsController extends ApiController
             ], 422);
         }
 
-        if($service->serviceContract->delete()){
+        $serviceContract = $service->serviceContract;
+        if($this->getUser()->cannot('delete', $serviceContract))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
+        if($serviceContract->delete()){
             return response()->json([
                 'message' => 'Contract was successfully destroyed'
             ]);
@@ -99,6 +120,11 @@ class ServiceContractsController extends ApiController
      */
     protected function store(Request $request, Service $service)
     {
+        if($this->getUser()->cannot('create', ServiceContract::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
@@ -142,11 +168,16 @@ class ServiceContractsController extends ApiController
      */
     protected function update(Request $request, ServiceContract $contract)
     {
+        if($this->getUser()->cannot('update', $contract))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'active' => 'boolean',
             'start_time' => 'date_format:H:i',
             'end_time' => "date_format:H:i|timeAfterDB:service_contracts,start_time,{$contract->service_id},start_time",
-            'status' => 'boolean',
+            'active' => 'boolean',
             'amount' => 'numeric|max:10000000',
             'currency' => 'string|validCurrency',
             'comments' => 'string',
@@ -160,7 +191,7 @@ class ServiceContractsController extends ApiController
             'service_days.sunday' => 'required_with:service_days|boolean',
         ]);
 
-        $values = array_map('htmlentities', $request->except('service_days'));
+        $values = array_map('htmlentities', $request->except('service_days', 'active'));
 
         // get the service days number 0-127 from request
         if($request->has('service_days')){

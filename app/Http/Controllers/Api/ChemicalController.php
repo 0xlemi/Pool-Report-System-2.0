@@ -24,6 +24,11 @@ class ChemicalController extends ApiController
      */
     public function index(Request $request, $serviceSeqId)
     {
+        if($this->getUser()->cannot('list', Chemical::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
@@ -47,6 +52,11 @@ class ChemicalController extends ApiController
      */
     public function store(Request $request, $serviceSeqId)
     {
+        if($this->getUser()->cannot('create', Chemical::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
 
         // validation
@@ -75,6 +85,11 @@ class ChemicalController extends ApiController
      */
     public function show(Chemical $chemical)
     {
+        if($this->getUser()->cannot('view', $chemical))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         return $this->respond([
             'data' =>$this->chemicalTransformer->transform($chemical)
         ]);
@@ -89,6 +104,11 @@ class ChemicalController extends ApiController
      */
     public function update(Request $request, Chemical $chemical)
     {
+        if($this->getUser()->cannot('update', $chemical))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         // validation
         $this->validate($request, [
             'name' => 'string|max:255',
@@ -112,6 +132,11 @@ class ChemicalController extends ApiController
      */
     public function destroy(Chemical $chemical)
     {
+        if($this->getUser()->cannot('delete', $chemical))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         if($chemical->delete()) {
             return response()->json(['message' => 'Chemical was deleted.'] , 200);
         }

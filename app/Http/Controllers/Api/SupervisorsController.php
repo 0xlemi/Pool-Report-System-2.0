@@ -43,7 +43,7 @@ class SupervisorsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('index', Supervisor::class))
+        if($this->getUser()->cannot('list', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -103,14 +103,23 @@ class SupervisorsController extends ApiController
      */
     public function store(Request $request)
     {
-        // check that the user has permission
         if($this->getUser()->cannot('create', Supervisor::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        // Validation
-        $this->validateSupervisorRequestCreate($request);
+        $this->validate($request, [
+            'name' => 'required|string|max:25',
+            'last_name' => 'required|string|max:40',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|alpha_dash|between:6,40',
+            'cellphone' => 'required|string|max:20',
+            'address'   => 'string|max:100',
+            'language' => 'required|string|max:2',
+            'getReportsEmails' => 'boolean',
+            'photo' => 'mimes:jpg,jpeg,png',
+            'comments' => 'string|max:1000',
+        ]);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -162,15 +171,15 @@ class SupervisorsController extends ApiController
      */
     public function show($seq_id, $checkPermission = true)
     {
-        if($checkPermission && $this->getUser()->cannot('show', Supervisor::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Supervisor with that id, does not exist.');
+        }
+
+        if($checkPermission && $this->getUser()->cannot('view', $supervisor))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($supervisor){
@@ -191,22 +200,30 @@ class SupervisorsController extends ApiController
      */
     public function update(Request $request, $seq_id, $checkPermission = true)
     {
-        // check that user has permission
-        if($checkPermission && $this->getUser()->cannot('edit', Supervisor::class))
+        try{
+            $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Supervisor with that id, does not exist.');
+        }
+
+        if($checkPermission && $this->getUser()->cannot('update', $supervisor))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        // Validation
-            // validate the $seq_id
-            try{
-                $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Supervisor with that id, does not exist.');
-            }
-            // validate the core attributes
-            $this->validateSupervisorRequestUpdate($request, $supervisor->user->id);
-
+        $this->validate($request, [
+            'name' => 'string|max:25',
+            'last_name' => 'string|max:40',
+            'email' => 'email|unique:users,email,'.$supervisor->user->id.',id',
+            'password' => 'alpha_dash|between:6,40',
+            'cellphone' => 'string|max:20',
+            'address'   => 'string|max:100',
+            'language' => 'string|max:2',
+            'status' => 'boolean',
+            'getReportsEmails' => 'boolean',
+            'photo' => 'mimes:jpg,jpeg,png',
+            'comments' => 'string|max:1000',
+        ]);
 
         // ***** Persiting *****
         $transaction = DB::transaction(function () use($request, $supervisor) {
@@ -256,15 +273,15 @@ class SupervisorsController extends ApiController
      */
     public function destroy($seq_id)
     {
-        if($this->getUser()->cannot('destroy', Supervisor::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try{
             $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Supervisor with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $supervisor))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($supervisor->delete()){
@@ -272,39 +289,6 @@ class SupervisorsController extends ApiController
         }
 
         return $this->respondNotFound('Supervisor with that id, does not exist.');
-    }
-
-protected function validateSupervisorRequestCreate(Request $request)
-    {
-        return $this->validate($request, [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|alpha_dash|between:6,40',
-            'cellphone' => 'required|string|max:20',
-            'address'   => 'string|max:100',
-            'language' => 'required|string|max:2',
-            'getReportsEmails' => 'boolean',
-            'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
-        ]);
-    }
-
-    protected function validateSupervisorRequestUpdate(Request $request, $id)
-    {
-        return $this->validate($request, [
-            'name' => 'string|max:25',
-            'last_name' => 'string|max:40',
-            'email' => 'email|unique:users,email,'.$id.',id',
-            'password' => 'alpha_dash|between:6,40',
-            'cellphone' => 'string|max:20',
-            'address'   => 'string|max:100',
-            'language' => 'string|max:2',
-            'status' => 'boolean',
-            'getReportsEmails' => 'boolean',
-            'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
-        ]);
     }
 
 

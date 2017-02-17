@@ -42,7 +42,7 @@ class ReportsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('index', Report::class))
+        if($this->getUser()->cannot('list', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -72,7 +72,7 @@ class ReportsController extends ApiController
      */
     public function indexByDate(String $date_str)
     {
-        if($this->getUser()->cannot('index', Report::class))
+        if($this->getUser()->cannot('list', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -102,7 +102,6 @@ class ReportsController extends ApiController
      */
     public function store(Request $request)
     {
-        // check that user has permission
         if($this->getUser()->cannot('create', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
@@ -185,15 +184,15 @@ class ReportsController extends ApiController
      */
     public function show($seq_id)
     {
-        if($this->getUser()->cannot('show', Report::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try {
             $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $report))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($report){
@@ -213,24 +212,20 @@ class ReportsController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
-        // check if user has permission
-        if($this->getUser()->cannot('edit', Report::class))
+        $admin = $this->loggedUserAdministrator();
+        try {
+            $report = $admin->reportsBySeqId($seq_id);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Report with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('update', $report))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
-
         // Validate
-            // validate core attributes
             $this->validateReportUpdate($request);
-            // validate and get the Report
-            try {
-                $report = $admin->reportsBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Report with that id, does not exist.');
-            }
-            // validate and get the service
             try {
                 if(isset($request->service_id)){
                     $service = $admin->serviceBySeqId($request->service_id);
@@ -295,15 +290,15 @@ class ReportsController extends ApiController
      */
     public function destroy($seq_id)
     {
-        if($this->getUser()->cannot('destroy', Report::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
         try{
             $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $report))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($report->delete()){
