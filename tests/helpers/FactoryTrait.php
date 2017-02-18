@@ -8,6 +8,7 @@ use App\Administrator;
 use App\Supervisor;
 use App\Technician;
 use App\Service;
+use App\Invoice;
 use App\Report;
 
 /**
@@ -21,6 +22,13 @@ trait FactoryTrait
     public function __construct()
     {
         $this->seederHelper = new SeederHelpers();
+    }
+
+    public function createPayment(Invoice $invoice)
+    {
+        return $invoice->payments()->create([
+            'amount' => 50,
+        ]);
     }
 
     public function createInvoice(WorkOrder $workOrder)

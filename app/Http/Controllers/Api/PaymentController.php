@@ -55,7 +55,7 @@ class PaymentController extends ApiController
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
-
+        
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
         ]);
