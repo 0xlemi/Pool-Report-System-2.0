@@ -59,7 +59,7 @@ trait FactoryTrait
             'title' => 'Title',
             'description' => 'Nothing',
             'start' => '2017-02-03 06:45:10',
-            'end' => '2017-02-13 19:27:11',
+            'end' => null,
             'price' => 1500,
             'currency' => 'USD',
             'supervisor_id' => $supervisor->id,
