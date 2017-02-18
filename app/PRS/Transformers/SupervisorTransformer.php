@@ -45,7 +45,7 @@ class SupervisorTransformer extends Transformer
             'comments' => $supervisor->comments,
             'photo' => $photo,
             'notification_settings' => [
-                $suprevisor->user->notificationSettings->getAll()
+                $supervisor->user->notificationSettings->getAll()
             ],
         ];
     }
