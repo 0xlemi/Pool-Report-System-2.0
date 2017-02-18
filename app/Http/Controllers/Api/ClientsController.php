@@ -83,6 +83,7 @@ class ClientsController extends ApiController
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
             'comments' => 'string|max:1000',
+            'add_services.*' => 'numeric|exists:services,seq_id',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
 
@@ -96,13 +97,14 @@ class ClientsController extends ApiController
                 // that the services with those id exist
             $client = Client::create(
                     array_merge(
-                        array_map('htmlentities', $request->except('services')),
+                        array_map('htmlentities', $request->except('add_services')),
                         [
                             'admin_id' => $admin->id,
                         ]
                     )
             );
-            $client->setServices($request->services);
+            
+            if(isset($request->add_services)){ $client->setServices($request->add_services);}
 
             // Crete the User
             $client_id = $admin->clientsInOrder('desc')->first()->id;
@@ -175,7 +177,6 @@ class ClientsController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
         // ***** Validation *****
             $this->validate($request, [
                     'name' => 'string|max:25',
@@ -187,6 +188,8 @@ class ClientsController extends ApiController
                     'getReportsEmails' => 'boolean',
                     'comments' => 'string|max:1000',
                     'photo' => 'mimes:jpg,jpeg,png',
+                    'add_services.*' => 'numeric|exists:services,seq_id',
+                    'remove_services.*' => 'numeric|exists:services,seq_id',
                 ]);
         // end validation
 
@@ -195,8 +198,9 @@ class ClientsController extends ApiController
 
             // set client values
             $client->fill(array_map('htmlentities', $request->except('admin_id','add_services', 'remove_services')));
-            $client->setServices($request->add_services);
-            $client->unsetServices($request->remove_services);
+
+            if(isset($request->add_services)){ $client->setServices($request->add_services); }
+            if(isset($request->remove_services)){ $client->unsetServices($request->remove_services); }
 
             // set user values
             $user = $client->user;

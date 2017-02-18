@@ -26,7 +26,7 @@ class ClientsTest extends DatabaseTester
 
         // When
         // Then
-        $this->assertSameObject($admin, $client->admin());    
+        $this->assertSameObject($admin, $client->admin());
 
     }
 
@@ -158,6 +158,41 @@ class ClientsTest extends DatabaseTester
         // Then
         $this->assertTrue($client->hasService($ser1_seq_id));
         $this->assertTrue($client->hasService($ser2_seq_id));
+        $this->assertTrue($client->hasService($ser3_seq_id));
+
+    }
+
+    /** @test */
+    public function unsetting_services_from_seq_id_array()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+        $client = $this->createClient($admin->id);
+
+        $ser1 = $client->services()->create([
+            'admin_id' => $admin->id,
+        ]);
+        $ser2 = $client->services()->create([
+            'admin_id' => $admin->id,
+        ]);
+        $ser3 = $client->services()->create([
+            'admin_id' => $admin->id,
+        ]);
+
+        $ser1_seq_id = Service::find($ser1->id)->seq_id;
+        $ser2_seq_id = Service::find($ser2->id)->seq_id;
+        $ser3_seq_id = Service::find($ser3->id)->seq_id;
+
+        // When
+        $client->unsetServices([
+            $ser1_seq_id,
+            $ser2_seq_id,
+        ]);
+
+        // Then
+        $this->assertFalse($client->hasService($ser1_seq_id));
+        $this->assertFalse($client->hasService($ser2_seq_id));
         $this->assertTrue($client->hasService($ser3_seq_id));
 
     }
