@@ -1,6 +1,7 @@
 <?php
 
 use App\PRS\Helpers\SeederHelpers;
+use App\WorkOrder;
 
 use App\User;
 use App\Administrator;
@@ -22,7 +23,32 @@ trait FactoryTrait
         $this->seederHelper = new SeederHelpers();
     }
 
-    public function createEquipment($service)
+    public function createWork(WorkOrder $workOrder, Technician $technician)
+    {
+        return $workOrder->works()->create([
+            'title' => 'Some Job',
+            'description' => 'Nothing',
+            'quantity' => 23,
+            'units' => 'square meters',
+            'cost' => 250,
+            'technician_id' => $technician->id,
+        ]);
+    }
+
+    public function createWorkOrder(Service $service, Supervisor $supervisor)
+    {
+        return $service->workOrders()->create([
+            'title' => 'Title',
+            'description' => 'Nothing',
+            'start' => '2017-02-03 06:45:10',
+            'end' => '2017-02-13 19:27:11',
+            'price' => 1500,
+            'currency' => 'USD',
+            'supervisor_id' => $supervisor->id,
+        ]);
+    }
+
+    public function createEquipment(Service $service)
     {
         return $service->equipment()->create([
             'kind' => 'Pump',
@@ -34,7 +60,7 @@ trait FactoryTrait
         ]);
     }
 
-    public function createChemical($service)
+    public function createChemical(Service $service)
     {
         return $service->chemicals()->create([
             'name' => 'Some Chemical',

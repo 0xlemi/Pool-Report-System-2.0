@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class EquipmentApiTest extends ApiTester
+class InvoiceAuthorizationTest extends TestCase
 {
     /**
      * A basic test example.
