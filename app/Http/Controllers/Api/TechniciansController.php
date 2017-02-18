@@ -207,7 +207,7 @@ class TechniciansController extends ApiController
             return $this->respondNotFound('Technician with that id, does not exist.');
         }
 
-        if($checkPermission && $this->getUser()->cannot('update', $techinican))
+        if($checkPermission && $this->getUser()->cannot('update', $technician))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -296,7 +296,7 @@ class TechniciansController extends ApiController
             return $this->respondNotFound('Technician with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('delete', $technican))
+        if($this->getUser()->cannot('delete', $technician))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
