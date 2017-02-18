@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\InvoiceTransformer;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Invoice;
+
 class InvoiceController extends ApiController
 {
 
@@ -50,12 +53,16 @@ class InvoiceController extends ApiController
      */
     public function show($seqId)
     {
-        if($this->getUser()->cannot('view', Invoice::class))
+        try {
+            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Invoice with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('view', $invoice))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
-
-        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
 
         return $this->respond([
             'data' => $this->invoiceTransformer->transform($invoice)
@@ -70,7 +77,13 @@ class InvoiceController extends ApiController
      */
     public function destroy($seqId)
     {
-        if($this->getUser()->cannot('delete', Invoice::class))
+        try {
+            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Invoice with that id, does not exist.');
+        }
+
+        if($this->getUser()->cannot('delete', $invoice))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

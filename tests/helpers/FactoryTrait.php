@@ -23,6 +23,16 @@ trait FactoryTrait
         $this->seederHelper = new SeederHelpers();
     }
 
+    public function createInvoice(WorkOrder $workOrder)
+    {
+        return $workOrder->invoices()->create([
+            'closed' => '2016-10-04 02:05:41',
+            'amount' => 150,
+            'currency' => 'USD',
+            'admin_id' => 1,
+        ]);
+    }
+
     public function createWork(WorkOrder $workOrder, Technician $technician)
     {
         return $workOrder->works()->create([
