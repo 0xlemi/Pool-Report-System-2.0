@@ -15,12 +15,6 @@ class WorkAuthorizationTest extends ApiTester
 
     public function setUp()
     {
-        // sup_work_view
-        // sup_work_create
-        // sup_work_update
-        // sup_work_addPhoto
-        // sup_work_removePhoto
-        // sup_work_delete
         parent::setUp();
 
         $this->withoutMiddleware();

@@ -48,6 +48,20 @@ trait FactoryTrait
         ]);
     }
 
+    public function createContract(Service $service)
+    {
+        return $service->serviceContract()->create([
+            'start' => '2017-02-16',
+            'active' => 1,
+            'service_days' => 56,
+            'amount' => 500,
+            'currency' => 'USD',
+            'start_time' => '01:17:26',
+            'end_time' => '11:17:29',
+            'comments' => 'This are the comments',
+        ]);
+    }
+
     public function createEquipment(Service $service)
     {
         return $service->equipment()->create([
