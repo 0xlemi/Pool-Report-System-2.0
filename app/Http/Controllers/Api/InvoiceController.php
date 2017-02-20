@@ -88,8 +88,6 @@ class InvoiceController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
-
         if($invoice->delete()){
             return response()->json([
                 'message' => 'Invoice deleted successfully.',
