@@ -10,6 +10,7 @@ use App\Service;
 use App\PRS\Transformers\ContractTransformer;
 use App\PRS\Helpers\ContractHelpers;
 use App\ServiceContract;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ServiceContractsController extends ApiController
 {
@@ -33,11 +34,14 @@ class ServiceContractsController extends ApiController
      */
     public function storeOrUpdate(Request $request, $serviceSeqId)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
-        $contract = $service->serviceContract;
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         if($service->hasServiceContract()){
-            return $this->update($request, $contract);
+            return $this->update($request, $service->serviceContract);
         }
         return $this->store($request, $service);
     }
