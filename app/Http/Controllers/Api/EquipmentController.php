@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -37,7 +38,11 @@ class EquipmentController extends ApiController
             'limit' => 'integer|between:1,25'
         ]);
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         $limit = ($request->limit)?: 5;
         $equipment = $service->equipment()->paginate($limit);
@@ -62,7 +67,11 @@ class EquipmentController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        try {
+            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Service with that id, does not exist.');
+        }
 
         // validation
         $this->validate($request, [
@@ -72,22 +81,17 @@ class EquipmentController extends ApiController
             'model' => 'required|string|max:255',
             'capacity' => 'required|numeric',
             'units' => 'required|string|max:255',
-            'photos.*' => 'mimes:jpg,jpeg,png',
+            'add_photos.*' => 'mimes:jpg,jpeg,png',
         ]);
 
         // ***** Persisting *****
         $equipment = DB::transaction(function () use($request, $service){
 
-            $equipment = Equipment::create(array_merge(
-                                $request->except('photos'),
-                                [
-                                    'service_id' => $service->id,
-                                ]
-                            ));
+            $equipment = $service->equipment()->create(array_map('htmlentities', $request->except('add_photos')));
 
             // Add Photos
-            if(isset($request->photos)){
-                foreach ($request->photos as $photo) {
+            if(isset($request->add_photos)){
+                foreach ($request->add_photos as $photo) {
                     $equipment->addImageFromForm($photo);
                 }
             }
@@ -151,7 +155,7 @@ class EquipmentController extends ApiController
         // ***** Persisting *****
         DB::transaction(function () use($request, $equipment){
 
-            $equipment->update($request->except('service_id'));
+            $equipment->update(array_map('htmlentities', $request->except('add_photos', 'remove_photos')));
 
             //Delete Photos
             if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $equipment)){
