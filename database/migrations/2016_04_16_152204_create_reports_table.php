@@ -16,7 +16,7 @@ class CreateReportsTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->dateTime('completed');
-            $table->enum('on_time', ['early', 'onTime', 'late']);
+            $table->enum('on_time', ['early', 'onTime', 'late', 'noContract']);
             $table->unsignedTinyInteger('ph');
             $table->unsignedTinyInteger('chlorine');
             $table->unsignedTinyInteger('temperature');

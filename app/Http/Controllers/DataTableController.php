@@ -68,10 +68,9 @@ class DataTableController extends PageController
     {
         $this->authorize('list', Report::class);
 
-        if(!validateDate($request->date))
-        {
-            return Response::json('Date is not valid', 422);
-        }
+        $this->validate($request, [
+            'date' => 'validDateReportFormat'
+        ]);
 
         $admin = $this->loggedUserAdministrator();
 
@@ -81,8 +80,8 @@ class DataTableController extends PageController
                     ->reportsByDate($date)
                     ->get()
                     ->transform(function($item){
-                        $service = $item->service();
-                        $technician = $item->technician();
+                        $service = $item->service;
+                        $technician = $item->technician;
                         return (object) array(
                             'id' => $item->seq_id,
                             'service' => $service->name,

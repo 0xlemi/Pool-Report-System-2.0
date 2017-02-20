@@ -24,7 +24,7 @@ class ReportTest extends DatabaseTester
         $report = $this->createReport($ser->id, $tech->id);
 
         // When
-        $service = $report->service();
+        $service = $report->service;
 
         // Then
         $this->assertSameObject($ser, $service);
@@ -98,7 +98,7 @@ class ReportTest extends DatabaseTester
         $report = $this->createReport($ser->id, $tech->id);
 
         // When
-        $technician = $report->technician();
+        $technician = $report->technician;
 
         // Then
         $this->assertSameObject($tech, $technician);

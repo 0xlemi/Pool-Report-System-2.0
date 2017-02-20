@@ -109,8 +109,3 @@ function get_random_name($prefix, $file_type){
 	return $prefix.'_'.str_random(5).'_'.time().'.'.$file_type;
 
 }
-
-function validateDate($date){
-    $d = DateTime::createFromFormat('Y-m-d', $date);
-    return $d && $d->format('Y-m-d') === $date;
-}

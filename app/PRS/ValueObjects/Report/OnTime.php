@@ -31,6 +31,9 @@ class OnTime{
     		case 'late':
                 $label = 'danger';
     			break;
+            case 'noContract':
+                $label = 'default';
+    			break;
         }
         return "<span class=\"label label-{$label}\">{$this}</span>";
     }
@@ -50,6 +53,9 @@ class OnTime{
     			break;
     		case 'late':
     			return 'Late';
+    			break;
+            case 'noContract':
+    			return 'No Contract';
     			break;
     		default:
     			return 'Unknown';

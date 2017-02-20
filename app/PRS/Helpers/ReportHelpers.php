@@ -82,7 +82,7 @@ class ReportHelpers
         }elseif($this->checkIsEarly($completedDate, $startTime, $timesTimezone)){
             return 'early'; //early
         }
-        return 0; //unknown
+        return null; //unknown
     }
 
     /**

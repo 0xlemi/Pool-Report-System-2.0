@@ -17,6 +17,10 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Validation condition to check if date for serching reports vaild
+        Validator::extend('validDateReportFormat', 'App\PRS\Validators\ValidDateReportFormat@validate');
+        Validator::replacer('validDateReportFormat', 'App\PRS\Validators\ValidDateReportFormat@message');
+
         // Validation condition to check if notification type is vaild
         Validator::extend('validNotificationType', 'App\PRS\Validators\ValidNotificationType@validate');
         Validator::replacer('validNotificationType', 'App\PRS\Validators\ValidNotificationType@message');

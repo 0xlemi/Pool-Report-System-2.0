@@ -44,7 +44,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Service</label>
 							<div class="col-sm-10">
-								<dropdown :key="{{ $report->service()->seq_id }}"
+								<dropdown :key="{{ $report->service->seq_id }}"
 											:options="{{ json_encode($services) }}"
 											:name="'service'">
 								</dropdown>
@@ -54,7 +54,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Technician</label>
 							<div class="col-sm-10">
-								<dropdown :key="{{ $report->technician()->seq_id }}"
+								<dropdown :key="{{ $report->technician->seq_id }}"
 											:options="{{ json_encode($technicians) }}"
 											:name="'technician'">
 								</dropdown>

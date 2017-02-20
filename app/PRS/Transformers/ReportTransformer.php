@@ -57,9 +57,9 @@ class ReportTransformer extends Transformer
                 ],
             'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
             'service' => $this->servicePreviewTransformer
-                            ->transform($report->service()),
+                            ->transform($report->service),
             'technician' => $this->technicianPreviewTransformer
-                            ->transform($report->technician()),
+                            ->transform($report->technician),
         ];
     }
 

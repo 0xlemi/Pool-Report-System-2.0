@@ -26,7 +26,6 @@ class Report extends Model
      * @var array
      */
     protected $fillable = [
-        'service_id',
         'technician_id',
         'completed',
         'on_time',
@@ -37,6 +36,7 @@ class Report extends Model
         'salt',
         'latitude',
         'longitude',
+        'altitude',
         'accuracy',
     ];
 
@@ -48,7 +48,7 @@ class Report extends Model
      * tested
      */
     public function service(){
-    	return $this->belongsTo('App\Service')->first();
+    	return $this->belongsTo('App\Service');
     }
 
     /**
@@ -56,7 +56,7 @@ class Report extends Model
      * tested
      */
     public function clients(){
-        return $this->service()->clients();
+        return $this->service->clients();
     }
 
     /**
@@ -65,7 +65,7 @@ class Report extends Model
      */
     public function admin()
     {
-        return $this->service()->admin();
+        return $this->service->admin();
     }
 
     /**
@@ -73,7 +73,7 @@ class Report extends Model
      */
     public function supervisor()
     {
-        return $this->technician()->supervisor();
+        return $this->technician->supervisor();
     }
 
     /**
@@ -81,7 +81,7 @@ class Report extends Model
      * tested
      */
     public function technician(){
-    	return $this->belongsTo('App\Technician')->first();
+    	return $this->belongsTo('App\Technician');
     }
 
 
@@ -141,7 +141,7 @@ class Report extends Model
             $name = $client->name;
         }
 
-        $address = $this->service()->address_line;
+        $address = $this->service->address_line;
         $time = (new Carbon($this->completed, 'UTC'))
                     ->setTimezone($this->admin()->timezone)
                     ->toDayDateTimeString();

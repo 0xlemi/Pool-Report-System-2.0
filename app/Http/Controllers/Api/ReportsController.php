@@ -47,15 +47,17 @@ class ReportsController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        if(isset($request->date)){
-            return $this->indexByDate($request->date);
-        }
-
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,25',
+            'date' => 'validDateReportFormat'
         ]);
 
         $limit = ($request->limit)?: 5;
+
+        if(isset($request->date)){
+            return $this->indexByDate($request->date, $limit);
+        }
+
         $reports = $this->loggedUserAdministrator()->reportsInOrder()->paginate($limit);
 
         return $this->respondWithPagination(
@@ -70,28 +72,23 @@ class ReportsController extends ApiController
      * @param  String $date format YYYY-MM-DD the timezone may not be UTC
      * @return $reports
      */
-    public function indexByDate(String $date_str)
+    public function indexByDate(String $date_str, int $limit)
     {
         if($this->getUser()->cannot('list', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        if(!validateDate($date_str))
-        {
-            return $this->setStatusCode(422)->RespondWithError('The date is invalid');
-        }
-
         $admin = $this->loggedUserAdministrator();
 
         $date = (new Carbon($date_str, $admin->timezone))->setTimezone('UTC');
 
-        // Needs pagination
-        $reports = $admin->reportsByDate($date)->get();
+        $reports = $admin->reportsByDate($date)->paginate($limit);
 
-        return $this->respond([
-            'data' => $this->reportTransformer->transformCollection($reports),
-        ]);
+        return $this->respondWithPagination(
+            $reports,
+            $this->reportTransformer->transformCollection($reports)
+        );
     }
 
     /**
@@ -110,37 +107,44 @@ class ReportsController extends ApiController
         $admin = $this->loggedUserAdministrator();
 
         // Validate
-            $this->validateReportCreate($request);
-            // validate and get the service
-            try {
-                $service = $admin->serviceBySeqId($request->service_id);
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Service with that id, does not exist.');
-            }
-            // validate and get the technician_id
-            try {
-                $technician_id = $admin->technicianBySeqId($request->technician_id)->id;
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Technician with that id, does not exist.');
-            }
+        $this->validate($request, [
+            'service' => 'required|integer|exists:services,seq_id',
+            'technician' => 'required|integer|exists:technicians,seq_id',
+            'completed' => 'required|date',
+            'ph' => 'required|integer|between:1,5',
+            'chlorine' => 'required|integer|between:1,5',
+            'temperature' => 'required|integer|between:1,5',
+            'turbidity' => 'required|integer|between:1,4',
+            'salt' => 'required|integer|between:1,5',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'altitude' => 'numeric|between:-100,9000',
+            'accuracy' => 'required|numeric|between:0,100000',
+            'add_photos' => 'required|array|size:3',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+        ]);
+
+        $service = $admin->serviceBySeqId($request->service);
+        $technician = $admin->technicianBySeqId($request->technician);
 
         // check if the report was made on time
-        $on_time = $this->reportHelpers->checkOnTimeValue(
+        $on_time = 'noContract';
+        if($service->hasServiceContract()){
+            $on_time = $this->reportHelpers->checkOnTimeValue(
                 (new Carbon($request->completed, $admin->timezone)),
-                $service->start_time,
-                $service->end_time,
+                $service->serviceContract->start_time,
+                $service->serviceContract->end_time,
                 $admin->timezone
             );
+        }
 
         // ***** Persisting *****
-        $report = DB::transaction(function () use($request, $service, $technician_id, $on_time) {
+        $report = DB::transaction(function () use($request, $service, $technician, $on_time) {
 
             // create report
-            $report = Report::create([
-                'service_id' => $service->id,
-                'technician_id' => $technician_id,
-                // need to check what timezone is completed
-                'completed' => $request->completed,
+            $report = $service->reports()->create(array_map('htmlentities', [
+                'technician_id' => $technician->id,
+                'completed' => $request->completed, // need to check what timezone is completed ***check***
                 'on_time' => $on_time,
                 'ph' => $request->ph,
                 'chlorine' => $request->chlorine,
@@ -151,20 +155,21 @@ class ReportsController extends ApiController
                 'longitude' => $request->longitude,
                 'altitude' => $request->altitude,
                 'accuracy' => $request->accuracy,
-            ]);
+            ]));
 
-            // add photos
-            $report->addImageFromForm($request->file('photo1'));
-            $report->addImageFromForm($request->file('photo2'));
-            $report->addImageFromForm($request->file('photo3'));
+            // Add Photos
+            if(isset($request->add_photos)){
+                foreach ($request->add_photos as $photo) {
+                    $report->addImageFromForm($photo);
+                }
+            }
 
             return $report;
-
         });
 
-        // notify report was made
+        // Notifications that report was made
             // notify the clients
-            foreach ($service->clients()->get() as $client) {
+            foreach ($service->clients as $client) {
                 $client->user->notify(new ReportCreatedNotification($report));
             }
             // notify the supervisor
@@ -172,7 +177,7 @@ class ReportsController extends ApiController
 
         return $this->respondPersisted(
             'The report was successfuly created.',
-            $this->reportTransformer->transform($admin->reportsInOrder('desc')->first())
+            $this->reportTransformer->transform(Report::findOrFail($report->id))
         );
 
     }
@@ -225,53 +230,70 @@ class ReportsController extends ApiController
         }
 
         // Validate
-            $this->validateReportUpdate($request);
-            try {
-                if(isset($request->service_id)){
-                    $service = $admin->serviceBySeqId($request->service_id);
-                }else{
-                    $service = $report->service();
-                }
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Service with that id, does not exist.');
-            }
-            // validate and get the technician_id
-            try {
-                if(isset($request->technician_id)){
-                    $technician_id = $admin->technicianBySeqId($request->technician_id)->id;
-                }else{
-                    $technician_id = $report->technician_id;
-                }
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('Technician with that id, does not exist.');
-            }
-
+        $this->validate($request, [
+            'service' => 'integer|exists:services,seq_id',
+            'technician' => 'integer|exists:technicians,seq_id',
+            'completed' => 'date',
+            'ph' => 'integer|between:1,5',
+            'chlorine' => 'integer|between:1,5',
+            'temperature' => 'integer|between:1,5',
+            'turbidity' => 'integer|between:1,4',
+            'salt' => 'integer|between:1,5',
+            'latitude' => 'numeric|between:-90,90',
+            'longitude' => 'numeric|between:-180,180',
+            'accuracy' => 'numeric|between:0,100000',
+            'photo_1' => 'mimes:jpg,jpeg,png',
+            'photo_2' => 'mimes:jpg,jpeg,png',
+            'photo_3' => 'mimes:jpg,jpeg,png',
+            'add_photos' => 'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'remove_photos' => 'array',
+            'remove_photos.*' => 'required|integer|min:4',
+        ]);
         // end validation
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $report, $service, $technician_id) {
+        $transaction = DB::transaction(function () use($request, $report, $admin) {
 
             // $service and $technician_id were checked allready
-            $report->fill(array_merge(
-                array_map('htmlentities', $request->except('on_time')),
-                [
-                    'service_id' => $service->id,
-                    'technician_id' => $technician_id
-                ]
-            ));
+            $report->fill(array_map('htmlentities', $request->except(
+                'on_time', 'technician_id', 'photo_1', 'photo_2', 'photo_3', 'add_photos', 'remove_photos'
+            )));
+
+            if(isset($request->service)){
+                $report->service()->associate($admin->serviceBySeqId($request->service));
+            }
+            if(isset($request->technician)){
+                $report->technician()->associate($admin->serviceBySeqId($request->technician));
+            }
+
             $report->save();
 
-            if(isset($request->photo1)){
+            if(isset($request->photo_1)){
                 $report->deleteImage(1);
-                $report->addImageFromForm($request->file('photo1'), 1);
+                $report->addImageFromForm($request->file('photo_1'), 1);
             }
-            if(isset($request->photo2)){
+            if(isset($request->photo_2)){
                 $report->deleteImage(2);
-                $report->addImageFromForm($request->file('photo2'), 2);
+                $report->addImageFromForm($request->file('photo_2'), 2);
             }
-            if(isset($request->photo3)){
+            if(isset($request->photo_3)){
                 $report->deleteImage(3);
-                $report->addImageFromForm($request->file('photo3'), 3);
+                $report->addImageFromForm($request->file('photo_3'), 3);
+            }
+
+            //Delete Photos
+            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $report)){
+                foreach ($request->remove_photos as $order) {
+                    $report->deleteImage($order);
+                }
+            }
+
+            // Add Photos
+            if(isset($request->add_photos) && $this->getUser()->can('addPhotos', $report)){
+                foreach ($request->add_photos as $photo) {
+                    $report->addImageFromForm($photo);
+                }
             }
 
         });
@@ -306,46 +328,6 @@ class ReportsController extends ApiController
         }
 
         return $this->respondNotFound('Report with that id, does not exist.');
-    }
-
-    protected function validateReportCreate(Request $request)
-    {
-        return $this->validate($request, [
-            'service_id' => 'required|integer|min:1',
-            'technician_id' => 'required|integer|min:1',
-            'completed' => 'required|date',
-            'ph' => 'required|integer|between:1,5',
-            'chlorine' => 'required|integer|between:1,5',
-            'temperature' => 'required|integer|between:1,5',
-            'turbidity' => 'required|integer|between:1,4',
-            'salt' => 'required|integer|between:1,5',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'accuracy' => 'required|numeric|between:0,100000',
-            'photo1' => 'required|mimes:jpg,jpeg,png',
-            'photo2' => 'required|mimes:jpg,jpeg,png',
-            'photo3' => 'required|mimes:jpg,jpeg,png',
-        ]);
-    }
-
-    protected function validateReportUpdate(Request $request)
-    {
-        return $this->validate($request, [
-            'service_id' => 'integer|min:1',
-            'technician_id' => 'integer|min:1',
-            'completed' => 'date',
-            'ph' => 'integer|between:1,5',
-            'chlorine' => 'integer|between:1,5',
-            'temperature' => 'integer|between:1,5',
-            'turbidity' => 'integer|between:1,4',
-            'salt' => 'integer|between:1,5',
-            'latitude' => 'numeric|between:-90,90',
-            'longitude' => 'numeric|between:-180,180',
-            'accuracy' => 'numeric|between:0,100000',
-            'photo1' => 'mimes:jpg,jpeg,png',
-            'photo2' => 'mimes:jpg,jpeg,png',
-            'photo3' => 'mimes:jpg,jpeg,png',
-        ]);
     }
 
 }

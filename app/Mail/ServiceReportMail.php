@@ -50,7 +50,7 @@ class ServiceReportMail extends Mailable
             'logo' => url('img/logo-2.png'),
             'headerImage' => url('img/uploads/email_header.png'),
             'name' => $name,
-            'address' => $this->report->service()->address_line,
+            'address' => $this->report->service->address_line,
             'time' => $time,
             'photo1' => Storage::url($this->report->image(1)),
             'photo2' => Storage::url($this->report->image(2)),
