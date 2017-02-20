@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\PaymentTransformer;
 use App\Payment;
@@ -29,12 +31,18 @@ class PaymentController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        try {
+            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Invoice with that id, does not exist.');
+        }
+
         $this->validate($request, [
             'limit' => 'integer|between:1,25'
         ]);
-
         $limit = ($request->limit)?: 5;
-        $payments = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId)->payments()->paginate($limit);
+
+        $payments = $invoice->payments()->paginate($limit);
 
         return $this->respondWithPagination(
             $payments,
@@ -55,12 +63,16 @@ class PaymentController extends ApiController
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
-        
+
+        try {
+            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Invoice with that id, does not exist.');
+        }
+
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
         ]);
-
-        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
 
         $payment = $invoice->payments()->create($request->all());
 
