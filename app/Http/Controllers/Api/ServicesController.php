@@ -58,8 +58,7 @@ class ServicesController extends ApiController
         $this->validate($request, [
             'preview' => 'boolean',
             'status' => 'boolean',
-            // dont validate limit if preview is true
-            'limit' => 'integer|between:1,25',
+            'limit' => 'integer|between:1,25', // dont validate limit if preview is true
         ]);
 
         $admin = $this->loggedUserAdministrator();
@@ -123,7 +122,7 @@ class ServicesController extends ApiController
             'state' => 'required|string|max:30',
             'postal_code' => 'required|string|max:15',
             'country' => 'required|string|size:2',
-            'comments' => 'string|max:750',
+            'comments' => 'string|max:10000',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
 
@@ -132,17 +131,14 @@ class ServicesController extends ApiController
         // Create service
         $transaction = DB::transaction(function () use($request, $admin) {
 
-            $service = Service::create(
+            $service = $admin->services()->create(
                 array_merge(
                     array_map('htmlentities', $request->all()),
                     [
                         'country' => strtoupper(htmlentities($request->country)),
-                        'admin_id' => $admin->id,
                     ]
                 )
             );
-
-            $service->save();
 
             // Add Photo
             if($request->photo){
@@ -223,7 +219,7 @@ class ServicesController extends ApiController
 
             $service->fill(
                 array_merge(
-                    array_map('htmlentities', $request->except('admin_id')),
+                    array_map('htmlentities', $request->all()),
                     [
                         'country' => strtoupper(htmlentities($request->country)),
                     ]

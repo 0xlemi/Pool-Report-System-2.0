@@ -32,7 +32,6 @@ class Service extends Model
         'postal_code',
         'country',
         'comments',
-        'admin_id',
     ];
 
 
