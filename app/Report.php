@@ -73,7 +73,7 @@ class Report extends Model
      */
     public function supervisor()
     {
-        return $this->technician->supervisor();
+        return $this->technician->supervisor;
     }
 
     /**

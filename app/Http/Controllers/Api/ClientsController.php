@@ -83,7 +83,8 @@ class ClientsController extends ApiController
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
             'comments' => 'string|max:1000',
-            'add_services.*' => 'numeric|exists:services,seq_id',
+            'add_services' => 'array',
+            'add_services.*' => 'required|integer|exists:services,seq_id',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
 
@@ -103,7 +104,7 @@ class ClientsController extends ApiController
                         ]
                     )
             );
-            
+
             if(isset($request->add_services)){ $client->setServices($request->add_services);}
 
             // Crete the User
@@ -188,8 +189,10 @@ class ClientsController extends ApiController
                     'getReportsEmails' => 'boolean',
                     'comments' => 'string|max:1000',
                     'photo' => 'mimes:jpg,jpeg,png',
-                    'add_services.*' => 'numeric|exists:services,seq_id',
-                    'remove_services.*' => 'numeric|exists:services,seq_id',
+                    'add_services' => 'array',
+                    'add_services.*' => 'required|integer|exists:services,seq_id',
+                    'remove_services' => 'array',
+                    'remove_services.*' => 'required|integer|exists:services,seq_id',
                 ]);
         // end validation
 

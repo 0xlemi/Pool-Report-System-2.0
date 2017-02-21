@@ -50,10 +50,10 @@ class TechnicianTransformer extends Transformer
             'cellphone' => $technician->cellphone,
             'address' => $technician->address,
             'language' => $technician->language,
-            'status' => $technician->user->active,
+            'active' => $technician->user->active,
             'comments' => $technician->comments,
             'photo' => $photo,
-            'supervisor' => $this->supervisorPreviewTransformer->transform($technician->supervisor()),
+            'supervisor' => $this->supervisorPreviewTransformer->transform($technician->supervisor),
             'notification_settings' => [
                 $technician->user->notificationSettings->getAll()
             ],

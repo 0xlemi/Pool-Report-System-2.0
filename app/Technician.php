@@ -30,7 +30,6 @@ class Technician extends Model
         'address',
         'language',
         'comments',
-        'supervisor_id',
 	];
 
     /**
@@ -55,7 +54,7 @@ class Technician extends Model
 	 * tested
 	 */
     public function supervisor(){
-    	return $this->belongsTo('App\Supervisor')->first();
+    	return $this->belongsTo('App\Supervisor');
     }
 
 	/**

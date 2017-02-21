@@ -109,7 +109,6 @@ class SupervisorsController extends ApiController
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|alpha_dash|between:6,40',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
@@ -130,7 +129,6 @@ class SupervisorsController extends ApiController
 
             $user = $supervisor->user()->create([
                 'email' => htmlentities($request->email),
-                'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
             ]);
 
@@ -199,7 +197,6 @@ class SupervisorsController extends ApiController
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'email' => 'email|unique:users,email,'.$supervisor->user->id.',id',
-            'password' => 'alpha_dash|between:6,40',
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
             'language' => 'string|max:2',
@@ -208,7 +205,7 @@ class SupervisorsController extends ApiController
         ]);
 
         $user = $supervisor->user;
-        // Check that the admin has payed for this technician
+        // Check that the admin has payed for this supervisor
         $status = ($request->status)? 1:0;
         if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
@@ -222,7 +219,6 @@ class SupervisorsController extends ApiController
 
             // update the user
             if($request->has('email')){ $user->email = htmlentities($request->email); }
-            if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }
 
             $supervisor->save();

@@ -42,7 +42,7 @@ class SupervisorTransformer extends Transformer
             'cellphone' => $supervisor->cellphone,
             'address' => $supervisor->address,
             'language' => $supervisor->language,
-            'status' => $supervisor->user->active,
+            'active' => $supervisor->user->active,
             'comments' => $supervisor->comments,
             'photo' => $photo,
             'notification_settings' => [

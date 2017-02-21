@@ -45,9 +45,8 @@ class TechniciansController extends ApiController
 
         $this->validate($request, [
             'preview' => 'boolean',
-            'status' => 'boolean',
-            // dont validate limit if preview is true
-            'limit' => 'integer|between:1,25',
+            'active' => 'boolean',
+            'limit' => 'integer|between:1,25',// dont validate limit if preview is true
         ]);
 
         $admin = $this->loggedUserAdministrator();
@@ -58,10 +57,8 @@ class TechniciansController extends ApiController
         }
 
         $limit = ($request->limit)?: 5;
-        if($request->has('status')){
-            // $technicians = $admin->techniciansActive($request->status)
-                            // ->paginate($limit);
-            $technicians = $admin->techniciansInOrder()
+        if($request->has('active')){
+            $technicians = $admin->techniciansActive($request->active)
                             ->paginate($limit);
         }else{
             $technicians = $admin->techniciansInOrder()
@@ -76,8 +73,8 @@ class TechniciansController extends ApiController
 
     protected function indexPreview(Request $request, Administrator $admin)
     {
-        if($request->has('status')){
-            $technicians = $admin->techniciansActive($request->status);
+        if($request->has('active')){
+            $technicians = $admin->techniciansActive($request->active)->get();
         }else{
             $technicians = $admin->techniciansInOrder()->get();
         }
@@ -100,68 +97,52 @@ class TechniciansController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
-
         // Validation
         $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'supervisor' => 'required|integer|min:1',
-            'username' => 'required|alpha_dash|between:4,25|unique:users,email',
-            'password' => 'required|alpha_dash|between:6,40',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
-            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
+            'username' => 'required|alpha_dash|between:4,25|unique:users,email',
+            'supervisor' => 'required|integer|exists:supervisors,seq_id',
         ]);
-        try {
-            $supervisor_id = $admin->supervisorBySeqId($request->supervisor)->id;
-        }catch(ModelNotFoundException $e){
-            return $this->respondNotFound('There is no supervisor with that supervisor_id.');
+
+        $admin = $this->loggedUserAdministrator();
+        // check if the you can add new users
+        if(!$admin->canAddObject()){
+            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
         }
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $admin, $supervisor_id) {
+        $technician = DB::transaction(function () use($request, $admin) {
+
+            $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
             // create Technician
-            $technician = Technician::create(
-                    array_merge(
-                        array_map('htmlentities', $request->all()),
-                        [ 'supervisor_id' => $supervisor_id ]
-                    )
+            $technician = $supervisor->technicians()->create(
+                array_map('htmlentities', $request->all())
             );
 
             // create User
-            $technician_id = $admin->techniciansInOrder('desc')->first()->id;
-            $user = User::create([
+            $technician->user()->create([
                 'email' => htmlentities($request->username),
-                'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
-                'userable_type' => 'App\Technician',
-                'userable_id' => $technician_id,
             ]);
-
-            // Optional values
-            if(isset($request->getReportsEmails))
-            {
-                $value = $request->getReportsEmails;
-                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                $user->notify_report_created = $newNotificationNumber;
-                $user->save();
-            }
 
             // add photo
             if($request->photo){
                 $photo = $technician->addImageFromForm($request->file('photo'));
             }
 
+            return $technician;
         });
 
         return $this->respondPersisted(
             'The technician was successfuly created.',
-            $this->technicianTransformer->transform($admin->techniciansInOrder('desc')->first())
+            $this->technicianTransformer->transform(Technician::findOrFail($technician->id))
         );
     }
 
@@ -185,7 +166,6 @@ class TechniciansController extends ApiController
 
         if($technician){
             return $this->respond([
-                'type' => 'Technician',
                 'data' => $this->technicianTransformer->transform($technician),
             ]);
         }
@@ -201,8 +181,9 @@ class TechniciansController extends ApiController
      */
     public function update(Request $request, $seq_id, $checkPermission = true)
     {
+        $admin = $this->loggedUserAdministrator();
         try {
-            $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+            $technician = $admin->technicianBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Technician with that id, does not exist.');
         }
@@ -213,55 +194,40 @@ class TechniciansController extends ApiController
         }
 
         // ***** Validation *****
-            // checking core attributes
-            $this->validate($request, [
-                'name' => 'string|max:25',
-                'last_name' => 'string|max:40',
-                'supervisor' => 'integer|min:1',
-                'username' => 'alpha_dash|between:4,25|unique:users,email,'.$technician->user->id.',id',
-                'password' => 'alpha_dash|between:6,40',
-                'cellphone' => 'string|max:20',
-                'address'   => 'max:100',
-                'language' => 'string|max:2',
-                'status' => 'boolean',
-                'getReportsEmails' => 'boolean',
-                'photo' => 'mimes:jpg,jpeg,png',
-                'comments' => 'string|max:1000',
-            ]);
-            // checking the supervisor_seqid and getting the real id
-            try {
-                $supervisor_id = $technician->supervisor_id;
-                if(isset($request->supervisor)){
-                    $supervisor_id = $this->loggedUserAdministrator()
-                        ->supervisorBySeqId($request->supervisor)->id;
-                }
-            }catch(ModelNotFoundException $e){
-                return $this->respondNotFound('There is no supervisor with that supervisor_id.');
-            }
+        $this->validate($request, [
+            'name' => 'string|max:25',
+            'last_name' => 'string|max:40',
+            'cellphone' => 'string|max:20',
+            'address'   => 'max:100',
+            'language' => 'string|max:2',
+            'photo' => 'mimes:jpg,jpeg,png',
+            'comments' => 'string|max:1000',
+            'username' => 'alpha_dash|between:4,25|unique:users,email,'.$technician->user->id.',id',
+            'active' =>  'boolean',
+            'supervisor' => 'integer|exists:supervisors,seq_id',
+        ]);
+
+        // Check that the admin has payed for this technician
+        $user = $technician->user;
+        $active = ($request->active)? 1:0;
+        if( ($active && ($active != $user->active)) && !$admin->canAddObject()){
+            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
+        }
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $technician, $supervisor_id) {
+        $transaction = DB::transaction(function () use($request, $admin, $user, $technician) {
 
             // update technician
-            $technician->fill(array_merge(
-                                array_map('htmlentities', $request->all()),
-                                [ 'supervisor_id' => $supervisor_id ]
-                            ));
+            $technician->fill(array_map('htmlentities', $request->all()));
 
             // update user
-            $user = $technician->user;
             if($request->has('username')){ $user->email = htmlentities($request->username); }
-            if($request->has('password')){ $user->password = bcrypt($request->password); }
-            if($request->has('status')){ $user->active = $request->status; }
-            if(isset($request->getReportsEmails))
-            {
-                $value = $request->getReportsEmails;
-                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                $user->notify_report_created = $newNotificationNumber;
-                $user->save();
+            if($request->has('active')){ $user->active = $request->active; }
+
+            if($request->has('supervisor')){
+                $technician->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));
             }
 
-            // persist
             $technician->save();
             $user->save();
 
@@ -272,12 +238,8 @@ class TechniciansController extends ApiController
             }
         });
 
-        $message = 'The technician was successfully updated.';
-        if($request->password){
-            $message = 'The technician and its password were successfully updated.';
-        }
         return $this->respondPersisted(
-            $message,
+            'The technician was successfully updated.',
             $this->technicianTransformer->transform($this->loggedUserAdministrator()->technicianBySeqId($seq_id))
         );
     }

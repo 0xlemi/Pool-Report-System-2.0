@@ -67,7 +67,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Supervisor Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->supervisor()->name.' '.$technician->supervisor()->last_name }}">
+									<input type="text" readonly class="form-control" value="{{ $technician->supervisor->name.' '.$technician->supervisor->last_name }}">
 								</div>
 							</div>
 
