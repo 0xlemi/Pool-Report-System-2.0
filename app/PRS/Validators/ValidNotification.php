@@ -7,8 +7,8 @@ class ValidNotification
 
     public function validate($attribute, $value)
     {
-        $validNotification = config('constants.notifications');
-        return array_key_exists($value, $validNotification);
+        $notifications = config('constants.notifications');
+        return array_key_exists($value, (array) $notifications);
     }
 
     public function message($message, $attribute)

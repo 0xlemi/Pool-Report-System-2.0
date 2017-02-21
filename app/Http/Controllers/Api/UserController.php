@@ -102,7 +102,7 @@ class UserController extends ApiController
     {
         $this->validate($request, [
             'name' => 'required|max:255|validNotification',
-            'type' => 'required|max:255|validNotificationType',
+            'type' => 'required|max:255|validNotificationType:name',
             'value' => 'required|boolean'
         ]);
 
