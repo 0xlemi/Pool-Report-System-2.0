@@ -53,11 +53,16 @@ class UserController extends ApiController
     public function show()
     {
         $user = $this->getUser();
-        if($user->isAdministrator()){
+        if($user->isAdministrator())
+        {
             return $this->administratorsController->show();
-        }elseif($user->isSupervisor()){
+        }
+        elseif($user->isSupervisor())
+        {
             return $this->supervisorsController->show($user->userable()->seq_id, false);
-        }elseif($user->isTechnician()){
+        }
+        elseif($user->isTechnician())
+        {
             return $this->techniciansController->show($user->userable()->seq_id, false);
         }
 
@@ -67,18 +72,53 @@ class UserController extends ApiController
     public function update(Request $request){
 
         $user = $this->getUser();
+
+        $this->validate($request, [
+            'password' => 'alpha_dash|between:6,200'
+        ]);
         if($user->isAdministrator())
         {
+            $user->password =  bcrypt($request->password);
+            $user->save();
             return $this->administratorsController->update($request);
-        }elseif($user->isSupervisor())
+        }
+        elseif($user->isSupervisor())
         {
+            $user->password =  bcrypt($request->password);
+            $user->save();
             return $this->supervisorsController->update($request, $user->userable()->seq_id, false);
-        }elseif($user->isTechnician())
+        }
+        elseif($user->isTechnician())
         {
+            $user->password =  bcrypt($request->password);
+            $user->save();
             return $this->techniciansController->update($request, $user->userable()->seq_id, false);
         }
 
         return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+    }
+
+    public function notifications(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|max:255|validNotification',
+            'type' => 'required|max:255|validNotificationType',
+            'value' => 'required|boolean'
+        ]);
+
+        $user = $request->user();
+        $name = $request->name;
+        $type = $request->type;
+        $value = $request->value;
+
+        $newNotificationNumber = $user->notificationSettings->notificationChanged($name, $type, $value);
+        $user->$name = $newNotificationNumber;
+        $user->save();
+
+        $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
+        $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
+
+        return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
     }
 
     public function todaysRoute()
@@ -109,12 +149,11 @@ class UserController extends ApiController
         );
     }
 
-
     public function login(Request $request)
     {
         $this->validate($request, [
             'email' => 'required|string|max:255',
-            'password' => 'required|string|max:255',
+            'password' => 'required|string|between:6,200',
         ]);
 
         $user = User::where('email', $request->email)->first();

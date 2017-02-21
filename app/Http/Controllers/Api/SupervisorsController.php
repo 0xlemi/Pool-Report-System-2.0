@@ -151,7 +151,7 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($seq_id)
+    public function show($seq_id, $checkPermission = true)
     {
         try {
             $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
@@ -159,13 +159,16 @@ class SupervisorsController extends ApiController
             return $this->respondNotFound('Supervisor with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('view', $supervisor))
+        // checkpermission toogle so i can use this no the user controller
+        if($checkPermission && $this->getUser()->cannot('view', $supervisor))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($supervisor){
             return $this->respond([
+                // send the type so they can be deferiantable in the user controller show
+                'type' => 'Supervisor',
                 'data' => $this->supervisorTransformer->transform($supervisor),
             ]);
         }
@@ -179,7 +182,7 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id)
+    public function update(Request $request, $seq_id, $checkPermission = true)
     {
         $admin = $this->loggedUserAdministrator();
         try{
@@ -188,7 +191,8 @@ class SupervisorsController extends ApiController
             return $this->respondNotFound('Supervisor with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('update', $supervisor))
+        // checkpermission toogle so i can use this no the user controller
+        if($checkPermission && $this->getUser()->cannot('update', $supervisor))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

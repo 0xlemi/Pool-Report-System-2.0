@@ -40,49 +40,31 @@ class AdministratorsController extends ApiController
      */
     public function store(Request $request)
     {
-
-            // Validation
-            $this->validate($request, [
-                    'name' => 'required|between:2,45',
-                    'email' => 'required|email|max:255|unique:users,email',
-                    'password' => 'required|string|between:6,255',
-                    'timezone' => 'required|string|between:3,255',
-                    'companyName' => 'required|between:2,30',
-                    'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-                    'facebook' => 'string|max:50',
-                    'twitter' => 'string|max:15',
-                    'language' => 'string|size:2',
-                    'getReportsEmails' => 'boolean',
-                    'photo' => 'mimes:jpg,jpeg,png',
-                ]);
+        // Validation
+        $this->validate($request, [
+            'name' => 'required|between:2,45',
+            'timezone' => 'required|string|validTimezone',
+            'company_name' => 'required|between:2,30',
+            'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
+            'facebook' => 'string|max:50',
+            'twitter' => 'string|max:15',
+            'language' => 'string|size:2',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|between:6,255',
+            'photo' => 'mimes:jpg,jpeg,png',
+        ]);
 
         // ***** Persiting *****
         $user = DB::transaction(function () use($request) {
             // create Supervisor
-            $admin = Administrator::create(
-                    array_merge(
-                        array_map('htmlentities', $request->all()),
-                        [ 'company_name' => $request->companyName ]
-                    )
-            );
+            $admin = Administrator::create(array_map('htmlentities', $request->all()));
 
             // create User
-            $user = User::create([
+            $admin->user()->create([
                 'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
-                'userable_type' => 'App\Administrator',
-                'userable_id' => $admin->id,
             ]);
-
-            // Optional values
-            if(isset($request->getReportsEmails))
-            {
-                $value = $request->getReportsEmails;
-                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                $user->notify_report_created = $newNotificationNumber;
-                $user->save();
-            }
 
             // add photo
             if($request->photo){
@@ -137,57 +119,45 @@ class AdministratorsController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. Only system administrators');
         }
 
-        // Validation
-            $this->validate($request, [
-                'name' => 'between:2,45',
-                'email' => 'email|max:255|unique:users,email,'.$user->id.',id',
-                'password' => 'string|between:6,255',
-                'timezone' => 'string|between:3,255',
-                'companyName' => 'between:2,30',
-                'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
-                'facebook' => 'string|max:50',
-                'twitter' => 'string|max:15',
-                'language' => 'string|size:2',
-                'getReportsEmails' => 'boolean',
-                'photo' => 'mimes:jpg,jpeg,png',
-            ]);
+        $this->validate($request, [
+            'name' => 'between:2,45',
+            'timezone' => 'string|between:3,255',
+            'company_name' => 'between:2,30',
+            'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
+            'facebook' => 'string|max:50',
+            'twitter' => 'string|max:15',
+            'language' => 'string|size:2',
+            'email' => 'email|max:255|unique:users,email,'.$user->id.',id',
+            'password' => 'string|between:6,255',
+            'photo' => 'mimes:jpg,jpeg,png',
+        ]);
 
-            $admin = $user->userable();
+        $admin = $user->userable();
 
-            // ***** Persisting *****
-            $report = DB::transaction(function () use($request, $admin, $user) {
+        // ***** Persisting *****
+        $report = DB::transaction(function () use($request, $admin, $user) {
 
-                $admin->fill(array_merge(
-                                array_map('htmlentities', $request->all()),
-                                [ 'company_name' => $request->company ]
-                            ));
-                $admin->save();
+            $admin->fill(array_map('htmlentities', $request->all()));
+            $admin->save();
 
-                if(isset($request->email)){ $user->email = htmlentities($request->email); }
-                if(isset($request->password)){ $user->password = bcrypt($request->password); }
-                if(isset($request->getReportsEmails))
-                {
-                    $value = $request->getReportsEmails;
-                    $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                    $user->notify_report_created = $newNotificationNumber;
-                    $user->save();
-                }
+            if(isset($request->email)){ $user->email = htmlentities($request->email); }
+            if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
-                // add photo
-                if($request->photo){
-                    $admin->images()->delete();
-                    $admin->addImageFromForm($request->file('photo'));
-                }
-            });
-
-            $message = 'Administrator account settings where updated';
-            if($request->password){
-                $message = 'Administrator account settings and password where updated';
+            // add photo
+            if($request->photo){
+                $admin->images()->delete();
+                $admin->addImageFromForm($request->file('photo'));
             }
-            return $this->respondPersisted(
-                            $message,
-                            $this->adminTransformer->transform($admin)
-                        );
+        });
+
+        return $this->respondPersisted(
+                    'Administrator account settings where updated',
+                    $this->adminTransformer->transform($admin)
+                );
+    }
+
+    public function billing()
+    {
 
     }
 

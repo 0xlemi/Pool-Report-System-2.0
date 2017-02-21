@@ -8,6 +8,7 @@ use App\Setting;
 
 trait SettingsControllerTrait{
 
+
     public function permissions(Request $request)
     {
         $this->authorize('permissions', Setting::class);

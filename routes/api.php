@@ -31,6 +31,7 @@ Route::group(['middleware' => ['auth:api'] ], function(){
 	Route::post('resettoken', 'Api\UserController@resetToken');
 	Route::get('account', 'Api\UserController@show');
 	Route::post('account', 'Api\UserController@update');
+	Route::post('notifications', 'Api\UserController@notifications');
 
 
 	// Administrator

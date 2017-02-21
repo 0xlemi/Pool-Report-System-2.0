@@ -120,7 +120,7 @@ class SettingsController extends PageController
 
         $user = $this->getUser();
         $this->validate($request, [
-            'password' => 'required|string|max:255',
+            'password' => 'required|string|max:200',
             'email' => 'required|email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
         ]);
 
@@ -146,9 +146,9 @@ class SettingsController extends PageController
         // }
 
         $this->validate($request, [
-          'oldPassword' => 'required|string|max:255',
-          'newPassword' => 'required|string|between:6,255',
-          'confirmPassword' => 'required|string|between:6,255|same:newPassword',
+          'oldPassword' => 'required|string|between:6,200',
+          'newPassword' => 'required|alpha_dash|between:6,200',
+          'confirmPassword' => 'required|alpha_dash|between:6,200|same:newPassword',
         ]);
 
             $user = $this->getUser();

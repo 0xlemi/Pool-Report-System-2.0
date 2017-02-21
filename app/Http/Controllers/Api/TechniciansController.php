@@ -159,6 +159,7 @@ class TechniciansController extends ApiController
             return $this->respondNotFound('Technician with that id, does not exist.');
         }
 
+        // checkpermission toogle so i can use this no the user controller
         if($checkPermission && $this->getUser()->cannot('view', $technician))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
@@ -166,6 +167,8 @@ class TechniciansController extends ApiController
 
         if($technician){
             return $this->respond([
+                // send the type so they can be deferiantable in the user controller show
+                'type' => 'Technician',
                 'data' => $this->technicianTransformer->transform($technician),
             ]);
         }
@@ -188,6 +191,7 @@ class TechniciansController extends ApiController
             return $this->respondNotFound('Technician with that id, does not exist.');
         }
 
+        // checkpermission toogle so i can use this no the user controller
         if($checkPermission && $this->getUser()->cannot('update', $technician))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');

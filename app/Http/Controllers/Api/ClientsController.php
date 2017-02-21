@@ -78,13 +78,13 @@ class ClientsController extends ApiController
         $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email',
             'cellphone' => 'required|string|max:20',
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
             'comments' => 'string|max:1000',
             'add_services' => 'array',
             'add_services.*' => 'required|integer|exists:services,seq_id',
+            'email' => 'required|email|unique:users,email',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
 
@@ -108,13 +108,9 @@ class ClientsController extends ApiController
             if(isset($request->add_services)){ $client->setServices($request->add_services);}
 
             // Crete the User
-            $client_id = $admin->clientsInOrder('desc')->first()->id;
-            $user = User::create([
+            $user = $client->user()->create([
                 'email' => htmlentities($request->email),
-                'password' => bcrypt(str_random(20)),
                 'api_token' => str_random(60),
-                'userable_type' => 'App\Client',
-                'userable_id' => $client_id,
             ]);
 
             // Add Photo to Client
@@ -152,6 +148,8 @@ class ClientsController extends ApiController
 
         if($client){
             return $this->respond([
+                // send the type so they can be deferiantable in the user controller show
+                'type' => 'Client',
                 'data' => $this->clientTransformer->transform($client),
             ]);
         }
@@ -182,13 +180,13 @@ class ClientsController extends ApiController
             $this->validate($request, [
                     'name' => 'string|max:25',
                     'last_name' => 'string|max:40',
-                    'email' => 'email|unique:users,email,'.$client->user->id.',id',
                     'cellphone' => 'string|max:20',
                     'type' => 'numeric|between:1,2',
                     'language' => 'string|max:2',
                     'getReportsEmails' => 'boolean',
                     'comments' => 'string|max:1000',
                     'photo' => 'mimes:jpg,jpeg,png',
+                    'email' => 'email|unique:users,email,'.$client->user->id.',id',
                     'add_services' => 'array',
                     'add_services.*' => 'required|integer|exists:services,seq_id',
                     'remove_services' => 'array',
@@ -208,7 +206,6 @@ class ClientsController extends ApiController
             // set user values
             $user = $client->user;
             if(isset($request->email)){ $user->email = htmlentities($request->email); }
-            if(isset($request->password)){ $user->password = bcrypt($request->password); }
 
             // set photo
             if($request->photo){

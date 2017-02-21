@@ -55,7 +55,7 @@ class RegisterController extends Controller
             'company_name' => 'required|max:255',
             'timezone' => 'required|validTimezone',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|alpha_dash|between:6,200'
         ]);
     }
 
