@@ -204,11 +204,12 @@ class DataTableController extends PageController
 
         $supervisors = $this->loggedUserAdministrator()
                         ->supervisorsActive($request->status)
+                        ->get()
                         ->transform(function($item){
                             return (object) array(
                                 'id' => $item->seq_id,
                                 'name' => $item->name.' '.$item->last_name,
-                                'email' => $item->user->email,
+                                'email' => $item->email,
                                 'cellphone' => $item->cellphone,
                             );
                         })

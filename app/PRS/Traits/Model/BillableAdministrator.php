@@ -76,7 +76,7 @@ trait BillableAdministrator{
     public function objectActiveCount()
     {
         return $this->techniciansActive()->count()
-                + $this->supervisorsActive()->count();
+                + $this->supervisorsActive()->get()->count();
     }
 
 
@@ -101,11 +101,14 @@ trait BillableAdministrator{
      */
     public function supervisorsActive($active = true)
     {
+        // getting the polimorphic relationship between user and supervisors
         $isActive = ($active)? 1:0;
-        return $this->supervisorsInOrder()->get()
-                    ->filter(function($item) use ($isActive){
-                        return ($item->user->active == $isActive);
-                    });
+        return $this->supervisorsInOrder()
+            ->join('users', function ($join) use ($isActive){
+            $join->on('users.userable_id', '=', 'supervisors.id')
+                 ->where('users.userable_type', '=', 'App\Supervisor')
+                 ->where('users.active', '=', $isActive);
+        })->select('supervisors.*', 'email');
     }
 
 }

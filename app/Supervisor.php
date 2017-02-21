@@ -27,7 +27,6 @@ class Supervisor extends Model
 		'address',
 		'language',
 		'comments',
-		'admin_id',
 	];
 
     /**

@@ -65,10 +65,7 @@ class SupervisorsController extends ApiController
         $limit = ($request->limit)?: 5;
         // Filter by status
         if($request->has('status')){
-            // $supervisors = $admin->supervisorsActive()
-            //                     ->paginate($limit);
-            $supervisors = $admin->supervisorsInOrder()
-                                ->paginate($limit);
+            $supervisors = $admin->supervisorsActive($request->status)->paginate($limit);
         }else{
             $supervisors = $admin->supervisorsInOrder()
                                 ->paginate($limit);
@@ -85,7 +82,7 @@ class SupervisorsController extends ApiController
     {
 
         if($request->has('status')){
-            $supervisors = $admin->supervisorsActive();
+            $supervisors = $admin->supervisorsActive($request->status)->get();
         }else{
             $supervisors = $admin->supervisorsInOrder()->get();
         }
@@ -116,51 +113,38 @@ class SupervisorsController extends ApiController
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
-            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
 
         $admin = $this->loggedUserAdministrator();
+        // check if the you can add new users
+        if(!$admin->canAddObject()){
+            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
+        }
 
         // ***** Persiting *****
-        $transaction = DB::transaction(function () use($request, $admin) {
-            // create Supervisor
-            $supervisor = Supervisor::create(
-                        array_merge(
-                            array_map('htmlentities', $request->all()),
-                            [ 'admin_id' => $admin->id ]
-                        )
-            );
+        $supervisor = DB::transaction(function () use($request, $admin) {
 
-            // create User
-            $supervisor_id = $admin->supervisorsInOrder('desc')->first()->id;
-            $user = User::create([
+            $supervisor = $admin->supervisors()->create(array_map('htmlentities', $request->all()));
+
+            $user = $supervisor->user()->create([
                 'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),
-                'userable_type' => 'App\Supervisor',
-                'userable_id' => $supervisor_id,
             ]);
-
-            // Optional values
-            if(isset($request->getReportsEmails))
-            {
-                $value = $request->getReportsEmails;
-                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                $user->notify_report_created = $newNotificationNumber;
-                $user->save();
-            }
 
             // add photo
             if($request->photo){
                 $photo = $supervisor->addImageFromForm($request->file('photo'));
             }
+
+            return $supervisor;
         });
 
         return $this->respondPersisted(
             'The supervisor was successfuly created.',
-            $this->supervisorTransformer->transform($admin->supervisorsInOrder('desc')->first())
+            $this->supervisorTransformer->transform(Supervisor::findOrFail($supervisor->id))
         );
     }
 
@@ -169,7 +153,7 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($seq_id, $checkPermission = true)
+    public function show($seq_id)
     {
         try {
             $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
@@ -177,14 +161,13 @@ class SupervisorsController extends ApiController
             return $this->respondNotFound('Supervisor with that id, does not exist.');
         }
 
-        if($checkPermission && $this->getUser()->cannot('view', $supervisor))
+        if($this->getUser()->cannot('view', $supervisor))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($supervisor){
             return $this->respond([
-                'type' => 'Supervisor',
                 'data' => $this->supervisorTransformer->transform($supervisor),
             ]);
         }
@@ -198,15 +181,16 @@ class SupervisorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id, $checkPermission = true)
+    public function update(Request $request, $seq_id)
     {
+        $admin = $this->loggedUserAdministrator();
         try{
-            $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+            $supervisor = $admin->supervisorBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Supervisor with that id, does not exist.');
         }
 
-        if($checkPermission && $this->getUser()->cannot('update', $supervisor))
+        if($this->getUser()->cannot('update', $supervisor))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -219,31 +203,27 @@ class SupervisorsController extends ApiController
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
             'language' => 'string|max:2',
-            'status' => 'boolean',
-            'getReportsEmails' => 'boolean',
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ]);
 
-        // ***** Persiting *****
-        $transaction = DB::transaction(function () use($request, $supervisor) {
-            // update supervisor
+        $user = $supervisor->user;
+        // Check that the admin has payed for this technician
+        $status = ($request->status)? 1:0;
+        if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
+            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
+        }
 
-            $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
+        // ***** Persiting *****
+        $transaction = DB::transaction(function () use($request, $supervisor, $user) {
+
+            // update supervisor
+            $supervisor->fill(array_map('htmlentities', $request->all()));
 
             // update the user
-            $user = $supervisor->user;
             if($request->has('email')){ $user->email = htmlentities($request->email); }
             if($request->has('password')){ $user->password = bcrypt($request->password); }
             if($request->has('status')){ $user->active = $request->status; }
-            if(isset($request->getReportsEmails))
-            {
-                $value = $request->getReportsEmails;
-                $newNotificationNumber = $user->notificationSettings->notificationChanged('notify_report_created', 'mail', $value);
-                $user->notify_report_created = $newNotificationNumber;
-                $user->save();
-            }
-
 
             $supervisor->save();
             $user->save();

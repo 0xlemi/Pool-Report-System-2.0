@@ -33,6 +33,7 @@ class SupervisorTransformer extends Transformer
         if($supervisor->imageExists()){
             $photo = $this->imageTransformer->transform($supervisor->image(1, false));
         }
+
         return [
             'id' => $supervisor->seq_id,
             'name' => $supervisor->name,

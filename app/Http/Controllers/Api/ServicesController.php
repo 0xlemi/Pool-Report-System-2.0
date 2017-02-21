@@ -70,6 +70,7 @@ class ServicesController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('status')){
+            // do this with filtering weather has contract active or not
             $services = $admin->servicesInOrder()
                             ->where('status', $request->status)
                             ->paginate($limit);
