@@ -60,7 +60,7 @@ class AdministratorsController extends ApiController
             $admin = Administrator::create(array_map('htmlentities', $request->all()));
 
             // create User
-            $admin->user()->create([
+            $user = $admin->user()->create([
                 'email' => htmlentities($request->email),
                 'password' => bcrypt($request->password),
                 'api_token' => str_random(60),

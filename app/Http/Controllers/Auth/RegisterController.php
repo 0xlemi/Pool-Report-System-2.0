@@ -101,7 +101,7 @@ class RegisterController extends Controller
     {
         Auth::logout();
 
-        return redirect('/login')->withInfo('Please now activate your account.');
+        return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
     }
 
 }

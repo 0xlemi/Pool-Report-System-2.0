@@ -51,7 +51,6 @@ class LoginController extends Controller
         return [
             $this->username() => $request->input($this->username()),
             'password' => $request->input('password'),
-            'active' => 1,
         ];
     }
 
@@ -64,7 +63,15 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        if(!$user->activated){
+        // payed for
+        if(!$user->active){
+            Auth::logout();
+
+            return redirect('/login')
+                ->withError('Your account has been deactivated. Contact your System Administrator to activate your account.');
+        }
+        // verify email
+        elseif(!$user->activated){
             Auth::logout();
 
             return redirect('/login')

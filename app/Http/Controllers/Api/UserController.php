@@ -12,8 +12,10 @@ use App\PRS\Transformers\ServiceTransformer;
 use App\PRS\Helpers\UserHelpers;
 use App\User;
 use Auth;
+use Mail;
 use Validator;
 use App\Service;
+use App\Mail\SendActivationToken;
 use Carbon\Carbon;
 
 class UserController extends ApiController
@@ -154,6 +156,16 @@ class UserController extends ApiController
         $user = User::where('email', $request->email)->first();
 
         if($user && $user->checkPassword($request->password)){
+
+            // check if the user is active (payed)
+            if(!$user->active){
+                return response('You cannot login because this user is set to inactive. Ask the system administrator to activate your account.', 402);
+            }
+            // check if the user is activated (email verification)
+            if(!$user->activated){
+                return response('You cannot login until you verify your email. Check you inbox.', 403);
+            }
+
             return $this->respond([
                 'message' => 'logged in successfull.',
                 'type' => $this->userHelpers->styledType($user->userable_type, true),
@@ -163,6 +175,29 @@ class UserController extends ApiController
         return $this->setStatusCode(401)->respond([
             'message' => 'Email or/and Password are incorrect'
         ]);
+
+    }
+
+    public function resendVerificationEmail(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        // check if the user is activated (email verification)
+        if($user->activated){
+            return response('Your account is already verified, just login.', 400);
+        }
+
+        $token = $user->activationToken()->create([
+            'token' => str_random(128),
+        ]);
+
+        Mail::to($user)->send(new SendActivationToken($user->activationToken));
+
+        return response('Email sent, please check your inbox and verify your account.', 403);
 
     }
 

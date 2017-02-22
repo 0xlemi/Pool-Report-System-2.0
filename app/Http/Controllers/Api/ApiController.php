@@ -104,12 +104,5 @@ class ApiController extends Controller
         return Response::json($data, $this->getStatusCode(), $headers);
     }
 
-    // public function checkValidation($validator)
-    // {
-    //     if ($validator->fails()) {
-    //         // return error response
-    //         return $this->setStatusCode(422)->RespondWithError('Paramenters failed validation.', $validator->errors()->toArray());
-    //     }
-    // }
 
 }

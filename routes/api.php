@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 // Authentication
 Route::group(['middleware' => ['throttle:10'] ], function (){
 	Route::post('login', 'Api\UserController@login');
+	Route::post('activate/resend', 'Api\UserController@resendVerificationEmail');
 	Route::post('signup', 'Api\AdministratorsController@store');
 });
 
