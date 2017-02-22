@@ -22,8 +22,11 @@ class AppServiceProvider extends ServiceProvider
                 'token' => str_random(128),
             ]);
 
+            $user->api_token = str_random(60);
+            $user->save();
+
             event(new UserRegistered($user));
-            
+
         });
     }
 

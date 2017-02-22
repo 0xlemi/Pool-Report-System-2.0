@@ -54,6 +54,7 @@ class ClientsTableSeeder extends Seeder
             factory(App\User::class)->create([
                 'userable_id' => $client->id,
                 'userable_type' => 'App\Client',
+                'activated' => 1,
             ]);
 
             // fill the pivot table that connects with the service

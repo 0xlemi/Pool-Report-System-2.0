@@ -47,6 +47,7 @@ class SupervisorsTableSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'userable_id' => $supervisor->id,
                 'userable_type' => 'App\Supervisor',
+                'activated' => 1,
             ]);
 
     		// create images link it to supervisors

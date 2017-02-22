@@ -44,6 +44,7 @@ class TechniciansTableSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'userable_id' => $technician->id,
                 'userable_type' => 'App\Technician',
+                'activated' => 1,
             ]);
 
     		// create images link it to technician
