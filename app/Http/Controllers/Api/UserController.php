@@ -98,7 +98,7 @@ class UserController extends ApiController
         return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
     }
 
-    public function notifications(Request $request)
+    public function notifications(Request $request, UserHelpers $userHelper)
     {
         $this->validate($request, [
             'name' => 'required|max:255|validNotification',
@@ -106,7 +106,7 @@ class UserController extends ApiController
             'value' => 'required|boolean'
         ]);
 
-        $user = $request->user();
+        $user = $this->getUser();
         $name = $request->name;
         $type = $request->type;
         $value = $request->value;
@@ -118,7 +118,7 @@ class UserController extends ApiController
         $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
         $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
 
-        return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
+        return $this->respondWithSuccess("Notification {$name} of type {$type} has been changed to: {$finalValue}");
     }
 
     public function todaysRoute()
@@ -126,11 +126,6 @@ class UserController extends ApiController
         if($this->getUser()->cannot('list', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
-        $user = $this->getUser();
-        if(!($user->isAdministrator() || $user->isTechnician() || $user->isSupervisor())){
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
         }
 
         $admin = $this->loggedUserAdministrator();
