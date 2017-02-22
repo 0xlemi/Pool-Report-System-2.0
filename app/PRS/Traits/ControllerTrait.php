@@ -2,7 +2,6 @@
 
 namespace App\PRS\Traits;
 
-use Auth;
 use App\PRS\Classes\Logged;
 
 trait ControllerTrait{

@@ -52,5 +52,9 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+        // custom
+        'checkActive' => \App\Http\Middleware\CheckActive::class, // checks that the user is payed for
+        'checkVerified' => \App\Http\Middleware\CheckVerified::class, // checks that the user  has verified his email
     ];
 }

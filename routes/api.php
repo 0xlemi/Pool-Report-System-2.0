@@ -24,7 +24,7 @@ Route::group(['middleware' => ['throttle:10'] ], function (){
 	Route::post('signup', 'Api\AdministratorsController@store');
 });
 
-Route::group(['middleware' => ['auth:api'] ], function(){
+Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], function(){
 
 
 	// User
