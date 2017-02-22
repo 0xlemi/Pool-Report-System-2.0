@@ -23,11 +23,8 @@ class WorkOrder extends Model
         'title',
         'description',
         'start',
-        'end',
-        'finished',
         'price',
         'currency',
-        'service_id',
         'supervisor_id',
     ];
 

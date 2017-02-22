@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -71,41 +72,38 @@ class WorkOrderController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        $admin = $this->loggedUserAdministrator();
+
         $this->validate($request,[
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'service_id' => 'required|integer|min:1',
-            'supervisor_id' => 'required|integer|min:1',
+            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
+            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
-            'photosBeforeWork.*' => 'mimes:jpg,jpeg,png',
+            'add_photos' => 'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
-
-        $admin = $this->loggedUserAdministrator();
-
-        // send json friendly message if not found
-        $service = $admin->serviceBySeqId($request->service_id);
-        $supervisor = $admin->supervisorBySeqId($request->supervisor_id);
-
+        $service = $admin->serviceBySeqId($request->service);
+        $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
         // ***** Persisting *****
         $workOrder = DB::transaction(function () use($request, $service, $supervisor) {
 
-            $workOrder = WorkOrder::create([
+            $workOrder = $service->workOrders()->create([
                 'title' => $request->title,
                 'description' => $request->description,
                 'start' => (new Carbon( $request->start))->setTimezone('UTC'),
                 'price' => $request->price,
                 'currency' => $request->currency,
-                'service_id' => $service->id,
                 'supervisor_id' => $supervisor->id,
             ]);
 
-            // Add Photos
-            if(isset($request->photosBeforeWork)){
-                foreach ($request->photosBeforeWork as $photo) {
+            // Add Photos before work
+            if(isset($request->add_photos)){
+                foreach ($request->add_photos as $photo) {
                     $workOrder->addImageFromForm($photo);
                 }
             }
@@ -116,7 +114,7 @@ class WorkOrderController extends ApiController
         if($workOrder){
             return $this->respondPersisted(
                 'Work Order was created successfully.',
-                $this->workOrderTransformer->transform($admin->workOrdersInOrder('desc')->first())
+                $this->workOrderTransformer->transform(WorkOrder::findOrFail($workOrder->id))
             );
         }
         return response()->json([
@@ -173,13 +171,14 @@ class WorkOrderController extends ApiController
         $this->validate($request,[
             'title' => 'string|max:255',
             'description' => 'string',
-            'service_id' => 'integer|min:1',
-            'supervisor_id' => 'integer|min:1',
             'start' => 'date',
             'price' => 'numeric|max:10000000',
             'currency' => 'string|size:3',
-            'photosBeforeWork.*' => 'mimes:jpg,jpeg,png',
-            'photosBeforeWorkDelete.*' => 'integer|min:1',
+            'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'add_photos' => 'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'remove_photos' => 'array',
+            'remove_photos.*' => 'required|integer|min:1',
         ]);
 
         // check that work order is not marked as finished
@@ -189,19 +188,15 @@ class WorkOrderController extends ApiController
             ], 422);
         }
 
-
         // ***** Persisting *****
         DB::transaction(function () use($request, $workOrder, $admin) {
 
             $workOrder->fill(array_map('htmlentities',
                     $request->except([
                         'start',
-                        'end',
-                        'finished',
-                        'service_id',
                         'supervisor_id',
-                        'photosBeforeWork',
-                        'photosBeforeWorkDelete',
+                        'add_photos',
+                        'remove_photos',
                         ]
                     )
             ));
@@ -209,28 +204,25 @@ class WorkOrderController extends ApiController
             if(isset($request->start)){
                 $workOrder->start = (new Carbon($request->start))->setTimezone('UTC');
             }
-            if(isset($request->service_id)){
-                $workOrder->service_id = $admin->serviceBySeqId($request->service_id)->id;
-            }
-            if(isset($request->supervisor_id)){
-                $workOrder->supervisor_id = $admin->supervisorBySeqId($request->supervisor_id)->id;
+            if(isset($request->supervisor)){
+                $workOrder->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));
             }
 
+            $workOrder->save();
+
             //Delete Photos
-            if(isset($request->photosBeforeWorkDelete) && $this->getUser()->can('removePhoto', $workOrder)){
-                foreach ($request->photosBeforeWorkDelete as $order) {
+            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $workOrder)){
+                foreach ($request->remove_photos as $order) {
                     $workOrder->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photosBeforeWork) && $this->getUser()->can('addPhoto', $workOrder)){
-                foreach ($request->photosBeforeWork as $photo) {
+            if(isset($request->add_photos) && $this->getUser()->can('addPhoto', $workOrder)){
+                foreach ($request->add_photos as $photo) {
                     $workOrder->addImageFromForm($photo);
                 }
             }
-
-            $workOrder->save();
         });
 
         return $this->respondPersisted(
@@ -268,7 +260,8 @@ class WorkOrderController extends ApiController
 
         $this->validate($request, [
             'end' => 'required|date|afterDB:work_orders,start,'.$workOrder->id,
-            'photosAfterWork.*' => 'mimes:jpg,jpeg,png',
+            'photos' => 'array',
+            'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         // ***** Persisting *****
@@ -276,8 +269,8 @@ class WorkOrderController extends ApiController
             $workOrder->end = (new Carbon( $request->end ))->setTimezone('UTC');
 
             // Add Photos
-            if(isset($request->photosAfterWork)){
-                foreach ($request->photosAfterWork as $photo) {
+            if(isset($request->photos)){
+                foreach ($request->photos as $photo) {
                     $workOrder->addImageFromForm($photo, null, 2);
                 }
             }
