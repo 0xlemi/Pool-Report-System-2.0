@@ -50,7 +50,7 @@ class AddedWorkNotification extends Notification
      */
     public function toArray($notifiable)
     {
-        $workOrder = $this->work->workOrder();
+        $workOrder = $this->work->workOrder;
         $userable = $this->user->userable();
         $type = $this->user->type;
         $urlName = $type->url();

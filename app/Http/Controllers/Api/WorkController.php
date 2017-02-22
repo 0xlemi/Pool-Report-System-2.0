@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use DB;
 use App\Work;
@@ -37,7 +38,11 @@ class WorkController extends ApiController
             'limit' => 'integer|between:1,25'
         ]);
 
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+        try {
+            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work Order with that id, does not exist.');
+        }
 
         $limit = ($request->limit)?: 5;
         $works = $workOrder->works()->paginate($limit);
@@ -67,27 +72,32 @@ class WorkController extends ApiController
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:255',
             'cost' => 'required|numeric',
-            'technician_id' => 'required|integer|min:1',
+            'technician' => 'required|integer|exists:technicians,seq_id',
+            'photos' => 'array',
             'photos.*' => 'mimes:jpg,jpeg,png',
         ]);
 
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician_id);
+        try {
+            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Work Order with that id, does not exist.');
+        }
+
+        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
         // ***** Persisting *****
         $work = DB::transaction(function () use($request, $workOrder, $technician){
 
-            $work = Work::create(array_merge(
-                                $request->all(),
+            $work = $workOrder->works()->create(array_merge(
+                                array_map('htmlentities', $request->except('photos')),
                                 [
-                                    'work_order_id' => $workOrder->id,
                                     'technician_id' => $technician->id,
                                 ]
                             ));
 
             // Add Photos
             if(isset($request->photos)){
-                foreach ($request->photos as $photo) {
+                foreach ($request->photos as $photo){
                     $work->addImageFromForm($photo);
                 }
             }
@@ -142,37 +152,45 @@ class WorkController extends ApiController
             'quantity' => 'numeric',
             'units' => 'string|max:255',
             'cost' => 'numeric',
-            'technician_id' => 'integer|min:1',
-            'photos.*' => 'mimes:jpg,jpeg,png',
-            'photosDelete.*' => 'integer|min:1',
+            'technician' => 'integer|exists:technicians,seq_id',
+            'add_photos' =>'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'remove_photos' =>'array',
+            'remove_photos.*' => 'required|integer|min:1',
         ]);
 
-        // ***** Persisting *****
-        DB::transaction(function () use($request, $work){
+        $admin = $this->loggedUserAdministrator();
 
-            $work->update(array_map('htmlentities',
+        // ***** Persisting *****
+        DB::transaction(function () use($request, $work, $admin){
+
+            $work->fill(array_map('htmlentities',
                     $request->except([
-                        'work_order_id',
                         'technician_id',
-                        'photos',
-                        'photosDelete',
+                        'add_photos',
+                        'remove_photos',
                     ])
             ));
 
+            if($request->has('technician')){
+                $work->technician()->associate($admin->technicianBySeqId($request->technician));
+            }
+
+            $work->save();
+
             //Delete Photos
-            if(isset($request->photosDelete) && $this->getUser()->can('removePhoto', $work)){
-                foreach ($request->photosDelete as $order) {
+            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $work)){
+                foreach ($request->remove_photos as $order) {
                     $work->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photos) && $this->getUser()->can('addPhoto', $work)){
-                foreach ($request->photos as $photo) {
+            if(isset($request->add_photos) && $this->getUser()->can('addPhoto', $work)){
+                foreach ($request->add_photos as $photo) {
                     $work->addImageFromForm($photo);
                 }
             }
-
 
         });
 

@@ -48,12 +48,12 @@ class WorkController extends PageController
         $works = $workOrder->works()
                         ->get()
                         ->transform(function($item){
-                            $technician = $item->technician();
+                            $technician = $item->technician;
                             return (object) [
                                 'id' => $item->id,
                                 'title' => $item->title,
                                 'quantity' => "{$item->quantity} {$item->units}",
-                                'cost' => "{$item->cost} {$item->workOrder()->currency}",
+                                'cost' => "{$item->cost} {$item->workOrder->currency}",
                                 'technician' => "{$technician->name} {$technician->last_name}",
                             ];
                         });
@@ -98,7 +98,7 @@ class WorkController extends PageController
     {
         $this->authorize('view', $work);
 
-        $technician = $work->technician();
+        $technician = $work->technician;
 
         return response()->json([
             'title' => $work->title,

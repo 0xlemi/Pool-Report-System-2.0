@@ -36,7 +36,7 @@ class Work extends Model
      */
     public function workOrder()
     {
-    	return $this->belongsTo('App\WorkOrder')->first();
+    	return $this->belongsTo('App\WorkOrder');
     }
 
     /**
@@ -44,7 +44,7 @@ class Work extends Model
      */
     public function technician()
     {
-    	return $this->belongsTo('App\Technician')->first();
+    	return $this->belongsTo('App\Technician');
     }
 
     /**
@@ -52,6 +52,6 @@ class Work extends Model
      */
     public function service()
     {
-        return $this->workOrder()->service;
+        return $this->workOrder->service;
     }
 }
