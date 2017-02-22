@@ -167,9 +167,19 @@ class AdministratorsController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        // check if is administrator
+        $user = $this->getUser();
+        if(!$user->isAdministrator()){
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. Only system administrators');
+        }
+
+        if($user->userable()->delete()){
+            return $this->respondWithSuccess('System Administrator was successfully deleted');
+        }
+
+        return $this->respondNotFound('System Administrator was not deleted, please contact support: support@poolreportsystem.com');
     }
 
 }

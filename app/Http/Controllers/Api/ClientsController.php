@@ -75,6 +75,7 @@ class ClientsController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        $admin = $this->loggedUserAdministrator();
         $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
@@ -87,8 +88,6 @@ class ClientsController extends ApiController
             'email' => 'required|email|unique:users,email',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
-
-        $admin = $this->loggedUserAdministrator();
 
         //Persist to database
         $transaction = DB::transaction(function () use($request, $admin) {
@@ -165,8 +164,9 @@ class ClientsController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
+        $admin = $this->loggedUserAdministrator();
         try {
-            $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+            $client = $admin->clientsBySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Client with that id, does not exist.');
         }
@@ -221,7 +221,7 @@ class ClientsController extends ApiController
         // success message
         return $this->respondPersisted(
             'The client was successfully updated.',
-            $this->clientTransformer->transform($this->loggedUserAdministrator()->clientsBySeqId($seq_id))
+            $this->clientTransformer->transform(Client::findOrFail($client->id))
         );
     }
 

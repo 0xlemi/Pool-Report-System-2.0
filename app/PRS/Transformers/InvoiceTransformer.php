@@ -9,6 +9,10 @@ use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\ContractPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\WorkOrderPreviewTransformer;
 use App\PRS\Classes\Logged;
+use App\ServiceContract;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Psy\Exception\ErrorException;
+use Psy\Exception\FatalErrorException;
 
 
 /**

@@ -17,8 +17,7 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->string('userable_type');
-            $table->integer('userable_id')->unsigned();
+            $table->morphs('userable');
             $table->boolean('active')->default(true); // Been payed for
             $table->boolean('activated')->default(false); // Activated the account via email
             // Email Preferences  Order: database, mail.

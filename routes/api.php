@@ -36,7 +36,8 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 
 
 	// Administrator
-	Route::post('permissions', 'Api\AdministratorsController@permissions');
+	Route::post('admin/permissions', 'Api\AdministratorsController@permissions');
+	Route::delete('admin', 'Api\AdministratorsController@destroy');
 
 
 	// Reports

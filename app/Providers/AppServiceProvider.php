@@ -7,6 +7,12 @@ use App\Mail\SendActivationToken;
 use App\User;
 use Mail;
 use App\Events\UserRegistered;
+use App\ServiceContract;
+use App\Client;
+use App\Administrator;
+use App\Supervisor;
+use App\Technician;
+use App\Jobs\DeleteModels;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +33,32 @@ class AppServiceProvider extends ServiceProvider
 
             event(new UserRegistered($user));
 
+        });
+
+        Administrator::deleted(function ($admin){
+            $user = $admin->user;
+            dispatch(new DeleteModels($user->notifications));
+            $user->delete();
+        });
+        Supervisor::deleted(function ($supervisor){
+            $user = $supervisor->user;
+            dispatch(new DeleteModels($user->notifications));
+            $user->delete();
+        });
+        Technician::deleted(function ($technician){
+            $user = $technician->user;
+            dispatch(new DeleteModels($user->notifications));
+            $user->delete();
+        });
+        Client::deleted(function ($client){
+            $user = $client->user;
+            dispatch(new DeleteModels($user->notifications));
+            $user->delete();
+        });
+        ServiceContract::deleted(function ($contract){
+            foreach ($contract->invoices as $invoice) {
+                $invoice->delete();
+            }
         });
     }
 

@@ -125,7 +125,7 @@ class CreateAdministratorsTable extends Migration
                     $table->boolean('sup_contract_create')->default(1);
                     $table->boolean('sup_contract_update')->default(1);
                     $table->boolean('sup_contract_deactivate')->default(1);
-                    $table->boolean('sup_contract_delete')->default(1);
+                    $table->boolean('sup_contract_delete')->default(0);
 
                     $table->boolean('tech_contract_view')->default(0);
                     $table->boolean('tech_contract_create')->default(0);
