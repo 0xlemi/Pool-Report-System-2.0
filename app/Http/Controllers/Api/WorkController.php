@@ -66,13 +66,14 @@ class WorkController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        $admin = $this->loggedUserAdministrator();
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:255',
             'cost' => 'required|numeric',
-            'technician' => 'required|integer|exists:technicians,seq_id',
+            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'photos' => 'array',
             'photos.*' => 'mimes:jpg,jpeg,png',
         ]);
@@ -146,20 +147,20 @@ class WorkController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        $admin = $this->loggedUserAdministrator();
         $this->validate($request, [
             'title' => 'string|max:255',
             'description' => 'string',
             'quantity' => 'numeric',
             'units' => 'string|max:255',
             'cost' => 'numeric',
-            'technician' => 'integer|exists:technicians,seq_id',
+            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'add_photos' =>'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' =>'array',
             'remove_photos.*' => 'required|integer|min:1',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
 
         // ***** Persisting *****
         DB::transaction(function () use($request, $work, $admin){

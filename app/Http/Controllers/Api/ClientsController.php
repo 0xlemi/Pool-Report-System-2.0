@@ -83,7 +83,7 @@ class ClientsController extends ApiController
             'language' => 'required|string|max:2',
             'comments' => 'string|max:1000',
             'add_services' => 'array',
-            'add_services.*' => 'required|integer|exists:services,seq_id',
+            'add_services.*' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
             'email' => 'required|email|unique:users,email',
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
@@ -188,9 +188,9 @@ class ClientsController extends ApiController
                     'photo' => 'mimes:jpg,jpeg,png',
                     'email' => 'email|unique:users,email,'.$client->user->id.',id',
                     'add_services' => 'array',
-                    'add_services.*' => 'required|integer|exists:services,seq_id',
+                    'add_services.*' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
                     'remove_services' => 'array',
-                    'remove_services.*' => 'required|integer|exists:services,seq_id',
+                    'remove_services.*' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
                 ]);
         // end validation
 

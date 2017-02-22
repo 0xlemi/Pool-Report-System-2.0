@@ -98,6 +98,7 @@ class TechniciansController extends ApiController
         }
 
         // Validation
+        $admin = $this->loggedUserAdministrator();
         $this->validate($request, [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
@@ -107,10 +108,9 @@ class TechniciansController extends ApiController
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
             'username' => 'required|alpha_dash|between:4,25|unique:users,email',
-            'supervisor' => 'required|integer|exists:supervisors,seq_id',
+            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
         ]);
 
-        $admin = $this->loggedUserAdministrator();
         // check if the you can add new users
         if(!$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
@@ -208,7 +208,7 @@ class TechniciansController extends ApiController
             'comments' => 'string|max:1000',
             'username' => 'alpha_dash|between:4,25|unique:users,email,'.$technician->user->id.',id',
             'active' =>  'boolean',
-            'supervisor' => 'integer|exists:supervisors,seq_id',
+            'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
         ]);
 
         // Check that the admin has payed for this technician

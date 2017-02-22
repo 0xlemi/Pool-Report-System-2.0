@@ -108,8 +108,8 @@ class ReportsController extends ApiController
 
         // Validate
         $this->validate($request, [
-            'service' => 'required|integer|exists:services,seq_id',
-            'technician' => 'required|integer|exists:technicians,seq_id',
+            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
+            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'completed' => 'required|date',
             'ph' => 'required|integer|between:1,5',
             'chlorine' => 'required|integer|between:1,5',
@@ -123,7 +123,6 @@ class ReportsController extends ApiController
             'add_photos' => 'required|array|size:3',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
-
         $service = $admin->serviceBySeqId($request->service);
         $technician = $admin->technicianBySeqId($request->technician);
 
@@ -231,8 +230,8 @@ class ReportsController extends ApiController
 
         // Validate
         $this->validate($request, [
-            'service' => 'integer|exists:services,seq_id',
-            'technician' => 'integer|exists:technicians,seq_id',
+            'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
+            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'completed' => 'date',
             'ph' => 'integer|between:1,5',
             'chlorine' => 'integer|between:1,5',
@@ -250,7 +249,6 @@ class ReportsController extends ApiController
             'remove_photos' => 'array',
             'remove_photos.*' => 'required|integer|min:4',
         ]);
-        // end validation
 
         // ***** Persisting *****
         $transaction = DB::transaction(function () use($request, $report, $admin) {
