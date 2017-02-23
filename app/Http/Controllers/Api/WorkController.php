@@ -75,7 +75,7 @@ class WorkController extends ApiController
             'cost' => 'required|numeric',
             'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'photos' => 'array',
-            'photos.*' => 'mimes:jpg,jpeg,png',
+            'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         try {

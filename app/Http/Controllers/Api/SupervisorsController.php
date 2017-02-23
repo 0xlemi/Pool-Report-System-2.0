@@ -230,7 +230,7 @@ class SupervisorsController extends ApiController
 
             // add photo
             if($request->photo){
-                $supervisor->images()->delete();
+                $supervisor->deleteImages();
                 $photo = $supervisor->addImageFromForm($request->file('photo'));
             }
         });

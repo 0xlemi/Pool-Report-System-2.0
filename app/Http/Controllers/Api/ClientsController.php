@@ -209,7 +209,7 @@ class ClientsController extends ApiController
 
             // set photo
             if($request->photo){
-                $client->images()->delete();
+                $client->deleteImages();
                 $photo = $client->addImageFromForm($request->file('photo'));
             }
 

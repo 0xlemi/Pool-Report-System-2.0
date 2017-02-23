@@ -15,7 +15,9 @@ use App\Administrator;
 use App\Supervisor;
 use App\Technician;
 use App\Jobs\DeleteModels;
-use App\Jobs\DeleteImages;
+use App\Jobs\DeleteImageFromS3;
+use App\Jobs\DeleteImagesFromS3;
+use App\Image;
 use App\Service;
 use App\WorkOrder;
 use App\Equipment;
@@ -43,30 +45,30 @@ class AppServiceProvider extends ServiceProvider
 
         Administrator::deleted(function ($admin){
             $user = $admin->user;
-            dispatch(new DeleteImages($admin->images));
+            dispatch(new DeleteImagesFromS3($admin->images));
             dispatch(new DeleteModels($user->notifications));
             $user->delete();
         });
 
         Report::deleted(function ($report){
-            dispatch(new DeleteImages($report->images));
+            dispatch(new DeleteImagesFromS3($report->images));
         });
 
         WorkOrder::deleted(function ($workOrder){
-            dispatch(new DeleteImages($workOrder->images));
+            dispatch(new DeleteImagesFromS3($workOrder->images));
             foreach ($workOrder->invoices as $invoice) {
                 $invoice->delete();
             }
         });
             Work::deleted(function ($work){
-                dispatch(new DeleteImages($work->images));
+                dispatch(new DeleteImagesFromS3($work->images));
             });
 
         Service::deleted(function ($service){
-            dispatch(new DeleteImages($service->images));
+            dispatch(new DeleteImagesFromS3($service->images));
         });
             Equipment::deleted(function ($equipment){
-                dispatch(new DeleteImages($equipment->images));
+                dispatch(new DeleteImagesFromS3($equipment->images));
             });
             ServiceContract::deleted(function ($contract){
                 foreach ($contract->invoices as $invoice) {
@@ -76,23 +78,27 @@ class AppServiceProvider extends ServiceProvider
 
         Client::deleted(function ($client){
             $user = $client->user;
-            dispatch(new DeleteImages($client->images));
+            dispatch(new DeleteImagesFromS3($client->images));
             dispatch(new DeleteModels($user->notifications));
             $user->delete();
         });
 
         Supervisor::deleted(function ($supervisor){
             $user = $supervisor->user;
-            dispatch(new DeleteImages($supervisor->images));
+            dispatch(new DeleteImagesFromS3($supervisor->images));
             dispatch(new DeleteModels($user->notifications));
             $user->delete();
         });
-        
+
         Technician::deleted(function ($technician){
             $user = $technician->user;
-            dispatch(new DeleteImages($technician->images));
+            dispatch(new DeleteImagesFromS3($technician->images));
             dispatch(new DeleteModels($user->notifications));
             $user->delete();
+        });
+
+        Image::deleted(function ($image){
+            dispatch(new DeleteImageFromS3($image->big, $image->medium, $image->thumbnail, $image->icon));
         });
     }
 

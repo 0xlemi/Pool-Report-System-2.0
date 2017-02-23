@@ -81,7 +81,8 @@ class EquipmentController extends ApiController
             'model' => 'required|string|max:255',
             'capacity' => 'required|numeric',
             'units' => 'required|string|max:255',
-            'add_photos.*' => 'mimes:jpg,jpeg,png',
+            'add_photos' => 'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         // ***** Persisting *****
@@ -148,8 +149,10 @@ class EquipmentController extends ApiController
             'model' => 'string|max:255',
             'capacity' => 'numeric',
             'units' => 'string|max:255',
-            'add_photos.*' => 'mimes:jpg,jpeg,png',
-            'remove_photos.*' => 'integer|min:1',
+            'add_photos' => 'array',
+            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'remove_photos' => 'array',
+            'remove_photos.*' => 'required|integer|min:1',
         ]);
 
         // ***** Persisting *****

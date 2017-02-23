@@ -26,11 +26,4 @@ class Image extends Model
         return $this->morphTo();
     }
 
-    public function delete()
-    {
-        // Delete the image files from s3
-        dispatch(new DeleteImage($this->big, $this->medium, $this->thumbnail, $this->icon));
-        return parent::delete();
-    }
-
 }

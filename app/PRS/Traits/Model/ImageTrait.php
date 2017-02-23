@@ -95,6 +95,13 @@ trait ImageTrait{
         return false;
     }
 
+    public function deleteImages()
+    {
+        foreach ($this->images as $image) {
+            $image->delete();
+        }
+    }
+
     /**
      * associated images with this report
      * tested for

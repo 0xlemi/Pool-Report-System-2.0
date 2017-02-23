@@ -229,7 +229,7 @@ class ServicesController extends ApiController
             $service->save();
 
             if($request->photo){
-                $service->images()->delete();
+                $service->deleteImages();
                 $photo = $service->addImageFromForm($request->file('photo'));
             }
 

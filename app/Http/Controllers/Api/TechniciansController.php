@@ -237,7 +237,7 @@ class TechniciansController extends ApiController
 
             // add photo
             if($request->photo){
-                $technician->images()->delete();
+                $supervisor->deleteImages();
                 $photo = $technician->addImageFromForm($request->file('photo'));
             }
         });

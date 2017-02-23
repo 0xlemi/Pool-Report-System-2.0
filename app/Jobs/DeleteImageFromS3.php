@@ -8,7 +8,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Storage;
 
-class DeleteImage implements ShouldQueue
+class DeleteImageFromS3 implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 

@@ -7,9 +7,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
-use App\Jobs\DeleteImage;
+use App\Jobs\DeleteImageFromS3;
 
-class DeleteImages implements ShouldQueue
+class DeleteImagesFromS3 implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,7 +34,7 @@ class DeleteImages implements ShouldQueue
     {
         foreach ($this->images as $image) {
             // Delete the image files from s3 too
-            dispatch(new DeleteImage($image->big, $image->medium, $image->thumbnail, $image->icon));
+            dispatch(new DeleteImageFromS3($image->big, $image->medium, $image->thumbnail, $image->icon));
         }
     }
 }
