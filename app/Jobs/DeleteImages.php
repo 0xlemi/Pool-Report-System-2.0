@@ -32,7 +32,7 @@ class DeleteImages implements ShouldQueue
      */
     public function handle()
     {
-        foreach ($images as $image) {
+        foreach ($this->images as $image) {
             // Delete the image files from s3 too
             dispatch(new DeleteImage($image->big, $image->medium, $image->thumbnail, $image->icon));
         }
