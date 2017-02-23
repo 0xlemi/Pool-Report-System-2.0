@@ -229,7 +229,7 @@ class DataTableController extends PageController
                             ->techniciansActive($request->status)
                             ->get()
                             ->transform(function($item){
-                                $supervisor = $item->supervisor();
+                                $supervisor = $item->supervisor;
                                 return (object) array(
                                     'id' =>  $item->seq_id,
                                     'name' => $item->name.' '.$item->last_name,

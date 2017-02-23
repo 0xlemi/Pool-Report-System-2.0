@@ -57,15 +57,6 @@ trait ImageTrait{
         return class_basename(get_class($this));
     }
 
-    public function delete()
-    {
-        // go through all images that the model has
-        foreach ($this->images as $image) {
-            // Delete the image files from s3 too
-            dispatch(new DeleteImage($image->big, $image->medium, $image->thumbnail, $image->icon));
-        }
-        return parent::delete();
-    }
 
 	 /**
      * Add a image to this client
