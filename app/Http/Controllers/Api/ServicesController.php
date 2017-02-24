@@ -57,7 +57,7 @@ class ServicesController extends ApiController
 
         $this->validate($request, [
             'preview' => 'boolean',
-            'status' => 'boolean',
+            'contract' => 'boolean',
             'limit' => 'integer|between:1,25', // dont validate limit if preview is true
         ]);
 
@@ -69,14 +69,17 @@ class ServicesController extends ApiController
         }
 
         $limit = ($request->limit)?: 5;
-        if($request->has('status')){
-            // do this with filtering weather has contract active or not
-            $services = $admin->servicesInOrder()
-                            ->where('status', $request->status)
-                            ->paginate($limit);
+        if($request->has('contract')){
+            // filter between services with active contracts, and everythnig else
+            $services = $admin->servicesWithActiveContract()->paginate($limit);
+            // $seq_id = [];
+            // foreach ($admin->serviceWithNoContractOrInactive()->get() as $service) {
+            //     $seq_id[] = $service->toArray();
+            // }
+            // dd($seq_id);
+            // dd($admin->serviceWithNoContractOrInactive()->get());
         }else{
-            $services = $admin->servicesInOrder()
-                            ->paginate($limit);
+            $services = $admin->servicesInOrder()->paginate($limit);
         }
 
         return $this->respondWithPagination(
@@ -88,10 +91,8 @@ class ServicesController extends ApiController
 
     protected function indexPreview(Request $request, Administrator $admin)
     {
-        if($request->has('status')){
-            $services = $admin->servicesInOrder()
-                                ->where('status', $request->status)
-                                ->get();
+        if($request->has('contract')){
+            $services = $admin->servicesWithActiveContract()->get();
         }else{
             $services = $admin->servicesInOrder()->get();
         }

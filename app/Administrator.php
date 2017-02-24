@@ -201,6 +201,30 @@ class Administrator extends Model
     }
 
     /**
+     * Get all the services where there is an active contract
+     * @return  Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function servicesWithActiveContract($order = 'asc')
+    {
+        return $this->services()->join('service_contracts', function ($join) {
+            $join->on('services.id', '=', 'service_contracts.service_id')
+                 ->where('service_contracts.active', '=', 1);
+        })->select('services.*')->orderBy('seq_id', $order);
+    }
+
+    public function serviceWithNoContractOrInactive($order = 'asc')
+    {
+        // return $this->services()->leftJoin('service_contracts', function ($join) {
+        //     $join->on('services.id', '=', 'service_contracts.service_id')
+        //         ->whereNull('service_contracts.service_id');
+        // });
+        // ->where('service_id','=', 'NULL');
+        // return $this->services()->leftJoin('service_contracts', 'services.id', '=', 'service_contracts.service_id')
+        // ->select('services.*', 'service_id')
+        // ->where('service_id','=', 'NULL');
+    }
+
+    /**
      * Get services accacited with this user and seq_id convination
      * @param  int $seq_id
      * tested
