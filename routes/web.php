@@ -32,6 +32,10 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
 
+// Client Interface
+Route::get('report', 'ClientInterfaceController@reports');
+Route::get('statement', 'ClientInterfaceController@statement');
+
 // Todays Route
 Route::get('todaysroute', 'TodaysRouteController@index');
 Route::get('todaysroute/report/{service_seq_id}', 'TodaysRouteController@createReport');

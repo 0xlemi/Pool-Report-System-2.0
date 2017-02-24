@@ -1,5 +1,5 @@
 <div class="mobile-menu-left-overlay"></div>
-<nav class="side-menu">
+<nav class="side-menu {{ (\Auth::user()->isClient()) ? 'side-menu-compact' : '' }}">
     <ul class="side-menu-list">
 
         <li class="orange-red {{ Request::is('dashboard*')? 'opened':'' }}">
@@ -8,6 +8,22 @@
                 <span class="lbl">Dashboard</span>
             </a>
         </li>
+
+        @if(\Auth::user()->isClient())
+        <li class="brown {{ Request::is('report*')? 'opened':'' }}">
+            <a href="{{ url('/report') }}">
+                <i class="font-icon glyphicon glyphicon-home"></i>
+                <span class="lbl">Reports</span>
+            </a>
+        </li>
+
+        <li class="green {{ Request::is('statement*')? 'opened':'' }}">
+            <a href="{{ url('/statement') }}">
+                <i class="fa fa-dollar"></i>
+                <span class="lbl">Statement</span>
+            </a>
+        </li>
+        @endif
 
         @can('list', App\Service::class)
         <li class="grey {{ Request::is('todaysroute*')? 'opened':'' }}">
