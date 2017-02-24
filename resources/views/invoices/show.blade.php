@@ -29,7 +29,6 @@
                             </div>
                         </div>
                     @else
-
                         <div class="form-group row">
                             <div class="col-md-10 col-md-offset-2">
                                 <h3><span class="label label-default">Invoice Closed</span></h3>
@@ -40,6 +39,13 @@
 							</div>
 						</div>
                     @endif
+
+					<div class="form-group row">
+						<label class="col-md-2 form-control-label">Created:</label>
+						<div class="col-md-10">
+							<input type="text" readonly class="form-control" value="{{ $service->created_at->format('d M Y h:i:s A') }}">
+						</div>
+					</div>
 
 					<div class="form-group row">
 						<label class="col-md-2 form-control-label">Service</label>
