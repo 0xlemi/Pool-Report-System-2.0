@@ -43,6 +43,13 @@ class AppServiceProvider extends ServiceProvider
 
         });
 
+        Technician::created(function ($technician){
+            // since technician don't have email
+            // should be immediately be verified
+            $technician->user->activated = 1;
+            $technician->save();
+        });
+
         Administrator::deleted(function ($admin){
             $user = $admin->user;
             dispatch(new DeleteImagesFromS3($admin->images));

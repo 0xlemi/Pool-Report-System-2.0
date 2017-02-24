@@ -23,6 +23,17 @@
 				</header>
 				<div class="card-block">
 					<form>
+
+						@if(!$supervisor->user->activated)
+						<div class="form-group row">
+							<email-verification-notice
+								name="Supervisor"
+								email="{{ $supervisor->user->email }}">
+							</email-verification-noctice>
+						</div>
+						<br>
+						@endif
+
 						@if($supervisor->images->count() > 0)
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Supervisor photo</label>

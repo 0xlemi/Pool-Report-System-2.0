@@ -3,7 +3,7 @@
 	<index-table
         :columns="columns"
         :button="{ icon: 'font-icon font-icon-home', name: 'New Service' }"
-        :toolbar-switch="{ checked: true, name: 'Status' }"
+        :toolbar-switch="{ checked: true, name: 'Active Contract' }"
         click-url="services/"
         table-url="datatables/services?status=">
     </index-table>

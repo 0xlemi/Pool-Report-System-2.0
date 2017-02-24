@@ -24,6 +24,16 @@
 					<div class="card-block">
 						<form>
 
+							@if(!$client->user->activated)
+							<div class="form-group row">
+								<email-verification-notice
+									name="Client"
+									email="{{ $client->user->email }}">
+								</email-verification-noctice>
+							</div>
+							<br>
+							@endif
+
 							@if($client->images->count() > 0)
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Client photo</label>

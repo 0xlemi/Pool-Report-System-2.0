@@ -75,6 +75,7 @@ function isset(strVariableName) {
     let photo = require('./components/photo.vue');
     let editReportPhotos = require('./components/editReportPhotos.vue');
     let timezoneDropdown = require('./components/timezoneDropdown.vue');
+    let emailVerificationNotice = require('./components/emailVerificationNotice.vue');
 
 
     let mainVue = new Vue({
@@ -89,6 +90,7 @@ function isset(strVariableName) {
             photo,
             deleteButton,
             timezoneDropdown,
+            emailVerificationNotice,
             // notifications
             AllNotificationsAsReadButton,
             // settings
