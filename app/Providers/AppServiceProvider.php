@@ -37,17 +37,15 @@ class AppServiceProvider extends ServiceProvider
             ]);
 
             $user->api_token = str_random(60);
+
+            if($user->isTechnician()){
+                // since technician don't have email
+                // should be immediately be verified
+                $user->activated = 1;
+            }
             $user->save();
 
             event(new UserRegistered($user));
-
-        });
-
-        Technician::created(function ($technician){
-            // since technician don't have email
-            // should be immediately be verified
-            $technician->user->activated = 1;
-            $technician->save();
         });
 
         Administrator::deleted(function ($admin){
