@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use Intervention;
+use Carbon\Carbon;
 
 use App\Administrator;
 use App\PRS\Traits\Model\ImageTrait;
+use App\Report;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -57,6 +59,18 @@ class Client extends Model
     {
       return $this->morphOne('App\User', 'userable');
     }
+
+	public function reportsByDate(Carbon $date)
+	{
+        $date_str = $date->toDateTimeString();
+		$timezone = $this->admin()->timezone;
+		$reportsIdArray = $this->services()->join('reports', function ($join) use ($timezone, $date_str){
+            $join->on('services.id', '=', 'reports.service_id')
+			->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$timezone.'\'), "'.$date_str.'")'), '=', '0');
+        })->select('reports.id')->get()->toArray();
+
+		return Report::find($reportsIdArray);
+	}
 
 	/*
 	 * associated services with this client
