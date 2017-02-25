@@ -14,7 +14,10 @@
 
     	<div class="tab-content">
     		<div v-for="(key, report) in reports" role="tabpanel" class="tab-pane fade in" :class="{'active': key == 0 }" id="tabs-1-tab-{{ report['id'] }}">
-                    {{ report['service']['name'] }}
+                <div class="row">
+                    <client-report :report="report">
+                    </client-report>
+                </div>
             </div>
     	</div><!--.tab-content-->
     </section><!--.tabs-section-->
@@ -23,11 +26,13 @@
 
 <script>
 import alert from './alert.vue';
+import clientReport from './ClientReport.vue';
 
 export default {
     props: ['today'],
     components:{
-        alert
+        alert,
+        clientReport
     },
     data(){
         return {
