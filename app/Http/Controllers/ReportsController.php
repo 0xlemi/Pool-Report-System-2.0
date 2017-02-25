@@ -58,12 +58,8 @@ class ReportsController extends PageController
         $defaultTableUrl = url('datatables/reports').'?date='.$today->toDateString();
 
         JavaScript::put([
-            'date_url' => url('reports/date').'/',
             'datatable_url' => url('datatables/reports').'?date=',
             'click_url' => url('reports').'/',
-
-            'missingServices_url' => url('datatables/missingServices').'?date=',
-            'missingServicesInfo_url' => url('datatables/missingServicesInfo'),
 
             'enabledDates' => $admin->datesWithReport(),
             'todayDate' => $today->toDateString(),

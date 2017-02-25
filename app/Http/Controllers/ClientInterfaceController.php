@@ -25,24 +25,36 @@ class ClientInterfaceController extends PageController
             abort(403, 'Only clients can view this page.');
         }
 
+        $admin = $request->user()->admin();
+        $client = $request->user()->userable();
+        $today = Carbon::today($admin->timezone)->toDateString();
+
+        JavaScript::put([
+            'enabledDates' => $admin->datesWithReport(),
+            'todayDate' => $today,
+        ]);
+
+        return view('clientInterface.reports', compact('today'));
+    }
+
+    public function reportsByDate(Request $request, ReportTransformer $reportTransformer)
+    {
+        if(!$request->user()->isClient()){
+            return response('You are not a Client', 403);
+        }
+
         $this->validate($request, [
             'date' => 'validDateReportFormat'
         ]);
 
         $admin = $request->user()->admin();
         $client = $request->user()->userable();
-
         $date = (new Carbon($request->date, $admin->timezone));
-
         $reports = $reportTransformer->transformCollection($client->reportsByDate($date));
 
-        $today = Carbon::today($admin->timezone);
-        JavaScript::put([
-            'enabledDates' => $admin->datesWithReport(),
-            'todayDate' => $today->toDateString(),
+        return response([
+            'reports' => $reports
         ]);
-
-        return view('clientInterface.reports', compact('reports'));
     }
 
     public function statement(Request $request)

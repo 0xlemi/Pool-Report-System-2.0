@@ -76,7 +76,7 @@ function isset(strVariableName) {
     let editReportPhotos = require('./components/editReportPhotos.vue');
     let timezoneDropdown = require('./components/timezoneDropdown.vue');
     let emailVerificationNotice = require('./components/emailVerificationNotice.vue');
-    let clientReportsGroup = require('./components/ClientReportsGroup.vue');
+    let clientReports = require('./components/ClientReports.vue');
 
 
     let mainVue = new Vue({
@@ -100,7 +100,7 @@ function isset(strVariableName) {
             settings,
             profile,
             // Client Interface
-            clientReportsGroup,
+            clientReports,
             // work orders
             workOrderTable,
             workOrderPhotosShow,
@@ -803,17 +803,20 @@ function isset(strVariableName) {
 	    });
 	}
 
-	if(isset('date_url')){
+	if(isset('datatable_url')){
 	   	$("#side-datetimepicker").on("dp.change", function(e) {
 	   		var date = new Date(e.date._d);
 	   		var date_selected = dateFormat(date, "yyyy-mm-dd");
             var new_url = back.datatable_url+date_selected;
-            var new_missingServices_url = back.missingServices_url+date_selected;
-
             generic_table.bootstrapTable('refresh', {url: new_url});
-            mainVue.$broadcast('datePickerClicked', date_selected);
 	    });
    }
+
+   	$("#side-datetimepicker").on("dp.change", function(e) {
+   		var date = new Date(e.date._d);
+   		var date_selected = dateFormat(date, "yyyy-mm-dd");
+        mainVue.$broadcast('datePickerClicked', date_selected);
+    });
    	if(isset('defaultDate')){
 	    $('#editGenericDatepicker').datetimepicker({
 	        widgetPositioning: {

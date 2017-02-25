@@ -34,6 +34,7 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 
 // Client Interface
 Route::get('report', 'ClientInterfaceController@reports');
+Route::post('report', 'ClientInterfaceController@reportsByDate');
 Route::get('statement', 'ClientInterfaceController@statement');
 
 // Todays Route
