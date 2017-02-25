@@ -60,6 +60,24 @@ class Client extends Model
       return $this->morphOne('App\User', 'userable');
     }
 
+	public function datesWithReport()
+	{
+		$admin = $this->admin();
+		return $this->services()
+				->join('reports', 'services.id', '=', 'reports.service_id')
+				->select('reports.completed')
+                ->get()
+                ->pluck('completed')
+                ->transform(function ($item) use ($admin){
+                    $date = (new Carbon($item, 'UTC'))->setTimezone($admin->timezone);
+                    return $date->toDateString();
+                })
+                ->unique()
+                ->flatten();
+				;
+	}
+
+
 	public function reportsByDate(Carbon $date)
 	{
         $date_str = $date->toDateTimeString();

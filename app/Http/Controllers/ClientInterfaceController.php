@@ -30,7 +30,7 @@ class ClientInterfaceController extends PageController
         $today = Carbon::today($admin->timezone)->toDateString();
 
         JavaScript::put([
-            'enabledDates' => $admin->datesWithReport(),
+            'enabledDates' => $client->datesWithReport(),
             'todayDate' => $today,
         ]);
 
