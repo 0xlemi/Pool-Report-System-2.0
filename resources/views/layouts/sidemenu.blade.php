@@ -12,8 +12,22 @@
         @if(\Auth::user()->isClient())
         <li class="brown {{ Request::is('report*')? 'opened':'' }}">
             <a href="{{ url('/report') }}">
-                <i class="font-icon glyphicon glyphicon-home"></i>
+                <i class="font-icon font-icon-notebook"></i>
                 <span class="lbl">Reports</span>
+            </a>
+        </li>
+
+        <li class="aquamarine {{ Request::is('workorder*')? 'opened':'' }}">
+            <a href="{{ url('/workorder') }}">
+                <i class="glyphicon glyphicon-briefcase"></i>
+                <span class="lbl">Work Orders</span>
+            </a>
+        </li>
+
+        <li class="red {{ Request::is('service*')? 'opened':'' }}">
+            <a href="{{ url('/service') }}">
+                <i class="font-icon glyphicon glyphicon-home"></i>
+                <span class="lbl">Services</span>
             </a>
         </li>
 
