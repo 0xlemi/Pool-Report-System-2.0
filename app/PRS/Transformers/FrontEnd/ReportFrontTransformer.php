@@ -1,6 +1,6 @@
 <?php
 
-namespace App\PRS\Transformers;
+namespace App\PRS\Transformers\FrontEnd;
 
 use App\Report;
 
@@ -11,25 +11,23 @@ use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
 use Carbon\Carbon;
+use App\PRS\Transformers\Transformer;
 
 
 /**
  * Transformer for the report class
  */
-class ReportTransformer extends Transformer
+class ReportFrontTransformer extends Transformer
 {
 
     private $servicePreviewTransformer;
-    private $technicianPreviewTransformer;
     private $imageTransformer;
 
     public function __construct(
             ServicePreviewTransformer $servicePreviewTransformer,
-            TechnicianPreviewTransformer $technicianPreviewTransformer,
             ImageTransformer $imageTransformer)
     {
         $this->servicePreviewTransformer = $servicePreviewTransformer;
-        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -37,10 +35,21 @@ class ReportTransformer extends Transformer
      * Transform Report to api friendly array
      * @param  Report $report
      * @return array
-     * tested
      */
     public function transform(Report $report)
     {
+        $supervisor = $report->supervisor();
+        $technician = $report->technician;
+
+        $supervisorPhoto = 'no image';
+        if($supervisor->imageExists()){
+            $supervisorPhoto = $this->imageTransformer->transform($supervisor->image(1, false));
+        }
+        $technicianPhoto = 'no image';
+        if($technician->imageExists()){
+            $technicianPhoto = $this->imageTransformer->transform($technician->image(1, false));
+        }
+
         return [
             'id' => $report->seq_id,
             'completed' => $report->completed(),
@@ -50,17 +59,25 @@ class ReportTransformer extends Transformer
             'temperature' => $report->temperature,
             'turbidity' => $report->turbidity,
             'salt' => $report->salt,
-            'location' =>
-                [
-                    'latitude' => $report->latitude,
-                    'longitude' => $report->longitude,
-                    'accuracy' => $report->accuracy,
-                ],
             'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
             'service' => $this->servicePreviewTransformer
                             ->transform($report->service),
-            'technician' => $this->technicianPreviewTransformer
-                            ->transform($report->technician),
+            'supervisor' => [
+                'full_name' => $supervisor->name.' '.$supervisor->last_name,
+                'email' => $supervisor->user->email,
+                'cellphone' => $supervisor->cellphone,
+                'address' => $supervisor->address,
+                'language' => $supervisor->language,
+                'photo' => $supervisorPhoto,
+            ],
+            'technician' => [
+                'full_name' => $technician->name.' '.$technician->last_name,
+                'username' => $technician->user->email,
+                'cellphone' => $technician->cellphone,
+                'address' => $technician->address,
+                'language' => $technician->language,
+                'photo' => $technicianPhoto,
+            ],
         ];
     }
 

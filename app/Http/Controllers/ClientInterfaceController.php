@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use JavaScript;
-use App\PRS\Transformers\ReportTransformer;
+use App\PRS\Transformers\FrontEnd\ReportFrontTransformer;
 use Carbon\Carbon;
 
 class ClientInterfaceController extends PageController
@@ -19,7 +19,7 @@ class ClientInterfaceController extends PageController
         $this->middleware('auth');
     }
 
-    public function reports(Request $request, ReportTransformer $reportTransformer)
+    public function reports(Request $request)
     {
         if(!$request->user()->isClient()){
             abort(403, 'Only clients can view this page.');
@@ -37,7 +37,7 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.reports', compact('today'));
     }
 
-    public function reportsByDate(Request $request, ReportTransformer $reportTransformer)
+    public function reportsByDate(Request $request, ReportFrontTransformer $reportTransformer)
     {
         if(!$request->user()->isClient()){
             return response('You are not a Client', 403);
