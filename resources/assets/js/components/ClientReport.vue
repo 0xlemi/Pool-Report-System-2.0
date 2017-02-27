@@ -1,78 +1,127 @@
 <template>
-<div class="col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0">
-    <section class="card">
-    	<header class="card-header card-header-xxl">
-    		Pool Photos
-    	</header>
-    	<div class="card-block">
-            <div class="row">
-                <photo-list :data="photos" :can-delete="false" list-class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md">
-            	</photo-list>
-                <bar-chart
-                    :data="chartData"
-                    :options="chartOptions">
-                </bar-chart>
-            </div>
-    	</div>
-        <button v-if="report.photos.length > 3" @click="morePhotos = !morePhotos" type="button" class="btn btn-block btn-default-outline">{{ photosButtonMessage }}</button>
-    </section>
+<div class="col-md-12">
+    <br>
+    <h3 class="with-border semibold">&nbsp;&nbsp;&nbsp;Pool Photos</h3>
+    <div class="col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0">
+        <photo-list
+            :data="photos"
+            :can-delete="false"
+            list-class="col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md">
+    	</photo-list>
+        <button v-if="report.photos.length > 3" @click="morePhotos = !morePhotos" type="button" class="btn btn-block btn-default-outline">
+            {{ photosButtonMessage }}
+        </button>
+        <br>
+        <br>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="col-xxl-6 col-xl-12 chart">
+        <panel title="Chemicals">
+            <chemical-chart
+            :values="values"
+            :tags="tags">
+            </chemical-chart>
+        </panel>
+    </div>
+    <div class="col-xxl-3 col-xl-6 chart">
+        <panel title="Temperature">
+            <chemical-chart
+            :values="temperature"
+            :tags="tags">
+            </chemical-chart>
+        </panel>
+    </div>
+    <div class="col-xxl-3 col-xl-6 chart">
+        <panel title="Turbidity">
+            <chemical-chart
+            :values="turbidity"
+            :tags="[
+                'Very High',
+                'High',
+                'Low',
+                'Perfect',
+            ]">
+            </chemical-chart>
+        </panel>
+    </div>
 </div>
 </template>
 
 <script>
 import photoList from './photoList.vue';
-import barChart from './BarChart.vue';
+import chemicalChart from './ChemicalChart.vue';
+import panel from './panel.vue';
 
 
 export default {
     props: ['report'],
     components:{
         photoList,
-        barChart
+        chemicalChart,
+        panel
     },
     data(){
         return {
             morePhotos: false,
-            chartData: {
-                labels: ["PH", "Chlorine", "Temperature", "Salt"],
-                datasets: [
-                    {
-                        label: "My First dataset",
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                        ],
-                        borderColor: [
-                            'rgba(255,99,132,1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                        ],
-                        borderWidth: 1,
-                        data: [this.report.ph, this.report.chlorine, this.report.temperature, this.report.salt],
+            values: [
+                {
+                    tag: 'PH',
+                    data: this.report.ph,
+                    color: {
+                        red: 255,
+                        green: 99,
+                        blue: 132,
                     }
-                ]
-            },
-            chartOptions: {
-                scales: {
-                // yAxes: [{
-                //   ticks: {
-                //     userCallback: function(value) {
-                //         switch (value) {
-                //             case value == 1:
-                //
-                //                 break;
-                //             default:
-                //
-                //         }
-                //         return v+'hello'
-                //     }
-                //   }
-                // }]
-              },
-            },
+                },
+                {
+                    tag: 'Chlorine',
+                    data: this.report.chlorine,
+                    color: {
+                        red: 54,
+                        green: 162,
+                        blue: 235,
+                    }
+                },
+                {
+                    tag: 'Salt',
+                    data: this.report.salt,
+                    color: {
+                        red: 255,
+                        green: 206,
+                        blue: 86,
+                    }
+                },
+            ],
+            temperature: [
+                {
+                    tag: 'Temperature',
+                    data: this.report.temperature,
+                    color: {
+                        red: 255,
+                        green: 99,
+                        blue: 132,
+                    }
+                },
+            ],
+            turbidity: [
+                {
+                    tag: 'Turbidity',
+                    data: this.report.turbidity,
+                    color: {
+                        red: 75,
+                        green: 192,
+                        blue: 192,
+                    }
+                },
+            ],
+            tags: [
+                'Very Low',
+                'Low',
+                'Perfect',
+                'High',
+                'Very High',
+            ],
         }
     },
     methods:{
@@ -89,7 +138,7 @@ export default {
             return result;
         },
         photosButtonMessage(){
-            return (this.morePhotos) ? 'Show less' : 'Show more';
+            return (this.morePhotos) ? 'Show Less Photos' : 'Show More Photos';
         }
     },
 
