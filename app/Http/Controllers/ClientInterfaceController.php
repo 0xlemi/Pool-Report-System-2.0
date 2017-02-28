@@ -57,6 +57,32 @@ class ClientInterfaceController extends PageController
         ]);
     }
 
+    public function workOrders(Request $request)
+    {
+        if(!$request->user()->isClient()){
+            return response('You are not a Client', 403);
+        }
+        return view('clientInterface.workorders');
+    }
+
+    public function workOrderTable(Request $request)
+    {
+        if(!$request->user()->isClient()){
+            return response('You are not a Client', 403);
+        }
+
+        $admin = $request->user()->admin();
+        $client = $request->user()->userable();
+        $workOrders = $client->workOrders();
+
+        return response($workOrders);
+    }
+
+    public function workOrderShow(Request $request)
+    {
+
+    }
+
     public function statement(Request $request)
     {
         if(!$request->user()->isClient()){

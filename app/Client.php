@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use App\Administrator;
 use App\PRS\Traits\Model\ImageTrait;
+use App\WorkOrder;
 use App\Report;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -85,9 +86,18 @@ class Client extends Model
 		$reportsIdArray = $this->services()->join('reports', function ($join) use ($timezone, $date_str){
             $join->on('services.id', '=', 'reports.service_id')
 			->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$timezone.'\'), "'.$date_str.'")'), '=', '0');
-        })->select('reports.id')->get()->toArray();
+        })->select('reports.id')->get()->pluck('id')->toArray();
 
 		return Report::find($reportsIdArray);
+	}
+
+	public function workOrders()
+	{
+		$workOrdersIdArray = $this->services()
+			->join('work_orders', 'services.id', '=', 'work_orders.service_id')
+			->select('work_orders.id')->get()->pluck('id')->toArray();
+
+			return WorkOrder::find($workOrdersIdArray);
 	}
 
 	/*
