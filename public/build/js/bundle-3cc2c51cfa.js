@@ -28613,10 +28613,10 @@ exports.default = _vueChartjs.Bar.extend({
                 enabled: false
             },
             responsive: true,
-            maintainAspectRatio: false,
+            // maintainAspectRatio: false,
             scales: {
                 xAxes: [{
-                    barPercentage: .8
+                    barPercentage: .6
                 }],
                 yAxes: [{
                     ticks: {
@@ -28742,7 +28742,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12 chart\">\n        <panel title=\"Chemicals\">\n            <chemical-chart :values=\"values\" :tags=\"tags\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6 chart\">\n        <panel title=\"Temperature\">\n            <chemical-chart :values=\"temperature\" :tags=\"tags\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6 chart\">\n        <panel title=\"Turbidity\">\n            <chemical-chart :values=\"turbidity\" :tags=\"[\n                'Very High',\n                'High',\n                'Low',\n                'Perfect',\n            ]\">\n            </chemical-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12 chart\">\n        <panel title=\"Staff\">\n            <client-report-staff :supervisor=\"report.supervisor\" :technician=\"report.technician\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Chemicals\">\n            <chemical-chart :values=\"values\" :tags=\"tags\" :height=\"187\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Temperature\">\n            <chemical-chart :values=\"temperature\" :tags=\"tags\" :height=\"400\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Turbidity\">\n            <chemical-chart :values=\"turbidity\" :tags=\"[\n                'Very High',\n                'High',\n                'Low',\n                'Perfect',\n            ]\" :height=\"400\">\n            </chemical-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Staff\">\n            <client-report-staff :supervisor=\"report.supervisor\" :technician=\"report.technician\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

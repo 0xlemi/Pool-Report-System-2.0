@@ -41,10 +41,10 @@ export default Bar.extend({
                     enabled: false
                 },
                 responsive: true,
-                maintainAspectRatio: false,
+                // maintainAspectRatio: false,
                 scales: {
                     xAxes: [{
-                        barPercentage: .8
+                        barPercentage: .6
                     }],
                     yAxes: [{
                         ticks: {

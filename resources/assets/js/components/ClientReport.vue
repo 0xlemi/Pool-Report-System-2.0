@@ -16,23 +16,25 @@
     </div>
 </div>
 <div class="col-md-12">
-    <div class="col-xxl-6 col-xl-12 chart">
+    <div class="col-xxl-6 col-xl-12">
         <panel title="Chemicals">
             <chemical-chart
             :values="values"
-            :tags="tags">
+            :tags="tags"
+            :height="187">
             </chemical-chart>
         </panel>
     </div>
-    <div class="col-xxl-3 col-xl-6 chart">
+    <div class="col-xxl-3 col-xl-6">
         <panel title="Temperature">
             <chemical-chart
             :values="temperature"
-            :tags="tags">
+            :tags="tags"
+            :height="400">
             </chemical-chart>
         </panel>
     </div>
-    <div class="col-xxl-3 col-xl-6 chart">
+    <div class="col-xxl-3 col-xl-6">
         <panel title="Turbidity">
             <chemical-chart
             :values="turbidity"
@@ -41,14 +43,15 @@
                 'High',
                 'Low',
                 'Perfect',
-            ]">
+            ]"
+            :height="400">
             </chemical-chart>
         </panel>
     </div>
 </div>
 
 <div class="col-md-12">
-    <div class="col-xxl-6 col-xl-12 chart">
+    <div class="col-xxl-6 col-xl-12">
         <panel title="Staff">
             <client-report-staff
                 :supervisor="report.supervisor"
