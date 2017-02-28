@@ -38,6 +38,9 @@ Route::post('report', 'ClientInterfaceController@reportsByDate');
 Route::get('workorder', 'ClientInterfaceController@workOrders');
 Route::get('workorder/table', 'ClientInterfaceController@workOrderTable');
 Route::get('workorder/{workorder}', 'ClientInterfaceController@workOrderShow');
+Route::get('service', 'ClientInterfaceController@services');
+Route::get('service/table', 'ClientInterfaceController@serviceTable');
+Route::get('service/{service}', 'ClientInterfaceController@serviceShow');
 Route::get('statement', 'ClientInterfaceController@statement');
 
 // Todays Route

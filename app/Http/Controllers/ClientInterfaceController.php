@@ -118,6 +118,36 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.workorder.show', compact('workOrder', 'default_table_url', 'technicians'));
     }
 
+    public function services(Request $request)
+    {
+        if(!$request->user()->isClient()){
+            abort(403, 'Only clients can view this page.');
+        }
+        return view('clientInterface.service.index');
+    }
+
+    public function serviceTable(Request $request)
+    {
+        if(!$request->user()->isClient()){
+            return response('You are not a Client', 403);
+        }
+
+        // $this->validate($request, [
+        //     'contract' => 'required|boolean'
+        // ]);
+
+        $client = $request->user()->userable();
+        $services = $client->services;
+
+        return response();
+
+    }
+
+    public function serviceShow()
+    {
+
+    }
+
     public function statement(Request $request)
     {
         if(!$request->user()->isClient()){
