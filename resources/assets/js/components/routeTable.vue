@@ -92,7 +92,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
     },
     events:{
 		rowClicked(id){
-            window.location = Larvel.url+'todaysroute/report/'+id;
+            window.location = Laravel.url+'todaysroute/report/'+id;
         }
     },
     methods: {
