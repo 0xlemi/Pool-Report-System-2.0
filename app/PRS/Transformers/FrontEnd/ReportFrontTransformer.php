@@ -41,11 +41,11 @@ class ReportFrontTransformer extends Transformer
         $supervisor = $report->supervisor();
         $technician = $report->technician;
 
-        $supervisorPhoto = 'no image';
+        $supervisorPhoto = null;
         if($supervisor->imageExists()){
             $supervisorPhoto = $this->imageTransformer->transform($supervisor->image(1, false));
         }
-        $technicianPhoto = 'no image';
+        $technicianPhoto = null;
         if($technician->imageExists()){
             $technicianPhoto = $this->imageTransformer->transform($technician->image(1, false));
         }
@@ -63,6 +63,7 @@ class ReportFrontTransformer extends Transformer
             'service' => $this->servicePreviewTransformer
                             ->transform($report->service),
             'supervisor' => [
+                'id' => $supervisor->seq_id,
                 'full_name' => $supervisor->name.' '.$supervisor->last_name,
                 'email' => $supervisor->user->email,
                 'cellphone' => $supervisor->cellphone,
@@ -71,6 +72,7 @@ class ReportFrontTransformer extends Transformer
                 'photo' => $supervisorPhoto,
             ],
             'technician' => [
+                'id' => $technician->seq_id,
                 'full_name' => $technician->name.' '.$technician->last_name,
                 'username' => $technician->user->email,
                 'cellphone' => $technician->cellphone,
