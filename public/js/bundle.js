@@ -32898,6 +32898,66 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _indexTable = require('./indexTable.vue');
+
+var _indexTable2 = _interopRequireDefault(_indexTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: {
+        indexTable: _indexTable2.default
+    },
+    data: function data() {
+        return {
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'service',
+                title: 'Service',
+                sortable: true
+            }, {
+                field: 'supervisor',
+                title: 'Supervisor',
+                sortable: true
+            }, {
+                field: 'start',
+                title: 'Start at',
+                sortable: true
+            }, {
+                field: 'end',
+                title: 'End at',
+                sortable: true
+            }, {
+                field: 'price',
+                title: 'Price',
+                sortable: true,
+                visible: true
+            }]
+        };
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :toolbar-switch=\"{ checked: false, name: 'Finished' }\" click-url=\"workorder/\" table-url=\"workorder/table?finished=\">\n    </index-table>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-5d1e310a", module.exports)
+  } else {
+    hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./indexTable.vue":217,"vue":181,"vue-hot-reload-api":178}],238:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _photoList = require('./photoList.vue');
 
 var _photoList2 = _interopRequireDefault(_photoList);
@@ -32955,7 +33015,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":212,"./photoList.vue":229,"vue":181,"vue-hot-reload-api":178}],238:[function(require,module,exports){
+},{"./dropzone.vue":212,"./photoList.vue":229,"vue":181,"vue-hot-reload-api":178}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33035,7 +33095,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":229,"vue":181,"vue-hot-reload-api":178}],239:[function(require,module,exports){
+},{"./photoList.vue":229,"vue":181,"vue-hot-reload-api":178}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33095,7 +33155,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":217,"vue":181,"vue-hot-reload-api":178}],240:[function(require,module,exports){
+},{"./indexTable.vue":217,"vue":181,"vue-hot-reload-api":178}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33506,7 +33566,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":189,"./alert.vue":199,"./dropdown.vue":211,"./dropzone.vue":212,"./photoList.vue":229,"spin":166,"vue":181,"vue-hot-reload-api":178}],241:[function(require,module,exports){
+},{"./BootstrapTable.vue":189,"./alert.vue":199,"./dropdown.vue":211,"./dropzone.vue":212,"./photoList.vue":229,"spin":166,"vue":181,"vue-hot-reload-api":178}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33590,7 +33650,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":181,"vue-hot-reload-api":178}],242:[function(require,module,exports){
+},{"vue":181,"vue-hot-reload-api":178}],243:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -33674,6 +33734,7 @@ $(document).ready(function () {
 	var timezoneDropdown = require('./components/timezoneDropdown.vue');
 	var emailVerificationNotice = require('./components/emailVerificationNotice.vue');
 	var clientReports = require('./components/ClientReports.vue');
+	var workOrderClientTable = require('./components/workOrderClientTable.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -33697,6 +33758,7 @@ $(document).ready(function () {
 			profile: profile,
 			// Client Interface
 			clientReports: clientReports,
+			workOrderClientTable: workOrderClientTable,
 			// work orders
 			workOrderTable: workOrderTable,
 			workOrderPhotosShow: workOrderPhotosShow,
@@ -34440,6 +34502,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":188,"./components/ClientReports.vue":194,"./components/Permissions.vue":196,"./components/addressFields.vue":198,"./components/alert.vue":199,"./components/billing.vue":200,"./components/chemical.vue":204,"./components/clientTable.vue":205,"./components/contract.vue":206,"./components/countries.vue":207,"./components/deleteButton.vue":210,"./components/dropdown.vue":211,"./components/editReportPhotos.vue":213,"./components/emailVerificationNotice.vue":214,"./components/equipment.vue":215,"./components/finishWorkOrderButton.vue":216,"./components/invoiceTable.vue":218,"./components/missingServices.vue":220,"./components/notificationsWidget.vue":224,"./components/payments.vue":227,"./components/photo.vue":228,"./components/photoList.vue":229,"./components/profile.vue":230,"./components/routeTable.vue":231,"./components/serviceTable.vue":232,"./components/settings.vue":233,"./components/supervisorTable.vue":234,"./components/technicianTable.vue":235,"./components/timezoneDropdown.vue":236,"./components/workOrderPhotosEdit.vue":237,"./components/workOrderPhotosShow.vue":238,"./components/workOrderTable.vue":239,"./components/works.vue":240,"./directives/FormToAjax.vue":241,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":181,"vue-resource":180}]},{},[186,184,183,185,187,242]);
+},{"./components/AllNotificationsAsReadButton.vue":188,"./components/ClientReports.vue":194,"./components/Permissions.vue":196,"./components/addressFields.vue":198,"./components/alert.vue":199,"./components/billing.vue":200,"./components/chemical.vue":204,"./components/clientTable.vue":205,"./components/contract.vue":206,"./components/countries.vue":207,"./components/deleteButton.vue":210,"./components/dropdown.vue":211,"./components/editReportPhotos.vue":213,"./components/emailVerificationNotice.vue":214,"./components/equipment.vue":215,"./components/finishWorkOrderButton.vue":216,"./components/invoiceTable.vue":218,"./components/missingServices.vue":220,"./components/notificationsWidget.vue":224,"./components/payments.vue":227,"./components/photo.vue":228,"./components/photoList.vue":229,"./components/profile.vue":230,"./components/routeTable.vue":231,"./components/serviceTable.vue":232,"./components/settings.vue":233,"./components/supervisorTable.vue":234,"./components/technicianTable.vue":235,"./components/timezoneDropdown.vue":236,"./components/workOrderClientTable.vue":237,"./components/workOrderPhotosEdit.vue":238,"./components/workOrderPhotosShow.vue":239,"./components/workOrderTable.vue":240,"./components/works.vue":241,"./directives/FormToAjax.vue":242,"bootstrap-toggle":7,"dateformat":81,"dropzone":82,"gmaps.core":83,"gmaps.markers":84,"jquery-locationpicker":85,"spin":166,"sweetalert":175,"vue":181,"vue-resource":180}]},{},[186,184,183,185,187,243]);
 
 //# sourceMappingURL=bundle.js.map

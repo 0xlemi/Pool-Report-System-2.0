@@ -36,7 +36,7 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 Route::get('report', 'ClientInterfaceController@reports');
 Route::post('report', 'ClientInterfaceController@reportsByDate');
 Route::get('workorder', 'ClientInterfaceController@workOrders');
-Route::post('workorder', 'ClientInterfaceController@workOrdersTable');
+Route::get('workorder/table', 'ClientInterfaceController@workOrderTable');
 Route::get('workorder/{workorder}', 'ClientInterfaceController@workOrderShow');
 Route::get('statement', 'ClientInterfaceController@statement');
 

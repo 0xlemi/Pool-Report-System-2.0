@@ -11,6 +11,10 @@
 	</div>
 </header>
 <div class="row">
-    
+    <div class="col-xl-12">
+		<section class="box-typical">
+            <work-order-client-table></work-order-client-table>    
+        </section>
+    </div>
 </div><!--.row-->
 @endsection

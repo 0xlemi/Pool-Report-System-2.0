@@ -91,13 +91,19 @@ class Client extends Model
 		return Report::find($reportsIdArray);
 	}
 
-	public function workOrders()
+	public function workOrders($finished = true)
 	{
+		$sign = '=';
+		if($finished){
+			$sign = '!=';
+		}
 		$workOrdersIdArray = $this->services()
-			->join('work_orders', 'services.id', '=', 'work_orders.service_id')
-			->select('work_orders.id')->get()->pluck('id')->toArray();
+			->join('work_orders', function ($join) use ($sign){
+	            $join->on('services.id', '=', 'work_orders.service_id')
+				->where('work_orders.end', $sign, null);
+        	})->select('work_orders.id')->get()->pluck('id')->toArray();
 
-			return WorkOrder::find($workOrdersIdArray);
+		return WorkOrder::find($workOrdersIdArray)->sortByDesc('seq_id');
 	}
 
 	/*

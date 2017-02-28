@@ -77,6 +77,7 @@ function isset(strVariableName) {
     let timezoneDropdown = require('./components/timezoneDropdown.vue');
     let emailVerificationNotice = require('./components/emailVerificationNotice.vue');
     let clientReports = require('./components/ClientReports.vue');
+    let workOrderClientTable = require('./components/workOrderClientTable.vue');
 
 
     let mainVue = new Vue({
@@ -101,6 +102,7 @@ function isset(strVariableName) {
             profile,
             // Client Interface
             clientReports,
+            workOrderClientTable,
             // work orders
             workOrderTable,
             workOrderPhotosShow,

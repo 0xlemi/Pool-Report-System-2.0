@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use JavaScript;
 use App\PRS\Transformers\FrontEnd\ReportFrontTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
+use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Helpers\TechnicianHelpers;
 use Carbon\Carbon;
 
 class ClientInterfaceController extends PageController
@@ -60,27 +63,59 @@ class ClientInterfaceController extends PageController
     public function workOrders(Request $request)
     {
         if(!$request->user()->isClient()){
-            return response('You are not a Client', 403);
+            abort(403, 'Only clients can view this page.');
         }
-        return view('clientInterface.workorders');
+        return view('clientInterface.workorder.index');
     }
 
-    public function workOrderTable(Request $request)
+    public function workOrderTable(Request $request, WorkOrderDatatableTransformer $workOrderTransformer)
     {
         if(!$request->user()->isClient()){
             return response('You are not a Client', 403);
         }
 
+        $this->validate($request, [
+            'finished' => 'required|boolean'
+        ]);
+
         $admin = $request->user()->admin();
         $client = $request->user()->userable();
-        $workOrders = $client->workOrders();
+        $workOrders = $client->workOrders($request->finished);
 
-        return response($workOrders);
+        return response($workOrderTransformer->transformCollection($workOrders));
     }
 
-    public function workOrderShow(Request $request)
+    public function workOrderShow(Request $request,
+                            ImageTransformer $imageTransformer,
+                            TechnicianHelpers $technicianHelpers,
+                            $seq_id)
     {
+        if(!$request->user()->isClient()){
+            abort(403, 'Only clients can view this page.');
+        }
 
+        $admin = $this->loggedUserAdministrator();
+        $workOrder = $admin->workOrderBySeqId($seq_id);
+
+        $imagesBeforeWork = $imageTransformer->transformCollection($workOrder->imagesBeforeWork());
+        $imagesAfterWork = $imageTransformer->transformCollection($workOrder->imagesAfterWork());
+
+        $technicians  = $technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $default_table_url = url('datatables/works/'.$seq_id);
+
+        JavaScript::put([
+            'worksUrl' => url('/works').'/',
+            'worksAddPhotoUrl' => url('/works/photos').'/',
+            'workOrderId' => $workOrder->id,
+            'workOrderFinished' => $workOrder->end()->finished(),
+            'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
+            'workOrderBeforePhotos' => $imagesBeforeWork,
+            'workOrderAfterPhotos' => $imagesAfterWork,
+            'workOrderPhotoAfterUrl' => url('workorders/photos/after/'.$workOrder->id),
+            'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),
+        ]);
+
+        return view('clientInterface.workorder.show', compact('workOrder', 'default_table_url', 'technicians'));
     }
 
     public function statement(Request $request)
