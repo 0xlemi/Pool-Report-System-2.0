@@ -43,6 +43,9 @@ class WorkOrderPolicy
             return $user->userable()->admin()->sup_workorder_view;
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_workorder_view;
+        }elseif($user->isClient()){
+            // only if this client owns this workorder
+            return $user->userable()->hasWorkOrder($workOrder->seq_id);
         }
         return false;
     }

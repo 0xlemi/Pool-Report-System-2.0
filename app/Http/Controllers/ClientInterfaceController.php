@@ -23,9 +23,6 @@ class ClientInterfaceController extends PageController
         $this->middleware('auth');
     }
 
-    // ************IMPORTANT****************
-    // NEED TO ADD AUTHORIZATION TO ALL THE METHODS
-    // ************IMPORTANT****************
 
     public function reports(Request $request)
     {
@@ -85,7 +82,7 @@ class ClientInterfaceController extends PageController
 
         $admin = $request->user()->admin();
         $client = $request->user()->userable();
-        $workOrders = $client->workOrders($request->finished);
+        $workOrders = $client->workOrdersFinished($request->finished)->get();
 
         return response($workOrderTransformer->transformCollection($workOrders));
     }
@@ -102,25 +99,14 @@ class ClientInterfaceController extends PageController
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);
 
+        $this->authorize('view', $workOrder);
+
         $imagesBeforeWork = $imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
-        $technicians  = $technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-        $default_table_url = url('datatables/works/'.$seq_id);
+        // $technicians  = $technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
 
-        JavaScript::put([
-            'worksUrl' => url('/works').'/',
-            'worksAddPhotoUrl' => url('/works/photos').'/',
-            'workOrderId' => $workOrder->id,
-            'workOrderFinished' => $workOrder->end()->finished(),
-            'workOrderUrl' => url('workorders/'.$workOrder->seq_id),
-            'workOrderBeforePhotos' => $imagesBeforeWork,
-            'workOrderAfterPhotos' => $imagesAfterWork,
-            'workOrderPhotoAfterUrl' => url('workorders/photos/after/'.$workOrder->id),
-            'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),
-        ]);
-
-        return view('clientInterface.workorder.show', compact('workOrder', 'default_table_url', 'technicians'));
+        return view('clientInterface.workorder.show', compact('workOrder', 'technicians'));
     }
 
     public function services(Request $request)
@@ -163,7 +149,12 @@ class ClientInterfaceController extends PageController
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         $image = $imageTransformer->transform($service->images->first());
-        $contract = $service->serviceContract;
+        $contract = null;
+        if($service->hasServiceContract()){
+            $contract = $service->serviceContract;
+        }
+
+        $this->authorize('view', $service);
 
         return view('clientInterface.service.show', compact('service', 'contract', 'image'));
 

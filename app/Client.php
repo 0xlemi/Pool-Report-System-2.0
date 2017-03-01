@@ -93,7 +93,16 @@ class Client extends Model
 		return Report::find($reportsIdArray);
 	}
 
-	public function workOrders($finished = true)
+	public function workOrders($order = 'desc')
+	{
+		$workOrdersIdArray = $this->services()
+				->join('work_orders', 'services.id', '=', 'work_orders.service_id')
+				->select('work_orders.id')->get()->pluck('id')->toArray();
+
+		return WorkOrder::whereIn('id', $workOrdersIdArray)->orderBy('seq_id', $order);
+	}
+
+	public function workOrdersFinished($finished = true)
 	{
 		$sign = '=';
 		if($finished){
@@ -105,7 +114,12 @@ class Client extends Model
 				->where('work_orders.end', $sign, null);
         	})->select('work_orders.id')->get()->pluck('id')->toArray();
 
-		return WorkOrder::find($workOrdersIdArray)->sortByDesc('seq_id');
+		return WorkOrder::whereIn('id', $workOrdersIdArray)->orderBy('seq_id', 'desc');
+	}
+
+	public function hasWorkOrder($seq_id)
+	{
+		return $this->workOrders()->get()->contains('seq_id', $seq_id);
 	}
 
 	/*

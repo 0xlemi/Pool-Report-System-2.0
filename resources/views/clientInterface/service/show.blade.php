@@ -78,6 +78,7 @@
 							</div>
 						</div>
 
+						@if($contract)
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Service Contract</label>
 							<div class="col-sm-10">
@@ -90,6 +91,7 @@
 								</client-contract>
 							</div>
 						</div>
+						@endif
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Equipment</label>

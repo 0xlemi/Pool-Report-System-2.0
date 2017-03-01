@@ -36,6 +36,9 @@ class ServicePolicy
             return $user->userable()->admin()->sup_service_view;
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_service_view;
+        }elseif($user->isClient()){
+            // only if this client owns this service
+            return $user->userable()->hasService($service->seq_id);
         }
         return false;
     }
