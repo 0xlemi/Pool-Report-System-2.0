@@ -22,6 +22,10 @@ class ClientInterfaceController extends PageController
     {
         $this->middleware('auth');
     }
+    
+    // ************IMPORTANT****************
+    // NEED TO ADD AUTHORIZATION TO ALL THE METHODS
+    // ************IMPORTANT****************
 
     public function reports(Request $request)
     {
@@ -149,8 +153,18 @@ class ClientInterfaceController extends PageController
 
     }
 
-    public function serviceShow()
+    public function serviceShow(Request $request,
+                            ImageTransformer $imageTransformer,
+                            $seq_id)
     {
+        if(!$request->user()->isClient()){
+            abort(403, 'Only clients can view this page.');
+        }
+
+        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $image = $imageTransformer->transform($service->images->first());
+
+        return view('clientInterface.service.show', compact('service', 'image'));
 
     }
 
