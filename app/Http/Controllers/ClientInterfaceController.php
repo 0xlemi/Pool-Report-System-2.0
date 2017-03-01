@@ -22,7 +22,7 @@ class ClientInterfaceController extends PageController
     {
         $this->middleware('auth');
     }
-    
+
     // ************IMPORTANT****************
     // NEED TO ADD AUTHORIZATION TO ALL THE METHODS
     // ************IMPORTANT****************
@@ -163,8 +163,9 @@ class ClientInterfaceController extends PageController
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
         $image = $imageTransformer->transform($service->images->first());
+        $contract = $service->serviceContract;
 
-        return view('clientInterface.service.show', compact('service', 'image'));
+        return view('clientInterface.service.show', compact('service', 'contract', 'image'));
 
     }
 

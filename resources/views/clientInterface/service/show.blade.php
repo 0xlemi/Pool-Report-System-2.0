@@ -38,45 +38,60 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">ID</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->seq_id }}">
+								<input type="text" readonly class="form-control" value="{{ $service->seq_id }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Name</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->name }}">
+								<input type="text" readonly class="form-control" value="{{ $service->name }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Street and Number</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->address_line }}">
+								<input type="text" readonly class="form-control" value="{{ $service->address_line }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">City</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->city }}">
+								<input type="text" readonly class="form-control" value="{{ $service->city }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">State</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->state }}">
+								<input type="text" readonly class="form-control" value="{{ $service->state }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Postal Code</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $service->postal_code }}">
+								<input type="text" readonly class="form-control" value="{{ $service->postal_code }}">
 							</div>
 						</div>
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Country</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" id="inputPassword" value="{{ $serviceHelpers->get_country_by_code($service->country) }}">
+								<input type="text" readonly class="form-control" value="{{ $serviceHelpers->get_country_by_code($service->country) }}">
 							</div>
 						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Service Contract</label>
+							<div class="col-sm-10">
+								<client-contract
+									service-days-string="{{ $contract->serviceDays()->shortNames() }}"
+									start-time="{{ $contract->startTime()->timePickerValue() }}"
+									end-time="{{ $contract->endTime()->timePickerValue() }}"
+									price="{{ $contract->amount.' '.$contract->currency }}"
+									start="{{ $contract->start() }}">
+								</client-contract>
+							</div>
+						</div>
+
+						
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Location</label>
