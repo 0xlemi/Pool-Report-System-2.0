@@ -9,6 +9,7 @@ use App\Http\Requests\CreateEquipmentRequest;
 use App\Equipment;
 use Response;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\EquipmentDatatableTransformer;
 
 class EquipmentController extends PageController
 {
@@ -25,26 +26,17 @@ class EquipmentController extends PageController
     }
 
 
-    public function index(Request $request, $service_seq_id)
+    public function index(Request $request, EquipmentDatatableTransformer $equipmentTransformer, $service_seq_id)
     {
         $this->authorize('list', Equipment::class);
 
+        // if client check that he owns the service
+
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
 
-        $equipment = $service->equipment()
-                        ->get()
-                        ->transform(function($item){
-                            return (object) [
-                                'id' => $item->id,
-                                'kind' => '<strong>'.$item->kind.'</strong>',
-                                'type' => $item->type,
-                                'brand' => $item->brand,
-                                'model' => $item->model,
-                                'capacity' => $item->capacity.' '.$item->units,
-                            ];
-                        });
+        $equipment = $service->equipment()->get();
 
-        return response()->json($equipment);
+        return response()->json($equipmentTransformer->transformCollection($equipment));
     }
 
     /**
@@ -81,6 +73,7 @@ class EquipmentController extends PageController
     {
         $this->authorize('view', $equipment);
 
+        // check that the service belongs to them if they are clients
         $photo = [
             'photos' => $this->imageTransformer
                         ->transformCollection($equipment->images()->get())

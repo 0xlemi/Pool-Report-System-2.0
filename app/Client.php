@@ -11,6 +11,7 @@ use App\Administrator;
 use App\PRS\Traits\Model\ImageTrait;
 use App\Service;
 use App\WorkOrder;
+use App\Equipment;
 use App\Report;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;

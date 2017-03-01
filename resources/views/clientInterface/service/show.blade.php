@@ -91,7 +91,15 @@
 							</div>
 						</div>
 
-						
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Equipment</label>
+							<div class="col-sm-10">
+								<client-equipment
+								service-id="{{ $service->seq_id }}">
+								</client-equipment>
+							</div>
+						</div>
+
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Location</label>

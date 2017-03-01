@@ -80,6 +80,7 @@ function isset(strVariableName) {
     let workOrderClientTable = require('./components/workOrderClientTable.vue');
     let serviceClientTable = require('./components/serviceClientTable.vue');
     let clientContract = require('./components/clientContract.vue');
+    let clientEquipment = require('./components/clientEquipment.vue');
 
 
     let mainVue = new Vue({
@@ -106,7 +107,8 @@ function isset(strVariableName) {
             clientReports,
             workOrderClientTable,
             serviceClientTable,
-            clientContract, 
+            clientContract,
+            clientEquipment, 
             // work orders
             workOrderTable,
             workOrderPhotosShow,

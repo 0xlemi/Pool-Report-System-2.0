@@ -13,6 +13,7 @@
 			</div>
         </div>
       <div class="modal-footer">
+        <slot name="buttonsBefore"></slot>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <slot name="buttons"></slot>
       </div>
