@@ -212,16 +212,43 @@ class Administrator extends Model
         })->select('services.*')->orderBy('seq_id', $order);
     }
 
+    /**
+    * THIS NEEDS TO BE CHECHED
+	 * Get all the services that have no contract or the contract that they have is inactive
+	 * @param  string $order
+	 * @return Illuminate\Database\Query\Builder
+	 */
     public function serviceWithNoContractOrInactive($order = 'asc')
     {
-        // return $this->services()->leftJoin('service_contracts', function ($join) {
-        //     $join->on('services.id', '=', 'service_contracts.service_id')
-        //         ->whereNull('service_contracts.service_id');
-        // });
-        // ->where('service_id','=', 'NULL');
-        // return $this->services()->leftJoin('service_contracts', 'services.id', '=', 'service_contracts.service_id')
-        // ->select('services.*', 'service_id')
-        // ->where('service_id','=', 'NULL');
+		// First we get all the clients with or with out service Contract
+		// we select relevant information like service_contracts.service_id which is gonig to be null if that service has no contract
+		// the service.id which is the id of the service all the time
+		// and active because we also want to return the services with a contract that is inactive
+        $serviceArray = $this->services()
+						->leftJoin('service_contracts', 'services.id', '=', 'service_contracts.service_id')
+        				->select('service_contracts.service_id', 'services.id', 'service_contracts.active')
+						->get()->toArray();
+
+		// Since Query Builder is not that great
+		// We filter to 2 conditions to get the services
+		// if it don't have a contract (if service_id == null)
+		// and if it has a contract but happens to be inactive (if active is false)
+		foreach ($serviceArray as $key => $value) {
+			// (filter out services with contracts) and (even if it has one must not be active)
+			if(($value['service_id'] != null) && ($value['active'])){
+				unset($serviceArray[$key]);
+			}else{
+				// replace array with values for the service.id
+				// that is the only thing that matters really
+				$serviceArray[$key] = $value['id'];
+			}
+		}
+
+		// reorder de array ids so they are sequential
+		$serviceArray = array_values($serviceArray);
+		// get Query Builder result with the whereIn
+		// because the find gives you a collection
+		return Service::whereIn('id', $serviceArray);
     }
 
     /**

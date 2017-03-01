@@ -13,6 +13,7 @@
 <div class="row">
     <div class="col-xl-12">
 		<section class="box-typical">
+			<service-client-table></service-client-table>
         </section>
     </div>
 </div><!--.row-->

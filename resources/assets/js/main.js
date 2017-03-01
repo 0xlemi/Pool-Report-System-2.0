@@ -78,6 +78,7 @@ function isset(strVariableName) {
     let emailVerificationNotice = require('./components/emailVerificationNotice.vue');
     let clientReports = require('./components/ClientReports.vue');
     let workOrderClientTable = require('./components/workOrderClientTable.vue');
+    let serviceClientTable = require('./components/serviceClientTable.vue');
 
 
     let mainVue = new Vue({
@@ -103,6 +104,7 @@ function isset(strVariableName) {
             // Client Interface
             clientReports,
             workOrderClientTable,
+            serviceClientTable, 
             // work orders
             workOrderTable,
             workOrderPhotosShow,

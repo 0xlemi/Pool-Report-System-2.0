@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use JavaScript;
 use App\PRS\Transformers\FrontEnd\ReportFrontTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\ServiceDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Helpers\TechnicianHelpers;
@@ -126,20 +127,25 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.service.index');
     }
 
-    public function serviceTable(Request $request)
+    public function serviceTable(Request $request, ServiceDatatableTransformer $serviceTransformer)
     {
         if(!$request->user()->isClient()){
             return response('You are not a Client', 403);
         }
 
-        // $this->validate($request, [
-        //     'contract' => 'required|boolean'
-        // ]);
+        $this->validate($request, [
+            'contract' => 'required|boolean'
+        ]);
 
         $client = $request->user()->userable();
-        $services = $client->services;
 
-        return response();
+        if($request->contract){
+            $services = $client->servicesWithActiveContract()->get();
+        }else{
+            $services = $client->serviceWithNoContractOrInactive()->get();
+        }
+
+        return response($serviceTransformer->transformCollection($services));
 
     }
 
