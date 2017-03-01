@@ -89,7 +89,9 @@
                         <div class="form-group row">
 							<label class="col-sm-2 form-control-label">Work Done</label>
 							<div class="col-sm-10">
-                                
+                                <client-works
+									work-order-id="{{ $workOrder->seq_id }}">
+                                </client-works>
 							</div>
 						</div>
 

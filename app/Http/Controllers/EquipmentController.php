@@ -28,6 +28,7 @@ class EquipmentController extends PageController
 
     public function index(Request $request, EquipmentDatatableTransformer $equipmentTransformer, $service_seq_id)
     {
+        // change this to handle errors as api response
         $this->authorize('list', Equipment::class);
 
         // if client check that he owns the service
@@ -47,6 +48,7 @@ class EquipmentController extends PageController
      */
     public function store(CreateEquipmentRequest $request, $service_seq_id)
     {
+        // change this to handle errors as api response
         $this->authorize('create', Equipment::class);
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
@@ -71,9 +73,9 @@ class EquipmentController extends PageController
      */
     public function show(Equipment $equipment)
     {
+        // change this to handle errors as api response
         $this->authorize('view', $equipment);
 
-        // check that the service belongs to them if they are clients
         $photo = [
             'photos' => $this->imageTransformer
                         ->transformCollection($equipment->images()->get())
@@ -90,6 +92,7 @@ class EquipmentController extends PageController
      */
     public function update(CreateEquipmentRequest $request, Equipment $equipment)
     {
+        // change this to handle errors as api response
         $this->authorize('update', $equipment);
 
         $equipment->fill(array_map('htmlentities', $request->except('service_id')));
@@ -104,6 +107,7 @@ class EquipmentController extends PageController
 
     public function addPhoto(Request $request, Equipment $equipment)
     {
+        // change this to handle errors as api response
         $this->authorize('addPhoto', $equipment);
 
         $this->validate($request, [
@@ -124,6 +128,7 @@ class EquipmentController extends PageController
 
     public function removePhoto(Equipment $equipment, $order)
     {
+        // change this to handle errors as api response
         $this->authorize('removePhoto', $equipment);
 
         $image = $equipment->image($order, false);
@@ -145,6 +150,7 @@ class EquipmentController extends PageController
      */
     public function destroy(Equipment $equipment)
     {
+        // change this to handle errors as api response
         $this->authorize('delete', $equipment);
 
         if($equipment->delete()){

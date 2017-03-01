@@ -9,6 +9,7 @@ use Carbon\Carbon;
 
 use App\Administrator;
 use App\PRS\Traits\Model\ImageTrait;
+use App\Work;
 use App\Service;
 use App\WorkOrder;
 use App\Equipment;
@@ -80,7 +81,6 @@ class Client extends Model
 				;
 	}
 
-
 	public function reportsByDate(Carbon $date)
 	{
         $date_str = $date->toDateTimeString();
@@ -120,6 +120,20 @@ class Client extends Model
 	public function hasWorkOrder($seq_id)
 	{
 		return $this->workOrders()->get()->contains('seq_id', $seq_id);
+	}
+
+	public function works()
+	{
+		$workIdArray = $this->workOrders()
+				->join('works', 'work_orders.id', '=', 'works.work_order_id')
+				->select('works.id')->get()->pluck('id')->toArray();
+
+		return Work::whereIn('id', $workIdArray)->orderBy('id', 'asc');
+	}
+
+	public function hasWork($id)
+	{
+		return $this->works()->get()->contains('id', $id);
 	}
 
 	/*
@@ -189,6 +203,20 @@ class Client extends Model
 	public function hasService($seq_id)
 	{
 		return $this->services()->get()->contains('seq_id', $seq_id);
+	}
+
+	public function equipment()
+	{
+		$equipmentIdArray = $this->services()
+				->join('equipment', 'services.id', '=', 'equipment.service_id')
+				->select('equipment.id')->get()->pluck('id')->toArray();
+
+		return Equipment::whereIn('id', $equipmentIdArray)->orderBy('id', 'asc');
+	}
+
+	public function hasEquipment($id)
+	{
+		return $this->equipment()->get()->contains('id', $id);
 	}
 
 	/**

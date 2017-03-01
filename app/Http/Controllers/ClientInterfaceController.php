@@ -104,9 +104,7 @@ class ClientInterfaceController extends PageController
         $imagesBeforeWork = $imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
-        // $technicians  = $technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-
-        return view('clientInterface.workorder.show', compact('workOrder', 'technicians'));
+        return view('clientInterface.workorder.show', compact('workOrder'));
     }
 
     public function services(Request $request)

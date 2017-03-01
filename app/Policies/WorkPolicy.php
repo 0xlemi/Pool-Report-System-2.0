@@ -26,6 +26,8 @@ class WorkPolicy
             return $user->userable()->admin()->sup_work_view;
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_work_view;
+        }elseif($user->isClient()){
+            return true;
         }
         return false;
     }
@@ -43,6 +45,8 @@ class WorkPolicy
             return $user->userable()->admin()->sup_work_view;
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_work_view;
+        }elseif($user->isClient()){
+            return true;
         }
         return false;
     }
