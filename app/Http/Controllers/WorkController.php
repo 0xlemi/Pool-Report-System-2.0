@@ -39,11 +39,16 @@ class WorkController extends PageController
      * @param  int  $workOrderSeqId
      * @return \Illuminate\Http\Response
      */
-    public function index($workOrderSeqId)
+    public function index(Request $request, $workOrderSeqId)
     {
-        $this->authorize('list', Work::class);
-
         $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+        if($request->user()->isClient()){
+            // Check if client owns workorder, preventing client from looking
+            // at works from workorders that are not his
+            $this->authorize('view', $workOrder);
+        }else{
+            $this->authorize('list', Work::class);
+        }
 
         $works = $workOrder->works()
                         ->get()

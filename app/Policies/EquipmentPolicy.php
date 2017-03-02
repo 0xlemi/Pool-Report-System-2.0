@@ -26,8 +26,6 @@ class EquipmentPolicy
             return $user->userable()->admin()->sup_equipment_view;
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_equipment_view;
-        }elseif($user->isClient()){
-            return true;
         }
         return false;
     }

@@ -28,12 +28,16 @@ class EquipmentController extends PageController
 
     public function index(Request $request, EquipmentDatatableTransformer $equipmentTransformer, $service_seq_id)
     {
-        // change this to handle errors as api response
-        $this->authorize('list', Equipment::class);
-
-        // if client check that he owns the service
 
         $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
+        if($request->user()->isClient()){
+            // Check if client owns service, preventing client from looking
+            // at equipment from services that are not his
+            $this->authorize('view', $service);
+        }else{
+            // change this to handle errors as api response
+            $this->authorize('list', Equipment::class);
+        }
 
         $equipment = $service->equipment()->get();
 

@@ -124,17 +124,20 @@ class Client extends Model
 
 	public function works()
 	{
-		$workIdArray = $this->workOrders()
-				->join('works', 'work_orders.id', '=', 'works.work_order_id')
-				->select('works.id')->get()->pluck('id')->toArray();
+		// I Cannot do a join over whereIn
 
-		return Work::whereIn('id', $workIdArray)->orderBy('id', 'asc');
+		// $workIdArray = $this->workOrders()
+		// 		->join('works', 'work_orders.id', '=', 'works.work_order_id')->get();
+		// 		// ->select('works.id');
+		//
+		// dd($workIdArray);
+		// // return Work::whereIn('id', $workIdArray)->orderBy('id', 'asc');
 	}
 
-	public function hasWork($id)
-	{
-		return $this->works()->get()->contains('id', $id);
-	}
+	// public function hasWork($id)
+	// {
+	// 	return $this->works()->get()->contains('id', $id);
+	// }
 
 	/*
 	 * associated services with this client
