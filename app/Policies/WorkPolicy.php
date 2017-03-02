@@ -44,9 +44,11 @@ class WorkPolicy
         }elseif($user->isTechnician()){
             return $user->userable()->admin()->tech_work_view;
         }elseif($user->isClient()){
-            return true;
-            // Need to fix this function so the client->works()
+            // ****** Security Bug ********
+            // client can look at works that are not his
+            // To resolve: need to fix this function so the client->works()
             // return $user->userable()->hasWork($work->id);
+            return true;
         }
         return false;
     }
