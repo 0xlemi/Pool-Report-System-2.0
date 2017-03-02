@@ -195,7 +195,7 @@ class ServiceContractsController extends ApiController
             'service_days.sunday' => 'required_with:service_days|boolean',
         ]);
 
-        $values = array_map('htmlentities', $request->except('service_days', 'active'));
+        $values = array_map('htmlentities', $request->except('service_days'));
 
         // get the service days number 0-127 from request
         if($request->has('service_days')){

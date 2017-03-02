@@ -49,16 +49,31 @@ class ClientsController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,25',
+            'preview' => 'boolean',
         ]);
+
+        // make a preview transformation
+        if($request->preview){
+            return $this->indexPreview($request);
+        }
 
         $limit = ($request->limit)?: 5;
         $clients = $this->loggedUserAdministrator()->clientsInOrder()->paginate($limit);
 
         return $this->respondWithPagination(
             $clients,
-            $this->clientPreviewTransformer->transformCollection($clients)
+            $this->clientTransformer->transformCollection($clients)
         );
+    }
+
+    protected function indexPreview(Request $request)
+    {
+        $clients = $this->loggedUserAdministrator()->clientsInOrder()->get();
+
+        return $this->respond([
+                'data' => $this->clientPreviewTransformer->transformCollection($clients)
+            ]);
     }
 
     /**

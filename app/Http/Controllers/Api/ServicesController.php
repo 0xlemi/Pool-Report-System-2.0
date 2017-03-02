@@ -70,14 +70,11 @@ class ServicesController extends ApiController
 
         $limit = ($request->limit)?: 5;
         if($request->has('contract')){
-            // filter between services with active contracts, and everythnig else
-            $services = $admin->servicesWithActiveContract()->paginate($limit);
-            // $seq_id = [];
-            // foreach ($admin->serviceWithNoContractOrInactive()->get() as $service) {
-            //     $seq_id[] = $service->toArray();
-            // }
-            // dd($seq_id);
-            // dd($admin->serviceWithNoContractOrInactive()->get());
+            if($request->contract){
+                $services = $admin->servicesWithActiveContract()->paginate($limit);
+            }else{
+                $services = $admin->serviceWithNoContractOrInactive()->paginate($limit);
+            }
         }else{
             $services = $admin->servicesInOrder()->paginate($limit);
         }
@@ -92,7 +89,11 @@ class ServicesController extends ApiController
     protected function indexPreview(Request $request, Administrator $admin)
     {
         if($request->has('contract')){
-            $services = $admin->servicesWithActiveContract()->get();
+            if($request->contract){
+                $services = $admin->servicesWithActiveContract()->get();
+            }else{
+                $services = $admin->serviceWithNoContractOrInactive()->get();
+            }
         }else{
             $services = $admin->servicesInOrder()->get();
         }
