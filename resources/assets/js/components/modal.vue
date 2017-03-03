@@ -24,6 +24,9 @@
 
 <script>
 
+
+// $('#mapModal').on('shown.bs.modal', function (e) {
+
 export default {
     props: ['title', 'id', 'modalClass'],
     events:{
@@ -33,6 +36,12 @@ export default {
         closeModal(id){
             $('#'+id).modal('hide');
         }
+    },
+    ready(){
+        let vue = this;
+    	$('#'+this.id).on('shown.bs.modal', function (e) {
+            vue.$dispatch('modalOpened', vue.id);
+    	});
     },
 }
 </script>

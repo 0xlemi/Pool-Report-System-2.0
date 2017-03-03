@@ -94,10 +94,10 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Location</label>
 							<div class="col-sm-10">
-								<button type="button" class="btn btn-success"
-									data-toggle="modal"
-									data-target="#mapModal">
-									<i class="font-icon font-icon-earth-bordered"></i>&nbsp;&nbsp;&nbsp;Show Map</button>
+								<location-show
+									latitude="{{ $service->latitude}}"
+									longitude="{{ $service->longitude}}">
+								</location-show>
 							</div>
 						</div>
 
@@ -142,7 +142,6 @@
 		</section>
 	</div>
 </div>
-@include('services.showMap')
 @include('services.listClients')
 
 @endsection

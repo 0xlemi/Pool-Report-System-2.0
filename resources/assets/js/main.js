@@ -4,8 +4,6 @@ var dateFormat 		= require('dateformat');
 var Vue 			= require('vue');
 
 var Spinner         = require("spin");
-var Gmaps           = require("gmaps.core");
-require("gmaps.markers");
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -82,6 +80,7 @@ function isset(strVariableName) {
     let clientContract = require('./components/clientContract.vue');
     let clientEquipment = require('./components/clientEquipment.vue');
     let clientWorks = require('./components/clientWorks.vue');
+    let locationShow = require('./components/locationShow.vue');
 
 
     let mainVue = new Vue({
@@ -110,7 +109,7 @@ function isset(strVariableName) {
             serviceClientTable,
             clientContract,
             clientEquipment,
-            clientWorks, 
+            clientWorks,
             // work orders
             workOrderTable,
             workOrderPhotosShow,
@@ -129,6 +128,7 @@ function isset(strVariableName) {
             routeTable,
             deleteButton,
             addressFields,
+            locationShow,
             // client
             clientTable,
             // supervisor
@@ -871,24 +871,6 @@ function isset(strVariableName) {
 	    });
 	});
 
-
-/* ==========================================================================
-    GMaps
-    ========================================================================== */
-    $('#mapModal').on('shown.bs.modal', function (e) {
-        if(isset('showLatitude') && isset('showLongitude')){
-            let map = new Gmaps({
-                el: '#serviceMap',
-                lat: back.showLatitude,
-                lng: back.showLongitude,
-            });
-
-            map.addMarker({
-                lat: back.showLatitude,
-                lng: back.showLongitude
-            });
-        }
-    });
 
 /* ==========================================================================
     Maxlenght and Hide Show Password
