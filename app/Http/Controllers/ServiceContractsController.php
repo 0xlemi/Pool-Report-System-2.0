@@ -134,21 +134,9 @@ class ServiceContractsController extends PageController
         $serviceContract->active = $active;
         $serviceContract->save();
 
-        // create invoice if there today is the day
-        $invoiceCreated = false;
-        if($serviceContract->checkIfTodayContractChargesInvoice()){
-            $invoiceCreated = true;
-            $serviceContract->invoices()->create([
-                'amount' => $serviceContract->amount,
-                'currency' => $serviceContract->currency,
-                'admin_id' => $serviceContract->admin()->id,
-            ]);
-        }
-
         return response()->json([
             'message' => "Service Contract has been set to {$serviceContract->active()}",
             'active' => $serviceContract->active()->asBoolean(),
-            'Invoced Created' => $invoiceCreated 
         ]);
     }
 

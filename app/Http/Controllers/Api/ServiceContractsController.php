@@ -208,17 +208,6 @@ class ServiceContractsController extends ApiController
         }
         $contract->update($values);
 
-        if($request->active){
-            // check if invoce should be created
-            if($contract->checkIfTodayContractChargesInvoice()){
-                $contract->invoices()->create([
-                    'amount' => $contract->amount,
-                    'currency' => $contract->currency,
-                    'admin_id' => $contract->admin()->id,
-                ]);
-            }
-        }
-
         return $this->respondPersisted(
             'Service Contract was updated successfully.',
             $this->contractTransformer->transform($contract)
