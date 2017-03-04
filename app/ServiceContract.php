@@ -11,6 +11,7 @@ use App\PRS\ValueObjects\Service\StartTime;
 use App\PRS\ValueObjects\Service\ServiceDays;
 use App\PRS\ValueObjects\Service\Status;
 use App\PRS\ValueObjects\ServiceContract\Start;
+use Carbon\Carbon;
 
 class ServiceContract extends Model
 {
@@ -63,6 +64,46 @@ class ServiceContract extends Model
 	public function invoices()
     {
       return $this->morphMany('App\Invoice', 'invoiceable');
+    }
+
+    /**
+     * Check if there is atleast one invoice for for this service contract in this date
+     * @param  Carbon $date  is on admin timezone
+     * @return boolean
+     */
+    public function invoicedByDate(Carbon $date)
+    {
+        $admin = $this->admin();
+        $strDate = $date->toDateTimeString();
+        $count = $this->invoices()
+                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(created_at,\'UTC\',\''.$admin->timezone.'\'), "'.$strDate.'")'), '=', '0')
+                ->count();
+        if($count > 0){
+            return true;
+        }
+        return false;
+    }
+
+    public function checkIfTodayContractChargesInvoice()
+    {
+        // we dont charge unactive services
+        if(!$this->active){
+            return false;
+        }
+
+        $today = Carbon::today($this->admin()->timezone);
+        $contractStartDate = Carbon::parse($this->start, $this->admin()->timezone);
+
+        // check for another invoice linked to the service contract in the same day
+        // so we dont generate duplicate invoices
+        if($this->invoicedByDate($today)){
+            return false;
+        }
+
+        // check that is the date of the month
+        // for this service contract
+        return ($today->format('d') == $contractStartDate->format('d'));
+
     }
 
     //******** VALUE OBJECTS ********

@@ -47,6 +47,25 @@ class AppServiceProvider extends ServiceProvider
 
             event(new UserRegistered($user));
         });
+        WorkOrder::created(function ($workOrder){
+            // create invoice
+            $workOrder->invoices()->create([
+                'amount' => $workOrder->price,
+                'currency' => $workOrder->currency,
+                'admin_id' => $workOrder->admin()->id,
+            ]);
+        });
+
+        ServiceContract::created(function ($contract){
+            // check invoice for date
+            if($contract->checkIfTodayContractChargesInvoice()){
+                $contract->invoices()->create([
+                    'amount' => $contract->amount,
+                    'currency' => $contract->currency,
+                    'admin_id' => $contract->admin()->id,
+                ]);
+            }
+        });
 
         Administrator::deleted(function ($admin){
             $user = $admin->user;

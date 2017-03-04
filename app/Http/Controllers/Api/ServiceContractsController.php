@@ -178,7 +178,6 @@ class ServiceContractsController extends ApiController
         }
 
         $this->validate($request, [
-            'active' => 'boolean',
             'start_time' => 'date_format:H:i',
             'end_time' => "date_format:H:i|timeAfterDB:service_contracts,start_time,{$contract->service_id},start_time",
             'active' => 'boolean',
@@ -208,6 +207,17 @@ class ServiceContractsController extends ApiController
                 );
         }
         $contract->update($values);
+
+        if($request->active){
+            // check if invoce should be created
+            if($contract->checkIfTodayContractChargesInvoice()){
+                $contract->invoices()->create([
+                    'amount' => $contract->amount,
+                    'currency' => $contract->currency,
+                    'admin_id' => $contract->admin()->id,
+                ]);
+            }
+        }
 
         return $this->respondPersisted(
             'Service Contract was updated successfully.',
