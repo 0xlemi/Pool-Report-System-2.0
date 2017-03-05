@@ -9,7 +9,6 @@ class TechniciansTableSeeder extends Seeder
 {
     // number of technicians to create
     private $number_of_technicians = 20;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -35,9 +34,6 @@ class TechniciansTableSeeder extends Seeder
                 'supervisor_id' => $supervisorId,
             ])->id;
             $technician = Technician::findOrFail($technicianId);
-            if($this->withNotifications){
-                $technician->admin()->user->notify(new NewTechnicianNotification($technician, $this->seederHelper->getRandomUser($technician->admin(), rand(1,2))));
-            }
 
             factory(App\User::class)->create([
                 'email' => 'username_'.rand(100000,999999),

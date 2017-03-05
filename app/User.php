@@ -25,11 +25,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
-        'language',
-        'userable_id',
-        'userable_type',
-        'remember_token',
-        'api_token',
+        // delete this from the fillable filleds
+            'userable_id',
+            'userable_type',
+            'remember_token',
+            'api_token',
     ];
 
     /**

@@ -166,14 +166,6 @@ class ReportsController extends ApiController
             return $report;
         });
 
-        // Notifications that report was made
-            // notify the clients
-            foreach ($service->clients as $client) {
-                $client->user->notify(new ReportCreatedNotification($report));
-            }
-            // notify the supervisor
-            $report->supervisor()->user->notify(new ReportCreatedNotification($report));
-
         return $this->respondPersisted(
             'The report was successfuly created.',
             $this->reportTransformer->transform(Report::findOrFail($report->id))

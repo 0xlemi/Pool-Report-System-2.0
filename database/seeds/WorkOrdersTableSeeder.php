@@ -18,7 +18,6 @@ class WorkOrdersTableSeeder extends Seeder
 {
 
     private $amount = 100;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -50,10 +49,7 @@ class WorkOrdersTableSeeder extends Seeder
                 'service_id' => $service->id,
                 'supervisor_id' => $supervisorId,
             ])->id;
-            $workOrder = WorkOrder::findOrFail($workOrderId);
-            if($this->withNotifications){
-                $admin->user->notify(new NewWorkOrderNotification($workOrder, $this->seederHelper->getRandomUser($admin, rand(1,3))));
-            }
+
 
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {
@@ -64,18 +60,12 @@ class WorkOrdersTableSeeder extends Seeder
                         'admin_id' => $admin->id,
                     ])->id;
                     $invoice = Invoice::findOrFail($invoiceId);
-                    if($this->withNotifications){
-                        $admin->user->notify(new NewInvoiceNotification($invoice));
-                    }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
                         $paymentId = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
                         ])->id;
                         $payment = Payment::findOrFail($paymentId);
-                        if($this->withNotifications){
-                            $admin->user->notify(new NewPaymentNotification($payment));
-                        }
                     }
                 }
 

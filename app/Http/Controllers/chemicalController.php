@@ -66,7 +66,6 @@ class chemicalController extends PageController
 
         $chemical = Chemical::findOrFail($chemicalId);
         if($chemical){
-            $admin->user->notify(new AddedChemicalNotification($chemical, $request->user()));
             return response()->json([
                 'message' => 'Chemical was successfully created.'
             ]);

@@ -37,9 +37,28 @@ class NewTechnicianNotification extends Notification
     {
         $channels = [];
         if($notifiable->notificationSettings->hasPermission('notify_technician_created', 'database')){
-        $channels[] = 'database';
+            $channels[] = 'database';
+        }if($notifiable->notificationSettings->hasPermission('notify_technician_created', 'mail')){
+            $channels[] = 'mail';
         }
         return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+        $url = url('/login');
+
+        return (new MailMessage)
+                    ->greeting('Technician was Created!')
+                    ->line('A new technician has been created!')
+                    ->action('Check New Techinican ', $url)
+                    ->line('Thank you for using our application!');
     }
 
     /**

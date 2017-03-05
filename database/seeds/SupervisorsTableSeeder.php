@@ -10,7 +10,6 @@ class SupervisorsTableSeeder extends Seeder
 {
     // number of supervisors to create
     private $number_of_supervisors = 6;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -39,9 +38,6 @@ class SupervisorsTableSeeder extends Seeder
             $admin = Administrator::findOrFail($adminId);
 
             $supervisor = Supervisor::findOrFail($supervisorId);
-            if($this->withNotifications){
-                $admin->user->notify(new NewSupervisorNotification($supervisor, $admin->user));
-            }
 
             factory(App\User::class)->create([
                 'password' => bcrypt('password'),

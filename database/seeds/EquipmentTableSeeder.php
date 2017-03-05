@@ -11,7 +11,6 @@ class EquipmentTableSeeder extends Seeder
 {
 
     private $amount = 100;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -50,9 +49,6 @@ class EquipmentTableSeeder extends Seeder
         		'service_id' => $serviceId,
             ])->id;
             $equipment = Equipment::findOrFail($equipmentId);
-            if($this->withNotifications){
-                $equipment->service()->admin()->user->notify(new AddedEquipmentNotification($equipment, $admin->user));
-            }
 
             // create images link it to equipment
             $equipment->images()->create([

@@ -44,18 +44,12 @@ class ServicesTableSeeder extends Seeder
         		'admin_id' => $admin->id,
             ])->id;
             $service = Service::findOrFail($serviceId);
-            if($this->withNotifications){
-                $admin->user->notify(new NewServiceNotification($service, $admin->user));
-            }
 
             if(rand(0,1)){
                 factory(App\ServiceContract::class)->create([
                     'service_id' => $service->id,
                 ]);
                 $contract = ServiceContract::findOrFail($serviceId);
-                if($this->withNotifications){
-                    $admin->user->notify(new AddedContractNotification($contract, $admin->user));
-                }
                 // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
                     $invoiceId = $contract->invoices()->create([
@@ -65,18 +59,12 @@ class ServicesTableSeeder extends Seeder
                         'admin_id' => $admin->id,
                     ])->id;
                     $invoice = Invoice::findOrFail($invoiceId);
-                    if($this->withNotifications){
-                        $admin->user->notify(new NewInvoiceNotification($invoice));
-                    }
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
                         $paymentId = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
                         ])->id;
                         $payment = Payment::findOrFail($paymentId);
-                        if($this->withNotifications){
-                            $admin->user->notify(new NewPaymentNotification($payment));
-                        }
                     }
                 }
 

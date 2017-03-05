@@ -132,14 +132,6 @@ class ReportsController extends PageController
         $image3 = $report->addImageFromForm($request->file('photo3'));
 
         if($report && $image1 && $image2 && $image3){
-            // notify report was made
-                // notify the clients
-                foreach ($service->clients as $client) {
-                    $client->user->notify(new ReportCreatedNotification($report));
-                }
-                // notify the supervisor
-                $report->supervisor()->user->notify(new ReportCreatedNotification($report));
-
             flash()->success('Created', 'Report was created successfuly.');
             return redirect('reports');
         }

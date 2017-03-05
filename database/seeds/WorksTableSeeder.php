@@ -12,7 +12,6 @@ class WorksTableSeeder extends Seeder
 {
 
     private $amount = 300;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -41,9 +40,6 @@ class WorksTableSeeder extends Seeder
                 'technician_id' => $technicianId,
             ])->id;
             $work = Work::findOrFail($workId);
-            if($this->withNotifications){
-                $admin->user->notify(new AddedWorkNotification($work, $this->seederHelper->getRandomUser($admin, rand(1,4))));
-            }
 
             // add image
             for ($e=1; $e < rand(2,5); $e++) {
