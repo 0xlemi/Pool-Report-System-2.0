@@ -73,7 +73,7 @@ class NewClientNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($client->icon()),
+            'icon' => \Storage::url($client->icon()),
             'link' => "clients/{$client->seq_id}",
             'title' => "New <strong>Client</strong> was created",
             'message' => "New <strong>Client</strong> (<a href=\"../clients/{$client->seq_id}\">{$client->name} {$client->last_name}</a>)

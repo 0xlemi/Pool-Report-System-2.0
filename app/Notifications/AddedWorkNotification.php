@@ -73,7 +73,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($this->work->icon()),
+            'icon' => \Storage::url($work->icon()),
             'title' => "A new <strong>Work</strong> was added to <strong>Work Order</strong> \"{$workOrder->seq_id} {$workOrder->title}\"",
             'message' => "New <strong>Work</strong> was added to the <strong>Work Order</strong>
                             (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>) by {$person}.",

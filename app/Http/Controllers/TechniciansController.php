@@ -169,15 +169,7 @@ class TechniciansController extends PageController
         $this->authorize('update', $technician);
 
         $supervisor = $admin->supervisorBySeqId($request->supervisor);
-
         $user = $technician->user;
-
-        $user->email = htmlentities($request->username);
-
-        $technician->fill(array_merge(
-                                array_map('htmlentities', $request->all()),
-                                [ 'supervisor_id' => $supervisor->id ]
-                            ));
 
         $status = ($request->status)? 1:0;
         // if he is setting the status to active
@@ -189,7 +181,13 @@ class TechniciansController extends PageController
                     'info');
             return redirect()->back();
         }
+
+
+        $technician->fill(array_map('htmlentities', $request->all()));
+        $technician->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));
+
         $user->active = $status;
+        $user->email = htmlentities($request->username);
 
         $photo = false;
         if($request->photo){

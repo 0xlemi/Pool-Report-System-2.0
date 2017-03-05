@@ -73,7 +73,7 @@ class NewSupervisorNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($supervisor->icon()),
+            'icon' => \Storage::url($supervisor->icon()),
             'link' => "supervisors/{$supervisor->seq_id}",
             'title' => "New <strong>Supervisor</strong> was created",
             'message' => "New <strong>Supervisor</strong>

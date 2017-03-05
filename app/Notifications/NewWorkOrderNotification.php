@@ -37,9 +37,22 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     {
         $channels = [];
         if($notifiable->notificationSettings->hasPermission('notify_workorder_created', 'database')){
-        $channels[] = 'database';
+            $channels[] = 'database';
+        }if($notifiable->notificationSettings->hasPermission('notify_workorder_created', 'mail')){
+            $channels[] = 'mail';
         }
         return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+
     }
 
     /**
@@ -60,7 +73,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($workOrder->icon()),
+            'icon' => \Storage::url($workOrder->icon()),
             'link' => "workorders/{$workOrder->seq_id}",
             'title' => "New <strong>Work Order</strong> was created",
             'message' => "New <strong>Work Order</strong>

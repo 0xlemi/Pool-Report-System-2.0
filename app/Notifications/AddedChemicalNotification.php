@@ -73,7 +73,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($service->icon()),
+            'icon' => \Storage::url($service->icon()),
             'title' => "New <strong>Chemical</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "New <strong>Chemical</strong> has been added to the <strong>Service</strong>
                             (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) by {$person}.",

@@ -73,7 +73,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($service->icon()),
+            'icon' => \Storage::url($service->icon()),
             'link' => "services/{$service->seq_id}",
             'title' => "New <strong>Service</strong> was created",
             'message' => "New <strong>Service</strong> (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>)

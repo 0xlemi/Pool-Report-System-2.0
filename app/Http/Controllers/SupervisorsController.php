@@ -82,19 +82,11 @@ class SupervisorsController extends PageController
             return redirect()->back()->withInput();
         }
 
-        $supervisor = Supervisor::create(
-                        array_merge(
-                            array_map('htmlentities', $request->all()),
-                            [ 'admin_id' => $admin->id ]
-                        )
-                    );
-        $user = User::create([
+        $supervisor = $admin->supervisors()->create(array_map('htmlentities', $request->all()));
+
+        $user = $supervisor->user()->create([
             'email' => htmlentities($request->email),
-            'password' => bcrypt(str_random(9)),
-            'userable_id' => $supervisor->id,
-            'userable_type' => 'App\Supervisor',
-            'remember_token' => str_random(10),
-            'api_token' => str_random(60),
+
         ]);
 
         $photo = true;
@@ -155,10 +147,6 @@ class SupervisorsController extends PageController
         $this->authorize('update', $supervisor);
 
         $user = $supervisor->user;
-        $user->email = htmlentities($request->email);
-
-        $supervisor->fill(array_map('htmlentities', $request->except('admin_id')));
-
         $status = ($request->status)? 1:0;
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
@@ -169,6 +157,10 @@ class SupervisorsController extends PageController
                     'info');
             return redirect()->back();
         }
+
+        $supervisor->fill(array_map('htmlentities', $request->all()));
+
+        $user->email = htmlentities($request->email);
         $user->active = $status;
 
         $photo = false;

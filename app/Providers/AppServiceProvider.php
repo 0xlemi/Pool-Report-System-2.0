@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Mail\SendActivationToken;
 use App\User;
 use App\Work;
+use Auth;
 use Mail;
 use App\Events\UserRegistered;
 use App\ServiceContract;
@@ -22,6 +23,14 @@ use App\Service;
 use App\WorkOrder;
 use App\Equipment;
 use App\Notifications\NewTechnicianNotification;
+use App\Notifications\AddedWorkNotification;
+use App\Notifications\NewClientNotification;
+use App\Notifications\NewServiceNotification;
+use App\Notifications\NewWorkOrderNotification;
+use App\Notifications\ReportCreatedNotification;
+use App\Notifications\AddedContractNotification;
+use App\Notifications\NewSupervisorNotification;
+use App\Notifications\AddedEquipmentNotification;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -32,12 +41,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+    // **********************
+    //       Created
+    // **********************
+
         User::created(function ($user) {
             $token = $user->activationToken()->create([
                 'token' => str_random(128),
             ]);
 
             $user->api_token = str_random(60);
+            $user->remember_token = str_random(10);
 
             if($user->isTechnician()){
                 // since technician don't have email
@@ -54,7 +69,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Report::created(function ($report){
-
+            $admin = $report->admin();
+            $admin->user->notify(new ReportCreatedNotification($report, Auth::user()));
         });
 
         WorkOrder::created(function ($workOrder){
@@ -64,16 +80,22 @@ class AppServiceProvider extends ServiceProvider
                 'currency' => $workOrder->currency,
                 'admin_id' => $workOrder->admin()->id,
             ]);
+
+            $admin = $workOrder->admin();
+            $admin->user->notify(new NewWorkOrderNotification($workOrder, Auth::user()));
         });
             Work::created(function ($work){
-
+                $admin = $work->workOrder->admin();
+                $admin->user->notify(new AddedWorkNotification($work, Auth::user()));
             });
 
         Service::created(function ($service){
-
+            $admin = $service->admin();
+            $admin->user->notify(new NewServiceNotification($service, Auth::user()));
         });
             Equipment::created(function ($equipment){
-
+                $admin = $equipment->service()->admin();
+                $admin->user->notify(new AddedEquipmentNotification($equipment, Auth::user()));
             });
             ServiceContract::created(function ($contract){
                 // check invoice for date
@@ -84,20 +106,29 @@ class AppServiceProvider extends ServiceProvider
                         'admin_id' => $contract->admin()->id,
                     ]);
                 }
+                $admin = $contract->admin();
+                $admin->user->notify(new AddedContractNotification($contract, Auth::user()));
             });
 
         Client::created(function ($client){
-
+            $admin = $client->admin();
+            $admin->user->notify(new NewClientNotification($client, Auth::user()));
         });
 
         Supervisor::created(function ($supervisor){
-
+            $admin = $supervisor->admin();
+            $admin->user->notify(new NewSupervisorNotification($supervisor, Auth::user()));
         });
 
         Technician::created(function ($technician){
             $admin = $technician->admin();
-            $admin->user->notify(new NewTechnicianNotification($technician, \Auth::user()));    
+            $admin->user->notify(new NewTechnicianNotification($technician, Auth::user()));
         });
+
+
+    // **********************
+    //       Deleted
+    // **********************
 
         Administrator::deleted(function ($admin){
             $user = $admin->user;

@@ -73,7 +73,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($service->icon()),
+            'icon' => \Storage::url($service->icon()),
             'link' => "services/{$service->seq_id}",
             'title' => "New <strong>Contract</strong> for <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "Opened a new <strong>Contract</strong> for the <strong>Service</strong>

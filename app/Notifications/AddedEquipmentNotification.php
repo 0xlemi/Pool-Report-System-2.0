@@ -73,7 +73,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
-            'icon' => url($this->equipment->icon()),
+            'icon' => \Storage::url($equipment->icon()),
             'title' => "New <strong>Equipment</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "New <strong>Equipment</strong> was added to the <strong>Service</strong>
                             (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) by {$person}.",

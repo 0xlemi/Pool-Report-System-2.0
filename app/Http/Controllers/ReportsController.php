@@ -18,7 +18,6 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\Service;
-use App\Notifications\ReportCreatedNotification;
 class ReportsController extends PageController
 {
     protected $reportHelpers;

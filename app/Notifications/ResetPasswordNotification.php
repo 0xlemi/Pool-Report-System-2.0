@@ -33,7 +33,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return [RealMailChannel::class];
+        return ['database', RealMailChannel::class];
     }
 
     /**
@@ -55,7 +55,10 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            //
+            'icon' => '',
+            'link' => "#",
+            'title' => "You made a password reset.",
+            'message' => "You made a password reset.",
         ];
     }
 }

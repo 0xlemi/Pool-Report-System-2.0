@@ -14,7 +14,6 @@ use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Notifications\ReportCreatedNotification;
 use App\PRS\Transformers\ReportTransformer;
 use App\PRS\Helpers\ReportHelpers;
 
