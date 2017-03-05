@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Chemical;
 
-class AddedChemicalNotification extends Notification
+class AddedChemicalNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

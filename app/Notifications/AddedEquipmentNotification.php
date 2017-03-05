@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Equipment;
 
-class AddedEquipmentNotification extends Notification
+class AddedEquipmentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

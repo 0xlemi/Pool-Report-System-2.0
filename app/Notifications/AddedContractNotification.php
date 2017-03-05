@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\ServiceContract;
 
-class AddedContractNotification extends Notification
+class AddedContractNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

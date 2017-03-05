@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Client;
 
-class NewClientNotification extends Notification
+class NewClientNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

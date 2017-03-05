@@ -21,6 +21,7 @@ use App\Image;
 use App\Service;
 use App\WorkOrder;
 use App\Equipment;
+use App\Notifications\NewTechnicianNotification;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,6 +48,15 @@ class AppServiceProvider extends ServiceProvider
 
             event(new UserRegistered($user));
         });
+
+        Administrator::created(function ($admin){
+
+        });
+
+        Report::created(function ($report){
+
+        });
+
         WorkOrder::created(function ($workOrder){
             // create invoice
             $workOrder->invoices()->create([
@@ -55,16 +65,38 @@ class AppServiceProvider extends ServiceProvider
                 'admin_id' => $workOrder->admin()->id,
             ]);
         });
+            Work::created(function ($work){
 
-        ServiceContract::created(function ($contract){
-            // check invoice for date
-            if($contract->checkIfTodayContractChargesInvoice()){
-                $contract->invoices()->create([
-                    'amount' => $contract->amount,
-                    'currency' => $contract->currency,
-                    'admin_id' => $contract->admin()->id,
-                ]);
-            }
+            });
+
+        Service::created(function ($service){
+
+        });
+            Equipment::created(function ($equipment){
+
+            });
+            ServiceContract::created(function ($contract){
+                // check invoice for date
+                if($contract->checkIfTodayContractChargesInvoice()){
+                    $contract->invoices()->create([
+                        'amount' => $contract->amount,
+                        'currency' => $contract->currency,
+                        'admin_id' => $contract->admin()->id,
+                    ]);
+                }
+            });
+
+        Client::created(function ($client){
+
+        });
+
+        Supervisor::created(function ($supervisor){
+
+        });
+
+        Technician::created(function ($technician){
+            $admin = $technician->admin();
+            $admin->user->notify(new NewTechnicianNotification($technician, \Auth::user()));    
         });
 
         Administrator::deleted(function ($admin){
