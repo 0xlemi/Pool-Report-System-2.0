@@ -37,9 +37,22 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
     {
         $channels = [];
         if($notifiable->notificationSettings->hasPermission('notify_equipment_added', 'database')){
-        $channels[] = 'database';
+            $channels[] = 'database';
+        }if($notifiable->notificationSettings->hasPermission('notify_equipment_added', 'mail')){
+            $channels[] = 'mail';
         }
         return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+
     }
 
     /**

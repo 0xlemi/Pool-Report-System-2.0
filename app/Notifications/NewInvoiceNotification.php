@@ -35,9 +35,22 @@ class NewInvoiceNotification extends Notification implements ShouldQueue
     {
         $channels = [];
         if($notifiable->notificationSettings->hasPermission('notify_invoice_created', 'database')){
-        $channels[] = 'database';
+            $channels[] = 'database';
+        }if($notifiable->notificationSettings->hasPermission('notify_invoice_created', 'mail')){
+            $channels[] = 'mail';
         }
         return $channels;
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
+     */
+    public function toMail($notifiable)
+    {
+
     }
 
     /**

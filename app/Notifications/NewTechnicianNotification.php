@@ -52,13 +52,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $url = url('/login');
 
-        return (new MailMessage)
-                    ->greeting('Technician was Created!')
-                    ->line('A new technician has been created!')
-                    ->action('Check New Techinican ', $url)
-                    ->line('Thank you for using our application!');
     }
 
     /**
