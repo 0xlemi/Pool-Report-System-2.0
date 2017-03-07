@@ -33,7 +33,7 @@ class UpdateTechnicianRequest extends FormRequest
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
-            'username' => 'alpha_dash|between:4,25|unique:users,email'.$userable_id.',userable_id',
+            'username' => 'alpha_dash|between:4,25|unique:users,email,'.$userable_id.',userable_id',
             'cellphone' => 'string|max:20',
             'address'   => 'string|max:100',
             'language' => 'string|max:2',
