@@ -8,10 +8,14 @@ use Response;
 use Validator;
 use Carbon\Carbon;
 
-
-use App\PRS\Helpers\ReportHelpers;
-use App\PRS\Helpers\ServiceHelpers;
-use App\PRS\Helpers\ClientHelpers;
+use App\PRS\Transformers\FrontEnd\DataTables\ReportDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\ClientDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\ServiceDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\InvoiceDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\SupervisorDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\TechnicianDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\TodaysRouteDatatableTransformer;
 
 use App\Http\Requests;
 use App\Supervisor;
@@ -25,46 +29,31 @@ use App\WorkOrder;
 class DataTableController extends PageController
 {
 
-    protected $reportHelpers;
-    protected $clientHelpers;
-
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(ReportHelpers $reportHelpers, ClientHelpers $clientHelpers)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->reportHelpers = $reportHelpers;
-        $this->clientHelpers = $clientHelpers;
     }
 
-    public function todaysroute(Request $request)
+    public function todaysroute(Request $request, TodaysRouteDatatableTransformer $transformer)
     {
         $this->validate($request, [
             'daysFromToday' => 'integer|between:0,6'
         ]);
         $daysFromToday = ($request->daysFromToday) ?: 0;
         $services = $this->loggedUserAdministrator()
-                ->servicesDoIn(Carbon::now()->addDays($daysFromToday))
-                ->transform(function($item){
-                        return (object) [
-                            'id' => $item->seq_id,
-                            'name' => $item->name,
-                            'address' => $item->address_line,
-                            'endTime' => $item->serviceContract->EndTime()->colored(),
-                            'price' => $item->serviceContract->amount.' <strong>'.$item->serviceContract->currency.'</strong>',
-                        ];
-                    })
-                ->flatten(1);
+                        ->servicesDoIn(Carbon::now()->addDays($daysFromToday));
 
         return response()->json([
-            'list' => $services
+            'list' => $transformer->transformCollection($services)
         ]);
     }
 
-    public function reports(Request $request)
+    public function reports(Request $request, ReportDatatableTransformer $transformer)
     {
         $this->authorize('list', Report::class);
 
@@ -78,123 +67,68 @@ class DataTableController extends PageController
 
         $reports =  $admin
                     ->reportsByDate($date)
-                    ->get()
-                    ->transform(function($item){
-                        $service = $item->service;
-                        $technician = $item->technician;
-                        return (object) array(
-                            'id' => $item->seq_id,
-                            'service' => $service->name,
-                            'on_time' => $item->onTime()->styled(),
-                            'technician' => $technician->name.' '.$technician->last_name,
-                        );
-                    });
+                    ->get();
 
-        return Response::json($reports, 200);
+        return response()->json(
+                    $transformer->transformCollection($reports)
+                );
     }
 
-    public function workOrders(Request $request)
+    public function workOrders(Request $request, WorkOrderDatatableTransformer $transformer)
     {
         $this->authorize('list', WorkOrder::class);
 
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'finished' => 'required|boolean',
         ]);
-        if ($validator->fails()) {
-            return Response::json([
-                    'message' => 'Paramenters failed validation.',
-                    'errors' => $validator->errors()->toArray(),
-                ],
-                422
-            );
-        }
 
         $operator = ($request->finished) ? '!=' : '=';
         $workOrders = $this->loggedUserAdministrator()
                         ->workOrdersInOrder()
                         ->get()
-                        ->where('end', $operator, null)
-                        ->transform(function($item){
-                            $supervisor =  $item->supervisor;
-                            return (object) array(
-                                'id' => $item->seq_id,
-                                'start' => $item->start()
-                                                ->format('d M Y h:i:s A'),
-                                'end' =>  (string) $item->end(),
-                                'price' => $item->price.' <strong>'.$item->currency.'</strong>',
-                                'service' => $item->service->name,
-                                'supervisor' => $supervisor->name.' '.$supervisor->last_name,
-                            );
-                        })
-                        ->flatten(1);
-        return Response::json($workOrders , 200);
+                        ->where('end', $operator, null);
+
+        return response()->json(
+                    $transformer->transformCollection($workOrders)
+                );
     }
 
-    public function services(Request $request)
+    public function services(Request $request, ServiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Service::class);
 
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'status' => 'required|boolean',
         ]);
-        if ($validator->fails()) {
-            return Response::json([
-                    'message' => 'Paramenters failed validation.',
-                    'errors' => $validator->errors()->toArray(),
-                ],
-                422
-            );
-        }
 
-        $status = $request->status;
-        $services = $this->loggedUserAdministrator()
-                        ->servicesInOrder()
-                        ->get()
-                        ->filter(function($item) use ($status){
-                            if($status){
-                                return $item->hasServiceContract();
-                            }
-                            return !$item->hasServiceContract();
-                        })
-                        ->transform(function($item) use ($status){
-                            $serviceDays = "<span class=\"label label-pill label-default\">No Contract</span>";
-                            $price = "<span class=\"label label-pill label-default\">No Contract</span>";
-                            if($status){
-                                $serviceDays = $item->serviceContract->serviceDays()->shortNamesStyled();
-                                $price = $item->serviceContract->amount.' <strong>'.$item->serviceContract->currency.'</strong>';
-                            }
-                            return (object) array(
-                                'id' => $item->seq_id,
-                                'name' => $item->name,
-                                'address' => $item->address_line,
-                                'serviceDays' => $serviceDays,
-                                'price' => $price,
-                            );
-                        })
-                        ->flatten(1);
-        return Response::json($services, 200);
+        if($request->status){
+            $services = $this->loggedUserAdministrator()
+                            ->servicesWithActiveContract()
+                            ->get();
+        }else{
+            $services = $this->loggedUserAdministrator()
+                            ->serviceWithNoContractOrInactive()
+                            ->get();
+        }
+        return response()->json(
+                    $transformer->transformCollection($services)
+                );
     }
 
-    public function clients()
+    public function clients(ClientDatatableTransformer $transformer)
     {
         $this->authorize('list', Client::class);
 
         $clients = $this->loggedUserAdministrator()
                         ->clientsInOrder()
-                        ->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                'id' => $item->seq_id,
-                                'name' => $item->name.' '.$item->last_name,
-                                'email' => $item->user->email,
-                                'type' => $this->clientHelpers->styledType($item->type, true, false),
-                                'cellphone' => $item->cellphone,
-                            );
-                        });
-        return Response::json($clients, 200);
+                        ->get();
+
+        return response()->json(
+                    $transformer->transformCollection($clients)
+                );
     }
 
-    public function supervisors(Request $request)
+    public function supervisors(Request $request, SupervisorDatatableTransformer $transformer)
     {
         $this->authorize('list', Supervisor::class);
 
@@ -204,20 +138,14 @@ class DataTableController extends PageController
 
         $supervisors = $this->loggedUserAdministrator()
                         ->supervisorsActive($request->status)
-                        ->get()
-                        ->transform(function($item){
-                            return (object) array(
-                                'id' => $item->seq_id,
-                                'name' => $item->name.' '.$item->last_name,
-                                'email' => $item->email,
-                                'cellphone' => $item->cellphone,
-                            );
-                        })
-                        ->flatten(1);
-        return Response::json($supervisors, 200);
+                        ->get();
+
+        return response()->json(
+                    $transformer->transformCollection($supervisors)
+                );
     }
 
-    public function technicians(Request $request)
+    public function technicians(Request $request, TechnicianDatatableTransformer $transformer)
     {
         $this->authorize('list', Technician::class);
 
@@ -227,58 +155,31 @@ class DataTableController extends PageController
 
         $technicians = $this->loggedUserAdministrator()
                             ->techniciansActive($request->status)
-                            ->get()
-                            ->transform(function($item){
-                                $supervisor = $item->supervisor;
-                                return (object) array(
-                                    'id' =>  $item->seq_id,
-                                    'name' => $item->name.' '.$item->last_name,
-                                    'username' => $item->email,
-                                    'cellphone' => $item->cellphone,
-                                    'supervisor' => $supervisor->name.' '.$supervisor->last_name,
-                                );
-                            })
-                            ->flatten(1);
-        return Response::json($technicians, 200);
+                            ->get();
+
+        return response()->json(
+                    $transformer->transformCollection($technicians)
+                );
     }
 
-    public function invoices(Request $request)
+    public function invoices(Request $request, InvoiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Invoice::class);
 
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'closed' => 'required|boolean',
         ]);
-        if ($validator->fails()) {
-            return Response::json([
-                    'message' => 'Paramenters failed validation.',
-                    'errors' => $validator->errors()->toArray(),
-                ],
-                422
-            );
-        }
 
         $closed = $request->closed;
-        $condition = ($closed)? '!=' : '=';
+        $condition = ($request->closed)? '!=' : '=';
         $invoices = $this->loggedUserAdministrator()
                         ->invoices()
                         ->get()
-                        ->where('closed', $condition , NULL)
-                        ->transform(function($item) use ($closed){
-                            $closedText = "<span class=\"label label-pill label-default\">Not Closed</span>";
-                            if($closed){
-                                $closedText = $item->closed()->format('d M Y h:i:s A');
-                            }
-                            return (object)[
-                                'id' => $item->seq_id,
-                                'service' => $item->invoiceable->service->name,
-                                'type' => $item->type()->styled(true),
-                                'amount' => "{$item->amount} {$item->currency}",
-                                'closed' => $closedText,
-                            ];
-                        })
-                        ->flatten(1);
-        return response()->json($invoices);
+                        ->where('closed', $condition , NULL);
+
+        return response()->json(
+                    $transformer->transformCollection($invoices)
+                );
     }
 
 }
