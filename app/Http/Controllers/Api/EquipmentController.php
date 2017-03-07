@@ -75,12 +75,12 @@ class EquipmentController extends ApiController
 
         // validation
         $this->validate($request, [
-            'kind' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
-            'brand' => 'required|string|max:255',
-            'model' => 'required|string|max:255',
+            'kind' => 'required|string|max:40',
+            'type' => 'required|string|max:40',
+            'brand' => 'required|string|max:40',
+            'model' => 'required|string|max:40',
             'capacity' => 'required|numeric',
-            'units' => 'required|string|max:255',
+            'units' => 'required|string|max:20',
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);

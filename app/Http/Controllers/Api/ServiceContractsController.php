@@ -130,6 +130,7 @@ class ServiceContractsController extends ApiController
         }
 
         $this->validate($request, [
+            'start' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'amount' => 'required|numeric|max:10000000',
@@ -178,6 +179,7 @@ class ServiceContractsController extends ApiController
         }
 
         $this->validate($request, [
+            'start' => 'date',
             'start_time' => 'date_format:H:i',
             'end_time' => "date_format:H:i|timeAfterDB:service_contracts,start_time,{$contract->service_id},start_time",
             'active' => 'boolean',

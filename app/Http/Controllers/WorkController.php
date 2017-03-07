@@ -79,9 +79,17 @@ class WorkController extends PageController
     {
         $this->authorize('create', Work::class);
 
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+        $admin  = $this->loggedUserAdministrator();
 
-        $work = $workOrder->works()->create(array_map('htmlentities', $request->all()));
+        $workOrder = $admin->workOrderBySeqId($workOrderSeqId);
+        $technician = $admin->technicianBySeqId($request->technician);
+
+        $work = $workOrder->works()->create(array_merge(
+                    array_map('htmlentities', $request->all()),
+                    [
+                        'technician_id' => $technician->id,
+                    ]
+                ));
 
         if($work){
             return response()->json([
@@ -132,7 +140,11 @@ class WorkController extends PageController
     {
         $this->authorize('update', $work);
 
-        $work->update(array_map('htmlentities', $request->except('work_order_id')));
+        $work->update(array_map('htmlentities', $request->except('technician_id')));
+
+        if($request->has('technician')){
+            $work->technician()->associate($admin->technicianBySeqId($request->technician));
+        }
 
         return response()->json([
                 'title' => 'Work Updated',

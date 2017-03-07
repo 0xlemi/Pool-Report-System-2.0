@@ -26,7 +26,7 @@ class CreateChemicalRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'amount' => 'required|numeric',
-            'units' => 'required|string|max:20',
+            'units' => 'required|string|max:225',
         ];
     }
 }

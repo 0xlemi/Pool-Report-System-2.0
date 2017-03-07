@@ -34,8 +34,8 @@ class CreateServiceRequest extends Request
             'state' => 'required|string|max:30',
             'postal_code' => 'required|string|max:15',
             'country' => 'required|string|max:2',
+            'comments' => 'string|max:10000',
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:750',
         ];
     }
 }

@@ -33956,7 +33956,7 @@ exports.default = {
 
 			this.$http.post(Laravel.url + '/service/' + this.workOrderId + '/works', {
 				title: this.titleName,
-				technician_id: this.technician.id,
+				technician: this.technician.id,
 				quantity: this.quantity,
 				units: this.units,
 				cost: this.cost,
@@ -33995,7 +33995,7 @@ exports.default = {
 
 			this.$http.patch(Laravel.url + '/works/' + this.id, {
 				title: this.titleName,
-				technician_id: this.technician.id,
+				technician: this.technician.id,
 				quantity: this.quantity,
 				units: this.units,
 				cost: this.cost,
@@ -34232,8 +34232,6 @@ var dateFormat = require('dateformat');
 var Vue = require('vue');
 
 var Spinner = require("spin");
-// var Gmaps           = require("gmaps.core");
-// require("gmaps.markers");
 var Dropzone = require("dropzone");
 var swal = require("sweetalert");
 var bootstrapToggle = require("bootstrap-toggle");
@@ -35035,24 +35033,6 @@ $(document).ready(function () {
 		});
 	});
 
-	/* ==========================================================================
-     GMaps
-     ========================================================================== */
-	// $('#mapModal').on('shown.bs.modal', function (e) {
-	//     if(isset('showLatitude') && isset('showLongitude')){
-	//         let map = new Gmaps({
-	//             el: '#serviceMap',
-	//             lat: back.showLatitude,
-	//             lng: back.showLongitude,
-	//         });
-	//
-	//         map.addMarker({
-	//             lat: back.showLatitude,
-	//             lng: back.showLongitude
-	//         });
-	//     }
-	// });
-	//
 	/* ==========================================================================
      Maxlenght and Hide Show Password
      ========================================================================== */

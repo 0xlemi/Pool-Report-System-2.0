@@ -41,9 +41,11 @@ class CreateReportRequest extends Request
      */
     public function rules()
     {
+        $admin = \Auth::user()->admin();
+
         return [
-            'service' => 'required|integer|min:1',
-            'technician' => 'required|integer|min:1',
+            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
+            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'completed_at' => 'required|date',
             'ph' => 'required|integer|between:1,5',
             'chlorine' => 'required|integer|between:1,5',

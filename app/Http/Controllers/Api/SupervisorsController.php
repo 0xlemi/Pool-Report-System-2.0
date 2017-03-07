@@ -113,7 +113,7 @@ class SupervisorsController extends ApiController
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
+            'comments' => 'string|max:10000',
         ]);
 
         $admin = $this->loggedUserAdministrator();

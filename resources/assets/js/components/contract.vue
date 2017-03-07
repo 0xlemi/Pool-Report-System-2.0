@@ -406,7 +406,7 @@ let VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js'
             }).spin(clickEvent.target);
 
 			this.$http.post(this.Url, {
-                serviceDays: {
+                service_days: {
                     monday: this.monday,
                     tuesday: this.tuesday,
                     wednesday: this.wednesday,
@@ -453,7 +453,7 @@ let VueDatetimePicker = require('vue-datetime-picker/src/vue-datetime-picker.js'
             }).spin(clickEvent.target);
 
             this.$http.patch(this.Url, {
-                serviceDays: {
+                service_days: {
                     monday: this.monday,
                     tuesday: this.tuesday,
                     wednesday: this.wednesday,

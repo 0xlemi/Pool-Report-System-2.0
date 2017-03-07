@@ -38,19 +38,15 @@ class CreateTechnicianRequest extends Request
 
         // get the supervisor id if is upadate request if not null
         $userable_id = NULL;
+        $admin = \Auth::user()->admin();
         if($this->seq_id){
-            $user = \Auth::user();
-            if($user->isAdministrator()){
-                $userable_id = $user->userable()->technicianBySeqId($this->seq_id)->id;
-            }else{
-                $userable_id = $user->userable()->admin()->technicianBySeqId($this->seq_id)->id;
-            }
+            $userable_id = $admin->technicianBySeqId($this->seq_id)->id;
         }
 
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'supervisor' => 'required|integer|min:1',
+            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
             'username' => 'required|alpha_dash|between:4,25|unique:users,email,'.$userable_id.',userable_id',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',

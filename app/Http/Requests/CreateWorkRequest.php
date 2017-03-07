@@ -35,13 +35,14 @@ class CreateWorkRequest extends FormRequest
      */
     public function rules()
     {
+        $admin = \Auth::user()->admin();
         return [
+            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:20',
             'cost' => 'required|numeric|max:10000000',
-            'technician_id' => 'required|integer|min:1',
         ];
     }
 }

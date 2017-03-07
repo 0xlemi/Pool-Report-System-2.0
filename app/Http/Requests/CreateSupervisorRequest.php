@@ -26,12 +26,7 @@ class CreateSupervisorRequest extends Request
         // get the supervisor id if is upadate request if not null
         $userable_id = NULL;
         if($this->seq_id){
-            $user = \Auth::user();
-            if($user->isAdministrator()){
-                $userable_id = $user->userable()->supervisorBySeqId($this->seq_id)->id;
-            }else{
-                $userable_id = $user->userable()->admin()->supervisorBySeqId($this->seq_id)->id;
-            }
+            $userable_id = \Auth::user()->admin()->supervisorBySeqId($this->seq_id)->id;
         }
 
         return [
@@ -42,7 +37,7 @@ class CreateSupervisorRequest extends Request
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
+            'comments' => 'string|max:10000',
         ];
     }
 }

@@ -29,8 +29,14 @@ class ServiceContractRequest extends FormRequest
             'end_time' => 'required|date_format:H:i|after:start_time',
             'amount' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3|validCurrency',
-            'serviceDays' => 'required|array|size:7',
-            'serviceDays.*' => 'boolean',
+            'service_days' => 'required|array|size:7',
+            'service_days.monday' => 'required|boolean',
+            'service_days.tuesday' => 'required|boolean',
+            'service_days.wednesday' => 'required|boolean',
+            'service_days.thursday' => 'required|boolean',
+            'service_days.friday' => 'required|boolean',
+            'service_days.saturday' => 'required|boolean',
+            'service_days.sunday' => 'required|boolean',
         ];
     }
 }

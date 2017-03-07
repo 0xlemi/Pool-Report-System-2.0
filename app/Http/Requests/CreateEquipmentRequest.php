@@ -30,6 +30,8 @@ class CreateEquipmentRequest extends FormRequest
             'model' => 'required|string|max:40',
             'capacity' => 'required|numeric',
             'units' => 'required|string|max:20',
+            'photos' => 'array',
+            'photos.*' => 'required|mimes:jpg,jpeg,png',
         ];
     }
 }

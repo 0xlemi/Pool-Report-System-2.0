@@ -56,6 +56,16 @@ class Administrator extends Model
     //******** RELATIONSHIPS ********
 
     /**
+     * For convenience so I don't need to check if is admin
+     * when I call userable on a user
+     * @return \App\Administrator
+     */
+    public function admin()
+    {
+        return $this;
+    }
+
+    /**
      * Get the user this administrator is morphed by
      * @return \App\User
      * tested

@@ -476,7 +476,7 @@ var Spinner = require("spin");
 
 			this.$http.post(Laravel.url+'/service/'+this.workOrderId+'/works', {
 				title : this.titleName,
-				technician_id: this.technician.id,
+				technician: this.technician.id,
 				quantity: this.quantity,
 				units: this.units,
 				cost: this.cost,
@@ -513,7 +513,7 @@ var Spinner = require("spin");
 
             this.$http.patch(Laravel.url+'/works/'+this.id, {
         		title : this.titleName,
-				technician_id: this.technician.id,
+				technician: this.technician.id,
 				quantity: this.quantity,
 				units: this.units,
 				cost: this.cost,

@@ -95,7 +95,7 @@ class ClientsController extends ApiController
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
             'cellphone' => 'required|string|max:20',
-            'type' => 'required|numeric|between:1,2',
+            'type' => 'required|integer|between:1,2',
             'language' => 'required|string|max:2',
             'comments' => 'string|max:1000',
             'add_services' => 'array',
