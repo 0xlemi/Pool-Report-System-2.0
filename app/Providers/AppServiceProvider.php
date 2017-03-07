@@ -31,6 +31,8 @@ use App\Notifications\ReportCreatedNotification;
 use App\Notifications\AddedContractNotification;
 use App\Notifications\NewSupervisorNotification;
 use App\Notifications\AddedEquipmentNotification;
+use App\PRS\Observers\UserObserver;
+use App\PRS\Observers\AdministratorObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,30 +45,16 @@ class AppServiceProvider extends ServiceProvider
     {
 
     // **********************
-    //       Created
+    //       Observers
     // **********************
 
-        User::created(function ($user) {
-            $token = $user->activationToken()->create([
-                'token' => str_random(128),
-            ]);
+    User::observe(UserObserver::class);
+    Administrator::observe(AdministratorObserver::class);
 
-            $user->api_token = str_random(60);
-            $user->remember_token = str_random(10);
 
-            if($user->isTechnician()){
-                // since technician don't have email
-                // should be immediately be verified
-                $user->activated = 1;
-            }
-            $user->save();
-
-            event(new UserRegistered($user));
-        });
-
-        Administrator::created(function ($admin){
-
-        });
+    // **********************
+    //       Created
+    // **********************
 
         Report::created(function ($report){
             $admin = $report->admin();
@@ -130,12 +118,6 @@ class AppServiceProvider extends ServiceProvider
     //       Deleted
     // **********************
 
-        Administrator::deleted(function ($admin){
-            $user = $admin->user;
-            dispatch(new DeleteImagesFromS3($admin->images));
-            dispatch(new DeleteModels($user->notifications));
-            $user->delete();
-        });
 
         Report::deleted(function ($report){
             dispatch(new DeleteImagesFromS3($report->images));
