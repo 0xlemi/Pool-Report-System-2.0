@@ -267,7 +267,7 @@ class Administrator extends Model
      * tested
      */
     public function clients(){
-        return Client::where('admin_id', $this->id);
+        return $this->hasMany(Client::class, 'admin_id');
     }
 
     /**

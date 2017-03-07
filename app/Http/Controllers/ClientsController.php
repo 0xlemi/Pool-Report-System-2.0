@@ -75,24 +75,15 @@ class ClientsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $client = Client::create(
-                            array_merge(
-                                array_map('htmlentities', $request->except('services')),
-                                [
-                                    'admin_id' => $admin->id,
-                                ]
-                            )
+        $client = $admin->clients()->create(
+                        array_map('htmlentities', $request->except('services'))
                     );
+
         $client->setServices($request->services);
         $client->save();
 
-        $user = User::create([
+        $user = $client->user()->create([
             'email' => htmlentities($request->email),
-            'password' => bcrypt(str_random(9)),
-            'userable_id' => $client->id,
-            'userable_type' => 'App\Client',
-            'remember_token' => str_random(10),
-            'api_token' => str_random(60),
         ]);
 
         $photo = true;
