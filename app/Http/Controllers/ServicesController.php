@@ -87,15 +87,9 @@ class ServicesController extends PageController
 
         $admin  = $this->loggedUserAdministrator();
 
-        $serviceId = Service::create(
-                            array_merge(
-                                array_map('htmlentities', $request->all()),
-                                [
-                                    'admin_id' => $admin->id,
-                                ]
-                            )
-                    )->id;
-        $service = Service::findOrFail($serviceId);
+        $service = $admin->services()->create(
+                        array_map('htmlentities', $request->all())
+                    );
 
         $photo = true;
         if($request->photo){
@@ -156,7 +150,7 @@ class ServicesController extends PageController
 
         $this->authorize('update', $service);
 
-        $service->fill(array_map('htmlentities', $request->except('admin_id')));
+        $service->fill(array_map('htmlentities', $request->all()));
 
         $photo = true;
         if($request->photo){

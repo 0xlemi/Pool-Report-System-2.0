@@ -9,6 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\Mail\ServiceReportMail;
 use App\Channels\RealMailChannel;
 use App\Report;
+use App\User;
 
 
 class ReportCreatedNotification extends Notification implements ShouldQueue
