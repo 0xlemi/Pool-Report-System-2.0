@@ -32,7 +32,6 @@ class Client extends Model
 		'type',
 		'language',
 		'comments',
-		'admin_id',
 	];
 
     /**

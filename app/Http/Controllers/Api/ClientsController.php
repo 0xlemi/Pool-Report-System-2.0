@@ -110,21 +110,15 @@ class ClientsController extends ApiController
             // Create Client
                 // Transform services_seq_id to service_id array and check
                 // that the services with those id exist
-            $client = Client::create(
-                    array_merge(
-                        array_map('htmlentities', $request->except('add_services')),
-                        [
-                            'admin_id' => $admin->id,
-                        ]
-                    )
-            );
+            $client = $admin->clients()->create(
+                        array_map('htmlentities', $request->except('add_services'))
+                    );
 
             if(isset($request->add_services)){ $client->setServices($request->add_services);}
 
             // Crete the User
             $user = $client->user()->create([
                 'email' => htmlentities($request->email),
-                'api_token' => str_random(60),
             ]);
 
             // Add Photo to Client
