@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateContractRequest;
+use App\Http\Requests\UpdateContractRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\ContractHelpers;
 use App\ServiceContract;
@@ -100,7 +101,7 @@ class ServiceContractsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateContractRequest $request, $serviceSeqId)
+    public function update(UpdateContractRequest $request, $serviceSeqId)
     {
         $admin = $this->loggedUserAdministrator();
         $serviceContract = $admin->serviceBySeqId($serviceSeqId)->serviceContract;

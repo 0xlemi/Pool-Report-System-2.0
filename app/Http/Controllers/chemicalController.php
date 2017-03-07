@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateChemicalRequest;
+use App\Http\Requests\UpdateChemicalRequest;
 use App\Chemical;
 use App\Notifications\AddedChemicalNotification;
 
@@ -82,7 +83,7 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateChemicalRequest $request, Chemical $chemical)
+    public function update(UpdateChemicalRequest $request, Chemical $chemical)
     {
         $this->authorize('update', $chemical);
 

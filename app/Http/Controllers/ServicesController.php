@@ -13,6 +13,7 @@ use App\PRS\Transformers\ImageTransformer;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Controllers\PageController;
 use App\Notifications\NewServiceNotification;
 
@@ -144,7 +145,7 @@ class ServicesController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateServiceRequest $request, $seq_id)
+    public function update(UpdateServiceRequest $request, $seq_id)
     {
         $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
 

@@ -11,6 +11,7 @@ use App\Supervisor;
 use App\User;
 
 use App\Http\Requests\CreateSupervisorRequest;
+use App\Http\Requests\UpdateSupervisorRequest;
 use App\Http\Requests;
 use App\Http\Controllers\PageController;
 use App\PRS\Transformers\ImageTransformer;
@@ -139,7 +140,7 @@ class SupervisorsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateSupervisorRequest $request, $seq_id)
+    public function update(UpdateSupervisorRequest $request, $seq_id)
     {
         $admin = $this->loggedUserAdministrator();
         $supervisor = $admin->supervisorBySeqId($seq_id);

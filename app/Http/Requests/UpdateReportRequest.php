@@ -42,9 +42,7 @@ class UpdateReportRequest extends FormRequest
     public function rules()
     {
         $admin = \Auth::user()->admin();
-
         return [
-            'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
             'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'completed_at' => 'date',
             'ph' => 'integer|between:1,5',
@@ -52,9 +50,6 @@ class UpdateReportRequest extends FormRequest
             'temperature' => 'integer|between:1,5',
             'turbidity' => 'integer|between:1,4',
             'salt' => 'integer|between:1,5',
-            'photo1' => 'mimes:jpg,jpeg,png',
-            'photo2' => 'mimes:jpg,jpeg,png',
-            'photo3' => 'mimes:jpg,jpeg,png',
         ];
     }
 }

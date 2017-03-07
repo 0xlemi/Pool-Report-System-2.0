@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateReportRequest;
+use App\Http\Requests\UpdateReportRequest;
 use App\Report;
 use App\Photo;
 use App\Image;
@@ -248,17 +249,8 @@ class ReportsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seq_id)
+    public function update(UpdateReportRequest $request, $seq_id)
     {
-        $this->validate($request, [
-            'technician' => 'required|integer|min:1',
-            'completed_at' => 'required|date',
-            'ph' => 'required|integer|min:1|max:5',
-            'chlorine' => 'required|integer|min:1|max:5',
-            'temperature' => 'required|integer|min:1|max:5',
-            'turbidity' => 'required|integer|min:1|max:4',
-            'salt' => 'required|integer|min:1|max:5',
-        ]);
 
         $admin = $this->loggedUserAdministrator();
         $report = $admin->reportsBySeqId($seq_id);

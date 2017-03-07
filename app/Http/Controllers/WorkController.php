@@ -10,6 +10,7 @@ use Storage;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateWorkRequest;
+use App\Http\Requests\UpdateWorkRequest;
 use App\Work;
 use App\PRS\Transformers\WorkTransformer;
 use App\PRS\Transformers\ImageTransformer;
@@ -136,7 +137,7 @@ class WorkController extends PageController
      * @param  Work  $work
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateWorkRequest $request, Work $work)
+    public function update(UpdateWorkRequest $request, Work $work)
     {
         $this->authorize('update', $work);
 

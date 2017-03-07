@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateEquipmentRequest;
+use App\Http\Requests\UpdateEquipmentRequest;
 use App\Equipment;
 use Response;
 use App\PRS\Transformers\ImageTransformer;
@@ -94,7 +95,7 @@ class EquipmentController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateEquipmentRequest $request, Equipment $equipment)
+    public function update(UpdateEquipmentRequest $request, Equipment $equipment)
     {
         // change this to handle errors as api response
         $this->authorize('update', $equipment);

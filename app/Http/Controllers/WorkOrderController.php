@@ -10,6 +10,7 @@ use Carbon\Carbon;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateWorkOrderRequest;
+use App\Http\Requests\UpdateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\SupervisorHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
@@ -186,7 +187,7 @@ class WorkOrderController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateWorkOrderRequest $request, $seq_id)
+    public function update(UpdateWorkOrderRequest $request, $seq_id)
     {
         $admin = $this->loggedUserAdministrator();
         $workOrder = $admin->workOrderBySeqId($seq_id);

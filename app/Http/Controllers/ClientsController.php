@@ -13,6 +13,7 @@ use App\User;
 use App\Http\Requests;
 
 use App\Http\Requests\CreateClientRequest;
+use App\Http\Requests\UpdateClientRequest;
 use App\PRS\Transformers\ImageTransformer;
 
 class ClientsController extends PageController
@@ -141,7 +142,7 @@ class ClientsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateClientRequest $request, $seq_id)
+    public function update(UpdateClientRequest $request, $seq_id)
     {
         $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
 

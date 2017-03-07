@@ -13,6 +13,7 @@ use App\User;
 
 use App\Http\Requests;
 use App\Http\Requests\CreateTechnicianRequest;
+use App\Http\Requests\UpdateTechnicianRequest;
 use App\Http\Controllers\PageController;
 use App\PRS\Helpers\SupervisorHelpers;
 use App\PRS\Transformers\ImageTransformer;
@@ -161,7 +162,7 @@ class TechniciansController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CreateTechnicianRequest $request, $seq_id)
+    public function update(UpdateTechnicianRequest $request, $seq_id)
     {
         $admin = $this->loggedUserAdministrator();
         $technician = $admin->technicianBySeqId($seq_id);
