@@ -39,19 +39,6 @@
 								</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Service</label>
-								<div class="col-sm-10">
-									<dropdown :key="{{ $workOrder->service->seq_id }}"
-												:options="{{ $services }}"
-												:name="'service'">
-									</dropdown>
-									@if ($errors->has('service'))
-										<small class="text-muted">{{ $errors->first('service') }}</small>
-									@endif
-								</div>
-							</div>
-
                             <div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Supervisor</label>
 								<div class="col-sm-10">

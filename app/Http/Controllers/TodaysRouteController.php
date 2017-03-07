@@ -108,8 +108,7 @@ class TodaysRouteController extends PageController
                 $admin->timezone
             );
 
-        $report = Report::create([
-            'service_id' => $service->id,
+        $report = $service->reports()->create([
             'technician_id' => $technician->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,

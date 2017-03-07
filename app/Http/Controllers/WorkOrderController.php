@@ -88,11 +88,10 @@ class WorkOrderController extends PageController
         $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
-        $workOrder = WorkOrder::create(array_merge(
+        $workOrder = $service->workOrders()->create(array_merge(
                             array_map('htmlentities', $request->all()),
                             [
                                 'start' => $startDate,
-                                'service_id' => $service->id,
                                 'supervisor_id' => $supervisor->id,
                             ])
                     );
@@ -175,10 +174,9 @@ class WorkOrderController extends PageController
 
         $this->authorize('update', $workOrder);
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
 
-        return view('workorders.edit', compact('workOrder', 'services', 'supervisors'));
+        return view('workorders.edit', compact('workOrder', 'supervisors'));
     }
 
     /**
@@ -196,14 +194,12 @@ class WorkOrderController extends PageController
         $this->authorize('update', $workOrder);
 
         $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
         $workOrder->fill(array_merge(
                             array_map('htmlentities', $request->all()),
                             [
                                 'start' => $startDate,
-                                'service_id' => $service->id,
                                 'supervisor_id' => $supervisor->id,
                             ]
                         ));
