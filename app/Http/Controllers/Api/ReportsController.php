@@ -221,7 +221,6 @@ class ReportsController extends ApiController
 
         // Validate
         $this->validate($request, [
-            'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
             'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
             'completed' => 'date',
             'ph' => 'integer|between:1,5',

@@ -113,8 +113,7 @@ class ReportsController extends PageController
                 );
         }
 
-        $report = Report::create([
-            'service_id' => $service->id,
+        $report = $service->reports()->create([
             'technician_id' => $technician->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
@@ -154,7 +153,9 @@ class ReportsController extends PageController
         return view('reports.show', compact('report', 'images'));
     }
 
-    // check this
+    //****************************************
+    //         This Needs Checking
+    //****************************************
     public function emailPreview(Request $request)
     {
         $report = $this->loggedUserAdministrator()->reportsBySeqId($request->id);
@@ -185,7 +186,6 @@ class ReportsController extends PageController
 
         $this->authorize('update', $report);
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();
 
@@ -195,7 +195,7 @@ class ReportsController extends PageController
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'services', 'technicians', 'tags'));
+        return view('reports.edit', compact('report', 'technicians', 'tags'));
     }
 
     public function getPhoto(Request $request, $seq_id)
@@ -251,7 +251,6 @@ class ReportsController extends PageController
     public function update(Request $request, $seq_id)
     {
         $this->validate($request, [
-            'service' => 'required|integer|min:1',
             'technician' => 'required|integer|min:1',
             'completed_at' => 'required|date',
             'ph' => 'required|integer|min:1|max:5',
@@ -266,13 +265,11 @@ class ReportsController extends PageController
 
         $this->authorize('update', $report);
 
-        $service = $admin->serviceBySeqId($request->service);
         $technician = $admin->technicianBySeqId($request->technician);
 
         $completed_at = (new Carbon($request->completed_at, $admin->timezone))
                             ->setTimezone('UTC');
 
-        $report->service_id     = $service->id;
         $report->technician_id  = $technician->id;
         $report->completed      = $completed_at;
         $report->ph             = $request->ph;
