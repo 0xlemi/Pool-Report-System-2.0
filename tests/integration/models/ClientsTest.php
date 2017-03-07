@@ -12,15 +12,17 @@ use App\Service;
 class ClientsTest extends DatabaseTester
 {
 
+
+
     /** @test */
-    public function it_gets_admin()
+    public function it_gets_client_admin()
     {
         // Given
         $admin = $this->createAdministrator();
 
         $service = $this->createService($admin->id);
 
-        $client = factory(Client::class)->create([
+        $client = $this->factoryWithoutObservers(Client::class)->create([
             'admin_id' => $admin->id,
         ]);
 

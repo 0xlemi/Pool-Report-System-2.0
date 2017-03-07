@@ -51,7 +51,7 @@ class Client extends Model
 	 */
 	public function admin()
 	{
-	    return Administrator::findOrFail($this->admin_id);
+		return $this->belongsTo('App\Administrator', 'admin_id')->first();
 	}
 
 	/**
