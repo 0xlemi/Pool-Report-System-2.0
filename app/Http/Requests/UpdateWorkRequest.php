@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateWorkRequest extends FormRequest
+class UpdateWorkRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +25,12 @@ class CreateWorkRequest extends FormRequest
     {
         $admin = \Auth::user()->admin();
         return [
-            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'quantity' => 'required|numeric',
-            'units' => 'required|string|max:20',
-            'cost' => 'required|numeric|max:10000000',
+            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'quantity' => 'numeric',
+            'units' => 'string|max:20',
+            'cost' => 'numeric|max:10000000',
         ];
     }
 }

@@ -23,16 +23,10 @@ class CreateSupervisorRequest extends Request
      */
     public function rules()
     {
-        // get the supervisor id if is upadate request if not null
-        $userable_id = NULL;
-        if($this->seq_id){
-            $userable_id = \Auth::user()->admin()->supervisorBySeqId($this->seq_id)->id;
-        }
-
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email,'.$userable_id.',userable_id',
+            'email' => 'required|email|unique:users,email',
             'cellphone' => 'required|string|max:20',
             'address'   => 'string|max:100',
             'language' => 'required|string|max:2',

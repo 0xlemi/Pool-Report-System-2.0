@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateWorkOrderRequest extends FormRequest
+class UpdateWorkOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,6 @@ class CreateWorkOrderRequest extends FormRequest
         return true;
     }
 
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,13 +25,13 @@ class CreateWorkOrderRequest extends FormRequest
     {
         $admin = \Auth::user()->admin();
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
-            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
-            'start' => 'required|date',
-            'price' => 'required|numeric|max:10000000',
-            'currency' => 'required|string|size:3',
+            'title' => 'string|max:255',
+            'description' => 'string',
+            'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
+            'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'start' => 'date',
+            'price' => 'numeric|max:10000000',
+            'currency' => 'string|size:3',
             'photo' => 'mimes:jpg,jpeg,png',
         ];
     }

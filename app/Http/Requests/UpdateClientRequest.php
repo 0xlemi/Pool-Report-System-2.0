@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateClientRequest extends Request
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+class UpdateClientRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +26,18 @@ class CreateClientRequest extends Request
     public function rules()
     {
         $admin = \Auth::user()->admin();
+        try {
+            $userable_id  = $admin->clientsBySeqId($this->seq_id)->id;
+        }catch(ModelNotFoundException $e){
+            abort(422);
+        }
         return [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email',
-            'cellphone' => 'required|string|max:20',
-            'type' => 'required|numeric|between:1,2',
-            'language' => 'required|string|max:2',
+            'name' => 'string|max:25',
+            'last_name' => 'string|max:40',
+            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'cellphone' => 'string|max:20',
+            'type' => 'numeric|between:1,2',
+            'language' => 'string|max:2',
             'services' => 'array',
             'services.*' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
             'photo' => 'mimes:jpg,jpeg,png',
