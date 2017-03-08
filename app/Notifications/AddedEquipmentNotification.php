@@ -10,7 +10,7 @@ use App\User;
 use App\Equipment;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedEquipmentNotification extends Notification implements ShouldQueue
+class AddedEquipmentNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_equipment_added', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_equipment_added', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_equipment_added');
     }
 
     /**
@@ -70,7 +64,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
         $person =  $this->helper->userStyled($this->user);
 
         return [
-            'icon' => \Storage::url($equipment->icon()),
+            'icon' => \Storage::url($this->equipment->icon()),
             'title' => "New <strong>Equipment</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
             'message' => "New <strong>Equipment</strong> was added to the <strong>Service</strong>
                             (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) by {$person}.",

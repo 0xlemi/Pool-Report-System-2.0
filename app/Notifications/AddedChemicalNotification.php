@@ -10,7 +10,7 @@ use App\User;
 use App\Chemical;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedChemicalNotification extends Notification implements ShouldQueue
+class AddedChemicalNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_chemical_added', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_chemical_added', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_chemical_added');
     }
 
     /**

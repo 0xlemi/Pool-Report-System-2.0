@@ -10,7 +10,7 @@ use App\User;
 use App\Technician;
 use App\PRS\Helpers\NotificationHelpers;
 
-class NewTechnicianNotification extends Notification implements ShouldQueue
+class NewTechnicianNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_technician_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_technician_created', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_technician_created');
     }
 
     /**

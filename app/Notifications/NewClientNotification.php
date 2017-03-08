@@ -10,7 +10,7 @@ use App\User;
 use App\Client;
 use App\PRS\Helpers\NotificationHelpers;
 
-class NewClientNotification extends Notification implements ShouldQueue
+class NewClientNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class NewClientNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_client_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_client_created', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_client_created');
     }
 
     /**

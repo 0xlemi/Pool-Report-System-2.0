@@ -10,7 +10,7 @@ use App\User;
 use App\Work;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedWorkNotification extends Notification implements ShouldQueue
+class AddedWorkNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_work_added', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_work_added', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_work_added');
     }
 
     /**
@@ -69,7 +63,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
         $workOrder = $this->work->workOrder;
         $person =  $this->helper->userStyled($this->user);
         return [
-            'icon' => \Storage::url($work->icon()),
+            'icon' => \Storage::url($this->work->icon()),
             'title' => "A new <strong>Work</strong> was added to <strong>Work Order</strong> \"{$workOrder->seq_id} {$workOrder->title}\"",
             'message' => "New <strong>Work</strong> was added to the <strong>Work Order</strong>
                             (<a href=\"../workorders/{$workOrder->seq_id}\">{$workOrder->title}</a>) by {$person}.",

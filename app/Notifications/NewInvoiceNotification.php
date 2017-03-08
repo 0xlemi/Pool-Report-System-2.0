@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Invoice;
 
-class NewInvoiceNotification extends Notification implements ShouldQueue
+class NewInvoiceNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -33,13 +33,7 @@ class NewInvoiceNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_invoice_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_invoice_created', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_invoice_created');
     }
 
     /**

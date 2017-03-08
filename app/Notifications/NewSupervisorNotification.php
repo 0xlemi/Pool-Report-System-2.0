@@ -10,7 +10,7 @@ use App\User;
 use App\Supervisor;
 use App\PRS\Helpers\NotificationHelpers;
 
-class NewSupervisorNotification extends Notification implements ShouldQueue
+class NewSupervisorNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class NewSupervisorNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_supervisor_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_supervisor_created', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_supervisor_created');
     }
 
     /**

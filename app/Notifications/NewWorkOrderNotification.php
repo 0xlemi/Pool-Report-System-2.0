@@ -10,7 +10,7 @@ use App\User;
 use App\WorkOrder;
 use App\PRS\Helpers\NotificationHelpers;
 
-class NewWorkOrderNotification extends Notification implements ShouldQueue
+class NewWorkOrderNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
@@ -38,13 +38,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_workorder_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_workorder_created', 'mail')){
-            $channels[] = 'mail';
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_workorder_created');
     }
 
     /**

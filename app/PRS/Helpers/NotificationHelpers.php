@@ -4,6 +4,8 @@ namespace App\PRS\Helpers;
 
 use App\PRS\Traits\HelperTrait;
 
+use App\User;
+
 /**
  * Helpers for notification elements
  */
@@ -11,6 +13,17 @@ class NotificationHelpers
 {
 
 use HelperTrait;
+
+    public function channels(User $user, $permissionName)
+    {
+        $channels = [];
+        if($user->notificationSettings->hasPermission($permissionName, 'database')){
+            $channels[] = 'database';
+        }if($user->notificationSettings->hasPermission($permissionName, 'mail')){
+            // $channels[] = 'mail';
+        }
+        return $channels;
+    }
 
     public function userStyled($user)
     {
