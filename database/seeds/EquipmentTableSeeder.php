@@ -44,12 +44,10 @@ class EquipmentTableSeeder extends Seeder
         	$serviceId = $this->seederHelper->getRandomObject('services');
             $admin = Service::findOrFail($serviceId)->admin();
 
-    		$equipmentId = factory(Equipment::class)->create([
+    		$equipment = factory(Equipment::class)->create([
                 'kind' => $kind['name'],
         		'service_id' => $serviceId,
-            ])->id;
-            $equipment = Equipment::findOrFail($equipmentId);
-
+            ]);
             // create images link it to equipment
             $equipment->images()->create([
                 'big' => $img->big,

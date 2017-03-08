@@ -35,7 +35,7 @@ class ServicesTableSeeder extends Seeder
     {
         // trouble with serviceContract Observer
         ServiceContract::flushEventListeners();
-        
+
     	for ($i=0; $i < $this->number_of_services; $i++) {
 		    // generate and save image and tn_image
 			$img = $this->seederHelper->get_random_image('service', 20);
@@ -44,16 +44,23 @@ class ServicesTableSeeder extends Seeder
         	$adminId = $this->seederHelper->getRandomObject('administrators');
             $admin = Administrator::findOrFail($adminId);
 
-    		$serviceId = factory(App\Service::class)->create([
+    		$service = factory(App\Service::class)->create([
         		'admin_id' => $admin->id,
-            ])->id;
-            $service = Service::findOrFail($serviceId);
+            ]);
+            // create images link it to service
+            $service->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+                'processing' => 0,
+            ]);
 
             if(rand(0,1)){
                 factory(App\ServiceContract::class)->create([
                     'service_id' => $service->id,
                 ]);
-                $contract = ServiceContract::findOrFail($serviceId);
+                $contract = ServiceContract::findOrFail($service->id);
                 // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
                     $invoiceId = $contract->invoices()->create([
@@ -80,14 +87,7 @@ class ServicesTableSeeder extends Seeder
                 ]);
             }
 
-            // create images link it to client
-            $service->images()->create([
-                'big' => $img->big,
-    			'medium' => $img->medium,
-                'thumbnail' => $img->thumbnail,
-                'icon' => $img->icon,
-                'processing' => 0,
-            ]);
+
     	}
     }
 }

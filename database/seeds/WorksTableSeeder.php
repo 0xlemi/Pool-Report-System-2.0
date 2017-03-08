@@ -35,11 +35,10 @@ class WorksTableSeeder extends Seeder
 
             $workOrder = $this->seederHelper->getRandomWorkOrder($admin);
 
-            $workId = factory(App\Work::class)->create([
+            $work = factory(App\Work::class)->create([
                 'work_order_id' => $workOrder->id,
                 'technician_id' => $technicianId,
-            ])->id;
-            $work = Work::findOrFail($workId);
+            ]);
 
             // add image
             for ($e=1; $e < rand(2,5); $e++) {

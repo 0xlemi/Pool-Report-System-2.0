@@ -29,15 +29,19 @@ class SupervisorsTableSeeder extends Seeder
     		$img = $this->seederHelper->get_random_image('supervisor', 5);
 
             // get a random admin_id that exists in database
-            // $adminId = $this->seederHelper->getRandomObject('administrators');
             $adminId = rand(1,2);
 
-    		$supervisorId = factory(App\Supervisor::class)->create([
+    		$supervisor = factory(App\Supervisor::class)->create([
         		'admin_id' => $adminId,
-            ])->id;
-            $admin = Administrator::findOrFail($adminId);
-
-            $supervisor = Supervisor::findOrFail($supervisorId);
+            ]);
+            // create images link it to supervisors
+            $supervisor->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+                'processing' => 0,
+            ]);
 
             factory(App\User::class)->create([
                 'password' => bcrypt('password'),
@@ -46,14 +50,6 @@ class SupervisorsTableSeeder extends Seeder
                 'activated' => 1,
             ]);
 
-    		// create images link it to supervisors
-            $supervisor->images()->create([
-                'big' => $img->big,
-    			'medium' => $img->medium,
-                'thumbnail' => $img->thumbnail,
-                'icon' => $img->icon,
-                'processing' => 0,
-            ]);
         }
     }
 }

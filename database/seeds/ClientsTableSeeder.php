@@ -41,11 +41,19 @@ class ClientsTableSeeder extends Seeder
             // find admin_id congruent with the service
             $admin = Service::findOrFail($serviceId)->admin();
 
-    		$clientId = factory(App\Client::class)->create([
+    		$client = factory(App\Client::class)->create([
                 'name' => $faker->firstName($gender),
                 'admin_id' => $admin->id,
-    		])->id;
-            $client = Client::findOrFail($clientId);
+    		]);
+
+            // create images link it to client
+            $client->images()->create([
+                'big' => $img->big,
+    			'medium' => $img->medium,
+                'thumbnail' => $img->thumbnail,
+                'icon' => $img->icon,
+                'processing' => 0,
+            ]);
 
             factory(App\User::class)->create([
                 'userable_id' => $client->id,
@@ -59,14 +67,7 @@ class ClientsTableSeeder extends Seeder
                 'service_id' => $serviceId,
             ]);
 
-    		// create images link it to client
-            $client->images()->create([
-                'big' => $img->big,
-    			'medium' => $img->medium,
-                'thumbnail' => $img->thumbnail,
-                'icon' => $img->icon,
-                'processing' => 0,
-            ]);
+
     	}
     }
 }
