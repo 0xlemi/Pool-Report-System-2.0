@@ -45,11 +45,10 @@ class WorkOrdersTableSeeder extends Seeder
         	$service = $this->seederHelper->getRandomService($admin);
 
 
-            $workOrderId = factory(App\WorkOrder::class)->create([
+            $workOrder = factory(App\WorkOrder::class)->create([
                 'service_id' => $service->id,
                 'supervisor_id' => $supervisorId,
-            ])->id;
-
+            ]);
 
             // Generate Invoices with Payments
             for ($o=0; $o < rand(1,4); $o++) {

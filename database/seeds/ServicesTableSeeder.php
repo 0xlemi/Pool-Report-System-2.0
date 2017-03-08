@@ -11,6 +11,7 @@ use App\Notifications\NewServiceNotification;
 use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\AddedContractNotification;
+use App\Chemical;
 use App\Administrator;
 use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
@@ -32,6 +33,9 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
+        // trouble with serviceContract Observer
+        ServiceContract::flushEventListeners();
+        
     	for ($i=0; $i < $this->number_of_services; $i++) {
 		    // generate and save image and tn_image
 			$img = $this->seederHelper->get_random_image('service', 20);

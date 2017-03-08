@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\PageController;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use Auth;
 use DB;
@@ -49,6 +50,29 @@ class HomeController extends PageController
     {
         $user = $this->getUser();
         return view('home', compact('user'));
+    }
+
+    public function signIn(string $token)
+    {
+        // if($object = $this->urlSigner->validateToken($token)){
+        //
+        //     try {
+        //         $user = User::where('email', $object->email)->get()->firstOrFail();
+        //     } catch (ModelNotFoundException $e) {
+        //         return redirect('/login');
+        //     }
+        //
+        //
+        //
+        //     // // if the user is allready logged in send him to his settings
+        //     // if($user == Auth::user()){
+        //     //     return redirect('/settings');
+        //     // }
+        //     $notifications = $user->notificationSettings->getAll();
+        //
+        //     return view('extras.emailSettings', compact('notifications', 'token'));
+        // }
+        // return redirect('/login');
     }
 
     public function emailOptions(string $token)

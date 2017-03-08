@@ -21,7 +21,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ServiceContract $contract, User $user)
+    public function __construct(ServiceContract $contract, $user)
     {
         $this->contract = $contract;
         $this->user = $user;
@@ -64,12 +64,15 @@ class AddedContractNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->contract->service;
-        $userable = $this->user->userable();
-        $type = $this->user->type;
-        $urlName = $type->url();
 
         $person =  "<strong>System Administrator</strong>";
-        if(!$this->user->isAdministrator()){
+        if($this->user == null){
+            // there is no authenticated user (we are running a migration)
+            $person =  "<strong>Unknown</strong>";
+        }elseif(!$this->user->isAdministrator()){
+            $userable = $this->user->userable();
+            $type = $this->user->type;
+            $urlName = $type->url();
             $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
         }
         return [
