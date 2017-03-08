@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\WorkOrder;
+use App\PRS\Helpers\NotificationHelpers;
 
 class NewWorkOrderNotification extends Notification implements ShouldQueue
 {
@@ -15,6 +16,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
 
     protected $workOrder;
     protected $user;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -25,6 +27,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     {
         $this->workOrder = $workOrder;
         $this->user = $user;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -65,16 +68,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     {
         $workOrder = $this->workOrder;
 
-        $person =  "<strong>System Administrator</strong>";
-        if($this->user == null){
-            // there is no authenticated user (we are running a migration)
-            $person =  "<strong>Unknown</strong>";
-        }elseif(!$this->user->isAdministrator()){
-            $userable = $this->user->userable();
-            $type = $this->user->type;
-            $urlName = $type->url();
-            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
-        }
+        $person =  $this->helper->userStyled($this->user);
         return [
             'icon' => \Storage::url($workOrder->icon()),
             'link' => "workorders/{$workOrder->seq_id}",

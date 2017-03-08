@@ -101,14 +101,16 @@ class TechniciansController extends PageController
 
         $technician = $supervisor->technicians()->create(array_map('htmlentities', $request->all()));
 
-        $user = $technician->user()->create([
-            'email' => htmlentities($request->username),
-        ]);
-
         $photo = true;
         if($request->photo){
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
+
+        $user = $technician->user()->create([
+            'email' => htmlentities($request->username),
+        ]);
+
+
         if($user && $technician && $photo){
             flash()->success('Created', 'New technician successfully created.');
             return redirect('technicians');

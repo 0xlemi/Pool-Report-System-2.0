@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Technician;
+use App\PRS\Helpers\NotificationHelpers;
 
 class NewTechnicianNotification extends Notification implements ShouldQueue
 {
@@ -15,6 +16,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
 
     protected $technician;
     protected $user;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -25,6 +27,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
     {
         $this->technician = $technician;
         $this->user = $user;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -65,16 +68,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
     {
         $technician = $this->technician;
 
-        $person =  "<strong>System Administrator</strong>";
-        if($this->user == null){
-            // there is no authenticated user (we are running a migration)
-            $person =  "<strong>Unknown</strong>";
-        }elseif(!$this->user->isAdministrator()){
-            $userable = $this->user->userable();
-            $type = $this->user->type;
-            $urlName = $type->url();
-            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
-        }
+        $person =  $this->helper->userStyled($this->user);
         return [
             'icon' => \Storage::url($technician->icon()),
             'link' => "technicians/{$technician->seq_id}",

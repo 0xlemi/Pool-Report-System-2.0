@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Chemical;
+use App\PRS\Helpers\NotificationHelpers;
 
 class AddedChemicalNotification extends Notification implements ShouldQueue
 {
@@ -15,6 +16,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
 
     protected $chemical;
     protected $user;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -25,6 +27,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
     {
         $this->chemical = $chemical;
         $this->user = $user;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -64,17 +67,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->chemical->service;
-
-        $person =  "<strong>System Administrator</strong>";
-        if($this->user == null){
-            // there is no authenticated user (we are running a migration)
-            $person =  "<strong>Unknown</strong>";
-        }elseif(!$this->user->isAdministrator()){
-            $userable = $this->user->userable();
-            $type = $this->user->type;
-            $urlName = $type->url();
-            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
-        }
+        $person =  $helper->userStyled($this->user);
         return [
             'icon' => \Storage::url($service->icon()),
             'title' => "New <strong>Chemical</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",

@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Equipment;
+use App\PRS\Helpers\NotificationHelpers;
 
 class AddedEquipmentNotification extends Notification implements ShouldQueue
 {
@@ -15,6 +16,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
 
     protected $equipment;
     protected $user;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -25,6 +27,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
     {
         $this->equipment = $equipment;
         $this->user = $user;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -64,16 +67,8 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->equipment->service();
+        $person =  $this->helper->userStyled($this->user);
 
-        if($this->user == null){
-            // there is no authenticated user (we are running a migration)
-            $person =  "<strong>Unknown</strong>";
-        }elseif(!$this->user->isAdministrator()){
-            $userable = $this->user->userable();
-            $type = $this->user->type;
-            $urlName = $type->url();
-            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
-        }
         return [
             'icon' => \Storage::url($equipment->icon()),
             'title' => "New <strong>Equipment</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",

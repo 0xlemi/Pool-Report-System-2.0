@@ -161,14 +161,14 @@ class SupervisorsController extends PageController
 
         $supervisor->fill(array_map('htmlentities', $request->all()));
 
-        $user->email = htmlentities($request->email);
-        $user->active = $status;
-
         $photo = false;
         if($request->photo){
             $supervisor->images()->delete();
             $photo = $supervisor->addImageFromForm($request->file('photo'));
         }
+
+        $user->email = htmlentities($request->email);
+        $user->active = $status;
 
         $userSaved = $user->save();
         $supervisorSaved = $supervisor->save();

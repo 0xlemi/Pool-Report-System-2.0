@@ -80,17 +80,18 @@ class ClientsController extends PageController
                         array_map('htmlentities', $request->except('services'))
                     );
 
+        $photo = true;
+        if($request->photo){
+            $photo = $client->addImageFromForm($request->file('photo'));
+        }
+
         $client->setServices($request->services);
         $client->save();
 
         $user = $client->user()->create([
             'email' => htmlentities($request->email),
         ]);
-
-        $photo = true;
-        if($request->photo){
-            $photo = $client->addImageFromForm($request->file('photo'));
-        }
+        
         if($client && $photo){
             flash()->success('Created', 'New client successfully created.');
             return redirect('clients');

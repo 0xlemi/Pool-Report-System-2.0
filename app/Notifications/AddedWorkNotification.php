@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Work;
+use App\PRS\Helpers\NotificationHelpers;
 
 class AddedWorkNotification extends Notification implements ShouldQueue
 {
@@ -15,6 +16,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
 
     protected $work;
     protected $user;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -25,6 +27,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
     {
         $this->work = $work;
         $this->user = $user;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -64,17 +67,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $workOrder = $this->work->workOrder;
-
-        $person =  "<strong>System Administrator</strong>";
-        if($this->user == null){
-            // there is no authenticated user (we are running a migration)
-            $person =  "<strong>Unknown</strong>";
-        }elseif(!$this->user->isAdministrator()){
-            $userable = $this->user->userable();
-            $type = $this->user->type;
-            $urlName = $type->url();
-            $person = "<strong>{$type}</strong> (<a href=\"../{$urlName}/{$userable->seq_id}\">{$this->user->fullName}</a>)";
-        }
+        $person =  $this->helper->userStyled($this->user);
         return [
             'icon' => \Storage::url($work->icon()),
             'title' => "A new <strong>Work</strong> was added to <strong>Work Order</strong> \"{$workOrder->seq_id} {$workOrder->title}\"",
