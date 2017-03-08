@@ -24,15 +24,29 @@ class HomeController extends PageController
     }
 
     /**
+     * Show the landing page, even if he is logged in.
+     * @return view
+     */
+    public function landingPage()
+    {
+        return view('landing.welcome');
+    }
+
+    /**
+     * Go to the dashboard
+     */
+    public function home()
+    {
+        return redirect('/dashboard');
+    }
+
+    /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Http\Response
+     * @return view
      */
-    public function index()
+    public function dashboard()
     {
-        if(!Auth::check()){
-            return view('landing.welcome');
-    	}
         $user = $this->getUser();
         return view('home', compact('user'));
     }

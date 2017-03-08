@@ -23,7 +23,7 @@ class ActivationController extends Controller
 
         Auth::login($user);
 
-        return redirect('/');
+        return redirect('/dashboard');
     }
 
     public function resend(Request $request)

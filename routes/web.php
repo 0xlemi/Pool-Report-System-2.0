@@ -16,9 +16,9 @@ Auth::routes();
 Route::auth();
 
 // Welcome Page
-Route::get('/', 'HomeController@index');
-Route::get('/dashboard', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
+Route::get('/', 'HomeController@landingPage');
+Route::get('/dashboard', 'HomeController@dashboard')->middleware('auth');
+Route::get('/home', 'HomeController@home')->middleware('auth');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
