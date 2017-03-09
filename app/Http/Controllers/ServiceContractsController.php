@@ -41,10 +41,11 @@ class ServiceContractsController extends PageController
         $service = $admin->serviceBySeqId($serviceSeqId);
 
         // get the service days number 0-127
-        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->serviceDays);
+        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->service_days);
 
+        // ServiceContract::flushEventListeners();
         $serviceContract = $service->serviceContract()->create(array_merge(
-                        array_map('htmlentities', $request->except('serviceDays')),
+                        array_map('htmlentities', $request->except('service_days', 'active')),
                         [
                             'service_days' => $serviceDays,
                         ]
@@ -88,7 +89,7 @@ class ServiceContractsController extends PageController
                 'contractExists' => true,
                 'serviceDaysArray' => $serviceContract->serviceDays()->asArray(),
                 'serviceDaysString' => $serviceContract->serviceDays()->shortNames(),
-                'active' => $serviceContract->active()->asBoolean(),
+                'active' => $serviceContract->activeStatus()->asBoolean(),
             ];
         }
         return response()->json($data);
@@ -109,10 +110,10 @@ class ServiceContractsController extends PageController
         $this->authorize('update', $serviceContract);
 
         // get the service days number 0-127
-        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->serviceDays);
+        $serviceDays = $this->contractHelpers->serviceDaysToNum($request->service_days);
 
         $serviceContract->fill(array_merge(
-                    array_map('htmlentities', $request->except('serviceDays')),
+                    array_map('htmlentities', $request->except('service_days')),
                     [
                         'service_days' => $serviceDays,
                     ]
@@ -136,8 +137,8 @@ class ServiceContractsController extends PageController
         $serviceContract->save();
 
         return response()->json([
-            'message' => "Service Contract has been set to {$serviceContract->active()}",
-            'active' => $serviceContract->active()->asBoolean(),
+            'message' => "Service Contract has been set to {$serviceContract->activeStatus()}",
+            'active' => $serviceContract->activeStatus()->asBoolean(),
         ]);
     }
 

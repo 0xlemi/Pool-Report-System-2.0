@@ -15,16 +15,16 @@ class ContractObserver
      */
     public function created(ServiceContract $contract)
     {
-        // check invoice for date
-        if($contract->checkIfTodayContractChargesInvoice()){
-            $contract->invoices()->create([
-                'amount' => $contract->amount,
-                'currency' => $contract->currency,
-                'admin_id' => $contract->admin()->id,
-            ]);
-        }
-        $admin = $contract->admin();
-        $admin->user->notify(new AddedContractNotification($contract, \Auth::user()));
+        // // check invoice for date
+        // if($contract->checkIfTodayContractChargesInvoice()){
+        //     $contract->invoices()->create([
+        //         'amount' => $contract->amount,
+        //         'currency' => $contract->currency,
+        //         'admin_id' => $contract->admin()->id,
+        //     ]);
+        // }
+        // $admin = $contract->admin();
+        // $admin->user->notify(new AddedContractNotification($contract, \Auth::user()));
     }
 
     /**

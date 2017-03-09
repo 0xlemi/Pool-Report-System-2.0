@@ -36,7 +36,7 @@ class ServiceContract extends Model
      * @var array
      */
 	protected $hidden = [
-        'service_id'
+        // 'service_id'
 	];
 
     protected $primaryKey = 'service_id';
@@ -50,7 +50,7 @@ class ServiceContract extends Model
      */
     public function service()
     {
-        return $this->belongsTo('App\Service', 'service_id');
+        return $this->belongsTo('App\Service');
     }
 
     public function admin()
@@ -149,7 +149,7 @@ class ServiceContract extends Model
      * status ValueObject
      * @return [type] [description]
      */
-    public function active()
+    public function activeStatus()
     {
         return (new Status($this->active));
     }

@@ -30491,7 +30491,7 @@ exports.default = {
             }).spin(clickEvent.target);
 
             this.$http.post(this.Url, {
-                serviceDays: {
+                service_days: {
                     monday: this.monday,
                     tuesday: this.tuesday,
                     wednesday: this.wednesday,
@@ -30539,7 +30539,7 @@ exports.default = {
             }).spin(clickEvent.target);
 
             this.$http.patch(this.Url, {
-                serviceDays: {
+                service_days: {
                     monday: this.monday,
                     tuesday: this.tuesday,
                     wednesday: this.wednesday,
