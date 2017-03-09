@@ -15,18 +15,16 @@ class CreateUrlSignersTable extends Migration
     {
         Schema::create('url_signers', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->string('email')->index();
-            // $table->string('user_id')->unsigned();
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
             $table->string('token')->index();
             $table->timestamp('expire');
-            $table->timestamp('updated_at')->nullable();
-            $table->timestamp('created_at')->nullable();
+            $table->timestamps();
 
-            // $table->timestamps();
-            // $table->foreign('user_id')
-            //     ->references('id')
-            //     ->on('users')
-            //     ->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

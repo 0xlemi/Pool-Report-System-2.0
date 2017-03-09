@@ -11,18 +11,11 @@ use Auth;
 use DB;
 use Carbon\Carbon;
 use App\User;
-use App\PRS\Classes\UrlSigner;
 use App\PRS\Helpers\UserHelpers;
+use App\UrlSigner;
 
 class HomeController extends PageController
 {
-
-    private $urlSigner;
-
-    public function __construct(UrlSigner $urlSigner)
-    {
-        $this->urlSigner = $urlSigner;
-    }
 
     /**
      * Show the landing page, even if he is logged in.
@@ -54,77 +47,66 @@ class HomeController extends PageController
 
     public function signIn(string $token)
     {
-        // if($object = $this->urlSigner->validateToken($token)){
-        //
-        //     try {
-        //         $user = User::where('email', $object->email)->get()->firstOrFail();
-        //     } catch (ModelNotFoundException $e) {
-        //         return redirect('/login');
-        //     }
-        //
-        //
-        //
-        //     // // if the user is allready logged in send him to his settings
-        //     // if($user == Auth::user()){
-        //     //     return redirect('/settings');
-        //     // }
-        //     $notifications = $user->notificationSettings->getAll();
-        //
-        //     return view('extras.emailSettings', compact('notifications', 'token'));
-        // }
-        // return redirect('/login');
+        
     }
 
     public function emailOptions(string $token)
     {
-        if($object = $this->urlSigner->validateToken($token)){
-
-            $user = User::where('email', $object->email)->get()->first();
-
-            // if the user is allready logged in send him to his settings
-            if($user == Auth::user()){
-                return redirect('/settings');
-            }
-            $notifications = $user->notificationSettings->getAll();
-
-            return view('extras.emailSettings', compact('notifications', 'token'));
+        try {
+            $signer = UrlSigner::where('token', $token)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return redirect('/login');
         }
-        return redirect('/login');
+
+        $user = $signer->user;
+
+        // if the user is allready logged in send him to his settings
+        if($user == Auth::user()){
+            return redirect('/settings');
+        }
+
+        $notifications = $user->notificationSettings->getAll();
+
+        return view('extras.emailSettings', compact('notifications', 'token'));
     }
 
     public function changeEmailOptions(Request $request, UserHelpers $userHelpers)
     {
-        if($object = $this->urlSigner->validateToken($request->token)){
-            $user = User::where('email', $object->email)->get()->first();
+        try {
+            $signer = UrlSigner::where('token', $request->token)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return redirect('/login');
+        }
 
-            $validNames = $user->notificationSettings->validNames();
-            $requestNames = array_keys($request->except('token','_token'));
+        $user = $signer->user;
 
-            // validate that the names sent are real notification settings
-            foreach ($requestNames as $name) {
-                if(!in_array($name, $validNames)){
-                    $this->urlSigner->removeSigner($request->token);
-                    return response("Something funny is going on, go away.", 422);
-                }
-            }
-            // run though all the valid notification
-            // set true or false depending if was sent in the request
-            foreach ($validNames as $validName) {
-                $value = in_array($validName, $requestNames);
-                $newNumber = $user->notificationSettings->notificationChanged($validName, 'mail', $value);
-                $user->$validName = $newNumber;
-            }
+        $validNames = $user->notificationSettings->validNames();
+        $requestNames = array_keys($request->except('token','_token'));
 
-            if($user->save()){
-                $title = 'Email Settings Changed!';
-                $isSuccess = true;
-                $this->urlSigner->removeSigner($request->token);
-                return view('extras.showMessage', compact('title', 'isSuccess'));
+        // validate that the names sent are real notification settings
+        foreach ($requestNames as $name) {
+            if(!in_array($name, $validNames)){
+                $signer->delete();
+                return response("Something funny is going on, go away.", 422);
             }
-            $title = 'Email Settings Where Not Changed!';
-            $isSuccess = false;
+        }
+        // run though all the valid notification
+        // set true or false depending if was sent in the request
+        foreach ($validNames as $validName) {
+            $value = in_array($validName, $requestNames);
+            $newNumber = $user->notificationSettings->notificationChanged($validName, 'mail', $value);
+            $user->$validName = $newNumber;
+        }
+
+        if($user->save()){
+            $title = 'Email Settings Changed!';
+            $isSuccess = true;
+            $signer->delete();
             return view('extras.showMessage', compact('title', 'isSuccess'));
         }
+        $title = 'Email Settings Where Not Changed!';
+        $isSuccess = false;
+        return view('extras.showMessage', compact('title', 'isSuccess'));
     }
 
 }

@@ -12,6 +12,7 @@ use App\PRS\Helpers\UserHelpers;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
+use App\UrlSigner;
 
 class User extends Authenticatable
 {
@@ -140,6 +141,11 @@ class User extends Authenticatable
     public function activationToken()
     {
         return $this->hasOne(ActivationToken::class);
+    }
+
+    public function urlSigners()
+    {
+        return $this->hasMany(UrlSigner::class);
     }
 
     public function admin()

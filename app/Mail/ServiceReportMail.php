@@ -8,7 +8,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\User;
 use App\Report;
-use App\PRS\Classes\UrlSigner;
 use Carbon\Carbon;
 use Storage;
 
@@ -18,7 +17,6 @@ class ServiceReportMail extends Mailable
 
     private $report;
     private $user;
-    private $urlSigner;
 
     /**
      * Create a new message instance.
@@ -29,7 +27,6 @@ class ServiceReportMail extends Mailable
     {
         $this->report = $report;
         $this->user = $user;
-        $this->urlSigner = (new UrlSigner());
     }
 
     /**
@@ -45,7 +42,10 @@ class ServiceReportMail extends Mailable
 
         // info needed by the template
         $name = $this->user->userable()->name;
-        $token = $this->urlSigner->create($this->user, 2);
+        $signer = $this->user->urlSigners()->create([
+            'token' => str_random(128),
+            'expire' => Carbon::now()->addDays(10)
+        ]);
         $data = array(
             'logo' => url('img/logo-2.png'),
             'headerImage' => url('img/uploads/email_header.png'),
@@ -55,7 +55,7 @@ class ServiceReportMail extends Mailable
             'photo1' => Storage::url($this->report->image(1)),
             'photo2' => Storage::url($this->report->image(2)),
             'photo3' => Storage::url($this->report->image(3)),
-            'unsubscribeLink' => url('/unsubscribe').'/'.$token,
+            'unsubscribeLink' => url('/unsubscribe').'/'.$signer->token,
         );
 
         return $this->from('no-reply@poolreportsystem.com')
