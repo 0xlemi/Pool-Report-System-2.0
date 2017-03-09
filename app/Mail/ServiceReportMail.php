@@ -42,7 +42,11 @@ class ServiceReportMail extends Mailable
 
         // info needed by the template
         $name = $this->user->userable()->name;
-        $signer = $this->user->urlSigners()->create([
+        $loginSigner = $this->user->urlSigners()->create([
+            'token' => str_random(128),
+            'expire' => Carbon::now()->addDays(10)
+        ]);
+        $unsubscribeSigner = $this->user->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
@@ -55,7 +59,8 @@ class ServiceReportMail extends Mailable
             'photo1' => Storage::url($this->report->image(1)),
             'photo2' => Storage::url($this->report->image(2)),
             'photo3' => Storage::url($this->report->image(3)),
-            'unsubscribeLink' => url('/unsubscribe').'/'.$signer->token,
+            'loginLink' => url('/signin').'/'.$loginSigner->token,
+            'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
         );
 
         return $this->from('no-reply@poolreportsystem.com')

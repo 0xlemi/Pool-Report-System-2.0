@@ -45,9 +45,23 @@ class HomeController extends PageController
         return view('home', compact('user'));
     }
 
+    /**
+     * Magic Login
+     * @param  string $token
+     */
     public function signIn(string $token)
     {
-        
+        try {
+            $signer = UrlSigner::where('token', $token)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            return redirect('/login');
+        }
+
+        $user = $signer->user;
+
+        $signer->delete();
+        Auth::login($user);
+        return redirect('/dashboard');
     }
 
     public function emailOptions(string $token)

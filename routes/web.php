@@ -17,6 +17,10 @@ Route::auth();
 
 // Welcome Page
 Route::get('/', 'HomeController@landingPage');
+
+// magic link login
+Route::get('/signin/{token}', 'HomeController@signIn');
+
 Route::get('/dashboard', 'HomeController@dashboard')->middleware('auth');
 Route::get('/home', 'HomeController@home')->middleware('auth');
 
