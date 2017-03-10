@@ -1,5 +1,7 @@
 <template>
-<alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
+<div class="col-md-12">
+	<alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
+</div>
 <div class="col-sm-10 col-sm-offset-2">
 	<h3 style="display: inline;"><span class="label label-default">Unverified Account</span></h3>
 	<small class="text-muted">This {{ name }} has not verified his account, by clicking on the email we sent him.
@@ -52,9 +54,15 @@ export default {
                 this.alertActive = true;
 				this.revertButton(clickEvent, buttonTag);
             }, response => {
-                this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
-                this.alertType = 'danger';
-                this.alertActive = true;
+				if(response.status == 409){
+					this.alertMessage = response.data;
+	                this.alertType = 'warning';
+	                this.alertActive = true;
+				}else{
+	                this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
+	                this.alertType = 'danger';
+	                this.alertActive = true;
+				}
 				this.revertButton(clickEvent, buttonTag);
             });
         },

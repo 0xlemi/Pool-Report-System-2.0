@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use Mail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -38,6 +39,14 @@ class ActivationController extends Controller
         if($user->activated){
             return redirect('/login')
                 ->withInfo('Your account is already verified, just login.');
+        }
+
+        if($request->wantsJson() && $user->activationToken){
+            $hoursSinceSent = Carbon::parse($user->activationToken->created_at)->diffInHours();
+            if($hoursSinceSent < 24){
+                $hoursLeft = 24 - $hoursSinceSent;
+                return response("You Need to wait {$hoursLeft} hours, for you to be able to send another activation email. (spam protection)", 409);
+            }
         }
 
         $token = $user->activationToken()->create([

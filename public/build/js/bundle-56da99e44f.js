@@ -31339,9 +31339,15 @@ exports.default = {
                 _this.alertActive = true;
                 _this.revertButton(clickEvent, buttonTag);
             }, function (response) {
-                _this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
-                _this.alertType = 'danger';
-                _this.alertActive = true;
+                if (response.status == 409) {
+                    _this.alertMessage = response.data;
+                    _this.alertType = 'warning';
+                    _this.alertActive = true;
+                } else {
+                    _this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
+                    _this.alertType = 'danger';
+                    _this.alertActive = true;
+                }
                 _this.revertButton(clickEvent, buttonTag);
             });
         },
@@ -31354,7 +31360,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n<div class=\"col-sm-10 col-sm-offset-2\">\n\t<h3 style=\"display: inline;\"><span class=\"label label-default\">Unverified Account</span></h3>\n\t<small class=\"text-muted\">This {{ name }} has not verified his account, by clicking on the email we sent him.\n\t\t<br>He will not recive emails or notifications until he verifies his account.\n\t\t<br>You can resend the verification email if they lost it.\n\t\t<br><strong>But don't do it too much, thats considered spam.</strong>\n\t</small>\n\t<br>\n\t<button @click=\"send\" type=\"button\" class=\"btn btn-sm btn-primary\">Resend Acivation Email</button>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n\t<alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n</div>\n<div class=\"col-sm-10 col-sm-offset-2\">\n\t<h3 style=\"display: inline;\"><span class=\"label label-default\">Unverified Account</span></h3>\n\t<small class=\"text-muted\">This {{ name }} has not verified his account, by clicking on the email we sent him.\n\t\t<br>He will not recive emails or notifications until he verifies his account.\n\t\t<br>You can resend the verification email if they lost it.\n\t\t<br><strong>But don't do it too much, thats considered spam.</strong>\n\t</small>\n\t<br>\n\t<button @click=\"send\" type=\"button\" class=\"btn btn-sm btn-primary\">Resend Acivation Email</button>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
