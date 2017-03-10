@@ -57,10 +57,9 @@ class ServicesTableSeeder extends Seeder
             ]);
 
             if(rand(0,1)){
-                factory(App\ServiceContract::class)->create([
+                $contract = factory(App\ServiceContract::class)->create([
                     'service_id' => $service->id,
                 ]);
-                $contract = ServiceContract::findOrFail($service->id);
                 // // Generate Invoices with Payments
                 for ($o=0; $o < rand(1,4); $o++) {
                     $invoiceId = $contract->invoices()->create([

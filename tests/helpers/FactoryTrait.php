@@ -263,11 +263,11 @@ trait FactoryTrait
        return $services[rand(0,--$num_of_services)];
    }
 
-   public function createServiceContract($service_id)
+   public function createServiceContract($service_id, $values = [])
    {
-       return $this->factoryWithoutObservers(App\ServiceContract::class)->create([
-           'service_id' => $service_id,
-       ]);
+       return $this->factoryWithoutObservers(App\ServiceContract::class)->create(
+           array_merge(['service_id' => $service_id], $values)
+       );
    }
 
    public function createReport($service_id, $technician_id)

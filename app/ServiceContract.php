@@ -39,9 +39,6 @@ class ServiceContract extends Model
         // 'service_id'
 	];
 
-    protected $primaryKey = 'service_id';
-
-
     //******** RELATIONSHIPS ********
 
     /**
@@ -92,14 +89,13 @@ class ServiceContract extends Model
         }
 
         $today = Carbon::today($this->admin()->timezone);
-        $contractStartDate = Carbon::parse($this->start, $this->admin()->timezone);
-
         // check for another invoice linked to the service contract in the same day
         // so we dont generate duplicate invoices
         if($this->invoicedByDate($today)){
             return false;
         }
 
+        $contractStartDate = Carbon::parse($this->start, $this->admin()->timezone);
         // check that is the date of the month
         // for this service contract
         return ($today->format('d') == $contractStartDate->format('d'));

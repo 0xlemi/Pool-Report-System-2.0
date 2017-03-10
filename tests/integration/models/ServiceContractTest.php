@@ -17,26 +17,36 @@ class ServiceContractTest extends DatabaseTester
 
         $service = $this->createService($admin->id);
 
-        // ServiceContract::flushEventListeners();
-        // $contract = $service->serviceContract()->create([
-        // // $contract = ServiceContract::create([
-        //     'start' => '',
-        //     'active' => true,
-        //     'service_days' => 100,
-        //     'amount' => 250,
-        //     'currency' => 'MXN',
-        //     'start_time' => Carbon::today(),
-        //     'end_time' => Carbon::now(),
-        // ]);
-
         $contract = $this->createServiceContract($service->id);
-        $contract = ServiceContract::findOrFail($service->id);
 
         // When
         $ser = $contract->service;
 
         // Then
         $this->assertSameObject($service, $ser);
+
+    }
+
+    /** @test */
+    public function check_if_today_is_the_day_to_charge_invoice_on_contract()
+    {
+        // Given
+        $admin = $this->createAdministrator();
+
+
+        $service = $this->createService($admin->id);
+
+        $today = Carbon::today($admin->timezone);
+        $contract = $this->createServiceContract($service->id, [
+            'start' => '2017-04-'.$today->format('d'),
+            'active' => true,
+        ]);
+
+        // When
+        $true = $contract->checkIfTodayContractChargesInvoice();
+
+        // Then
+        $this->assertTrue($true);
 
     }
 
