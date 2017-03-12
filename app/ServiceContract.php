@@ -81,10 +81,10 @@ class ServiceContract extends Model
         return false;
     }
 
-    public function checkIfTodayContractChargesInvoice()
+    public function checkIfTodayContractChargesInvoice($checkActive = true)
     {
         // we dont charge unactive services
-        if(!$this->active){
+        if((!$this->active) && $checkActive){
             return false;
         }
 
@@ -99,7 +99,6 @@ class ServiceContract extends Model
         // check that is the date of the month
         // for this service contract
         return ($today->format('d') == $contractStartDate->format('d'));
-
     }
 
     //******** VALUE OBJECTS ********

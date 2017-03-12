@@ -174,8 +174,9 @@ class DataTableController extends PageController
         $condition = ($request->closed)? '!=' : '=';
         $invoices = $this->loggedUserAdministrator()
                         ->invoices()
-                        ->get()
-                        ->where('closed', $condition , NULL);
+                        ->where('closed', $condition , NULL)
+                        ->orderBy('seq_id', 'desc')
+                        ->get();
 
         return response()->json(
                     $transformer->transformCollection($invoices)
