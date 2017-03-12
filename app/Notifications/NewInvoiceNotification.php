@@ -8,12 +8,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Invoice;
+use App\PRS\Helpers\NotificationHelpers;
 
 class NewInvoiceNotification extends Notification //implements ShouldQueue
 {
     use Queueable;
 
     protected $invoice;
+    protected $helper;
 
     /**
      * Create a new notification instance.
@@ -23,6 +25,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
     public function __construct(Invoice $invoice)
     {
         $this->invoice = $invoice;
+        $this->helper = new NotificationHelpers();
     }
 
     /**
@@ -55,7 +58,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        $invoice = $this->invoice;
+        $invoice = Invoice::findOrFail($this->invoice->id);
 
         return [
             'icon' => url('img/notifications-button.png'),

@@ -14,6 +14,8 @@ use App\Supervisor;
 use App\Technician;
 use App\Image;
 use App\Service;
+use App\Invoice;
+use App\Payment;
 use App\WorkOrder;
 use App\Equipment;
 
@@ -23,6 +25,8 @@ use App\PRS\Observers\ImageObserver;
 use App\PRS\Observers\ClientObserver;
 use App\PRS\Observers\ReportObserver;
 use App\PRS\Observers\ServiceObserver;
+use App\PRS\Observers\InvoiceObserver;
+use App\PRS\Observers\PaymentObserver;
 use App\PRS\Observers\ContractObserver;
 use App\PRS\Observers\EquipmentObserver;
 use App\PRS\Observers\WorkOrderObserver;
@@ -56,6 +60,8 @@ class AppServiceProvider extends ServiceProvider
     User::observe(UserObserver::class);
     Work::observe(WorkObserver::class);
     WorkOrder::observe(WorkOrderObserver::class);
+    Invoice::observe(InvoiceObserver::class);
+    Payment::observe(PaymentObserver::class);
 
     }
 
