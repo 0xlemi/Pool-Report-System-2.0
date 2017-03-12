@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\PRS\Classes\Logged;
 use App\Image;
+use App\User;
 use App\Service;
 use App\Notifications\NewClientNotification;
 use App\Client;
@@ -27,6 +28,10 @@ class ClientsTableSeeder extends Seeder
     public function run()
     {
     	$faker = Faker\Factory::create();
+
+        Client::flushEventListeners();
+        User::flushEventListeners();
+        Image::flushEventListeners();
 
         for ($i=0; $i < $this->number_of_clients; $i++) {
         	// woman or men

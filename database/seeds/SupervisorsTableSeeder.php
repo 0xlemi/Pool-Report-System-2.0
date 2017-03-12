@@ -6,6 +6,7 @@ use App\Image;
 use App\Notifications\NewSupervisorNotification;
 use App\Administrator;
 use App\Supervisor;
+use App\User;
 class SupervisorsTableSeeder extends Seeder
 {
     // number of supervisors to create
@@ -24,6 +25,10 @@ class SupervisorsTableSeeder extends Seeder
      */
     public function run()
     {
+        Supervisor::flushEventListeners();
+        User::flushEventListeners();
+        Image::flushEventListeners();
+
         for ($i=0; $i < $this->number_of_supervisors; $i++) {
         	// generate and save image and tn_image
     		$img = $this->seederHelper->get_random_image('supervisor', 5);

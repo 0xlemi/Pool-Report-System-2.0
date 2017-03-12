@@ -32,6 +32,12 @@ class WorkOrdersTableSeeder extends Seeder
      */
     public function run()
     {
+
+        WorkOrder::flushEventListeners();
+        Image::flushEventListeners();
+        Invoice::flushEventListeners();
+        Payment::flushEventListeners();
+
         for ($i=0; $i < $this->amount; $i++) {
 
             // get random supervisor

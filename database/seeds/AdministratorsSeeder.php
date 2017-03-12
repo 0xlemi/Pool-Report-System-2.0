@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Administrator;
+use App\User;
+use App\Image;
 
 class AdministratorsSeeder extends Seeder
 {
@@ -15,6 +17,9 @@ class AdministratorsSeeder extends Seeder
      */
     public function run()
     {
+        Administrator::flushEventListeners();
+        User::flushEventListeners();
+        Image::flushEventListeners();
         // for ($i=0; $i < $this->number_of_administrators; $i++) {
         //
     	// 	$administrator_id = factory(App\Administrator::class)->create()->id;

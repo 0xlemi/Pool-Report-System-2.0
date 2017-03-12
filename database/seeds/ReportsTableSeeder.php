@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
+use App\Report;
 use App\Image;
 
 use App\Technician;
@@ -24,6 +25,9 @@ class ReportsTableSeeder extends Seeder
      */
     public function run()
     {
+        Report::flushEventListeners();
+        Image::flushEventListeners();
+
         for ($i=0; $i < $this->number_of_reports; $i++) {
 
             // random technician id

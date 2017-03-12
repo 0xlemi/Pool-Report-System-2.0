@@ -25,6 +25,9 @@ class EquipmentTableSeeder extends Seeder
      */
     public function run()
     {
+        Equipment::flushEventListeners();
+        Image::flushEventListeners();
+
         for ($i=0; $i < $this->amount; $i++) {
             $kinds = [
                 ['folder' => 'filter', 'name' => 'Filter'],

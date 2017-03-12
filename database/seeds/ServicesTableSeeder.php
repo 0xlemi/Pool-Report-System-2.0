@@ -33,8 +33,14 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
-        // trouble with serviceContract Observer
+        // Disable observers
+        Administrator::flushEventListeners();
+        Service::flushEventListeners();
+        Chemical::flushEventListeners();
         ServiceContract::flushEventListeners();
+        Invoice::flushEventListeners();
+        Payment::flushEventListeners();
+        Image::flushEventListeners();
 
     	for ($i=0; $i < $this->number_of_services; $i++) {
 		    // generate and save image and tn_image

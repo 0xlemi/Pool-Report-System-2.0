@@ -26,6 +26,8 @@ class WorksTableSeeder extends Seeder
      */
     public function run()
     {
+        Work::flushEventListeners();
+        Image::flushEventListeners();
 
         for ($i=0; $i < $this->amount; $i++) {
 

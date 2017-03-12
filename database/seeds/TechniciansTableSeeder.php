@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
 use App\Image;
+use App\User;
 use App\Notifications\NewTechnicianNotification;
 use App\Technician;
 class TechniciansTableSeeder extends Seeder
@@ -23,6 +24,10 @@ class TechniciansTableSeeder extends Seeder
      */
     public function run()
     {
+        Technician::flushEventListeners();
+        User::flushEventListeners();
+        Image::flushEventListeners();
+
         for ($i=0; $i < $this->number_of_technicians; $i++) {
         	// generate and save image and tn_image
 			$img = $this->seederHelper->get_random_image('technician', 20);
