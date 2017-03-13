@@ -8,26 +8,28 @@ use App\Administrator;
 use App\User;
 
 use App\Image;
+use App\Report;
 
 use Carbon\Carbon;
 
 class AdministratorTest extends DatabaseTester
 {
     /** @test */
-    public function it_gets_user()
+    public function it_gets_administrator_user()
     {
         // Given
         $admin = factory(Administrator::class)->create();
-        $user_original = factory(User::class)->create([
+        $userCreatedId = factory(User::class)->create([
             'userable_id' => $admin->id,
             'userable_type' => 'App\Administrator',
-        ]);
+        ])->id;
 
         // When
+        $userCreated = User::find($userCreatedId);
         $user = $admin->user;
 
         // Then
-        $this->assertSameObject($user_original, $user);
+        $this->assertTrue($userCreated == $user);
     }
 
     /** @test */
@@ -70,7 +72,7 @@ class AdministratorTest extends DatabaseTester
     }
 
     /** @test */
-    public function it_gets_all_reports()
+    public function it_gets_all_administrator_reports()
     {
         // Given
         $admin1 = $this->createAdministrator();
@@ -79,28 +81,31 @@ class AdministratorTest extends DatabaseTester
         $tech1 = $this->createTechnician($super1->id);
         $tech2 = $this->createTechnician($super1->id);
         $ser1 = $this->createService($admin1->id);
-        $report1 = factory(App\Report::class)->create([
+        $report1Id = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech1->id,
             'completed' => Carbon::tomorrow(),
         ]);
-        $report2 = factory(App\Report::class)->create([
+        $report2Id = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech1->id,
             'completed' => Carbon::now(),
         ]);
-        $report3 = factory(App\Report::class)->create([
+        $report3Id = factory(App\Report::class)->create([
             'service_id' => $ser1->id,
             'technician_id' => $tech2->id,
             'completed' => Carbon::yesterday(),
         ]);
+        $report1 = Report::find($report1Id);
+        $report2 = Report::find($report2Id);
+        $report3 = Report::find($report3Id);
 
         // When
         $reports = $admin1->reports()->get();
 
         // Then
-        $this->assertSameObject($report1, $reports[0]);
-        $this->assertSameObject($report3, $reports[2]);
+        $this->assertTrue($report1 == $reports[0]);
+        $this->assertTrue($report3 == $reports[2]);
     }
 
 
