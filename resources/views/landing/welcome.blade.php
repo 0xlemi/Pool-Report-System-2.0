@@ -17,7 +17,7 @@
             </div><!-- /End Container -->
             <!-- Dashboard Image on Right -->
             <div class="dashboard-box dashboard-right">
-                <img src="img/uploads/screenshot.png" style="width: 600px; border-radius: 0px; border: 1px none rgb(105, 105, 110);" alt="">
+                <img src="{{ \Storage::url('images/assets/landing/screenshot.png') }}" style="width: 600px; border-radius: 0px; border: 1px none rgb(105, 105, 110);" alt="">
             </div>
 
         </section><!-- =========================
@@ -39,19 +39,19 @@
                 <div class="row text-center features-block c3">
                     <!-- Feature Item -->
                     <div class="col-sm-4">
-                        <img src="img/uploads/1463088522_clipboard.png" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
+                        <img src="{{ \Storage::url('images/assets/landing/clipboard.png') }}" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
                         <h4>Easy managment</h4>
                         <p>Our mobile app lets you track your employees every move and compare there activities. So you always know whats happening at all times.</p>
                     </div>
                     <!-- Feature Item -->
                     <div class="col-sm-4">
-                        <img src="img/uploads/1463089390_easel.png" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
+                        <img src="{{ \Storage::url('images/assets/landing/easel.png') }}" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
                         <h4>A bunch of info</h4>
                         <p>The software collects a bunch of information about your business and display it in a way you can make decisions based on it, and improve your business.</p>
                     </div>
                     <!-- Feature Item -->
                     <div class="col-sm-4">
-                        <img src="img/uploads/1463088653_chat.png" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
+                        <img src="{{ \Storage::url('images/assets/landing/chat.png') }}" alt="" style="border-radius: 0px; border: 1px none rgb(105, 105, 110);">
                         <h4>Client communication</h4>
                         <p>Clients have record of how and when the pool was cleaned, making them able to finally appreciate your good work. Also they can easily communicate with you in a modern fashion via the chat system.</p>
                     </div>

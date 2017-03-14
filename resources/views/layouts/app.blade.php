@@ -5,6 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+	<!-- FAVICON  -->
+    <!-- Place your favicon.ico in the img directory -->
+    <link rel="shortcut icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

@@ -52,8 +52,8 @@ class ServiceReportMail extends Mailable implements ShouldQueue
             'expire' => Carbon::now()->addDays(10)
         ]);
         $data = array(
-            'logo' => url('img/logo-2.png'),
-            'headerImage' => url('img/uploads/email_header.png'),
+            'logo' => Storage::url('images/assets/app/logo-2.png'),
+            'headerImage' => Storage::url('images/assets/email/email_header.png'),
             'name' => $name,
             'address' => $this->report->service->address_line,
             'time' => $time,

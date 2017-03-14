@@ -33,7 +33,7 @@
                             width: 150px;
                             height: 35px;
                     -->
-                    <a href="{{url('/')}}" class="navbar-brand smooth-scroll"><img src="{{ url('img/logo-black.png') }}" alt="logo"></a>
+                    <a href="{{url('/')}}" class="navbar-brand smooth-scroll"><img src="{{ \Storage::url('images/assets/app/logo-black.png') }}" alt="logo"></a>
                     <!-- Image Logo For Background Transparent -->
                     <!--
                         <a href="#" class="navbar-brand logo-black smooth-scroll"><img src="img/logo-black.png" alt="logo" /></a>

@@ -51,13 +51,13 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
         $person =  $this->helper->userStyled($this->user);
         $location = "technicians/{$technician->seq_id}";
 
-        $image = url('img/email/wrench.png');
+        $image = Storage::url('images/assets/email/wrench.png');
         if($this->technician->imageExists()){
             $image = Storage::url($this->technician->normalImage(1));
         }
 
         $data = array(
-                    'logo' => url('img/logo-2.png'),
+                    'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Technician Created!",
                     'moreInfo' => "The technician {$technician->name} {$technician->last_name} was created by {$person}",

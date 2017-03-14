@@ -15,9 +15,9 @@ img.displayed {
                 <br>
                 <br>
                 @if($isSuccess)
-                <img class="displayed" src="{{ url('img/uploads/checkbox.png') }}" width="150px"/>
+                <img class="displayed" src="{{ \Storage::url('images/assets/app/checkbox.png') }}" width="150px"/>
                 @else
-                <img class="displayed" src="{{ url('img/uploads/cross.png') }}" width="150px"/>
+                <img class="displayed" src="{{ \Storage::url('images/assets/app/cross.png') }}" width="150px"/>
                 @endif
             </div>
         </div>

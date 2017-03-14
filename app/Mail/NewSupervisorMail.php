@@ -51,13 +51,13 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
         $person =  $this->helper->userStyled($this->user);
         $location = "supervisors/{$supervisor->seq_id}";
 
-        $image = url('img/email/eye.png');
+        $image = Storage::url('images/assets/email/eye.png');
         if($this->supervisor->imageExists()){
             $image = Storage::url($this->supervisor->normalImage(1));
         }
 
         $data = [
-                    'logo' => url('img/logo-2.png'),
+                    'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Supervisor Created!",
                     'moreInfo' => "The supervisor {$supervisor->name} {$supervisor->last_name} was created by {$person}",

@@ -51,13 +51,13 @@ class NewClientMail extends Mailable implements ShouldQueue
         $person =  $this->helper->userStyled($this->user);
         $location = "clients/{$client->seq_id}";
 
-        $image = url('img/email/new_user.png');
+        $image = Storage::url('images/assets/email/new_user.png');
         if($this->client->imageExists()){
             $image = Storage::url($this->client->normalImage(1));
         }
 
         $data = [
-                    'logo' => url('img/logo-2.png'),
+                    'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Client Created!",
                     'moreInfo' => "The client {$client->name} {$client->last_name} was created by {$person}",

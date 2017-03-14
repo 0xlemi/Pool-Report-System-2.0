@@ -134,8 +134,8 @@ class Report extends Model
         $img_path = public_path('storage/images/emails/'.$fileName);
 
         // info needed by the template
-        $logo = url('img/logo-2.png');
-        $headerImage = url('img/uploads/email_header.png');
+        $logo = Storage::url('images/assets/app/logo-2.png');
+        $headerImage = Storage::url('images/assets/email/email_header.png');
         $name = "client_name";
         if($client){
             $name = $client->name;

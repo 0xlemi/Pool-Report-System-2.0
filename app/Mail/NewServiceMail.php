@@ -51,13 +51,13 @@ class NewServiceMail extends Mailable implements ShouldQueue
         $person =  $this->helper->userStyled($this->user);
         $location = "services/{$service->seq_id}";
 
-        $image = url('img/email/house.png');
+        $image = Storage::url('images/assets/email/house.png');
         if($this->service->imageExists()){
             $image = Storage::url($this->service->normalImage(1));
         }
 
         $data = [
-                    'logo' => url('img/logo-2.png'),
+                    'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Service Created!",
                     'moreInfo' => "The service {$service->name} was created by {$person}",

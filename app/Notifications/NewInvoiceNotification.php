@@ -61,7 +61,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
         $invoice = Invoice::findOrFail($this->invoice->id);
 
         return [
-            'icon' => url('img/notifications-button.png'),
+            'icon' => Storage::url('images/assets/app/notifications-button.png'),
             'link' => "invoices/{$invoice->seq_id}",
             'title' => "New <strong>Invoice</strong> (#{$invoice->seq_id}) was created",
             'message' => "New <strong>Invoice</strong> (<a href=\"../invoices/{$invoice->seq_id}\">#{$invoice->seq_id}</a>)

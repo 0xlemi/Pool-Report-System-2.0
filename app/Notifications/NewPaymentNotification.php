@@ -63,7 +63,7 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
         $invoice = Invoice::findOrFail($payment->invoice->id);
 
         return [
-            'icon' => url('img/notifications-button.png'),
+            'icon' => Storage::url('images/assets/app/notifications-button.png'),
             'link' => "invoices/{$invoice->seq_id}",
             'title' => "A new <strong>Payment</strong> was added to <strong>Invoice</strong> (#{$invoice->seq_id})",
             'message' => "New <strong>Payment</strong> for <strong>{$payment->amount} {$payment->invoice->currency}</strong>
