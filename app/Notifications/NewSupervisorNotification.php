@@ -9,8 +9,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Supervisor;
 use App\PRS\Helpers\NotificationHelpers;
+use App\Mail\NewSupervisorMail;
 
-class NewSupervisorNotification extends Notification //implements ShouldQueue
+class NewSupervisorNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -49,7 +50,7 @@ class NewSupervisorNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return (new NewSupervisorMail($this->supervisor, $this->user, $this->helper))->to($this->user->email);
     }
 
     /**

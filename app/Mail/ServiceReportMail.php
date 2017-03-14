@@ -11,7 +11,7 @@ use App\Report;
 use Carbon\Carbon;
 use Storage;
 
-class ServiceReportMail extends Mailable
+class ServiceReportMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

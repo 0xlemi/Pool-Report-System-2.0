@@ -10,7 +10,7 @@ use App\User;
 use App\Service;
 use App\PRS\Helpers\NotificationHelpers;
 
-class NewServiceNotification extends Notification //implements ShouldQueue
+class NewServiceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

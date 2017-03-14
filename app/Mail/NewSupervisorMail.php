@@ -6,17 +6,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Supervisor;
 use App\User;
-use App\Technician;
 use App\PRS\Helpers\NotificationHelpers;
 use Carbon\Carbon;
 use Storage;
 
-class NewTechnicianMail extends Mailable implements ShouldQueue
+class NewSupervisorMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    protected $technician;
+    protected $supervisor;
     protected $user;
     protected $helper;
 
@@ -25,9 +25,9 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Technician $technician, User $user, NotificationHelpers $helper)
+    public function __construct(Supervisor $supervisor, User $user, NotificationHelpers $helper)
     {
-        $this->technician = $technician;
+        $this->supervisor = $supervisor;
         $this->user = $user;
         $this->helper = $helper;
     }
@@ -39,7 +39,7 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $technician = $this->technician;
+        $supervisor = $this->supervisor;
         $loginSigner = $this->user->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
@@ -50,22 +50,22 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
         ]);
         $person =  $this->helper->userStyled($this->user);
 
-        $image = url('img/email/wrench.png');
-        if($this->technician->imageExists()){
-            $image = Storage::url($this->technician->normalImage(1));
+        $image = url('img/email/eye.png');
+        if($this->supervisor->imageExists()){
+            $image = Storage::url($this->supervisor->normalImage(1));
         }
 
-        $data = array(
+        $data = [
                     'logo' => url('img/logo-2.png'),
                     'objectImage' => $image,
-                    'title' => "New Technician Created!",
-                    'moreInfo' => "The technician {$technician->name} {$technician->last_name} was created by {$person}",
+                    'title' => "New Supervisor Created!",
+                    'moreInfo' => "The supervisor {$supervisor->name} {$supervisor->last_name} was created by {$person}",
                     'magicLink' => url('/signin').'/'.$loginSigner->token,
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
-                );
+                ];
 
         return $this->from('no-reply@poolreportsystem.com')
-                    ->subject('New Technician Created')
+                    ->subject('New Supervisor Created')
                     ->view('emails.newObject')
                     ->with($data);
     }
