@@ -15,7 +15,7 @@ class TimeAfterDB
         $id = $parameters[2];
         $todayDate = Carbon::today()->toDateString();
 
-        if($validator->hasAttribute($parameters[3])){
+        if(in_array($parameters[3], $validator->attributes())){
             $beforeTime = $validator->attributes()[$parameters[3]];
         }else{
             $beforeTime  = DB::table($table)

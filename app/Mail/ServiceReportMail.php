@@ -56,9 +56,9 @@ class ServiceReportMail extends Mailable
             'name' => $name,
             'address' => $this->report->service->address_line,
             'time' => $time,
-            'photo1' => Storage::url($this->report->image(1)),
-            'photo2' => Storage::url($this->report->image(2)),
-            'photo3' => Storage::url($this->report->image(3)),
+            'photo1' => Storage::url($this->report->normalImage(1)),
+            'photo2' => Storage::url($this->report->normalImage(2)),
+            'photo3' => Storage::url($this->report->normalImage(3)),
             'loginLink' => url('/signin').'/'.$loginSigner->token,
             'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
         );

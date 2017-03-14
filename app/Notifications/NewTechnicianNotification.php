@@ -9,8 +9,12 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Technician;
 use App\PRS\Helpers\NotificationHelpers;
+use App\Mail\NewTechnicianMail;
+use Carbon\Carbon;
+use Storage;
+use Mail;
 
-class NewTechnicianNotification extends Notification //implements ShouldQueue
+class NewTechnicianNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -49,7 +53,7 @@ class NewTechnicianNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return (new NewTechnicianMail($this->technician, $this->user, $this->helper))->to($this->user->email);
     }
 
     /**

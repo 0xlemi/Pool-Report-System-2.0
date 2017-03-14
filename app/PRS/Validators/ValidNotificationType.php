@@ -9,7 +9,8 @@ class ValidNotificationType
     {
         $notifications = config('constants.notifications');
 
-        if($validator->hasAttribute($parameters[0])){
+        // check that the paramenter name is in the other attributes
+        if(in_array($parameters[0], $validator->attributes())){
             $name = $validator->attributes()[$parameters[0]];
             // first check that the notification name exists
             if(!array_key_exists($name, (array) $notifications)){

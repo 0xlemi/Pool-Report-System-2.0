@@ -20,7 +20,7 @@ use HelperTrait;
         if($user->notificationSettings->hasPermission($permissionName, 'database')){
             $channels[] = 'database';
         }if($user->notificationSettings->hasPermission($permissionName, 'mail')){
-            // $channels[] = 'mail';
+            $channels[] = 'mail';
         }
         return $channels;
     }
