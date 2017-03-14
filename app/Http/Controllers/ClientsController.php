@@ -91,7 +91,7 @@ class ClientsController extends PageController
         $user = $client->user()->create([
             'email' => htmlentities($request->email),
         ]);
-        
+
         if($client && $photo){
             flash()->success('Created', 'New client successfully created.');
             return redirect('clients');
@@ -113,7 +113,10 @@ class ClientsController extends PageController
         $this->authorize('view', $client);
 
         $services = $client->services()->get();
-        $image = $this->imageTransformer->transform($client->images->first());
+        $image = null;
+        if($client->images->count() > 0){
+            $image = $this->imageTransformer->transform($client->images->first());
+        }
 
         return view('clients.show',compact('client', 'services', 'image'));
     }

@@ -113,7 +113,10 @@ class SupervisorsController extends PageController
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
 
         $this->authorize('view', $supervisor);
-        $image = $this->imageTransformer->transform($supervisor->images->first());
+        $image = null;
+        if($supervisor->images->count() > 0){
+            $image = $this->imageTransformer->transform($supervisor->images->first());
+        }
 
         return view('supervisors.show', compact('supervisor', 'image'));
     }

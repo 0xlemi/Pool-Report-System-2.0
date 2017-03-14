@@ -34,7 +34,7 @@
 							<br>
 							@endif
 
-							@if($client->images->count() > 0)
+							@if($image)
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Client photo</label>
 								<div class="col-sm-10">

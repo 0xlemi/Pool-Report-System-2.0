@@ -130,7 +130,10 @@ class TechniciansController extends PageController
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
 
         $this->authorize('view', $technician);
-        $image = $this->imageTransformer->transform($technician->images->first());
+        $image = null;
+        if($technician->images->count() > 0){
+            $image = $this->imageTransformer->transform($technician->images->first());
+        }
 
         return view('technicians.show', compact('technician', 'image'));
     }
