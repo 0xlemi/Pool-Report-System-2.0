@@ -12,7 +12,7 @@ use App\User;
 use App\PRS\Helpers\NotificationHelpers;
 
 
-class ReportCreatedNotification extends Notification implements ShouldQueue
+class NewReportNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

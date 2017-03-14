@@ -3,7 +3,7 @@
 namespace App\PRS\Observers;
 
 use App\Report;
-use App\Notifications\ReportCreatedNotification;
+use App\Notifications\NewReportNotification;
 use App\Jobs\DeleteImagesFromS3;
 
 class ReportObserver
@@ -17,7 +17,7 @@ class ReportObserver
     public function created(Report $report)
     {
         $admin = $report->admin();
-        $admin->user->notify(new ReportCreatedNotification($report, \Auth::user()));
+        $admin->user->notify(new NewReportNotification($report, \Auth::user()));
     }
 
     /**
