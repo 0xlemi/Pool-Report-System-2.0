@@ -49,7 +49,7 @@ class HomeController extends PageController
      * Magic Login
      * @param  string $token
      */
-    public function signIn(string $token)
+    public function signIn(Request $request, string $token)
     {
         try {
             $signer = UrlSigner::where('token', $token)->firstOrFail();
@@ -61,6 +61,9 @@ class HomeController extends PageController
 
         $signer->delete();
         Auth::login($user);
+        if($request->has('location')){
+            return redirect($request->location);
+        }
         return redirect('/dashboard');
     }
 

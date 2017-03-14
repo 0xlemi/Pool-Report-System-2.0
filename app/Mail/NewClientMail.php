@@ -49,6 +49,7 @@ class NewClientMail extends Mailable implements ShouldQueue
             'expire' => Carbon::now()->addDays(10)
         ]);
         $person =  $this->helper->userStyled($this->user);
+        $location = "clients/{$client->seq_id}";
 
         $image = url('img/email/new_user.png');
         if($this->client->imageExists()){
@@ -60,7 +61,7 @@ class NewClientMail extends Mailable implements ShouldQueue
                     'objectImage' => $image,
                     'title' => "New Client Created!",
                     'moreInfo' => "The client {$client->name} {$client->last_name} was created by {$person}",
-                    'magicLink' => url('/signin').'/'.$loginSigner->token,
+                    'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];
 

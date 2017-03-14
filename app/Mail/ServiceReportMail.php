@@ -42,6 +42,7 @@ class ServiceReportMail extends Mailable implements ShouldQueue
 
         // info needed by the template
         $name = $this->user->userable()->name;
+        $location = "reports/{$report->seq_id}";
         $loginSigner = $this->user->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
@@ -59,7 +60,7 @@ class ServiceReportMail extends Mailable implements ShouldQueue
             'photo1' => Storage::url($this->report->normalImage(1)),
             'photo2' => Storage::url($this->report->normalImage(2)),
             'photo3' => Storage::url($this->report->normalImage(3)),
-            'loginLink' => url('/signin').'/'.$loginSigner->token,
+            'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
             'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
         );
 

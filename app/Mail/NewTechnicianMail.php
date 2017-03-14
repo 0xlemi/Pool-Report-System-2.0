@@ -49,6 +49,7 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
             'expire' => Carbon::now()->addDays(10)
         ]);
         $person =  $this->helper->userStyled($this->user);
+        $location = "technicians/{$technician->seq_id}";
 
         $image = url('img/email/wrench.png');
         if($this->technician->imageExists()){
@@ -60,7 +61,7 @@ class NewTechnicianMail extends Mailable implements ShouldQueue
                     'objectImage' => $image,
                     'title' => "New Technician Created!",
                     'moreInfo' => "The technician {$technician->name} {$technician->last_name} was created by {$person}",
-                    'magicLink' => url('/signin').'/'.$loginSigner->token,
+                    'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 );
 

@@ -49,6 +49,7 @@ class NewServiceMail extends Mailable implements ShouldQueue
             'expire' => Carbon::now()->addDays(10)
         ]);
         $person =  $this->helper->userStyled($this->user);
+        $location = "services/{$service->seq_id}";
 
         $image = url('img/email/house.png');
         if($this->service->imageExists()){
@@ -60,7 +61,7 @@ class NewServiceMail extends Mailable implements ShouldQueue
                     'objectImage' => $image,
                     'title' => "New Service Created!",
                     'moreInfo' => "The service {$service->name} was created by {$person}",
-                    'magicLink' => url('/signin').'/'.$loginSigner->token,
+                    'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];
 
