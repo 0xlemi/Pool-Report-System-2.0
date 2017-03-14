@@ -9,6 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Service;
 use App\PRS\Helpers\NotificationHelpers;
+use App\Mail\NewServiceMail;
 
 class NewServiceNotification extends Notification implements ShouldQueue
 {
@@ -49,7 +50,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return (new NewServiceMail($this->service, $this->user, $this->helper))->to($this->user->email);
     }
 
     /**
