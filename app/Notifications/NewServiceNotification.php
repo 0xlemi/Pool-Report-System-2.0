@@ -50,7 +50,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewServiceMail($this->service, $this->user, $this->helper))->to($this->user->email);
+        return (new NewServiceMail($this->service, $this->user, $this->helper))->to($notifiable->email);
     }
 
     /**

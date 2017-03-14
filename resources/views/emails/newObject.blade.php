@@ -177,7 +177,7 @@ td {
     <td align="center" valign="top"style="background-color: rgb(231, 240, 247);"><div>
         <table align="center" class="em_main_table" width="500" border="0" cellspacing="0" cellpadding="0" style="table-layout:fixed; ">
           <tr>
-            <td class="em_hide" style="line-height:1px; font-size:1px;" width="500"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" height="1" width="500" style="max-height:1px; min-height:1px; display:block; width:500px; min-width:500px;" border="0" class="mCS_img_loaded"></td>
+            <td class="em_hide" style="line-height:1px; font-size:1px;" width="500"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" height="1" width="500" style="max-height:1px; min-height:1px; display:block; width:500px; min-width:500px;" border="0" class="mCS_img_loaded"></td>
           </tr>
         </table>
       </div></td>
@@ -222,13 +222,13 @@ td {
                   <td align="center" width="100%" valign="middle" bgcolor="#ffffff" style="border-radius: 5px; background-color: rgb(255, 255, 255);"><div class="sortable_inner ui-sortable">
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="35" class="em_h30"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="35" class="em_h30"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
 
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="16" class="em_h20"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="16" class="em_h20"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
                       <table width="340" border="0" cellpadding="0" cellspacing="0" align="center" class="full" object="drag-module-small">
@@ -242,7 +242,7 @@ td {
                       </table>
 					  <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="25"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="25"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
 					  <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
@@ -252,7 +252,7 @@ td {
                       </table>
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="25"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="25"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
                       <table width="300" border="0" cellpadding="0" cellspacing="0" align="center" class="full" object="drag-module-small">
@@ -266,7 +266,7 @@ td {
                       </table>
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="33" class="em_h30"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="33" class="em_h30"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
                       <!-- Centered Button -->
@@ -296,7 +296,7 @@ td {
                         <tr>
                           <td align="center" width="100%" valign="middle"><table width="250" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" height="40" class="em_h40"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                                <td width="100%" height="40" class="em_h40"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                               </tr>
                             </table></td>
                         </tr>
@@ -308,7 +308,7 @@ td {
         </table>
         <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td height="50" class="em_h40"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+            <td height="50" class="em_h40"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
           </tr>
         </table>
         <table width="100%" border="0" cellspacing="0" cellpadding="0" align="center">
@@ -332,7 +332,7 @@ td {
                       </table>
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td height="73" class="em_h1"><img src="http://rocketway.net/templatebuilder/templates/notify3/images/spacer.gif" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                          <td height="73" class="em_h1"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
                     </div></td>

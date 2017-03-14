@@ -50,7 +50,7 @@ class NewSupervisorNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewSupervisorMail($this->supervisor, $this->user, $this->helper))->to($this->user->email);
+        return (new NewSupervisorMail($this->supervisor, $this->user, $this->helper))->to($notifiable->email);
     }
 
     /**

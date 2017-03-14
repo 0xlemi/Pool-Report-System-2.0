@@ -11,7 +11,7 @@ use App\Report;
 use Carbon\Carbon;
 use Storage;
 
-class ServiceReportMail extends Mailable implements ShouldQueue
+class NewReportMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -42,7 +42,7 @@ class ServiceReportMail extends Mailable implements ShouldQueue
 
         // info needed by the template
         $name = $this->user->userable()->name;
-        $location = "reports/{$report->seq_id}";
+        $location = "reports/{$this->report->seq_id}";
         $loginSigner = $this->user->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)

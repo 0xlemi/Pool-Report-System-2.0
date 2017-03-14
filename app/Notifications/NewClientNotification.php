@@ -50,7 +50,7 @@ class NewClientNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewClientMail($this->client, $this->user, $this->helper))->to($this->user->email);
+        return (new NewClientMail($this->client, $this->user, $this->helper))->to($notifiable->email);
     }
 
     /**

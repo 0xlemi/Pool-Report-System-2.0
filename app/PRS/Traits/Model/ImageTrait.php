@@ -170,7 +170,7 @@ trait ImageTrait{
             ->first();
         if($getUrl){
             if(!$image){
-                return 'img/no_image.png';
+                return Storage::url('images/assets/app/no_image.png');
             }
             return $image->big;
         }
@@ -192,7 +192,7 @@ trait ImageTrait{
             ->where('images.order', '=', $order)
             ->firstOrFail();
         if(!$image){
-            return 'img/no_image.png';
+            return Storage::url('images/assets/app/no_image.png');
         }
         return $image->medium;
     }
@@ -212,7 +212,7 @@ trait ImageTrait{
             return $this->images()
                 ->first()->thumbnail;
         }
-        return 'img/no_image.png';
+        return Storage::url('images/assets/app/no_image.png');
     }
 
     /**
@@ -230,7 +230,7 @@ trait ImageTrait{
             return $this->images()
                 ->first()->icon;
         }
-        return 'img/avatar-2-48.png';
+        return Storage::url('images/assets/app/avatar-2-48.png');
     }
 
 }

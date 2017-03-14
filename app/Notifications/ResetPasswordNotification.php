@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Channels\RealMailChannel;
 use App\Mail\ResetPasswordMail;
 
 class ResetPasswordNotification extends Notification implements ShouldQueue
@@ -33,17 +32,18 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['database', RealMailChannel::class];
+        return ['database', 'mail'];
     }
-
+    
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toRealMail($notifiable)
+    public function toMail($notifiable)
     {
-        return (new ResetPasswordMail($this->token, $notifiable));
+        return (new ResetPasswordMail($this->token))->to($notifiable->email);
     }
 
     /**
@@ -55,7 +55,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'icon' => '',
+            'icon' => \Storage::url('images/assets/app/shield_32.png'),
             'link' => "#",
             'title' => "You made a password reset.",
             'message' => "You made a password reset.",

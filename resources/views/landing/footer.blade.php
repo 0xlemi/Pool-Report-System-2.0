@@ -6,7 +6,7 @@
         <div class="row">
             <!-- Footer Logo and Text -->
             <div class="col-md-6">
-                <img src="img/logo-black.png" alt="">
+                <img src="{{ \Storage::url('images/assets/app/logo-black.png') }}" alt="">
                 <p class="m-t">Helping pool service businesses getting into the internet, in a easy and friendly way.</p>
                 <div class="footer-social social-btn m-t-md inverse">
                     <a href="#" class="sb-facebook"><i class="fa fa-facebook"></i></a>

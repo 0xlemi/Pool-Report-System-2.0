@@ -6,8 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Mail\ServiceReportMail;
-use App\Channels\RealMailChannel;
+use App\Mail\NewReportMail;
 use App\Report;
 use App\User;
 use App\PRS\Helpers\NotificationHelpers;
@@ -41,26 +40,19 @@ class ReportCreatedNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        $channels = [];
-        if($notifiable->notificationSettings->hasPermission('notify_report_created', 'database')){
-            $channels[] = 'database';
-        }if($notifiable->notificationSettings->hasPermission('notify_report_created', 'mail')){
-        $channels[] = RealMailChannel::class;
-        }
-        return $channels;
+        return $this->helper->channels($notifiable, 'notify_report_created');
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toRealMail($notifiable)
+    public function toMail($notifiable)
     {
-        return (new ServiceReportMail($this->report, $notifiable));
+        return (new NewReportMail($this->report, $this->user))->to($notifiable->email);
     }
-
-
 
     /**
      * Get the array representation of the notification.

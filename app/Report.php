@@ -16,7 +16,6 @@ use App\PRS\ValueObjects\Report\Reading;
 use App\PRS\ValueObjects\Report\Turbidity;
 use App\Client;
 use App\Image;
-use App\Mail\ServiceReportMail;
 class Report extends Model
 {
     use ImageTrait;
