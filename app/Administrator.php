@@ -478,27 +478,23 @@ class Administrator extends Model
             $date = $date->setTimezone($this->timezone);
         }
 
-        return $this->services()
+        return $this->servicesWithActiveContract()
             ->get()
-            ->filter(function($item){
-                return $item->hasServiceContract();
-            })
-            ->map(function($service) use ($date, $AddCompletedReports){
+            ->filter(function($service) use ($date, $AddCompletedReports){
                 // check that the service is do in this date
                 if($service->checkIfIsDo($date)){
                     // what to add all the reports or only the ones that are missing for $date
                     if($AddCompletedReports){
                         // add all reports that are do
-                        return $service;
+                        return true;
                     }else{
                         // check that the report is missing in the $date
                         if(!$service->checkIfIsDone($date)){
-                            return $service;
+                            return true;
                         }
                     }
                 }
-            })->reject(function($service){
-                return is_null($service);
+                return false;
             });
     }
 
