@@ -279,6 +279,14 @@ class Administrator extends Model
         return $this->hasMany(MissingHistory::class, 'admin_id');
     }
 
+    public function missingHistoriesByDate(Carbon $date)
+    {
+        $date_str = $date->toDateTimeString();
+        return $this->missingHistories()
+                        ->whereDate('date', $date_str)
+                        ->first();
+    }
+
     /**
      * Get clients associated with this user
      * tested
