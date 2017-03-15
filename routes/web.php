@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Http\Request;
+use App\Jobs\RecordServiceHistory;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,6 +12,8 @@ use Illuminate\Http\Request;
 | to using a Closure or controller method. Build something great!
 |
 */
+
+// dispatch(new RecordServiceHistory());
 
 Auth::routes();
 Route::auth();

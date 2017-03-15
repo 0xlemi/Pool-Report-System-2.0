@@ -14,6 +14,7 @@ use App\PRS\ValueObjects\Administrator\Tag;
 use App\PRS\Traits\Model\BillableAdministrator;
 use App\Invoice;
 use App\Payment;
+use App\MissingHistory;
 
 use DB;
 
@@ -270,6 +271,12 @@ class Administrator extends Model
         return $this->services()
                     ->where('services.seq_id', '=', $seq_id)
                     ->firstOrFail();
+    }
+
+
+    public function missingHistories()
+    {
+        return $this->hasMany(MissingHistory::class, 'admin_id');
     }
 
     /**
