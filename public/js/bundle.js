@@ -28790,44 +28790,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e506934", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ChemicalChart.vue":194,"./ClientReportStaff.vue":197,"./panel.vue":233,"./photoList.vue":237,"vue":185,"vue-hot-reload-api":182}],196:[function(require,module,exports){
-var __vueify_insert__ = require("vueify/lib/insert-css")
-var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-8e8383a0]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = {
-    data: function data() {
-        return {
-            disabled: false
-        };
-    },
-
-    events: {
-        disableDatePicker: function disableDatePicker(disable) {
-            this.disabled = disable;
-        }
-    }
-};
-if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"box-typical\" :class=\"(disabled) ? 'disabled' : ''\" _v-8e8383a0=\"\">\n\t<section class=\"calendar-page-side-section\" _v-8e8383a0=\"\">\n\t\t<div class=\"calendar-page-side-section-in\" _v-8e8383a0=\"\">\n\t\t\t<div class=\"datepicker-inline\" id=\"side-datetimepicker\" _v-8e8383a0=\"\"></div>\n\t\t</div>\n\t</section>\n</section>\n"
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  module.hot.dispose(function () {
-    __vueify_insert__.cache["\n.disabled[_v-8e8383a0]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n"] = false
-    document.head.removeChild(__vueify_style__)
-  })
-  if (!module.hot.data) {
-    hotAPI.createRecord("_v-8e8383a0", module.exports)
-  } else {
-    hotAPI.update("_v-8e8383a0", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],197:[function(require,module,exports){
+},{"./ChemicalChart.vue":194,"./ClientReportStaff.vue":196,"./panel.vue":234,"./photoList.vue":238,"vue":185,"vue-hot-reload-api":182}],196:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.contact-row[_v-1cd3303c]:hover {\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    top: 0px;\n    left: 0px;\n}\n.contact-row[_v-1cd3303c]:active {\n    background-color: #337ab7;\n}\n")
 'use strict';
@@ -28869,7 +28832,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1cd3303c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":229,"./photo.vue":236,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],198:[function(require,module,exports){
+},{"./modal.vue":230,"./photo.vue":237,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -28880,9 +28843,9 @@ var _ClientReportsGroup = require('./ClientReportsGroup.vue');
 
 var _ClientReportsGroup2 = _interopRequireDefault(_ClientReportsGroup);
 
-var _ClientReportDatePicker = require('./ClientReportDatePicker.vue');
+var _datePicker = require('./datePicker.vue');
 
-var _ClientReportDatePicker2 = _interopRequireDefault(_ClientReportDatePicker);
+var _datePicker2 = _interopRequireDefault(_datePicker);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -28890,7 +28853,7 @@ exports.default = {
     props: ['today'],
     components: {
         clientReportsGroup: _ClientReportsGroup2.default,
-        clientReportDatePicker: _ClientReportDatePicker2.default
+        datePicker: _datePicker2.default
     },
     events: {
         // triangulate to get to sibling
@@ -28900,7 +28863,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div class=\"col-xxl-2 col-xl-3 col-lg-4 col-md-12\">\n\t\t<client-report-date-picker></client-report-date-picker>\n\t</div>\n\t<div class=\"col-xxl-10 col-xl-9 col-lg-8 col-md-12\">\n        <client-reports-group :today=\"today\"></client-reports-group>\n\t</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n    <div class=\"col-xxl-2 col-xl-3 col-lg-4 col-md-12\">\n\t\t<date-picker></date-picker>\n\t</div>\n\t<div class=\"col-xxl-10 col-xl-9 col-lg-8 col-md-12\">\n        <client-reports-group :today=\"today\"></client-reports-group>\n\t</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -28911,7 +28874,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6f685e6f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReportDatePicker.vue":196,"./ClientReportsGroup.vue":199,"vue":185,"vue-hot-reload-api":182}],199:[function(require,module,exports){
+},{"./ClientReportsGroup.vue":198,"./datePicker.vue":217,"vue":185,"vue-hot-reload-api":182}],198:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-5440d800]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n.announcement-box[_v-5440d800]{\n    padding: 80px 0;\n}\n.announcement-text[_v-5440d800]{\n    text-align: center;\n}\n")
 'use strict';
@@ -28991,7 +28954,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5440d800", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReport.vue":195,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],200:[function(require,module,exports){
+},{"./ClientReport.vue":195,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],199:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: red;\n}\n")
 'use strict';
@@ -29050,7 +29013,48 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":203,"./checkboxList.vue":207,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],201:[function(require,module,exports){
+},{"./alert.vue":203,"./checkboxList.vue":207,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],200:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _datePicker = require('./datePicker.vue');
+
+var _datePicker2 = _interopRequireDefault(_datePicker);
+
+var _reportTable = require('./reportTable.vue');
+
+var _reportTable2 = _interopRequireDefault(_reportTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: {
+        datePicker: _datePicker2.default,
+        reportTable: _reportTable2.default
+    },
+    events: {
+        // triangulate to get to sibling
+        disableDatePicker: function disableDatePicker(disable) {
+            this.$broadcast('disableDatePicker', disable);
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-xl-2\">\n\t<date-picker></date-picker>\n</div>\n<div class=\"col-xl-10\">\n\t<section class=\"box-typical\">\n\t\t<report-table>\n\t\t</report-table>\n\t</section><!--.box-typical-->\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-cf2fc28e", module.exports)
+  } else {
+    hotAPI.update("_v-cf2fc28e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./datePicker.vue":217,"./reportTable.vue":240,"vue":185,"vue-hot-reload-api":182}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29197,7 +29201,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4aa75e68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./countries.vue":214,"./locationPicker.vue":226,"vue":185,"vue-hot-reload-api":182}],203:[function(require,module,exports){
+},{"./countries.vue":214,"./locationPicker.vue":227,"vue":185,"vue-hot-reload-api":182}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29927,7 +29931,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-657f0ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":229,"vue":185,"vue-hot-reload-api":182}],210:[function(require,module,exports){
+},{"./modal.vue":230,"vue":185,"vue-hot-reload-api":182}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30112,7 +30116,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3998b644", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"./modal.vue":229,"./photoList.vue":237,"vue":185,"vue-hot-reload-api":182}],211:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./modal.vue":230,"./photoList.vue":238,"vue":185,"vue-hot-reload-api":182}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30167,7 +30171,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-508d771e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],212:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30358,7 +30362,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-091f5cd2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"./modal.vue":229,"./photoList.vue":237,"babel-runtime/helpers/defineProperty":7,"vue":185,"vue-hot-reload-api":182}],213:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./modal.vue":230,"./photoList.vue":238,"babel-runtime/helpers/defineProperty":7,"vue":185,"vue-hot-reload-api":182}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -30976,7 +30980,44 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":203,"./timezoneDropdown.vue":245,"spin":170,"vue":185,"vue-hot-reload-api":182}],217:[function(require,module,exports){
+},{"./alert.vue":203,"./timezoneDropdown.vue":247,"spin":170,"vue":185,"vue-hot-reload-api":182}],217:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            disabled: false
+        };
+    },
+
+    events: {
+        disableDatePicker: function disableDatePicker(disable) {
+            this.disabled = disable;
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"box-typical\" :class=\"(disabled) ? 'disabled' : ''\" _v-9a4c0a5e=\"\">\n\t<section class=\"calendar-page-side-section\" _v-9a4c0a5e=\"\">\n\t\t<div class=\"calendar-page-side-section-in\" _v-9a4c0a5e=\"\">\n\t\t\t<div class=\"datepicker-inline\" id=\"side-datetimepicker\" _v-9a4c0a5e=\"\"></div>\n\t\t</div>\n\t</section>\n</section>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-9a4c0a5e", module.exports)
+  } else {
+    hotAPI.update("_v-9a4c0a5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],218:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31081,7 +31122,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8c88fc1c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":170,"vue":185,"vue-hot-reload-api":182}],218:[function(require,module,exports){
+},{"spin":170,"vue":185,"vue-hot-reload-api":182}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31148,7 +31189,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":234,"vue":185,"vue-hot-reload-api":182,"vue-multiselect":183}],219:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":235,"vue":185,"vue-hot-reload-api":182,"vue-multiselect":183}],220:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31217,7 +31258,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"dropzone":86,"vue":185,"vue-hot-reload-api":182}],220:[function(require,module,exports){
+},{"dropzone":86,"vue":185,"vue-hot-reload-api":182}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31286,7 +31327,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2bc03898", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":203,"./dropzone.vue":219,"./photoList.vue":237,"vue":185,"vue-hot-reload-api":182}],221:[function(require,module,exports){
+},{"./alert.vue":203,"./dropzone.vue":220,"./photoList.vue":238,"vue":185,"vue-hot-reload-api":182}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31371,7 +31412,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5c1f512c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":203,"spin":170,"vue":185,"vue-hot-reload-api":182}],222:[function(require,module,exports){
+},{"./alert.vue":203,"spin":170,"vue":185,"vue-hot-reload-api":182}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31782,7 +31823,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"./dropzone.vue":219,"./photoList.vue":237,"spin":170,"vue":185,"vue-hot-reload-api":182}],223:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./dropzone.vue":220,"./photoList.vue":238,"spin":170,"vue":185,"vue-hot-reload-api":182}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31914,7 +31955,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":203,"./dropzone.vue":219,"./photoList.vue":237,"spin":170,"vue":185,"vue-datetime-picker/src/vue-datetime-picker.js":181,"vue-hot-reload-api":182}],224:[function(require,module,exports){
+},{"./alert.vue":203,"./dropzone.vue":220,"./photoList.vue":238,"spin":170,"vue":185,"vue-datetime-picker/src/vue-datetime-picker.js":181,"vue-hot-reload-api":182}],225:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32024,7 +32065,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],225:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],226:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32079,7 +32120,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-75470054", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],226:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],227:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -32203,7 +32244,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"jquery-locationpicker":89,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],227:[function(require,module,exports){
+},{"jquery-locationpicker":89,"vue":185,"vue-hot-reload-api":182,"vueify/lib/insert-css":186}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32260,7 +32301,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-136361f2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":229,"gmaps.core":87,"gmaps.markers":88,"vue":185,"vue-hot-reload-api":182}],228:[function(require,module,exports){
+},{"./modal.vue":230,"gmaps.core":87,"gmaps.markers":88,"vue":185,"vue-hot-reload-api":182}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32401,7 +32442,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],229:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32440,7 +32481,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-756e4770", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],230:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],231:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32461,7 +32502,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],231:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],232:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32518,7 +32559,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-528515e3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],232:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],233:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32582,7 +32623,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":230,"vue":185,"vue-hot-reload-api":182}],233:[function(require,module,exports){
+},{"./notification.vue":231,"vue":185,"vue-hot-reload-api":182}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32615,9 +32656,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-28d12fc2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],234:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],235:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],235:[function(require,module,exports){
+},{}],236:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32897,7 +32938,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"spin":170,"vue":185,"vue-hot-reload-api":182}],236:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"spin":170,"vue":185,"vue-hot-reload-api":182}],237:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32930,7 +32971,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1168d54d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],237:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],238:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -32979,7 +33020,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photo.vue":236,"vue":185,"vue-hot-reload-api":182}],238:[function(require,module,exports){
+},{"./photo.vue":237,"vue":185,"vue-hot-reload-api":182}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33003,7 +33044,141 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-626e3884", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],239:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],240:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _BootstrapTable = require('./BootstrapTable.vue');
+
+var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+
+var _missingServices = require('./missingServices.vue');
+
+var _missingServices2 = _interopRequireDefault(_missingServices);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    props: [],
+    components: {
+        alert: _alert2.default,
+        missingServices: _missingServices2.default,
+        BootstrapTable: _BootstrapTable2.default
+    },
+    data: function data() {
+        return {
+            // alert
+            alertMessage: '',
+            alertActive: false,
+
+            data: [],
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'service',
+                title: 'Service',
+                sortable: true
+            }, {
+                field: 'on_time',
+                title: 'On Time',
+                sortable: true
+            }, {
+                field: 'technician',
+                title: 'Technician',
+                sortable: true
+            }],
+            tableOptions: {
+                iconsPrefix: 'font-icon',
+                toggle: 'table',
+                sidePagination: 'client',
+                pagination: 'true',
+                classes: 'table',
+                icons: {
+                    paginationSwitchDown: 'font-icon-arrow-square-down',
+                    paginationSwitchUp: 'font-icon-arrow-square-down up',
+                    refresh: 'font-icon-refresh',
+                    toggle: 'font-icon-list-square',
+                    columns: 'font-icon-list-rotate',
+                    export: 'font-icon-download'
+                },
+                paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+                paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+                pageSize: 10,
+                pageList: [5, 10, 20],
+                search: true,
+                showExport: true,
+                exportTypes: ['excel', 'pdf'],
+                minimumCountColumns: 2,
+                showFooter: false,
+
+                uniqueId: 'id',
+                idField: 'id'
+            }
+        };
+    },
+
+    events: {
+        rowClicked: function rowClicked(id) {
+            window.location = Laravel.url + 'reports/' + id;
+        },
+        datePickerClicked: function datePickerClicked(date) {
+            this.getList(date);
+            this.$broadcast('datePickerClicked', date);
+        }
+    },
+    methods: {
+        getList: function getList(date) {
+            var _this = this;
+
+            this.$dispatch('disableDatePicker', true);
+            var listUrl = Laravel.url + 'datatables/reports';
+            if (date) {
+                listUrl = Laravel.url + 'datatables/reports?date=' + date;
+            }
+            this.$broadcast('disableTable');
+            this.$http.get(listUrl).then(function (response) {
+                _this.data = response.data;
+                _this.validationErrors = {};
+                _this.$broadcast('refreshTable');
+                _this.$dispatch('disableDatePicker', false);
+            }, function (response) {
+                _this.alertMessage = "The information could not be retrieved, please try again.";
+                _this.alertActive = true;
+                _this.$broadcast('enableTable');
+                _this.$dispatch('disableDatePicker', false);
+            });
+        },
+        goToCreate: function goToCreate() {
+            window.location = Laravel.url + 'reports/create';
+        }
+    },
+    ready: function ready() {
+        this.getList();
+        this.getList();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"tableOptions\">\n\t    <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n        <button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t<i class=\"font-icon font-icon-page\"></i>&nbsp;&nbsp;&nbsp;New Report\n\t\t</button>\n\t\t<missing-services>\n\t\t</missing-services>\n    </bootstrap-table>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-e51ec856", module.exports)
+  } else {
+    hotAPI.update("_v-e51ec856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./missingServices.vue":229,"vue":185,"vue-hot-reload-api":182}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33132,7 +33307,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],240:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"vue":185,"vue-hot-reload-api":182}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33192,7 +33367,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-12e0b07a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],241:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33252,7 +33427,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],242:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33336,7 +33511,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":200,"./accountSettings.vue":201,"./alert.vue":203,"./billing.vue":204,"./changeEmail.vue":205,"./changePassword.vue":206,"./customizationSettings.vue":216,"./notificationSettings.vue":231,"vue":185,"vue-hot-reload-api":182}],243:[function(require,module,exports){
+},{"./Permissions.vue":199,"./accountSettings.vue":201,"./alert.vue":203,"./billing.vue":204,"./changeEmail.vue":205,"./changePassword.vue":206,"./customizationSettings.vue":216,"./notificationSettings.vue":232,"vue":185,"vue-hot-reload-api":182}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33387,7 +33562,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],244:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],246:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33442,7 +33617,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],245:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],247:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33468,7 +33643,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8165b142", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],246:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],248:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33528,7 +33703,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],247:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33592,7 +33767,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":219,"./photoList.vue":237,"vue":185,"vue-hot-reload-api":182}],248:[function(require,module,exports){
+},{"./dropzone.vue":220,"./photoList.vue":238,"vue":185,"vue-hot-reload-api":182}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33672,7 +33847,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":237,"vue":185,"vue-hot-reload-api":182}],249:[function(require,module,exports){
+},{"./photoList.vue":238,"vue":185,"vue-hot-reload-api":182}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33732,7 +33907,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":224,"vue":185,"vue-hot-reload-api":182}],250:[function(require,module,exports){
+},{"./indexTable.vue":225,"vue":185,"vue-hot-reload-api":182}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34143,7 +34318,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"./dropdown.vue":218,"./dropzone.vue":219,"./photoList.vue":237,"spin":170,"vue":185,"vue-hot-reload-api":182}],251:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./dropdown.vue":219,"./dropzone.vue":220,"./photoList.vue":238,"spin":170,"vue":185,"vue-hot-reload-api":182}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34227,7 +34402,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":185,"vue-hot-reload-api":182}],252:[function(require,module,exports){
+},{"vue":185,"vue-hot-reload-api":182}],254:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -34315,6 +34490,7 @@ $(document).ready(function () {
 	var clientEquipment = require('./components/clientEquipment.vue');
 	var clientWorks = require('./components/clientWorks.vue');
 	var locationShow = require('./components/locationShow.vue');
+	var reportIndex = require('./components/ReportIndex.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -34350,7 +34526,7 @@ $(document).ready(function () {
 			finishWorkOrderButton: finishWorkOrderButton,
 			works: works,
 			// report
-			missingServices: missingServices,
+			reportIndex: reportIndex,
 			editReportPhotos: editReportPhotos,
 			// service
 			serviceTable: serviceTable,
@@ -34983,20 +35159,13 @@ $(document).ready(function () {
 		});
 	}
 
-	if (isset('datatable_url')) {
-		$("#side-datetimepicker").on("dp.change", function (e) {
-			var date = new Date(e.date._d);
-			var date_selected = dateFormat(date, "yyyy-mm-dd");
-			var new_url = back.datatable_url + date_selected;
-			generic_table.bootstrapTable('refresh', { url: new_url });
-		});
-	}
-
 	$("#side-datetimepicker").on("dp.change", function (e) {
 		var date = new Date(e.date._d);
 		var date_selected = dateFormat(date, "yyyy-mm-dd");
 		mainVue.$broadcast('datePickerClicked', date_selected);
 	});
+
+	// Forms Datepickers
 	if (isset('defaultDate')) {
 		$('#editGenericDatepicker').datetimepicker({
 			widgetPositioning: {
@@ -35006,7 +35175,6 @@ $(document).ready(function () {
 			defaultDate: back.defaultDate
 		});
 	}
-
 	$('#genericDatepicker').datetimepicker({
 		widgetPositioning: {
 			horizontal: 'right'
@@ -35068,6 +35236,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":192,"./components/ClientReports.vue":198,"./components/Permissions.vue":200,"./components/addressFields.vue":202,"./components/alert.vue":203,"./components/billing.vue":204,"./components/chemical.vue":208,"./components/clientContract.vue":209,"./components/clientEquipment.vue":210,"./components/clientTable.vue":211,"./components/clientWorks.vue":212,"./components/contract.vue":213,"./components/countries.vue":214,"./components/deleteButton.vue":217,"./components/dropdown.vue":218,"./components/editReportPhotos.vue":220,"./components/emailVerificationNotice.vue":221,"./components/equipment.vue":222,"./components/finishWorkOrderButton.vue":223,"./components/invoiceTable.vue":225,"./components/locationShow.vue":227,"./components/missingServices.vue":228,"./components/notificationsWidget.vue":232,"./components/payments.vue":235,"./components/photo.vue":236,"./components/photoList.vue":237,"./components/profile.vue":238,"./components/routeTable.vue":239,"./components/serviceClientTable.vue":240,"./components/serviceTable.vue":241,"./components/settings.vue":242,"./components/supervisorTable.vue":243,"./components/technicianTable.vue":244,"./components/timezoneDropdown.vue":245,"./components/workOrderClientTable.vue":246,"./components/workOrderPhotosEdit.vue":247,"./components/workOrderPhotosShow.vue":248,"./components/workOrderTable.vue":249,"./components/works.vue":250,"./directives/FormToAjax.vue":251,"bootstrap-toggle":9,"dateformat":85,"dropzone":86,"jquery-locationpicker":89,"spin":170,"sweetalert":179,"vue":185,"vue-resource":184}]},{},[190,188,187,189,191,252]);
+},{"./components/AllNotificationsAsReadButton.vue":192,"./components/ClientReports.vue":197,"./components/Permissions.vue":199,"./components/ReportIndex.vue":200,"./components/addressFields.vue":202,"./components/alert.vue":203,"./components/billing.vue":204,"./components/chemical.vue":208,"./components/clientContract.vue":209,"./components/clientEquipment.vue":210,"./components/clientTable.vue":211,"./components/clientWorks.vue":212,"./components/contract.vue":213,"./components/countries.vue":214,"./components/deleteButton.vue":218,"./components/dropdown.vue":219,"./components/editReportPhotos.vue":221,"./components/emailVerificationNotice.vue":222,"./components/equipment.vue":223,"./components/finishWorkOrderButton.vue":224,"./components/invoiceTable.vue":226,"./components/locationShow.vue":228,"./components/missingServices.vue":229,"./components/notificationsWidget.vue":233,"./components/payments.vue":236,"./components/photo.vue":237,"./components/photoList.vue":238,"./components/profile.vue":239,"./components/routeTable.vue":241,"./components/serviceClientTable.vue":242,"./components/serviceTable.vue":243,"./components/settings.vue":244,"./components/supervisorTable.vue":245,"./components/technicianTable.vue":246,"./components/timezoneDropdown.vue":247,"./components/workOrderClientTable.vue":248,"./components/workOrderPhotosEdit.vue":249,"./components/workOrderPhotosShow.vue":250,"./components/workOrderTable.vue":251,"./components/works.vue":252,"./directives/FormToAjax.vue":253,"bootstrap-toggle":9,"dateformat":85,"dropzone":86,"jquery-locationpicker":89,"spin":170,"sweetalert":179,"vue":185,"vue-resource":184}]},{},[190,188,187,189,191,254]);
 
 //# sourceMappingURL=bundle.js.map

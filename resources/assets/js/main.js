@@ -81,6 +81,7 @@ function isset(strVariableName) {
     let clientEquipment = require('./components/clientEquipment.vue');
     let clientWorks = require('./components/clientWorks.vue');
     let locationShow = require('./components/locationShow.vue');
+    let reportIndex = require('./components/ReportIndex.vue');
 
 
     let mainVue = new Vue({
@@ -117,7 +118,7 @@ function isset(strVariableName) {
             finishWorkOrderButton,
             works,
             // report
-            missingServices,
+            reportIndex,
             editReportPhotos,
             // service
             serviceTable,
@@ -813,21 +814,14 @@ function isset(strVariableName) {
 	    });
 	}
 
-	if(isset('datatable_url')){
-	   	$("#side-datetimepicker").on("dp.change", function(e) {
-	   		var date = new Date(e.date._d);
-	   		var date_selected = dateFormat(date, "yyyy-mm-dd");
-            var new_url = back.datatable_url+date_selected;
-            generic_table.bootstrapTable('refresh', {url: new_url});
-	    });
-   }
-
    	$("#side-datetimepicker").on("dp.change", function(e) {
    		var date = new Date(e.date._d);
    		var date_selected = dateFormat(date, "yyyy-mm-dd");
         mainVue.$broadcast('datePickerClicked', date_selected);
     });
-   	if(isset('defaultDate')){
+
+    // Forms Datepickers
+    if(isset('defaultDate')){
 	    $('#editGenericDatepicker').datetimepicker({
 	        widgetPositioning: {
 				horizontal: 'right'
@@ -836,7 +830,6 @@ function isset(strVariableName) {
 	        defaultDate: back.defaultDate,
 	    });
 	}
-
 	$('#genericDatepicker').datetimepicker({
 	        widgetPositioning: {
 				horizontal: 'right'
