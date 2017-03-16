@@ -47,8 +47,9 @@
                         <li><a href="{{url('/features')}}" class="smooth-scroll">Features</a></li>
                         <li><a href="{{url('/pricing')}}" class="smooth-scroll">Pricing</a></li>
                         <li><a href="{{url('/tutorials')}}" class="smooth-scroll">Tutorials</a></li>
+                        <li><a href="{{url('/support')}}" class="smooth-scroll">Support</a></li>
                         <!-- Dropdown Menu -->
-                        <li class="dropdown">
+                        <!-- <li class="dropdown">
                             <a id="dLabel" data-toggle="dropdown" data-target="#" href="#">Extras</a>
                             <ul class="dropdown-menu multi-level" role="menu">
                               <li><a href="#">Some action</a></li>
@@ -63,7 +64,7 @@
                                 </ul>
                               </li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li><a href="{{url('/login')}}" class="btn-nav btn-grey btn-login" style="font-weight: 700; font-size: 15px; background-color: rgb(215, 220, 229);">Login</a></li>
                         <li><a href="{{url('/register')}}" class="btn-nav btn-blue btn-signup" style="font-weight: 700; font-size: 15px; background-color: rgb(44, 142, 210);">Sign up</a></li>
                     </ul><!-- /End Menu Links -->

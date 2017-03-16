@@ -126,4 +126,31 @@ class HomeController extends PageController
         return view('extras.showMessage', compact('title', 'isSuccess'));
     }
 
+    public function terms()
+    {
+        return view('landing.terms');
+    }
+
+    public function features()
+    {
+        return view('landing.features');
+    }
+
+    public function pricing()
+    {
+        return view('landing.pricing');
+    }
+
+    public function tutorials()
+    {
+        return view('landing.tutorials');
+    }
+
+    public function support()
+    {
+        return view('landing.support');
+    }
+
+
+
 }

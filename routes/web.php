@@ -20,6 +20,11 @@ Route::auth();
 
 // Welcome Page
 Route::get('/', 'HomeController@landingPage');
+Route::get('/terms', 'HomeController@terms');
+Route::get('/features', 'HomeController@features');
+Route::get('/pricing', 'HomeController@pricing');
+Route::get('/tutorials', 'HomeController@tutorials');
+Route::get('/support', 'HomeController@support');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');

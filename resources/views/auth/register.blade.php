@@ -64,8 +64,8 @@
                     </div>
 
                 </form>
-                <p class="terms m-t">By clicking Signup you agree to the <a href="" class="f-w-700">Terms</a> and <a href="" class="f-w-700">Privacy Policy</a>.</p>
-                <p class="terms"> Already have a GetLeads account? <a href="" class="f-w-700">Sign in</a>.</p>
+                <p class="terms m-t">By clicking Signup you agree to the <a href="{{ url('/terms') }}" class="f-w-700">Terms and Privacy Policy</a>.</p>
+                <p class="terms"> Already have a Pool Report System account? <a href="{{ url('/login') }}" class="f-w-700">Sign in</a>.</p>
             </div>
         </div>
     </div>

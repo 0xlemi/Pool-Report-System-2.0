@@ -10,7 +10,7 @@
                     <div class="col-sm-6">
                         <h1 class="text-white m-b-md p-t-md">Software that makes you pool service business grow.</h1>
                         <p class="lead text-white m-b-md f-w-700">We know managing a pool service buissness can be a hustle. We make software that is going to make you smile.</p>
-                        <a class="btn btn-shadow btn-md btn-green text-uppercase">Get Free Trail</a>
+                        <a class="btn btn-shadow btn-md btn-green text-uppercase" href="{{ url('/register') }}">Sign Up For Free</a>
                         <a class="mp-iframe watch-video inverse f-w-900" href="https://vimeo.com/151453817"><i class="fa fa-play-circle-o"></i>Watch the video</a>
                     </div>
                 </div><!-- /End Row -->
@@ -77,36 +77,36 @@
                     <div class="col-md-12 testimonials text-white">
                         <!-- Testimonial Item -->
                         <div class="col-md-4 text-center p-t-md  clearfix">
-                            <blockquote class="quote-border">
+                            <!-- <blockquote class="quote-border">
                                 <figure><img src="img/testimonial1.jpg" class="img-circle" alt="" width="90" height="90"> </figure>
                                 <p>Illum timeam maiestatis his te. Ei mel eirmod legendos, quis moderatius ea mea, vix viris dignissim contentiones no. Sint facilisis ad eam. Vix an illud assentiet.</p>
                                 <div class="cite text-edit">
                                     Carol Miller
                                     <span class="cite-info p-opacity ">Awesome Lorem Studio</span>
                                 </div>
-                            </blockquote>
+                            </blockquote> -->
                         </div>
                         <!-- Testimonial Item -->
                         <div class="col-md-4 text-center p-t-md clearfix">
                             <blockquote class="quote-border">
-                                <figure><img src="img/testimonial2.jpg" alt="" class="img-circle" width="90" height="90"> </figure>
-                                <p>Natum mandamus qualisque id ius, an qui urbanitas pertinacia. Oblique deserunt qui cu, eum id bonorum inimicus prodesset. An pri maiorum constituam intellegebat.</p>
+                                <figure><img src="{{ \Storage::url('images/assets/landing/norma.jpg') }}" alt="" class="img-circle" width="90" height="90"> </figure>
+                                <p>Great investment, with the help of this software we were able to grow the maintenance department by 20% in a single month.</p>
                                 <div class="cite text-edit">
-                                    Brandon Riley
-                                    <span class="cite-info p-opacity">Smart Lorem Agency</span>
+                                    Norma Lopez Gutierrez
+                                    <span class="cite-info p-opacity">CEO of Hirdoequipos</span>
                                 </div>
                             </blockquote>
                         </div>
                         <!-- Testimonial Item -->
                         <div class="col-md-4 text-center p-t-md clearfix">
-                            <blockquote class="quote-border">
+                            <!-- <blockquote class="quote-border">
                                 <figure><img src="img/testimonial3.jpg" alt="" class="img-circle" width="90" height="90"> </figure>
                                 <p>Omnium voluptua mediocritatem usu ei, in pri nonumes periculis. Mea dictas audire quaerendum ex, has congue graeci mediocritatem in. Ut minimum deleniti.</p>
                                 <div class="cite text-edit">
                                     Jonathan Lawson
                                     <span class="cite-info p-opacity">Intrepid Ipsum Enterpreneurs</span>
                                 </div>
-                            </blockquote>
+                            </blockquote> -->
                         </div>
                     </div><!-- /End Testimonial Col -->
 
@@ -123,7 +123,8 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="section-header text-center wow fadeIn" style="visibility: visible; animation-name: fadeIn;">
                             <h2>Simple Pricing</h2>
-                            <p class="lead">Quality service at an affordable price. Pariatur consequatur mollitia officia solutavel possimus voluptates temporibus quod nesciunt consectetur.</p>
+                            <br>
+                            <p class="lead">Quality service at an affordable price.<br> We only charge for active users and the first 2 are free.</p>
                         </div>
                     </div>
                 </div>
@@ -135,25 +136,27 @@
                             <h4 class="m-b-md">Completly Free</h4>
                             <div class="price text-edit"> <span class="currency">$</span>0</div>
                             <ul class="details m-b-md text-edit"><li>Free forever</li>
-<li>Limited to 1 technician only</li></ul>
-                            <a class="btn btn-green text-uppercase" href="#">Create your account</a>
+                                <li>Limited to 2 Users only</li></ul>
+                            <a class="btn btn-green text-uppercase" href="{{ url('/register') }}">Create Free Account</a>
                         </div>
                     </div>
                     <!-- Pricing Item -->
                     <div class="col-md-4">
                         <div class="info text-center bg-edit bg-color bg-green text-white">
                             <h4 class="m-b-md">Business Plan</h4>
-                            <div class="price text-edit"><span class="currency">$</span>13</div>
-                            <ul class="details m-b-md text-edit"><li>per technician/mo.</li>
-<li>Unlimited projects</li></ul>
-                            <a class="btn btn-white text-uppercase wow pulse" data-wow-iteration="2" href="#" style="visibility: visible; animation-iteration-count: 2; animation-name: pulse;">Start 30-days free trial</a>
+                            <div class="price text-edit"><span class="currency">$</span>12</div>
+                            <ul class="details m-b-md text-edit"><li>per user/mo.</li>
+                                <li>Unlimited Users</li></ul>
+                            <a class="btn btn-white text-uppercase wow pulse" data-wow-iteration="2" href="{{ url('/register') }}" style="visibility: visible; animation-iteration-count: 2; animation-name: pulse;">Get Started</a>
                         </div>
                     </div>
                 </div><!-- /End Row -->
                 <!-- Pricing Note -->
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 text-center">
-                        <p><strong>Note.</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus adipisci explicabo, quis magnam voluptates unde blanditiis, voluptate vero molestiae vel illum ab aspernatur perferendis.</p>
+                        <p><strong>Note.</strong> All of this prices are in US Dollars.<br>
+                            *Users are registed supervisors or technicians.
+                        </p>
                     </div>
                 </div>
             </div><!-- /End Container -->
