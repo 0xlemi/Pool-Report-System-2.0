@@ -18,7 +18,6 @@ class CreateAdministratorsTable extends Migration
                 // Administrator Profile information
                 $table->string('name');
             // Company information
-                $table->string('logo')->nullable();
                 $table->string('company_name');
                 $table->string('timezone');
                 $table->char('language', 2)->default('en');

@@ -161,7 +161,8 @@
                 </div>
             </div><!-- /End Container -->
 
-        </section><!-- =========================
+        </section>
+        <!-- =========================
            VIDEO
         ============================== -->
         <section id="video4-1" class="p-y-md bg-edit bg-dark video content-align-md" style="outline-offset: -3px; background-color: rgb(61, 133, 198);">

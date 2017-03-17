@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'hello@example.com',
-        'name' => 'Example',
+        'address' => 'no-reply@notify.poolreportsystem.com',
+        'name' => 'Pool Report System',
     ],
 
     /*
@@ -119,7 +119,7 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    
+
     'markdown' => [
         'theme' => 'default',
 

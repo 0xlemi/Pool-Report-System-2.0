@@ -23,7 +23,7 @@ class AdministratorTransformer extends Transformer
             'notification_settings' => [
                 $admin->user->notificationSettings->getAll()
             ],
-            'permissons' => $admin->permissions()->getAll(),
+            'permissions' => $admin->permissions()->getAll(),
         ];
 
     }

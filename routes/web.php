@@ -36,6 +36,7 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 // Activation
 Route::get('activate/token/{token}', 'Auth\ActivationController@activate')->name('auth.activate');
+Route::post('activate/password', 'Auth\ActivationController@setPassword');
 Route::get('activate/resend', 'Auth\ActivationController@resend')->name('auth.activate.resend');
 
 // change email settings from link
