@@ -11,6 +11,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use App\ActivationToken;
 use App\Mail\SendActivationToken;
+use App\Mail\WelcomeActivationMail;
 
 class ActivationController extends Controller
 {
@@ -79,7 +80,10 @@ class ActivationController extends Controller
             'token' => str_random(128),
         ]);
 
-        Mail::to($user)->send(new SendActivationToken($user->activationToken));
+        if($user->isAdministrator){
+            Mail::to($user)->send(new SendActivationToken($user->activationToken));
+        }
+        Mail::to($user)->send(new WelcomeActivationMail($user->activationToken));
 
         return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
     }

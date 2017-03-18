@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 use Mail;
 use App\Mail\SendActivationToken;
+use App\Mail\WelcomeActivationMail;
 
 class SendActivationEmail
 {
@@ -29,8 +30,11 @@ class SendActivationEmail
      */
     public function handle($event)
     {
-        if(!$event->user->isTechnician()){
+        if($event->user->isAdministrator()){
             Mail::to($event->user)->send(new SendActivationToken($event->user->activationToken));
+        }
+        elseif(!$event->user->isTechnician()){
+            Mail::to($event->user)->send(new WelcomeActivationMail($event->user->activationToken));
         }
     }
 }

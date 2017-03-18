@@ -16,6 +16,7 @@ use Mail;
 use Validator;
 use App\Service;
 use App\Mail\SendActivationToken;
+use App\Mail\WelcomeActivationMail;
 use Carbon\Carbon;
 
 class UserController extends ApiController
@@ -195,7 +196,10 @@ class UserController extends ApiController
             'token' => str_random(128),
         ]);
 
-        Mail::to($user)->send(new SendActivationToken($user->activationToken));
+        if($user->isAdministrator){
+            Mail::to($user)->send(new SendActivationToken($user->activationToken));
+        }
+        Mail::to($user)->send(new WelcomeActivationMail($user->activationToken));
 
         return response('Email sent, please check your inbox and verify your account.', 403);
 
