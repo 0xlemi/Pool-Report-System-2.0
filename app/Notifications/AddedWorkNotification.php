@@ -10,7 +10,7 @@ use App\User;
 use App\Work;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedWorkNotification extends Notification //implements ShouldQueue
+class AddedWorkNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

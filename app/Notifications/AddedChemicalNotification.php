@@ -10,7 +10,7 @@ use App\User;
 use App\Chemical;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedChemicalNotification extends Notification //implements ShouldQueue
+class AddedChemicalNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

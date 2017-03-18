@@ -10,6 +10,7 @@ use App\User;
 use App\Payment;
 use App\Invoice;
 use App\PRS\Helpers\NotificationHelpers;
+use Storage;
 
 class NewPaymentNotification extends Notification //implements ShouldQueue
 {
@@ -37,7 +38,7 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return $this->helper->channels($notifiable, 'notify_payment_created');
+        // return $this->helper->channels($notifiable, 'notify_payment_created');
     }
 
     /**

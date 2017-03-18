@@ -221,7 +221,7 @@ td {
                         <tr>
                           <td align="center" width="100%" valign="middle"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" align="center" style="font-size:38px; color:#141414; font-family:'Lato',Arial, sans-serif; font-weight:900;"  cu-identify="element_06043415376805752"> Good Move!</td>
+                                <td width="100%" align="center" style="font-size:38px; color:#141414; font-family:'Lato',Arial, sans-serif; font-weight:900;"  cu-identify="element_06043415376805752">Verify Your Email!</td>
                               </tr>
                             </table></td>
                         </tr>
@@ -235,7 +235,7 @@ td {
                         <tr>
                           <td align="center" width="250" valign="middle" class="em_pad"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" align="center" style="font-size:19px; color:#161619; font-family:'Lato',Arial, sans-serif; font-weight:400; line-height:24px;"  cu-identify="element_09206949752811251">The only thing left is to confirm your email.</td>
+                                <td width="100%" align="center" style="font-size:19px; color:#161619; font-family:'Lato',Arial, sans-serif; font-weight:400; line-height:24px;"  cu-identify="element_09206949752811251">The only thing left is to confirm your email address.</td>
                               </tr>
                             </table></td>
                         </tr>

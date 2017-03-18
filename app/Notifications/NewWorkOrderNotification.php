@@ -9,8 +9,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\WorkOrder;
 use App\PRS\Helpers\NotificationHelpers;
+use App\Mail\NewWorkOrderMail;
 
-class NewWorkOrderNotification extends Notification //implements ShouldQueue
+class NewWorkOrderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -49,7 +50,7 @@ class NewWorkOrderNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return (new NewWorkOrderMail($this->workOrder, $this->user, $this->helper))->to($notifiable->email);
     }
 
     /**

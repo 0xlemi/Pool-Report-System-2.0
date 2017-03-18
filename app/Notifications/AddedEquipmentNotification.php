@@ -10,7 +10,7 @@ use App\User;
 use App\Equipment;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedEquipmentNotification extends Notification //implements ShouldQueue
+class AddedEquipmentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

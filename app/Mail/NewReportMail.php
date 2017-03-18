@@ -52,7 +52,7 @@ class NewReportMail extends Mailable implements ShouldQueue
             'expire' => Carbon::now()->addDays(10)
         ]);
         $data = array(
-            'logo' => Storage::url('images/assets/app/logo-2.png'),
+            'logo' => Storage::url('images/assets/app/logo-black.png'),
             'headerImage' => Storage::url('images/assets/email/email_header.png'),
             'name' => $name,
             'address' => $this->report->service->address_line,

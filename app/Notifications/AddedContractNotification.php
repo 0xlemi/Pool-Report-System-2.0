@@ -10,7 +10,7 @@ use App\User;
 use App\ServiceContract;
 use App\PRS\Helpers\NotificationHelpers;
 
-class AddedContractNotification extends Notification //implements ShouldQueue
+class AddedContractNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

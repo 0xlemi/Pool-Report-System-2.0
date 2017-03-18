@@ -9,6 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Invoice;
 use App\PRS\Helpers\NotificationHelpers;
+use Storage;
 
 class NewInvoiceNotification extends Notification //implements ShouldQueue
 {
@@ -36,7 +37,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return $this->helper->channels($notifiable, 'notify_invoice_created');
+        // return $this->helper->channels($notifiable, 'notify_invoice_created');
     }
 
     /**
