@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->morphs('userable');
             $table->boolean('active')->default(true); // Been payed for
-            $table->boolean('activated')->default(false); // Activated the account via email
+            $table->boolean('activated')->default(true); // Activated the account via email
             // Email Preferences  Order: database, mail.
             // IMPORTANT: should be synced with the constants
             $table->integer('notify_report_created')->default(3); // default database and mail

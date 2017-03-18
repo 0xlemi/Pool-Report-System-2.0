@@ -36,6 +36,11 @@ class NotificationSettings {
      */
     public function hasPermission(string $name, string $type)
     {
+        // If user is not activated don't send emails to them
+        // They dont jet agree to use the system
+        if(!$this->user->activated){
+            return false;
+        }
         $notificationPermissonsArray = $this->userHelper->notificationPermissonToArray($this->user->$name);
         $positonOfType = $this->userHelper->notificationTypePosition($type);
         return (bool) $notificationPermissonsArray[$positonOfType];
