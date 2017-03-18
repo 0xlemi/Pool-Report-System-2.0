@@ -45,6 +45,12 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        // 404 page when a model is not found
+        // and is not logged in
+        if (($e instanceof ModelNotFoundException) && (!\Auth::check())) {
+            return response()->view('errors.404_guest');
+        }
+
         return parent::render($request, $e);
     }
 }
