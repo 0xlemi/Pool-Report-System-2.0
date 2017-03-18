@@ -85,14 +85,16 @@ class ClientsController extends PageController
             $photo = $client->addImageFromForm($request->file('photo'));
         }
 
-        $client->setServices($request->services);
+        if($request->services){
+            $client->setServices($request->services);
+        }
         $client->save();
 
         $user = $client->user()->create([
             'email' => htmlentities($request->email),
         ]);
 
-        if($client && $photo){
+        if($client && $photo && $user){
             flash()->success('Created', 'New client successfully created.');
             return redirect('clients');
         }
