@@ -38,7 +38,7 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
      */
     public function via($notifiable)
     {
-        // return $this->helper->channels($notifiable, 'notify_payment_created');
+        return $this->helper->channels($notifiable, 'notify_payment_created');
     }
 
     /**
@@ -49,7 +49,7 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return null;    
     }
 
     /**

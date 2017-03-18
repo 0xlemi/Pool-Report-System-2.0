@@ -10,8 +10,9 @@ use App\User;
 use App\Invoice;
 use App\PRS\Helpers\NotificationHelpers;
 use Storage;
+use App\Mail\NewInvoiceMail;
 
-class NewInvoiceNotification extends Notification //implements ShouldQueue
+class NewInvoiceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -37,7 +38,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
      */
     public function via($notifiable)
     {
-        // return $this->helper->channels($notifiable, 'notify_invoice_created');
+        return $this->helper->channels($notifiable, 'notify_invoice_created');
     }
 
     /**
@@ -48,7 +49,7 @@ class NewInvoiceNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return (new NewInvoiceMail($this->invoice->admin(), $notifiable, $this->invoice->invoiceable->service, $this->invoice))->to($notifiable->email);
     }
 
     /**
