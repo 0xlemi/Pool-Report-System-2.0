@@ -13,7 +13,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
-    private $token;
+    public $token;
 
     /**
      * Create a new message instance.
@@ -32,12 +32,7 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $data = [
-            'token' => $this->token
-        ];
-        return $this->from('no-reply@poolreportsystem.com')
-                    ->subject('Password Reset')
-                    ->view('emails.auth.resetPassword')
-                    ->with($data);
+        return $this->subject('Password Reset')
+                    ->view('emails.auth.resetPassword');
     }
 }

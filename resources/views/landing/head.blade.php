@@ -14,8 +14,8 @@ software, pool service business management software">
 
     <!-- FAVICON  -->
     <!-- Place your favicon.ico in the img directory -->
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url('img/favicon.ico') }}" type="image/x-icon">
 
     <!-- =========================
        STYLESHEETS

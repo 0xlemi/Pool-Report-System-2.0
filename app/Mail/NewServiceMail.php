@@ -65,8 +65,7 @@ class NewServiceMail extends Mailable implements ShouldQueue
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];
 
-        return $this->from('no-reply@poolreportsystem.com')
-                    ->subject('New Service Created')
+        return $this->subject('New Service Created')
                     ->view('emails.newObject')
                     ->with($data);
     }

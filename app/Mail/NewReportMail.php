@@ -64,8 +64,7 @@ class NewReportMail extends Mailable implements ShouldQueue
             'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
         );
 
-        return $this->from('no-reply@poolreportsystem.com')
-                    ->subject('Your pool is clean '.$name)
+        return $this->subject('Your pool is clean '.$name)
                     ->view('emails.serviceReport')
                     ->with($data);
 

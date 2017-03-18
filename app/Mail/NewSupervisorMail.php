@@ -65,8 +65,7 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];
 
-        return $this->from('no-reply@poolreportsystem.com')
-                    ->subject('New Supervisor Created')
+        return $this->subject('New Supervisor Created')
                     ->view('emails.newObject')
                     ->with($data);
     }
