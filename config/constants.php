@@ -8,6 +8,20 @@ return [
     |--------------------------------------------------------------------------
     */
 
+    'constants' => [
+        'currencies',
+        'languages',
+        'timezones',
+        'startLocation',
+        'notificationsAdministrator',
+        'notificationsSupervisor',
+        'notificationsTechnician',
+        'notificationsClient',
+        'notificationTypes',
+        'notifications',
+        'permissions'
+    ],
+
     'currencies' => [
         'USD',
         'MXN',

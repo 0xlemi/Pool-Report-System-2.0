@@ -147,6 +147,14 @@ class UserController extends ApiController
         );
     }
 
+    public function constants(Request $request)
+    {
+        $this->validate($request, [
+            'name' => 'required|validConstant'
+        ]);
+        return response(config('constants.'.$request->name, "Constant Not Found"));
+    }
+
     public function login(Request $request)
     {
         $this->validate($request, [

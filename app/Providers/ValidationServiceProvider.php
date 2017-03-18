@@ -18,6 +18,10 @@ class ValidationServiceProvider extends ServiceProvider
     public function boot()
     {
         // Validation condition to check if object exists in the admin system based on seq_id and administartor
+        Validator::extend('validConstant', 'App\PRS\Validators\ValidConstant@validate');
+        Validator::replacer('validConstant', 'App\PRS\Validators\ValidConstant@message');
+
+        // Validation condition to check if object exists in the admin system based on seq_id and administartor
         Validator::extend('existsBasedOnAdmin', 'App\PRS\Validators\ExistsBasedOnAdmin@validate');
         Validator::replacer('existsBasedOnAdmin', 'App\PRS\Validators\ExistsBasedOnAdmin@message');
 
