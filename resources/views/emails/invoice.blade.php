@@ -162,7 +162,7 @@ a { color: #ff646a; text-decoration: none; }
                   <td>
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td width="263" align="left" valign="top" style="font-family: 'Open Sans', Arial, sans-serif; font-size:14px; color:#3b3b3b; line-height:26px;  font-weight: bold;">{{ $invoice->type() }}</td>
+                        <td width="263" align="left" valign="top" style="font-family: 'Open Sans', Arial, sans-serif; font-size:14px; color:#3b3b3b; line-height:26px;  font-weight: bold;">{{ $title }}</td>
                         <td width="87" align="right" valign="top" style="font-family: 'Open Sans', Arial, sans-serif; font-size:14px; color:#3b3b3b; line-height:26px;  font-weight: bold;">${{$invoice->amount}}</td>
                       </tr>
                     </table>
@@ -181,7 +181,7 @@ a { color: #ff646a; text-decoration: none; }
             <td align="center">
               <table width="550" border="0" align="center" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="font-family: 'Open Sans', Arial, sans-serif; font-size:12px; color:#7f8c8d; line-height:26px;">{{$description}}</td>
+                  <td style="font-family: 'Open Sans', Arial, sans-serif; font-size:12px; color:#7f8c8d; line-height:26px;">{{$invoice->description}}</td>
                 </tr>
               </table>
             </td>

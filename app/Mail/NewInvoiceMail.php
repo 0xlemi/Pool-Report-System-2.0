@@ -50,12 +50,15 @@ class NewInvoiceMail extends Mailable
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $subject = (string)$this->invoice->type().' Invoice';
 
-        return $this->subject($subject)
+        $title = (string) $this->invoice->type();
+        if($workOrderTitle = $this->invoice->invoiceable->title){
+            $title .= ' - '.$workOrderTitle ;
+        }
+        return $this->subject($this->invoice->type().' Invoice')
                 ->view('emails.invoice')
                 ->with([
-                    'description' => 'hello',
+                    'title' => $title,
                     'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ]);

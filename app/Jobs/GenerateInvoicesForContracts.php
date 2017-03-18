@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\ServiceContract;
+use Carbon\Carbon;
 
 class GenerateInvoicesForContracts implements ShouldQueue
 {
@@ -23,11 +24,18 @@ class GenerateInvoicesForContracts implements ShouldQueue
 
         foreach ($contracts as $contract) {
             if($contract->checkIfTodayContractChargesInvoice()){
+
+                $now = Carbon::now($contract->admin()->timezone);
+                $month = $now->format('F');
+                $year = $now->format('Y');
+
                 $contract->invoices()->create([
                     'amount' => $contract->amount,
                     'currency' => $contract->currency,
+                    'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
                     'admin_id' => $contract->admin()->id,
                 ]);
+
             }
         }
     }

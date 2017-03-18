@@ -20,6 +20,7 @@ class WorkOrderObserver
         $workOrder->invoices()->create([
             'amount' => $workOrder->price,
             'currency' => $workOrder->currency,
+            'description' => $workOrder->description,
             'admin_id' => $workOrder->admin()->id,
         ]);
 

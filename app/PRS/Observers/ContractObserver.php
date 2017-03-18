@@ -4,6 +4,7 @@ namespace App\PRS\Observers;
 
 use App\ServiceContract;
 use App\Notifications\AddedContractNotification;
+use Carbon\Carbon;
 
 class ContractObserver
 {
@@ -17,9 +18,15 @@ class ContractObserver
     {
         // check invoice for date
         if($contract->checkIfTodayContractChargesInvoice(false)){
+
+            $now = Carbon::now($contract->admin()->timezone);
+            $month = $now->format('F');
+            $year = $now->format('Y');
+
             $contract->invoices()->create([
                 'amount' => $contract->amount,
                 'currency' => $contract->currency,
+                'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
                 'admin_id' => $contract->admin()->id,
             ]);
         }
