@@ -72,9 +72,27 @@
 						</div>
 					</div>
 
+					<div class="form-group row">
+						<label class="col-md-2 form-control-label">Total Paid</label>
+						<div class=" col-xxl-4 col-xl-6 col-lg-5 col-md-5 col-sm-10">
+                            <div class="input-group">
+								<div class="input-group-addon">$</div>
+					            <input type="text" readonly class="form-control" value="{{ $invoice->totalPayments() }}">
+								<div class="input-group-addon">{{ $invoice->currency }}</div>
+							</div>
+						</div>
+					</div>
+
 					<payments invoice-id="{{ $invoice->seq_id }}"
 					    base-url="{{ url('/') }}">
 					</payments>
+
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">Description</label>
+						<div class="col-sm-10">
+							<textarea rows="4" class="form-control" name="description" placeholder="This invoice has no description." readonly>{{ $invoice->description }}</textarea>
+						</div>
+					</div>
 
 					<hr>
 					<span style="float: right;">

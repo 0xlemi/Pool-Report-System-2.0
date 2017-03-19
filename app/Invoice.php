@@ -40,6 +40,11 @@ class Invoice extends Model
         return $this->hasMany('App\Payment');
     }
 
+    public function totalPayments()
+    {
+        return $this->payments()->sum('payments.amount');
+    }
+
 
     //******** VALUE OBJECTS ********
 
