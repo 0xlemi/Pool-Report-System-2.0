@@ -10,9 +10,10 @@ use App\User;
 use App\Payment;
 use App\Invoice;
 use App\PRS\Helpers\NotificationHelpers;
+use App\Mail\NewPaymentMail;
 use Storage;
 
-class NewPaymentNotification extends Notification //implements ShouldQueue
+class NewPaymentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -49,7 +50,7 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return null;    
+        return (new NewPaymentMail($this->payment, $notifiable))->to($notifiable->email);
     }
 
     /**
@@ -61,13 +62,13 @@ class NewPaymentNotification extends Notification //implements ShouldQueue
     public function toArray($notifiable)
     {
         $payment = $this->payment;
-        $invoice = Invoice::findOrFail($payment->invoice->id);
+        $invoice = $payment->invoice;
 
         return [
             'icon' => Storage::url('images/assets/app/notifications-button.png'),
             'link' => "invoices/{$invoice->seq_id}",
             'title' => "A new <strong>Payment</strong> was added to <strong>Invoice</strong> (#{$invoice->seq_id})",
-            'message' => "New <strong>Payment</strong> for <strong>{$payment->amount} {$payment->invoice->currency}</strong>
+            'message' => "New <strong>Payment</strong> for <strong>{$payment->amount} {$invoice->currency}</strong>
                             was added to the <strong>Invoice</strong>
                             (<a href=\"../invoices/{$invoice->seq_id}\">#{$invoice->seq_id}</a>).",
         ];

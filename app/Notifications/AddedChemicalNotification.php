@@ -49,7 +49,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return null;    
     }
 
     /**

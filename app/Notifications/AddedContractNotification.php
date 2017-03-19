@@ -49,7 +49,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return null;    
     }
 
     /**

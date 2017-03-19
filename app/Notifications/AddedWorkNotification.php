@@ -49,7 +49,7 @@ class AddedWorkNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-
+        return null;    
     }
 
     /**
