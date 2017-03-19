@@ -17,6 +17,7 @@ class ClientObserver
      */
     public function created(Client $client)
     {
+        // Notify Admin, Supervisors, Technicians
         $admin = $client->admin();
         $admin->user->notify(new NewClientNotification($client, \Auth::user()));
     }

@@ -24,8 +24,6 @@ use App\Http\Requests;
 class SettingsController extends PageController
 {
 
-    use SettingsControllerTrait;
-
     /**
      * Create a new controller instance.
      *
@@ -217,6 +215,35 @@ class SettingsController extends PageController
         $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
 
         return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
+    }
+
+    public function permissions(Request $request)
+    {
+        $this->authorize('permissions', Setting::class);
+
+        $this->validate($request, [
+            'id' => 'required|max:255|validPermission',
+            'checked' => 'required',
+        ]);
+
+        $admin = $this->loggedUserAdministrator();
+        $attributes = $admin->getAttributes();
+
+        $columnName = $request->id;
+        $checkedValue = strtolower($request->checked);
+        $checked = ($checkedValue  == 'true' || $checkedValue  == '1') ? true : false;
+
+        //check whether the id they are sending us is a real permission
+        if(isset($attributes[$columnName]))
+        {
+            $admin->$columnName = $checked;
+            if($admin->save()){
+                $checkedAfter = ($admin->$columnName) ? 'active' : 'inactive';
+                return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
+            }
+            return $this->respondInternalError('Error while persisting the permission');
+        }
+        return $this->respondNotFound('There is no permission with that id');
     }
 
     public function subscribe(Request $request)
