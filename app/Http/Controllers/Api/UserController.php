@@ -81,19 +81,25 @@ class UserController extends ApiController
         ]);
         if($user->isAdministrator())
         {
-            $user->password =  bcrypt($request->password);
+            if($request->has('password')){
+                $user->password =  bcrypt($request->password);
+            }
             $user->save();
             return $this->administratorsController->update($request);
         }
         elseif($user->isSupervisor())
         {
-            $user->password =  bcrypt($request->password);
+            if($request->has('password')){
+                $user->password =  bcrypt($request->password);
+            }
             $user->save();
             return $this->supervisorsController->update($request, $user->userable()->seq_id, false);
         }
         elseif($user->isTechnician())
         {
-            $user->password =  bcrypt($request->password);
+            if($request->has('password')){
+                $user->password =  bcrypt($request->password);
+            }
             $user->save();
             return $this->techniciansController->update($request, $user->userable()->seq_id, false);
         }
