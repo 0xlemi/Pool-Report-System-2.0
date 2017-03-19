@@ -80,7 +80,9 @@ return [
     ],
     'notificationsClient' => [
         'notify_report_created',
-        'notify_workorder_created'
+        'notify_workorder_created',
+        'notify_invoice_created',
+        'notify_payment_created'
     ],
 
     'notificationTypes' => (object)[

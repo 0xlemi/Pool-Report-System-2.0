@@ -37,7 +37,7 @@ class NotificationSettings {
     public function hasPermission(string $name, string $type)
     {
         // If user is not activated don't send emails to them
-        // They dont jet agree to use the system
+        // They dont yet agree to use the system
         if(!$this->user->activated){
             return false;
         }

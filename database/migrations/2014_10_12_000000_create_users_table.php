@@ -28,8 +28,8 @@ class CreateUsersTable extends Migration
             $table->integer('notify_client_created')->default(1); // default only database
             $table->integer('notify_supervisor_created')->default(1); // default only database
             $table->integer('notify_technician_created')->default(1); // default only database
-            $table->integer('notify_invoice_created')->default(1); // default only database
-            $table->integer('notify_payment_created')->default(1); // default only database
+            $table->integer('notify_invoice_created')->default(3); // default only database
+            $table->integer('notify_payment_created')->default(3); // default only database
             $table->integer('notify_work_added')->default(1); // default only database
             $table->integer('notify_chemical_added')->default(1); // default only database
             $table->integer('notify_equipment_added')->default(1); // default only database
