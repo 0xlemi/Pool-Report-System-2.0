@@ -170,6 +170,11 @@ class UserController extends ApiController
 
         $user = User::where('email', $request->email)->first();
 
+        // disable client login
+        if($user->isClient()){
+                return response('This app currently does not support client login, you can log in through the web app.', 403);
+        }
+
         if($user && $user->checkPassword($request->password)){
 
             // check if the user is active (payed)
