@@ -54,10 +54,10 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1 text-center share-color">
                 <div class="col-md-4 col-md-offset-2">
-                    <a target="_blank" href="https://plus.google.com/share?url=http://www.themedept.com" class="share-block gp"><i class="fa fa-youtube"></i>Watch the rest on Youtube</a>
+                    <a target="_blank" href="https://www.youtube.com/channel/UCTe2VUvEMl1k9AsgidvQc4A" class="share-block gp"><i class="fa fa-youtube"></i>Watch the rest on Youtube</a>
                 </div>
                 <div class="col-md-4">
-                    <a target="_blank" href="https://plus.google.com/share?url=http://www.themedept.com" class="share-block twt"><i class="fa fa-vimeo"></i>Watch the rest on Vimeo</a>
+                    <a target="_blank" href="https://vimeo.com/poolreportsystem" class="share-block twt"><i class="fa fa-vimeo"></i>Watch the rest on Vimeo</a>
                 </div>
             </div>
         </div><!-- /End Row -->

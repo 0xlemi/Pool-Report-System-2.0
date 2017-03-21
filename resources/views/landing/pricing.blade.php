@@ -12,7 +12,7 @@
                     <div class="col-md-8 col-md-offset-2">
                         <div class="section-header text-center wow fadeIn" style="visibility: visible; animation-name: fadeIn;">
                             <h2>Pricing</h2>
-                            <p class="lead">We change per active user.</p>
+                            <p class="lead">We only charge for active users and the first 2 are free.</p>
                         </div>
                     </div>
                 </div>
