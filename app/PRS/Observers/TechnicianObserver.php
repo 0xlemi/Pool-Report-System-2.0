@@ -17,8 +17,12 @@ class TechnicianObserver
      */
     public function created(Technician $technician)
     {
+        $authUser = \Auth::user();
         $admin = $technician->admin();
-        $admin->user->notify(new NewTechnicianNotification($technician, \Auth::user()));
+        $admin->user->notify(new NewTechnicianNotification($technician, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new NewTechnicianNotification($technician, $authUser));
+        }
     }
 
     /**

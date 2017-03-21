@@ -30,8 +30,21 @@ class ContractObserver
                 'admin_id' => $contract->admin()->id,
             ]);
         }
+
+        // Notify:
+            //  System Admin,
+            //  All Admin Supervisors,
+            //  Clients related to the service
+        $authUser = \Auth::user();
         $admin = $contract->admin();
-        $admin->user->notify(new AddedContractNotification($contract, \Auth::user()));
+        $admin->user->notify(new AddedContractNotification($contract, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new AddedContractNotification($contract, $authUser));
+        }
+        foreach ($contract->service->clients as $client) {
+            $client->user->notify(new AddedContractNotification($contract, $authUser));
+        }
+
     }
 
     /**

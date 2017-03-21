@@ -15,8 +15,21 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice)
     {
+        // Notify:
+            // System admin
+            // Supervisors
+            // Invoice Related Clients
+        $authUser = \Auth::user();
         $admin = $invoice->admin();
-        $admin->user->notify(new NewInvoiceNotification($invoice, \Auth::user()));
+        $service = $inovice->invoiceable->service;
+        $admin->user->notify(new NewInvoiceNotification($invoice, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new NewInvoiceNotification($report, $authUser));
+        }
+        foreach ($service->clients as $client) {
+            $client->user->notify(new NewInvoiceNotification($report, $authUser));
+        }
+
     }
 
     /**

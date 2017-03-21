@@ -16,8 +16,15 @@ class WorkObserver
      */
     public function created(Work $work)
     {
+        $authUser = \Auth::user();
         $admin = $work->workOrder->admin();
-        $admin->user->notify(new AddedWorkNotification($work, \Auth::user()));
+        $workOrder = $work->workOrder;
+
+        $admin->user->notify(new AddedWorkNotification($work, $authUser));
+        $workOrder->supervisor->user->notify(new AddedWorkNotification($work, $authUser));
+        foreach ($workOrder->service->clients as $client) {
+            $client->user->notify(new AddedWorkNotification($work, $authUser));
+        }
     }
 
     /**

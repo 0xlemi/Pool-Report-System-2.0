@@ -17,9 +17,15 @@ class ClientObserver
      */
     public function created(Client $client)
     {
-        // Notify Admin, Supervisors, Technicians
+        // Notify:
+            // Admin,
+            // Supervisors
+        $authUser = \Auth::user();
         $admin = $client->admin();
-        $admin->user->notify(new NewClientNotification($client, \Auth::user()));
+        $admin->user->notify(new NewClientNotification($client, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new NewClientNotification($client, $authUser));
+        }
     }
 
     /**

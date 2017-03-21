@@ -16,8 +16,12 @@ class ServiceObserver
      */
     public function created(Service $service)
     {
+        $authUser = \Auth::user();
         $admin = $service->admin();
-        $admin->user->notify(new NewServiceNotification($service, \Auth::user()));
+        $admin->user->notify(new NewServiceNotification($service, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new NewServiceNotification($service, $authUser));
+        }
     }
 
     /**

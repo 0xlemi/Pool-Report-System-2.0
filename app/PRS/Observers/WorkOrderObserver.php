@@ -24,8 +24,17 @@ class WorkOrderObserver
             'admin_id' => $workOrder->admin()->id,
         ]);
 
+        $authUser = \Auth::user();
         $admin = $workOrder->admin();
-        $admin->user->notify(new NewWorkOrderNotification($workOrder, \Auth::user()));
+
+        $admin->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        }
+        foreach ($workOrder->service->clients as $client) {
+            $client->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        }
+
     }
 
     /**
