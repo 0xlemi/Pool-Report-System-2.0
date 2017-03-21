@@ -2,61 +2,62 @@
 
 @section('content')
 
-<!-- =========================
+ <!-- =========================
            PRICING
         ============================== -->
-        <section id="pricing2-1" class="p-y-lg bg-edit bg-light content-align-sm">
+        <section id="pricing5-1" class="p-y-lg bg-edit bg-light">
             <div class="container">
-                <div class="row pricing-st y-middle">
-                    <!-- Pricing Table -->
-                    <div class="col-md-5 col-sm-6 m-b">
-                        <div class="info text-center">
-                            <h4 class="m-b f-w-900 text-left">Become a member</h4>
-                            <div class="price text-edit text-left"> <span class="currency">$</span>29</div>
-                            <p class="m-t-lg m-b-md f-w-900 text-left">Perfect for single freelancers who work by themselves</p>
-                            <ul class="details text-right m-b-lg text-edit">
-                                <li>Unlimited access to all courses</li>
-                                <li>Unlimited access to all screencasts</li>
-                                <li>Engage with the latest technologies</li>
-                                <li>Cancel anytime</li>
-                            </ul>
-                            <a class="btn btn-shadow btn-green text-uppercase" href="">Start Learning Now</a>
+                <!-- Section Header -->
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="section-header text-center wow fadeIn" style="visibility: visible; animation-name: fadeIn;">
+                            <h2>Pricing</h2>
+                            <p class="lead">We change per active user.</p>
                         </div>
                     </div>
-                    <!-- Testimonial Carousel -->
-                    <div class="col-md-5 col-sm-6 text-center">
+                </div>
 
-                        <div id="carousel-testimonial4" class="carousel slide carousel-fade carousel-testimonial-single" data-ride="carousel">
-                            <!-- Indicators -->
-                            <ol class="carousel-indicators inverse">
-                                <li data-target="#carousel-testimonial4" data-slide-to="0" class="active"></li>
-                                <li data-target="#carousel-testimonial4" data-slide-to="1" class=""></li>
-                            </ol>
-
-                            <!-- Wrapper for slides -->
-                            <div class="carousel-inner" role="listbox">
-                                <!-- Testimonial 1 -->
-                                <div class="item next left">
-                                    <blockquote>
-                                        <figure><img src="images/testimonial1.jpg" alt="" class="img-circle img-thumbnail m-b-md" width="150" height="150"> </figure>
-                                        <p class="p-opacity m-b-md">Optio accusamus quos ratione iusto non pariatur voluptatum! Eos ipsam maxime assumenda quas, unde officia provident nam, ducimus veritatis eius suscipit, amet ullam consequatur odit sapiente.</p>
-                                        <cite class="p-opacity text-edit"><strong>Justin Jordan</strong>, Ipsum Enterpreneur</cite>
-                                    </blockquote>
-                                </div>
-                                <!-- Testimonial 2 -->
-                                <div class="item active left">
-                                    <blockquote>
-                                        <figure><img src="images/testimonial3.jpg" alt="" class="img-circle img-thumbnail m-b-md" width="150" height="150"> </figure>
-                                        <p class="p-opacity m-b-md">Optio accusamus quos ratione iusto non pariatur voluptatum! Eos ipsam maxime assumenda quas, unde officia provident nam, ducimus veritatis eius suscipit, amet ullam consequatur odit sapiente.</p>
-                                        <cite class="p-opacity text-edit"><strong>Justin Jordan</strong>, Ipsum Enterpreneur</cite>
-                                    </blockquote>
-                                </div>
+                <div class="row">
+                    <div class="col-md-10 col-md-offset-1 c2">
+                        <!-- Dynamic Options -->
+                        <div class="col-md-6">
+                            <div class="options-table">
+                                <form>
+                                    <div class="switch">
+                                        <p class="package-title">Need More Than 2 Users ?</p>
+                                        <input id="package1" class="package-toggle toggle-round-flat" type="checkbox" data-price="13">
+                                        <label for="package1"></label>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
+                        </div><!--/End Col Options -->
 
-                    </div><!-- /End Testimonial Carousel -->
+                        <!-- Dynamic Price -->
+                        <div class="col-md-6">
+                            <div class="pricing-table">
+                                <ul class="list-unstyled">
+                                    <li class="price text-edit"><i>$</i><span>0</span></li>
+                                    <li class="text-edit">First 2 users are completly <strong>FREE</strong></li>
+                                    <li class="package1 text-edit">Per user/month</li>
+                                    <li class="package1 text-edit">Add all the users you want.</li>
+                                    <li class="m-t p-b"><a href="{{ url('/register') }}" class="btn btn-shadow btn-blue text-uppercase">GET STARTED NOW</a></li>
+                                </ul>
+                            </div>
+                        </div><!-- /End Col Price -->
+
+                    </div><!-- /End Col-10 -->
                 </div><!-- /End Row -->
+                <!-- Pricing Note -->
+                <div class="row">
+                    <br>
+                    <div class="col-md-8 col-md-offset-2 text-center">
+                        <p><strong>Note.</strong> All of this prices are in US Dollars.<br>
+                            *Users are registed supervisors or technicians.
+                        </p>
+                    </div>
+                </div>
             </div><!-- /End Container -->
+
         </section>
 
 @include('landing.footer')

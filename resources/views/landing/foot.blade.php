@@ -18,10 +18,11 @@
 <script src="{{ url('js/plugins/picker.js') }}"></script>
 <script src="{{ url('js/plugins/picker.date.js') }}"></script>
 
-<script src="{{ elixir('js/bundle.js') }}"></script>
 <!-- Custom Script -->
 <script src="{{ url('js/custom.js') }}"></script>
 
 
 
-<iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;"></iframe></body></html>
+<iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;"></iframe>
+</body>
+</html>

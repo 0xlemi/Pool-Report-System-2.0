@@ -20,9 +20,9 @@
                 <!-- <p><strong>Section Footer 1</strong></p> -->
                 <ul class="footer-links m-t">
                     <li class="m-b"><a href="{{ url('/terms') }}" class="edit">Terms of Service</a></li>
-                    <li class="m-b"><a href="#" class="edit">About</a></li>
-                    <li class="m-b"><a href="#" class="edit">Contact</a></li>
-                    <li class="m-b"><a href="#" class="edit">Help</a></li>
+                    <!-- <li class="m-b"><a href="#" class="edit">About</a></li> -->
+                    <!-- <li class="m-b"><a href="#" class="edit">Contact</a></li> -->
+                    <!-- <li class="m-b"><a href="{{ url('/tutorials') }}" class="edit">Help</a></li> -->
                 </ul>
             </div>
             <!-- Footer Links -->

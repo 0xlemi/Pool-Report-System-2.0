@@ -144,7 +144,7 @@
                     <div class="col-md-4">
                         <div class="info text-center bg-edit bg-color bg-green text-white">
                             <h4 class="m-b-md">Business Plan</h4>
-                            <div class="price text-edit"><span class="currency">$</span>12</div>
+                            <div class="price text-edit"><span class="currency">$</span>13</div>
                             <ul class="details m-b-md text-edit"><li>per user/mo.</li>
                                 <li>Unlimited Users</li></ul>
                             <a class="btn btn-white text-uppercase wow pulse" data-wow-iteration="2" href="{{ url('/register') }}" style="visibility: visible; animation-iteration-count: 2; animation-name: pulse;">Get Started</a>
