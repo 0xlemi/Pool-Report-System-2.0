@@ -19,8 +19,8 @@
             <!-- Video Iframe -->
             <div class="col-md-10 col-md-offset-1 text-center">
                 <div class="videoWrapper">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/sU3FkzUKHXU" allowfullscreen=""></iframe>
-
+                    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/sU3FkzUKHXU" allowfullscreen=""></iframe> -->
+                    <img src="{{ \Storage::url('images/assets/landing/coming_soon.png') }}" width="950" height="530" alt="Coming Soon" />
                 </div>
             </div>
         </div><!-- /End Row -->
@@ -36,12 +36,11 @@
             <div class="col-md-5">
                 <h3 class="f-w-900">Quick overview of the android app</h3>
                 <p class="h5">The moble app has the same functionality the web app, but there are some differences that need to be clear up.</p>
-                <!-- <p class="m-b-0">Natus cumque odio sit harum facilis excepturi deleniti voluptatibus odit alias perspiciatis eligendi. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Esse animi eum fuga odit voluptatum ea error quidem, eveniet.</p> -->
             </div>
             <div class="col-md-6">
                 <div class="videoWrapper">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/sU3FkzUKHXU" allowfullscreen=""></iframe>
-
+                    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/sU3FkzUKHXU" allowfullscreen=""></iframe> -->
+                    <img src="{{ \Storage::url('images/assets/landing/coming_soon.png') }}" alt="Coming Soon" />
                 </div>
             </div><!--/End Col -->
         </div><!--/End Row -->

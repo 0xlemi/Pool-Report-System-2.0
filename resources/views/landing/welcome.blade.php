@@ -176,9 +176,9 @@
                         <!-- Video Image with Popup -->
                         <div class="col-md-4 col-md-offset-1">
                             <div class="popup-box">
-                                <img src="img/bg-2.jpg" class="img-responsive" alt="">
+                                <img src="{{ \Storage::url('images/assets/landing/coming_soon.png') }}" class="img-responsive" alt="">
                                 <div class="popup-button wow pulse" data-wow-iteration="3" style="visibility: visible; animation-iteration-count: 3; animation-name: pulse;">
-                                    <a class="mp-iframe" href="https://vimeo.com/70301553"><i class="fa fa-play" style="background-color: rgb(86, 182, 139);"></i></a>
+                                    <a href="{{ url('/tutorials') }}"><i class="fa fa-play" style="background-color: rgb(86, 182, 139);"></i></a>
                                 </div>
                             </div>
                         </div>
