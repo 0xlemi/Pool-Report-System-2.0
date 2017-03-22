@@ -20,7 +20,7 @@ class ReportObserver
         $admin = $report->admin();
 
         $admin->user->notify(new NewReportNotification($report, $authUser));
-        // $report->supervisor->user->notify(new NewReportNotification($report, $authUser));
+        $report->technician->supervisor->user->notify(new NewReportNotification($report, $authUser));
         foreach ($report->service->clients as $client) {
             $client->user->notify(new NewReportNotification($report, $authUser));
         }

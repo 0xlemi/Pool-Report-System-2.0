@@ -20,8 +20,10 @@ class SupervisorObserver
         $authUser = \Auth::user();
         $admin = $supervisor->admin();
         $admin->user->notify(new NewSupervisorNotification($supervisor, $authUser));
-        foreach ($admin->supervisors as $supervisor) {
-            $supervisor->user->notify(new NewSupervisorNotification($supervisor, $authUser));
+        foreach ($admin->supervisors as $supervisorElement) {
+            if($supervisor->id != $supervisorElement->id){
+                $supervisorElement->user->notify(new NewSupervisorNotification($supervisor, $authUser));
+            }
         }
     }
 
