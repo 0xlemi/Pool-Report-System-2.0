@@ -67,6 +67,9 @@ Route::get('reports/photos/{seq_id}', 'ReportsController@getPhoto');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
 
+// Technician
+Route::post('technicians/password/{seq_id}', 'TechniciansController@updatePassword');
+
 // Work Orders
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
 Route::get('workorders/photos/before/{seq_id}', 'WorkOrderController@getPhotosBefore');

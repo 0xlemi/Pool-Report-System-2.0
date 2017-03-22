@@ -82,6 +82,7 @@ function isset(strVariableName) {
     let clientWorks = require('./components/clientWorks.vue');
     let locationShow = require('./components/locationShow.vue');
     let reportIndex = require('./components/ReportIndex.vue');
+    let changeTechnicianPassword = require('./components/changeTechnicianPassword.vue');
 
 
     let mainVue = new Vue({
@@ -136,6 +137,7 @@ function isset(strVariableName) {
             supervisorTable,
             // technician
             technicianTable,
+            changeTechnicianPassword, 
             // invoice
             invoiceTable,
             payments,

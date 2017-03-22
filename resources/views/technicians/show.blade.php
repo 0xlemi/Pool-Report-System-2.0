@@ -79,6 +79,13 @@
 							</div>
 
 							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Password</label>
+									<change-technician-password
+										id="{{ $technician->seq_id }}">
+									</change-technician-password>
+							</div>
+
+							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $technician->cellphone }}">

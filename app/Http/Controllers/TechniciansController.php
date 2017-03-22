@@ -216,7 +216,7 @@ class TechniciansController extends PageController
     public function updatePassword(Request $request, $seq_id)
     {
         $this->validate($request, [
-            'password' => 'required|alpha_dash|between:6,200'
+            'password' => 'required|alpha_dash|confirmed|between:6,200'
         ]);
 
         $admin = $this->loggedUserAdministrator();
@@ -224,7 +224,7 @@ class TechniciansController extends PageController
 
         $this->authorize('update', $technician);
 
-        $user = $technician->user();
+        $user = $technician->user;
 
         $user->password = bcrypt($request->password);
         $user->save();
