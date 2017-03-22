@@ -69,8 +69,9 @@ class WorkOrderController extends PageController
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $currencies = config('constants.currencies');
 
-        return view('workorders.create', compact('services', 'supervisors'));
+        return view('workorders.create', compact('services', 'supervisors', 'currencies'));
     }
 
     /**
@@ -184,6 +185,13 @@ class WorkOrderController extends PageController
         $this->authorize('update', $workOrder);
 
         $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+
+        $date = (new Carbon($workOrder->start, 'UTC'))
+                    ->setTimezone($admin->timezone)
+                    ->format('m/d/Y h:i:s A');
+        JavaScript::put([
+            'defaultDate' => $date,
+        ]);
 
         return view('workorders.edit', compact('workOrder', 'supervisors'));
     }

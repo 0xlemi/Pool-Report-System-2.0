@@ -74,7 +74,7 @@
 						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Supervisor</label>
 							<div class="col-sm-10">
-								<dropdown :key="0"
+								<dropdown :key="{{ old('supervisor') }}"
 											:options="{{ $supervisors }}"
 											:name="'supervisor'">
 								</dropdown>

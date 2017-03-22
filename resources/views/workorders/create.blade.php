@@ -28,7 +28,7 @@
 							<label class="col-sm-2 form-control-label">Title:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="title" maxlength="50" value="">
+										name="title" maxlength="50" value="{{ old('title') }}">
 								@if ($errors->has('title'))
 									<small class="text-muted">{{ $errors->first('title') }}</small>
 								@endif
@@ -38,7 +38,7 @@
 						<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Service</label>
 							<div class="col-sm-10">
-								<dropdown :key="0"
+								<dropdown :key="{{ old('service') }}"
 											:options="{{ $services }}"
 											:name="'service'">
 								</dropdown>
@@ -51,7 +51,7 @@
                         <div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Supervisor</label>
 							<div class="col-sm-10">
-								<dropdown :key="0"
+								<dropdown :key="{{ old('supervisor') }}"
 											:options="{{ $supervisors }}"
 											:name="'supervisor'">
 								</dropdown>
@@ -67,15 +67,15 @@
 								<div class="input-group">
 									<div class="input-group-addon">$</div>
 									<input type="text" class="form-control money-mask-input"
-									 		name="price" placeholder="Amount"
-									 		value="{{ old('price') }}">
-									 <div class="input-group-addon">
-									 	<select name='currency' data-live-search="true">
-									 		<option value="USD" {{ (old('currency') == 'USD') ? 'selected':'' }}>USD</option>
-									 		<option value="MXN" {{ (old('currency') == 'MXN') ? 'selected':'' }}>MXN</option>
-									 		<option value="CAD" {{ (old('currency') == 'CAD') ? 'selected':'' }}>CAD</option>
-									 	</select>
-									 </div>
+											name="price" placeholder="Amount"
+											value="{{ old('price') }}">
+									<div class="input-group-addon">
+										<select name='currency'>
+											@foreach ($currencies as $currency)
+												<option value="{{ $currency }}" {{ (old('currency') == $currency) ? 'selected':'' }}>{{ $currency }}</option>
+											@endforeach
+										</select>
+									</div>
 								</div>
 								@if ($errors->has('price'))
 									<small class="text-muted">{{ $errors->first('price') }}</small>
@@ -108,7 +108,7 @@
 							<div class="col-sm-10">
 								<textarea rows="5" class="form-control"
 											placeholder="Describe the work order to be done."
-											name="description"></textarea>
+											name="description">{{ old('description') }}</textarea>
 								@if ($errors->has('description'))
 									<small class="text-muted">{{ $errors->first('description') }}</small>
 								@endif

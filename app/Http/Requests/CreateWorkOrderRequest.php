@@ -32,7 +32,7 @@ class CreateWorkOrderRequest extends FormRequest
             'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
-            'currency' => 'required|string|size:3',
+            'currency' => 'required|string|validCurrency',
             'photo' => 'mimes:jpg,jpeg,png',
         ];
     }
