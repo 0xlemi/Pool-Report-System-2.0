@@ -167,6 +167,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
+        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
     ],
 
@@ -219,6 +220,7 @@ return [
         'JavaScript' => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'ImageHTML' => Barryvdh\Snappy\Facades\SnappyImage::class,
+        'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
     ],
 
 ];

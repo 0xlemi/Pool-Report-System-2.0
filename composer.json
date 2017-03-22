@@ -17,7 +17,9 @@
         "league/flysystem-aws-s3-v3": "^1.0",
         "aws/aws-sdk-php": "~3.0",
         "laravel/tinker": "^1.0",
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "sentry/sentry": "^1.6",
+        "sentry/sentry-laravel": "^0.6.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
