@@ -53,7 +53,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewTechnicianMail($this->technician, $this->user, $this->helper))->to($notifiable->email);
+        return (new NewTechnicianMail($this->technician, $notifiable, $this->helper))->to($notifiable->email);
     }
 
     /**

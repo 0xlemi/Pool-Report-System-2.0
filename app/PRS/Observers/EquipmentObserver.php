@@ -26,7 +26,7 @@ class EquipmentObserver
         foreach ($admin->supervisors as $supervisor) {
             $supervisor->user->notify(new AddedEquipmentNotification($equipment, $authUser));
         }
-        foreach ($equiment->service()->clients as $client) {
+        foreach ($equipment->service()->clients as $client) {
             $client->user->notify(new AddedEquipmentNotification($equipment, $authUser));
         }
     }

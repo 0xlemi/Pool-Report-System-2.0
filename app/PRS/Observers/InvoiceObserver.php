@@ -21,13 +21,13 @@ class InvoiceObserver
             // Invoice Related Clients
         $authUser = \Auth::user();
         $admin = $invoice->admin();
-        $service = $inovice->invoiceable->service;
+        $service = $invoice->invoiceable->service;
         $admin->user->notify(new NewInvoiceNotification($invoice, $authUser));
         foreach ($admin->supervisors as $supervisor) {
-            $supervisor->user->notify(new NewInvoiceNotification($report, $authUser));
+            $supervisor->user->notify(new NewInvoiceNotification($invoice, $authUser));
         }
         foreach ($service->clients as $client) {
-            $client->user->notify(new NewInvoiceNotification($report, $authUser));
+            $client->user->notify(new NewInvoiceNotification($invoice, $authUser));
         }
 
     }

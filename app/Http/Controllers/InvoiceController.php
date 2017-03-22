@@ -68,9 +68,13 @@ class InvoiceController extends PageController
 
         if($invoice->delete()){
             flash()->success('Deleted', 'The invoice was successfuly deleted');
-            return redirect('invoices');
+            return response()->json([
+                'message' => 'The client was deleted successfully.'
+            ]);
+
         }
-        flash()->error('Not Deleted', 'We could not delete this invoice, please try again later.');
-        return redirect()->back();
+        return response()->json([
+                'error' => 'The client was not deleted, please try again later.'
+            ], 500);
     }
 }

@@ -55,7 +55,7 @@ class CreateAdministratorsTable extends Migration
                 $table->string('salt_high')->default('High'); // 4
                 $table->string('salt_very_high')->default('Very High'); // 5
             // Billing
-                $table->integer('free_objects')->default(3);
+                $table->integer('free_objects')->default(2);
                 // Stripe
                 $table->string('stripe_id')->nullable();
                 $table->string('card_brand')->nullable();

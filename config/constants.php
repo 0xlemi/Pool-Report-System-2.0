@@ -41,6 +41,7 @@ return [
         'longitude' => '-109.705866',
     ],
 
+    // This need to be in sync with the observers
     'notificationsAdministrator' => [
         'notify_report_created',
         'notify_workorder_created',

@@ -50,7 +50,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewWorkOrderMail($this->workOrder, $this->user, $this->helper))->to($notifiable->email);
+        return (new NewWorkOrderMail($this->workOrder, $notifiable, $this->helper))->to($notifiable->email);
     }
 
     /**

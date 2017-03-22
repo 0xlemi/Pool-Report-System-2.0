@@ -100,13 +100,16 @@ class TodaysRouteController extends PageController
         $service = $admin->serviceBySeqId($request->service_id);
         $technician = $admin->technicianBySeqId($request->technician_id);
 
-        $on_time = $this->reportHelpers->checkOnTimeValue(
-// ****** check the timezoen for check on time
-                $completed_at,
-                $service->start_time,
-                $service->end_time,
-                $admin->timezone
-            );
+        $on_time = 'onTime';
+        if($service->hasServiceContract()){
+            $on_time = $this->reportHelpers->checkOnTimeValue(
+                // ****** check the timezoen for check on time
+                    $completed_at,
+                    $service->serviceContract->start_time,
+                    $service->serviceContract->end_time,
+                    $admin->timezone
+                );
+        }
 
         $report = $service->reports()->create([
             'technician_id' => $technician->id,

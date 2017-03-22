@@ -51,7 +51,7 @@ class NewReportNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewReportMail($this->report, $this->user))->to($notifiable->email);
+        return (new NewReportMail($this->report, $notifiable))->to($notifiable->email);
     }
 
     /**
