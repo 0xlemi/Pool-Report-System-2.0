@@ -185,7 +185,7 @@ td {
 </table>
   <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full" >
     <tr>
-      <td bgcolor="#bd9e6f" align="center"style="background-color: rgb(68, 158, 228);"><!-- Mobile Wrapper -->
+      <td bgcolor="#e9f1f7" align="center"style="background-color: rgb(233, 241, 247);"><!-- Mobile Wrapper -->
 
         <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="full">
           <tr>
@@ -267,7 +267,7 @@ td {
                         <tr>
                           <td align="center" width="250" valign="middle" class="em_pad"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" align="center" style="font-size: 30px; color: rgb(51, 51, 51); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 34px;"  cu-identify="element_02773212454171379"><multiline style="font-size: x-large; font-weight: bold;">A innovative way to see and manage your pool</td>
+                                <td width="100%" align="center" style="font-size: 30px; color: rgb(51, 51, 51); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 34px;"  cu-identify="element_02773212454171379"><multiline style="font-size: x-large; font-weight: bold;">You can check your swimming pool online now</td>
                               </tr>
                             </table></td>
                         </tr>
@@ -291,7 +291,7 @@ td {
                         <tr>
                           <td align="center" width="250" valign="middle" class="em_pad"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" align="center" style="font-size: 15px; color: rgb(64, 64, 64); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 23px;"  cu-identify="element_06940842468703603"><div><span style="font-style: italic;">Some of the Features:</span></div><span style="font-style: italic;">See Pool Cleaning Reports&nbsp;</span><div><span style="font-style: italic;">Statements<br>See Cleaning Technician Info<br>Communicate directly to your pool company<br>And alot more</span></div></td>
+                                <td width="100%" align="center" style="font-size: 15px; color: rgb(64, 64, 64); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 23px;"  cu-identify="element_06940842468703603"><div><span style="font-style: italic; font-weight:bold;">Some of the Features:</span></div><span style="font-style: italic;">See Pool Cleaning Reports&nbsp;</span><div><span style="font-style: italic;">Statements<br>See Cleaning Technician Info<br>Communicate directly to your pool company<br>And alot more</span></div></td>
                               </tr>
                             </table></td>
                         </tr>
@@ -312,7 +312,7 @@ td {
                                   <div class="sortable_inner ui-sortable">
                                     <table border="0" cellpadding="0" cellspacing="0" class="mcenter">
                                       <tr>
-                                        <td align="center" valign="middle" height="40" bgcolor="#161619" style="font-size: 14px; font-family: Lato, Arial, sans-serif; font-weight: 700; color: rgb(255, 255, 255); border-radius: 25px; background: rgb(22, 22, 25); padding-left: 20px; padding-right: 20px;"target="_blank" style="text-decoration: none; color: rgb(255, 255, 255); line-height: 31px; display: block;"  cu-identify="element_06662840111401607">Get Started it is Free</td>
+                                        <td align="center" valign="middle" height="40" bgcolor="#161619" style="font-size: 14px; font-family: Lato, Arial, sans-serif; font-weight: 700; color: rgb(255, 255, 255); border-radius: 25px; background: rgb(22, 22, 25); padding-left: 20px; padding-right: 20px;"target="_blank" style="text-decoration: none; color: rgb(255, 255, 255); line-height: 31px; display: block;"  cu-identify="element_06662840111401607">LOG IN</td>
                                       </tr>
                                     </table>
                                   </div>
@@ -348,7 +348,7 @@ td {
                   <td><div class="sortable_inner ui-sortable">
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
-                          <td valign="top" align="center" style="font-family:'Lato', Arial, sans-serif; font-weight:400; font-size:11px; color:#ffffff; line-height:22px;" > © 20XX YourCompany. All Rights Reserved.</td>
+                          <td valign="top" align="center" style="font-family:'Lato', Arial, sans-serif; font-weight:400; font-size:11px; color:#ffffff; line-height:22px;" > © 2017 Pool Report System. All Rights Reserved.</td>
                         </tr>
                       </table>
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
