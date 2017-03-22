@@ -34,7 +34,8 @@ class SendActivationEmail
             Mail::to($event->user)->send(new SendActivationToken($event->user->activationToken));
         }
         elseif(!$event->user->isTechnician()){
-            Mail::to($event->user)->send(new WelcomeActivationMail($event->user->activationToken));
+            $admin = $event->user->userable()->admin();
+            Mail::to($event->user)->send(new WelcomeActivationMail($event->user->activationToken, $admin));
         }
     }
 }
