@@ -95,6 +95,17 @@
 							</div>
 						</div>
 
+						<div class="form-group row {{($errors->has('password'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Password:</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control"
+										name="password" value="">
+								@if ($errors->has('password'))
+									<small class="text-muted">{{ $errors->first('password') }}</small>
+								@endif
+							</div>
+						</div>
+
 						<div class="form-group row {{($errors->has('cellphone'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 							<div class="col-sm-10">

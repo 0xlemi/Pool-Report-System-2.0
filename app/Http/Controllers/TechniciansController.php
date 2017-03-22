@@ -109,7 +109,8 @@ class TechniciansController extends PageController
         $user = $technician->user()->create([
             'email' => htmlentities($request->username),
         ]);
-
+        $user->password = bcrypt($request->password);
+        $user->save();
 
         if($user && $technician && $photo){
             flash()->success('Created', 'New technician successfully created.');
@@ -210,6 +211,28 @@ class TechniciansController extends PageController
         }
         flash()->success('Updated', 'Technician successfully updated.');
         return redirect('technicians/'.$seq_id);
+    }
+
+    public function updatePassword(Request $request, $seq_id)
+    {
+        $this->validate($request, [
+            'password' => 'required|alpha_dash|between:6,200'
+        ]);
+
+        $admin = $this->loggedUserAdministrator();
+        $technician = $admin->technicianBySeqId($seq_id);
+
+        $this->authorize('update', $technician);
+
+        $user = $technician->user();
+
+        $user->password = bcrypt($request->password);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Technician password was updated.'
+        ]);
+
     }
 
     /**
