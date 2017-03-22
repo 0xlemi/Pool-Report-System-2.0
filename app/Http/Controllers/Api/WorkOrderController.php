@@ -197,6 +197,8 @@ class WorkOrderController extends ApiController
                         'supervisor_id',
                         'add_photos',
                         'remove_photos',
+                        'price',
+                        'currency'
                         ]
                     )
             ));

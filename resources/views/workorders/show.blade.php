@@ -110,15 +110,19 @@
         				@endcan
 						<span style="float: right;display:inline;">
     						@can('update', $workOrder)
-								<a class="btn btn-primary"
-										href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
-									<i class="font-icon font-icon-pencil"></i>
-									&nbsp;&nbsp;Edit Work Order
-								</a>
+								@if(!$workOrder->end()->finished())
+									<a class="btn btn-primary"
+											href="{{ url('/workorders/'.$workOrder->seq_id.'/edit') }}">
+										<i class="font-icon font-icon-pencil"></i>
+										&nbsp;&nbsp;Edit Work Order
+									</a>
+								@endif
     						@endcan
     						@can('finish', $workOrder)
-								<finish-work-order-button work-order-id="{{ $workOrder->seq_id }}">
-								</finish-work-order-button>
+								@if(!$workOrder->end()->finished())
+									<finish-work-order-button work-order-id="{{ $workOrder->seq_id }}">
+									</finish-work-order-button>
+								@endif
     						@endcan
 						</span>
 						<br>

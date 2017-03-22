@@ -153,6 +153,14 @@ class WorkOrderController extends PageController
 
         $this->authorize('finish', $workOrder);
 
+        // check that work order is not marked as finished
+        if($workOrder->end()->finished()){
+            return response()->json([
+                'title' => 'This Work Order was already finished.',
+                'message' => 'You cannot finish a work order that is already finished.'
+            ], 400);
+        }
+
         $workOrder->end = (new Carbon($request->end, $admin->timezone))->setTimezone('UTC');
         $workOrder->save();
 
@@ -194,11 +202,19 @@ class WorkOrderController extends PageController
 
         $this->authorize('update', $workOrder);
 
+        // check that work order is not marked as finished
+        if($workOrder->end()->finished()){
+            return response()->json([
+                'title' => 'This Work Order was already finished.',
+                'message' => 'You cannot edit a workorder that is already finished.'
+            ], 400);
+        }
+
         $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
         $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
 
         $workOrder->fill(array_merge(
-                            array_map('htmlentities', $request->all()),
+                            array_map('htmlentities', $request->except(['price', 'currency'])),
                             [
                                 'start' => $startDate,
                                 'supervisor_id' => $supervisor->id,

@@ -30,8 +30,6 @@ class UpdateWorkOrderRequest extends FormRequest
             'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
             'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
             'start' => 'date',
-            'price' => 'numeric|max:10000000',
-            'currency' => 'string|size:3',
             'photo' => 'mimes:jpg,jpeg,png',
         ];
     }

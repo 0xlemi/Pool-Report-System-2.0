@@ -52,31 +52,6 @@
 								</div>
 							</div>
 
-                            <div class="form-group row {{($errors->has('price') || $errors->has('currency'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Price:</label>
-								<div class="col-sm-10">
-									<div class="input-group">
-										<div class="input-group-addon">$</div>
-										<input type="text" class="form-control money-mask-input"
-										 		name="price" placeholder="Amount"
-										 		value="{{ $workOrder->price }}">
-										 <div class="input-group-addon">
-										 	<select name='currency' data-live-search="true">
-										 		<option value="USD" {{ ($workOrder->currency == 'USD') ? 'selected':'' }}>USD</option>
-										 		<option value="MXN" {{ ($workOrder->currency == 'MXN') ? 'selected':'' }}>MXN</option>
-										 		<option value="CAD" {{ ($workOrder->currency == 'CAD') ? 'selected':'' }}>CAD</option>
-										 	</select>
-										 </div>
-									</div>
-									@if ($errors->has('price'))
-										<small class="text-muted">{{ $errors->first('price') }}</small>
-									@endif
-									@if ($errors->has('currency'))
-										<small class="text-muted">{{ $errors->first('currency') }}</small>
-									@endif
-								</div>
-							</div>
-
                             <div class="form-group row">
 								<label class="col-sm-2 form-control-label">Started at</label>
 								<div class="col-sm-10">
