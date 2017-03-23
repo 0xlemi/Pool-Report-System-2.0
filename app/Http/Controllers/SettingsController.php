@@ -162,6 +162,11 @@ class SettingsController extends PageController
         return response('Password was not updated, the password is wrong', 400);
     }
 
+    public function deleteAccount(Request $request)
+    {
+        $this->authorize('deleteAccount', Setting::class);
+    }
+
     public function customization(Request $request)
     {
         $this->authorize('customization', Setting::class);

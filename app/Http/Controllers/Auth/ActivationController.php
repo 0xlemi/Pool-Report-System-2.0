@@ -76,14 +76,22 @@ class ActivationController extends Controller
             }
         }
 
-        $token = $user->activationToken()->create([
-            'token' => str_random(128),
-        ]);
-
-        if($user->isAdministrator){
-            Mail::to($user)->send(new SendActivationToken($user->activationToken));
+        if($user->activationToken){
+            $token = $user->activationToken;
+        }else{
+            $token = $user->activationToken()->create([
+                'token' => str_random(128),
+            ]);
         }
-        Mail::to($user)->send(new WelcomeActivationMail($user->activationToken));
+
+        if($user->isAdministrator()){
+            Mail::to($user)->send(new SendActivationToken($token));
+        }
+        else{
+            if($request->wantsJson()){
+                Mail::to($user)->send(new WelcomeActivationMail($token, $user->userable()->admin()));
+            }
+        }
 
         return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
     }
