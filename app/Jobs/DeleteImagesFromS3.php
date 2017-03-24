@@ -35,6 +35,7 @@ class DeleteImagesFromS3 implements ShouldQueue
         foreach ($this->images as $image) {
             // Delete the image files from s3 too
             dispatch(new DeleteImageFromS3($image->big, $image->medium, $image->thumbnail, $image->icon));
+            $image->delete();
         }
     }
 }
