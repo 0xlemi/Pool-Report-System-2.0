@@ -28,6 +28,19 @@ class SupervisorObserver
     }
 
     /**
+     * Listen to the App\Supervisor deleting event.
+     *
+     * @param  Supervisor  $service
+     * @return void
+     */
+    public function deleting(Supervisor $supervisor)
+    {
+        foreach ($supervisor->technicians as $technician) {
+            $technician->delete();
+        }
+    }
+
+    /**
      * Listen to the Supervisor deleting event.
      *
      * @param  Supervisor  $supervisor

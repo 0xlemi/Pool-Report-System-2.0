@@ -38,6 +38,19 @@ class WorkOrderObserver
     }
 
     /**
+     * Listen to the App\WorkOrder deleting event.
+     *
+     * @param  WorkOrder  $service
+     * @return void
+     */
+    public function deleting(WorkOrder $workOrder)
+    {
+        foreach ($workOrder->works as $work) {
+            $work->delete();
+        }
+    }
+
+    /**
      * Listen to the WorkOrder deleting event.
      *
      * @param  WorkOrder  $workOrder

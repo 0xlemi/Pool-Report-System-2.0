@@ -376,15 +376,6 @@ class Administrator extends Model
                     ->firstOrFail();
     }
 
-    /**
-     * Overwrite this from trait,
-     * because foreign key is 'admin_id' not 'administrator_id'
-     * tested
-     */
-    public function images(){
-        return $this->hasMany('App\Image', 'admin_id');
-    }
-
 
     //******** VALUE OBJECTS ********
 

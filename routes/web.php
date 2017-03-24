@@ -150,6 +150,7 @@ Route::get('settings', 'SettingsController@index');
 Route::post('settings/profile', 'SettingsController@profile');
 Route::post('settings/changeEmail', 'SettingsController@changeEmail');
 Route::post('settings/changePassword', 'SettingsController@changePassword');
+Route::delete('settings/delete', 'SettingsController@deleteAccount');
 
 Route::post('settings/customization', 'SettingsController@customization');
 

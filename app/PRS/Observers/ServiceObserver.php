@@ -25,6 +25,25 @@ class ServiceObserver
     }
 
     /**
+     * Listen to the App\Service deleting event.
+     *
+     * @param  Service  $service
+     * @return void
+     */
+    public function deleting(Service $service)
+    {
+        foreach ($service->reports as $report) {
+            $report->delete();
+        }
+        foreach ($service->workOrders as $workOrder) {
+            $workOrder->delete();
+        }
+        foreach ($service->equipment as $equipment) {
+            $equipment->delete();
+        }
+    }
+
+    /**
      * Listen to the Service deleting event.
      *
      * @param  Service  $service

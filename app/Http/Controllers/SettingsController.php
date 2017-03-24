@@ -50,6 +50,7 @@ class SettingsController extends PageController
                 'name' => $user->userable()->name,
                 'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
                 'email' => $user->email,
+                'deleteIcon' => \Storage::url('images/assets/app/exclamation-mark.png'),
             ];
         }
 
@@ -149,22 +150,46 @@ class SettingsController extends PageController
           'confirmPassword' => 'required|alpha_dash|between:6,200|same:newPassword',
         ]);
 
-            $user = $this->getUser();
-            if($user->checkPassword($request->oldPassword)){
-                $user->password = bcrypt($request->newPassword);
-                if($user->save()){
-                    return response('Password was updated');
-                }
+        $user = $this->getUser();
+        if($user->checkPassword($request->oldPassword)){
+            $user->password = bcrypt($request->newPassword);
+            if($user->save()){
+                return response('Password was updated');
+            }
             return response('Password was not updated, there was an error.', 500);
          }
-        // avoid password fishing
-        sleep(2);
+        sleep(3); // avoid password fishing
         return response('Password was not updated, the password is wrong', 400);
     }
 
     public function deleteAccount(Request $request)
     {
         $this->authorize('deleteAccount', Setting::class);
+
+        $this->validate($request, [
+          'password' => 'required|string|max:200',
+        ]);
+
+        $user = $this->getUser();
+        if(!$user->checkPassword($request->password)){
+            sleep(3); // avoid password fishing
+            return response()->json([
+                'error' => 'Account not deleted, the password is wrong.'
+            ], 400);
+        }
+
+        $object = $user->userable();
+        if($object->delete()){
+            \Auth::logout();
+            $request->session()->flash('info', 'Your account has been completely deleted!');
+            return response()->json([
+                'message' => 'Your account has been completely deleted.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'The account was not deleted, please contact support@poolreportsystem.com.'
+            ], 500);
+
     }
 
     public function customization(Request $request)

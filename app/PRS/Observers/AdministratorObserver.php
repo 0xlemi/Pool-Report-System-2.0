@@ -9,6 +9,24 @@ use App\Jobs\DeleteImagesFromS3;
 class AdministratorObserver
 {
 
+    /**
+     * Listen to the App\Administrator deleting event.
+     *
+     * @param  App\Administrator  $admin
+     * @return void
+     */
+    public function deleting(Administrator $admin)
+    {
+        foreach ($admin->clients as $client) {
+            $client->delete();
+        }
+        foreach ($admin->supervisors as $supervisor) {
+            $supervisor->delete();
+        }
+        foreach ($admin->services as $service) {
+            $service->delete();
+        }
+    }
 
     /**
      * Listen to the App\Administrator deleting event.

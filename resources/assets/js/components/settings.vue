@@ -75,6 +75,13 @@
                     <br>
                     <change-password></change-password>
                 </div>
+                <div class="col-md-12">
+                    <hr>
+                    <delete-account
+                        url="settings/delete/"
+                        :icon="profile.deleteIcon">
+                    </delete-account>
+                </div>
             </div>
         </div>
 
@@ -150,6 +157,7 @@ import accountSettings from './accountSettings.vue';
 import notificationSettings from './notificationSettings.vue';
 import changeEmail from './changeEmail.vue';
 import changePassword from './changePassword.vue';
+import deleteAccount from './deleteAccount.vue';
 import customizationSettings from './customizationSettings.vue';
 import billing from './billing.vue';
 import Permissions from './Permissions.vue';
@@ -163,6 +171,7 @@ export default {
         notificationSettings,
         changeEmail,
         changePassword,
+        deleteAccount,
         billing,
         Permissions,
         alert
