@@ -32,11 +32,22 @@ class InvoiceController extends ApiController
         }
 
         $this->validate($request, [
-            'limit' => 'integer|between:1,25'
+            'limit' => 'integer|between:1,25',
+            'closed' => 'boolean',
         ]);
 
         $limit = ($request->limit)?: 5;
-        $invoices = $this->loggedUserAdministrator()->invoices()->paginate($limit);
+        $admin = $this->loggedUserAdministrator();
+
+        if($request->has('closed')){
+            if($request->closed){
+                $invoices = $admin->invoices()->whereNotNull('closed')->paginate($limit);
+            }else{
+                $invoices = $admin->invoices()->whereNull('closed')->paginate($limit);
+            }
+        }else{
+            $invoices = $admin->invoices()->paginate($limit);
+        }
 
         return $this->respondWithPagination(
             $invoices,
