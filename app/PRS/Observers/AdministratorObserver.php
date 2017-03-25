@@ -17,6 +17,12 @@ class AdministratorObserver
      */
     public function deleting(Administrator $admin)
     {
+        // Cancel Stripe Subscription
+        if ($admin->subscribed('main')) {
+            $admin->subscription('main')->cancelNow();
+        }
+
+        // Delete associated objects
         foreach ($admin->clients as $client) {
             $client->delete();
         }
