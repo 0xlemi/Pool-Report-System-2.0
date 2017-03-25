@@ -75,8 +75,8 @@ trait BillableAdministrator{
      */
     public function objectActiveCount()
     {
-        return $this->techniciansActive()->get()->count()
-                + $this->supervisorsActive()->get()->count();
+        return $this->techniciansActive()->count()
+                + $this->supervisorsActive()->count();
     }
 
 

@@ -327,7 +327,8 @@ class SettingsController extends PageController
 
         if($admin->subscribedToPlan('free', 'main')) {
             return $admin->subscription('main')
-                            ->swap('pro');
+                            ->swap('pro')
+                            ->updateQuantity($admin->billableObjects());
         }elseif($admin->subscribedToPlan('pro', 'main')){
             return response()->json(['error' => 'You cannot upgrade if you are on pro subscription.'], 422);
         }

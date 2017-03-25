@@ -6,6 +6,7 @@ use App\Supervisor;
 use App\Notifications\NewSupervisorNotification;
 use App\Jobs\DeleteModels;
 use App\Jobs\DeleteImagesFromS3;
+use App\Jobs\UpdateSubscriptionQuantity;
 
 class SupervisorObserver
 {
@@ -19,6 +20,9 @@ class SupervisorObserver
     {
         $authUser = \Auth::user();
         $admin = $supervisor->admin();
+
+        dispatch(new UpdateSubscriptionQuantity($admin));
+
         $admin->user->notify(new NewSupervisorNotification($supervisor, $authUser));
         foreach ($admin->supervisors as $supervisorElement) {
             if($supervisor->id != $supervisorElement->id){
@@ -28,9 +32,20 @@ class SupervisorObserver
     }
 
     /**
+     * Listen to the Supervisor saved event.
+     *
+     * @param  App\Supervisor  $supervisor
+     * @return void
+     */
+    public function saved(Supervisor $supervisor)
+    {
+        dispatch(new UpdateSubscriptionQuantity($supervisor->admin()));
+    }
+
+    /**
      * Listen to the App\Supervisor deleting event.
      *
-     * @param  Supervisor  $service
+     * @param  Supervisor  $supervisor
      * @return void
      */
     public function deleting(Supervisor $supervisor)

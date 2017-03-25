@@ -5,6 +5,7 @@ namespace App\PRS\Observers;
 use App\Technician;
 use App\Jobs\DeleteModels;
 use App\Jobs\DeleteImagesFromS3;
+use App\Jobs\UpdateSubscriptionQuantity;
 use App\Notifications\NewTechnicianNotification;
 
 class TechnicianObserver
@@ -19,10 +20,24 @@ class TechnicianObserver
     {
         $authUser = \Auth::user();
         $admin = $technician->admin();
+
+        dispatch(new UpdateSubscriptionQuantity($admin));
+
         $admin->user->notify(new NewTechnicianNotification($technician, $authUser));
         foreach ($admin->supervisors as $supervisor) {
             $supervisor->user->notify(new NewTechnicianNotification($technician, $authUser));
         }
+    }
+
+    /**
+     * Listen to the Technician saved event.
+     *
+     * @param  Technician  $technician
+     * @return void
+     */
+    public function saved(Technician $technician)
+    {
+        dispatch(new UpdateSubscriptionQuantity($technician->admin()));
     }
 
     /**
