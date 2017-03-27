@@ -19,12 +19,12 @@ class CreateTriggersPayments extends Migration
             FOR EACH ROW
             BEGIN
 
-                DECLARE v_admin INT;
-                SELECT admin_id INTO v_admin
+                DECLARE v_company INT;
+                SELECT company_id INTO v_company
                 FROM invoices
                 WHERE id = NEW.invoice_id;
 
-                SET NEW.seq_id = (SELECT f_gen_seq('payments',v_admin));
+                SET NEW.seq_id = (SELECT f_gen_seq('payments',v_company));
             END
       ");
     }

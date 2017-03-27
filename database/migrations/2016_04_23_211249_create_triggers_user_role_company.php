@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTriggersInvoice extends Migration
+class CreateTriggersUserRoleCompany extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class CreateTriggersInvoice extends Migration
     public function up()
     {
         DB::unprepared("
-            CREATE TRIGGER trg_invoices_bi_seq
-            BEFORE INSERT ON invoices
+            CREATE TRIGGER trg_user_role_company_bi_seq
+            BEFORE INSERT ON user_role_company
             FOR EACH ROW
-                BEGIN
-                SET NEW.seq_id = (SELECT f_gen_seq('invoices',NEW.company_id));
+            BEGIN
+              SET NEW.seq_id = (SELECT f_gen_seq('user_role_company',NEW.company_id));
             END
-      ");
+        ");
     }
 
     /**
@@ -30,6 +30,6 @@ class CreateTriggersInvoice extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_invoices_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_user_role_company_bi_seq');
     }
 }

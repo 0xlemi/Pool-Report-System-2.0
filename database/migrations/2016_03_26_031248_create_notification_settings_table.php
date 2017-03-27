@@ -16,9 +16,9 @@ class CreateNotificationSettingsTable extends Migration
         Schema::create('notification_settings', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $name->string('name');
-            $name->string('text');
-            $name->string('type');
+            $table->string('name');
+            $table->string('text');
+            $table->string('type');
             $table->timestamps();
         });
     }

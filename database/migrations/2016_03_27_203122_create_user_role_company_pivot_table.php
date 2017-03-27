@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUsersRolesPivotTable extends Migration
+class CreateUserRoleCompanyPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -24,6 +24,7 @@ class CreateUsersRolesPivotTable extends Migration
 
             $table->timestamps();
 
+            $table->integer('seq_id')->unsigned()->index();
             $table->unique(['user_id', 'role_id', 'company_id']);
 
             $table->foreign('user_id')
@@ -48,6 +49,6 @@ class CreateUsersRolesPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_role');
+        Schema::dropIfExists('user_role_company');
     }
 }

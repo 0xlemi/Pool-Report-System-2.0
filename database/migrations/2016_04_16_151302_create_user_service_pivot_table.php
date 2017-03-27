@@ -1,11 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Service;
-use Stripe\Error\ApiConnection;
 
-class CreateClientServicesTable extends Migration
+class CreateUserServicePivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +13,7 @@ class CreateClientServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('client_service', function (Blueprint $table) {
+        Schema::create('user_service', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('user_id')->unsigned()->index();
             $table->integer('service_id')->unsigned()->index();
@@ -37,17 +36,7 @@ class CreateClientServicesTable extends Migration
                 ->references('id')
                 ->on('services')
                 ->onDelete('cascade');
-
         });
-
-        // DB::unprepared("
-        //     ALTER TABLE `client_service`
-        //         ADD CHECK (invoiceable_type IN (
-        //             'App\WorkOrder',
-        //             'App\ServiceContract'
-        //         ));
-        // ");
-
     }
 
     /**
@@ -57,6 +46,6 @@ class CreateClientServicesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('client_service');
+        Schema::dropIfExists('user_service');
     }
 }

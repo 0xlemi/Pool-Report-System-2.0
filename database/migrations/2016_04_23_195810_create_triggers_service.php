@@ -17,7 +17,7 @@ class CreateTriggersService extends Migration
             BEFORE INSERT ON services
             FOR EACH ROW
             BEGIN
-              SET NEW.seq_id = (SELECT f_gen_seq('services',NEW.admin_id));
+              SET NEW.seq_id = (SELECT f_gen_seq('services',NEW.company_id));
             END
         ");
     }

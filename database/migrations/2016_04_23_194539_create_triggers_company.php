@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTriggersAdministrator extends Migration
+class CreateTriggersCompany extends Migration
 {
     /**
      * Run the migrations.
