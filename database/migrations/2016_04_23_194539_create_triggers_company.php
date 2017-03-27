@@ -13,25 +13,21 @@ class CreateTriggersAdministrator extends Migration
     public function up()
     {
         DB::unprepared("
-            CREATE TRIGGER trg_administrators_ai_seq
-            AFTER INSERT ON administrators
+            CREATE TRIGGER trg_company_ai_seq
+            AFTER INSERT ON companies
             FOR EACH ROW
             BEGIN
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
-                VALUES ('clients', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
+                VALUES ('users', NEW.id, 0);
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('services', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('reports', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('work_orders', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
-                VALUES ('supervisors', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
-                VALUES ('technicians', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('invoices', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `admin_id`, `val`)
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('payments', NEW.id, 10000);
             END
         ");

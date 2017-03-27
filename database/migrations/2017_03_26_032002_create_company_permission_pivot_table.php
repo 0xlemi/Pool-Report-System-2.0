@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServiceMissingHistoriesTable extends Migration
+class CreateCompanyPermissionPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,22 @@ class CreateServiceMissingHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('missing_histories', function (Blueprint $table) {
+        Schema::create('company_permission', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->date('date');
-            $table->integer('num_services_missing');
-            $table->integer('num_services_done');
             $table->integer('company_id')->unsigned();
+            $table->integer('permission_id')->unsigned();
+
             $table->timestamps();
 
-            $table->unique(['date', 'company_id']);
+            $table->primary(['company_id', 'permission_id']);
+
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
+                ->onDelete('cascade');
+            $table->foreign('permission_id')
+                ->references('id')
+                ->on('permissions')
                 ->onDelete('cascade');
         });
     }
@@ -37,6 +40,6 @@ class CreateServiceMissingHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('missing_histories');
+        Schema::dropIfExists('company_permission');
     }
 }

@@ -21,19 +21,16 @@ class CreateWorksTable extends Migration
             $table->string('units');
             $table->decimal('cost', 16, 2); // currency is same as work order
             $table->integer('work_order_id')->unsigned();
-            $table->integer('technician_id')->unsigned();
+            $table->integer('user_role_company_id')->unsigned();
             $table->timestamps();
-        });
 
-        Schema::table('works', function(Blueprint $table){
             $table->foreign('work_order_id')
                 ->references('id')
                 ->on('work_orders')
                 ->onDelete('cascade');
-
-            $table->foreign('technician_id')
+            $table->foreign('user_role_company_id')
                 ->references('id')
-                ->on('technicians')
+                ->on('user_role_company')
                 ->onDelete('cascade');
         });
     }

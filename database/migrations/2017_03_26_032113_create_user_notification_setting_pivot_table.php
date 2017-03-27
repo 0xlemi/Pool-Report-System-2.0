@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActivationTokensTable extends Migration
+class CreateUserNotificationSettingPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,22 @@ class CreateActivationTokensTable extends Migration
      */
     public function up()
     {
-        Schema::create('activation_tokens', function (Blueprint $table) {
+        Schema::create('user_notification_setting', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('id');
-            $table->integer('user_id')->unsigned()->index();
-            $table->string('token');
+            $table->integer('user_id')->unsigned();
+            $table->integer('notification_setting_id')->unsigned();
+
             $table->timestamps();
+
+            $table->primary(['user_id', 'notification_setting_id']);
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade');
+            $table->foreign('notification_setting_id')
+                ->references('id')
+                ->on('notification_settings')
                 ->onDelete('cascade');
         });
     }
@@ -34,6 +40,6 @@ class CreateActivationTokensTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activation_tokens');
+        Schema::dropIfExists('user_notification_setting');
     }
 }

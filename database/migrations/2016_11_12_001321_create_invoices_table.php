@@ -21,12 +21,12 @@ class CreateInvoicesTable extends Migration
             $table->text('description');
             $table->morphs('invoiceable');
             $table->integer('seq_id')->unsigned()->index();
-            $table->integer('admin_id')->unsigned();
+            $table->integer('company_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('admin_id')
+            $table->foreign('company_id')
                 ->references('id')
-                ->on('administrators')
+                ->on('companies')
                 ->onDelete('cascade');
         });
 

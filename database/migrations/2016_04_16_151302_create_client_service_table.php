@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use App\Service;
+use Stripe\Error\ApiConnection;
 
 class CreateClientServicesTable extends Migration
 {
@@ -14,22 +16,38 @@ class CreateClientServicesTable extends Migration
     {
         Schema::create('client_service', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('client_id')->unsigned()->index();
+            $table->integer('user_id')->unsigned()->index();
             $table->integer('service_id')->unsigned()->index();
-            $table->timestamps();
-        });
 
-        Schema::table('client_service', function(Blueprint $table){
-            $table->primary(['client_id', 'service_id']);
-            $table->foreign('client_id')
+            $table->timestamps();
+
+            $table->primary(['user_id', 'service_id']);
+
+            // ************************************
+            //  REALLY IMPORTANT TO CHECK THAT THIS
+            //  USER HAS ROLE OF CLIENT IN THE
+            //  SERVICE COMPANY BEFORE CONNECTION
+            //  ***********************************
+
+            $table->foreign('user_id')
                 ->references('id')
-                ->on('clients')
+                ->on('users')
                 ->onDelete('cascade');
             $table->foreign('service_id')
                 ->references('id')
                 ->on('services')
                 ->onDelete('cascade');
+
         });
+
+        // DB::unprepared("
+        //     ALTER TABLE `client_service`
+        //         ADD CHECK (invoiceable_type IN (
+        //             'App\WorkOrder',
+        //             'App\ServiceContract'
+        //         ));
+        // ");
+
     }
 
     /**

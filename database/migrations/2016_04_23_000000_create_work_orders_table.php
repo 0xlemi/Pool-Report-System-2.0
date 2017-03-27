@@ -22,19 +22,17 @@ class CreateWorkOrdersTable extends Migration
             $table->decimal('price', 16, 2);
             $table->char('currency', 3);
             $table->integer('service_id')->unsigned();
-            $table->integer('supervisor_id')->unsigned();
+            $table->integer('user_role_company_id')->unsigned();
             $table->integer('seq_id')->unsigned()->index();
             $table->timestamps();
-        });
 
-        Schema::table('work_orders', function(Blueprint $table){
             $table->foreign('service_id')
                 ->references('id')
                 ->on('services')
                 ->onDelete('cascade');
-            $table->foreign('supervisor_id')
+            $table->foreign('user_role_company_id')
                 ->references('id')
-                ->on('supervisors')
+                ->on('user_role_company')
                 ->onDelete('cascade');
         });
     }

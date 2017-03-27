@@ -22,6 +22,6 @@ class CreateTriggersUser extends Migration
      */
     public function down()
     {
-        
+
     }
 }

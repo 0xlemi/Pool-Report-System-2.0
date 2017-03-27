@@ -17,39 +17,32 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('email')->unique()->index();
             $table->string('password');
-            $table->morphs('userable');
             $table->boolean('active')->default(true); // Been payed for
+            // change this to verified
             $table->boolean('activated')->default(false); // Activated the account via email
-            // Email Preferences  Order: database, mail.
-            // IMPORTANT: should be synced with the constants
-            $table->integer('notify_report_created')->default(3); // default database and mail
-            $table->integer('notify_workorder_created')->default(3); // default database and mail
-            $table->integer('notify_service_created')->default(1); // default only database
-            $table->integer('notify_client_created')->default(1); // default only database
-            $table->integer('notify_supervisor_created')->default(1); // default only database
-            $table->integer('notify_technician_created')->default(1); // default only database
-            $table->integer('notify_invoice_created')->default(3); // default only database
-            $table->integer('notify_payment_created')->default(3); // default only database
-            $table->integer('notify_work_added')->default(1); // default only database
-            $table->integer('notify_chemical_added')->default(1); // default only database
-            $table->integer('notify_equipment_added')->default(1); // default only database
-            $table->integer('notify_contract_added')->default(1); // default only database
 
-            $table->softDeletes();
-            $table->rememberToken();
+            $table->string('name');
+            $table->string('last_name');
+            $table->string('cellphone');
+            $table->string('address');
+            $table->tinyInteger('type'); // type meaning depends on the role
+            $table->char('language', 2)->default('en');
+            $table->text('comments');
+
+            // **************
+            //    Billing
+            // **************
+            $table->integer('free_objects')->default(2);
+            // Stripe
+            $table->string('stripe_id')->nullable();
+            $table->string('card_brand')->nullable();
+            $table->string('card_last_four')->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+
             $table->string('api_token', 60)->unique();
+            $table->rememberToken();
             $table->timestamps();
         });
-
-        DB::unprepared("
-            ALTER TABLE `users`
-                ADD CHECK (userable_type IN (
-                    'App\Administrator',
-                    'App\Client',
-                    'App\Technician',
-                    'App\Supervisor'
-                ));
-        ");
     }
 
     /**
