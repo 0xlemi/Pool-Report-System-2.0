@@ -12,12 +12,14 @@ use App\PRS\Helpers\UserHelpers;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
+use App\PRS\Traits\Model\BillableAdministrator;
 use App\UrlSigner;
 
 class User extends Authenticatable
 {
 
     use Notifiable;
+    use BillableAdministrator;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +44,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'api_token',
+        'free_objects',
+        'stripe_id',
+        'card_brand',
+        'card_last_four',
+        'trial_ends_at'
     ];
 
     protected $appends = [
@@ -59,76 +66,22 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
-
-    /**
-     * Is this user an administrator ?
-     * @return boolean
-     * tested
-     */
-    public function isAdministrator()
-    {
-        return $this->userable_type == "App\Administrator";
-    }
-
-    /**
-     * Is this user an client ?
-     * @return boolean
-     * tested
-     */
-    public function isClient()
-    {
-        return $this->userable_type == "App\Client";
-    }
-
-    /**
-     * Is this user an supervisor ?
-     * @return boolean
-     * tested
-     */
-    public function isSupervisor()
-    {
-        return $this->userable_type == "App\Supervisor";
-    }
-
-    /**
-     * Is this user an technician ?
-     * @return boolean
-     * tested
-     */
-    public function isTechnician()
-    {
-        return $this->userable_type == "App\Technician";
-    }
-
     public function checkPassword($password)
     {
         return (Hash::check($password, $this->password));
     }
 
-    public function getFullName()
-    {
-        $object = $this->userable();
-        if($this->isAdministrator()){
-            return $object->name;
-        }
-        return $object->name.' '.$object->last_name;
-    }
-
     public function getFullNameAttribute()
     {
-        $object = $this->userable();
-        if($this->isAdministrator()){
-            return $object->name;
-        }
-        return $object->name.' '.$object->last_name;
+        return $this->name.' '.$this->last_name;
     }
 
     //******** VALUE OBJECTS ********
 
-    public function getTypeAttribute()
-    {
-        return new Type($this->userable_type);
-    }
+    // public function getTypeAttribute()
+    // {
+    //     return new Type($this->userable_type);
+    // }
 
     public function getNotificationSettingsAttribute()
     {
@@ -141,30 +94,6 @@ class User extends Authenticatable
     public function activationToken()
     {
         return $this->hasOne(ActivationToken::class);
-    }
-
-    public function urlSigners()
-    {
-        return $this->hasMany(UrlSigner::class);
-    }
-
-    public function admin()
-    {
-        if($this->isAdministrator()){
-            return $this->userable();
-        }
-        return $this->userable()->admin();
-    }
-
-    /**
-     * Get the element that this user morphs to
-     * @return It could be any of:
-     *         Administrator, Client, Supervisor, Technician
-     * tested
-     */
-    public function userable()
-    {
-        return $this->morphTo()->first();
     }
 
 

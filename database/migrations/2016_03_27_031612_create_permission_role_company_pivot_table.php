@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePermissionRolesPivotTable extends Migration
+class CreatePermissionRoleCompanyPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreatePermissionRolesPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('permission_roles', function (Blueprint $table) {
+        Schema::create('permission_role_company', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('role_id')->unsigned();
             $table->integer('permission_id')->unsigned();
+            $table->integer('company_id')->unsigned();
 
             $table->timestamps();
 
-            $table->primary(['role_id', 'permission_id']);
+            $table->primary(['role_id', 'permission_id', 'company_id']);
 
             $table->foreign('role_id')
                 ->references('id')
@@ -29,6 +30,10 @@ class CreatePermissionRolesPivotTable extends Migration
             $table->foreign('permission_id')
                 ->references('id')
                 ->on('permissions')
+                ->onDelete('cascade');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
                 ->onDelete('cascade');
         });
     }
@@ -40,6 +45,6 @@ class CreatePermissionRolesPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('permission_roles');
+        Schema::dropIfExists('permission_role_company');
     }
 }

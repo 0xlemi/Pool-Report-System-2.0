@@ -16,14 +16,14 @@ class CreateUrlSignersTable extends Migration
         Schema::create('url_signers', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_role_company_id')->unsigned();
             $table->string('token')->index();
             $table->timestamp('expire');
             $table->timestamps();
 
-            $table->foreign('user_id')
+            $table->foreign('user_role_company_id')
                 ->references('id')
-                ->on('users')
+                ->on('user_role_company')
                 ->onDelete('cascade');
         });
     }

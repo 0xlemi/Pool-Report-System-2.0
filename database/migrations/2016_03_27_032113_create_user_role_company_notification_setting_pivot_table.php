@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCompanyPermissionPivotTable extends Migration
+class CreateUserRoleCompanyNotificationSettingPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,22 @@ class CreateCompanyPermissionPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_permission', function (Blueprint $table) {
+        Schema::create('urc_notify_setting', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->integer('company_id')->unsigned();
-            $table->integer('permission_id')->unsigned();
+            $table->integer('urc_id')->unsigned();
+            $table->integer('notify_setting_id')->unsigned();
 
             $table->timestamps();
 
-            $table->primary(['company_id', 'permission_id']);
+            $table->primary(['urc_id', 'notify_setting_id']);
 
-            $table->foreign('company_id')
+            $table->foreign('urc_id')
                 ->references('id')
-                ->on('companies')
+                ->on('user_role_company')
                 ->onDelete('cascade');
-            $table->foreign('permission_id')
+            $table->foreign('notify_setting_id')
                 ->references('id')
-                ->on('permissions')
+                ->on('notification_settings')
                 ->onDelete('cascade');
         });
     }
@@ -40,6 +40,6 @@ class CreateCompanyPermissionPivotTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_permission');
+        Schema::dropIfExists('urc_notify_setting');
     }
 }

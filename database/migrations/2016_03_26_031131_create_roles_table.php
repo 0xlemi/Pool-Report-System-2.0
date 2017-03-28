@@ -15,11 +15,19 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->increments('id');
+            $table->integer('id')->unsigned();
             $table->string('name');
             $table->string('text');
-            $table->timestamps();
+
+            $table->primary('id');
         });
+
+        DB::table('roles')->insert([
+            ['id' => 1, 'name' => 'admin', 'text' => 'Company Administrator'],
+            ['id' => 2, 'name' => 'client', 'text' => 'Client'],
+            ['id' => 3, 'name' => 'sup', 'text' => 'Supervisor'],
+            ['id' => 4, 'name' => 'tech', 'text' => 'Technician'],
+        ]);
     }
 
     /**

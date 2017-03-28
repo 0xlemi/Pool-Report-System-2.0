@@ -32,30 +32,6 @@ class Technician extends Model
         'comments',
 	];
 
-    /**
-     * hidden variables
-     * @var array
-     */
-	protected $hidden = [
-	];
-
-    /**
-     * Get the user that this technician morphs to
-     * @return $User
-     * tested
-     */
-    public function user()
-    {
-      return $this->morphOne('App\User', 'userable');
-    }
-
-	/**
-	 * associated supervisor with this technician
-	 * tested
-	 */
-    public function supervisor(){
-    	return $this->belongsTo('App\Supervisor');
-    }
 
 	/**
 	 * assaciated reports with this technician

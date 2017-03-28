@@ -19,9 +19,9 @@ class CreateSequenceTable extends Migration
         Schema::create('seq', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('name', 50);
-            $table->integer('admin_id');
+            $table->integer('company_id');
             $table->integer('val')->unsigned();
-            $table->primary(['name', 'admin_id']);
+            $table->primary(['name', 'company_id']);
         });
     }
 

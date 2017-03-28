@@ -21,6 +21,8 @@ class CreateCompaniesTable extends Migration
                 $table->string('name');
             // Company information
                 $table->string('company_name');
+                $table->decimal('latitude', 9, 6)->nullable();
+                $table->decimal('longitude', 9, 6)->nullable();
                 $table->string('timezone');
                 $table->char('language', 2)->default('en');
                 $table->string('website')->nullable();
