@@ -25,7 +25,7 @@ class WorkOrder extends Model
         'start',
         'price',
         'currency',
-        'supervisor_id',
+        'user_role_client_id',
     ];
 
     /**
@@ -39,17 +39,17 @@ class WorkOrder extends Model
     /**
      * associated administrator with this workOrder
      */
-    public function admin()
+    public function company()
     {
-        return $this->service->admin();
+        return $this->service->company();
     }
 
     /**
-     * associated supervisor with this workOrder
+     * associated UserRoleCompany with this workOrder
      */
-    public function supervisor()
+    public function userRoleCompany()
     {
-    	return $this->belongsTo('App\Supervisor');
+    	return $this->belongsTo(UserRoleCompany::class);
     }
 
     /**

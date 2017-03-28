@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\User;
+use App\UserRoleCompany;
 
 class ActivationToken extends Model
 {
@@ -15,9 +15,9 @@ class ActivationToken extends Model
         return 'token';
     }
 
-    public function user()
+    public function userRoleCompany()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserRoleCompany::class);
     }
 
 }

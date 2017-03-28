@@ -50,9 +50,9 @@ class ServiceContract extends Model
         return $this->belongsTo('App\Service');
     }
 
-    public function admin()
+    public function company()
     {
-        return $this->service->admin();
+        return $this->service->company();
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use App\UserRoleCompany;
 
 class UrlSigner extends Model
 {
@@ -32,11 +33,11 @@ class UrlSigner extends Model
 
     /**
      * Get the user with this token
-     * @return App\User
+     * @return App\UserRoleCompany
      */
-    public function user()
+    public function userRoleCompany()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserRoleCompany::class);
     }
 
 }

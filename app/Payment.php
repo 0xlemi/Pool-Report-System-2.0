@@ -15,9 +15,9 @@ class Payment extends Model
         'amount',
     ];
 
-    public function admin()
+    public function company()
     {
-        return $this->invoice->admin();
+        return $this->invoice->company();
     }
 
     public function invoice()
@@ -29,7 +29,7 @@ class Payment extends Model
 
     public function createdAt()
     {
-        return $this->created_at->setTimezone($this->admin()->timezone);
+        return $this->created_at->setTimezone($this->company->timezone);
     }
 
 }

@@ -13,6 +13,7 @@ use App\PRS\Helpers\UserHelpers;
 use Hash;
 use App\Notifications\ResetPasswordNotification;
 use App\PRS\Traits\Model\BillableAdministrator;
+use App\UserRoleCompany;
 use App\UrlSigner;
 
 class User extends Authenticatable
@@ -78,11 +79,6 @@ class User extends Authenticatable
 
     //******** VALUE OBJECTS ********
 
-    // public function getTypeAttribute()
-    // {
-    //     return new Type($this->userable_type);
-    // }
-
     public function getNotificationSettingsAttribute()
     {
         return new notificationSettings($this, resolve(UserHelpers::class));
@@ -94,6 +90,11 @@ class User extends Authenticatable
     public function activationToken()
     {
         return $this->hasOne(ActivationToken::class);
+    }
+
+    public function userRoleCompany()
+    {
+        $this->hasMany(UserRoleCompany::class);
     }
 
 

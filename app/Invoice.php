@@ -22,9 +22,9 @@ class Invoice extends Model
         'admin_id',
     ];
 
-    public function admin()
+    public function company()
     {
-        return $this->invoiceable->admin();
+        return $this->invoiceable->company();
     }
 
     /**

@@ -14,6 +14,7 @@ use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\ValueObjects\Report\OnTime;
 use App\PRS\ValueObjects\Report\Reading;
 use App\PRS\ValueObjects\Report\Turbidity;
+use App\UserRoleCompany;
 use App\Client;
 use App\Image;
 class Report extends Model
@@ -25,7 +26,7 @@ class Report extends Model
      * @var array
      */
     protected $fillable = [
-        'technician_id',
+        'user_role_company_id',
         'completed',
         'on_time',
         'ph',
@@ -44,7 +45,6 @@ class Report extends Model
 
     /**
      * associated service with this report
-     * tested
      */
     public function service(){
     	return $this->belongsTo('App\Service');
@@ -52,37 +52,17 @@ class Report extends Model
 
     /**
      * associated clients with this report
-     * tested
      */
-    public function clients(){
-        return $this->service->clients();
-    }
-
-    /**
-     * associated clients with this report
-     * tested
-     */
-    public function admin()
+    public function company()
     {
-        return $this->service->admin();
+        return $this->service->company();
     }
 
-    /**
-     * associated supervisor with this report
-     */
-    public function supervisor()
+    // check that this not done by clients
+    public function userRoleCompany()
     {
-        return $this->technician->supervisor;
+        return $this->belongsTo(UserRoleCompany::class);
     }
-
-    /**
-     * associated technician with this report
-     * tested
-     */
-    public function technician(){
-    	return $this->belongsTo('App\Technician');
-    }
-
 
     //******** VALUE OBJECTS ********
 
@@ -121,47 +101,5 @@ class Report extends Model
         return new Reading($this->salt, $this->admin()->tags()->salt());
     }
 
-
-    //******** MISCELLANEOUS ********
-
-    public function getEmailImage(Client $client = null)
-    {
-        // delete email preview photos
-        array_map('unlink', glob(public_path('storage/images/emails/*')));
-
-        $fileName = 'email_'.str_random(25).'.jpg';
-        $img_path = public_path('storage/images/emails/'.$fileName);
-
-        // info needed by the template
-        $logo = Storage::url('images/assets/app/logo-2.png');
-        $headerImage = Storage::url('images/assets/email/email_header.png');
-        $name = "client_name";
-        if($client){
-            $name = $client->name;
-        }
-
-        $address = $this->service->address_line;
-        $time = (new Carbon($this->completed, 'UTC'))
-                    ->setTimezone($this->admin()->timezone)
-                    ->toDayDateTimeString();
-
-        $unsubscribeLink = '#';
-        $photo1 = url($this->image(1));
-        $photo2 = url($this->image(2));
-        $photo3 = url($this->image(3));
-
-        //convert template with info to image
-        $result = \ImageHTML::loadHTML(
-                    view(
-                        'emails.serviceReport',
-                        compact('logo', 'headerImage', 'name','address','time', 'unsubscribeLink', 'photo1','photo2','photo3')
-                    )
-                )->save($img_path);
-
-        if($result){
-            return url('storage/images/emails/'.$fileName);
-        }
-        return false;
-    }
 
 }

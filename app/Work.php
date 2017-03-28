@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\UserRoleCompany;
 
 class Work extends Model
 {
@@ -20,7 +21,7 @@ class Work extends Model
         'quantity',
         'units',
         'cost',
-        'technician_id',
+        'user_role_client_id',
     ];
 
     /**
@@ -40,11 +41,11 @@ class Work extends Model
     }
 
     /**
-     * associated technician with this work
+     * associated UserRoleCompany with this work
      */
-    public function technician()
+    public function userRoleCompany()
     {
-    	return $this->belongsTo('App\Technician');
+    	return $this->belongsTo(UserRoleCompany::class);
     }
 
     /**

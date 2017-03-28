@@ -9,6 +9,7 @@ use Intervention;
 use App\PRS\Traits\Model\ImageTrait;
 use App\Chemical;
 use App\ServiceContract;
+use App\UserRoleCompany;
 
 use Carbon\Carbon;
 
@@ -46,24 +47,20 @@ class Service extends Model
     //******** RELATIONSHIPS ********
 
     /**
-	 * Get the associated Administrator with this service
-	 * tested
+	 * Get the associated Company with this service
 	 */
-    public function admin(){
-    	return $this->belongsTo('App\Administrator')->first();
+    public function company(){
+    	return $this->belongsTo('App\Company');
     }
 
-    /**
-     * Get the associated clients with this service
-     * tested
-     */
-    public function clients(){
-    	return $this->belongsToMany('App\Client');
+    // this should be clients only
+    public function userRoleCompany()
+    {
+        return $this->belongsToMany(UserRoleCompany::class , 'urc_service', 'service_id', 'urc_id');
     }
 
     /**
      * Get associated reports with this service
-     * tested
      */
     public function reports(){
     	return $this->hasMany('App\Report');
@@ -78,7 +75,6 @@ class Service extends Model
 
     /**
      * Get associated ServiceContract with this service
-     * tested
      */
     public function serviceContract()
     {
@@ -115,29 +111,26 @@ class Service extends Model
 
     /**
      * check if this service is scheduled for a date
-     * tested
      * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
     public function checkIfIsDo(Carbon $date)
     {
-        $admin = $this->admin();
         $dayToCheck = strtolower($date->format('l'));
         return $this->serviceContract->serviceDays()->asArray()[$dayToCheck];
     }
 
     /**
      * check if there is a single report for this service already done in a date
-     * tested
      * @param  Carbon $date is in Administrator timezone
      * @return boolean
      */
     public function checkIfIsDone(Carbon $date)
     {
-        $admin = $this->admin();
+        $company = $this->company;
         $strDate = $date->toDateTimeString();
         $count = $this->reports()
-                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$admin->timezone.'\'), "'.$strDate.'")'), '=', '0')
+                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$company->timezone.'\'), "'.$strDate.'")'), '=', '0')
                 ->count();
         if($count > 0){
             return true;
