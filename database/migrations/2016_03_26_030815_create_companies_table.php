@@ -16,11 +16,8 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            // General Settings
-                // Administrator Profile information
-                $table->string('name');
             // Company information
-                $table->string('company_name');
+                $table->string('name');
                 $table->decimal('latitude', 9, 6)->nullable();
                 $table->decimal('longitude', 9, 6)->nullable();
                 $table->string('timezone');

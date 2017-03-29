@@ -10,7 +10,7 @@ use App\Service;
 class EquipmentTableSeeder extends Seeder
 {
 
-    private $amount = 100;
+    private $amount = 1000;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -45,7 +45,6 @@ class EquipmentTableSeeder extends Seeder
 
             // get a random admin_id that exists in database
         	$serviceId = $this->seederHelper->getRandomObject('services');
-            $admin = Service::findOrFail($serviceId)->admin();
 
     		$equipment = factory(Equipment::class)->create([
                 'kind' => $kind['name'],

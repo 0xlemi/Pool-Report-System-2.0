@@ -5,19 +5,20 @@ use App\PRS\Helpers\SeederHelpers;
 use App\Service;
 use App\Invoice;
 use App\Payment;
-use App\Supervisor;
+use App\Company;
 use App\Image;
 
 use App\WorkOrder;
 use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\NewWorkOrderNotification;
+use App\UserRoleCompany;
 use Carbon\Carbon;
 
 class WorkOrdersTableSeeder extends Seeder
 {
 
-    private $amount = 100;
+    private $amount = 800;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -40,20 +41,20 @@ class WorkOrdersTableSeeder extends Seeder
 
         for ($i=0; $i < $this->amount; $i++) {
 
-            // get random supervisor
-        	$supervisorId = $this->seederHelper->getRandomObject('supervisors');
+            // Get Random User that is not a client
+        	$userRoleCompany = $this->seederHelper->getRandomUserRoleCompany(1, 3, 4);
 
             // get the user id in of the random technician
-        	$admin = Supervisor::findOrFail($supervisorId)->admin();
+        	$company = $userRoleCompany->company;
 
-        	// get a random service that shares the same admin_id
+        	// get a random service that shares the same company_id
         	// as the supervisor
-        	$service = $this->seederHelper->getRandomService($admin);
+        	$service = $this->seederHelper->getRandomService($company);
 
 
             $workOrder = factory(App\WorkOrder::class)->create([
                 'service_id' => $service->id,
-                'supervisor_id' => $supervisorId,
+                'user_role_company_id' => $userRoleCompany->id,
             ]);
 
             // add image
@@ -87,7 +88,7 @@ class WorkOrdersTableSeeder extends Seeder
                     'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                     'amount' => $workOrder->price,
                     'currency' => $workOrder->currency,
-                    'admin_id' => $admin->id,
+                    'company_id' => $company->id,
                 ])->id;
                 $invoice = Invoice::findOrFail($invoiceId);
                 $numberPayments = rand(0,3);

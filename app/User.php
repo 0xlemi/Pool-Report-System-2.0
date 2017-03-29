@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
 use App\PRS\ValueObjects\User\NotificationSettings;
 use App\PRS\Helpers\UserHelpers;
+use App\PRS\Traits\Model\ImageTrait;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
@@ -18,7 +19,7 @@ use App\UrlSigner;
 
 class User extends Authenticatable
 {
-
+	use ImageTrait;
     use Notifiable;
     use BillableAdministrator;
 

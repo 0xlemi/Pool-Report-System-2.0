@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\PRS\Traits\Model\ImageTrait;
 use App\Work;
 use App\Report;
 use App\Role;
@@ -17,7 +16,23 @@ use App\NotificationSetting;
 class UserRoleCompany extends Model
 {
 
-	use ImageTrait;
+	/**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'user_role_company';
+
+	/**
+     * variables that can be mass assign
+     * @var array
+     */
+    protected $fillable = [
+		'user_id',
+		'role_id',
+		'company_id',
+		'active'
+	];
 
     public function isRole($role)
     {

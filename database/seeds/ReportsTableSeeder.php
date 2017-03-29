@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
+use App\UserRoleCompany;
 use App\Report;
 use App\Image;
 
@@ -10,7 +11,7 @@ use App\Technician;
 class ReportsTableSeeder extends Seeder
 {
     // number of reports to create
-    private $number_of_reports = 200;
+    private $number_of_reports = 800;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -29,20 +30,19 @@ class ReportsTableSeeder extends Seeder
         Image::flushEventListeners();
 
         for ($i=0; $i < $this->number_of_reports; $i++) {
+            // Get Random User that is not a client
+        	$userRoleCompany = $this->seederHelper->getRandomUserRoleCompany(1, 3, 4);
 
-            // random technician id
-        	$technicianId = $this->seederHelper->getRandomObject('technicians');
-
-        	// get the user id in of the random technician
-        	$admin = Technician::findOrFail($technicianId)->admin();
+            // get the user id in of the random technician
+        	$company = $userRoleCompany->company;
 
         	// get a random service that shares the same admin_id
         	// as the technician
-        	$service = $this->seederHelper->getRandomService($admin);
+        	$service = $this->seederHelper->getRandomService($company);
 
-    		$report = factory(App\Report::class)->create([
+    		$report = factory(Report::class)->create([
                 'service_id' => $service->id,
-                'technician_id' => $technicianId,
+                'user_role_company_id' => $userRoleCompany->id,
             ]);
 
     		// create images link it to report

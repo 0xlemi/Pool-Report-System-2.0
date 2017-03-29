@@ -17,17 +17,25 @@ use App\Invoice;
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     // factory dosnt work unless userable_id and userable_type are added
+    $name = $faker->name;
+    $lastName = $faker->lastName;
     return [
-        'email' => $faker->safeEmail,
+        'email' => $name.'.'.$lastName.'@example.com',
         'password' => bcrypt('password'),
         'remember_token' => str_random(10),
         'api_token' => str_random(60),
+
+        'name' => $name,
+		'last_name' => $lastName,
+		'cellphone' => $faker->phoneNumber,
+		'address' => $faker->address,
+    	'language' => 'en',
+		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true)
     ];
 });
 
-$factory->define(App\Administrator::class, function (Faker\Generator $faker) {
+$factory->define(App\Company::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
         'company_name' => $faker->company,
         'website' => $faker->url,
         'facebook' => $faker->word,
@@ -48,8 +56,8 @@ $factory->define(App\Invoice::class, function (Faker\Generator $faker){
 $factory->define(App\Service::class, function (Faker\Generator $faker){
 	return [
 		'name' => $faker->words($nb = 2, $asText = true),
-        'latitude' => number_format($faker->latitude(-90, 90),6,'.',''),
-        'longitude' => number_format($faker->longitude(-180, 180),6,'.',''),
+        'latitude' => number_format($faker->latitude(23.049486, 23.061333),6,'.',''),
+        'longitude' => number_format($faker->longitude(-109.706683, -109.695697),6,'.',''),
 		'address_line' => $faker->streetAddress,
 		'city' => $faker->city,
         'state' => $faker->state,
@@ -142,38 +150,38 @@ $factory->define(App\Work::class, function (Faker\Generator $faker){
 });
 
 
-$factory->define(App\Supervisor::class, function (Faker\Generator $faker){
-	return [
-        'name' => $faker->name,
-		'last_name' => $faker->lastName,
-		'cellphone' => $faker->phoneNumber,
-        'address' => $faker->streetAddress,
-    	'language' => $faker->languageCode,
-		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-	];
-});
-
-$factory->define(App\Technician::class, function (Faker\Generator $faker){
-	return [
-        'name' => $faker->name,
-		'last_name' => $faker->lastName,
-		'cellphone' => $faker->phoneNumber,
-		'address' => $faker->address,
-    	'language' => $faker->languageCode,
-		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-	];
-});
-
-$factory->define(App\Client::class, function (Faker\Generator $faker){
-	return [
-        'name' => $faker->name,
-		'last_name' => $faker->lastName,
-		'cellphone' => $faker->phoneNumber,
-		'type' => $faker->numberBetween(1, 2),
-    	'language' => $faker->languageCode,
-		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-	];
-});
+// $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
+// 	return [
+//         'name' => $faker->name,
+// 		'last_name' => $faker->lastName,
+// 		'cellphone' => $faker->phoneNumber,
+//         'address' => $faker->streetAddress,
+//     	'language' => $faker->languageCode,
+// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+// 	];
+// });
+//
+// $factory->define(App\Technician::class, function (Faker\Generator $faker){
+// 	return [
+//         'name' => $faker->name,
+// 		'last_name' => $faker->lastName,
+// 		'cellphone' => $faker->phoneNumber,
+// 		'address' => $faker->address,
+//     	'language' => $faker->languageCode,
+// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+// 	];
+// });
+//
+// $factory->define(App\Client::class, function (Faker\Generator $faker){
+// 	return [
+//         'name' => $faker->name,
+// 		'last_name' => $faker->lastName,
+// 		'cellphone' => $faker->phoneNumber,
+// 		'type' => $faker->numberBetween(1, 2),
+//     	'language' => $faker->languageCode,
+// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+// 	];
+// });
 
 $factory->define(App\Report::class, function (Faker\Generator $faker){
 	return [
@@ -184,8 +192,8 @@ $factory->define(App\Report::class, function (Faker\Generator $faker){
         'temperature' => $faker->numberBetween(1, 5),
         'turbidity' => $faker->numberBetween(1, 4),
         'salt' => $faker->numberBetween(1, 5),
-        'latitude' => number_format($faker->latitude(-90, 90),6,'.',''),
-        'longitude' => number_format($faker->longitude(-180, 180),6,'.',''),
+        'latitude' => number_format($faker->latitude(23.049486, 23.061333),6,'.',''),
+        'longitude' => number_format($faker->longitude(-109.706683, -109.695697),6,'.',''),
         'altitude' => number_format(($faker->numberBetween(0, 500000)/100),2,'.',''),
         'accuracy' => number_format(($faker->numberBetween(0, 500000)/100),2,'.',''),
 	];

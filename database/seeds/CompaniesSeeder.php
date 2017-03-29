@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Company;
+use App\UserRoleCompany;
+use App\User;
 
 class CompaniesSeeder extends Seeder
 {
@@ -12,42 +14,59 @@ class CompaniesSeeder extends Seeder
      */
     public function run()
     {
-        //
         Company::flushEventListeners();
         User::flushEventListeners();
-        Image::flushEventListeners();
+        UserRoleCompany::flushEventListeners();
+        // Image::flushEventListeners();
 
-        $admin1 = Company::create([
-            'company_name' => 'Hidroequipos',
+        $company1 = Company::create([
+            'name' => 'Hidroequipos',
             'website' => 'www.hidroequipos.com',
             'facebook' => 'poolreportsystem',
             'twitter' => 'poolreportsys',
             'language' => 'en',
     		'timezone' => 'America/Mazatlan',
+            'latitude' => rand(23.049486, 23.061333),
+            'longitude' => rand(-109.706683, -109.695697),
     	]);
 
-        $admin1->user()->create([
+    	$user1 = factory(User::class)->create([
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
             'activated' => 1,
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
         ]);
 
-        $admin2 = App\Administrator::create([
-    		'name' => 'Pepe Gonzales',
-            'company_name' => 'Hidroequipos',
-            'website' => 'www.google.com',
-            'facebook' => 'poolreportsystem',
-            'twitter' => 'poolreportsys',
+        $userRoleCompany1 = UserRoleCompany::create([
+            'user_id' => $user1->id,
+    		'role_id' => 1,
+    		'company_id' => $company1->id,
+    		'active' => true,
+        ]);
+
+        $company2 = Company::create([
+            'name' => 'Generic Pool Company',
+            'website' => 'www.poolcompany.com',
+            'facebook' => 'poolservice',
+            'twitter' => 'poolservice',
     		'language' => 'es',
     		'timezone' => 'America/Mazatlan',
+            'latitude' => rand(23.049486, 23.061333),
+            'longitude' => rand(-109.706683, -109.695697),
     	]);
 
-    	$admin2->user()->create([
+    	$user2 = factory(User::class)->create([
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
             'activated' => 1,
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
     	]);
+
+        $userRoleCompany2 = UserRoleCompany::create([
+            'user_id' => $user2->id,
+    		'role_id' => 1,
+    		'company_id' => $company2->id,
+    		'active' => true,
+        ]);
     }
 }

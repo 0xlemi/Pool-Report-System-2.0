@@ -2,16 +2,14 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
-use App\Technician;
-
+use App\UserRoleCompany;
 use App\Image;
 use App\Work;
-use App\Notifications\AddedWorkNotification;
 
 class WorksTableSeeder extends Seeder
 {
 
-    private $amount = 300;
+    private $amount = 2000;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -30,16 +28,17 @@ class WorksTableSeeder extends Seeder
         Image::flushEventListeners();
 
         for ($i=0; $i < $this->amount; $i++) {
+            // Get Random User that is not a client
+        	$userRoleCompany = $this->seederHelper->getRandomUserRoleCompany(1, 3, 4);
 
-        	$technicianId = $this->seederHelper->getRandomObject('technicians');
+            // get the user id in of the random technician
+        	$company = $userRoleCompany->company;
 
-            $admin = Technician::findOrFail($technicianId)->admin();
+            $workOrder = $this->seederHelper->getRandomWorkOrder($company);
 
-            $workOrder = $this->seederHelper->getRandomWorkOrder($admin);
-
-            $work = factory(App\Work::class)->create([
+            $work = factory(Work::class)->create([
                 'work_order_id' => $workOrder->id,
-                'technician_id' => $technicianId,
+                'user_role_company_id' => $userRoleCompany->id,
             ]);
 
             // add image

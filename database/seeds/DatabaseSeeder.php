@@ -5,27 +5,30 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
 	protected $toTruncate = [
-		'images',
-		'chat',
-		'reports',
-		'client_service',
-		'clients',
-		'technicians',
-		'supervisors',
-		'services',
-		'seq',
-		'users',
-	];
-
-	protected $foldersToDelete = [
-		'client',
-		'report',
-		'service',
-		'supervisor',
-		'technician',
+		'activation_tokens',
+		'chemicals',
+		'companies',
 		'equipment',
-		'workOrder',
-		'work',
+		'images',
+		'invoices',
+		'missing_histories',
+		'missing_history_service',
+		'notifications',
+		'password_resets',
+		'payments',
+		'permission_role_company',
+		'reports',
+		'seq',
+		'service_contracts',
+		'services',
+		'subscriptions',
+		'urc_notify_setting',
+		'urc_service',
+		'url_signers',
+		'user_role_company',
+		'users',
+		'work_orders',
+		'works'
 	];
 
     /**
@@ -39,11 +42,12 @@ class DatabaseSeeder extends Seeder
     	$this->truncate_tables();
 
     	$this->call(CompaniesSeeder::class);
-    	// $this->call(ServicesTableSeeder::class);
-    	// $this->call(EquipmentTableSeeder::class);
-    	// $this->call(WorkOrdersTableSeeder::class);
-    	// $this->call(WorksTableSeeder::class);
-    	// $this->call(ReportsTableSeeder::class);
+    	$this->call(ServicesTableSeeder::class);
+    	$this->call(UserTableSeeder::class);
+    	$this->call(EquipmentTableSeeder::class);
+    	$this->call(WorkOrdersTableSeeder::class);
+    	$this->call(WorksTableSeeder::class);
+    	$this->call(ReportsTableSeeder::class);
     }
 
 

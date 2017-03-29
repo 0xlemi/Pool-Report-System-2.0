@@ -6,19 +6,17 @@ use App\ServiceContract;
 use App\Invoice;
 use App\Service;
 use App\Payment;
+use App\Company;
 use App\Image;
 use App\Notifications\NewServiceNotification;
 use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\AddedContractNotification;
 use App\Chemical;
-use App\Administrator;
 use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
 {
     // number of services to create
-    private $number_of_services = 40;
-    private $withNotifications = true;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
@@ -33,8 +31,9 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
+        $number_of_services = rand(100, 120);
+
         // Disable observers
-        Administrator::flushEventListeners();
         Service::flushEventListeners();
         Chemical::flushEventListeners();
         ServiceContract::flushEventListeners();
@@ -42,16 +41,16 @@ class ServicesTableSeeder extends Seeder
         Payment::flushEventListeners();
         Image::flushEventListeners();
 
-    	for ($i=0; $i < $this->number_of_services; $i++) {
+    	for ($i=0; $i < $number_of_services ; $i++) {
 		    // generate and save image and tn_image
 			$img = $this->seederHelper->get_random_image('service', 20);
 
-            // get a random admin_id that exists in database
-        	$adminId = $this->seederHelper->getRandomObject('administrators');
-            $admin = Administrator::findOrFail($adminId);
+            // get a random company_id that exists in database
+        	$companyId = $this->seederHelper->getRandomObject('companies');
+            $company = Company::findOrFail($companyId);
 
-    		$service = factory(App\Service::class)->create([
-        		'admin_id' => $admin->id,
+    		$service = factory(Service::class)->create([
+        		'company_id' => $company->id,
             ]);
             // create images link it to service
             $service->images()->create([
@@ -63,7 +62,7 @@ class ServicesTableSeeder extends Seeder
             ]);
 
             if(rand(0,1)){
-                $contract = factory(App\ServiceContract::class)->create([
+                $contract = factory(ServiceContract::class)->create([
                     'service_id' => $service->id,
                 ]);
                 // // Generate Invoices with Payments
@@ -72,7 +71,7 @@ class ServicesTableSeeder extends Seeder
                         'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $contract->amount,
                         'currency' => $contract->currency,
-                        'admin_id' => $admin->id,
+                        'company_id' => $company->id,
                     ])->id;
                     $invoice = Invoice::findOrFail($invoiceId);
                     $numberPayments = rand(0,3);
@@ -87,7 +86,7 @@ class ServicesTableSeeder extends Seeder
             }
 
             for ($e=0; $e < rand(2,5); $e++) {
-                factory(App\Chemical::class)->create([
+                factory(Chemical::class)->create([
                     'service_id' => $service->id,
                 ]);
             }
