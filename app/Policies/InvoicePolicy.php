@@ -15,19 +15,14 @@ class InvoicePolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_invoice_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('invoice_view');
     }
 
     /**
@@ -39,12 +34,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_invoice_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('invoice_view');
     }
 
     /**
@@ -56,11 +46,6 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_invoice_delete;
-        }elseif($user->isTechnician()){
-            return false;
-        }
-        return false;
+        return $user->activeUser->hasPermission('invoice_delete');
     }
 }

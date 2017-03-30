@@ -15,7 +15,7 @@ class ContractPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
@@ -29,12 +29,7 @@ class ContractPolicy
      */
     public function view(User $user, ServiceContract $serviceContract)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('contract_view');
     }
 
     /**
@@ -45,12 +40,7 @@ class ContractPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('contract_create');
     }
 
     /**
@@ -62,22 +52,12 @@ class ContractPolicy
      */
     public function update(User $user, ServiceContract $serviceContract)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_update;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_update;
-        }
-        return false;
+        return $user->activeUser->hasPermission('contract_update');
     }
 
     public function toggleActivation(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_deactivate;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_deactivate;
-        }
-        return false;
+        return $user->activeUser->hasPermission('contract_deactivate');
     }
 
     /**
@@ -89,11 +69,6 @@ class ContractPolicy
      */
     public function delete(User $user, ServiceContract $serviceContract)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_contract_delete;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_contract_delete;
-        }
-        return false;
+        return $user->activeUser->hasPermission('contract_delete');
     }
 }

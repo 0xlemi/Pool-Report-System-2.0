@@ -15,19 +15,14 @@ class PaymentPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_payment_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('payment_view');
     }
 
     /**
@@ -39,12 +34,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_payment_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('payment_view');
     }
 
     /**
@@ -55,12 +45,7 @@ class PaymentPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_payment_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('payment_create');
     }
 
     /**
@@ -72,11 +57,6 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_payment_delete;
-        }elseif($user->isTechnician()){
-            return false;
-        }
-        return false;
+        return $user->activeUser->hasPermission('payment_delete');
     }
 }

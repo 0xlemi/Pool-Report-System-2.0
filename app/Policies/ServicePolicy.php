@@ -15,61 +15,33 @@ class ServicePolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_service_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_service_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('service_view');
     }
 
     public function view(User $user, Service $service)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_service_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_service_view;
-        }elseif($user->isClient()){
-            // only if this client owns this service
-            return $user->userable()->hasService($service->seq_id);
-        }
-        return false;
+        return $user->activeUser->hasPermission('service_view');
     }
 
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_service_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_service_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('service_create');
     }
 
     public function update(User $user, Service $service)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_service_update;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_service_update;
-        }
-        return false;
+        return $user->activeUser->hasPermission('service_update');
     }
 
     public function delete(User $user, Service $service)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_service_delete;
-        }elseif($user->isTechnician()){
-            return false;
-        }
-        return false;
+        return $user->activeUser->hasPermission('service_delete');
     }
 }

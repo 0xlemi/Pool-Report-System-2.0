@@ -15,19 +15,14 @@ class WorkPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_view');
     }
 
     /**
@@ -39,18 +34,14 @@ class WorkPolicy
      */
     public function view(User $user, Work $work)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_view;
-        }elseif($user->isClient()){
+        if($user->activeUser->isRole('admin')){
             // ****** Security Bug ********
             // client can look at works that are not his
             // To resolve: need to fix this function so the client->works()
             // return $user->userable()->hasWork($work->id);
-            return true;
+            return false; // temporary
         }
-        return false;
+        return $user->activeUser->hasPermission('work_view');
     }
 
     /**
@@ -61,12 +52,7 @@ class WorkPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_create');
     }
 
     /**
@@ -78,32 +64,17 @@ class WorkPolicy
      */
     public function update(User $user, Work $work)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_update;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_update;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_update');
     }
 
     public function addPhoto(User $user, Work $work)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_addPhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_addPhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_addPhoto');
     }
 
     public function removePhoto(User $user, Work $work)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_removePhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_removePhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_removePhoto');
     }
 
     /**
@@ -115,11 +86,6 @@ class WorkPolicy
      */
     public function delete(User $user, Work $work)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_work_delete;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_work_delete;
-        }
-        return false;
+        return $user->activeUser->hasPermission('work_delete');
     }
 }

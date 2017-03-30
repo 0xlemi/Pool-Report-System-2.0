@@ -34,10 +34,25 @@ class UserRoleCompany extends Model
 		'active'
 	];
 
-    public function isRole($role)
+    public function isRole(...$roles)
     {
-        return ($this->role->name == $role);
+		$roleName = $this->role->name;
+		foreach ($roles as $role) {
+        	if ($roleName == $role){
+				return true;
+			}
+		}
     }
+
+	public function hasPermission(...$permissions)
+	{
+		$permissiosCompany = $this->role->permissionsFromCompany($this->company)->get();
+		foreach ($permissions as $permission) {
+        	if ($permissiosCompany->contains('name', $permission)){
+				return true;
+			}
+		}
+	}
 
     public function hasNotificationSetting($name)
     {

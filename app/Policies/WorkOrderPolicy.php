@@ -15,19 +15,14 @@ class WorkOrderPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('workorder_view');
     }
 
     /**
@@ -39,15 +34,12 @@ class WorkOrderPolicy
      */
     public function view(User $user, WorkOrder $workOrder)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_view;
-        }elseif($user->isClient()){
+        if($user->activeUser->isRole('client')){
             // only if this client owns this workorder
-            return $user->userable()->hasWorkOrder($workOrder->seq_id);
+            // return $user->activeUser->hasWorkOrder($workOrder->seq_id);
+            return false; // temporary
         }
-        return false;
+        return $user->activeUser->hasPermission('workorder_view');
     }
 
     /**
@@ -58,12 +50,7 @@ class WorkOrderPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('workorder_create');
     }
 
     /**
@@ -76,14 +63,7 @@ class WorkOrderPolicy
     public function update(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        if($user->isSupervisor()){
-            $permission = $user->userable()->admin()->sup_workorder_update;
-            return ($permission && $isNotFinished);
-        }elseif($user->isTechnician()){
-            $permission = $user->userable()->admin()->tech_workorder_update;
-            return ($permission && $isNotFinished);
-        }
-        return false;
+        return ($user->activeUser->hasPermission('workorder_update') && $isNotFinished );
     }
 
     /**
@@ -96,34 +76,17 @@ class WorkOrderPolicy
     public function finish(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        if($user->isSupervisor()){
-            $permission = $user->userable()->admin()->sup_workorder_finish;
-            return ($permission && $isNotFinished);
-        }elseif($user->isTechnician()){
-            $permission = $user->userable()->admin()->tech_workorder_finish;
-            return ($permission && $isNotFinished);
-        }
-        return false;
+        return ($user->activeUser->hasPermission('workorder_finish') && $isNotFinished );
     }
 
     public function addPhoto(User $user, WorkOrder $workOrder)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_addPhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_addPhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('workorder_addPhoto');
     }
 
     public function removePhoto(User $user, WorkOrder $workOrder)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_removePhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_workorder_removePhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('workorder_removePhoto');
     }
 
     /**
@@ -135,11 +98,6 @@ class WorkOrderPolicy
      */
     public function delete(User $user, WorkOrder $workOrder)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_workorder_delete;
-        }elseif($user->isTechnician()){
-            return false;
-        }
-        return false;
+        return $user->activeUser->hasPermission('workorder_delete');
     }
 }

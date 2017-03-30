@@ -15,19 +15,14 @@ class EquipmentPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_view');
     }
 
     /**
@@ -39,13 +34,11 @@ class EquipmentPolicy
      */
     public function view(User $user, Equipment $equipment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_view;
-        }elseif($user->isClient()){
-            return $user->userable()->hasEquipment($equipment->id);
+        if($user->activeUser->isRole('client')){
+            // return $user->userable()->hasEquipment($equipment->id);
+            return false; // temporary
         }
+        return $user->activeUser->hasPermission('equipment_view');
         return false;
     }
 
@@ -57,12 +50,7 @@ class EquipmentPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_create');
     }
 
     /**
@@ -74,32 +62,17 @@ class EquipmentPolicy
      */
     public function update(User $user, Equipment $equipment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_update;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_update;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_update');
     }
 
     public function addPhoto(User $user, Equipment $equipment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_addPhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_addPhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_addPhoto');
     }
 
     public function removePhoto(User $user, Equipment $equipment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_removePhoto;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_removePhoto;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_removePhoto');
     }
 
     /**
@@ -111,11 +84,6 @@ class EquipmentPolicy
      */
     public function delete(User $user, Equipment $equipment)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_equipment_delete;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_equipment_delete;
-        }
-        return false;
+        return $user->activeUser->hasPermission('equipment_delete');
     }
 }

@@ -88,9 +88,6 @@ class User extends Authenticatable
         return new notificationSettings($this, resolve(UserHelpers::class));
     }
 
-
-    //******** Relationships ********
-
 	public function getActiveUserAttribute()
 	{
 		try {
@@ -100,6 +97,10 @@ class User extends Authenticatable
 		}
 		return $activeUser;
 	}
+
+
+    //******** Relationships ********
+
 
 	// basic relationships
 

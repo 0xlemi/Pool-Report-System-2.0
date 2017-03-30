@@ -15,19 +15,14 @@ class ChemicalPolicy
      */
     public function before(User $user)
     {
-        if($user->isAdministrator()){
+        if($user->activeUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('chemical_view');
     }
 
     /**
@@ -39,12 +34,7 @@ class ChemicalPolicy
      */
     public function view(User $user, Chemical $chemical)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_view;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_view;
-        }
-        return false;
+        return $user->activeUser->hasPermission('chemical_view');
     }
 
     /**
@@ -55,12 +45,7 @@ class ChemicalPolicy
      */
     public function create(User $user)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_create;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_create;
-        }
-        return false;
+        return $user->activeUser->hasPermission('chemical_create');
     }
 
     /**
@@ -72,12 +57,7 @@ class ChemicalPolicy
      */
     public function update(User $user, Chemical $chemical)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_update;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_update;
-        }
-        return false;
+        return $user->activeUser->hasPermission('chemical_update');
     }
 
     /**
@@ -89,11 +69,6 @@ class ChemicalPolicy
      */
     public function delete(User $user, Chemical $chemical)
     {
-        if($user->isSupervisor()){
-            return $user->userable()->admin()->sup_chemical_delete;
-        }elseif($user->isTechnician()){
-            return $user->userable()->admin()->tech_chemical_delete;
-        }
-        return false;
+        return $user->activeUser->hasPermission('chemical_delete');
     }
 }
