@@ -61,13 +61,11 @@ class DataTableController extends PageController
             'date' => 'validDateReportFormat'
         ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $date = (new Carbon($request->date, $admin->timezone));
+        $date = (new Carbon($request->date, $company->timezone));
 
-        $reports =  $admin
-                    ->reportsByDate($date)
-                    ->get();
+        $reports =  $company->reportsByDate($date)->get();
 
         return response()->json(
                     $transformer->transformCollection($reports)

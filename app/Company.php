@@ -13,9 +13,12 @@ use App\PRS\ValueObjects\Administrator\Tag;
 
 use App\Invoice;
 use App\Payment;
+use App\Service;
 use App\MissingHistory;
 
 use DB;
+use App\WorkOrder;
+use App\Report;
 use App\UserRoleCompany;
 use App\PermissionRoleCompany;
 
@@ -40,207 +43,7 @@ class Company extends Model
         'language',
     ];
 
-    // ******************************
-    //******** RELATIONSHIPS ********
-    // ******************************
 
-    // Basic Relationships
-
-    public function userRoleCompanies()
-    {
-        return $this->hasMany(UserRoleCompany::class);
-    }
-
-    public function permissionRoleCompany()
-    {
-        return $this->hasMany(PermissionRoleCompany::class);
-    }
-
-    /**
-     *  Get services associated with this user
-     */
-    public function services()
-    {
-        return $this->hasMany('App\Service', 'company_id');
-    }
-
-    /**
-     * Get reports associatod with this user
-     */
-    public function reports(){
-        return $this->hasManyThrough('App\Report', 'App\Service', 'company_id');
-    }
-
-    /**
-     *  Get services associated with this user
-     * @param boolean
-     * @return Collection
-     * tested
-     */
-    public function workOrders(){
-        return $this->hasManyThrough('App\WorkOrder', 'App\Service', 'company_id');
-    }
-
-    /**
-     * Get invoices associated with this user
-     */
-    public function invoices()
-    {
-        return Invoice::where('company_id', $this->id);
-    }
-
-    /**
-     * Get invoices associated with this user
-     */
-    public function payments()
-    {
-        return Payment::join('invoices', 'invoices.id', '=', 'payments.invoice_id')
-                    ->where('company_id', '=', $this->id)
-                    ->select('payments.*');
-    }
-
-    public function missingHistories()
-    {
-        return $this->hasMany(MissingHistory::class, 'company_id');
-    }
-
-
-    // Feature Relationships
-
-
-    public function userRoleCompaniesWithRole($role)
-    {
-        return $this->userRoleCompanies->filter(function ($userRoleCompany) use ($role){
-            return $userRoleCompany->isRole($role);
-        });
-    }
-
-    /**
-     * Get userRoleCompany ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function userRoleCompaniesByRole($role, $order = 'asc')
-    {
-        return $this->userRoleCompaniesWithRole($role)->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get userRoleCompany accacited with this user and seq_id convination
-     * @param  int $seq_id
-     */
-    public function userRoleCompanyBySeqId($seq_id){
-        return $this->userRoleCompanies()
-                    ->where('user_role_company.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    /**
-     * Get services ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function servicesInOrder($order = 'asc')
-    {
-        return $this->services()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get services accacited with this user and seq_id convination
-     * @param  int $seq_id
-     * tested
-     */
-    public function serviceBySeqId($seq_id){
-        return $this->services()
-                    ->where('services.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    /**
-     * Get reports order by seq_id
-     * @param  string $order    'asc' or 'desc'
-     */
-    public function reportsInOrder($order = 'asc')
-    {
-        return $this->reports()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get the reports based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Report
-     * tested
-     */
-    public function reportsBySeqId($seq_id){
-        return $this->reports()
-                    ->where('reports.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    /**
-     * Get the reports in this date
-     * @param  Carbon $date date is Administrator timzone
-     * tested
-     */
-    public function reportsByDate(Carbon $date){
-        $date_str = $date->toDateTimeString();
-        return $this->reports()
-                    ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
-                    ->orderBy('seq_id');
-    }
-
-
-
-    /**
-     * Get work orders ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function workOrdersInOrder($order = 'asc')
-    {
-        return $this->workOrders()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get the work order based on the seq_id
-     * @param  integer $seq_id
-     * @return App\WorkOrder
-     * tested
-     */
-    public function workOrderBySeqId($seq_id){
-        return $this->workOrders()
-                    ->where('work_orders.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-
-    /**
-     * Get the invoices based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Invoice
-     */
-    public function invoicesBySeqId($seq_id){
-        return $this->invoices()
-                    ->where('invoices.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-
-    /**
-     * Get the payments based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Payment
-     */
-    public function paymentsBySeqId($seq_id){
-        return $this->payments()
-                    ->where('payments.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    public function missingHistoriesByDate(Carbon $date)
-    {
-        $date_str = $date->toDateTimeString();
-        return $this->missingHistories()
-                        ->whereDate('date', $date_str)
-                        ->first();
-    }
 
 
 
@@ -452,6 +255,205 @@ class Company extends Model
                         $this->salt_very_high);
     }
 
+    // ******************************
+    //******** RELATIONSHIPS ********
+    // ******************************
 
+// Feature Relationships
+
+
+    public function userRoleCompaniesWithRole($role)
+    {
+        return $this->userRoleCompanies->filter(function ($userRoleCompany) use ($role){
+            return $userRoleCompany->isRole($role);
+        });
+    }
+
+    /**
+     * Get userRoleCompany ordered by seq_id
+     * @param  string $order    asc or desc
+     */
+    public function userRoleCompaniesByRole($role, $order = 'asc')
+    {
+        return $this->userRoleCompaniesWithRole($role)->orderBy('seq_id', $order);
+    }
+
+    /**
+     * Get userRoleCompany accacited with this user and seq_id convination
+     * @param  int $seq_id
+     */
+    public function userRoleCompanyBySeqId($seq_id){
+        return $this->userRoleCompanies()
+                    ->where('user_role_company.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
+     * Get services ordered by seq_id
+     * @param  string $order    asc or desc
+     */
+    public function servicesInOrder($order = 'asc')
+    {
+        return $this->services()->orderBy('seq_id', $order);
+    }
+
+    /**
+     * Get services accacited with this user and seq_id convination
+     * @param  int $seq_id
+     * tested
+     */
+    public function serviceBySeqId($seq_id){
+        return $this->services()
+                    ->where('services.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
+     * Get reports order by seq_id
+     * @param  string $order    'asc' or 'desc'
+     */
+    public function reportsInOrder($order = 'asc')
+    {
+        return $this->reports()->orderBy('seq_id', $order);
+    }
+
+    /**
+     * Get the reports based on the seq_id
+     * @param  integer $seq_id
+     * @return App\Report
+     * tested
+     */
+    public function reportsBySeqId($seq_id){
+        return $this->reports()
+                    ->where('reports.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    /**
+     * Get the reports in this date
+     * @param  Carbon $date date is Administrator timzone
+     * tested
+     */
+    public function reportsByDate(Carbon $date){
+        $date_str = $date->toDateTimeString();
+        return $this->reports()
+                    ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
+                    ->orderBy('seq_id');
+    }
+
+
+
+    /**
+     * Get work orders ordered by seq_id
+     * @param  string $order    asc or desc
+     */
+    public function workOrdersInOrder($order = 'asc')
+    {
+        return $this->workOrders()->orderBy('seq_id', $order);
+    }
+
+    /**
+     * Get the work order based on the seq_id
+     * @param  integer $seq_id
+     * @return App\WorkOrder
+     * tested
+     */
+    public function workOrderBySeqId($seq_id){
+        return $this->workOrders()
+                    ->where('work_orders.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+
+    /**
+     * Get the invoices based on the seq_id
+     * @param  integer $seq_id
+     * @return App\Invoice
+     */
+    public function invoicesBySeqId($seq_id){
+        return $this->invoices()
+                    ->where('invoices.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+
+    /**
+     * Get the payments based on the seq_id
+     * @param  integer $seq_id
+     * @return App\Payment
+     */
+    public function paymentsBySeqId($seq_id){
+        return $this->payments()
+                    ->where('payments.seq_id', '=', $seq_id)
+                    ->firstOrFail();
+    }
+
+    public function missingHistoriesByDate(Carbon $date)
+    {
+        $date_str = $date->toDateTimeString();
+        return $this->missingHistories()
+                        ->whereDate('date', $date_str)
+                        ->first();
+    }
+
+    // Basic Relationships
+
+    public function userRoleCompanies()
+    {
+        return $this->hasMany(UserRoleCompany::class);
+    }
+
+    public function permissionRoleCompany()
+    {
+        return $this->hasMany(PermissionRoleCompany::class);
+    }
+
+    /**
+     *  Get services associated with this user
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    /**
+     * Get reports associatod with this user
+     */
+    public function reports(){
+        return $this->hasManyThrough(Report::class, Service::class);
+    }
+
+    /**
+     *  Get services associated with this user
+     * @param boolean
+     * @return Collection
+     * tested
+     */
+    public function workOrders(){
+        return $this->hasManyThrough(WorkOrder::class, Service::class);
+    }
+
+    /**
+     * Get invoices associated with this user
+     */
+    public function invoices()
+    {
+        return Invoice::where('company_id', $this->id);
+    }
+
+    /**
+     * Get invoices associated with this user
+     */
+    public function payments()
+    {
+        return Payment::join('invoices', 'invoices.id', '=', 'payments.invoice_id')
+                    ->where('company_id', '=', $this->id)
+                    ->select('payments.*');
+    }
+
+    public function missingHistories()
+    {
+        return $this->hasMany(MissingHistory::class);
+    }
 
 }

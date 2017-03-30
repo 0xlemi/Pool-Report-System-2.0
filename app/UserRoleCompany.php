@@ -59,6 +59,11 @@ class UserRoleCompany extends Model
         return $this->notificationSettings->contains($name);
     }
 
+	// ***********************
+	//       Attributes
+	// ***********************
+
+
     // **********************
     //     RELATIONSHIPS
     // **********************

@@ -52,8 +52,8 @@ class ReportsController extends PageController
     {
         $this->authorize('list', Report::class);
 
-        $admin = $this->loggedUserAdministrator();
-        $today = Carbon::today($admin->timezone);
+        $company = $this->loggedCompany();
+        $today = Carbon::today($company->timezone);
 
         $defaultTableUrl = url('datatables/reports').'?date='.$today->toDateString();
 
@@ -61,7 +61,7 @@ class ReportsController extends PageController
             'datatable_url' => url('datatables/reports').'?date=',
             'click_url' => url('reports').'/',
 
-            'enabledDates' => $admin->datesWithReport(),
+            'enabledDates' => $company->datesWithReport(),
             'todayDate' => $today->toDateString(),
         ]);
 

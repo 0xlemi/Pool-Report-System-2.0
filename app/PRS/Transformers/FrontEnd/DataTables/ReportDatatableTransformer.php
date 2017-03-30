@@ -18,12 +18,12 @@ class ReportDatatableTransformer extends Transformer
      */
     public function transform(Report $report)
     {
-        $technician = $report->technician;
+        $report->userRoleCompany;
         return [
             'id' => $report->seq_id,
             'service' => $report->service->name,
             'on_time' => $report->onTime()->styled(),
-            'technician' => $technician->name.' '.$technician->last_name,
+            'technician' => $report->userRoleCompany->user->fullName,
         ];
     }
 
