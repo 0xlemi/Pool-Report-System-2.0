@@ -6,14 +6,15 @@ use App\PRS\Classes\Logged;
 
 trait ControllerTrait{
 
-    public function loggedUserAdministrator()
+
+    public function loggedUser()
     {
-        return (new Logged)->admin();
+        return (new Logged)->user()->activeUser;
     }
 
-    public function getUser()
+    public function loggedCompany()
     {
-        return (new Logged)->user();
+        return (new Logged)->company();
     }
 
 }

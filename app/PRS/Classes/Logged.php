@@ -25,12 +25,12 @@ class Logged{
     }
 
     /**
-     * Get the administrator linked to the current logged in user
-     * @return Administrator
+     * Get the company linked to the current logged in user
+     * @return Company
      */
-    public function admin()
+    public function company()
     {
-        return $this->user()->admin();
+        return $this->user()->activeUser->company;
     }
 
 }
