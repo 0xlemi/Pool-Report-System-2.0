@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
 use App\PRS\ValueObjects\User\NotificationSettings;
@@ -54,7 +55,9 @@ class User extends Authenticatable
     ];
 
     protected $appends = [
-        'fullName'
+        'fullName',
+		'notificationSettings',
+		'activeUser'
     ];
 
 
@@ -88,14 +91,26 @@ class User extends Authenticatable
 
     //******** Relationships ********
 
+	public function getActiveUserAttribute()
+	{
+		try {
+			$activeUser = $this->userRoleCompanies()->where('active', true)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			$activeUser = $this->userRoleCompanies()->first();
+		}
+		return $activeUser;
+	}
+
+	// basic relationships
+
     public function activationToken()
     {
         return $this->hasOne(ActivationToken::class);
     }
 
-    public function userRoleCompany()
+    public function userRoleCompanies()
     {
-        $this->hasMany(UserRoleCompany::class);
+        return $this->hasMany(UserRoleCompany::class);
     }
 
 
