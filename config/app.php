@@ -159,6 +159,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ValidationServiceProvider::class,
+        App\Providers\PermissionServiceProvider::class,
 
         /**
          * Third Party Service Providers

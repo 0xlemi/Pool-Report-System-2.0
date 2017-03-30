@@ -14,10 +14,10 @@ class PermissionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Checking for roles
         Blade::directive('role', function($role) {
             return "<?php if(auth()->check() && auth()->user()->activeUser->isRole({$role})): ?>";
         });
-
         Blade::directive('endrole', function($role) {
             return "<?php endif; ?>";
         });
