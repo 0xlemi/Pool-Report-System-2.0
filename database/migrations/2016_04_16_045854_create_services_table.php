@@ -29,6 +29,8 @@ class CreateServicesTable extends Migration
             $table->softDeletes();
             $table->timestamps();
 
+            $table->unique(['seq_id', 'company_id']);
+
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')

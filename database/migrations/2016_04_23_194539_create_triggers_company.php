@@ -18,7 +18,7 @@ class CreateTriggersCompany extends Migration
             FOR EACH ROW
             BEGIN
                 INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('users', NEW.id, 0);
+                VALUES ('user_role_company', NEW.id, 0);
                 INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('services', NEW.id, 0);
                 INSERT INTO `seq` (`name`, `company_id`, `val`)

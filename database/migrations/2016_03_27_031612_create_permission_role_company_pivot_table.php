@@ -20,8 +20,10 @@ class CreatePermissionRoleCompanyPivotTable extends Migration
             $table->integer('company_id')->unsigned();
 
             $table->timestamps();
+            $table->integer('seq_id')->unsigned();
 
             $table->primary(['role_id', 'permission_id', 'company_id']);
+            $table->unique(['seq_id', 'company_id']);
 
             $table->foreign('role_id')
                 ->references('id')

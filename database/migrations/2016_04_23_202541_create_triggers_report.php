@@ -38,6 +38,20 @@ class CreateTriggersReport extends Migration
         //     END IF;
         // END
         // ");
+        DB::unprepared("
+            CREATE TRIGGER trg_reports_bi_seq
+                BEFORE INSERT ON reports
+                FOR EACH ROW
+                BEGIN
+
+                DECLARE v_company_id INT;
+                SELECT company_id INTO v_company_id
+                FROM services
+                WHERE id = NEW.service_id;
+
+                SET NEW.seq_id = (SELECT f_gen_seq('reports',v_company_id));
+            END
+        ");
     }
 
     /**
@@ -48,5 +62,6 @@ class CreateTriggersReport extends Migration
     public function down()
     {
         // DB::unprepared('DROP TRIGGER IF EXISTS trg_reports_bi_admin_consistency_and_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_reports_bi_seq');
     }
 }
