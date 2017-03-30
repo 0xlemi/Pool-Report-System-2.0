@@ -95,7 +95,7 @@ class WorkOrder extends Model
      */
     public function start()
     {
-        return (new Carbon($this->start, 'UTC'))->setTimezone($this->admin()->timezone);
+        return (new Carbon($this->start, 'UTC'))->setTimezone($this->company->timezone);
     }
 
     /**
@@ -104,7 +104,7 @@ class WorkOrder extends Model
      */
     public function end()
     {
-        return new End($this->end, $this->admin()->timezone);
+        return new End($this->end, $this->company->timezone);
     }
 
 

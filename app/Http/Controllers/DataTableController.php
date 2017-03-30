@@ -81,9 +81,8 @@ class DataTableController extends PageController
         ]);
 
         $operator = ($request->finished) ? '!=' : '=';
-        $workOrders = $this->loggedUserAdministrator()
-                        ->workOrdersInOrder()
-                        ->get()
+        $workOrders = $this->loggedCompany()
+                        ->workOrdersInOrder()->get()
                         ->where('end', $operator, null);
 
         return response()->json(

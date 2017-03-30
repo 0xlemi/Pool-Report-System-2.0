@@ -24,7 +24,6 @@ class WorkOrderDatatableTransformer extends Transformer
      */
     public function transform(WorkOrder $workOrder)
     {
-        $supervisor = $workOrder->supervisor;
         return [
             'id' => $workOrder->seq_id,
             'start' => $workOrder->start()
@@ -32,7 +31,7 @@ class WorkOrderDatatableTransformer extends Transformer
             'end' =>  (string) $workOrder->end(),
             'price' => $workOrder->price.' <strong>'.$workOrder->currency.'</strong>',
             'service' => $workOrder->service->name,
-            'supervisor' => $supervisor->name.' '.$supervisor->last_name,
+            'supervisor' => $workOrder->userRoleCompany->user->fullName,
         ];
     }
 
