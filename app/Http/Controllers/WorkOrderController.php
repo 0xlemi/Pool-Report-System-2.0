@@ -185,7 +185,10 @@ class WorkOrderController extends PageController
 
         $this->authorize('update', $workOrder);
 
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($company->supervisorsInOrder()->get());
+        $persons = $this->userRoleCompanyHelpers->transformForDropdown(
+                                $company->userRoleCompaniesByRole('admin', 'sup', 'tech')
+                                        ->orderBy('seq_id')->get()
+                            );
 
         $date = (new Carbon($workOrder->start, 'UTC'))
                     ->setTimezone($company->timezone)
@@ -194,7 +197,7 @@ class WorkOrderController extends PageController
             'defaultDate' => $date,
         ]);
 
-        return view('workorders.edit', compact('workOrder', 'supervisors'));
+        return view('workorders.edit', compact('workOrder', 'persons'));
     }
 
     /**
@@ -220,13 +223,13 @@ class WorkOrderController extends PageController
         }
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
-        $supervisor = $this->loggedCompany()->supervisorBySeqId($request->supervisor);
+        $userRoleCompany = $company->userRoleCompanyBySeqId($request->person);
 
         $workOrder->fill(array_merge(
                             array_map('htmlentities', $request->except(['price', 'currency'])),
                             [
                                 'start' => $startDate,
-                                'supervisor_id' => $supervisor->id,
+                                'user_role_company_id' => $userRoleCompany->id,
                             ]
                         ));
 

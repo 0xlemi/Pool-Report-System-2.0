@@ -23,12 +23,12 @@ class UpdateWorkOrderRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->activeUser->company;
         return [
             'title' => 'string|max:255',
             'description' => 'string',
-            'service' => 'integer|existsBasedOnCompany:services,'.$admin->id,
-            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$admin->id,
+            'service' => 'integer|existsBasedOnCompany:services,'.$company->id,
+            'supervisor' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'date',
             'photo' => 'mimes:jpg,jpeg,png',
         ];

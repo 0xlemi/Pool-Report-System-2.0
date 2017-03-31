@@ -39,15 +39,15 @@
 								</div>
 							</div>
 
-                            <div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Supervisor</label>
+                            <div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Person</label>
 								<div class="col-sm-10">
-									<dropdown :key="{{ $workOrder->supervisor->seq_id }}"
-												:options="{{ $supervisors }}"
-												:name="'supervisor'">
+									<dropdown :key="{{ $workOrder->userRoleCompany->seq_id }}"
+												:options="{{ $persons }}"
+												:name="'person'">
 									</dropdown>
-									@if ($errors->has('supervisor'))
-										<small class="text-muted">{{ $errors->first('supervisor') }}</small>
+									@if ($errors->has('person'))
+										<small class="text-muted">{{ $errors->first('person') }}</small>
 									@endif
 								</div>
 							</div>
