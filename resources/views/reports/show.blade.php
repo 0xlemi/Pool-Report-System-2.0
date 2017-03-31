@@ -49,7 +49,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Technician Name</label>
 							<div class="col-sm-10">
-								<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->technician->name }}"></p>
+								<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->userRoleCompany->user->fullName }}"></p>
 							</div>
 						</div>
 						<div class="form-group row">

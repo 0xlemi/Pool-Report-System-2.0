@@ -144,7 +144,7 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedCompany()->reportsBySeqId($seq_id);
 
         $this->authorize('view', $report);
         $images = $this->imageTransformer->transformCollection($report->images);

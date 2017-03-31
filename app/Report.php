@@ -68,7 +68,7 @@ class Report extends Model
 
     public function completed()
     {
-        return (new Carbon($this->completed, 'UTC'))->setTimezone($this->admin()->timezone);
+        return (new Carbon($this->completed, 'UTC'))->setTimezone($this->company->timezone);
     }
 
     public function onTime()
@@ -78,27 +78,27 @@ class Report extends Model
 
     public function ph()
     {
-        return new Reading($this->ph, $this->admin()->tags()->ph());
+        return new Reading($this->ph, $this->company->tags()->ph());
     }
 
     public function chlorine()
     {
-        return new Reading($this->chlorine, $this->admin()->tags()->chlorine());
+        return new Reading($this->chlorine, $this->company->tags()->chlorine());
     }
 
     public function temperature()
     {
-        return new Reading($this->temperature, $this->admin()->tags()->temperature());
+        return new Reading($this->temperature, $this->company->tags()->temperature());
     }
 
     public function turbidity()
     {
-        return new Turbidity($this->turbidity, $this->admin()->tags()->turbidity());
+        return new Turbidity($this->turbidity, $this->company->tags()->turbidity());
     }
 
     public function salt()
     {
-        return new Reading($this->salt, $this->admin()->tags()->salt());
+        return new Reading($this->salt, $this->company->tags()->salt());
     }
 
 
