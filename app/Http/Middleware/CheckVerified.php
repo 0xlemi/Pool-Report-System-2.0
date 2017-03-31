@@ -18,7 +18,7 @@ class CheckVerified
     {
         $user = (new Logged)->user();
 
-        if(!$user->activated){
+        if(!$user->verified){
             return response([
                 'message' => 'You cannot login because your email has not been verified.',
                 'resend_email' => 'Make post request: '.url('api/v1/activate/resend'),

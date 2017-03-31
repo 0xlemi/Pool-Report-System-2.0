@@ -12,8 +12,7 @@ use App\Http\Requests;
 use App\Http\Requests\CreateWorkOrderRequest;
 use App\Http\Requests\UpdateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
-use App\PRS\Helpers\SupervisorHelpers;
-use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\WorkOrder;
 use App\Notifications\NewWorkOrderNotification;
@@ -23,8 +22,7 @@ class WorkOrderController extends PageController
 {
 
     private $serviceHelpers;
-    private $supervisorHelpers;
-    private $technicianHelpers;
+    private $userRoleCompanyHelpers;
     private $imageTransformer;
 
     /**
@@ -33,14 +31,12 @@ class WorkOrderController extends PageController
      * @return void
      */
     public function __construct(ServiceHelpers $serviceHelpers,
-                                    SupervisorHelpers $supervisorHelpers,
-                                    TechnicianHelpers $technicianHelpers,
+                                    UserRoleCompanyHelpers $userRoleCompanyHelpers,
                                     ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->serviceHelpers = $serviceHelpers;
-        $this->supervisorHelpers = $supervisorHelpers;
-        $this->technicianHelpers = $technicianHelpers;
+        $this->userRoleCompanyHelpers = $userRoleCompanyHelpers;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -68,7 +64,7 @@ class WorkOrderController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $currencies = config('constants.currencies');
 
         return view('workorders.create', compact('services', 'supervisors', 'currencies'));
@@ -126,7 +122,7 @@ class WorkOrderController extends PageController
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
-        $technicians  = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $technicians  = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $default_table_url = url('datatables/works/'.$seq_id);
 
         JavaScript::put([
@@ -184,7 +180,7 @@ class WorkOrderController extends PageController
 
         $this->authorize('update', $workOrder);
 
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
 
         $date = (new Carbon($workOrder->start, 'UTC'))
                     ->setTimezone($admin->timezone)

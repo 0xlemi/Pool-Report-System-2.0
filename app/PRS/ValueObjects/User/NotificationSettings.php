@@ -38,7 +38,7 @@ class NotificationSettings {
     {
         // If user is not activated don't send emails to them
         // They dont yet agree to use the system
-        if(!$this->user->activated){
+        if(!$this->user->verified){
             return false;
         }
         $notificationPermissonsArray = $this->userHelper->notificationPermissonToArray($this->user->$name);

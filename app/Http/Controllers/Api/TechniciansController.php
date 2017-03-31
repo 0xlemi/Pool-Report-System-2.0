@@ -17,6 +17,7 @@ use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\UserRoleCompany;
 use App\Administrator;
 
 class TechniciansController extends ApiController
@@ -38,7 +39,7 @@ class TechniciansController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', Technician::class))
+        if($this->getUser()->cannot('listTechnicians', UserRoleCompany::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -214,7 +215,7 @@ class TechniciansController extends ApiController
         // Check that the admin has payed for this technician
         $user = $technician->user;
         $active = ($request->active)? 1:0;
-        if( ($active && ($active != $user->active)) && !$admin->canAddObject()){
+        if( ($active && ($active != $user->activeUser->paid)) && !$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
         }
 

@@ -77,7 +77,7 @@
             </li>
             @endcan
 
-            @can('list', App\Client::class)
+            @can('listClients', App\UserRoleCompany::class)
             <li class="blue {{ Request::is('clients*')? 'opened':'' }}">
                 <a href="{{ url('/clients') }}">
                     <i class="font-icon glyphicon glyphicon-user"></i>
@@ -86,7 +86,7 @@
             </li>
             @endcan
 
-            @can('list', App\Supervisor::class)
+            @can('listSupervisors', App\UserRoleCompany::class)
             <li class="orange-red {{ Request::is('supervisors*')? 'opened':'' }}">
                 <a href="{{ url('/supervisors') }}">
                     <i class="font-icon glyphicon glyphicon-eye-open"></i>
@@ -95,7 +95,7 @@
             </li>
             @endcan
 
-            @can('list', App\Technician::class)
+            @can('listTechnicians', App\UserRoleCompany::class)
             <li class="magenta {{ Request::is('technicians*')? 'opened':'' }}">
                 <a href="{{ url('/technicians') }}">
                     <i class="font-icon glyphicon glyphicon-wrench"></i>

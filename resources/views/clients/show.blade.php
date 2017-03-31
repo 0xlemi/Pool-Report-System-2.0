@@ -24,7 +24,7 @@
 					<div class="card-block">
 						<form>
 
-							@if(!$client->user->activated)
+							@if(!$client->user->verified)
 							<div class="form-group row">
 								<email-verification-notice
 									name="Client"

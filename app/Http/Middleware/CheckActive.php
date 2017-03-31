@@ -19,9 +19,9 @@ class CheckActive
     {
         $user = (new Logged)->user();
 
-        if(!$user->active){
+        if(!$user->activeUser->paid){
             return response([
-                'message' => 'You cannot login because this user is set to inactive. Ask the system administrator to activate your account.'
+                'message' => 'You cannot login because this user is not been paid for. Ask the system administrator to activate your account.'
             ], 402);
         }
 

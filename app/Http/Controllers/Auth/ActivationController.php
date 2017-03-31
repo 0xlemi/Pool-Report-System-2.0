@@ -19,7 +19,7 @@ class ActivationController extends Controller
     {
         $user = $token->user;
         if($user->isAdministrator()){
-            $user->activated = 1;
+            $user->verified = 1;
             $user->save();
 
             $token->delete();
@@ -43,7 +43,7 @@ class ActivationController extends Controller
         }
 
         $user  = $token->user;
-        $user->activated = 1;
+        $user->verified = 1;
         $user->password = bcrypt($request->password);
         $user->save();
 
@@ -63,7 +63,7 @@ class ActivationController extends Controller
         $user = User::where('email', $request->email)->first();
 
         // check if the user is activated (email verification)
-        if($user->activated){
+        if($user->verified){
             return redirect('/login')
                 ->withInfo('Your account is already verified, just login.');
         }

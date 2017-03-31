@@ -15,6 +15,7 @@ use App\Http\Requests\UpdateSupervisorRequest;
 use App\Http\Requests;
 use App\Http\Controllers\PageController;
 use App\PRS\Transformers\ImageTransformer;
+use App\UserRoleCompany;
 
 class SupervisorsController extends PageController
 {
@@ -39,7 +40,7 @@ class SupervisorsController extends PageController
      */
     public function index()
     {
-        $this->authorize('list', Supervisor::class);
+        $this->authorize('listSupervisors', UserRoleCompany::class);
 
         $default_table_url = url('datatables/supervisors?status=1');
 
@@ -155,7 +156,7 @@ class SupervisorsController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->activeUser->paid)) && !$admin->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
                     "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');

@@ -64,14 +64,14 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         // payed for
-        if(!$user->active){
+        if(!$user->activeUser->paid){
             Auth::logout();
 
             return redirect('/login')
                 ->withError('Your account has been deactivated. Contact your System Administrator to activate your account.');
         }
         // verify email
-        elseif(!$user->activated){
+        elseif(!$user->verified){
             Auth::logout();
 
             return redirect('/login')

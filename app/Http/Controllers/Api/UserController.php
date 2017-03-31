@@ -179,11 +179,11 @@ class UserController extends ApiController
             }
 
             // check if the user is active (payed)
-            if(!$user->active){
+            if(!$user->activeUser->paid){
                 return response('You cannot login because this user is set to inactive. Ask the system administrator to activate your account.', 402);
             }
             // check if the user is activated (email verification)
-            if(!$user->activated){
+            if(!$user->verified){
                 return response('You cannot login until you verify your email. Check you inbox.', 403);
             }
 
@@ -208,7 +208,7 @@ class UserController extends ApiController
         $user = User::where('email', $request->email)->first();
 
         // check if the user is activated (email verification)
-        if($user->activated){
+        if($user->verified){
             return response('Your account is already verified, just login.', 400);
         }
 

@@ -17,6 +17,7 @@ use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\UserRoleCompany;
 use App\Administrator;
 
 class ClientsController extends ApiController
@@ -43,7 +44,7 @@ class ClientsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', Client::class))
+        if($this->getUser()->cannot('listClients', UserRoleCompany::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

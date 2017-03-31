@@ -15,6 +15,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\SupervisorTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
+use App\UserRoleCompany;
 use App\Administrator;
 
 class SupervisorsController extends ApiController
@@ -43,7 +44,7 @@ class SupervisorsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', Supervisor::class))
+        if($this->getUser()->cannot('listSupervisors', UserRoleCompany::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -211,7 +212,7 @@ class SupervisorsController extends ApiController
         $user = $supervisor->user;
         // Check that the admin has payed for this supervisor
         $status = ($request->status)? 1:0;
-        if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->activeUser->paid)) && !$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
         }
 

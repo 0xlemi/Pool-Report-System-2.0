@@ -262,20 +262,27 @@ class Company extends Model
 // Feature Relationships
 
 
-    public function userRoleCompaniesWithRole($role)
+    public function userRoleCompaniesByRole($role)
     {
-        return $this->userRoleCompanies->filter(function ($userRoleCompany) use ($role){
-            return $userRoleCompany->isRole($role);
-        });
+        return $this->userRoleCompanies()
+                ->join('roles', function ($join) use ($role){
+                    $join->on('user_role_company.role_id', '=', 'roles.id')
+                            ->where('roles.name', $role);
+                });
+    }
+
+    public function userRoleCompaniesByRoleWherePaid($role, $paid)
+    {
+        return $this->userRoleCompaniesByRole($role)->where('paid', $paid);
     }
 
     /**
      * Get userRoleCompany ordered by seq_id
      * @param  string $order    asc or desc
      */
-    public function userRoleCompaniesByRole($role, $order = 'asc')
+    public function userRoleCompaniesByRoleInOrder($role, $order = 'asc')
     {
-        return $this->userRoleCompaniesWithRole($role)->orderBy('seq_id', $order);
+        return $this->userRoleCompaniesByRole($role)->orderBy('seq_id', $order);
     }
 
     /**

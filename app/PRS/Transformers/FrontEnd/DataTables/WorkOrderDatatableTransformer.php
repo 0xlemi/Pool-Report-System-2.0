@@ -16,7 +16,6 @@ use Carbon\Carbon;
 class WorkOrderDatatableTransformer extends Transformer
 {
 
-
     /**
      * Transform WorkOrder to api friendly array
      * @param  WorkOrder $workOrder

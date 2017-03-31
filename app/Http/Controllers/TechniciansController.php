@@ -15,13 +15,14 @@ use App\Http\Requests;
 use App\Http\Requests\CreateTechnicianRequest;
 use App\Http\Requests\UpdateTechnicianRequest;
 use App\Http\Controllers\PageController;
-use App\PRS\Helpers\SupervisorHelpers;
+use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\UserRoleCompany;
 
 class TechniciansController extends PageController
 {
 
-    private $supervisorHelpers;
+    private $userRoleCompanyHelpers;
     protected $imageTransformer;
 
     /**
@@ -29,11 +30,11 @@ class TechniciansController extends PageController
      *
      * @return void
      */
-    public function __construct(SupervisorHelpers $supervisorHelpers,
+    public function __construct(UserRoleCompanyHelpers $userRoleCompanyHelpers,
                                 ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
-        $this->supervisorHelpers = $supervisorHelpers;
+        $this->userRoleCompanyHelpers = $userRoleCompanyHelpers;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -44,7 +45,7 @@ class TechniciansController extends PageController
      */
     public function index()
     {
-        $this->authorize('list', Technician::class);
+        $this->authorize('listTechnicians', UserRoleCompany::class);
 
         $default_table_url = url('datatables/technicians?status=1');
 
@@ -65,7 +66,7 @@ class TechniciansController extends PageController
     {
         $this->authorize('create', Technician::class);
 
-        $supervisors = $this->supervisorHelpers->transformForDropdown(
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown(
                     $this->loggedUserAdministrator()
                     ->supervisorsInOrder()
                     ->get()
@@ -152,7 +153,7 @@ class TechniciansController extends PageController
 
         $this->authorize('update', $technician);
 
-        $supervisors = $this->supervisorHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
         $supervisorSelected = Supervisor::find($technician->supervisor_id);
         JavaScript::put([
             'dropdownKey' => $supervisorSelected->seq_id,
@@ -182,7 +183,7 @@ class TechniciansController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->activeUser->paid)) && !$admin->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
                     "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');

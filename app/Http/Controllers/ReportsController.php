@@ -17,13 +17,14 @@ use Auth;
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\UserRoleCompany;
 use App\Service;
 class ReportsController extends PageController
 {
     protected $reportHelpers;
-    protected $serviceHelpers;
-    protected $technicianHelpers;
+    protected $userRoleCompanyHelpers;
     protected $imageTransformer;
 
     /**
@@ -32,14 +33,12 @@ class ReportsController extends PageController
      * @return void
      */
     public function __construct(ReportHelpers $reportHelpers,
-                                ServiceHelpers $serviceHelpers,
-                                TechnicianHelpers $technicianHelpers,
+                                UserRoleCompanyHelpers $userRoleCompanyHelpers,
                                 ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->reportHelpers = $reportHelpers;
-        $this->serviceHelpers = $serviceHelpers;
-        $this->technicianHelpers = $technicianHelpers;
+        $this->userRoleCompanyHelpers = $userRoleCompanyHelpers;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -79,8 +78,8 @@ class ReportsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
-        $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $services = $this->userRoleCompanyHelpers->transformForDropdown($admin->servicesInOrder()->get());
+        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();;
 
         return view('reports.create', compact('services', 'technicians', 'tags'));
@@ -186,7 +185,7 @@ class ReportsController extends PageController
 
         $this->authorize('update', $report);
 
-        $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();
 
         $date = (new Carbon($report->completed, 'UTC'))

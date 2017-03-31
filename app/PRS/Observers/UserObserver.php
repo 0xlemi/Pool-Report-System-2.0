@@ -28,7 +28,7 @@ class UserObserver
         // if($user->isTechnician()){
         //     // since technician don't have email
         //     // should be immediately be verified
-        //     $user->activated = 1;
+        //     $user->verified = 1;
         // }
         // $user->save();
         //

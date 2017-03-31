@@ -16,8 +16,10 @@ use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\SupervisorDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TechnicianDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TodaysRouteDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\UserRoleCompanyDatatableTransformer;
 
 use App\Http\Requests;
+use App\UserRoleCompany;
 use App\Supervisor;
 use App\Technician;
 use App\Service;
@@ -110,50 +112,47 @@ class DataTableController extends PageController
                 );
     }
 
-    public function clients(ClientDatatableTransformer $transformer)
+    public function clients(UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('list', Client::class);
+        $this->authorize('listClients', UserRoleCompany::class);
 
-        $clients = $this->loggedCompany()
-                        ->clientsInOrder()
-                        ->get();
+        $userRoleCompanies = $this->loggedCompany()
+                        ->userRoleCompaniesByRole('client')->get();
 
         return response()->json(
-                    $transformer->transformCollection($clients)
+                    $transformer->transformCollection($userRoleCompanies)
                 );
     }
 
-    public function supervisors(Request $request, SupervisorDatatableTransformer $transformer)
+    public function supervisors(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('list', Supervisor::class);
+        $this->authorize('listSupervisors', UserRoleCompany::class);
 
         $this->validate($request, [
             'status' => 'required|boolean',
         ]);
 
-        $supervisors = $this->loggedUserAdministrator()
-                        ->supervisorsActive($request->status)
-                        ->get();
+        $userRoleCompanies = $this->loggedCompany()
+                        ->userRoleCompaniesByRoleWherePaid('sup', $request->status)->get();
 
         return response()->json(
-                    $transformer->transformCollection($supervisors)
+                    $transformer->transformCollection($userRoleCompanies)
                 );
     }
 
-    public function technicians(Request $request, TechnicianDatatableTransformer $transformer)
+    public function technicians(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('list', Technician::class);
+        $this->authorize('listTechnicians', UserRoleCompany::class);
 
         $this->validate($request, [
             'status' => 'required|boolean',
         ]);
 
-        $technicians = $this->loggedUserAdministrator()
-                            ->techniciansActive($request->status)
-                            ->get();
+        $userRoleCompanies = $this->loggedCompany()
+                            ->userRoleCompaniesByRoleWherePaid('tech', $request->status)->get();
 
         return response()->json(
-                    $transformer->transformCollection($technicians)
+                    $transformer->transformCollection($userRoleCompanies)
                 );
     }
 
@@ -167,7 +166,7 @@ class DataTableController extends PageController
 
         $closed = $request->closed;
         $condition = ($request->closed)? '!=' : '=';
-        $invoices = $this->loggedUserAdministrator()
+        $invoices = $this->loggedCompany()
                         ->invoices()
                         ->where('closed', $condition , NULL)
                         ->orderBy('seq_id', 'desc')

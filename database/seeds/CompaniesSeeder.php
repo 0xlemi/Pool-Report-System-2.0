@@ -33,7 +33,7 @@ class CompaniesSeeder extends Seeder
     	$user1 = factory(User::class)->create([
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
-            'activated' => 1,
+            'verified' => 1,
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
         ]);
 
@@ -58,7 +58,7 @@ class CompaniesSeeder extends Seeder
     	$user2 = factory(User::class)->create([
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
-            'activated' => 1,
+            'verified' => 1,
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
     	]);
 

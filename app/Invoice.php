@@ -50,7 +50,7 @@ class Invoice extends Model
 
     public function closed()
     {
-        return (new Carbon($this->closed, 'UTC'))->setTimezone($this->admin()->timezone);
+        return (new Carbon($this->closed, 'UTC'))->setTimezone($this->company->timezone);
     }
 
     public function type()

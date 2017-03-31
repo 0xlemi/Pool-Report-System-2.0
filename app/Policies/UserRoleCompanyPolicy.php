@@ -21,6 +21,42 @@ class UserRoleCompanyPolicy
     }
 
     /**
+     * Determine whether the user can view the list of userRoleCompany with role client.
+     *
+     * @param  \App\User  $user
+     * @param  \App\UserRoleCompany  $userRoleCompany
+     * @return mixed
+     */
+    public function listClients(User $user)
+    {
+        return true; // temporary
+    }
+
+    /**
+     * Determine whether the user can view the list of userRoleCompany with role client.
+     *
+     * @param  \App\User  $user
+     * @param  \App\UserRoleCompany  $userRoleCompany
+     * @return mixed
+     */
+    public function listSupervisors(User $user)
+    {
+        return true; // temporary
+    }
+
+    /**
+     * Determine whether the user can view the list of userRoleCompany with role client.
+     *
+     * @param  \App\User  $user
+     * @param  \App\UserRoleCompany  $userRoleCompany
+     * @return mixed
+     */
+    public function listTechnicians(User $user)
+    {
+        return true; // temporary
+    }
+
+    /**
      * Determine whether the user can view the userRoleCompany.
      *
      * @param  \App\User  $user

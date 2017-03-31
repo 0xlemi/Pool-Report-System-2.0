@@ -15,6 +15,7 @@ use App\Http\Requests;
 use App\Http\Requests\CreateClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\PRS\Transformers\ImageTransformer;
+use App\UserRoleCompany;
 
 class ClientsController extends PageController
 {
@@ -39,7 +40,7 @@ class ClientsController extends PageController
      */
     public function index()
     {
-        $this->authorize('list', Client::class);
+        $this->authorize('listClients', UserRoleCompany::class);
 
         $default_table_url = url('datatables/clients');
 
