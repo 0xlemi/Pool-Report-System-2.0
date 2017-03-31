@@ -18,20 +18,20 @@ class MissingServicesController extends PageController
             'date' => 'date_format:Y-m-d',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
         $date = Carbon::today();
         if($request->has('date')){
             $date = Carbon::parse($request->date);
         }
 
-        if($history = $admin->missingHistoriesByDate($date)){
+        if($history = $company->missingHistoriesByDate($date)){
             $numServicesMissing = $history->num_services_missing;
             $numServicesDone = $history->num_services_done;
             $services = $history->services;
         }else{
-            $numServicesMissing = $admin->numberServicesMissing($date);
-            $numServicesDone = $admin->numberServicesDoIn($date) - $numServicesMissing;
-            $services = $this->loggedUserAdministrator()->servicesDoIn($date);
+            $numServicesMissing = $company->numberServicesMissing($date);
+            $numServicesDone = $company->numberServicesDoIn($date) - $numServicesMissing;
+            $services = $company->servicesDoIn($date);
         }
 
         return response()->json([

@@ -38,6 +38,20 @@ class CreateTriggersWorkOrder extends Migration
         //         END IF;
         //     END
         // ");
+        DB::unprepared("
+            CREATE TRIGGER trg_work_orders_bi_seq
+                BEFORE INSERT ON work_orders
+                FOR EACH ROW
+                BEGIN
+
+                DECLARE v_company_id INT;
+                SELECT company_id INTO v_company_id
+                FROM services
+                WHERE id = NEW.service_id;
+
+                SET NEW.seq_id = (SELECT f_gen_seq('work_orders',v_company_id));
+            END
+        ");
     }
 
     /**
@@ -48,5 +62,6 @@ class CreateTriggersWorkOrder extends Migration
     public function down()
     {
         // DB::unprepared('DROP TRIGGER IF EXISTS trg_work_orders_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_work_orders_bi_seq');
     }
 }

@@ -26,6 +26,7 @@ class CreateUserRoleCompanyPivotTable extends Migration
 
             $table->integer('seq_id')->unsigned()->index();
             $table->unique(['user_id', 'role_id', 'company_id']);
+            $table->unique(['seq_id', 'company_id']);
 
             $table->foreign('user_id')
                 ->references('id')

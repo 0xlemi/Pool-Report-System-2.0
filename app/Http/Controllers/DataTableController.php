@@ -98,14 +98,12 @@ class DataTableController extends PageController
             'status' => 'required|boolean',
         ]);
 
+        $company = $this->loggedCompany();
+
         if($request->status){
-            $services = $this->loggedUserAdministrator()
-                            ->servicesWithActiveContract()
-                            ->get();
+            $services = $company->servicesWithActiveContract()->get();
         }else{
-            $services = $this->loggedUserAdministrator()
-                            ->serviceWithNoContractOrInactive()
-                            ->get();
+            $services = $company->serviceWithNoContractOrInactive()->get();
         }
         return response()->json(
                     $transformer->transformCollection($services)
@@ -116,7 +114,7 @@ class DataTableController extends PageController
     {
         $this->authorize('list', Client::class);
 
-        $clients = $this->loggedUserAdministrator()
+        $clients = $this->loggedCompany()
                         ->clientsInOrder()
                         ->get();
 
