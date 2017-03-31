@@ -61,10 +61,10 @@ class WorkOrderController extends PageController
     {
         $this->authorize('create', WorkOrder::class);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $services = $this->serviceHelpers->transformForDropdown($admin->servicesInOrder()->get());
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $services = $this->serviceHelpers->transformForDropdown($company->servicesInOrder()->get());
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($company->supervisorsInOrder()->get());
         $currencies = config('constants.currencies');
 
         return view('workorders.create', compact('services', 'supervisors', 'currencies'));
@@ -80,11 +80,11 @@ class WorkOrderController extends PageController
     {
         $this->authorize('create', WorkOrder::class);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
+        $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
+        $service = $this->loggedCompany()->serviceBySeqId($request->service);
+        $supervisor = $this->loggedCompany()->supervisorBySeqId($request->supervisor);
 
         $workOrder = $service->workOrders()->create(array_merge(
                             array_map('htmlentities', $request->all()),
@@ -114,15 +114,17 @@ class WorkOrderController extends PageController
      */
     public function show($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $workOrder = $company->workOrderBySeqId($seq_id);
 
         $this->authorize('view', $workOrder);
 
         $imagesBeforeWork = $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork());
         $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
-        $technicians  = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $userRoleCompanies  = $this->userRoleCompanyHelpers->transformForDropdown(
+                                $company->userRoleCompanies()->orderBy('seq_id')->get()
+                            );
         $default_table_url = url('datatables/works/'.$seq_id);
 
         JavaScript::put([
@@ -137,7 +139,7 @@ class WorkOrderController extends PageController
             'finishWorkOrderUrl' => url('workorders/finish/'.$workOrder->seq_id),
         ]);
 
-        return view('workorders.show', compact('workOrder', 'default_table_url', 'technicians'));
+        return view('workorders.show', compact('workOrder', 'default_table_url', 'userRoleCompanies'));
     }
 
     public function finish(Request $request, $seq_id)
@@ -145,8 +147,8 @@ class WorkOrderController extends PageController
         $this->validate($request, [
             'end' => 'required|date'
         ]);
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $workOrder = $company->workOrderBySeqId($seq_id);
 
         $this->authorize('finish', $workOrder);
 
@@ -158,7 +160,7 @@ class WorkOrderController extends PageController
             ], 400);
         }
 
-        $workOrder->end = (new Carbon($request->end, $admin->timezone))->setTimezone('UTC');
+        $workOrder->end = (new Carbon($request->end, $company->timezone))->setTimezone('UTC');
         $workOrder->save();
 
         return response()->json([
@@ -175,15 +177,15 @@ class WorkOrderController extends PageController
      */
     public function edit($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $workOrder = $company->workOrderBySeqId($seq_id);
 
         $this->authorize('update', $workOrder);
 
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
+        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($company->supervisorsInOrder()->get());
 
         $date = (new Carbon($workOrder->start, 'UTC'))
-                    ->setTimezone($admin->timezone)
+                    ->setTimezone($company->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'defaultDate' => $date,
@@ -201,8 +203,8 @@ class WorkOrderController extends PageController
      */
     public function update(UpdateWorkOrderRequest $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $workOrder = $company->workOrderBySeqId($seq_id);
 
         $this->authorize('update', $workOrder);
 
@@ -214,8 +216,8 @@ class WorkOrderController extends PageController
             ], 400);
         }
 
-        $startDate = (new Carbon($request->start, $admin->timezone))->setTimezone('UTC');
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($request->supervisor);
+        $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
+        $supervisor = $this->loggedCompany()->supervisorBySeqId($request->supervisor);
 
         $workOrder->fill(array_merge(
                             array_map('htmlentities', $request->except(['price', 'currency'])),
@@ -233,14 +235,14 @@ class WorkOrderController extends PageController
 
     public function getPhotosBefore($seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('view', $workOrder);
         return $this->getPhoto($workOrder, 'before');
     }
 
     public function getPhotosAfter($seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('view', $workOrder);
         return $this->getPhoto($workOrder, 'after');
     }
@@ -248,28 +250,28 @@ class WorkOrderController extends PageController
 
     public function addPhotoBefore(Request $request, $seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('addPhoto', $workOrder);
         return $this->addPhoto($request, $workOrder, 1);
     }
 
     public function addPhotoAfter(Request $request, $seq_id)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('finish', $workOrder);
         return $this->addPhoto($request, $workOrder, 2);
     }
 
     public function removePhotoBefore($seq_id, $order)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('removePhoto', $workOrder);
         return $this->removePhoto($workOrder, $order, 1);
     }
 
     public function removePhotoAfter($seq_id, $order)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
         $this->authorize('finish', $workOrder);
         return $this->removePhoto($workOrder, $order, 2);
     }
@@ -282,8 +284,8 @@ class WorkOrderController extends PageController
      */
     public function destroy($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $workOrder = $company->workOrderBySeqId($seq_id);
 
         $this->authorize('delete', $workOrder);
 

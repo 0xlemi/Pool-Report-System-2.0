@@ -43,7 +43,7 @@ class UpdateReportRequest extends FormRequest
     {
         $admin = \Auth::user()->admin();
         return [
-            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
             'completed_at' => 'date',
             'ph' => 'integer|between:1,5',
             'chlorine' => 'integer|between:1,5',

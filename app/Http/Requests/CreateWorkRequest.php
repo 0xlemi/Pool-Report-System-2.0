@@ -23,9 +23,9 @@ class CreateWorkRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->activeUser->company;
         return [
-            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'technician' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|numeric',

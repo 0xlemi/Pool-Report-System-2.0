@@ -27,7 +27,7 @@ class CreateTechnicianRequest extends Request
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
             'username' => 'required|alpha_dash|between:4,25|unique:users,email',
             'password' => 'required|alpha_dash|between:6,200',
             'cellphone' => 'required|string|max:20',

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\WorkOrder;
 use App\UserRoleCompany;
 
 class Work extends Model
@@ -37,7 +38,7 @@ class Work extends Model
      */
     public function workOrder()
     {
-    	return $this->belongsTo('App\WorkOrder');
+    	return $this->belongsTo(WorkOrder::class);
     }
 
     /**
@@ -53,6 +54,6 @@ class Work extends Model
      */
     public function service()
     {
-        return $this->workOrder->service;
+        return $this->workOrder->service();
     }
 }

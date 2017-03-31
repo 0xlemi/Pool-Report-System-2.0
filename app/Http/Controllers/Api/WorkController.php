@@ -73,7 +73,7 @@ class WorkController extends ApiController
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:20',
             'cost' => 'required|numeric|max:10000000',
-            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'technician' => 'required|integer|existsBasedOnCompany:technicians,'.$admin->id,
             'photos' => 'array',
             'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
@@ -154,7 +154,7 @@ class WorkController extends ApiController
             'quantity' => 'numeric',
             'units' => 'string|max:255',
             'cost' => 'numeric',
-            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
             'add_photos' =>'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' =>'array',

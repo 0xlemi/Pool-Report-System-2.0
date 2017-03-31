@@ -22,8 +22,8 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::replacer('validConstant', 'App\PRS\Validators\ValidConstant@message');
 
         // Validation condition to check if object exists in the admin system based on seq_id and administartor
-        Validator::extend('existsBasedOnAdmin', 'App\PRS\Validators\ExistsBasedOnAdmin@validate');
-        Validator::replacer('existsBasedOnAdmin', 'App\PRS\Validators\ExistsBasedOnAdmin@message');
+        Validator::extend('existsBasedOnCompany', 'App\PRS\Validators\ExistsBasedOnCompany@validate');
+        Validator::replacer('existsBasedOnCompany', 'App\PRS\Validators\ExistsBasedOnCompany@message');
 
         // Validation condition to check if date for serching reports vaild
         Validator::extend('validDateReportFormat', 'App\PRS\Validators\ValidDateReportFormat@validate');

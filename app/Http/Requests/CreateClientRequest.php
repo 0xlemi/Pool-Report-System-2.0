@@ -32,7 +32,7 @@ class CreateClientRequest extends Request
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
             'services' => 'array',
-            'services.*' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
+            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
         ];

@@ -107,8 +107,8 @@ class ReportsController extends ApiController
 
         // Validate
         $this->validate($request, [
-            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
-            'technician' => 'required|integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
+            'technician' => 'required|integer|existsBasedOnCompany:technicians,'.$admin->id,
             'completed' => 'required|date',
             'ph' => 'required|integer|between:1,5',
             'chlorine' => 'required|integer|between:1,5',
@@ -221,7 +221,7 @@ class ReportsController extends ApiController
 
         // Validate
         $this->validate($request, [
-            'technician' => 'integer|existsBasedOnAdmin:technicians,'.$admin->id,
+            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
             'completed' => 'date',
             'ph' => 'integer|between:1,5',
             'chlorine' => 'integer|between:1,5',

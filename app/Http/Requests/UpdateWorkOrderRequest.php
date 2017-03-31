@@ -27,8 +27,8 @@ class UpdateWorkOrderRequest extends FormRequest
         return [
             'title' => 'string|max:255',
             'description' => 'string',
-            'service' => 'integer|existsBasedOnAdmin:services,'.$admin->id,
-            'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'service' => 'integer|existsBasedOnCompany:services,'.$admin->id,
+            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$admin->id,
             'start' => 'date',
             'photo' => 'mimes:jpg,jpeg,png',
         ];

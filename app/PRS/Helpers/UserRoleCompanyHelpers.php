@@ -4,6 +4,7 @@ namespace App\PRS\Helpers;
 
 use App\PRS\Traits\HelperTrait;
 use App\UserRoleCompany;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Helpers for client elements
@@ -24,8 +25,8 @@ use HelperTrait;
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,
-                        'label' => $item->name.' '.$item->last_name,
-                        'icon' => \Storage::url($item->icon()),
+                        'label' => $item->user->fullName,
+                        'icon' => \Storage::url($item->user->icon()),
                     );
                 });
     }

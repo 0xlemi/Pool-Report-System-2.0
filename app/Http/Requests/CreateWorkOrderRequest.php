@@ -28,8 +28,8 @@ class CreateWorkOrderRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'service' => 'required|integer|existsBasedOnAdmin:services,'.$admin->id,
-            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
+            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|validCurrency',

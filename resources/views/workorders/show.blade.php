@@ -59,7 +59,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Supervisor Name</label>
 							<div class="col-sm-10">
-								<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->supervisor->name }}"></p>
+								<p class="form-control-static"><input type="text" readonly class="form-control" value="{{ $workOrder->userRoleCompany->user->fullName }}"></p>
 							</div>
 						</div>
 
@@ -86,7 +86,7 @@
 							</div>
 						@endif
 
-						<works work-order-id="{{ $workOrder->seq_id }}" :technicians="{{ $technicians }}">
+						<works work-order-id="{{ $workOrder->seq_id }}" :technicians="{{ $userRoleCompanies }}">
 						</works>
 
 						<work-order-photos-show work-order-id="{{ $workOrder->seq_id }}" finished="{{ $workOrder->end()->finished() }}">

@@ -8,9 +8,8 @@ trait HelperTrait{
 
     // dates are NOT sent in UTC
     function format_date(string $date){
-        $admin = $this->loggedUserAdministrator();
     	return (new Carbon($date, 'UTC'))
-                ->setTimezone($admin->timezone)
+                ->setTimezone($this->loggedCompany()->timezone)
                 ->format('l jS \\of F Y h:i:s A');
     }
 

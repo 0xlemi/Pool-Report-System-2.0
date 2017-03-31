@@ -4,45 +4,36 @@ namespace App\PRS\Validators;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Company;
 use App\Administrator;
 
-class ExistsBasedOnAdmin
+class ExistsBasedOnCompany
 {
 
     public function validate($attribute, $value, $parameters, $validator)
     {
         // Only has support for tables:
         // services
-        // supervisors
-        // technicians
+        // user_role_company
 
         $seq_id = $value;
         $table = $parameters[0];
-        $admin_id = $parameters[1];
+        $company_id = $parameters[1];
 
-        $admin = Administrator::findOrFail($admin_id);
+        $company = Company::findOrFail($company_id);
         if($table == 'services')
         {
             try {
-                $admin->serviceBySeqId($seq_id);
+                $company->serviceBySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }
             return true;
         }
-        elseif($table == 'supervisors')
+        elseif($table == 'user_role_company')
         {
             try {
-                $admin->supervisorBySeqId($seq_id);
-            }catch(ModelNotFoundException $e){
-                return false;
-            }
-            return true;
-        }
-        elseif($table == 'technicians')
-        {
-            try {
-                $admin->technicianBySeqId($seq_id);
+                $company->userRoleCompanyBySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }

@@ -42,8 +42,8 @@ class WorkController extends PageController
      */
     public function index(Request $request, $workOrderSeqId)
     {
-        $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
-        if($request->user()->isClient()){
+        $workOrder = $this->loggedCompany()->workOrderBySeqId($workOrderSeqId);
+        if($request->user()->activeUser->isRole('client')){
             // Check if client owns workorder, preventing client from looking
             // at works from workorders that are not his
             $this->authorize('view', $workOrder);
@@ -54,13 +54,13 @@ class WorkController extends PageController
         $works = $workOrder->works()
                         ->get()
                         ->transform(function($item){
-                            $technician = $item->technician;
+                            $userRoleCompany = $item->userRoleCompany;
                             return (object) [
                                 'id' => $item->id,
                                 'title' => $item->title,
                                 'quantity' => "{$item->quantity} {$item->units}",
                                 'cost' => "{$item->cost} {$item->workOrder->currency}",
-                                'technician' => "{$technician->name} {$technician->last_name}",
+                                'technician' => $userRoleCompany->user->fullName,
                             ];
                         });
         return response()->json([
@@ -80,15 +80,16 @@ class WorkController extends PageController
     {
         $this->authorize('create', Work::class);
 
-        $admin  = $this->loggedUserAdministrator();
+        $company  = $this->loggedCompany();
 
-        $workOrder = $admin->workOrderBySeqId($workOrderSeqId);
-        $technician = $admin->technicianBySeqId($request->technician);
+        $workOrder = $company->workOrderBySeqId($workOrderSeqId);
+        $userRoleCompany = $company->userRoleCompanyBySeqId($request->technician);
 
         $work = $workOrder->works()->create(array_merge(
                     array_map('htmlentities', $request->all()),
                     [
-                        'technician_id' => $technician->id,
+                        // Getting Query Exception
+                        'user_role_company_id' => $userRoleCompany->id,
                     ]
                 ));
 
@@ -112,7 +113,7 @@ class WorkController extends PageController
     {
         $this->authorize('view', $work);
 
-        $technician = $work->technician;
+        $userRoleCompany = $work->userRoleCompany;
 
         return response()->json([
             'title' => $work->title,
@@ -121,9 +122,9 @@ class WorkController extends PageController
             'cost' => $work->cost,
             'description' => $work->description,
             'technician' => (object)[
-                'id' => $technician->seq_id,
-                'fullName' => "{$technician->name} {$technician->last_name}",
-                'icon' => Storage::url($technician->icon()),
+                'id' => $userRoleCompany->seq_id,
+                'fullName' => $userRoleCompany->user->fullName,
+                'icon' => Storage::url($userRoleCompany->user->icon()),
             ],
             'photos' => $this->imageTransformer
                         ->transformCollection($work->images()->get())
@@ -141,10 +142,10 @@ class WorkController extends PageController
     {
         $this->authorize('update', $work);
 
-        $work->update(array_map('htmlentities', $request->except('technician_id')));
+        $work->update(array_map('htmlentities', $request->except('user_role_company')));
 
         if($request->has('technician')){
-            $work->technician()->associate($admin->technicianBySeqId($request->technician));
+            $work->technician()->associate($this->loggedCompany()->technicianBySeqId($request->technician));
         }
 
         return response()->json([

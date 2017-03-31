@@ -37,7 +37,7 @@ class WorkOrder extends Model
     }
 
     /**
-     * associated administrator with this workOrder
+     * associated company with this workOrder
      */
     public function company()
     {
@@ -90,7 +90,7 @@ class WorkOrder extends Model
     //******** VALUE OBJECTS ********
 
     /**
-     * Start date in the admin timezone
+     * Start date in the company timezone
      * @return Carbon
      */
     public function start()

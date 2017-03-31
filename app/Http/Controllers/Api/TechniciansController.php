@@ -109,7 +109,7 @@ class TechniciansController extends ApiController
             'photo' => 'mimes:jpg,jpeg,png',
             'comments' => 'string|max:1000',
             'username' => 'required|alpha_dash|between:4,25|unique:users,email',
-            'supervisor' => 'required|integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
         ]);
 
         // check if the you can add new users
@@ -209,7 +209,7 @@ class TechniciansController extends ApiController
             'comments' => 'string|max:1000',
             'username' => 'alpha_dash|between:4,25|unique:users,email,'.$technician->user->id.',id',
             'active' =>  'boolean',
-            'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
+            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$admin->id,
         ]);
 
         // Check that the admin has payed for this technician
