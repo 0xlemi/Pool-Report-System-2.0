@@ -64,10 +64,13 @@ class WorkOrderController extends PageController
         $company = $this->loggedCompany();
 
         $services = $this->serviceHelpers->transformForDropdown($company->servicesInOrder()->get());
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($company->supervisorsInOrder()->get());
+        $persons = $this->userRoleCompanyHelpers->transformForDropdown(
+                            $company->userRoleCompaniesByRole('admin', 'sup', 'tech')
+                                        ->orderBy('seq_id')->get()
+                        );
         $currencies = config('constants.currencies');
 
-        return view('workorders.create', compact('services', 'supervisors', 'currencies'));
+        return view('workorders.create', compact('services', 'persons', 'currencies'));
     }
 
     /**
@@ -84,13 +87,13 @@ class WorkOrderController extends PageController
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
         $service = $this->loggedCompany()->serviceBySeqId($request->service);
-        $supervisor = $this->loggedCompany()->supervisorBySeqId($request->supervisor);
+        $userRoleCompany = $this->loggedCompany()->userRoleCompanyBySeqId($request->person);
 
         $workOrder = $service->workOrders()->create(array_merge(
                             array_map('htmlentities', $request->all()),
                             [
                                 'start' => $startDate,
-                                'supervisor_id' => $supervisor->id,
+                                'user_role_company_id' => $userRoleCompany->id,
                             ])
                     );
         $photo = true;

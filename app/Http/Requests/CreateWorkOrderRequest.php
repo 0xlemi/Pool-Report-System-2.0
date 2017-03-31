@@ -24,12 +24,12 @@ class CreateWorkOrderRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->activeUser->company;
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'service' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
-            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|validCurrency',

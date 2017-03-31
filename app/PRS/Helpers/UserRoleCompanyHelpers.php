@@ -25,7 +25,7 @@ use HelperTrait;
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,
-                        'label' => $item->user->fullName,
+                        'label' => $item->user->fullName.' - '.$item->role->text,
                         'icon' => \Storage::url($item->user->icon()),
                     );
                 });

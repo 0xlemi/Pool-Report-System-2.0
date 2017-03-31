@@ -16,24 +16,24 @@ class WorkOrderObserver
      */
     public function created(WorkOrder $workOrder)
     {
-        // create invoice
-        $workOrder->invoices()->create([
-            'amount' => $workOrder->price,
-            'currency' => $workOrder->currency,
-            'description' => $workOrder->description,
-            'admin_id' => $workOrder->admin()->id,
-        ]);
-
-        $authUser = \Auth::user();
-        $admin = $workOrder->admin();
-
-        $admin->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
-        foreach ($admin->supervisors as $supervisor) {
-            $supervisor->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
-        }
-        foreach ($workOrder->service->clients as $client) {
-            $client->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
-        }
+        // // create invoice
+        // $workOrder->invoices()->create([
+        //     'amount' => $workOrder->price,
+        //     'currency' => $workOrder->currency,
+        //     'description' => $workOrder->description,
+        //     'admin_id' => $workOrder->admin()->id,
+        // ]);
+        //
+        // $authUser = \Auth::user();
+        // $admin = $workOrder->admin();
+        //
+        // $admin->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        // foreach ($admin->supervisors as $supervisor) {
+        //     $supervisor->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        // }
+        // foreach ($workOrder->service->clients as $client) {
+        //     $client->user->notify(new NewWorkOrderNotification($workOrder, $authUser));
+        // }
 
     }
 

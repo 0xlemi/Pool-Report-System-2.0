@@ -25,7 +25,7 @@ class WorkOrder extends Model
         'start',
         'price',
         'currency',
-        'user_role_client_id',
+        'user_role_company_id',
     ];
 
     /**
