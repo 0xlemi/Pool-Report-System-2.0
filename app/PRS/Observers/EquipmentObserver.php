@@ -16,19 +16,19 @@ class EquipmentObserver
      */
     public function created(Equipment $equipment)
     {
-        // Notify:
-            //  System Admin,
-            //  All Admin Supervisors,
-            //  Clients related to the service
-        $authUser = \Auth::user();
-        $admin = $equipment->service()->admin();
-        $admin->user->notify(new AddedEquipmentNotification($equipment, $authUser));
-        foreach ($admin->supervisors as $supervisor) {
-            $supervisor->user->notify(new AddedEquipmentNotification($equipment, $authUser));
-        }
-        foreach ($equipment->service()->clients as $client) {
-            $client->user->notify(new AddedEquipmentNotification($equipment, $authUser));
-        }
+        // // Notify:
+        //     //  System Admin,
+        //     //  All Admin Supervisors,
+        //     //  Clients related to the service
+        // $authUser = \Auth::user();
+        // $admin = $equipment->service()->admin();
+        // $admin->user->notify(new AddedEquipmentNotification($equipment, $authUser));
+        // foreach ($admin->supervisors as $supervisor) {
+        //     $supervisor->user->notify(new AddedEquipmentNotification($equipment, $authUser));
+        // }
+        // foreach ($equipment->service()->clients as $client) {
+        //     $client->user->notify(new AddedEquipmentNotification($equipment, $authUser));
+        // }
     }
 
     /**

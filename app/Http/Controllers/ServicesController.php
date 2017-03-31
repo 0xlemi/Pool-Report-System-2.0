@@ -63,6 +63,12 @@ class ServicesController extends PageController
     {
         $this->authorize('create', Service::class);
 
+        $company = $this->loggedCompany();
+        $startLocation = [
+            'latitude' => $company->latitude,
+            'longitude' => $company->longitude,
+        ];
+
         JavaScript::put([
             'latitude' => $request->old('latitude'),
             'longitude' => $request->old('longitude'),
@@ -73,7 +79,7 @@ class ServicesController extends PageController
             'country' => $request->old('country'),
         ]);
 
-        return view('services.create');
+        return view('services.create', compact('startLocation'));
     }
 
     /**
@@ -86,9 +92,7 @@ class ServicesController extends PageController
     {
         $this->authorize('create', Service::class);
 
-        $admin  = $this->loggedUserAdministrator();
-
-        $service = $admin->services()->create(
+        $service = $this->loggedCompany()->services()->create(
                         array_map('htmlentities', $request->all())
                     );
 
@@ -113,11 +117,11 @@ class ServicesController extends PageController
      */
     public function show($seq_id)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
 
         $this->authorize('view', $service);
 
-        $clients = $service->clients()->get();
+        $clients = $service->userRoleCompanies()->get();
         $image = null;
         if($service->images->count() > 0){
             $image = $this->imageTransformer->transform($service->images->first());
@@ -133,7 +137,7 @@ class ServicesController extends PageController
      */
     public function edit($seq_id)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
 
         $this->authorize('update', $service);
 
@@ -149,7 +153,7 @@ class ServicesController extends PageController
      */
     public function update(UpdateServiceRequest $request, $seq_id)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
 
         $this->authorize('update', $service);
 
@@ -178,7 +182,7 @@ class ServicesController extends PageController
      */
     public function destroy($seq_id)
     {
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
 
         $this->authorize('delete', $service);
 

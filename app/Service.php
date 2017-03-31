@@ -54,7 +54,7 @@ class Service extends Model
     }
 
     // this should be clients only
-    public function userRoleCompany()
+    public function userRoleCompanies()
     {
         return $this->belongsToMany(UserRoleCompany::class , 'urc_service', 'service_id', 'urc_id');
     }

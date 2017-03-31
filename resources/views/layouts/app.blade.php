@@ -23,7 +23,6 @@
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
             'url' => url('/').'/',
-			'startLocation' => config('constants.startLocation'),
         ]); ?>
     </script>
 </head>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @inject('serviceHelpers', 'App\PRS\Helpers\ServiceHelpers')
-@inject('clientHelpers', 'App\PRS\Helpers\ClientHelpers')
+@inject('personHelpers', 'App\PRS\Helpers\UserRoleCompanyHelpers')
 @section('content')
 <header class="section-header">
 	<div class="tbl">

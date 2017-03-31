@@ -72,7 +72,7 @@
 let locationPicker  = require("jquery-locationpicker");
 
 export default {
-	props: ['latitude', 'longitude', 'errors'],
+	props: ['latitude', 'longitude', 'errors', 'startLocation'],
     data(){
         return {
             pickerAddressLine1: null,
@@ -100,12 +100,6 @@ export default {
             }
             return attributes;
         },
-		startPosition(){
-			return {
-				latitude: (this.latitude) ? this.latitude: Laravel.startLocation.latitude,
-				longitude: (this.longitude) ? this.longitude: Laravel.startLocation.longitude,
-			}
-		}
     },
     methods: {
         setAddressFields(){
@@ -127,7 +121,7 @@ export default {
     ready(){
         let locPicker = $('#locationPicker').locationpicker({
             vue: this,
-            location: {latitude: this.startPosition.latitude, longitude: this.startPosition.longitude},
+            location: {latitude: this.startLocation.latitude, longitude: this.startLocation.longitude},
             radius: 0,
             inputBinding: {
             	latitudeInput: $('#latitude'),

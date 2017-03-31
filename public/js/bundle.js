@@ -29173,7 +29173,7 @@ var _locationPicker2 = _interopRequireDefault(_locationPicker);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['addressLine', 'city', 'state', 'postalCode', 'country', 'latitude', 'longitude', 'errors'],
+    props: ['addressLine', 'city', 'state', 'postalCode', 'country', 'latitude', 'longitude', 'errors', 'startLocation'],
     components: {
         locationPicker: _locationPicker2.default,
         countries: _countries2.default
@@ -29190,7 +29190,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<location-picker :latitude=\"latitude\" :longitude=\"longitude\" :errors=\"errors\">\n</location-picker>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('address_line')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Street and number:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"address_line\" maxlength=\"50\" :value=\"addressLine\">\n\t\t<small v-if=\"errors.hasOwnProperty('address_line')\" class=\"text-muted\">{{ errors.address_line[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('city')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">City:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"city\" maxlength=\"30\" :value=\"city\">\n\t\t<small v-if=\"errors.hasOwnProperty('city')\" class=\"text-muted\">{{ errors.city[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('state')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">State:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"state\" maxlength=\"30\" :value=\"state\">\n\t\t<small v-if=\"errors.hasOwnProperty('state')\" class=\"text-muted\">{{ errors.state[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('postal_code')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Postal Code:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"postal_code\" maxlength=\"15\" :value=\"postalCode\">\n\t\t<small v-if=\"errors.hasOwnProperty('postal_code')\" class=\"text-muted\">{{ errors.postal_code[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('country')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Country:</label>\n\t<div class=\"col-sm-10\">\n\t\t\t<countries :code.sync=\"country\"></countries>\n\t\t<small v-if=\"errors.hasOwnProperty('country')\" class=\"text-muted\">{{ errors.country[0] }}</small>\n\t</div>\n</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<location-picker :latitude=\"latitude\" :longitude=\"longitude\" :errors=\"errors\" :start-location=\"startLocation\">\n</location-picker>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('address_line')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Street and number:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"address_line\" maxlength=\"50\" :value=\"addressLine\">\n\t\t<small v-if=\"errors.hasOwnProperty('address_line')\" class=\"text-muted\">{{ errors.address_line[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('city')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">City:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"city\" maxlength=\"30\" :value=\"city\">\n\t\t<small v-if=\"errors.hasOwnProperty('city')\" class=\"text-muted\">{{ errors.city[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('state')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">State:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"state\" maxlength=\"30\" :value=\"state\">\n\t\t<small v-if=\"errors.hasOwnProperty('state')\" class=\"text-muted\">{{ errors.state[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('postal_code')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Postal Code:</label>\n\t<div class=\"col-sm-10\">\n\t\t<input type=\"text\" class=\"form-control maxlength-simple\" name=\"postal_code\" maxlength=\"15\" :value=\"postalCode\">\n\t\t<small v-if=\"errors.hasOwnProperty('postal_code')\" class=\"text-muted\">{{ errors.postal_code[0] }}</small>\n\t</div>\n</div>\n\n<div class=\"form-group row\" :class=\"[(errors.hasOwnProperty('country')) ? 'form-group-error': '']\">\n\t<label class=\"col-sm-2 form-control-label\">Country:</label>\n\t<div class=\"col-sm-10\">\n\t\t\t<countries :code.sync=\"country\"></countries>\n\t\t<small v-if=\"errors.hasOwnProperty('country')\" class=\"text-muted\">{{ errors.country[0] }}</small>\n\t</div>\n</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31166,7 +31166,7 @@ exports.default = {
             var clickEvent = event;
             swal({
                 title: "<span style=\"color: #E2574C;\"><i class=\"glyphicon glyphicon-warning-sign\"></i>&nbsp;&nbsp;&nbsp;<strong>Delete Account</strong>&nbsp;&nbsp;&nbsp;<i class=\"glyphicon glyphicon-warning-sign\"></i></span>",
-                text: "<strong>Are you sure you want to do delete all your information?</strong><br> The deleting process might take a few minutes.",
+                text: "<strong>Are you sure you want to do delete all your information?</strong><br>The deleting process might take a few minutes.",
                 type: "input",
                 imageUrl: this.icon,
                 confirmButtonColor: "#DD6B55",
@@ -32335,7 +32335,7 @@ Object.defineProperty(exports, "__esModule", {
 var locationPicker = require("jquery-locationpicker");
 
 exports.default = {
-    props: ['latitude', 'longitude', 'errors'],
+    props: ['latitude', 'longitude', 'errors', 'startLocation'],
     data: function data() {
         return {
             pickerAddressLine1: null,
@@ -32363,12 +32363,6 @@ exports.default = {
                 };
             }
             return attributes;
-        },
-        startPosition: function startPosition() {
-            return {
-                latitude: this.latitude ? this.latitude : Laravel.startLocation.latitude,
-                longitude: this.longitude ? this.longitude : Laravel.startLocation.longitude
-            };
         }
     },
     methods: {
@@ -32391,7 +32385,7 @@ exports.default = {
     ready: function ready() {
         var locPicker = $('#locationPicker').locationpicker({
             vue: this,
-            location: { latitude: this.startPosition.latitude, longitude: this.startPosition.longitude },
+            location: { latitude: this.startLocation.latitude, longitude: this.startLocation.longitude },
             radius: 0,
             inputBinding: {
                 latitudeInput: $('#latitude'),

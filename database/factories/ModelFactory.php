@@ -36,12 +36,14 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Company::class, function (Faker\Generator $faker) {
     return [
-        'company_name' => $faker->company,
+        'name' => $faker->company,
         'website' => $faker->url,
         'facebook' => $faker->word,
         'twitter' => $faker->word,
     	'language' => $faker->languageCode,
 		'timezone' => 'America/Mazatlan',
+        'latitude' => number_format($faker->latitude(23.049486, 23.061333),6,'.',''),
+        'longitude' => number_format($faker->longitude(-109.706683, -109.695697),6,'.',''),
     ];
 });
 

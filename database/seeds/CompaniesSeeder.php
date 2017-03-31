@@ -19,15 +19,13 @@ class CompaniesSeeder extends Seeder
         UserRoleCompany::flushEventListeners();
         // Image::flushEventListeners();
 
-        $company1 = Company::create([
+        $company1 = factory(Company::class)->create([
             'name' => 'Hidroequipos',
             'website' => 'www.hidroequipos.com',
             'facebook' => 'poolreportsystem',
             'twitter' => 'poolreportsys',
             'language' => 'en',
     		'timezone' => 'America/Mazatlan',
-            'latitude' => rand(23.049486, 23.061333),
-            'longitude' => rand(-109.706683, -109.695697),
     	]);
 
     	$user1 = factory(User::class)->create([
@@ -44,15 +42,13 @@ class CompaniesSeeder extends Seeder
     		'active' => true,
         ]);
 
-        $company2 = Company::create([
+        $company2 = factory(Company::class)->create([
             'name' => 'Generic Pool Company',
             'website' => 'www.poolcompany.com',
             'facebook' => 'poolservice',
             'twitter' => 'poolservice',
     		'language' => 'es',
     		'timezone' => 'America/Mazatlan',
-            'latitude' => rand(23.049486, 23.061333),
-            'longitude' => rand(-109.706683, -109.695697),
     	]);
 
     	$user2 = factory(User::class)->create([

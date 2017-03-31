@@ -42,7 +42,8 @@
 								state="{{ old('state') }}"
 								postal-code="{{ old('postal_code') }}"
 								country="{{ old('country') }}"
-								:errors="{{ json_encode($errors->toArray()) }}">
+								:errors="{{ json_encode($errors->toArray()) }}"
+								:start-location="{{ json_encode($startLocation) }}">
 							</address-fields>
 
 							<div class="form-group row">

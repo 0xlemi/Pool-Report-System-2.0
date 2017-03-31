@@ -1,6 +1,6 @@
 <template>
 
-<location-picker :latitude="latitude" :longitude="longitude" :errors="errors">
+<location-picker :latitude="latitude" :longitude="longitude" :errors="errors" :start-location="startLocation">
 </location-picker>
 
 <div class="form-group row" :class="[(errors.hasOwnProperty('address_line')) ? 'form-group-error': '']">
@@ -57,7 +57,7 @@ export default {
     props: [
 		'addressLine', 'city', 'state',
 		'postalCode', 'country', 'latitude',
-		'longitude', 'errors'
+		'longitude', 'errors', 'startLocation'
 	],
     components: {
         locationPicker,
