@@ -18,13 +18,13 @@ class CreateCompaniesTable extends Migration
             $table->increments('id');
             // Company information
                 $table->string('name');
-                $table->decimal('latitude', 9, 6)->nullable();
-                $table->decimal('longitude', 9, 6)->nullable();
                 $table->string('timezone');
                 $table->char('language', 2)->default('en');
                 $table->string('website')->nullable();
                 $table->string('facebook')->nullable();
                 $table->string('twitter')->nullable();
+                $table->decimal('latitude', 9, 6)->nullable();
+                $table->decimal('longitude', 9, 6)->nullable();
             // System Values
                 // ph
                 $table->string('ph_very_low')->default('Very Low'); // 1

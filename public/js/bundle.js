@@ -32363,6 +32363,12 @@ exports.default = {
                 };
             }
             return attributes;
+        },
+        startPosition: function startPosition() {
+            return {
+                latitude: this.latitude ? this.latitude : this.startLocation.latitude,
+                longitude: this.longitude ? this.longitude : this.startLocation.longitude
+            };
         }
     },
     methods: {
@@ -32385,7 +32391,7 @@ exports.default = {
     ready: function ready() {
         var locPicker = $('#locationPicker').locationpicker({
             vue: this,
-            location: { latitude: this.startLocation.latitude, longitude: this.startLocation.longitude },
+            location: { latitude: this.startPosition.latitude, longitude: this.startPosition.longitude },
             radius: 0,
             inputBinding: {
                 latitudeInput: $('#latitude'),

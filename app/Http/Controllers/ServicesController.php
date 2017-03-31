@@ -140,8 +140,13 @@ class ServicesController extends PageController
         $service = $this->loggedCompany()->serviceBySeqId($seq_id);
 
         $this->authorize('update', $service);
+        $company = $this->loggedCompany();
+        $startLocation = [
+            'latitude' => $company->latitude,
+            'longitude' => $company->longitude,
+        ];
 
-        return view('services.edit',compact('service'));
+        return view('services.edit',compact('service', 'startLocation'));
     }
 
     /**

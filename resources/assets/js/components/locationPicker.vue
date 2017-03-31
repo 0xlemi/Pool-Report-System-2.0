@@ -100,6 +100,12 @@ export default {
             }
             return attributes;
         },
+		startPosition(){
+			return {
+				latitude: (this.latitude) ? this.latitude: this.startLocation.latitude,
+				longitude: (this.longitude) ? this.longitude: this.startLocation.longitude,
+			}
+		}
     },
     methods: {
         setAddressFields(){
@@ -121,7 +127,7 @@ export default {
     ready(){
         let locPicker = $('#locationPicker').locationpicker({
             vue: this,
-            location: {latitude: this.startLocation.latitude, longitude: this.startLocation.longitude},
+            location: {latitude: this.startPosition.latitude, longitude: this.startPosition.longitude},
             radius: 0,
             inputBinding: {
             	latitudeInput: $('#latitude'),
