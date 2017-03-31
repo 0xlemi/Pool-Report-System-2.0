@@ -39,9 +39,9 @@ class HomeController extends PageController
      *
      * @return view
      */
-    public function dashboard()
+    public function dashboard(Request $request)
     {
-        $user = $this->getUser();
+        $user = $request->user();
         return view('home', compact('user'));
     }
 

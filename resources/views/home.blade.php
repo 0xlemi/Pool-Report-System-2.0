@@ -8,7 +8,7 @@
         <h2><strong>{{ $user->fullName }}</strong></h2>
         <br>
         <h4><small class="text-muted">You are logged in as
-            &nbsp;{!! $helper->styledType($user->userable_type) !!}
+            &nbsp;{{ $user->activeUser->role->text }}
         </small></h4>
     </div>
 </div>

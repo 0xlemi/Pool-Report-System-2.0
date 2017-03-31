@@ -9,21 +9,21 @@ use Carbon\Carbon;
 
 use App\Http\Requests;
 use App\PRS\Helpers\ReportHelpers;
-use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\Service;
 use App\Report;
 
 class TodaysRouteController extends PageController
 {
 
-    private $technicianHelpers;
+    private $userRoleCompanyHelpers;
     private $reportHelpers;
 
-    public function __construct(TechnicianHelpers $technicianHelpers,
+    public function __construct(UserRoleCompanyHelpers $userRoleCompanyHelpers,
                                 ReportHelpers $reportHelpers)
     {
         $this->middleware('auth');
-        $this->technicianHelpers = $technicianHelpers;
+        $this->userRoleCompanyHelpers = $userRoleCompanyHelpers;
         $this->reportHelpers = $reportHelpers;
     }
 
@@ -85,7 +85,7 @@ class TodaysRouteController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $service_id = $service_seq_id;
-        $technicians = $this->technicianHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
 
         return view('todaysroute.createReport', compact('technicians', 'service_id'));
     }
