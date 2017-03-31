@@ -145,7 +145,8 @@ class WorkController extends PageController
         $work->update(array_map('htmlentities', $request->except('user_role_company')));
 
         if($request->has('technician')){
-            $work->technician()->associate($this->loggedCompany()->technicianBySeqId($request->technician));
+            // Not Working, database relationship giving trouble
+            $work->userRoleCompany()->associate($this->loggedCompany()->userRoleCompanyBySeqId($request->technician));
         }
 
         return response()->json([

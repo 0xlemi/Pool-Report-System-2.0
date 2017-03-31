@@ -23,9 +23,9 @@ class UpdateWorkRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->activeUser->company;
         return [
-            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
+            'technician' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'title' => 'string|max:255',
             'description' => 'string',
             'quantity' => 'numeric',
