@@ -17,7 +17,7 @@ class Role extends Model
 
     public function permissionsFromCompany(Company $company)
     {
-        $this->permissions()->where('company_id', $copmany->id);
+        $this->permissions()->where('company_id', $company->id);
     }
 
     // basic relationships
@@ -29,6 +29,6 @@ class Role extends Model
 
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, 'permission_role_company', 'role_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'permission_role_company');
     }
 }

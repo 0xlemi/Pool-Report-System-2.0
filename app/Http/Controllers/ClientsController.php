@@ -40,7 +40,7 @@ class ClientsController extends PageController
      */
     public function index()
     {
-        $this->authorize('listClients', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'client']);
 
         $default_table_url = url('datatables/clients');
 

@@ -101,7 +101,7 @@
 							</div>
 						</div>
 
-            			@can('listClients', App\UserRoleCompany::class)
+            			@can('list', [App\UserRoleCompany::class, 'client'])
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Clients</label>
 								<div class="col-sm-10">

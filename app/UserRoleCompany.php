@@ -11,6 +11,7 @@ use App\Company;
 use App\Service;
 use App\WorkOrder;
 use App\UrlSigner;
+use App\UserRoleCompany;
 use App\NotificationSetting;
 
 class UserRoleCompany extends Model

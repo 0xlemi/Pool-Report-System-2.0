@@ -39,7 +39,7 @@ class TechniciansController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('listTechnicians', UserRoleCompany::class))
+        if($this->getUser()->cannot('list', [UserRoleCompany::class, 'tech']))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

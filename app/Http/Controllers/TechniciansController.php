@@ -45,7 +45,7 @@ class TechniciansController extends PageController
      */
     public function index()
     {
-        $this->authorize('listTechnicians', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'tech']);
 
         $default_table_url = url('datatables/technicians?status=1');
 

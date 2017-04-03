@@ -44,7 +44,7 @@ class SupervisorsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('listSupervisors', UserRoleCompany::class))
+        if($this->getUser()->cannot('list', [UserRoleCompany::class, 'sup']))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

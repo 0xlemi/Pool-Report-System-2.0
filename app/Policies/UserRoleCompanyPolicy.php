@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\User;
+use App\Role;
 use App\UserRoleCompany;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -24,36 +25,17 @@ class UserRoleCompanyPolicy
      * Determine whether the user can view the list of userRoleCompany with role client.
      *
      * @param  \App\User  $user
-     * @param  \App\UserRoleCompany  $userRoleCompany
      * @return mixed
      */
-    public function listClients(User $user)
+    public function list(User $user, $role)
     {
-        return true; // temporary
-    }
-
-    /**
-     * Determine whether the user can view the list of userRoleCompany with role client.
-     *
-     * @param  \App\User  $user
-     * @param  \App\UserRoleCompany  $userRoleCompany
-     * @return mixed
-     */
-    public function listSupervisors(User $user)
-    {
-        return true; // temporary
-    }
-
-    /**
-     * Determine whether the user can view the list of userRoleCompany with role client.
-     *
-     * @param  \App\User  $user
-     * @param  \App\UserRoleCompany  $userRoleCompany
-     * @return mixed
-     */
-    public function listTechnicians(User $user)
-    {
-        return true; // temporary
+        if($role == 'client'){
+            return $user->activeUser->hasPermission('client_view');
+        }elseif($role == 'sup'){
+            return $user->activeUser->hasPermission('supervisor_view');
+        }elseif($role == 'tech'){
+            return $user->activeUser->hasPermission('technician_view');
+        }
     }
 
     /**
@@ -65,7 +47,14 @@ class UserRoleCompanyPolicy
      */
     public function view(User $user, UserRoleCompany $userRoleCompany)
     {
-        return true; // temporary
+        $role = $userRoleCompany->role->name;
+        if($role == 'client'){
+            return $user->activeUser->hasPermission('client_view');
+        }elseif($role == 'sup'){
+            return $user->activeUser->hasPermission('supervisor_view');
+        }elseif($role == 'tech'){
+            return $user->activeUser->hasPermission('technician_view');
+        }
     }
 
     /**
@@ -74,9 +63,15 @@ class UserRoleCompanyPolicy
      * @param  \App\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, $role)
     {
-        return true; // temporary
+        if($role == 'client'){
+            return $user->activeUser->hasPermission('client_create');
+        }elseif($role == 'sup'){
+            return $user->activeUser->hasPermission('supervisor_create');
+        }elseif($role == 'tech'){
+            return $user->activeUser->hasPermission('technician_create');
+        }
     }
 
     /**
@@ -88,7 +83,14 @@ class UserRoleCompanyPolicy
      */
     public function update(User $user, UserRoleCompany $userRoleCompany)
     {
-        return true; // temporary
+        $role = $userRoleCompany->role->name;
+        if($role == 'client'){
+            return $user->activeUser->hasPermission('client_update');
+        }elseif($role == 'sup'){
+            return $user->activeUser->hasPermission('supervisor_update');
+        }elseif($role == 'tech'){
+            return $user->activeUser->hasPermission('technician_update');
+        }
     }
 
     /**
@@ -100,6 +102,13 @@ class UserRoleCompanyPolicy
      */
     public function delete(User $user, UserRoleCompany $userRoleCompany)
     {
-        return true; // temporary
+        $role = $userRoleCompany->role->name;
+        if($role == 'client'){
+            return $user->activeUser->hasPermission('client_delete');
+        }elseif($role == 'sup'){
+            return $user->activeUser->hasPermission('supervisor_delete');
+        }elseif($role == 'tech'){
+            return $user->activeUser->hasPermission('technician_delete');
+        }
     }
 }

@@ -114,7 +114,7 @@ class DataTableController extends PageController
 
     public function clients(UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('listClients', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'client']);
 
         $userRoleCompanies = $this->loggedCompany()
                         ->userRoleCompaniesByRole('client')->get();
@@ -126,7 +126,7 @@ class DataTableController extends PageController
 
     public function supervisors(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('listSupervisors', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'sup']);
 
         $this->validate($request, [
             'status' => 'required|boolean',
@@ -142,7 +142,7 @@ class DataTableController extends PageController
 
     public function technicians(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
-        $this->authorize('listTechnicians', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'tech']);
 
         $this->validate($request, [
             'status' => 'required|boolean',

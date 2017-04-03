@@ -40,7 +40,7 @@ class SupervisorsController extends PageController
      */
     public function index()
     {
-        $this->authorize('listSupervisors', UserRoleCompany::class);
+        $this->authorize('list', [UserRoleCompany::class, 'sup']);
 
         $default_table_url = url('datatables/supervisors?status=1');
 
