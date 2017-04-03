@@ -44,9 +44,6 @@ class Company extends Model
     ];
 
 
-
-
-
     //******** VALUE OBJECTS ********
 
     public function tags()
@@ -256,44 +253,15 @@ class Company extends Model
     }
 
     // ******************************
+    //            Scopes
+    // ******************************
+
+
+    // ******************************
     //******** RELATIONSHIPS ********
     // ******************************
 
-// Feature Relationships
-
-
-    public function userRoleCompaniesByRole(...$roles)
-    {
-        return $this->userRoleCompanies()
-                ->join('roles', function ($join) use ($roles){
-                    $join->on('user_role_company.role_id', '=', 'roles.id')
-                            ->whereIn('roles.name', $roles);
-                });
-    }
-
-    public function userRoleCompaniesByRoleWherePaid($roles, $paid)
-    {
-        return $this->userRoleCompaniesByRole($roles)->where('paid', $paid);
-    }
-
-    /**
-     * Get userRoleCompany ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function userRoleCompaniesByRoleInOrder($roles, $order = 'asc')
-    {
-        return $this->userRoleCompaniesByRole($roles)->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get userRoleCompany accacited with this user and seq_id convination
-     * @param  int $seq_id
-     */
-    public function userRoleCompanyBySeqId($seq_id){
-        return $this->userRoleCompanies()
-                    ->where('user_role_company.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
+    // Feature Relationships
 
     /**
      * Get services ordered by seq_id

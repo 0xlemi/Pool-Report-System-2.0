@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\PRS\Traits\Model\ScopeableTrait;
 use App\Work;
 use App\Report;
 use App\Role;
@@ -16,6 +17,8 @@ use App\NotificationSetting;
 
 class UserRoleCompany extends Model
 {
+
+    use ScopeableTrait;
 
 	/**
      * The table associated with the model.
@@ -64,6 +67,24 @@ class UserRoleCompany extends Model
 	//       Attributes
 	// ***********************
 
+
+
+    // ******************************
+    //            Scopes
+    // ******************************
+
+    public function scopeOfRole($query, ...$roles)
+    {
+        return $query->join('roles', function ($join) use ($roles){
+                    $join->on('role_id', '=', 'roles.id')
+                            ->whereIn('roles.name', $roles);
+                });
+    }
+
+    public function scopePaid($query, $paid)
+    {
+        return $query->where('paid', $paid);
+    }
 
     // **********************
     //     RELATIONSHIPS

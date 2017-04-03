@@ -83,7 +83,9 @@ class WorkController extends PageController
         $company  = $this->loggedCompany();
 
         $workOrder = $company->workOrderBySeqId($workOrderSeqId);
-        $userRoleCompany = $company->userRoleCompanyBySeqId($request->technician);
+        $userRoleCompany = $company->userRoleCompanies()
+                                    ->bySeqId($request->technician)
+                                    ->firstOrFail();
 
         $work = $workOrder->works()->create(array_merge(
                     array_map('htmlentities', $request->all()),
@@ -146,7 +148,12 @@ class WorkController extends PageController
 
         if($request->has('technician')){
             // Not Working, database relationship giving trouble
-            $work->userRoleCompany()->associate($this->loggedCompany()->userRoleCompanyBySeqId($request->technician));
+            $work->userRoleCompany()->associate(
+                                        $this->loggedCompany()
+                                        ->userRoleCompanies()
+                                        ->bySeqId($request->technician)
+                                        ->firstOrFail()
+                                    );
         }
 
         return response()->json([

@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\PRS\Traits\Model\ScopeableTrait;
 use App\PRS\ValueObjects\Invoice\TypeInvoice;
 use Carbon\Carbon;
 
 class Invoice extends Model
 {
+
+    use ScopeableTrait;
 
     /**
      * variables that can be mass assigned

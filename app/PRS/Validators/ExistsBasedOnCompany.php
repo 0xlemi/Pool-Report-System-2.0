@@ -33,7 +33,9 @@ class ExistsBasedOnCompany
         elseif($table == 'user_role_company')
         {
             try {
-                $company->userRoleCompanyBySeqId($seq_id);
+                $company->userRoleCompanies()
+                            ->bySeqId($seq_id)
+                            ->firstOrFail();
             }catch(ModelNotFoundException $e){
                 return false;
             }

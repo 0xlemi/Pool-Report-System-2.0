@@ -58,9 +58,9 @@ class ClientsController extends PageController
      */
     public function create()
     {
-        $this->authorize('create', Client::class);
+        $this->authorize('create', [UserRoleCompany::class, 'client']);
 
-        $services = $this->loggedUserAdministrator()->servicesInOrder()->get();
+        $services = $this->loggedCompany()->servicesInOrder()->get();
 
         return view('clients.create', compact('services'));
     }

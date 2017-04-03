@@ -117,7 +117,9 @@ class DataTableController extends PageController
         $this->authorize('list', [UserRoleCompany::class, 'client']);
 
         $userRoleCompanies = $this->loggedCompany()
-                        ->userRoleCompaniesByRole('client')->get();
+                                    ->userRoleCompanies()
+                                    ->ofRole('client')
+                                    ->seqIdOrdered()->get();
 
         return response()->json(
                     $transformer->transformCollection($userRoleCompanies)
@@ -133,7 +135,10 @@ class DataTableController extends PageController
         ]);
 
         $userRoleCompanies = $this->loggedCompany()
-                        ->userRoleCompaniesByRoleWherePaid('sup', $request->status)->get();
+                                ->userRoleCompanies()
+                                ->ofRole('sup')
+                                ->paid($request->status)
+                                ->seqIdOrdered()->get();
 
         return response()->json(
                     $transformer->transformCollection($userRoleCompanies)
@@ -149,7 +154,10 @@ class DataTableController extends PageController
         ]);
 
         $userRoleCompanies = $this->loggedCompany()
-                            ->userRoleCompaniesByRoleWherePaid('tech', $request->status)->get();
+                                ->userRoleCompanies()
+                                ->ofRole('tech')
+                                ->paid($request->status)
+                                ->seqIdOrdered()->get();
 
         return response()->json(
                     $transformer->transformCollection($userRoleCompanies)
@@ -169,8 +177,7 @@ class DataTableController extends PageController
         $invoices = $this->loggedCompany()
                         ->invoices()
                         ->where('closed', $condition , NULL)
-                        ->orderBy('seq_id', 'desc')
-                        ->get();
+                        ->seqIdOrdered()->get();
 
         return response()->json(
                     $transformer->transformCollection($invoices)
