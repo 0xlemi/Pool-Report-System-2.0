@@ -15,14 +15,14 @@ class InvoicePolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('invoice_view');
+        return $user->selectedUser->hasPermission('invoice_view');
     }
 
     /**
@@ -34,7 +34,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice)
     {
-        return $user->activeUser->hasPermission('invoice_view');
+        return $user->selectedUser->hasPermission('invoice_view');
     }
 
     /**
@@ -46,6 +46,6 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice)
     {
-        return $user->activeUser->hasPermission('invoice_delete');
+        return $user->selectedUser->hasPermission('invoice_delete');
     }
 }

@@ -24,28 +24,28 @@ class SettingPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function profile(User $user)
     {
-        if($user->activeUser->isRole('client', 'sup', 'tech')){
+        if($user->selectedUser->isRole('client', 'sup', 'tech')){
             return true;
         }
     }
 
     public function changeEmail(User $user)
     {
-        if($user->activeUser->isRole('client', 'sup', 'tech')){
+        if($user->selectedUser->isRole('client', 'sup', 'tech')){
             return true;
         }
     }
 
     public function changePassword(User $user)
     {
-        if($user->activeUser->isRole('client', 'sup', 'tech')){
+        if($user->selectedUser->isRole('client', 'sup', 'tech')){
             return true;
         }
     }
@@ -58,7 +58,7 @@ class SettingPolicy
 
     public function notifications(User $user)
     {
-        if($user->activeUser->isRole('client', 'sup', 'tech')){
+        if($user->selectedUser->isRole('client', 'sup', 'tech')){
             return true;
         }
     }

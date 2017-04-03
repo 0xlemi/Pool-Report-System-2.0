@@ -23,7 +23,7 @@ class CreateWorkRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->activeUser->company;
+        $company = auth()->user()->selectedUser->company;
         return [
             'technician' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'title' => 'required|string|max:255',

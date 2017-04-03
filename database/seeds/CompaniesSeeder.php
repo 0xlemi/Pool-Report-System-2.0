@@ -35,11 +35,11 @@ class CompaniesSeeder extends Seeder
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
         ]);
 
-        $userRoleCompany1 = UserRoleCompany::create([
+        $userRoleCompany1 = factory(UserRoleCompany::class)->create([
             'user_id' => $user1->id,
     		'role_id' => 1,
     		'company_id' => $company1->id,
-    		'active' => true,
+    		'selected' => true,
         ]);
 
         $company2 = factory(Company::class)->create([
@@ -58,11 +58,11 @@ class CompaniesSeeder extends Seeder
 			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
     	]);
 
-        $userRoleCompany2 = UserRoleCompany::create([
+        $userRoleCompany2 = factory(UserRoleCompany::class)->create([
             'user_id' => $user2->id,
     		'role_id' => 1,
     		'company_id' => $company2->id,
-    		'active' => true,
+    		'selected' => true,
         ]);
 
         DB::table('permission_role_company')->insert([

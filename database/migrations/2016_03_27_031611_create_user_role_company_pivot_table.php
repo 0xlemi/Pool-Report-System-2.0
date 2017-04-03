@@ -19,9 +19,10 @@ class CreateUserRoleCompanyPivotTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
             $table->integer('company_id')->unsigned();
-            // Since users can have multiple roles we need to know which one they want you use rigth now
-            $table->boolean('active')->default(false);
-            $table->boolean('paid')->default(true);
+
+            $table->unsignedTinyInteger('type')->default(1); // Type meaning depends on the role
+            $table->boolean('selected')->default(false); // We need to know which urc the user wants to use rigth now
+            $table->boolean('paid')->default(true); // Billable active account
 
             $table->timestamps();
 

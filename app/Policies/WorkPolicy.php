@@ -15,14 +15,14 @@ class WorkPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('work_view');
+        return $user->selectedUser->hasPermission('work_view');
     }
 
     /**
@@ -34,14 +34,14 @@ class WorkPolicy
      */
     public function view(User $user, Work $work)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             // ****** Security Bug ********
             // client can look at works that are not his
             // To resolve: need to fix this function so the client->works()
             // return $user->userable()->hasWork($work->id);
             return false; // temporary
         }
-        return $user->activeUser->hasPermission('work_view');
+        return $user->selectedUser->hasPermission('work_view');
     }
 
     /**
@@ -52,7 +52,7 @@ class WorkPolicy
      */
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('work_create');
+        return $user->selectedUser->hasPermission('work_create');
     }
 
     /**
@@ -64,17 +64,17 @@ class WorkPolicy
      */
     public function update(User $user, Work $work)
     {
-        return $user->activeUser->hasPermission('work_update');
+        return $user->selectedUser->hasPermission('work_update');
     }
 
     public function addPhoto(User $user, Work $work)
     {
-        return $user->activeUser->hasPermission('work_addPhoto');
+        return $user->selectedUser->hasPermission('work_addPhoto');
     }
 
     public function removePhoto(User $user, Work $work)
     {
-        return $user->activeUser->hasPermission('work_removePhoto');
+        return $user->selectedUser->hasPermission('work_removePhoto');
     }
 
     /**
@@ -86,6 +86,6 @@ class WorkPolicy
      */
     public function delete(User $user, Work $work)
     {
-        return $user->activeUser->hasPermission('work_delete');
+        return $user->selectedUser->hasPermission('work_delete');
     }
 }

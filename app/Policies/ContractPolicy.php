@@ -15,7 +15,7 @@ class ContractPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
@@ -29,7 +29,7 @@ class ContractPolicy
      */
     public function view(User $user, ServiceContract $serviceContract)
     {
-        return $user->activeUser->hasPermission('contract_view');
+        return $user->selectedUser->hasPermission('contract_view');
     }
 
     /**
@@ -40,7 +40,7 @@ class ContractPolicy
      */
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('contract_create');
+        return $user->selectedUser->hasPermission('contract_create');
     }
 
     /**
@@ -52,12 +52,12 @@ class ContractPolicy
      */
     public function update(User $user, ServiceContract $serviceContract)
     {
-        return $user->activeUser->hasPermission('contract_update');
+        return $user->selectedUser->hasPermission('contract_update');
     }
 
     public function toggleActivation(User $user)
     {
-        return $user->activeUser->hasPermission('contract_deactivate');
+        return $user->selectedUser->hasPermission('contract_deactivate');
     }
 
     /**
@@ -69,6 +69,6 @@ class ContractPolicy
      */
     public function delete(User $user, ServiceContract $serviceContract)
     {
-        return $user->activeUser->hasPermission('contract_delete');
+        return $user->selectedUser->hasPermission('contract_delete');
     }
 }

@@ -43,7 +43,7 @@ class WorkController extends PageController
     public function index(Request $request, $workOrderSeqId)
     {
         $workOrder = $this->loggedCompany()->workOrderBySeqId($workOrderSeqId);
-        if($request->user()->activeUser->isRole('client')){
+        if($request->user()->selectedUser->isRole('client')){
             // Check if client owns workorder, preventing client from looking
             // at works from workorders that are not his
             $this->authorize('view', $workOrder);

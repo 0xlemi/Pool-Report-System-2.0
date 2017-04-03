@@ -156,7 +156,7 @@ class SupervisorsController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->activeUser->paid)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->selectedUser->paid)) && !$admin->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
                     "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
@@ -172,7 +172,7 @@ class SupervisorsController extends PageController
         }
 
         $user->email = htmlentities($request->email);
-        $user->active = $status;
+        // $user->active = $status;
 
         $userSaved = $user->save();
         $supervisorSaved = $supervisor->save();

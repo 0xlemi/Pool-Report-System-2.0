@@ -179,7 +179,7 @@ class UserController extends ApiController
             }
 
             // check if the user is active (payed)
-            if(!$user->activeUser->paid){
+            if(!$user->selectedUser->paid){
                 return response('You cannot login because this user is set to inactive. Ask the system administrator to activate your account.', 402);
             }
             // check if the user is activated (email verification)

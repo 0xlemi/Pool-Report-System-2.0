@@ -51,7 +51,7 @@ class UserTableSeeder extends Seeder
                 'name' => $faker->firstName($gender),
     		]);
 
-            $userRoleCompany = UserRoleCompany::create([
+            $userRoleCompany = factory(UserRoleCompany::class)->create([
                 'user_id' => $user->id,
                 'role_id' => 2,
                 'company_id' => $company->id,
@@ -61,7 +61,7 @@ class UserTableSeeder extends Seeder
             $userRoleCompany->services()->attach($serviceId);
 
             // create images link it to client
-            $user->images()->create([
+            $userRoleCompany->images()->create([
                 'big' => $img->big,
     			'medium' => $img->medium,
                 'thumbnail' => $img->thumbnail,
@@ -80,14 +80,14 @@ class UserTableSeeder extends Seeder
 
     		$user = factory(User::class)->create();
 
-            UserRoleCompany::create([
+            $userRoleCompany = factory(UserRoleCompany::class)->create([
                 'user_id' => $user->id,
                 'role_id' => 3,
                 'company_id' => $company_id,
             ]);
 
             // create images link it to supervisors
-            $user->images()->create([
+            $userRoleCompany->images()->create([
                 'big' => $img->big,
     			'medium' => $img->medium,
                 'thumbnail' => $img->thumbnail,
@@ -107,14 +107,14 @@ class UserTableSeeder extends Seeder
 
     		$user = factory(User::class)->create();
 
-            UserRoleCompany::create([
+            $userRoleCompany = factory(UserRoleCompany::class)->create([
                 'user_id' => $user->id,
                 'role_id' => 4,
                 'company_id' => $company_id,
             ]);
 
     		// create images link it to technician
-            $user->images()->create([
+            $userRoleCompany->images()->create([
                 'big' => $img->big,
     			'medium' => $img->medium,
                 'thumbnail' => $img->thumbnail,

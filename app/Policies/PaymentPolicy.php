@@ -15,14 +15,14 @@ class PaymentPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('payment_view');
+        return $user->selectedUser->hasPermission('payment_view');
     }
 
     /**
@@ -34,7 +34,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        return $user->activeUser->hasPermission('payment_view');
+        return $user->selectedUser->hasPermission('payment_view');
     }
 
     /**
@@ -45,7 +45,7 @@ class PaymentPolicy
      */
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('payment_create');
+        return $user->selectedUser->hasPermission('payment_create');
     }
 
     /**
@@ -57,6 +57,6 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        return $user->activeUser->hasPermission('payment_delete');
+        return $user->selectedUser->hasPermission('payment_delete');
     }
 }

@@ -15,14 +15,14 @@ class EquipmentPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('equipment_view');
+        return $user->selectedUser->hasPermission('equipment_view');
     }
 
     /**
@@ -34,11 +34,11 @@ class EquipmentPolicy
      */
     public function view(User $user, Equipment $equipment)
     {
-        if($user->activeUser->isRole('client')){
+        if($user->selectedUser->isRole('client')){
             // return $user->userable()->hasEquipment($equipment->id);
             return false; // temporary
         }
-        return $user->activeUser->hasPermission('equipment_view');
+        return $user->selectedUser->hasPermission('equipment_view');
         return false;
     }
 
@@ -50,7 +50,7 @@ class EquipmentPolicy
      */
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('equipment_create');
+        return $user->selectedUser->hasPermission('equipment_create');
     }
 
     /**
@@ -62,17 +62,17 @@ class EquipmentPolicy
      */
     public function update(User $user, Equipment $equipment)
     {
-        return $user->activeUser->hasPermission('equipment_update');
+        return $user->selectedUser->hasPermission('equipment_update');
     }
 
     public function addPhoto(User $user, Equipment $equipment)
     {
-        return $user->activeUser->hasPermission('equipment_addPhoto');
+        return $user->selectedUser->hasPermission('equipment_addPhoto');
     }
 
     public function removePhoto(User $user, Equipment $equipment)
     {
-        return $user->activeUser->hasPermission('equipment_removePhoto');
+        return $user->selectedUser->hasPermission('equipment_removePhoto');
     }
 
     /**
@@ -84,6 +84,6 @@ class EquipmentPolicy
      */
     public function delete(User $user, Equipment $equipment)
     {
-        return $user->activeUser->hasPermission('equipment_delete');
+        return $user->selectedUser->hasPermission('equipment_delete');
     }
 }

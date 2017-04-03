@@ -30,7 +30,7 @@ class Logged{
      */
     public function company()
     {
-        return $this->user()->activeUser->company;
+        return $this->user()->selectedUser->company;
     }
 
 }

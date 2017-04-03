@@ -111,17 +111,22 @@ class ClientsController extends PageController
      */
     public function show($seq_id)
     {
-        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        $client = $this->loggedCompany()
+                            ->userRoleCompanies()
+                            ->ofRole('client')
+                            ->bySeqId($seq_id)
+                            ->firstOrFail();
 
         $this->authorize('view', $client);
 
+        $user = $client->user;
         $services = $client->services()->get();
         $image = null;
         if($client->images->count() > 0){
             $image = $this->imageTransformer->transform($client->images->first());
         }
 
-        return view('clients.show',compact('client', 'services', 'image'));
+        return view('clients.show',compact('client','user', 'services', 'image'));
     }
 
     /**

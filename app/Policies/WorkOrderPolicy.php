@@ -15,14 +15,14 @@ class WorkOrderPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('workorder_view');
+        return $user->selectedUser->hasPermission('workorder_view');
     }
 
     /**
@@ -34,12 +34,12 @@ class WorkOrderPolicy
      */
     public function view(User $user, WorkOrder $workOrder)
     {
-        if($user->activeUser->isRole('client')){
+        if($user->selectedUser->isRole('client')){
             // only if this client owns this workorder
-            // return $user->activeUser->hasWorkOrder($workOrder->seq_id);
+            // return $user->selectedUser->hasWorkOrder($workOrder->seq_id);
             return false; // temporary
         }
-        return $user->activeUser->hasPermission('workorder_view');
+        return $user->selectedUser->hasPermission('workorder_view');
     }
 
     /**
@@ -50,7 +50,7 @@ class WorkOrderPolicy
      */
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('workorder_create');
+        return $user->selectedUser->hasPermission('workorder_create');
     }
 
     /**
@@ -63,7 +63,7 @@ class WorkOrderPolicy
     public function update(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        return ($user->activeUser->hasPermission('workorder_update') && $isNotFinished );
+        return ($user->selectedUser->hasPermission('workorder_update') && $isNotFinished );
     }
 
     /**
@@ -76,17 +76,17 @@ class WorkOrderPolicy
     public function finish(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        return ($user->activeUser->hasPermission('workorder_finish') && $isNotFinished );
+        return ($user->selectedUser->hasPermission('workorder_finish') && $isNotFinished );
     }
 
     public function addPhoto(User $user, WorkOrder $workOrder)
     {
-        return $user->activeUser->hasPermission('workorder_addPhoto');
+        return $user->selectedUser->hasPermission('workorder_addPhoto');
     }
 
     public function removePhoto(User $user, WorkOrder $workOrder)
     {
-        return $user->activeUser->hasPermission('workorder_removePhoto');
+        return $user->selectedUser->hasPermission('workorder_removePhoto');
     }
 
     /**
@@ -98,6 +98,6 @@ class WorkOrderPolicy
      */
     public function delete(User $user, WorkOrder $workOrder)
     {
-        return $user->activeUser->hasPermission('workorder_delete');
+        return $user->selectedUser->hasPermission('workorder_delete');
     }
 }

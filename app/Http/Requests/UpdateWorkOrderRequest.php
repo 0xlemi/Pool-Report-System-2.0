@@ -23,7 +23,7 @@ class UpdateWorkOrderRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->activeUser->company;
+        $company = auth()->user()->selectedUser->company;
         return [
             'title' => 'string|max:255',
             'description' => 'string',

@@ -212,7 +212,7 @@ class SupervisorsController extends ApiController
         $user = $supervisor->user;
         // Check that the admin has payed for this supervisor
         $status = ($request->status)? 1:0;
-        if( ($status && ($status != $user->activeUser->paid)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->selectedUser->paid)) && !$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
         }
 
@@ -224,7 +224,7 @@ class SupervisorsController extends ApiController
 
             // update the user
             if($request->has('email')){ $user->email = htmlentities($request->email); }
-            if($request->has('status')){ $user->active = $request->status; }
+            // if($request->has('status')){ $user->selected = $request->status; }
 
             $supervisor->save();
             $user->save();

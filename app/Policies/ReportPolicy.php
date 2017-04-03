@@ -15,44 +15,44 @@ class ReportPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
 
     public function list(User $user)
     {
-        return $user->activeUser->hasPermission('report_view');
+        return $user->selectedUser->hasPermission('report_view');
     }
 
     public function view(User $user, Report $report)
     {
-        return $user->activeUser->hasPermission('report_view');
+        return $user->selectedUser->hasPermission('report_view');
     }
 
     public function create(User $user)
     {
-        return $user->activeUser->hasPermission('report_create');
+        return $user->selectedUser->hasPermission('report_create');
     }
 
     public function update(User $user, Report $report)
     {
-        return $user->activeUser->hasPermission('report_update');
+        return $user->selectedUser->hasPermission('report_update');
     }
 
     public function addPhoto(User $user, Report $report)
     {
-        return $user->activeUser->hasPermission('report_addPhoto');
+        return $user->selectedUser->hasPermission('report_addPhoto');
     }
 
     public function removePhoto(User $user, Report $report)
     {
-        return $user->activeUser->hasPermission('report_removePhoto');
+        return $user->selectedUser->hasPermission('report_removePhoto');
     }
 
     public function delete(User $user, Report $report)
     {
-        return $user->activeUser->hasPermission('report_delete');
+        return $user->selectedUser->hasPermission('report_delete');
     }
 
 

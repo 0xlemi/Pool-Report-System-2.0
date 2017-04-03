@@ -23,7 +23,7 @@ class UpdateWorkRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->activeUser->company;
+        $company = auth()->user()->selectedUser->company;
         return [
             'technician' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'title' => 'string|max:255',

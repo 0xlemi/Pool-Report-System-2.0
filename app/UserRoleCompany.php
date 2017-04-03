@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\PRS\Traits\Model\ScopeableTrait;
+use App\PRS\Traits\Model\ImageTrait;
 use App\Work;
 use App\Report;
 use App\Role;
@@ -19,6 +20,7 @@ class UserRoleCompany extends Model
 {
 
     use ScopeableTrait;
+    use ImageTrait;
 
 	/**
      * The table associated with the model.

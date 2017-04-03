@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@inject('helper', 'App\PRS\Helpers\ClientHelpers')
+@inject('helper', 'App\PRS\Helpers\UserRoleCompanyHelpers')
 @section('content')
 	<header class="section-header">
 		<div class="tbl">
@@ -24,11 +24,11 @@
 					<div class="card-block">
 						<form>
 
-							@if(!$client->user->verified)
+							@if(!$user->verified)
 							<div class="form-group row">
 								<email-verification-notice
 									name="Client"
-									email="{{ $client->user->email }}">
+									email="{{ $user->email }}">
 								</email-verification-noctice>
 							</div>
 							<br>
@@ -54,51 +54,51 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->name }}">
+									<input type="text" readonly class="form-control" value="{{ $user->name }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Last Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->last_name }}">
+									<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->user->email }}">
+									<input type="text" readonly class="form-control" value="{{ $user->email }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $client->cellphone }}">
+									<input type="text" readonly class="form-control" value="{{ $user->cellphone }}">
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
-									{!! $helper->styledType($client->type, false) !!}
+									{!! $helper->styledTypeClient($client->type, false) !!}
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Receives email</label>
 								<div class="col-sm-10">
-									{!! $helper->styleEmailPermissions($client->user) !!}
+									{!! $helper->styleEmailPermissions($user) !!}
 								</div>
 							</div>
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Language</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($client->language) }}">
+									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($user->language) }}">
 								</div>
 							</div>
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Comments</label>
+								<label class="col-sm-2 form-control-label">About</label>
 								<div class="col-sm-10">
 									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this client."
-												name="comments" readonly>{{ $client->comments }}</textarea>
+												name="comments" readonly>{{ $user->about }}</textarea>
 								</div>
 							</div>
 						</form>

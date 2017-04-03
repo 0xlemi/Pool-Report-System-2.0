@@ -64,7 +64,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         // payed for
-        if(!$user->activeUser->paid){
+        if(!$user->selectedUser->paid){
             Auth::logout();
 
             return redirect('/login')

@@ -2,7 +2,6 @@
 
 
 use Carbon\Carbon;
-use App\Invoice;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +29,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 		'cellphone' => $faker->phoneNumber,
 		'address' => $faker->address,
     	'language' => 'en',
-		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true)
+		'about' => $faker->sentence($nbWords = 6, $variableNbWords = true)
     ];
 });
 
@@ -151,39 +150,11 @@ $factory->define(App\Work::class, function (Faker\Generator $faker){
     ];
 });
 
-
-// $factory->define(App\Supervisor::class, function (Faker\Generator $faker){
-// 	return [
-//         'name' => $faker->name,
-// 		'last_name' => $faker->lastName,
-// 		'cellphone' => $faker->phoneNumber,
-//         'address' => $faker->streetAddress,
-//     	'language' => $faker->languageCode,
-// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-// 	];
-// });
-//
-// $factory->define(App\Technician::class, function (Faker\Generator $faker){
-// 	return [
-//         'name' => $faker->name,
-// 		'last_name' => $faker->lastName,
-// 		'cellphone' => $faker->phoneNumber,
-// 		'address' => $faker->address,
-//     	'language' => $faker->languageCode,
-// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-// 	];
-// });
-//
-// $factory->define(App\Client::class, function (Faker\Generator $faker){
-// 	return [
-//         'name' => $faker->name,
-// 		'last_name' => $faker->lastName,
-// 		'cellphone' => $faker->phoneNumber,
-// 		'type' => $faker->numberBetween(1, 2),
-//     	'language' => $faker->languageCode,
-// 		'comments' => $faker->sentence($nbWords = 6, $variableNbWords = true),
-// 	];
-// });
+$factory->define(App\UserRoleCompany::class, function (Faker\Generator $faker){
+	return [
+		'type' => $faker->numberBetween(1, 2),
+	];
+});
 
 $factory->define(App\Report::class, function (Faker\Generator $faker){
 	return [

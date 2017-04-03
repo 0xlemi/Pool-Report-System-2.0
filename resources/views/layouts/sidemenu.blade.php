@@ -1,5 +1,5 @@
 <div class="mobile-menu-left-overlay"></div>
-<nav class="side-menu {{ (auth()->user()->activeUser->isRole('client')) ? 'side-menu-compact' : '' }}">
+<nav class="side-menu {{ (auth()->user()->selectedUser->isRole('client')) ? 'side-menu-compact' : '' }}">
     <ul class="side-menu-list">
 
         <li class="orange-red {{ Request::is('dashboard*')? 'opened':'' }}">

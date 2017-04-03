@@ -24,9 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('cellphone');
             $table->string('address');
-            $table->tinyInteger('type'); // type meaning depends on the role
             $table->char('language', 2)->default('en');
-            $table->text('comments');
+            $table->text('about');
 
             // **************
             //    Billing

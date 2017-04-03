@@ -57,7 +57,7 @@ class User extends Authenticatable
     protected $appends = [
         'fullName',
 		'notificationSettings',
-		'activeUser'
+		'selectedUser'
     ];
 
 
@@ -88,14 +88,14 @@ class User extends Authenticatable
         return new notificationSettings($this, resolve(UserHelpers::class));
     }
 
-	public function getActiveUserAttribute()
+	public function getSelectedUserAttribute()
 	{
 		try {
-			$activeUser = $this->userRoleCompanies()->where('active', true)->firstOrFail();
+			$selectedUser = $this->userRoleCompanies()->where('selected', true)->firstOrFail();
 		} catch (ModelNotFoundException $e) {
-			$activeUser = $this->userRoleCompanies()->first();
+			$selectedUser = $this->userRoleCompanies()->first();
 		}
-		return $activeUser;
+		return $selectedUser;
 	}
 
 

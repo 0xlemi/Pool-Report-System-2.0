@@ -16,7 +16,7 @@ class UserRoleCompanyPolicy
      */
     public function before(User $user)
     {
-        if($user->activeUser->isRole('admin')){
+        if($user->selectedUser->isRole('admin')){
             return true;
         }
     }
@@ -30,11 +30,11 @@ class UserRoleCompanyPolicy
     public function list(User $user, $role)
     {
         if($role == 'client'){
-            return $user->activeUser->hasPermission('client_view');
+            return $user->selectedUser->hasPermission('client_view');
         }elseif($role == 'sup'){
-            return $user->activeUser->hasPermission('supervisor_view');
+            return $user->selectedUser->hasPermission('supervisor_view');
         }elseif($role == 'tech'){
-            return $user->activeUser->hasPermission('technician_view');
+            return $user->selectedUser->hasPermission('technician_view');
         }
     }
 
@@ -49,11 +49,11 @@ class UserRoleCompanyPolicy
     {
         $role = $userRoleCompany->role->name;
         if($role == 'client'){
-            return $user->activeUser->hasPermission('client_view');
+            return $user->selectedUser->hasPermission('client_view');
         }elseif($role == 'sup'){
-            return $user->activeUser->hasPermission('supervisor_view');
+            return $user->selectedUser->hasPermission('supervisor_view');
         }elseif($role == 'tech'){
-            return $user->activeUser->hasPermission('technician_view');
+            return $user->selectedUser->hasPermission('technician_view');
         }
     }
 
@@ -66,11 +66,11 @@ class UserRoleCompanyPolicy
     public function create(User $user, $role)
     {
         if($role == 'client'){
-            return $user->activeUser->hasPermission('client_create');
+            return $user->selectedUser->hasPermission('client_create');
         }elseif($role == 'sup'){
-            return $user->activeUser->hasPermission('supervisor_create');
+            return $user->selectedUser->hasPermission('supervisor_create');
         }elseif($role == 'tech'){
-            return $user->activeUser->hasPermission('technician_create');
+            return $user->selectedUser->hasPermission('technician_create');
         }
     }
 
@@ -85,11 +85,11 @@ class UserRoleCompanyPolicy
     {
         $role = $userRoleCompany->role->name;
         if($role == 'client'){
-            return $user->activeUser->hasPermission('client_update');
+            return $user->selectedUser->hasPermission('client_update');
         }elseif($role == 'sup'){
-            return $user->activeUser->hasPermission('supervisor_update');
+            return $user->selectedUser->hasPermission('supervisor_update');
         }elseif($role == 'tech'){
-            return $user->activeUser->hasPermission('technician_update');
+            return $user->selectedUser->hasPermission('technician_update');
         }
     }
 
@@ -104,11 +104,11 @@ class UserRoleCompanyPolicy
     {
         $role = $userRoleCompany->role->name;
         if($role == 'client'){
-            return $user->activeUser->hasPermission('client_delete');
+            return $user->selectedUser->hasPermission('client_delete');
         }elseif($role == 'sup'){
-            return $user->activeUser->hasPermission('supervisor_delete');
+            return $user->selectedUser->hasPermission('supervisor_delete');
         }elseif($role == 'tech'){
-            return $user->activeUser->hasPermission('technician_delete');
+            return $user->selectedUser->hasPermission('technician_delete');
         }
     }
 }

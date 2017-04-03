@@ -9,7 +9,7 @@ trait ControllerTrait{
 
     public function loggedUser()
     {
-        return (new Logged)->user()->activeUser;
+        return (new Logged)->user()->selectedUser;
     }
 
     public function loggedCompany()

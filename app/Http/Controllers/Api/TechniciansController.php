@@ -215,7 +215,7 @@ class TechniciansController extends ApiController
         // Check that the admin has payed for this technician
         $user = $technician->user;
         $active = ($request->active)? 1:0;
-        if( ($active && ($active != $user->activeUser->paid)) && !$admin->canAddObject()){
+        if( ($active && ($active != $user->selectedUser->paid)) && !$admin->canAddObject()){
             return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
         }
 
@@ -227,7 +227,7 @@ class TechniciansController extends ApiController
 
             // update user
             if($request->has('username')){ $user->email = htmlentities($request->username); }
-            if($request->has('active')){ $user->active = $request->active; }
+            // if($request->has('active')){ $user->selected = $request->active; }
 
             if($request->has('supervisor')){
                 $technician->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));

@@ -24,7 +24,7 @@ class CreateWorkOrderRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->activeUser->company;
+        $company = auth()->user()->selectedUser->company;
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
