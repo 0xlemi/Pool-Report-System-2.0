@@ -13,7 +13,6 @@ use App\Jobs\RecordServiceHistory;
 |
 */
 
-// dispatch(new RecordServiceHistory());
 
 Auth::routes();
 Route::auth();

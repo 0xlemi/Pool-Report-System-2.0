@@ -117,9 +117,13 @@ class ClientsController extends PageController
     {
         $client = $this->loggedCompany()
                             ->userRoleCompanies()
-                            ->ofRole('client')
                             ->bySeqId($seq_id)
                             ->firstOrFail();
+
+        // check that userRoleCompany has role of client
+        if(!$client->isRole('client')){
+            abort(404, 'There is no client with that id');
+        }
 
         $this->authorize('view', $client);
 
