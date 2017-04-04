@@ -77,12 +77,6 @@ class ClientsController extends PageController
 
         $company = $this->loggedCompany();
 
-        User::create([
-                
-        ]);
-
-
-
         $user = $client->user()->create([
             'email' => htmlentities($request->email),
         ]);
@@ -130,7 +124,7 @@ class ClientsController extends PageController
         $this->authorize('view', $client);
 
         $user = $client->user;
-        $services = $client->services()->get();
+        $services = $client->services;
         $image = null;
         if($client->images->count() > 0){
             $image = $this->imageTransformer->transform($client->images->first());
