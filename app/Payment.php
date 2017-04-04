@@ -31,7 +31,7 @@ class Payment extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('payments.seq_id', $seqId)->findOrFail();
+        return $query->where('payments.seq_id', $seqId)->firstOrFail();
     }
 
     // ************************

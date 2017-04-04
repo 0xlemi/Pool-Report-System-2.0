@@ -61,7 +61,7 @@ class WorkOrder extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('work_orders.seq_id', $seqId)->findOrFail();
+        return $query->where('work_orders.seq_id', $seqId)->firstOrFail();
     }
 
 

@@ -290,7 +290,7 @@ class Company extends Model
      * Get reports associatod with this user
      */
     public function reports(){
-        return $this->hasManyThrough(Report::class, Service::class);
+        return $this->hasManyThrough(Report::class, Service::class)->select('reports.*');
     }
 
     /**
@@ -300,7 +300,7 @@ class Company extends Model
      * tested
      */
     public function workOrders(){
-        return $this->hasManyThrough(WorkOrder::class, Service::class);
+        return $this->hasManyThrough(WorkOrder::class, Service::class)->select('work_orders.*');
     }
 
     /**

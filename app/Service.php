@@ -54,7 +54,7 @@ class Service extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('service.seq_id', $seqId)->firstOrFail();
+        return $query->where('services.seq_id', $seqId)->firstOrFail();
     }
 
     // ******************************
