@@ -26,10 +26,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
         'name' => $name,
 		'last_name' => $lastName,
-		'cellphone' => $faker->phoneNumber,
-		'address' => $faker->address,
     	'language' => 'en',
-		'about' => $faker->sentence($nbWords = 6, $variableNbWords = true)
     ];
 });
 
@@ -153,6 +150,9 @@ $factory->define(App\Work::class, function (Faker\Generator $faker){
 $factory->define(App\UserRoleCompany::class, function (Faker\Generator $faker){
 	return [
 		'type' => $faker->numberBetween(1, 2),
+		'cellphone' => $faker->phoneNumber,
+		'address' => $faker->address,
+		'about' => $faker->sentence($nbWords = 6, $variableNbWords = true)
 	];
 });
 

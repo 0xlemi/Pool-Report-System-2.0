@@ -72,7 +72,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $user->cellphone }}">
+									<input type="text" readonly class="form-control" value="{{ $client->cellphone }}">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -98,7 +98,7 @@
 								<div class="col-sm-10">
 									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this client."
-												name="comments" readonly>{{ $user->about }}</textarea>
+												name="comments" readonly>{{ $client->about }}</textarea>
 								</div>
 							</div>
 						</form>

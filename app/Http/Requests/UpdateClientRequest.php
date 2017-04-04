@@ -25,23 +25,17 @@ class UpdateClientRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
-        try {
-            $userable_id  = $admin->clientsBySeqId($this->seq_id)->id;
-        }catch(ModelNotFoundException $e){
-            abort(422);
-        }
+        $company = auth()->user()->selectedUser->company;
         return [
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
-            'email' => 'email|unique:users,email,'.$userable_id.',userable_id',
+            'email' => 'email',
             'cellphone' => 'string|max:20',
             'type' => 'numeric|between:1,2',
             'language' => 'string|max:2',
             'services' => 'array',
-            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
+            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
         ];
     }
 }

@@ -23,18 +23,17 @@ class CreateClientRequest extends Request
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->selectedUser->company;
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'cellphone' => 'required|string|max:20',
             'type' => 'required|numeric|between:1,2',
             'language' => 'required|string|max:2',
             'services' => 'array',
-            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
+            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
         ];
     }
 }

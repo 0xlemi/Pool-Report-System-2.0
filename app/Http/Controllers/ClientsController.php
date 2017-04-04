@@ -73,11 +73,21 @@ class ClientsController extends PageController
      */
     public function store(CreateClientRequest $request)
     {
-        $this->authorize('create', Client::class);
+        $this->authorize('create', [UserRoleCompany::class, 'client']);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $client = $admin->clients()->create(
+        User::create([
+                
+        ]);
+
+
+
+        $user = $client->user()->create([
+            'email' => htmlentities($request->email),
+        ]);
+
+        $client = $company->userRoleCompanies()->create(
                         array_map('htmlentities', $request->except('services'))
                     );
 
