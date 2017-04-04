@@ -83,21 +83,21 @@ class ReportsApiTest extends ApiTester
             'service_id' => $service->id,
             'technician_id' => $tech->id,
         ]);
-        $rep1 = $admin->reportsBySeqId(1);
+        $rep1 = $admin->reports()->bySeqId(1);
 
         factory(App\Report::class)->create([
             'completed' => Carbon::today(),
             'service_id' => $service->id,
             'technician_id' => $tech->id,
         ]);
-        $rep2 = $admin->reportsBySeqId(2);
+        $rep2 = $admin->reports()->bySeqId(2);
 
         factory(App\Report::class)->create([
             'completed' => Carbon::tomorrow(),
             'service_id' => $service->id,
             'technician_id' => $tech->id,
         ]);
-        $rep3 = $admin->reportsBySeqId(3);
+        $rep3 = $admin->reports()->bySeqId(3);
 
         // When
         // Then
@@ -197,10 +197,10 @@ class ReportsApiTest extends ApiTester
         $tech = $this->createTechnician($sup->id);
 
         $this->createReport($service->id, $tech->id);
-        $rep1 = $admin->reportsBySeqId(1);
+        $rep1 = $admin->reports()->bySeqId(1);
 
         $this->createReport($service->id, $tech->id);
-        $rep2 = $admin->reportsBySeqId(2);
+        $rep2 = $admin->reports()->bySeqId(2);
 
         // When
         // Then
@@ -244,7 +244,7 @@ class ReportsApiTest extends ApiTester
         $tech = $this->createTechnician($sup->id);
 
         $this->createReport($service->id, $tech->id);
-        $rep = $admin->reportsBySeqId(1);
+        $rep = $admin->reports()->bySeqId(1);
 
         // When
         // Then

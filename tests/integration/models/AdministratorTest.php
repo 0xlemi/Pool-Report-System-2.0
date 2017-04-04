@@ -205,9 +205,9 @@ class AdministratorTest extends DatabaseTester
         ]);
 
         // When
-        $report_1 = $admin1->reportsBySeqId(1);
-        $report_2 = $admin2->reportsBySeqId(1);
-        $report_3 = $admin2->reportsBySeqId(2);
+        $report_1 = $admin1->reports()->bySeqId(1);
+        $report_2 = $admin2->reports()->bySeqId(1);
+        $report_3 = $admin2->reports()->bySeqId(2);
 
         // Then
         $this->assertSameObject($report1, $report_1);
@@ -272,9 +272,9 @@ class AdministratorTest extends DatabaseTester
         ]);
 
         // When
-        $workOrder_1 = $admin1->workOrderBySeqId(1);
-        $workOrder_2 = $admin2->workOrderBySeqId(1);
-        $workOrder_3 = $admin2->workOrderBySeqId(2);
+        $workOrder_1 = $admin1->workOrders()->bySeqId(1);
+        $workOrder_2 = $admin2->workOrders()->bySeqId(1);
+        $workOrder_3 = $admin2->workOrders()->bySeqId(2);
 
         // Then
         $this->assertSameObject($workOrder1, $workOrder_1);
@@ -316,9 +316,9 @@ class AdministratorTest extends DatabaseTester
         $ser3 = $this->createService($admin2->id);
 
         // When
-        $ser_1 = $admin1->serviceBySeqId(1);
-        $ser_2 = $admin2->serviceBySeqId(1);
-        $ser_3 = $admin2->serviceBySeqId(2);
+        $ser_1 = $admin1->services()->bySeqId(1);
+        $ser_2 = $admin2->services()->bySeqId(1);
+        $ser_3 = $admin2->services()->bySeqId(2);
 
         // Then
         $this->assertSameObject($ser1, $ser_1);

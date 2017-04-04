@@ -76,7 +76,7 @@ class ServicesController extends ApiController
                 $services = $admin->serviceWithNoContractOrInactive()->paginate($limit);
             }
         }else{
-            $services = $admin->servicesInOrder()->paginate($limit);
+            $services = $admin->services()->seqIdOrdered()->paginate($limit);
         }
 
         return $this->respondWithPagination(
@@ -95,7 +95,7 @@ class ServicesController extends ApiController
                 $services = $admin->serviceWithNoContractOrInactive()->get();
             }
         }else{
-            $services = $admin->servicesInOrder()->get();
+            $services = $admin->services()->seqIdOrdered()->get();
         }
 
         return $this->respond([
@@ -165,7 +165,7 @@ class ServicesController extends ApiController
     public function show($seq_id)
     {
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -194,7 +194,7 @@ class ServicesController extends ApiController
     public function update(Request $request, $seq_id)
     {
         try{
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -239,7 +239,7 @@ class ServicesController extends ApiController
 
         return $this->respondPersisted(
             'The service was successfully updated.',
-            $this->serviceTransformer->transform($this->loggedUserAdministrator()->serviceBySeqId($seq_id))
+            $this->serviceTransformer->transform($this->loggedUserAdministrator()->services()->bySeqId($seq_id))
         );
 
     }
@@ -253,7 +253,7 @@ class ServicesController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }

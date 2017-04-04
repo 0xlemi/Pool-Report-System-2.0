@@ -4,18 +4,8 @@ namespace App\PRS\Traits\Model;
 
 use Illuminate\Database\Eloquent\Collection;
 
-trait ScopeableTrait
+trait SortableTrait
 {
-
-    // Filtering
-
-    public function scopeBySeqId($query, $seqId)
-    {
-        return $query->where('seq_id', $seqId);
-    }
-
-
-    // Ordering
 
     public function scopeSeqIdOrdered($query, $order = 'asc')
     {

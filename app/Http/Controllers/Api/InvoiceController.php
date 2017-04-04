@@ -65,7 +65,7 @@ class InvoiceController extends ApiController
     public function show($seqId)
     {
         try {
-            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }
@@ -89,7 +89,7 @@ class InvoiceController extends ApiController
     public function destroy($seqId)
     {
         try {
-            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($seqId);
+            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }

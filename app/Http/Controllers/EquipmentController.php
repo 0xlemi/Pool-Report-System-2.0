@@ -30,7 +30,7 @@ class EquipmentController extends PageController
     public function index(Request $request, EquipmentDatatableTransformer $equipmentTransformer, $service_seq_id)
     {
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($service_seq_id);
         if($request->user()->isClient()){
             // Check if client owns service, preventing client from looking
             // at equipment from services that are not his
@@ -56,7 +56,7 @@ class EquipmentController extends PageController
         // change this to handle errors as api response
         $this->authorize('create', Equipment::class);
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($service_seq_id);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($service_seq_id);
 
         $equipment = $service->equipment()->create(array_map('htmlentities', $request->all()));
 

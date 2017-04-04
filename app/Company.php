@@ -256,49 +256,6 @@ class Company extends Model
     //******** RELATIONSHIPS ********
     // ******************************
 
-    // Feature Relationships
-
-    /**
-     * Get services ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function servicesInOrder($order = 'asc')
-    {
-        return $this->services()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get services accacited with this user and seq_id convination
-     * @param  int $seq_id
-     * tested
-     */
-    public function serviceBySeqId($seq_id){
-        return $this->services()
-                    ->where('services.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    /**
-     * Get reports order by seq_id
-     * @param  string $order    'asc' or 'desc'
-     */
-    public function reportsInOrder($order = 'asc')
-    {
-        return $this->reports()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get the reports based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Report
-     * tested
-     */
-    public function reportsBySeqId($seq_id){
-        return $this->reports()
-                    ->where('reports.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
     /**
      * Get the reports in this date
      * @param  Carbon $date date is Administrator timzone
@@ -310,63 +267,6 @@ class Company extends Model
                     ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
                     ->orderBy('seq_id');
     }
-
-
-
-    /**
-     * Get work orders ordered by seq_id
-     * @param  string $order    asc or desc
-     */
-    public function workOrdersInOrder($order = 'asc')
-    {
-        return $this->workOrders()->orderBy('seq_id', $order);
-    }
-
-    /**
-     * Get the work order based on the seq_id
-     * @param  integer $seq_id
-     * @return App\WorkOrder
-     * tested
-     */
-    public function workOrderBySeqId($seq_id){
-        return $this->workOrders()
-                    ->where('work_orders.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-
-    /**
-     * Get the invoices based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Invoice
-     */
-    public function invoicesBySeqId($seq_id){
-        return $this->invoices()
-                    ->where('invoices.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-
-    /**
-     * Get the payments based on the seq_id
-     * @param  integer $seq_id
-     * @return App\Payment
-     */
-    public function paymentsBySeqId($seq_id){
-        return $this->payments()
-                    ->where('payments.seq_id', '=', $seq_id)
-                    ->firstOrFail();
-    }
-
-    public function missingHistoriesByDate(Carbon $date)
-    {
-        $date_str = $date->toDateTimeString();
-        return $this->missingHistories()
-                        ->whereDate('date', $date_str)
-                        ->first();
-    }
-
-    // Basic Relationships
 
     public function userRoleCompanies()
     {

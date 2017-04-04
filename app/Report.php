@@ -11,6 +11,7 @@ use Mail;
 
 use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\Report\OnTime;
 use App\PRS\ValueObjects\Report\Reading;
 use App\PRS\ValueObjects\Report\Turbidity;
@@ -20,6 +21,7 @@ use App\Image;
 class Report extends Model
 {
     use ImageTrait;
+    use SortableTrait;
 
     /**
      * variables that can be mass assigned
@@ -40,6 +42,16 @@ class Report extends Model
         'accuracy',
     ];
 
+
+    // ******************************
+    //            Scopes
+    // ******************************
+
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('reports.seq_id', $seqId)->firstOrFail();
+    }
 
     //******** RELATIONSHIPS ********
 

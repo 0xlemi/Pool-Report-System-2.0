@@ -24,7 +24,7 @@ class ExistsBasedOnCompany
         if($table == 'services')
         {
             try {
-                $company->serviceBySeqId($seq_id);
+                $company->services()->bySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }

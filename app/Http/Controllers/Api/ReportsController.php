@@ -57,7 +57,7 @@ class ReportsController extends ApiController
             return $this->indexByDate($request->date, $limit);
         }
 
-        $reports = $this->loggedUserAdministrator()->reportsInOrder()->paginate($limit);
+        $reports = $this->loggedUserAdministrator()->reports()->seqIdOrdered()->paginate($limit);
 
         return $this->respondWithPagination(
             $reports,
@@ -122,7 +122,7 @@ class ReportsController extends ApiController
             'add_photos' => 'required|array|size:3',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
-        $service = $admin->serviceBySeqId($request->service);
+        $service = $admin->services()->bySeqId($request->service);
         $technician = $admin->technicianBySeqId($request->technician);
 
         // check if the report was made on time
@@ -180,7 +180,7 @@ class ReportsController extends ApiController
     public function show($seq_id)
     {
         try {
-            $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+            $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }
@@ -209,7 +209,7 @@ class ReportsController extends ApiController
     {
         $admin = $this->loggedUserAdministrator();
         try {
-            $report = $admin->reportsBySeqId($seq_id);
+            $report = $admin->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }
@@ -249,10 +249,10 @@ class ReportsController extends ApiController
             )));
 
             if(isset($request->service)){
-                $report->service()->associate($admin->serviceBySeqId($request->service));
+                $report->service()->associate($admin->services()->bySeqId($request->service));
             }
             if(isset($request->technician)){
-                $report->technician()->associate($admin->serviceBySeqId($request->technician));
+                $report->technician()->associate($admin->services()->bySeqId($request->technician));
             }
 
             $report->save();
@@ -288,7 +288,7 @@ class ReportsController extends ApiController
 
         return $this->respondPersisted(
             'The report was successfully updated.',
-            $this->reportTransformer->transform($this->loggedUserAdministrator()->reportsBySeqId($seq_id))
+            $this->reportTransformer->transform($this->loggedUserAdministrator()->reports()->bySeqId($seq_id))
         );
     }
 
@@ -301,7 +301,7 @@ class ReportsController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+            $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }

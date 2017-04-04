@@ -117,13 +117,13 @@ public function it_can_store_clients()
     $admin = $this->createAdministrator();
 
     $this->createService($admin->id);
-    $service1 = $admin->serviceBySeqId(1);
+    $service1 = $admin->services()->bySeqId(1);
 
     $this->createService($admin->id);
-    $service2 = $admin->serviceBySeqId(2);
+    $service2 = $admin->services()->bySeqId(2);
 
     $this->createService($admin->id);
-    $service3 = $admin->serviceBySeqId(3);
+    $service3 = $admin->services()->bySeqId(3);
 
     // When
     // Then
@@ -199,16 +199,16 @@ public function it_can_update_client()
     $admin = $this->createAdministrator();
 
     $this->createService($admin->id);
-    $service1 = $admin->serviceBySeqId(1);
+    $service1 = $admin->services()->bySeqId(1);
 
     $this->createService($admin->id);
-    $service2 = $admin->serviceBySeqId(2);
+    $service2 = $admin->services()->bySeqId(2);
 
     $this->createService($admin->id);
-    $service3 = $admin->serviceBySeqId(3);
+    $service3 = $admin->services()->bySeqId(3);
 
     $this->createService($admin->id);
-    $service4 = $admin->serviceBySeqId(4);
+    $service4 = $admin->services()->bySeqId(4);
 
     $this->createClient($admin->id,[$service1->id, $service4->id]);
 

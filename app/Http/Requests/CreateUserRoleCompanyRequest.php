@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateTechnicianRequest extends Request
+class CreateUserRoleCompanyRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,13 @@ class CreateTechnicianRequest extends Request
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
         return [
             'name' => 'required|string|max:25',
             'last_name' => 'required|string|max:40',
-            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
-            'username' => 'required|alpha_dash|between:4,25|unique:users,email',
-            'password' => 'required|alpha_dash|between:6,200',
+            'email' => 'required|email',
             'cellphone' => 'required|string|max:20',
-            'address'   => 'string|max:100',
-            'language' => 'required|string|max:2',
+            'language' => 'required|string|validLanguage',
             'photo' => 'mimes:jpg,jpeg,png',
-            'comments' => 'string|max:1000',
         ];
     }
 }

@@ -84,7 +84,7 @@ class DataTableController extends PageController
 
         $operator = ($request->finished) ? '!=' : '=';
         $workOrders = $this->loggedCompany()
-                        ->workOrdersInOrder()->get()
+                        ->workOrders()->seqIdOrdered()->get()
                         ->where('end', $operator, null);
 
         return response()->json(

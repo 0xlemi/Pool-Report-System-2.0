@@ -117,7 +117,7 @@ class ServicesController extends PageController
      */
     public function show($seq_id)
     {
-        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
 
         $this->authorize('view', $service);
 
@@ -137,7 +137,7 @@ class ServicesController extends PageController
      */
     public function edit($seq_id)
     {
-        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
 
         $this->authorize('update', $service);
         $company = $this->loggedCompany();
@@ -158,7 +158,7 @@ class ServicesController extends PageController
      */
     public function update(UpdateServiceRequest $request, $seq_id)
     {
-        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
 
         $this->authorize('update', $service);
 
@@ -187,7 +187,7 @@ class ServicesController extends PageController
      */
     public function destroy($seq_id)
     {
-        $service = $this->loggedCompany()->serviceBySeqId($seq_id);
+        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
 
         $this->authorize('delete', $service);
 

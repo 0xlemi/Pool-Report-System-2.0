@@ -33,7 +33,7 @@ class chemicalController extends PageController
     {
         $this->authorize('list', Chemical::class);
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
 
         $chemicals = $service->chemicals()
                         ->get()
@@ -61,7 +61,7 @@ class chemicalController extends PageController
         $this->authorize('create', Chemical::class);
 
         $admin = $this->loggedUserAdministrator();
-        $service = $admin->serviceBySeqId($serviceSeqId);
+        $service = $admin->services()->bySeqId($serviceSeqId);
 
         $chemicalId = $service->chemicals()->create($request->all())->id;
 

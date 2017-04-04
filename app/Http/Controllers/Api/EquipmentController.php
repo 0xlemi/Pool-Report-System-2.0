@@ -39,7 +39,7 @@ class EquipmentController extends ApiController
         ]);
 
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -68,7 +68,7 @@ class EquipmentController extends ApiController
         }
 
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }

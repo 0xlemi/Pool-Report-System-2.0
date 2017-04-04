@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\WorkOrder\End;
 
 use Carbon\Carbon;
@@ -14,6 +15,7 @@ class WorkOrder extends Model
 {
 
     use ImageTrait;
+    use SortableTrait;
 
     /**
      * variables that can be mass assigned
@@ -27,6 +29,45 @@ class WorkOrder extends Model
         'currency',
         'user_role_company_id',
     ];
+
+
+
+    // ************************
+    //      VALUE OBJECTS
+    // ************************
+
+    /**
+     * Start date in the company timezone
+     * @return Carbon
+     */
+    public function start()
+    {
+        return (new Carbon($this->start, 'UTC'))->setTimezone($this->company->timezone);
+    }
+
+    /**
+     * End date in the admin timezone
+     * @return Carbon
+     */
+    public function end()
+    {
+        return new End($this->end, $this->company->timezone);
+    }
+
+
+    // ************************
+    //        Scopes
+    // ************************
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('work_orders.seq_id', $seqId)->findOrFail();
+    }
+
+
+    // ************************
+    //      Relationships
+    // ************************
 
     /**
      * associated service with this workOrder
@@ -84,27 +125,6 @@ class WorkOrder extends Model
     public function imagesAfterWork()
     {
         return $this->imagesByType(2);
-    }
-
-
-    //******** VALUE OBJECTS ********
-
-    /**
-     * Start date in the company timezone
-     * @return Carbon
-     */
-    public function start()
-    {
-        return (new Carbon($this->start, 'UTC'))->setTimezone($this->company->timezone);
-    }
-
-    /**
-     * End date in the admin timezone
-     * @return Carbon
-     */
-    public function end()
-    {
-        return new End($this->end, $this->company->timezone);
     }
 
 

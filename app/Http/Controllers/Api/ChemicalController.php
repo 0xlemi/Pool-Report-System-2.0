@@ -33,7 +33,7 @@ class ChemicalController extends ApiController
             'limit' => 'integer|between:1,25'
         ]);
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
 
         $limit = ($request->limit)?: 5;
         $chemicals = $service->chemicals()->paginate($limit);
@@ -57,7 +57,7 @@ class ChemicalController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
 
         // validation
         $this->validate($request, [

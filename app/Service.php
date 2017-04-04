@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Intervention;
 
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Traits\Model\SortableTrait;
 use App\Chemical;
 use App\ServiceContract;
 use App\UserRoleCompany;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class Service extends Model
 {
     use ImageTrait;
+    use SortableTrait;
 
     /**
      * variables that can be mass assign
@@ -44,7 +46,20 @@ class Service extends Model
         'admin_id',
     ];
 
-    //******** RELATIONSHIPS ********
+
+    // ******************************
+    //            Scopes
+    // ******************************
+
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('service.seq_id', $seqId)->firstOrFail();
+    }
+
+    // ******************************
+    //         RELATIONSHIPS
+    // ******************************
 
     /**
 	 * Get the associated Company with this service

@@ -15,6 +15,29 @@ class Payment extends Model
         'amount',
     ];
 
+
+    // **************************
+    //      VALUE OBJECTS
+    // **************************
+
+    public function createdAt()
+    {
+        return $this->created_at->setTimezone($this->company->timezone);
+    }
+
+    // ************************
+    //        Scopes
+    // ************************
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('payments.seq_id', $seqId)->findOrFail();
+    }
+
+    // ************************
+    //      Relationships
+    // ************************
+
     public function company()
     {
         return $this->invoice->company();
@@ -23,13 +46,6 @@ class Payment extends Model
     public function invoice()
     {
         return $this->belongsTo('App\Invoice');
-    }
-
-    //******** VALUE OBJECTS ********
-
-    public function createdAt()
-    {
-        return $this->created_at->setTimezone($this->company->timezone);
     }
 
 }

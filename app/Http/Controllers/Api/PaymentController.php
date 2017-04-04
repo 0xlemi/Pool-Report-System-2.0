@@ -32,7 +32,7 @@ class PaymentController extends ApiController
         }
 
         try {
-            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }
@@ -65,7 +65,7 @@ class PaymentController extends ApiController
         }
 
         try {
-            $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }
@@ -94,7 +94,7 @@ class PaymentController extends ApiController
     public function show($seqId)
     {
         try {
-            $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+            $payment = $this->loggedUserAdministrator()->payments()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Payment with that id, does not exist.');
         }
@@ -118,7 +118,7 @@ class PaymentController extends ApiController
     public function destroy($seqId)
     {
         try {
-            $payment = $this->loggedUserAdministrator()->paymentsBySeqId($seqId);
+            $payment = $this->loggedUserAdministrator()->payments()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Payment with that id, does not exist.');
         }

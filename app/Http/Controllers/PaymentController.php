@@ -27,7 +27,7 @@ class PaymentController extends PageController
     {
         $this->authorize('list', Payment::class);
 
-        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+        $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
 
         $payments = $invoice->payments
                         ->transform(function($item) use ($invoice){
@@ -57,7 +57,7 @@ class PaymentController extends PageController
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
         ]);
-        $invoice = $this->loggedUserAdministrator()->invoicesBySeqId($invoiceSeqId);
+        $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
 
         $payment = $invoice->payments()->create($request->all());
 
@@ -79,7 +79,7 @@ class PaymentController extends PageController
      */
     public function show($paymentSeqId)
     {
-        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
+        $payment = $this->loggedUserAdministrator()->payments()->bySeqId($paymentSeqId);
 
         $this->authorize('view', $payment);
 
@@ -97,7 +97,7 @@ class PaymentController extends PageController
      */
     public function destroy($paymentSeqId)
     {
-        $payment = $this->loggedUserAdministrator()->paymentsBySeqId($paymentSeqId);
+        $payment = $this->loggedUserAdministrator()->payments()->bySeqId($paymentSeqId);
 
         $this->authorize('destroy', $payment);
 

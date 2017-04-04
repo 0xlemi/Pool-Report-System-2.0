@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\PRS\Traits\Model\ScopeableTrait;
+use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\Traits\Model\ImageTrait;
 use App\Work;
 use App\Report;
@@ -19,7 +19,7 @@ use App\NotificationSetting;
 class UserRoleCompany extends Model
 {
 
-    use ScopeableTrait;
+    use SortableTrait;
     use ImageTrait;
 
 	/**
@@ -74,6 +74,12 @@ class UserRoleCompany extends Model
     // ******************************
     //            Scopes
     // ******************************
+
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('user_role_company.seq_id', $seqId);
+    }
 
     public function scopeOfRole($query, ...$roles)
     {
@@ -291,40 +297,40 @@ class UserRoleCompany extends Model
 	// {
 	// 	return $this->equipment()->get()->contains('id', $id);
 	// }
-    //
-	// /**
-	//  * set services with an array of seq_ids
-	//  * tested
-	//  * @param array $seq_ids
-	//  */
-	// public function setServices(array $seq_ids)
-	// {
-	//     foreach ($seq_ids as $seq_id) {
-	// 		if($service = $this->admin()->serviceBySeqId($seq_id)){
-	// 			$service_id = $service->id;
-	// 			if(!$this->hasService($seq_id)){
-	// 				$this->services()->attach($service_id);
-	// 			}
-	// 		}
-	//     }
-	// }
-    //
-	// /**
-	//  * remove services with an array of seq_ids
-	//  * tested
-	//  * @param array $seq_ids
-	//  */
-	// public function unsetServices(array $seq_ids)
-	// {
-	//     foreach ($seq_ids as $seq_id) {
-	// 		if($service = $this->admin()->serviceBySeqId($seq_id)){
-	// 			$service_id = $service->id;
-	// 			if($this->hasService($seq_id)){
-	// 				$this->services()->detach($service_id);
-	// 			}
-	// 		}
-	//     }
-	// }
+
+	/**
+	 * set services with an array of seq_ids
+	 * tested
+	 * @param array $seq_ids
+	 */
+	public function setServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			if($service = $this->company->services()->bySeqId($seq_id)){
+				$service_id = $service->id;
+				if(!$this->hasService($seq_id)){
+					$this->services()->attach($service_id);
+				}
+			}
+	    }
+	}
+
+	/**
+	 * remove services with an array of seq_ids
+	 * tested
+	 * @param array $seq_ids
+	 */
+	public function unsetServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			if($service = $this->company->services()->bySeqId($seq_id)){
+				$service_id = $service->id;
+				if($this->hasService($seq_id)){
+					$this->services()->detach($service_id);
+				}
+			}
+	    }
+	}
 
 
 

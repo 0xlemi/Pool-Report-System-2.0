@@ -78,7 +78,7 @@ class ReportsController extends PageController
 
         $admin = $this->loggedUserAdministrator();
 
-        $services = $this->userRoleCompanyHelpers->transformForDropdown($admin->servicesInOrder()->get());
+        $services = $this->userRoleCompanyHelpers->transformForDropdown($admin->services()->seqIdOrdered()->get());
         $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
         $tags = $admin->tags();;
 
@@ -98,7 +98,7 @@ class ReportsController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $completed_at = (new Carbon($request->completed_at, $admin->timezone));
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($request->service);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($request->service);
         $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
 
         $on_time = 'onTime';
@@ -144,7 +144,7 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $report = $this->loggedCompany()->reportsBySeqId($seq_id);
+        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
 
         $this->authorize('view', $report);
         $images = $this->imageTransformer->transformCollection($report->images);
@@ -157,7 +157,7 @@ class ReportsController extends PageController
     //****************************************
     public function emailPreview(Request $request)
     {
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($request->id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($request->id);
 
         $url = $report->getEmailImage();
 
@@ -181,7 +181,7 @@ class ReportsController extends PageController
     public function edit($seq_id)
     {
         $admin = $this->loggedUserAdministrator();
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
 
@@ -199,7 +199,7 @@ class ReportsController extends PageController
 
     public function getPhoto(Request $request, $seq_id)
     {
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
 
         $this->authorize('view', $report);
 
@@ -214,7 +214,7 @@ class ReportsController extends PageController
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
 
         $this->authorize('addPhoto', $report);
 
@@ -225,7 +225,7 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
 
         $this->authorize('removePhoto', $report);
 
@@ -251,7 +251,7 @@ class ReportsController extends PageController
     {
 
         $admin = $this->loggedUserAdministrator();
-        $report = $admin->reportsBySeqId($seq_id);
+        $report = $admin->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
 
@@ -286,7 +286,7 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $report = $this->loggedUserAdministrator()->reportsBySeqId($seq_id);
+        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
 
         $this->authorize('delete', $report);
 

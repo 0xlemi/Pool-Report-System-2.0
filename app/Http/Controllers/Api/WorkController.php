@@ -39,7 +39,7 @@ class WorkController extends ApiController
         ]);
 
         try {
-            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($workOrderSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Work Order with that id, does not exist.');
         }
@@ -79,7 +79,7 @@ class WorkController extends ApiController
         ]);
 
         try {
-            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($workOrderSeqId);
+            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($workOrderSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Work Order with that id, does not exist.');
         }

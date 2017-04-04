@@ -97,7 +97,7 @@ class TodaysRouteController extends PageController
         $admin = $this->loggedUserAdministrator();
 
         $completed_at = Carbon::now($admin->timezone);
-        $service = $admin->serviceBySeqId($request->service_id);
+        $service = $admin->services()->bySeqId($request->service_id);
         $technician = $admin->technicianBySeqId($request->technician_id);
 
         $on_time = 'onTime';

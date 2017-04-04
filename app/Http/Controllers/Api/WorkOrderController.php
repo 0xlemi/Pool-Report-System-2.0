@@ -44,11 +44,11 @@ class WorkOrderController extends ApiController
         $limit = ($request->limit)?: 5;
         $operator = ($request->finished) ? '!=' : '=';
         if($request->has('finished')){
-            $workOrders = $admin->workOrdersInOrder()
+            $workOrders = $admin->workOrders()->seqIdOrdered()
                             ->where('end', $operator, null)
                             ->paginate($limit);
         }else{
-            $workOrders = $admin->workOrdersInOrder()
+            $workOrders = $admin->workOrders()->seqIdOrdered()
                             ->paginate($limit);
         }
 
@@ -86,7 +86,7 @@ class WorkOrderController extends ApiController
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
-        $service = $admin->serviceBySeqId($request->service);
+        $service = $admin->services()->bySeqId($request->service);
         $supervisor = $admin->supervisorBySeqId($request->supervisor);
 
         // ***** Persisting *****
@@ -131,7 +131,7 @@ class WorkOrderController extends ApiController
     public function show($seq_id)
     {
         try{
-            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
@@ -158,7 +158,7 @@ class WorkOrderController extends ApiController
     {
         $admin = $this->loggedUserAdministrator();
         try{
-            $workOrder = $admin->workOrderBySeqId($seq_id);
+            $workOrder = $admin->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
@@ -229,7 +229,7 @@ class WorkOrderController extends ApiController
 
         return $this->respondPersisted(
             'Work Order was updated successfully.',
-            $this->workOrderTransformer->transform($admin->workOrderBySeqId($seq_id))
+            $this->workOrderTransformer->transform($admin->workOrders()->bySeqId($seq_id))
         );
     }
 
@@ -243,7 +243,7 @@ class WorkOrderController extends ApiController
     {
         $admin = $this->loggedUserAdministrator();
         try{
-            $workOrder = $admin->workOrderBySeqId($seq_id);
+            $workOrder = $admin->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
@@ -299,7 +299,7 @@ class WorkOrderController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $workOrder = $this->loggedUserAdministrator()->workOrderBySeqId($seq_id);
+            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }

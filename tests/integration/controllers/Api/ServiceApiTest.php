@@ -152,10 +152,10 @@ class ServiceApiTest extends ApiTester
         $admin = $this->createAdministrator();
 
         $this->createService($admin->id);
-        $service1 = $admin->serviceBySeqId(1);
+        $service1 = $admin->services()->bySeqId(1);
 
         $this->createService($admin->id);
-        $service2 = $admin->serviceBySeqId(2);
+        $service2 = $admin->services()->bySeqId(2);
 
         // When
         // Then
@@ -189,10 +189,10 @@ class ServiceApiTest extends ApiTester
         $admin = $this->createAdministrator();
 
         $this->createService($admin->id);
-        $service1 = $admin->serviceBySeqId(1);
+        $service1 = $admin->services()->bySeqId(1);
 
         $this->createService($admin->id);
-        $service2 = $admin->serviceBySeqId(2);
+        $service2 = $admin->services()->bySeqId(2);
 
         // When
         // Then

@@ -63,7 +63,7 @@ class WorkOrderController extends PageController
 
         $company = $this->loggedCompany();
 
-        $services = $this->serviceHelpers->transformForDropdown($company->servicesInOrder()->get());
+        $services = $this->serviceHelpers->transformForDropdown($company->services()->seqIdOrdered()->get());
         $persons = $this->userRoleCompanyHelpers->transformForDropdown(
                             $company->userRoleCompanies()
                                         ->ofRole('admin', 'sup', 'tech')
@@ -87,7 +87,7 @@ class WorkOrderController extends PageController
         $company = $this->loggedCompany();
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
-        $service = $this->loggedCompany()->serviceBySeqId($request->service);
+        $service = $this->loggedCompany()->services()->bySeqId($request->service);
         $userRoleCompany = $this->loggedCompany()
                                         ->userRoleCompanies()
                                         ->bySeqId($request->person)
@@ -122,7 +122,7 @@ class WorkOrderController extends PageController
     public function show($seq_id)
     {
         $company = $this->loggedCompany();
-        $workOrder = $company->workOrderBySeqId($seq_id);
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('view', $workOrder);
 
@@ -155,7 +155,7 @@ class WorkOrderController extends PageController
             'end' => 'required|date'
         ]);
         $company = $this->loggedCompany();
-        $workOrder = $company->workOrderBySeqId($seq_id);
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('finish', $workOrder);
 
@@ -185,7 +185,7 @@ class WorkOrderController extends PageController
     public function edit($seq_id)
     {
         $company = $this->loggedCompany();
-        $workOrder = $company->workOrderBySeqId($seq_id);
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('update', $workOrder);
 
@@ -215,7 +215,7 @@ class WorkOrderController extends PageController
     public function update(UpdateWorkOrderRequest $request, $seq_id)
     {
         $company = $this->loggedCompany();
-        $workOrder = $company->workOrderBySeqId($seq_id);
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('update', $workOrder);
 
@@ -248,14 +248,14 @@ class WorkOrderController extends PageController
 
     public function getPhotosBefore($seq_id)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('view', $workOrder);
         return $this->getPhoto($workOrder, 'before');
     }
 
     public function getPhotosAfter($seq_id)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('view', $workOrder);
         return $this->getPhoto($workOrder, 'after');
     }
@@ -263,28 +263,28 @@ class WorkOrderController extends PageController
 
     public function addPhotoBefore(Request $request, $seq_id)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('addPhoto', $workOrder);
         return $this->addPhoto($request, $workOrder, 1);
     }
 
     public function addPhotoAfter(Request $request, $seq_id)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('finish', $workOrder);
         return $this->addPhoto($request, $workOrder, 2);
     }
 
     public function removePhotoBefore($seq_id, $order)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('removePhoto', $workOrder);
         return $this->removePhoto($workOrder, $order, 1);
     }
 
     public function removePhotoAfter($seq_id, $order)
     {
-        $workOrder = $this->loggedCompany()->workOrderBySeqId($seq_id);
+        $workOrder = $this->loggedCompany()->workOrders()->bySeqId($seq_id);
         $this->authorize('finish', $workOrder);
         return $this->removePhoto($workOrder, $order, 2);
     }
@@ -298,7 +298,7 @@ class WorkOrderController extends PageController
     public function destroy($seq_id)
     {
         $company = $this->loggedCompany();
-        $workOrder = $company->workOrderBySeqId($seq_id);
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('delete', $workOrder);
 

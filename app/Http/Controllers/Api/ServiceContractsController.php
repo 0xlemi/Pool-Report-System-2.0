@@ -35,7 +35,7 @@ class ServiceContractsController extends ApiController
     public function storeOrUpdate(Request $request, $serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -55,7 +55,7 @@ class ServiceContractsController extends ApiController
     public function show($serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -87,7 +87,7 @@ class ServiceContractsController extends ApiController
     public function destroy($serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->serviceBySeqId($serviceSeqId);
+            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }

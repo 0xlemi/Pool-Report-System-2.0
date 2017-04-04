@@ -97,7 +97,7 @@ class ClientInterfaceController extends PageController
         }
 
         $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrderBySeqId($seq_id);
+        $workOrder = $admin->workOrders()->bySeqId($seq_id);
 
         $this->authorize('view', $workOrder);
 
@@ -145,7 +145,7 @@ class ClientInterfaceController extends PageController
             abort(403, 'Only clients can view this page.');
         }
 
-        $service = $this->loggedUserAdministrator()->serviceBySeqId($seq_id);
+        $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
         $image = $imageTransformer->transform($service->images->first());
         $contract = null;
         if($service->hasServiceContract()){

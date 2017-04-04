@@ -12,8 +12,8 @@ use App\Client;
 use App\User;
 use App\Http\Requests;
 
-use App\Http\Requests\CreateClientRequest;
-use App\Http\Requests\UpdateClientRequest;
+use App\Http\Requests\CreateUserRoleCompanyRequest;
+use App\Http\Requests\UpdateUserRoleCompanyRequest;
 use App\PRS\Transformers\ImageTransformer;
 use App\UserRoleCompany;
 
@@ -60,7 +60,7 @@ class ClientsController extends PageController
     {
         $this->authorize('create', [UserRoleCompany::class, 'client']);
 
-        $services = $this->loggedCompany()->servicesInOrder()->get();
+        $services = $this->loggedCompany()->services()->seqIdOrdered()->get();
 
         return view('clients.create', compact('services'));
     }
@@ -71,18 +71,38 @@ class ClientsController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateClientRequest $request)
+    public function store(CreateUserRoleCompanyRequest $request)
     {
         $this->authorize('create', [UserRoleCompany::class, 'client']);
 
         $company = $this->loggedCompany();
 
-        $user = $client->user()->create([
-            'email' => htmlentities($request->email),
+        $this->validate($request, [
+            'type' => 'required|numeric|between:1,2',
+            'services' => 'array',
+            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
         ]);
 
-        $client = $company->userRoleCompanies()->create(
-                        array_map('htmlentities', $request->except('services'))
+        $user = User::where('email', $request->email)->first();
+        if($user == null){
+            // Create the user
+            $user = User::create(array_map('htmlentities',[
+                'email' => $request->email,
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'language' => $request->language,
+            ]));
+        }
+
+        $client = $user->userRoleCompanies()->create(
+                        array_map('htmlentities', [
+                            'type' => $request->type,
+                            'cellphone' => $request->cellphone,
+                            'address' => $request->address,
+                            'about' => $request->about,
+                            'role_id' => 2,
+                            'company_id' => $company->id,
+                        ])
                     );
 
         $photo = true;
@@ -94,10 +114,6 @@ class ClientsController extends PageController
             $client->setServices($request->services);
         }
         $client->save();
-
-        $user = $client->user()->create([
-            'email' => htmlentities($request->email),
-        ]);
 
         if($client && $photo && $user){
             flash()->success('Created', 'New client successfully created.');
@@ -150,7 +166,7 @@ class ClientsController extends PageController
 
         $this->authorize('update', $client);
 
-        $services = $admin->servicesInOrder()->get();
+        $services = $admin->services()->seqIdOrdered()->get();
 
         return view('clients.edit',compact('client', 'services'));
     }
@@ -162,9 +178,17 @@ class ClientsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateClientRequest $request, $seq_id)
+    public function update(UpdateUserRoleCompanyRequest $request, $seq_id)
     {
-        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        $company = $this->loggedCompany();
+
+        $this->validate($request, [
+            'type' => 'numeric|between:1,2',
+            'services' => 'array',
+            'services.*' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+        ]);
+
+        $client = $company->clientsBySeqId($seq_id);
 
         $this->authorize('update', $client);
 

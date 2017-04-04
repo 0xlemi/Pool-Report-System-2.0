@@ -3,14 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\PRS\Traits\Model\ScopeableTrait;
+use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\Invoice\TypeInvoice;
 use Carbon\Carbon;
 
 class Invoice extends Model
 {
 
-    use ScopeableTrait;
+    use SortableTrait;
 
     /**
      * variables that can be mass assigned
@@ -23,6 +23,19 @@ class Invoice extends Model
         'description',
         'admin_id',
     ];
+
+    // ************************
+    //        Scopes
+    // ************************
+
+    public function scopeBySeqId($query, $seqId)
+    {
+        return $query->where('invoces.seq_id', $seqId)->findOrFail();
+    }
+
+    // *****************************
+    //      Relationships
+    // *****************************
 
     public function company()
     {
