@@ -15,6 +15,7 @@ use App\PRS\Traits\Model\ImageTrait;
 use Hash;
 use App\Notifications\ResetPasswordNotification;
 use App\PRS\Traits\Model\BillableAdministrator;
+use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
 
@@ -32,11 +33,8 @@ class User extends Authenticatable
     protected $fillable = [
         'email',
 		'name',
-		'last name',
-		'cellphone',
-		'address',
+		'last_name',
 		'language',
-		'about',
 
         // 'remember_token',
         // 'api_token',
@@ -75,21 +73,31 @@ class User extends Authenticatable
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+	/**
+	 * Check if between the user's UserRoleCompany if it has one of the roles
+	 * and is associated to the company
+	 * @param  array 	$roles   	strings with the name of the roles
+	 * @param  Company  $company
+	 * @return boolean
+	 */
+	public function hasRolesWithCompany(Company $company, ...$roles)
+	{
+		$urcFromCompany = $this->userRoleCompanies()->where('company_id', $company->id);
+		return ($urcFromCompany->ofRole('client')->count() > 0);
+	}
+
     public function checkPassword($password)
     {
         return (Hash::check($password, $this->password));
     }
 
+
+	// ********** Attributes ************
+
     public function getFullNameAttribute()
     {
         return $this->name.' '.$this->last_name;
-    }
-
-    //******** VALUE OBJECTS ********
-
-    public function getNotificationSettingsAttribute()
-    {
-        return new notificationSettings($this, resolve(UserHelpers::class));
     }
 
 	public function getSelectedUserAttribute()
@@ -103,10 +111,15 @@ class User extends Authenticatable
 	}
 
 
+    //******** VALUE OBJECTS ********
+
+    // public function getNotificationSettingsAttribute()
+    // {
+    //     return new notificationSettings($this, resolve(UserHelpers::class));
+    // }
+
+
     //******** Relationships ********
-
-
-	// basic relationships
 
     public function activationToken()
     {

@@ -34,8 +34,7 @@ class ExistsBasedOnCompany
         {
             try {
                 $company->userRoleCompanies()
-                            ->bySeqId($seq_id)
-                            ->firstOrFail();
+                            ->bySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }

@@ -34,6 +34,10 @@ class UserRoleCompany extends Model
      * @var array
      */
     protected $fillable = [
+        'type',
+        'cellphone',
+        'address',
+        'about',
 		'user_id',
 		'role_id',
 		'company_id',
@@ -65,6 +69,55 @@ class UserRoleCompany extends Model
         return $this->notificationSettings->contains($name);
     }
 
+
+	// ********************************
+    //        Client only Methods
+	// ********************************
+
+
+/**
+	 * Checks if client has service with this $seq_id
+	 * @param  integer  $seq_id
+	 * @return boolean
+	 */
+	public function hasService($seq_id)
+	{
+		return $this->services()->get()->contains('seq_id', $seq_id);
+	}
+
+	/**
+	 * set services with an array of seq_ids
+	 * @param array $seq_ids
+	 */
+	public function setServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			if($service = $this->company->services()->bySeqId($seq_id)){
+				$service_id = $service->id;
+				if(!$this->hasService($seq_id)){
+					$this->services()->attach($service_id);
+				}
+			}
+	    }
+	}
+
+	/**
+	 * remove services with an array of seq_ids
+	 * @param array $seq_ids
+	 */
+	public function unsetServices(array $seq_ids)
+	{
+	    foreach ($seq_ids as $seq_id) {
+			if($service = $this->company->services()->bySeqId($seq_id)){
+				$service_id = $service->id;
+				if($this->hasService($seq_id)){
+					$this->services()->detach($service_id);
+				}
+			}
+	    }
+	}
+
+
 	// ***********************
 	//       Attributes
 	// ***********************
@@ -78,7 +131,7 @@ class UserRoleCompany extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('user_role_company.seq_id', $seqId);
+        return $query->where('user_role_company.seq_id', $seqId)->firstOrFail();
     }
 
     public function scopeOfRole($query, ...$roles)
@@ -272,19 +325,8 @@ class UserRoleCompany extends Model
 	// 	// because the find gives you a collection
 	// 	return Service::whereIn('id', $serviceArray);
     // }
-    //
-	// /**
-	//  * Checks if client has service with this $seq_id
-	//  * tested
-	//  * @param  integer  $seq_id
-	//  * @return boolean
-	//  */
-	// public function hasService($seq_id)
-	// {
-	// 	return $this->services()->get()->contains('seq_id', $seq_id);
-	// }
-    //
-	// public function equipment()
+
+		// public function equipment()
 	// {
 	// 	$equipmentIdArray = $this->services()
 	// 			->join('equipment', 'services.id', '=', 'equipment.service_id')
@@ -297,41 +339,6 @@ class UserRoleCompany extends Model
 	// {
 	// 	return $this->equipment()->get()->contains('id', $id);
 	// }
-
-	/**
-	 * set services with an array of seq_ids
-	 * tested
-	 * @param array $seq_ids
-	 */
-	public function setServices(array $seq_ids)
-	{
-	    foreach ($seq_ids as $seq_id) {
-			if($service = $this->company->services()->bySeqId($seq_id)){
-				$service_id = $service->id;
-				if(!$this->hasService($seq_id)){
-					$this->services()->attach($service_id);
-				}
-			}
-	    }
-	}
-
-	/**
-	 * remove services with an array of seq_ids
-	 * tested
-	 * @param array $seq_ids
-	 */
-	public function unsetServices(array $seq_ids)
-	{
-	    foreach ($seq_ids as $seq_id) {
-			if($service = $this->company->services()->bySeqId($seq_id)){
-				$service_id = $service->id;
-				if($this->hasService($seq_id)){
-					$this->services()->detach($service_id);
-				}
-			}
-	    }
-	}
-
 
 
 }

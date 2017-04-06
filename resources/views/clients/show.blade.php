@@ -76,6 +76,12 @@
 								</div>
 							</div>
 							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">Address</label>
+								<div class="col-sm-10">
+									<input type="text" readonly class="form-control" value="{{ $client->address }}">
+								</div>
+							</div>
+							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
 									{!! $helper->styledTypeClient($client->type, false) !!}
@@ -84,7 +90,6 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Receives email</label>
 								<div class="col-sm-10">
-									{!! $helper->styleEmailPermissions($user) !!}
 								</div>
 							</div>
 							<div class="form-group row">
@@ -98,7 +103,7 @@
 								<div class="col-sm-10">
 									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this client."
-												name="comments" readonly>{{ $client->about }}</textarea>
+												readonly>{{ $client->about }}</textarea>
 								</div>
 							</div>
 						</form>

@@ -84,8 +84,7 @@ class WorkController extends PageController
 
         $workOrder = $company->workOrders()->bySeqId($workOrderSeqId);
         $userRoleCompany = $company->userRoleCompanies()
-                                    ->bySeqId($request->technician)
-                                    ->firstOrFail();
+                                    ->bySeqId($request->technician);
 
         $work = $workOrder->works()->create(array_merge(
                     array_map('htmlentities', $request->all()),
@@ -152,7 +151,6 @@ class WorkController extends PageController
                                         $this->loggedCompany()
                                         ->userRoleCompanies()
                                         ->bySeqId($request->technician)
-                                        ->firstOrFail()
                                     );
         }
 

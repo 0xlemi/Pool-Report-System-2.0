@@ -23,7 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->char('language', 2)->default('en');
-            $table->text('about');
 
             // **************
             //    Billing
@@ -35,7 +34,7 @@ class CreateUsersTable extends Migration
             $table->string('card_last_four')->nullable();
             $table->timestamp('trial_ends_at')->nullable();
 
-            $table->string('api_token', 60)->unique();
+            // $table->string('api_token', 60)->unique();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -32,7 +32,7 @@ class CompaniesSeeder extends Seeder
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
             'verified' => 1,
-			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
+			// 'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
         ]);
 
         $userRoleCompany1 = factory(UserRoleCompany::class)->create([
@@ -55,7 +55,7 @@ class CompaniesSeeder extends Seeder
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
             'verified' => 1,
-			'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
+			// 'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K2',
     	]);
 
         $userRoleCompany2 = factory(UserRoleCompany::class)->create([

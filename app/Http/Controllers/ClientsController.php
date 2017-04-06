@@ -94,6 +94,13 @@ class ClientsController extends PageController
             ]));
         }
 
+
+        // Check that there is no other URC with the same attributes
+        if($user->hasRolesWithCompany($company, 'client')){
+            flash()->overlay('Not Created', 'You already have a client with that email.', 'error');
+            return redirect()->back()->withInput();
+        }
+
         $client = $user->userRoleCompanies()->create(
                         array_map('htmlentities', [
                             'type' => $request->type,
@@ -120,7 +127,7 @@ class ClientsController extends PageController
             return redirect('clients');
         }
         flash()->success('Not created', 'New client was not created, please try again later.');
-        return redirect()->back();
+        return redirect()->back()->withInput();
     }
 
     /**
@@ -133,8 +140,7 @@ class ClientsController extends PageController
     {
         $client = $this->loggedCompany()
                             ->userRoleCompanies()
-                            ->bySeqId($seq_id)
-                            ->firstOrFail();
+                            ->bySeqId($seq_id);
 
         // check that userRoleCompany has role of client
         if(!$client->isRole('client')){
@@ -161,12 +167,12 @@ class ClientsController extends PageController
      */
     public function edit($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $client = $admin->clientsBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $client = $company->userRolecompanies($seq_id);
 
         $this->authorize('update', $client);
 
-        $services = $admin->services()->seqIdOrdered()->get();
+        $services = $company->services()->seqIdOrdered()->get();
 
         return view('clients.edit',compact('client', 'services'));
     }

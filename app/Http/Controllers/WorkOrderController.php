@@ -90,8 +90,7 @@ class WorkOrderController extends PageController
         $service = $this->loggedCompany()->services()->bySeqId($request->service);
         $userRoleCompany = $this->loggedCompany()
                                         ->userRoleCompanies()
-                                        ->bySeqId($request->person)
-                                        ->firstOrFail();
+                                        ->bySeqId($request->person);
 
         $workOrder = $service->workOrders()->create(array_merge(
                             array_map('htmlentities', $request->all()),
@@ -229,8 +228,7 @@ class WorkOrderController extends PageController
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
         $userRoleCompany = $company->userRoleCompanies()
-                                    ->bySeqId($request->person)
-                                    ->firstOrFail();
+                                    ->bySeqId($request->person);
 
         $workOrder->fill(array_merge(
                             array_map('htmlentities', $request->except(['price', 'currency'])),

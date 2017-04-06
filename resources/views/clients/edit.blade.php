@@ -51,39 +51,6 @@
 				              	</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Name:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="name" maxlength="25" value="{{ $client->name }}">
-									@if ($errors->has('name'))
-										<small class="text-muted">{{ $errors->first('name') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('last_name'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Last name:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="last_name" maxlength="40" value="{{ $client->last_name }}">
-									@if ($errors->has('last_name'))
-										<small class="text-muted">{{ $errors->first('last_name') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('email'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Email:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control"
-											name="email" value="{{ $client->user->email }}">
-									@if ($errors->has('email'))
-										<small class="text-muted">{{ $errors->first('email') }}</small>
-									@endif
-								</div>
-							</div>
-
 							<div class="form-group row {{($errors->has('cellphone'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 								<div class="col-sm-10">
@@ -91,6 +58,17 @@
 											name="cellphone" maxlength="20" value="{{ $client->cellphone }}">
 									@if ($errors->has('cellphone'))
 										<small class="text-muted">{{ $errors->first('cellphone') }}</small>
+									@endif
+								</div>
+							</div>
+
+							<div class="form-group row {{($errors->has('address'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Address:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="address" maxlength="50" value="{{ $client->address }}">
+									@if ($errors->has('address'))
+										<small class="text-muted">{{ $errors->first('address') }}</small>
 									@endif
 								</div>
 							</div>
@@ -145,14 +123,14 @@
 								</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Comments:</label>
+							<div class="form-group row {{($errors->has('about'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">About Client:</label>
 								<div class="col-sm-10">
 									<textarea rows="5" class="form-control"
 												placeholder="Any additional info about this client."
-												name="comments">{{ $client->comments }}</textarea>
-									@if ($errors->has('comments'))
-										<small class="text-muted">{{ $errors->first('comments') }}</small>
+												name="about">{{ $client->about }}</textarea>
+									@if ($errors->has('about'))
+										<small class="text-muted">{{ $errors->first('about') }}</small>
 									@endif
 								</div>
 							</div>
