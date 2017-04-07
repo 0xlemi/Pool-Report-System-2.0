@@ -9,6 +9,18 @@ use App\UserRoleCompany;
 class UserRoleCompanyObserver
 {
     /**
+     * Listen to the App\UserRoleCompany deleting event.
+     *
+     * @param  App\UserRoleCompany  $userRoleCompany
+     * @return void
+     */
+    public function deleted(UserRoleCompany $userRoleCompany)
+    {
+        dispatch(new DeleteImagesFromS3($userRoleCompany->images));
+    }
+
+
+    /**
      * Listen to the User created event.
      *
      * @param  User  $userRoleCompany

@@ -237,7 +237,7 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $client = $company->userRoleCompanies()->bySeqId($seq_id);
+        $client = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $client);
 
