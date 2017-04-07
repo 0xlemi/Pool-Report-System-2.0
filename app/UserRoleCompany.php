@@ -82,7 +82,7 @@ class UserRoleCompany extends Model
 	 */
 	public function hasService($seq_id)
 	{
-		return $this->services()->get()->contains('seq_id', $seq_id);
+		return $this->services->contains('seq_id', $seq_id);
 	}
 
 	/**
@@ -117,6 +117,18 @@ class UserRoleCompany extends Model
 	    }
 	}
 
+    /**
+     * Update the services associated with this URC from array of seqIds
+     * @param  array  $seq_id
+     * @return  boolean
+     */
+    public function syncServices(array $seq_id)
+    {
+        $services = $this->company->services()->whereIn('services.seq_id', $seq_id)->get();
+        $serviceIds = $services->pluck('id');
+        return $this->services()->sync($serviceIds);
+    }
+
 
 	// ***********************
 	//       Attributes
@@ -138,7 +150,8 @@ class UserRoleCompany extends Model
     {
         return $query->join('roles', function ($join) use ($roles){
                     $join->on('role_id', '=', 'roles.id')
-                            ->whereIn('roles.name', $roles);
+                            ->whereIn('roles.name', $roles)
+                            ->select('user_role_company.*');
                 });
     }
 

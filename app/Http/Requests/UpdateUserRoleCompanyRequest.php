@@ -27,7 +27,6 @@ class UpdateUserRoleCompanyRequest extends FormRequest
             'name' => 'string|max:25',
             'last_name' => 'string|max:40',
             'email' => 'email',
-            'type' => 'integer|between:1,3',
             'cellphone' => 'string|max:20',
             'address' => 'string|max:50',
             'language' => 'string|validLanguage',

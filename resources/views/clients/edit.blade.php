@@ -90,23 +90,6 @@
 								</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('language'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Language:</label>
-								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow" name="language">
-										<option value="en" {{ ($client->language == 'en') ? 'selected':'' }}>
-											English
-										</option>
-										<option value="es" {{ ($client->language == 'es') ? 'selected':'' }}>
-											Español
-										</option>
-									</select>
-									@if ($errors->has('language'))
-										<small class="text-muted">{{ $errors->first('language') }}</small>
-									@endif
-								</div>
-							</div>
-
 							<div class="form-group row {{($errors->has('services'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Services:</label>
 								<div class="col-sm-10">

@@ -34,6 +34,27 @@
 							<br>
 							@endif
 
+							@if(!$client->accepted)
+							<br>
+							<div class="form-group row">
+								<div class="col-sm-10 col-sm-offset-2">
+									<h3 style="display: inline;"><span class="label label-warning">Unaccepted Client</span></h3>
+									<small class="text-muted"><strong>This Client has't accepted been part of your organization.</strong>
+										<br>
+										<br><strong>Dont worry you can still store it here, but some of the features are going to be disabled.</strong>
+										<br>Features that require acceptance:
+										<ul>
+											<li>* Accepting Payments</li>
+											<li>* Sending Notifications</li>
+											<li>* Sending Generating Invoices</li>
+										</ul>
+									</small>
+									<br>
+								</div>
+							</div>
+							<br>
+							@endif
+
 							@if($image)
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Client photo</label>

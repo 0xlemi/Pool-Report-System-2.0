@@ -117,7 +117,7 @@ class ClientsController extends PageController
             $photo = $client->addImageFromForm($request->file('photo'));
         }
 
-        if($request->services){
+        if($request->has('services')){
             $client->setServices($request->services);
         }
         $client->save();
@@ -138,16 +138,14 @@ class ClientsController extends PageController
      */
     public function show($seq_id)
     {
-        $client = $this->loggedCompany()
-                            ->userRoleCompanies()
-                            ->bySeqId($seq_id);
+        $client = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
+
+        $this->authorize('view', $client);
 
         // check that userRoleCompany has role of client
         if(!$client->isRole('client')){
             abort(404, 'There is no client with that id');
         }
-
-        $this->authorize('view', $client);
 
         $user = $client->user;
         $services = $client->services;
@@ -168,9 +166,14 @@ class ClientsController extends PageController
     public function edit($seq_id)
     {
         $company = $this->loggedCompany();
-        $client = $company->userRolecompanies($seq_id);
+        $client = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $client);
+
+        // check that userRoleCompany has role of client
+        if(!$client->isRole('client')){
+            abort(404, 'There is no client with that id');
+        }
 
         $services = $company->services()->seqIdOrdered()->get();
 
@@ -194,15 +197,27 @@ class ClientsController extends PageController
             'services.*' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
         ]);
 
-        $client = $company->clientsBySeqId($seq_id);
+        $client = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $client);
 
-        $user  = $client->user;
-        $user->email = htmlentities($request->email);
+        // check that userRoleCompany has role of client
+        if(!$client->isRole('client')){
+            abort(404, 'There is no client with that id');
+        }
 
-        $client->fill(array_map('htmlentities', $request->except(['admin_id', 'services'])));
-        $client->setServices($request->services);
+        $client->update([
+            'type' => $request->type,
+            'cellphone' => $request->cellphone,
+            'address' => $request->address,
+            'about' => $request->about,
+        ]);
+
+        if($request->has('services')){
+            $client->syncServices($request->services);
+        }else{
+            $client->syncServices([]);
+        }
 
         $photo = false;
         if($request->photo){
@@ -210,16 +225,8 @@ class ClientsController extends PageController
             $photo = $client->addImageFromForm($request->file('photo'));
         }
 
-        $userSaved = $user->save();
-        $clientSaved = $client->save();
-
-        if(!$userSaved && !$clientSaved && !$photo){
-            flash()->overlay("You did not change anything", 'You did not make changes in client information.', 'info');
-            return redirect()->back();
-        }
         flash()->success('Updated', 'Client successfully updated.');
         return redirect('clients/'.$seq_id);
-
     }
 
     /**
@@ -230,9 +237,14 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $client = $this->loggedUserAdministrator()->clientsBySeqId($seq_id);
+        $client = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $client);
+
+        // check that userRoleCompany has role of client
+        if(!$client->isRole('client')){
+            abort(404, 'There is no client with that id');
+        }
 
         if($client->delete()){
             flash()->success('Deleted', 'The client successfully deleted.');
