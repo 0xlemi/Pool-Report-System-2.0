@@ -16,7 +16,10 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            // Company information
+
+            // ***********************
+            //   Company information
+            // ***********************
                 $table->string('name');
                 $table->string('timezone');
                 $table->char('language', 2)->default('en');
@@ -25,6 +28,17 @@ class CreateCompaniesTable extends Migration
                 $table->string('twitter')->nullable();
                 $table->decimal('latitude', 9, 6)->nullable();
                 $table->decimal('longitude', 9, 6)->nullable();
+
+            // **************
+            //    Billing
+            // **************
+                $table->integer('free_objects')->default(3);
+                // Stripe
+                $table->string('stripe_id')->nullable();
+                $table->string('card_brand')->nullable();
+                $table->string('card_last_four')->nullable();
+                $table->timestamp('trial_ends_at')->nullable();
+
             // System Values
                 // ph
                 $table->string('ph_very_low')->default('Very Low'); // 1

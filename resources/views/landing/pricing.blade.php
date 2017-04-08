@@ -25,7 +25,7 @@
                                 <form>
                                     <div class="switch">
                                         <p class="package-title">Need More Than 2 Users ?</p>
-                                        <input id="package1" class="package-toggle toggle-round-flat" type="checkbox" data-price="13">
+                                        <input id="package1" class="package-toggle toggle-round-flat" type="checkbox" data-price="5">
                                         <label for="package1"></label>
                                     </div>
                                 </form>

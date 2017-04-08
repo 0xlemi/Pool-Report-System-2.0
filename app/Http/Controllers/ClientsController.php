@@ -94,7 +94,6 @@ class ClientsController extends PageController
             ]));
         }
 
-
         // Check that there is no other URC with the same attributes
         if($user->hasRolesWithCompany($company, 'client')){
             flash()->overlay('Not Created', 'You already have a client with that email.', 'error');
@@ -237,14 +236,11 @@ class ClientsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $client = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
+        $client = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $client);
 
-        // check that userRoleCompany has role of client
-        if(!$client->isRole('client')){
-            abort(404, 'There is no client with that id');
-        }
+
 
         if($client->delete()){
             flash()->success('Deleted', 'The client successfully deleted.');

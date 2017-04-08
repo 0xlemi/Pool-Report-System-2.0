@@ -8,6 +8,18 @@ use App\UserRoleCompany;
 
 class UserRoleCompanyObserver
 {
+
+    /**
+     * Listen to the User created event.
+     *
+     * @param  User  $userRoleCompany
+     * @return void
+     */
+    public function created(UserRoleCompany $userRoleCompany)
+    {
+        $this->setNotificationsSettings($userRoleCompany);
+    }
+
     /**
      * Listen to the App\UserRoleCompany deleting event.
      *
@@ -20,13 +32,7 @@ class UserRoleCompanyObserver
     }
 
 
-    /**
-     * Listen to the User created event.
-     *
-     * @param  User  $userRoleCompany
-     * @return void
-     */
-    public function created(UserRoleCompany $userRoleCompany)
+    protected function setNotificationsSettings(UserRoleCompany $userRoleCompany)
     {
         if($userRoleCompany->isRole('admin')){
             DB::table('urc_notify_setting')->insert([
@@ -105,6 +111,5 @@ class UserRoleCompanyObserver
                 [ 'notify_setting_id' => 15, 'urc' => $userRoleCompany ],// Email when Service is Created
             ]);
         }
-
     }
 }

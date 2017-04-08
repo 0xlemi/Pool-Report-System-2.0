@@ -14,7 +14,6 @@ use App\PRS\Traits\Model\ImageTrait;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
-use App\PRS\Traits\Model\BillableAdministrator;
 use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
@@ -23,7 +22,6 @@ class User extends Authenticatable
 {
 	use ImageTrait;
     use Notifiable;
-    use BillableAdministrator;
 
     /**
      * The attributes that are mass assignable.
@@ -48,12 +46,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'api_token',
-        'free_objects',
-        'stripe_id',
-        'card_brand',
-        'card_last_four',
-        'trial_ends_at'
+        // 'api_token',
+
     ];
 
     protected $appends = [

@@ -10,8 +10,8 @@ use JavaScript;
 use App\Supervisor;
 use App\User;
 
-use App\Http\Requests\CreateSupervisorRequest;
-use App\Http\Requests\UpdateSupervisorRequest;
+use App\Http\Requests\CreateUserRoleCompanyRequest;
+use App\Http\Requests\UpdateUserRoleCompanyRequest;
 use App\Http\Requests;
 use App\Http\Controllers\PageController;
 use App\PRS\Transformers\ImageTransformer;
@@ -59,7 +59,7 @@ class SupervisorsController extends PageController
      */
     public function create()
     {
-        $this->authorize('create', Supervisor::class);
+        $this->authorize('create', [UserRoleCompany::class, 'sup']);
 
         return view('supervisors.create');
     }
@@ -70,31 +70,53 @@ class SupervisorsController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateSupervisorRequest $request)
+    public function store(CreateUserRoleCompanyRequest $request)
     {
-        $this->authorize('create', Supervisor::class);
+        $this->authorize('create', [UserRoleCompany::class, 'sup']);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
         // check if the you can add new users
-        if(!$admin->canAddObject()){
+        if(!$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
             return redirect()->back()->withInput();
         }
 
-        $supervisor = $admin->supervisors()->create(array_map('htmlentities', $request->all()));
 
-        $user = $supervisor->user()->create([
-            'email' => htmlentities($request->email),
+        $user = User::where('email', $request->email)->first();
+        if($user == null){
+            // Create the user
+            $user = User::create(array_map('htmlentities',[
+                'email' => $request->email,
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'language' => $request->language,
+            ]));
+        }
 
-        ]);
+        // Check that there is no other URC with the same attributes
+        // Not need to worry about creating a only a user because if the user was
+        // null this check is never gonig to be true.
+        if($user->hasRolesWithCompany($company, 'sup', 'tech', 'admin')){
+            flash()->overlay('Not Created', 'You already have a supervisor, technician or administrator with that email for this company.', 'error');
+            return redirect()->back()->withInput();
+        }
+
+        $supervisor = $company->userRoleCompanies()->create(array_map('htmlentities', [
+                'cellphone' => $request->cellphone,
+                'address' => $request->address,
+                'about' => $request->about,
+                'role_id' => 3, // supervisor
+                'company_id' => $company->id,
+        ]));
 
         $photo = true;
         if($request->photo){
             $photo = $supervisor->addImageFromForm($request->file('photo'));
         }
+
         if($user && $supervisor && $photo){
             flash()->success('Created', 'New supervisor successfully created.');
             return redirect('supervisors');
@@ -111,7 +133,7 @@ class SupervisorsController extends PageController
      */
     public function show($seq_id)
     {
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+        $supervisor = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('view', $supervisor);
         $image = null;
@@ -130,7 +152,7 @@ class SupervisorsController extends PageController
      */
     public function edit($seq_id)
     {
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+        $supervisor = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $supervisor);
 
@@ -144,10 +166,10 @@ class SupervisorsController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSupervisorRequest $request, $seq_id)
+    public function update(UpdateUserRoleCompanyRequest $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $supervisor = $admin->supervisorBySeqId($seq_id);
+        $company = $this->loggedUserAdministrator();
+        $supervisor = $company->supervisorBySeqId($seq_id);
 
         $this->authorize('update', $supervisor);
 
@@ -156,9 +178,9 @@ class SupervisorsController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->selectedUser->paid)) && !$admin->canAddObject()){
+        if( ($status && ($status != $user->selectedUser->paid)) && !$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
             return redirect()->back();
         }

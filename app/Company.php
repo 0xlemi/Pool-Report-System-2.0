@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Traits\Model\BillableTrait;
 
 use App\PRS\ValueObjects\Administrator\Tags;
 use App\PRS\ValueObjects\Administrator\Permissions;
@@ -28,6 +29,7 @@ class Company extends Model
 {
 
     use ImageTrait;
+    use BillableTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -41,6 +43,20 @@ class Company extends Model
         'twitter',
         'timezone',
         'language',
+    ];
+
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'free_objects',
+        'stripe_id',
+        'card_brand',
+        'card_last_four',
+        'trial_ends_at'
     ];
 
 

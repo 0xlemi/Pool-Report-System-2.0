@@ -54,6 +54,7 @@
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
 										name="name" maxlength="25" value="{{ old('name') }}">
+								<small class="text-muted">This value is only used if supervisor don't have a account already.</small>
 								@if ($errors->has('name'))
 									<small class="text-muted">{{ $errors->first('name') }}</small>
 								@endif
@@ -65,6 +66,7 @@
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
 										name="last_name" maxlength="40" value="{{ old('last_name') }}">
+								<small class="text-muted">This value is only used if supervisor don't have a account already.</small>
 								@if ($errors->has('last_name'))
 									<small class="text-muted">{{ $errors->first('last_name') }}</small>
 								@endif
@@ -115,20 +117,21 @@
 										Español
 									</option>
 								</select>
+								<small class="text-muted">This value is only used if supervisor don't have a account already.</small>
 								@if ($errors->has('language'))
 									<small class="text-muted">{{ $errors->first('language') }}</small>
 								@endif
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Comments:</label>
+						<div class="form-group row {{($errors->has('about'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">About Supervisor:</label>
 							<div class="col-sm-10">
 								<textarea rows="5" class="form-control"
 											placeholder="Any additional info about this supervisor."
-											name="comments">{{ old('comments') }}</textarea>
-								@if ($errors->has('comments'))
-									<small class="text-muted">{{ $errors->first('comments') }}</small>
+											name="about">{{ old('about') }}</textarea>
+								@if ($errors->has('about'))
+									<small class="text-muted">{{ $errors->first('about') }}</small>
 								@endif
 							</div>
 						</div>
