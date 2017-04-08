@@ -71,14 +71,16 @@ class User extends Authenticatable
 	/**
 	 * Check if between the user's UserRoleCompany if it has one of the roles
 	 * and is associated to the company
-	 * @param  array 	$roles   	strings with the name of the roles
 	 * @param  Company  $company
+	 * @param  array 	$roles   	strings with the name of the roles
 	 * @return boolean
 	 */
+
 	public function hasRolesWithCompany(Company $company, ...$roles)
 	{
 		$urcFromCompany = $this->userRoleCompanies()->where('company_id', $company->id);
-		return ($urcFromCompany->ofRole('client')->count() > 0);
+		// not working
+		return ($urcFromCompany->ofRole(...$roles)->count() > 0);
 	}
 
     public function checkPassword($password)

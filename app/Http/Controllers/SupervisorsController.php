@@ -104,7 +104,7 @@ class SupervisorsController extends PageController
             return redirect()->back()->withInput();
         }
 
-        $supervisor = $company->userRoleCompanies()->create(array_map('htmlentities', [
+        $supervisor = $user->userRoleCompanies()->create(array_map('htmlentities', [
                 'cellphone' => $request->cellphone,
                 'address' => $request->address,
                 'about' => $request->about,
