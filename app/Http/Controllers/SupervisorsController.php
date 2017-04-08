@@ -136,12 +136,19 @@ class SupervisorsController extends PageController
         $supervisor = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('view', $supervisor);
+
+        // check that userRoleCompany has role of supervisor
+        if(!$supervisor->isRole('sup')){
+            abort(404, 'There is no supervisor with that id');
+        }
+
+        $user = $supervisor->user;
         $image = null;
         if($supervisor->images->count() > 0){
             $image = $this->imageTransformer->transform($supervisor->images->first());
         }
 
-        return view('supervisors.show', compact('supervisor', 'image'));
+        return view('supervisors.show', compact('supervisor', 'user', 'image'));
     }
 
     /**
@@ -156,6 +163,11 @@ class SupervisorsController extends PageController
 
         $this->authorize('update', $supervisor);
 
+        // check that userRoleCompany has role of supervisor
+        if(!$supervisor->isRole('sup')){
+            abort(404, 'There is no supervisor with that id');
+        }
+
         return view('supervisors.edit', compact('supervisor'));
     }
 
@@ -168,24 +180,34 @@ class SupervisorsController extends PageController
      */
     public function update(UpdateUserRoleCompanyRequest $request, $seq_id)
     {
-        $company = $this->loggedUserAdministrator();
-        $supervisor = $company->supervisorBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $supervisor = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $supervisor);
 
-        $user = $supervisor->user;
-        $status = ($request->status)? 1:0;
+        // check that userRoleCompany has role of supervisor
+        if(!$supervisor->isRole('sup')){
+            abort(404, 'There is no supervisor with that id');
+        }
+
+        $status = ($request->paid)? 1:0;
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->selectedUser->paid)) && !$company->canAddObject()){
+        if( ($status && ($status != $supervisor->user->selectedUser->paid)) && !$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
                     "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
-        $supervisor->fill(array_map('htmlentities', $request->all()));
+        $supervisor->fill(array_map('htmlentities', [
+            'cellphone' => $request->cellphone,
+            'address' => $request->address,
+            'about' => $request->about,
+        ]));
+        $supervisor->paid = $status;
+        $supervisorSaved = $supervisor->save();
 
         $photo = false;
         if($request->photo){
@@ -193,16 +215,6 @@ class SupervisorsController extends PageController
             $photo = $supervisor->addImageFromForm($request->file('photo'));
         }
 
-        $user->email = htmlentities($request->email);
-        // $user->active = $status;
-
-        $userSaved = $user->save();
-        $supervisorSaved = $supervisor->save();
-
-        if(!$userSaved && !$supervisorSaved && !$photo){
-            flash()->overlay("You did not change anything", 'You did not make changes in supervisor information.', 'info');
-            return redirect()->back();
-        }
         flash()->success('Updated', 'Supervisor successfully updated.');
         return redirect('supervisors/'.$seq_id);
     }
@@ -215,9 +227,14 @@ class SupervisorsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $supervisor = $this->loggedUserAdministrator()->supervisorBySeqId($seq_id);
+        $supervisor = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $supervisor);
+
+        // check that userRoleCompany has role of supervisor
+        if(!$supervisor->isRole('sup')){
+            abort(404, 'There is no supervisor with that id');
+        }
 
         if($supervisor->delete()){
             flash()->success('Deleted', 'The supervisor successfully deleted.');

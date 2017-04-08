@@ -52,39 +52,6 @@
 				              	</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Name:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="name" maxlength="25" value="{{ $supervisor->name }}">
-									@if ($errors->has('name'))
-										<small class="text-muted">{{ $errors->first('name') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('last_name'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Last name:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control maxlength-simple"
-											name="last_name" maxlength="40" value="{{ $supervisor->last_name }}">
-									@if ($errors->has('last_name'))
-										<small class="text-muted">{{ $errors->first('last_name') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('email'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Email:</label>
-								<div class="col-sm-10">
-									<input type="text" class="form-control"
-											name="email" value="{{ $supervisor->user->email }}">
-									@if ($errors->has('email'))
-										<small class="text-muted">{{ $errors->first('email') }}</small>
-									@endif
-								</div>
-							</div>
-
 							<div class="form-group row {{($errors->has('cellphone'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 								<div class="col-sm-10">
@@ -113,36 +80,19 @@
 								<input type="checkbox" data-toggle="toggle"
 										data-on="Active" data-off="Not Active"
 										data-onstyle="success" data-offstyle="danger"
-										data-size="small" name="status" {{ ($supervisor->user->active) ? 'checked':'' }}>
+										data-size="small" name="paid" {{ ($supervisor->paid) ? 'checked':'' }}>
 								<small class="text-muted">You are only charged for active supervisors.</small>
 								</div>
 							</div>
 
-							<div class="form-group row {{($errors->has('language'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Language:</label>
-								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow" name="language">
-										<option value="en" {{ ($supervisor->language == 'en') ? 'selected':'' }}>
-											English
-										</option>
-										<option value="es" {{ ($supervisor->language == 'es') ? 'selected':'' }}>
-											Español
-										</option>
-									</select>
-									@if ($errors->has('language'))
-										<small class="text-muted">{{ $errors->first('language') }}</small>
-									@endif
-								</div>
-							</div>
-
-							<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">Comments:</label>
+							<div class="form-group row {{($errors->has('about'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">About Supervisor:</label>
 								<div class="col-sm-10">
 									<textarea rows="5" class="form-control"
 												placeholder="Any additional info about this supervisor."
-												name="comments">{{ $supervisor->comments }}</textarea>
-									@if ($errors->has('comments'))
-										<small class="text-muted">{{ $errors->first('comments') }}</small>
+												name="about">{{ $supervisor->about }}</textarea>
+									@if ($errors->has('about'))
+										<small class="text-muted">{{ $errors->first('about') }}</small>
 									@endif
 								</div>
 							</div>

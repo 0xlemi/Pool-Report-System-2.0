@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@inject('helper', 'App\PRS\Helpers\SupervisorHelpers')
+@inject('helper', 'App\PRS\Helpers\UserRoleCompanyHelpers')
 @section('content')
 <header class="section-header">
 	<div class="tbl">
@@ -48,7 +48,7 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Status:</label>
 							<div class="col-sm-10">
-								{!! $helper->styleStatus($supervisor->user->active) !!}
+								{!! $helper->styleStatus($supervisor->paid) !!}
 							</div>
 						</div>
 
@@ -62,21 +62,21 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Name</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $supervisor->name }}">
+								<input type="text" readonly class="form-control" value="{{ $user->name }}">
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Last Name</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $supervisor->last_name }}">
+								<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Email</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $supervisor->user->email }}">
+								<input type="text" readonly class="form-control" value="{{ $user->email }}">
 							</div>
 						</div>
 
@@ -97,14 +97,13 @@
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Receives email</label>
 							<div class="col-sm-10">
-								{!! $helper->styleEmailPermissions($supervisor->user) !!}
 							</div>
 						</div>
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Language</label>
 							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ languageCode_to_text($supervisor->language) }}">
+								<input type="text" readonly class="form-control" value="{{ languageCode_to_text($user->language) }}">
 							</div>
 						</div>
 
@@ -113,7 +112,7 @@
 							<div class="col-sm-10">
 								<textarea rows="4" class="form-control"
 											placeholder="Any additional info about this supervisor."
-											name="comments" readonly>{{ $supervisor->comments }}</textarea>
+											name="about" readonly>{{ $supervisor->about }}</textarea>
 							</div>
 						</div>
 					</form>
