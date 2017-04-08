@@ -7,22 +7,21 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Administrator;
 
 class UpdateSubscriptionQuantity implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $admin;
+    protected $company;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Administrator $admin)
+    public function __construct(Company $company)
     {
-        $this->admin = $admin;
+        $this->company = $company;
     }
 
     /**
@@ -32,8 +31,8 @@ class UpdateSubscriptionQuantity implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->admin->subscribed('main')) {
-            $this->admin->subscription('main')->updateQuantity($this->admin->billableObjects());
+        if ($this->company->subscribed('main')) {
+            $this->company->subscription('main')->updateQuantity($this->company->billableObjects());
         }
     }
 }

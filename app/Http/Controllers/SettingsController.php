@@ -16,8 +16,8 @@ use DateTime;
 use Auth;
 
 use App\User;
-use App\Administrator;
 use App\Setting;
+use App\Company;
 
 use App\Http\Requests;
 
@@ -39,16 +39,17 @@ class SettingsController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = $this->getUser();
-        $admin = $user->admin();
+        $user = $request->user();
+        $userRoleCompany = $user->selectedUser;
+        $company = $this->loggedCompany();
 
         $profile = null;
         if ($user->can('profile', Setting::class)) {
             $profile = (object)[
-                'name' => $user->userable()->name,
-                'lastName' => ($user->isAdministrator()) ? null : $user->userable()->last_name,
+                'name' => $user->name,
+                'lastName' => $user->last_name,
                 'email' => $user->email,
                 'deleteIcon' => \Storage::url('images/assets/app/exclamation-mark.png'),
             ];
@@ -57,11 +58,11 @@ class SettingsController extends PageController
         $customization = null;
         if ($user->can('customization', Setting::class)) {
             $customization = (object)[
-                'companyName' => $admin->company_name,
-                'timezone' => $admin->timezone,
-                'website' => $admin->website,
-                'facebook' => $admin->facebook,
-                'twitter' => $admin->twitter,
+                'companyName' => $company->name,
+                'timezone' => $company->timezone,
+                'website' => $company->website,
+                'facebook' => $company->facebook,
+                'twitter' => $company->twitter,
                 'timezoneList' => timezoneList(),
             ];
         }
@@ -69,27 +70,27 @@ class SettingsController extends PageController
         $notifications = null;
         if ($user->can('notifications', Setting::class)) {
             $notifications = (object)[
-                'settings' => $user->notificationSettings->getAll()
+                // 'settings' => $user->notificationSettings->getAll()
             ];
         }
 
         $billing = null;
         if ($user->can('billing', Setting::class)) {
             $billing = (object)[
-                'subscribed' => $admin->subscribed('main'),
-                'lastFour' => $admin->card_last_four,
-                'plan' => ($admin->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
-                'activeObjects' => $admin->objectActiveCount(),
-                'billableObjects' => $admin->billableObjects(),
-                'freeObjects' => $admin->free_objects,
+                'subscribed' => $company->subscribed('main'),
+                'lastFour' => $company->card_last_four,
+                'plan' => ($company->subscribedToPlan('pro', 'main')) ? 'pro' : 'free',
+                'activeObjects' => $company->objectActiveCount(),
+                'billableObjects' => $company->billableObjects(),
+                'freeObjects' => $company->free_objects,
             ];
         }
 
         $permissions = null;
         if ($user->can('permissions', Setting::class)) {
             $permissions = (object)[
-                'supervisor' => $admin->permissions()->permissionsDivided('sup'),
-                'technician' => $admin->permissions()->permissionsDivided('tech'),
+                // 'supervisor' => $admin->permissions()->permissionsDivided('sup'),
+                // 'technician' => $admin->permissions()->permissionsDivided('tech'),
             ];
         }
 
@@ -276,21 +277,25 @@ class SettingsController extends PageController
         return $this->respondNotFound('There is no permission with that id');
     }
 
+    // *******************
+    //     BIllable
+    // *******************
+
     public function subscribe(Request $request)
     {
         $this->authorize('billing', Setting::class);
 
-        $admin = $request->user()->userable();
+        $company = $this->loggedCompany();
 
         // Admin is upgrading the credit card.
-        if ($admin->subscribed('main')) {
-            return $this->updateCreditCard($admin, $request->stripeToken);
+        if ($company->subscribed('main')) {
+            return $this->updateCreditCard($company, $request->stripeToken);
         }
 
         // Admin is subscribing for the first time
-        $result = $admin->newSubscription('main', 'pro')
+        $result = $company->newSubscription('main', 'pro')
                     ->create($request->stripeToken)
-                    ->updateQuantity($admin->billableObjects());
+                    ->updateQuantity($company->billableObjects());
         if($result){
             flash()->overlay('Upgraded to Pro',
                     'You are now free to add as much technicians and supervisors as you need.',
@@ -303,11 +308,11 @@ class SettingsController extends PageController
             return redirect()->back();
     }
 
-    private function updateCreditCard(Administrator $admin, string $stripeToken)
+    private function updateCreditCard(Company $company, string $stripeToken)
     {
-        $admin->updateCard($stripeToken);
-        $result = $admin->subscription('main')
-                    ->updateQuantity($admin->billableObjects());
+        $company->updateCard($stripeToken);
+        $result = $company->subscription('main')
+                    ->updateQuantity($company->billableObjects());
 
         if($result){
             flash()->overlay('Credit Card Changed', 'Your credit card was updated successfully.', 'success');
@@ -323,13 +328,13 @@ class SettingsController extends PageController
     {
         $this->authorize('billing', Setting::class);
 
-        $admin = $request->user()->userable();
+        $company = $this->loggedCompany();
 
-        if($admin->subscribedToPlan('free', 'main')) {
-            return $admin->subscription('main')
+        if($company->subscribedToPlan('free', 'main')) {
+            return $company->subscription('main')
                             ->swap('pro')
-                            ->updateQuantity($admin->billableObjects());
-        }elseif($admin->subscribedToPlan('pro', 'main')){
+                            ->updateQuantity($company->billableObjects());
+        }elseif($company->subscribedToPlan('pro', 'main')){
             return response()->json(['error' => 'You cannot upgrade if you are on pro subscription.'], 422);
         }
 
@@ -339,17 +344,16 @@ class SettingsController extends PageController
     {
         $this->authorize('billing', Setting::class);
 
-        $admin = $request->user()->userable();
+        $company = $this->loggedCompany();
 
-        if ($admin->subscribedToPlan('pro', 'main')) {
-            $result = $admin->subscription('main')->swap('free');
+        if ($company->subscribedToPlan('pro', 'main')) {
+            $result = $company->subscription('main')->swap('free');
             if($result){
-                return (string) $admin->setBillibleUsersAsInactive();
+                return (string) $company->setBillibleUsersAsInactive();
             }
-        }elseif($admin->subscribedToPlan('free', 'main')){
+        }elseif($company->subscribedToPlan('free', 'main')){
             return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
         }
-        // return response()->json(['error' => 'You cannot downgrade if you are on free subscription.'], 422);
     }
 
 }

@@ -41,7 +41,6 @@ class UserRoleCompany extends Model
 		'user_id',
 		'role_id',
 		'company_id',
-		'active'
 	];
 
     public function isRole(...$roles)

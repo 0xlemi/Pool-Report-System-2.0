@@ -269,7 +269,7 @@ class Company extends Model
     }
 
     // ******************************
-    //******** RELATIONSHIPS ********
+    //        RELATIONSHIPS 
     // ******************************
 
     /**

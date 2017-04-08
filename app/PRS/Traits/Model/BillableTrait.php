@@ -5,8 +5,6 @@ namespace App\PRS\Traits\Model;
 use Illuminate\Database\Eloquent\Collection;
 use Laravel\Cashier\Billable;
 
-use App\Administrator;
-
 trait BillableTrait{
 
     use Billable;
@@ -16,10 +14,13 @@ trait BillableTrait{
      */
     public function setBillibleUsersAsInactive()
     {
-        $userRoleCompanies = $this->userRoleCompanies()->ofRole('sup', 'tech')->get();
+        $userRoleCompanies = $this->userRoleCompanies()->get();
         foreach ($userRoleCompanies as $userRoleCompany) {
-            $userRoleCompany->paid = 0;
-            $userRoleCompany->save();
+            if($userRoleCompany->isRole('sup', 'tech'))
+            {
+                $userRoleCompany->paid = false;
+                $userRoleCompany->save();
+            }
         }
     }
 
