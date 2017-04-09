@@ -9,7 +9,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3><strong>Pool Report System Terms of Service and Privacy Policy</strong></h3>
+
+                        <h3><strong>Terms of Service</strong></h3>
                         <br>
                             <h5>1. Terms</h5>
 
@@ -78,6 +79,19 @@
                               </ul>
 
                               <p>We are committed to conducting our business in accordance with these principles in order to ensure that the confidentiality of personal information is protected and maintained. Pool Report System may change this privacy policy from time to time at Pool Report System's sole discretion.</p>
+
+                            <br>
+                            <h3><strong>Refund Policy</strong></h3>
+                            <br>
+
+                            <p><strong>No refunds.</strong> You may cancel your Pool Reports System account at any time but you won't be issued a refund unless it's legally required</p>
+                            <br>
+                            <h5>For regions that require refunds</h5>
+                            <br>
+                            <p>
+                                If you live in a region where we're legally required to issue a refund on early cancellation, you may be eligible for a refund. For example, if you live in the European Union, you can cancel your subscription within 14 days of upgrading or opening a paid account, and you'll get a refund for the amount you paid us. We'll issue refunds as appropriate and applicable.
+                            </p>
+                            <p>In these specific cases, we can only help with refunds if you send us a email at <strong>support@poolreportsystem.com</strong></p>
                     </div>
                 </div>
             </div>
