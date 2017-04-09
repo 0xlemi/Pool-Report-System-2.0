@@ -46,7 +46,7 @@ class InvoiceController extends PageController
      */
     public function show($seqId)
     {
-        $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($seqId);
+        $invoice = $this->loggedCompany()->invoices()->bySeqId($seqId);
 
         $this->authorize('view', $invoice);
 
@@ -62,7 +62,7 @@ class InvoiceController extends PageController
      */
     public function destroy($seqId)
     {
-        $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($seqId);
+        $invoice = $this->loggedCompany()->invoices()->bySeqId($seqId);
 
         $this->authorize('delete', $invoice);
 

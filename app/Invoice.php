@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\Invoice\TypeInvoice;
+use App\Payment;
 use Carbon\Carbon;
 
 class Invoice extends Model
@@ -30,7 +31,7 @@ class Invoice extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('invoces.seq_id', $seqId)->firstOrFail();
+        return $query->where('invoices.seq_id', $seqId)->firstOrFail();
     }
 
     // *****************************
@@ -52,7 +53,7 @@ class Invoice extends Model
 
     public function payments()
     {
-        return $this->hasMany('App\Payment');
+        return $this->hasMany(Payment::class);
     }
 
     public function totalPayments()

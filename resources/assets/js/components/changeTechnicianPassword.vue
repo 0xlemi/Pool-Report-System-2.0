@@ -13,12 +13,12 @@
 		<alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
 
         <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('password'))}">
-			<input type="text" v-model="password" class="form-control" placeholder="Your new password">
+			<input type="password" v-model="password" class="form-control" placeholder="Your new password">
 			<small v-if="checkValidationError('password')" class="text-muted">{{ validationErrors.password[0] }}</small>
 		</fieldset>
 
         <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('password_confirmation'))}">
-			<input type="text" v-model="password_confirmation" class="form-control" placeholder="Confirm the new password">
+			<input type="password" v-model="password_confirmation" class="form-control" placeholder="Confirm the new password">
 			<small v-if="checkValidationError('password_confirmation')" class="text-muted">{{ validationErrors.password_confirmation[0] }}</small>
 		</fieldset>
     </div>
