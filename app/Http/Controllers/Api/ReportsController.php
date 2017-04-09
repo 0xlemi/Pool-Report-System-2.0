@@ -142,7 +142,7 @@ class ReportsController extends ApiController
             // create report
             $report = $service->reports()->create(array_map('htmlentities', [
                 'technician_id' => $technician->id,
-                'completed' => $request->completed, // need to check what timezone is completed ***check***
+                'completed' => (new Carbon( $request->completed))->setTimezone('UTC'), // need to check what timezone is completed ***check***
                 'on_time' => $on_time,
                 'ph' => $request->ph,
                 'chlorine' => $request->chlorine,
