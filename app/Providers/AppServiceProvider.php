@@ -48,15 +48,11 @@ class AppServiceProvider extends ServiceProvider
     //       Observers
     // **********************
 
-    // Administrator::observe(AdministratorObserver::class);
-    // Client::observe(ClientObserver::class);
     ServiceContract::observe(ContractObserver::class);
     Equipment::observe(EquipmentObserver::class);
     Image::observe(ImageObserver::class);
     Report::observe(ReportObserver::class);
     Service::observe(ServiceObserver::class);
-    // Supervisor::observe(SupervisorObserver::class);
-    // Technician::observe(TechnicianObserver::class);
     User::observe(UserObserver::class);
     Work::observe(WorkObserver::class);
     WorkOrder::observe(WorkOrderObserver::class);

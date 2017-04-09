@@ -53,7 +53,7 @@ class ContractObserver
      * @param  ServiceContract   $contract
      * @return void
      */
-    public function deleted(ServiceContract $contract)
+    public function deleting(ServiceContract $contract)
     {
         foreach ($contract->invoices as $invoice) {
             $invoice->delete();

@@ -41,6 +41,9 @@ class ServiceObserver
         foreach ($service->equipment as $equipment) {
             $equipment->delete();
         }
+        if($service->hasServiceContract()){
+            $service->serviceContract->delete();
+        }
     }
 
     /**
