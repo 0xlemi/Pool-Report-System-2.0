@@ -258,7 +258,7 @@ class ReportsController extends ApiController
                 $report->service()->associate($admin->serviceBySeqId($request->service));
             }
             if(isset($request->technician)){
-                $report->technician()->associate($admin->serviceBySeqId($request->technician));
+                $report->technician()->associate($admin->technicianBySeqId($request->technician));
             }
 
             $report->save();
