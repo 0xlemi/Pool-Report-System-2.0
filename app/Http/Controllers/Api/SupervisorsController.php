@@ -119,7 +119,10 @@ class SupervisorsController extends ApiController
         $admin = $this->loggedUserAdministrator();
         // check if the you can add new users
         if(!$admin->canAddObject()){
-            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
+            return response()->json([
+                'message' =>
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account."
+                ], 402);
         }
 
         // ***** Persiting *****
