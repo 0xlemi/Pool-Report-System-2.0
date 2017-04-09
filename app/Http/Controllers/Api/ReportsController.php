@@ -142,7 +142,7 @@ class ReportsController extends ApiController
             // create report
             $report = $service->reports()->create(array_map('htmlentities', [
                 'technician_id' => $technician->id,
-                'completed' => (new Carbon( $request->completed))->setTimezone('UTC'), // need to check what timezone is completed ***check***
+                'completed' => (new Carbon( $request->completed, $admin->timezone))->setTimezone('UTC'),
                 'on_time' => $on_time,
                 'ph' => $request->ph,
                 'chlorine' => $request->chlorine,
@@ -242,6 +242,7 @@ class ReportsController extends ApiController
 
             // $service and $technician_id were checked allready
             $report->fill(array_map('htmlentities', $request->except(
+                'completed',
                 'on_time',
                 'technician_id',
                 'photo_1',
@@ -253,6 +254,7 @@ class ReportsController extends ApiController
                 'longitude',
                 'acurracy'
             )));
+            $report->completed = (new Carbon( $request->completed, $admin->timezone))->setTimezone('UTC');
 
             if(isset($request->service)){
                 $report->service()->associate($admin->serviceBySeqId($request->service));
