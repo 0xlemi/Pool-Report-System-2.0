@@ -228,9 +228,6 @@ class ReportsController extends ApiController
             'temperature' => 'integer|between:1,5',
             'turbidity' => 'integer|between:1,4',
             'salt' => 'integer|between:1,5',
-            'latitude' => 'numeric|between:-90,90',
-            'longitude' => 'numeric|between:-180,180',
-            'accuracy' => 'numeric|between:0,100000',
             'photo_1' => 'mimes:jpg,jpeg,png',
             'photo_2' => 'mimes:jpg,jpeg,png',
             'photo_3' => 'mimes:jpg,jpeg,png',
@@ -245,7 +242,16 @@ class ReportsController extends ApiController
 
             // $service and $technician_id were checked allready
             $report->fill(array_map('htmlentities', $request->except(
-                'on_time', 'technician_id', 'photo_1', 'photo_2', 'photo_3', 'add_photos', 'remove_photos'
+                'on_time',
+                'technician_id',
+                'photo_1',
+                'photo_2',
+                'photo_3',
+                'add_photos',
+                'remove_photos',
+                'latitude',
+                'longitude',
+                'acurracy'
             )));
 
             if(isset($request->service)){

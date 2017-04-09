@@ -172,8 +172,6 @@ class WorkOrderController extends ApiController
             'title' => 'string|max:255',
             'description' => 'string',
             'start' => 'date',
-            'price' => 'numeric|max:10000000',
-            'currency' => 'string|size:3',
             'supervisor' => 'integer|existsBasedOnAdmin:supervisors,'.$admin->id,
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
