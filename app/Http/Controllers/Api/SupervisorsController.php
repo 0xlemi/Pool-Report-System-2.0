@@ -212,7 +212,10 @@ class SupervisorsController extends ApiController
         // Check that the admin has payed for this supervisor
         $status = ($request->status)? 1:0;
         if( ($status && ($status != $user->active)) && !$admin->canAddObject()){
-            return response("You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402);
+            return response([
+                'message' =>
+                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.", 402
+                ]);
         }
 
         // ***** Persiting *****
