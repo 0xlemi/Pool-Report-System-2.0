@@ -8,7 +8,7 @@
             <div class="container vertical-center-rel">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h1 class="text-white m-b-md p-t-md">Software that makes you pool service business grow.</h1>
+                        <h1 class="text-white m-b-md p-t-md">Software that makes your pool service business grow.</h1>
                         <p class="lead text-white m-b-md f-w-700">We know managing a pool service buissness can be a hustle. We make software that is going to make you smile.</p>
                         <a class="btn btn-shadow btn-md btn-green text-uppercase" href="{{ url('/register') }}">Sign Up For Free</a>
                         <a class="mp-iframe watch-video inverse f-w-900" href="https://vimeo.com/151453817"><i class="fa fa-play-circle-o"></i>Watch the video</a>
@@ -144,7 +144,7 @@
                     <div class="col-md-4">
                         <div class="info text-center bg-edit bg-color bg-green text-white">
                             <h4 class="m-b-md">Business Plan</h4>
-                            <div class="price text-edit"><span class="currency">$</span>13</div>
+                            <div class="price text-edit"><span class="currency">$</span>5</div>
                             <ul class="details m-b-md text-edit"><li>per user/mo.</li>
                                 <li>Unlimited Users</li></ul>
                             <a class="btn btn-white text-uppercase wow pulse" data-wow-iteration="2" href="{{ url('/register') }}" style="visibility: visible; animation-iteration-count: 2; animation-name: pulse;">Get Started</a>
