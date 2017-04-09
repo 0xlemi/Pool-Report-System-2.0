@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@inject('technicianHelpers', 'App\PRS\Helpers\TechnicianHelpers')
+@inject('helper', 'App\PRS\Helpers\UserRoleCompanyHelpers')
 @section('content')
 <div class="technicianVue">
 	<header class="section-header">
@@ -39,7 +39,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status:</label>
 								<div class="col-sm-10">
-									{!! $technicianHelpers->styleStatus($technician->user->active) !!}
+									{!! $helper->styleStatus($technician->paid) !!}
 								</div>
 							</div>
 
@@ -53,28 +53,21 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->name }}">
+									<input type="text" readonly class="form-control" value="{{ $user->name }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Last Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->last_name }}">
+									<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Supervisor Name</label>
+								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->supervisor->name.' '.$technician->supervisor->last_name }}">
-								</div>
-							</div>
-
-							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Username</label>
-								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $technician->user->email }}">
+									<input type="text" readonly class="form-control" value="{{ $user->email }}">
 								</div>
 							</div>
 
@@ -103,16 +96,16 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Language</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($technician->language) }}">
+									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($user->language) }}">
 								</div>
 							</div>
 
 							<div class="form-group row">
-								<label class="col-sm-2 form-control-label">Comments</label>
+								<label class="col-sm-2 form-control-label">About Techinician</label>
 								<div class="col-sm-10">
 									<textarea rows="4" class="form-control"
 												placeholder="Any additional info about this technician."
-												name="comments" readonly>{{ $technician->comments }}</textarea>
+												readonly>{{ $technician->about }}</textarea>
 								</div>
 							</div>
 						</form>

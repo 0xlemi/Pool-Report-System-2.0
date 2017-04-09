@@ -12,8 +12,8 @@ use App\Supervisor;
 use App\User;
 
 use App\Http\Requests;
-use App\Http\Requests\CreateTechnicianRequest;
-use App\Http\Requests\UpdateTechnicianRequest;
+use App\Http\Requests\CreateUserRoleCompanyRequest;
+use App\Http\Requests\UpdateUserRoleCompanyRequest;
 use App\Http\Controllers\PageController;
 use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
@@ -64,18 +64,9 @@ class TechniciansController extends PageController
      */
     public function create(Request $request)
     {
-        $this->authorize('create', Technician::class);
+        $this->authorize('create', [UserRoleCompany::class, 'tech']);
 
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown(
-                    $this->loggedUserAdministrator()
-                    ->supervisorsInOrder()
-                    ->get()
-                );
-        JavaScript::put([
-            'dropdownKey' => $request->old('supervisor'),
-        ]);
-
-        return view('technicians.create', compact('supervisors'));
+        return view('technicians.create');
     }
 
     /**
@@ -84,34 +75,58 @@ class TechniciansController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateTechnicianRequest $request)
+    public function store(CreateUserRoleCompanyRequest $request)
     {
-        $this->authorize('create', Technician::class);
+        $this->validate($request, [
+            'password' => 'required|alpha_dash|between:6,200'
+        ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $this->authorize('create', [UserRoleCompany::class, 'tech']);
 
-        $supervisor = $admin->supervisorBySeqId($request->supervisor);
+        $company = $this->loggedCompany();
 
         // check if the you can add new users
-        if(!$admin->canAddObject()){
+        if(!$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
             return redirect()->back()->withInput();
         }
 
-        $technician = $supervisor->technicians()->create(array_map('htmlentities', $request->all()));
+
+        $user = User::where('email', $request->email)->first();
+        if($user == null){
+            // Create the user
+            $user = User::create(array_map('htmlentities',[
+                'email' => $request->email,
+                'name' => $request->name,
+                'last_name' => $request->last_name,
+                'language' => $request->language,
+            ]));
+            $user->password = bcrypt($request->password);
+            $user->save();
+        }
+
+        // Check that there is no other URC with the same attributes
+        // Not need to worry about creating a only a user because if the user was
+        // null this check is never gonig to be true.
+        if($user->hasRolesWithCompany($company, 'sup', 'tech', 'admin')){
+            flash()->overlay('Not Created', 'You already have a supervisor, technician or administrator with that email for this company.', 'error');
+            return redirect()->back()->withInput();
+        }
+
+        $technician = $user->userRoleCompanies()->create(array_map('htmlentities', [
+            'cellphone' => $request->cellphone,
+            'address' => $request->address,
+            'about' => $request->about,
+            'role_id' => 4, // technician
+            'company_id' => $company->id,
+        ]));
 
         $photo = true;
         if($request->photo){
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
-
-        $user = $technician->user()->create([
-            'email' => htmlentities($request->username),
-        ]);
-        $user->password = bcrypt($request->password);
-        $user->save();
 
         if($user && $technician && $photo){
             flash()->success('Created', 'New technician successfully created.');
@@ -129,15 +144,22 @@ class TechniciansController extends PageController
      */
     public function show($seq_id)
     {
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+        $technician = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('view', $technician);
+
+        // check that userRoleCompany has role of technician
+        if(!$technician->isRole('tech')){
+            abort(404, 'There is no technician with that id');
+        }
+
+        $user = $technician->user;
         $image = null;
         if($technician->images->count() > 0){
             $image = $this->imageTransformer->transform($technician->images->first());
         }
 
-        return view('technicians.show', compact('technician', 'image'));
+        return view('technicians.show', compact('technician', 'user', 'image'));
     }
 
     /**
@@ -148,18 +170,16 @@ class TechniciansController extends PageController
      */
     public function edit($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $technician = $admin->technicianBySeqId($seq_id);
+        $technician = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $technician);
 
-        $supervisors = $this->userRoleCompanyHelpers->transformForDropdown($admin->supervisorsInOrder()->get());
-        $supervisorSelected = Supervisor::find($technician->supervisor_id);
-        JavaScript::put([
-            'dropdownKey' => $supervisorSelected->seq_id,
-        ]);
+        // check that userRoleCompany has role of technician
+        if(!$technician->isRole('tech')){
+            abort(404, 'There is no technician with that id');
+        }
 
-        return view('technicians.edit', compact('technician','supervisors'));
+        return view('technicians.edit', compact('technician'));
     }
 
     /**
@@ -169,33 +189,36 @@ class TechniciansController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTechnicianRequest $request, $seq_id)
+    public function update(UpdateUserRoleCompanyRequest $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $technician = $admin->technicianBySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $technician = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $technician);
 
-        $supervisor = $admin->supervisorBySeqId($request->supervisor);
-        $user = $technician->user;
+        // check that userRoleCompany has role of technician
+        if(!$technician->isRole('tech')){
+            abort(404, 'There is no technician with that id');
+        }
 
-        $status = ($request->status)? 1:0;
+        $status = ($request->paid)? 1:0;
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $user->selectedUser->paid)) && !$admin->canAddObject()){
+        if( ($status && ($status != $technician->paid)) && !$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$admin->free_objects} free users, to activate more users subscribe to Pro account.",
+                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
-            return redirect()->back();
+            return redirect()->back()->withInput();
         }
 
-
-        $technician->fill(array_map('htmlentities', $request->all()));
-        $technician->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));
-
-        // $user->active = $status;
-        $user->email = htmlentities($request->username);
+        $technician->fill(array_map('htmlentities', [
+            'cellphone' => $request->cellphone,
+            'address' => $request->address,
+            'about' => $request->about,
+        ]));
+        $technician->paid = $status;
+        $technician->save();
 
         $photo = false;
         if($request->photo){
@@ -203,13 +226,6 @@ class TechniciansController extends PageController
             $photo = $technician->addImageFromForm($request->file('photo'));
         }
 
-        $userSaved = $user->save();
-        $technicianSaved = $technician->save();
-
-        if(!$userSaved && !$technicianSaved && !$photo){
-            flash()->overlay("You did not change anything", 'You did not make changes in technician information.', 'info');
-            return redirect()->back();
-        }
         flash()->success('Updated', 'Technician successfully updated.');
         return redirect('technicians/'.$seq_id);
     }
@@ -220,13 +236,16 @@ class TechniciansController extends PageController
             'password' => 'required|alpha_dash|confirmed|between:6,200'
         ]);
 
-        $admin = $this->loggedUserAdministrator();
-        $technician = $admin->technicianBySeqId($seq_id);
+        $technician = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('update', $technician);
 
-        $user = $technician->user;
+        // check that userRoleCompany has role of technician
+        if(!$technician->isRole('tech')){
+            abort(404, 'There is no technician with that id');
+        }
 
+        $user = $technician->user;
         $user->password = bcrypt($request->password);
         $user->save();
 
@@ -244,9 +263,14 @@ class TechniciansController extends PageController
      */
     public function destroy($seq_id)
     {
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($seq_id);
+        $technician = $this->loggedCompany()->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $technician);
+
+        // check that userRoleCompany has role of technician
+        if(!$technician->isRole('tech')){
+            abort(404, 'There is no technician with that id');
+        }
 
         if($technician->delete()){
             flash()->success('Deleted', 'The technician successfully deleted.');

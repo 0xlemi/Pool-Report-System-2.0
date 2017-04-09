@@ -71,26 +71,13 @@
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('supervisor'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Supervisor</label>
-							<div class="col-sm-10">
-								<dropdown :key="{{ old('supervisor') }}"
-											:options="{{ $supervisors }}"
-											:name="'supervisor'">
-								</dropdown>
-								@if ($errors->has('supervisor'))
-									<small class="text-muted">{{ $errors->first('supervisor') }}</small>
-								@endif
-							</div>
-						</div>
-
-						<div class="form-group row {{($errors->has('username'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Username:</label>
+						<div class="form-group row {{($errors->has('email'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Email:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="username" maxlength="25" value="{{ old('username') }}">
-								@if ($errors->has('username'))
-									<small class="text-muted">{{ $errors->first('username') }}</small>
+										name="email" maxlength="25" value="{{ old('email') }}">
+								@if ($errors->has('email'))
+									<small class="text-muted">{{ $errors->first('email') }}</small>
 								@endif
 							</div>
 						</div>
@@ -145,14 +132,14 @@
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('comments'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Comments:</label>
+						<div class="form-group row {{($errors->has('about'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">About:</label>
 							<div class="col-sm-10">
 								<textarea rows="5" class="form-control"
 											placeholder="Any additional info about this technician."
-											name="comments">{{ old('comments') }}</textarea>
-								@if ($errors->has('comments'))
-									<small class="text-muted">{{ $errors->first('comments') }}</small>
+											name="about">{{ old('about') }}</textarea>
+								@if ($errors->has('about'))
+									<small class="text-muted">{{ $errors->first('about') }}</small>
 								@endif
 							</div>
 						</div>

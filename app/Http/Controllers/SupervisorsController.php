@@ -105,11 +105,11 @@ class SupervisorsController extends PageController
         }
 
         $supervisor = $user->userRoleCompanies()->create(array_map('htmlentities', [
-                'cellphone' => $request->cellphone,
-                'address' => $request->address,
-                'about' => $request->about,
-                'role_id' => 3, // supervisor
-                'company_id' => $company->id,
+            'cellphone' => $request->cellphone,
+            'address' => $request->address,
+            'about' => $request->about,
+            'role_id' => 3, // supervisor
+            'company_id' => $company->id,
         ]));
 
         $photo = true;
@@ -194,7 +194,7 @@ class SupervisorsController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $supervisor->user->selectedUser->paid)) && !$company->canAddObject()){
+        if( ($status && ($status != $supervisor->paid)) && !$company->canAddObject()){
             flash()->overlay("Oops, you need a Pro account.",
                     "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
                     'info');
