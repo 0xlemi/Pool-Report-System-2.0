@@ -41,9 +41,10 @@ class UpdateReportRequest extends FormRequest
      */
     public function rules()
     {
-        $admin = \Auth::user()->admin();
+        $company = auth()->user()->selectedUser->company;
+
         return [
-            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'completed_at' => 'date',
             'ph' => 'integer|between:1,5',
             'chlorine' => 'integer|between:1,5',

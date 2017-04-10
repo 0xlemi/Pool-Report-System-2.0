@@ -24,6 +24,7 @@ use App\Service;
 class ReportsController extends PageController
 {
     protected $reportHelpers;
+    protected $serviceHelpers;
     protected $userRoleCompanyHelpers;
     protected $imageTransformer;
 
@@ -33,11 +34,13 @@ class ReportsController extends PageController
      * @return void
      */
     public function __construct(ReportHelpers $reportHelpers,
+                                ServiceHelpers $serviceHelpers,
                                 UserRoleCompanyHelpers $userRoleCompanyHelpers,
                                 ImageTransformer $imageTransformer)
     {
         $this->middleware('auth');
         $this->reportHelpers = $reportHelpers;
+        $this->serviceHelpers = $serviceHelpers;
         $this->userRoleCompanyHelpers = $userRoleCompanyHelpers;
         $this->imageTransformer = $imageTransformer;
     }
@@ -76,13 +79,17 @@ class ReportsController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $services = $this->userRoleCompanyHelpers->transformForDropdown($admin->services()->seqIdOrdered()->get());
-        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-        $tags = $admin->tags();;
+        $services = $this->serviceHelpers->transformForDropdown($company->services()->seqIdOrdered()->get());
+        $people = $this->userRoleCompanyHelpers->transformForDropdown(
+                            $company->userRoleCompanies()
+                                        ->ofRole('admin', 'sup', 'tech')
+                                        ->seqIdOrdered()->get()
+                        );
+        $tags = $company->tags();
 
-        return view('reports.create', compact('services', 'technicians', 'tags'));
+        return view('reports.create', compact('services', 'people', 'tags'));
     }
 
     /**
@@ -95,11 +102,11 @@ class ReportsController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $completed_at = (new Carbon($request->completed_at, $admin->timezone));
-        $service = $this->loggedUserAdministrator()->services()->bySeqId($request->service);
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
+        $completed_at = (new Carbon($request->completed_at, $company->timezone));
+        $service = $this->loggedCompany()->services()->bySeqId($request->service);
+        $person = $this->loggedCompany()->userRoleCompanies()->bySeqId($request->person);
 
         $on_time = 'onTime';
         if($service->hasServiceContract()){
@@ -108,12 +115,12 @@ class ReportsController extends PageController
                     $completed_at,
                     $service->serviceContract->start_time,
                     $service->serviceContract->end_time,
-                    $admin->timezone
+                    $company->timezone
                 );
         }
 
         $report = $service->reports()->create([
-            'technician_id' => $technician->id,
+            'user_role_company_id' => $person->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
             'ph' => $request->ph,
@@ -155,22 +162,22 @@ class ReportsController extends PageController
     //****************************************
     //         This Needs Checking
     //****************************************
-    public function emailPreview(Request $request)
-    {
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($request->id);
-
-        $url = $report->getEmailImage();
-
-        if($report){
-            return Response::json([
-                'data' => [
-                    'url' => $url,
-                ]
-            ], 200);
-        }
-
-        return $this->respondInternalError();
-    }
+    // public function emailPreview(Request $request)
+    // {
+    //     $report = $this->loggedCompany()->reports()->bySeqId($request->id);
+    //
+    //     $url = $report->getEmailImage();
+    //
+    //     if($report){
+    //         return Response::json([
+    //             'data' => [
+    //                 'url' => $url,
+    //             ]
+    //         ], 200);
+    //     }
+    //
+    //     return $this->respondInternalError()Technician;
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -180,26 +187,30 @@ class ReportsController extends PageController
      */
     public function edit($seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $report = $company->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
 
-        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
-        $tags = $admin->tags();
+        $people = $this->userRoleCompanyHelpers->transformForDropdown(
+                                        $company->userRoleCompanies()
+                                            ->ofRole('admin', 'sup', 'tech')
+                                            ->seqIdOrdered()->get()
+                                    );
+        $tags = $company->tags();
 
         $date = (new Carbon($report->completed, 'UTC'))
-                    ->setTimezone($admin->timezone)
+                    ->setTimezone($company->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'technicians', 'tags'));
+        return view('reports.edit', compact('report', 'people', 'tags'));
     }
 
     public function getPhoto(Request $request, $seq_id)
     {
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
 
         $this->authorize('view', $report);
 
@@ -214,7 +225,7 @@ class ReportsController extends PageController
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
 
         $this->authorize('addPhoto', $report);
 
@@ -225,7 +236,7 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
 
         $this->authorize('removePhoto', $report);
 
@@ -250,23 +261,23 @@ class ReportsController extends PageController
     public function update(UpdateReportRequest $request, $seq_id)
     {
 
-        $admin = $this->loggedUserAdministrator();
-        $report = $admin->reports()->bySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $report = $company->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
 
-        $technician = $admin->technicianBySeqId($request->technician);
+        $person = $company->UserRoleCompanies()->bySeqId($request->person);
 
-        $completed_at = (new Carbon($request->completed_at, $admin->timezone))
+        $completed_at = (new Carbon($request->completed_at, $company->timezone))
                             ->setTimezone('UTC');
 
-        $report->technician_id  = $technician->id;
-        $report->completed      = $completed_at;
-        $report->ph             = $request->ph;
-        $report->chlorine        = $request->chlorine;
-        $report->temperature    = $request->temperature;
-        $report->turbidity      = $request->turbidity;
-        $report->salt           = $request->salt;
+        $report->user_role_company_id   = $person->id;
+        $report->completed              = $completed_at;
+        $report->ph                     = $request->ph;
+        $report->chlorine               = $request->chlorine;
+        $report->temperature            = $request->temperature;
+        $report->turbidity              = $request->turbidity;
+        $report->salt                   = $request->salt;
 
         if($report->save()){
             flash()->success('Updated', 'The report was successfuly updated');
@@ -286,7 +297,7 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
 
         $this->authorize('delete', $report);
 

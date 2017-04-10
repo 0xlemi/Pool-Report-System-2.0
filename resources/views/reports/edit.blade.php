@@ -42,11 +42,11 @@
 						</div>
 
 						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Technician</label>
+							<label class="col-sm-2 form-control-label">Person</label>
 							<div class="col-sm-10">
-								<dropdown :key="{{ $report->technician->seq_id }}"
-											:options="{{ json_encode($technicians) }}"
-											:name="'technician'">
+								<dropdown :key="{{ $report->userRoleCompany->seq_id }}"
+											:options="{{ json_encode($people) }}"
+											:name="'person'">
 								</dropdown>
 							</div>
 						</div>

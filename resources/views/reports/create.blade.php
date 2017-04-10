@@ -54,15 +54,15 @@
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('technician'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Technician</label>
+						<div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Person</label>
 							<div class="col-sm-10">
-								<dropdown :key="{{ old('technician') }}"
-											:options="{{ $technicians }}"
-											:name="'technician'">
+								<dropdown :key="{{ old('person') }}"
+											:options="{{ $people }}"
+											:name="'person'">
 								</dropdown>
-								@if ($errors->has('technician'))
-									<small class="text-muted">{{ $errors->first('technician') }}</small>
+								@if ($errors->has('person'))
+									<small class="text-muted">{{ $errors->first('person') }}</small>
 								@endif
 							</div>
 						</div>
