@@ -129,7 +129,7 @@ class WorkOrderController extends PageController
         $imagesAfterWork = $this->imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
         $userRoleCompanies  = $this->userRoleCompanyHelpers->transformForDropdown(
-                                $company->userRoleCompanies()->orderBy('seq_id')->get()
+                                $company->userRoleCompanies()->ofRole('admin', 'sup', 'tech')->seqIdOrdered()->get()
                             );
         $default_table_url = url('datatables/works/'.$seq_id);
 

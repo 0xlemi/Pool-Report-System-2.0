@@ -22,7 +22,7 @@ class Work extends Model
         'quantity',
         'units',
         'cost',
-        'user_role_client_id',
+        'user_role_company_id',
     ];
 
     /**
