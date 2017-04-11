@@ -90,7 +90,7 @@
             <div v-if="customization" class="row">
                 <div class="col-md-12">
                     <customization-settings
-                        :company-name="customization.companyName"
+                        :name="customization.name"
                         :timezone="customization.timezone"
                         :website="customization.website"
                         :facebook="customization.facebook"

@@ -37,7 +37,7 @@ class Company extends Model
      * @var array
      */
     protected $fillable = [
-        'company_name',
+        'name',
         'website',
         'facebook',
         'twitter',
@@ -269,7 +269,7 @@ class Company extends Model
     }
 
     // ******************************
-    //        RELATIONSHIPS 
+    //        RELATIONSHIPS
     // ******************************
 
     /**

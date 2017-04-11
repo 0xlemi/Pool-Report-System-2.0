@@ -6,7 +6,7 @@
     <div class="col-lg-3 col-md-6 col-sm-12">
         <profile
             name="{{ ($profile) ? $profile->name : '' }}"
-            company-name="{{ ($customization) ? $customization->companyName : '' }}"
+            company-name="{{ ($customization) ? $customization->name : '' }}"
             email="{{ ($profile) ?  $profile->email : '' }}"
             website="{{ ($customization) ? $customization->website : '' }}"
             facebook="{{ ($customization) ? $customization->facebook : '' }}"

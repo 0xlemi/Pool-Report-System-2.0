@@ -23,17 +23,17 @@
 					<alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
 
                     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('oldPassword'))}">
-						<input type="text" v-model="oldPassword" class="form-control" placeholder="Your current password">
+						<input type="password" v-model="oldPassword" class="form-control" placeholder="Your current password">
 						<small v-if="checkValidationError('oldPassword')" class="text-muted">{{ validationErrors.oldPassword[0] }}</small>
 					</fieldset>
 
                     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('newPassword'))}">
-						<input type="text" v-model="newPassword" class="form-control" placeholder="Your new password">
+						<input type="password" v-model="newPassword" class="form-control" placeholder="Your new password">
 						<small v-if="checkValidationError('newPassword')" class="text-muted">{{ validationErrors.newPassword[0] }}</small>
 					</fieldset>
 
                     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('confirmPassword'))}">
-						<input type="text" v-model="confirmPassword" class="form-control" placeholder="Confirm the new password">
+						<input type="password" v-model="confirmPassword" class="form-control" placeholder="Confirm the new password">
 						<small v-if="checkValidationError('confirmPassword')" class="text-muted">{{ validationErrors.confirmPassword[0] }}</small>
 					</fieldset>
 

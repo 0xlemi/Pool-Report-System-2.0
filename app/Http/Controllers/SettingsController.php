@@ -58,7 +58,7 @@ class SettingsController extends PageController
         $customization = null;
         if ($user->can('customization', Setting::class)) {
             $customization = (object)[
-                'companyName' => $company->name,
+                'name' => $company->name,
                 'timezone' => $company->timezone,
                 'website' => $company->website,
                 'facebook' => $company->facebook,
@@ -106,7 +106,7 @@ class SettingsController extends PageController
             'last_name' => 'string|max:50',
         ]);
 
-        $object = $request->user()->userable();
+        $object = $request->user();
 
         if($object->update(array_map('htmlentities', $request->only(['name', 'last_name'])))){
             return $this->respondWithSuccess('Profile settings was updated successfully.');
@@ -118,10 +118,10 @@ class SettingsController extends PageController
     {
         $this->authorize('changeEmail', Setting::class);
 
-        $user = $this->getUser();
+        $user = $request->user();
         $this->validate($request, [
             'password' => 'required|string|max:200',
-            'email' => 'required|email|max:255|unique:users,email,'.$user->userable_id.',userable_id',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id.',id',
         ]);
 
         if($user->checkPassword($request->password)){
@@ -140,18 +140,13 @@ class SettingsController extends PageController
     {
         $this->authorize('changePassword', Setting::class);
 
-        // if($this->getUser()->cannot('changePassword', Setting::class))
-        // {
-        //     return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
-        // }
-
         $this->validate($request, [
           'oldPassword' => 'required|string|between:6,200',
           'newPassword' => 'required|alpha_dash|between:6,200',
           'confirmPassword' => 'required|alpha_dash|between:6,200|same:newPassword',
         ]);
 
-        $user = $this->getUser();
+        $user = $request->user();
         if($user->checkPassword($request->oldPassword)){
             $user->password = bcrypt($request->newPassword);
             if($user->save()){
@@ -171,7 +166,7 @@ class SettingsController extends PageController
           'password' => 'required|string|max:200',
         ]);
 
-        $user = $this->getUser();
+        $user = $request->user();
         if(!$user->checkPassword($request->password)){
             sleep(3); // avoid password fishing
             return response()->json([
@@ -198,17 +193,16 @@ class SettingsController extends PageController
         $this->authorize('customization', Setting::class);
 
         $this->validate($request, [
-            'company_name' => 'required|string|between:2,30',
+            'name' => 'required|string|between:2,30',
             'timezone' => 'required|string|validTimezone',
             'website' => 'regex:/^([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/',
             'facebook' => 'string|max:50',
             'twitter' => 'string|max:15',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
-
-        $saved = $admin->update(array_map('htmlentities', $request->only([
-            'company_name',
+        $company = $this->loggedCompany();
+        $saved = $company->update(array_map('htmlentities', $request->only([
+            'name',
             'language',
             'timezone',
             'website',

@@ -2,10 +2,10 @@
 
     <alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
 
-    <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('company_name'))}">
+    <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('name'))}">
     	<label class="form-label semibold">Company Name</label>
-    	<input type="text" class="form-control" v-model="companyName">
-	    <small v-if="checkValidationError('company_name')" class="text-muted">{{ validationErrors.company_name[0] }}</small>
+    	<input type="text" class="form-control" v-model="name">
+	    <small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
     </fieldset>
 
     <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('timezone'))}">
@@ -53,7 +53,7 @@ import timezoneDropdown from './timezoneDropdown.vue';
 var Spinner = require("spin");
 
 export default {
-    props: ['companyName', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList' ],
+    props: ['name', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList' ],
 	components:{
 		alert,
         timezoneDropdown
@@ -87,7 +87,7 @@ export default {
 			this.validationErrors = {};
 
 			this.$http.post(Laravel.url+'settings/customization', {
-                company_name: this.companyName,
+                name: this.name,
                 timezone: this.timezone,
                 language: this.language,
                 website: this.website,
