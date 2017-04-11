@@ -37,8 +37,8 @@ class ServiceContractsController extends PageController
     {
         $this->authorize('create', ServiceContract::class);
 
-        $admin = $this->loggedUserAdministrator();
-        $service = $admin->services()->bySeqId($serviceSeqId);
+        $company = $this->loggedCompany();
+        $service = $company->services()->bySeqId($serviceSeqId);
 
         // get the service days number 0-127
         $serviceDays = $this->contractHelpers->serviceDaysToNum($request->service_days);
@@ -69,8 +69,8 @@ class ServiceContractsController extends PageController
      */
     public function show($serviceSeqId)
     {
-        $admin = $this->loggedUserAdministrator();
-        $service = $admin->services()->bySeqId($serviceSeqId);
+        $company = $this->loggedCompany();
+        $service = $company->services()->bySeqId($serviceSeqId);
 
         $data = [
             'contractExists' => false
@@ -104,8 +104,8 @@ class ServiceContractsController extends PageController
      */
     public function update(UpdateContractRequest $request, $serviceSeqId)
     {
-        $admin = $this->loggedUserAdministrator();
-        $serviceContract = $admin->services()->bySeqId($serviceSeqId)->serviceContract;
+        $company = $this->loggedCompany();
+        $serviceContract = $company->services()->bySeqId($serviceSeqId)->serviceContract;
 
         $this->authorize('update', $serviceContract);
 
@@ -127,8 +127,8 @@ class ServiceContractsController extends PageController
 
     public function toggleActivation($serviceSeqId)
     {
-        $admin = $this->loggedUserAdministrator();
-        $serviceContract = $admin->services()->bySeqId($serviceSeqId)->serviceContract;
+        $company = $this->loggedCompany();
+        $serviceContract = $company->services()->bySeqId($serviceSeqId)->serviceContract;
 
         $this->authorize('toggleActivation', $serviceContract);
 
@@ -150,8 +150,8 @@ class ServiceContractsController extends PageController
      */
     public function destroy($serviceSeqId)
     {
-        $admin = $this->loggedUserAdministrator();
-        $serviceContract = $admin->services()->bySeqId($serviceSeqId)->serviceContract;
+        $company = $this->loggedCompany();
+        $serviceContract = $company->services()->bySeqId($serviceSeqId)->serviceContract;
 
         $this->authorize('delete', $serviceContract);
 

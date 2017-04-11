@@ -65,15 +65,14 @@ class ServiceContract extends Model
 
     /**
      * Check if there is atleast one invoice for for this service contract in this date
-     * @param  Carbon $date  is on admin timezone
+     * @param  Carbon $date  is on company timezone
      * @return boolean
      */
     public function invoicedByDate(Carbon $date)
     {
-        $admin = $this->admin();
         $strDate = $date->toDateTimeString();
         $count = $this->invoices()
-                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(created_at,\'UTC\',\''.$admin->timezone.'\'), "'.$strDate.'")'), '=', '0')
+                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(created_at,\'UTC\',\''.$this->company->timezone.'\'), "'.$strDate.'")'), '=', '0')
                 ->count();
         if($count > 0){
             return true;
@@ -88,14 +87,14 @@ class ServiceContract extends Model
             return false;
         }
 
-        $today = Carbon::today($this->admin()->timezone);
+        $today = Carbon::today($this->company->timezone);
         // check for another invoice linked to the service contract in the same day
         // so we dont generate duplicate invoices
         if($this->invoicedByDate($today)){
             return false;
         }
 
-        $contractStartDate = Carbon::parse($this->start, $this->admin()->timezone);
+        $contractStartDate = Carbon::parse($this->start, $this->company->timezone);
         // check that is the date of the month
         // for this service contract
         return ($today->format('d') == $contractStartDate->format('d'));
@@ -119,7 +118,7 @@ class ServiceContract extends Model
     public function endTime()
     {
         $reportHelpers = \App::make('App\PRS\Helpers\ReportHelpers');
-        return (new EndTime($this->end_time, $this->admin()->timezone, $reportHelpers));
+        return (new EndTime($this->end_time, $this->company->timezone, $reportHelpers));
     }
 
     /**
