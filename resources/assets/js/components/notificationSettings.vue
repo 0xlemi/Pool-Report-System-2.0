@@ -1,13 +1,13 @@
 <template>
 <div class="form-group row" v-for="setting in settings">
-    <label class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6 form-control-label semibold">{{ setting.tag }}</label>
+    <label class="col-xxl-4 col-xl-6 col-lg-6 col-md-6 col-sm-6 form-control-label semibold">{{ setting[0].text }}</label>
     <div class="col-xxl-8 col-xl-6 col-lg-6 col-md-6 col-sm-6">
-        <div class="btn-group btn-group-sm" id="notificationButtons{{setting.name}}" role="group" aria-label="Basic example">
-            <button v-for="button in setting.buttons"
-                @click="sendRequest(setting.name, button.type, button.value)"
+        <div class="btn-group btn-group-sm" id="notificationButtons{{setting[0].name}}" role="group" aria-label="Basic example">
+            <button v-for="option in setting"
+                @click="sendRequest(option.name, option.type, option.value)"
                 type="button" class="btn"
-                :class="(button.value) ? 'btn-default' : 'btn-default-outline'">
-                <span :class="button.icon"></span>
+                :class="(option.value) ? 'btn-default' : 'btn-default-outline'">
+                <span :class="buttonIcon(option.type)"></span>
             </button>
 		</div>
     </div>
@@ -20,16 +20,14 @@ export default {
     props:['settings'],
     methods: {
         changeButtonValue(name, type, value){
-            // get the Selected Setting
-            let selectedSetting = this.settings.find(settings => settings.name === name)
-            let selectedSettingId = this.settings.indexOf(selectedSetting);
-
-            // find what button was clicked in that setting
-            let selectedButton = selectedSetting.buttons.find(button => button.type === type)
-            let selectedButtonId = selectedSetting.buttons.indexOf(selectedButton);
-
+            let num = 0;
+            if(type == 'database'){
+                num = 0;
+            }else if(type == 'mail'){
+                num = 1;
+            }
             // toggle button class selection
-            this.settings[selectedSettingId].buttons[selectedButtonId].value = value;
+            this.settings[name][num].value = value;
         },
         sendRequest(name, type, value){
             this.$dispatch('notificationClearError');
@@ -46,6 +44,13 @@ export default {
                 this.changeButtonValue(name, type, value);
                 $("#notificationButtons"+name).children().prop('disabled',false);
             });
+        },
+        buttonIcon(name){
+            if(name == 'database'){
+                return 'font-icon font-icon-alarm';
+            }else if(name == 'mail'){
+                return 'font-icon font-icon-mail';
+            }
         }
     }
 }

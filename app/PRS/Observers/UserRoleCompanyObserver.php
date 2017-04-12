@@ -36,79 +36,79 @@ class UserRoleCompanyObserver
     {
         if($userRoleCompany->isRole('admin')){
             DB::table('urc_notify_setting')->insert([
-                [ 'notify_setting_id' => 1, 'urc' => $userRoleCompany ],// Notification when Report is Created
-                [ 'notify_setting_id' => 2, 'urc' => $userRoleCompany ],// Notification when Work Order is Created
-                [ 'notify_setting_id' => 3, 'urc' => $userRoleCompany ],// Notification when Service is Created
-                [ 'notify_setting_id' => 4, 'urc' => $userRoleCompany ],// Notification when Client is Created
-                [ 'notify_setting_id' => 5, 'urc' => $userRoleCompany ],// Notification when Supervisor is Created
-                [ 'notify_setting_id' => 6, 'urc' => $userRoleCompany ],// Notification when Technician is Created
-                [ 'notify_setting_id' => 7, 'urc' => $userRoleCompany ],// Notification when Invoice is Created
-                [ 'notify_setting_id' => 8, 'urc' => $userRoleCompany ],// Notification when Payment is Created
-                [ 'notify_setting_id' => 9, 'urc' => $userRoleCompany ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc' => $userRoleCompany ],// Notification when Chemical is added to Service
-                [ 'notify_setting_id' => 11, 'urc' => $userRoleCompany ],// Notification when Equipment is added to Service
-                [ 'notify_setting_id' => 12, 'urc' => $userRoleCompany ],// Notification when Contract is added to Service
-                [ 'notify_setting_id' => 13, 'urc' => $userRoleCompany ],// Email when Report is Created
-                [ 'notify_setting_id' => 14, 'urc' => $userRoleCompany ],// Email when Work Order is Created
-                [ 'notify_setting_id' => 15, 'urc' => $userRoleCompany ],// Email when Service is Created
-                [ 'notify_setting_id' => 16, 'urc' => $userRoleCompany ],// Email when Client is Created
-                [ 'notify_setting_id' => 17, 'urc' => $userRoleCompany ],// Email when Supervisor is Created
-                [ 'notify_setting_id' => 18, 'urc' => $userRoleCompany ],// Email when Technician is Created
-                [ 'notify_setting_id' => 19, 'urc' => $userRoleCompany ],// Email when Invoice is Created
-                [ 'notify_setting_id' => 20, 'urc' => $userRoleCompany ],// Email when Payment is Created
+                [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
+                [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany->id ],// Notification when Work Order is Created
+                [ 'notify_setting_id' => 3, 'urc_id' => $userRoleCompany->id ],// Notification when Service is Created
+                [ 'notify_setting_id' => 4, 'urc_id' => $userRoleCompany->id ],// Notification when Client is Created
+                [ 'notify_setting_id' => 5, 'urc_id' => $userRoleCompany->id ],// Notification when Supervisor is Created
+                [ 'notify_setting_id' => 6, 'urc_id' => $userRoleCompany->id ],// Notification when Technician is Created
+                [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany->id ],// Notification when Invoice is Created
+                [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany->id ],// Notification when Payment is Created
+                [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
+                [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
+                [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
+                [ 'notify_setting_id' => 14, 'urc_id' => $userRoleCompany->id ],// Email when Work Order is Created
+                [ 'notify_setting_id' => 15, 'urc_id' => $userRoleCompany->id ],// Email when Service is Created
+                [ 'notify_setting_id' => 16, 'urc_id' => $userRoleCompany->id ],// Email when Client is Created
+                [ 'notify_setting_id' => 17, 'urc_id' => $userRoleCompany->id ],// Email when Supervisor is Created
+                [ 'notify_setting_id' => 18, 'urc_id' => $userRoleCompany->id ],// Email when Technician is Created
+                [ 'notify_setting_id' => 19, 'urc_id' => $userRoleCompany->id ],// Email when Invoice is Created
+                [ 'notify_setting_id' => 20, 'urc_id' => $userRoleCompany->id ],// Email when Payment is Created
             ]);
         }elseif($userRoleCompany->isRole('client')){
             DB::table('urc_notify_setting')->insert([
-                [ 'notify_setting_id' => 1, 'urc' => $userRoleCompany ],// Notification when Report is Created
-                [ 'notify_setting_id' => 2, 'urc' => $userRoleCompany ],// Notification when Work Order is Created
-                [ 'notify_setting_id' => 3, 'urc' => $userRoleCompany ],// Notification when Service is Created
-                [ 'notify_setting_id' => 7, 'urc' => $userRoleCompany ],// Notification when Invoice is Created
-                [ 'notify_setting_id' => 8, 'urc' => $userRoleCompany ],// Notification when Payment is Created
-                [ 'notify_setting_id' => 9, 'urc' => $userRoleCompany ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc' => $userRoleCompany ],// Notification when Chemical is added to Service
-                [ 'notify_setting_id' => 11, 'urc' => $userRoleCompany ],// Notification when Equipment is added to Service
-                [ 'notify_setting_id' => 12, 'urc' => $userRoleCompany ],// Notification when Contract is added to Service
-                [ 'notify_setting_id' => 13, 'urc' => $userRoleCompany ],// Email when Report is Created
-                [ 'notify_setting_id' => 14, 'urc' => $userRoleCompany ],// Email when Work Order is Created
-                [ 'notify_setting_id' => 15, 'urc' => $userRoleCompany ],// Email when Service is Created
-                [ 'notify_setting_id' => 19, 'urc' => $userRoleCompany ],// Email when Invoice is Created
-                [ 'notify_setting_id' => 20, 'urc' => $userRoleCompany ],// Email when Payment is Created
+                [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
+                [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany->id ],// Notification when Work Order is Created
+                [ 'notify_setting_id' => 3, 'urc_id' => $userRoleCompany->id ],// Notification when Service is Created
+                [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany->id ],// Notification when Invoice is Created
+                [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany->id ],// Notification when Payment is Created
+                [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
+                [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
+                [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
+                [ 'notify_setting_id' => 14, 'urc_id' => $userRoleCompany->id ],// Email when Work Order is Created
+                [ 'notify_setting_id' => 15, 'urc_id' => $userRoleCompany->id ],// Email when Service is Created
+                [ 'notify_setting_id' => 19, 'urc_id' => $userRoleCompany->id ],// Email when Invoice is Created
+                [ 'notify_setting_id' => 20, 'urc_id' => $userRoleCompany->id ],// Email when Payment is Created
             ]);
         }elseif($userRoleCompany->isRole('sup')){
             DB::table('urc_notify_setting')->insert([
-                [ 'notify_setting_id' => 1, 'urc' => $userRoleCompany ],// Notification when Report is Created
-                [ 'notify_setting_id' => 2, 'urc' => $userRoleCompany ],// Notification when Work Order is Created
-                [ 'notify_setting_id' => 3, 'urc' => $userRoleCompany ],// Notification when Service is Created
-                [ 'notify_setting_id' => 4, 'urc' => $userRoleCompany ],// Notification when Client is Created
-                [ 'notify_setting_id' => 5, 'urc' => $userRoleCompany ],// Notification when Supervisor is Created
-                [ 'notify_setting_id' => 6, 'urc' => $userRoleCompany ],// Notification when Technician is Created
-                [ 'notify_setting_id' => 7, 'urc' => $userRoleCompany ],// Notification when Invoice is Created
-                [ 'notify_setting_id' => 8, 'urc' => $userRoleCompany ],// Notification when Payment is Created
-                [ 'notify_setting_id' => 9, 'urc' => $userRoleCompany ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc' => $userRoleCompany ],// Notification when Chemical is added to Service
-                [ 'notify_setting_id' => 11, 'urc' => $userRoleCompany ],// Notification when Equipment is added to Service
-                [ 'notify_setting_id' => 12, 'urc' => $userRoleCompany ],// Notification when Contract is added to Service
-                [ 'notify_setting_id' => 13, 'urc' => $userRoleCompany ],// Email when Report is Created
-                [ 'notify_setting_id' => 14, 'urc' => $userRoleCompany ],// Email when Work Order is Created
-                [ 'notify_setting_id' => 15, 'urc' => $userRoleCompany ],// Email when Service is Created
-                [ 'notify_setting_id' => 16, 'urc' => $userRoleCompany ],// Email when Client is Created
-                [ 'notify_setting_id' => 17, 'urc' => $userRoleCompany ],// Email when Supervisor is Created
-                [ 'notify_setting_id' => 18, 'urc' => $userRoleCompany ],// Email when Technician is Created
-                [ 'notify_setting_id' => 19, 'urc' => $userRoleCompany ],// Email when Invoice is Created
-                [ 'notify_setting_id' => 20, 'urc' => $userRoleCompany ],// Email when Payment is Created
+                [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
+                [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany->id ],// Notification when Work Order is Created
+                [ 'notify_setting_id' => 3, 'urc_id' => $userRoleCompany->id ],// Notification when Service is Created
+                [ 'notify_setting_id' => 4, 'urc_id' => $userRoleCompany->id ],// Notification when Client is Created
+                [ 'notify_setting_id' => 5, 'urc_id' => $userRoleCompany->id ],// Notification when Supervisor is Created
+                [ 'notify_setting_id' => 6, 'urc_id' => $userRoleCompany->id ],// Notification when Technician is Created
+                [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany->id ],// Notification when Invoice is Created
+                [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany->id ],// Notification when Payment is Created
+                [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
+                [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
+                [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
+                [ 'notify_setting_id' => 14, 'urc_id' => $userRoleCompany->id ],// Email when Work Order is Created
+                [ 'notify_setting_id' => 15, 'urc_id' => $userRoleCompany->id ],// Email when Service is Created
+                [ 'notify_setting_id' => 16, 'urc_id' => $userRoleCompany->id ],// Email when Client is Created
+                [ 'notify_setting_id' => 17, 'urc_id' => $userRoleCompany->id ],// Email when Supervisor is Created
+                [ 'notify_setting_id' => 18, 'urc_id' => $userRoleCompany->id ],// Email when Technician is Created
+                [ 'notify_setting_id' => 19, 'urc_id' => $userRoleCompany->id ],// Email when Invoice is Created
+                [ 'notify_setting_id' => 20, 'urc_id' => $userRoleCompany->id ],// Email when Payment is Created
             ]);
         }elseif($userRoleCompany->isRole('tech')){
             DB::table('urc_notify_setting')->insert([
-                [ 'notify_setting_id' => 1, 'urc' => $userRoleCompany ],// Notification when Report is Created
-                [ 'notify_setting_id' => 2, 'urc' => $userRoleCompany ],// Notification when Work Order is Created
-                [ 'notify_setting_id' => 3, 'urc' => $userRoleCompany ],// Notification when Service is Created
-                [ 'notify_setting_id' => 9, 'urc' => $userRoleCompany ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc' => $userRoleCompany ],// Notification when Chemical is added to Service
-                [ 'notify_setting_id' => 11, 'urc' => $userRoleCompany ],// Notification when Equipment is added to Service
-                [ 'notify_setting_id' => 12, 'urc' => $userRoleCompany ],// Notification when Contract is added to Service
-                [ 'notify_setting_id' => 13, 'urc' => $userRoleCompany ],// Email when Report is Created
-                [ 'notify_setting_id' => 14, 'urc' => $userRoleCompany ],// Email when Work Order is Created
-                [ 'notify_setting_id' => 15, 'urc' => $userRoleCompany ],// Email when Service is Created
+                [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
+                [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany->id ],// Notification when Work Order is Created
+                [ 'notify_setting_id' => 3, 'urc_id' => $userRoleCompany->id ],// Notification when Service is Created
+                [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
+                [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
+                [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
+                [ 'notify_setting_id' => 14, 'urc_id' => $userRoleCompany->id ],// Email when Work Order is Created
+                [ 'notify_setting_id' => 15, 'urc_id' => $userRoleCompany->id ],// Email when Service is Created
             ]);
         }
     }

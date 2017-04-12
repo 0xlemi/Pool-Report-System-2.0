@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
     	// cleaning up
     	$this->truncate_tables();
 
-    	$this->call(CompaniesSeeder::class);
+    	$this->call(CompaniesTableSeeder::class);
     	$this->call(ServicesTableSeeder::class);
     	$this->call(UserTableSeeder::class);
     	$this->call(EquipmentTableSeeder::class);

@@ -20,6 +20,7 @@ use App\Setting;
 use App\Company;
 
 use App\Http\Requests;
+use App\NotificationSetting;
 
 class SettingsController extends PageController
 {
@@ -70,7 +71,7 @@ class SettingsController extends PageController
         $notifications = null;
         if ($user->can('notifications', Setting::class)) {
             $notifications = (object)[
-                // 'settings' => $user->notificationSettings->getAll()
+                'settings' => $user->selectedUser->allNotificationSettings(),
             ];
         }
 
@@ -222,24 +223,28 @@ class SettingsController extends PageController
         $this->authorize('notifications', Setting::class);
 
         $this->validate($request, [
-            'name' => 'required|max:255|validNotification',
-            'type' => 'required|max:255|validNotificationType:name',
+            'name' => 'required|string|max:255|validNotification',
+            'type' => 'required|string|max:10',
             'value' => 'required|boolean'
         ]);
 
-        $user = $request->user();
+        $userRoleCompany = $request->user()->selectedUser;
         $name = $request->name;
         $type = $request->type;
+        $notificationSetting = NotificationSetting::where('name', $name)->where('type', $type)->firstOrFail();
         $value = !$request->value; // the value is backwards
 
-        $newNotificationNumber = $user->notificationSettings->notificationChanged($name, $type, $value);
-        $user->$name = $newNotificationNumber;
-        $user->save();
+        if($value){
+            if(!$userRoleCompany->hasNotificationSetting($name, $type)){
+                $userRoleCompany->notificationSettings()->attach($notificationSetting->id);
+            }
+        }else{
+            if($userRoleCompany->hasNotificationSetting($name, $type)){
+                $userRoleCompany->notificationSettings()->detach($notificationSetting->id);
+            }
+        }
 
-        $perssistedArray = $userHelper->notificationPermissonToArray($user->$name);
-        $finalValue = $perssistedArray[$userHelper->notificationTypePosition($type)];
-
-        return $this->respondWithSuccess("Notification {$type} has been changed to: {$finalValue}");
+        return $this->respondWithSuccess("Notification {$name} has been changed to: {$value}");
     }
 
     public function permissions(Request $request)

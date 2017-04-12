@@ -13,19 +13,19 @@
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
         <testsuite name="model">
-            <directory suffix="Test.php">./tests/integration/models</directory>
+            <directory suffix="Test.php">./tests/old/integration/models</directory>
         </testsuite>
         <testsuite name="control">
-            <directory suffix="Test.php">./tests/integration/controllers</directory>
+            <directory suffix="Test.php">./tests/old/integration/controllers</directory>
         </testsuite>
         <testsuite name="unit">
-            <directory suffix="Test.php">./tests/unit</directory>
+            <directory suffix="Test.php">./tests/old/unit</directory>
         </testsuite>
         <testsuite name="valueObjects">
-            <directory suffix="Test.php">./tests/mixed/ValueObjects</directory>
+            <directory suffix="Test.php">./tests/old/mixed/ValueObjects</directory>
         </testsuite>
         <testsuite name="transformers">
-            <directory suffix="Test.php">./tests/unit/Transformers</directory>
+            <directory suffix="Test.php">./tests/old/unit/Transformers</directory>
         </testsuite>
     </testsuites>
     <filter>

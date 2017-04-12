@@ -2,13 +2,15 @@
 
 namespace App\PRS\Validators;
 
+use DB;
+
 class ValidNotification
 {
 
     public function validate($attribute, $value)
     {
-        $notifications = config('constants.notifications');
-        return array_key_exists($value, (array) $notifications);
+        $num = DB::table('notification_settings')->where('name', $value)->count();
+        return ($num > 0);
     }
 
     public function message($message, $attribute)

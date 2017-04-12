@@ -107,7 +107,9 @@
                 <div class="col-md-12">
 					<alert type="danger" :message="notificationAlertMessage" :active="notificationAlertActive"></alert>
                     <div class="col-md-12">
-                        <notification-settings :settings="notifications.settings"></notification-settings>
+                        <notification-settings
+                            :settings="notifications.settings">
+                        </notification-settings>
                     </div>
                 </div>
             </div>

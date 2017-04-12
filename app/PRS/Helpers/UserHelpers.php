@@ -9,7 +9,7 @@ use App\User;
  */
 class UserHelpers
 {
-    // 
+    //
     // public function styledType($type, $simple = false)
     // {
     //     if($type == 'App\Administrator'){
@@ -38,57 +38,57 @@ class UserHelpers
     //                     <span>Client</span>';
     //     }
     // }
+    //
+    // /**
+    //  * get the notifications that are permited in array format from integer
+    //  * @param  int    $num  integer from the database
+    //  * @return array
+    //  * tested
+    //  */
+    // public function notificationPermissonToArray(int $num)
+    // {
+    //     // depending on the notifaation types is the ammount of zeros to fill
+    //     $numOfTypes = count((array)config('constants.notificationTypes'));
+    //     // Transform ints to booleans
+    //     return array_map(function($num){
+    //                 return (int) $num;
+    //             },
+    //                 // reverse the order so it starts at monday
+    //                 array_reverse(
+    //                     // make it an array
+    //                     str_split(
+    //                         // fill missing zeros
+    //                         sprintf( "%0{$numOfTypes}d",
+    //                             // transform num to binary
+    //                             decbin($num)
+    //                         )
+    //                     )
+    //                 )
+    //             );
+    // }
 
-    /**
-     * get the notifications that are permited in array format from integer
-     * @param  int    $num  integer from the database
-     * @return array
-     * tested
-     */
-    public function notificationPermissonToArray(int $num)
-    {
-        // depending on the notifaation types is the ammount of zeros to fill
-        $numOfTypes = count((array)config('constants.notificationTypes'));
-        // Transform ints to booleans
-        return array_map(function($num){
-                    return (int) $num;
-                },
-                    // reverse the order so it starts at monday
-                    array_reverse(
-                        // make it an array
-                        str_split(
-                            // fill missing zeros
-                            sprintf( "%0{$numOfTypes}d",
-                                // transform num to binary
-                                decbin($num)
-                            )
-                        )
-                    )
-                );
-    }
+    // /**
+    //  * Get the index possition of the type depending on
+    //  * the config constant notifacation types array
+    //  * @param  string $type
+    //  * @return integer        The index
+    //  * tested
+    //  */
+    // public function notificationTypePosition(string $type)
+    // {
+    //     return array_search($type ,array_keys((array)config('constants.notificationTypes')));
+    // }
 
-    /**
-     * Get the index possition of the type depending on
-     * the config constant notifacation types array
-     * @param  string $type
-     * @return integer        The index
-     * tested
-     */
-    public function notificationTypePosition(string $type)
-    {
-        return array_search($type ,array_keys((array)config('constants.notificationTypes')));
-    }
-
-    /**
-     * Transform binary array to number
-     * @param  array  $array
-     * @return int
-     * tested
-     */
-    public function notificationPermissionToNum(array $array)
-    {
-        $binaryNumber = implode('', array_reverse($array));
-        return bindec($binaryNumber);
-    }
+    // /**
+    //  * Transform binary array to number
+    //  * @param  array  $array
+    //  * @return int
+    //  * tested
+    //  */
+    // public function notificationPermissionToNum(array $array)
+    // {
+    //     $binaryNumber = implode('', array_reverse($array));
+    //     return bindec($binaryNumber);
+    // }
 
 }

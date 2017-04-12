@@ -29,10 +29,6 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('validDateReportFormat', 'App\PRS\Validators\ValidDateReportFormat@validate');
         Validator::replacer('validDateReportFormat', 'App\PRS\Validators\ValidDateReportFormat@message');
 
-        // Validation condition to check if notification type is vaild
-        Validator::extend('validNotificationType', 'App\PRS\Validators\ValidNotificationType@validate');
-        Validator::replacer('validNotificationType', 'App\PRS\Validators\ValidNotificationType@message');
-
         // Validation condition to check if notification is vaild
         Validator::extend('validNotification', 'App\PRS\Validators\ValidNotification@validate');
         Validator::replacer('validNotification', 'App\PRS\Validators\ValidNotification@message');

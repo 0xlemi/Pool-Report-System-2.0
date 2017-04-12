@@ -63,9 +63,26 @@ class UserRoleCompany extends Model
 		}
 	}
 
-    public function hasNotificationSetting($name)
+    public function hasNotificationSetting($name, $type)
     {
-        return $this->notificationSettings->contains($name);
+        return $this->notificationSettings->where('name', $name)->contains('type', $type);
+    }
+
+    public function allNotificationSettings()
+    {
+        $urcNotifications = $this->notificationSettings()->select('name', 'type')->get();
+        return NotificationSetting::all()->transform(function($setting) use ($urcNotifications){
+            $value = false;
+            if($urcNotifications->where('name', $setting->name)->contains('type', $setting->type)){
+                $value = true;
+            }
+            return [
+                'name' => $setting->name,
+                'type' => $setting->type,
+                'text' => $setting->text,
+                'value' => $value,
+            ];
+        })->groupBy('name');
     }
 
 
