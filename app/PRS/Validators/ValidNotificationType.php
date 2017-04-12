@@ -10,7 +10,7 @@ class ValidNotificationType
     {
         $nameKey = $parameters[0];
         // check that the paramenter name is in the other attributes
-        if(in_array($nameKey, $validator->attributes())){
+        if(array_key_exists($nameKey, $validator->attributes())){
             $name = $validator->attributes()[$nameKey];
             return NotificationSetting::where('name', $name)->get()->contains('type', $value);
         }

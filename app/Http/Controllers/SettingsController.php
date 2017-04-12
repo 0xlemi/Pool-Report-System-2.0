@@ -222,9 +222,10 @@ class SettingsController extends PageController
     {
         $this->authorize('notifications', Setting::class);
 
+        // dd($request->all());
         $this->validate($request, [
             'name' => 'required|string|max:255|validNotification',
-            'type' => 'required|string|max:10|validNotificationType:name',
+            'type' => 'required|string|max:20|validNotificationType:name',
             'value' => 'required|boolean'
         ]);
 
