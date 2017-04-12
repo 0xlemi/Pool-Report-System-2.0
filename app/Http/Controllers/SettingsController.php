@@ -90,10 +90,11 @@ class SettingsController extends PageController
         $permissions = null;
         if ($user->can('permissions', Setting::class)) {
             $permissions = (object)[
-                // 'supervisor' => $admin->permissions()->permissionsDivided('sup'),
-                // 'technician' => $admin->permissions()->permissionsDivided('tech'),
+                'supervisor' => $company->permissionRoleCompany()->ofRole('sup'),
+                'technician' => $company->permissionRoleCompany()->ofRole('tech'),
             ];
         }
+        dd($company->permissionRoleCompany()->ofRole('sup')->get()->toArray());
 
         return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
@@ -222,7 +223,6 @@ class SettingsController extends PageController
     {
         $this->authorize('notifications', Setting::class);
 
-        // dd($request->all());
         $this->validate($request, [
             'name' => 'required|string|max:255|validNotification',
             'type' => 'required|string|max:20|validNotificationType:name',

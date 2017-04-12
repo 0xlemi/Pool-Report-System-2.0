@@ -20,6 +20,7 @@ use App\MissingHistory;
 use DB;
 use App\WorkOrder;
 use App\Report;
+use App\Role;
 use App\UserRoleCompany;
 use App\PermissionRoleCompany;
 
@@ -67,11 +68,6 @@ class Company extends Model
         return new Tags($this->phTags(), $this->chlorineTags(),
                         $this->temperatureTags(), $this->turbidityTags(),
                         $this->saltTags());
-    }
-
-    public function permissions()
-    {
-        // return new Permissions($this);
     }
 
 
