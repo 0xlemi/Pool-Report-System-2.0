@@ -2,14 +2,14 @@
 
 namespace App\PRS\Validators;
 
-use DB;
+use App\NotificationSetting;
 
 class ValidNotification
 {
 
     public function validate($attribute, $value)
     {
-        $num = DB::table('notification_settings')->where('name', $value)->count();
+        $num = NotificationSetting::where('name', $value)->count();
         return ($num > 0);
     }
 

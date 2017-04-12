@@ -47,10 +47,10 @@ class CreateNotificationSettingsTable extends Migration
             [ 'id' => 18, 'name' => 'notify_technician_created', 'type' => 'mail', 'text' => 'Email when Technician is Created', ],
             [ 'id' => 19, 'name' => 'notify_invoice_created', 'type' => 'mail', 'text' => 'Email when Invoice is Created', ],
             [ 'id' => 20, 'name' => 'notify_payment_created', 'type' => 'mail', 'text' => 'Email when Payment is Created', ],
-            // [ 'id' => num,'name' => 'notify_work_added_mail', 'type' => '', 'text' => 'Email when Work is added to Work Order', ],
-            // [ 'id' => num,'name' => 'notify_chemical_added_mail', 'type' => '', 'text' => 'Email when Chemical is added to Service', ],
-            // [ 'id' => num,'name' => 'notify_equipment_added_mail', 'type' => '', 'text' => 'Email when Equipment is added to Service', ],
-            // [ 'id' => num,'name' => 'notify_contract_added_mail', 'type' => '', 'text' => 'Email when Contract is added to Service', ],
+            // [ 'id' => num,'name' => 'notify_work_added', 'type' => 'mail', 'text' => 'Email when Work is added to Work Order', ],
+            // [ 'id' => num,'name' => 'notify_chemical_added', 'type' => 'mail', 'text' => 'Email when Chemical is added to Service', ],
+            // [ 'id' => num,'name' => 'notify_equipment_added', 'type' => 'mail', 'text' => 'Email when Equipment is added to Service', ],
+            // [ 'id' => num,'name' => 'notify_contract_added', 'type' => 'mail', 'text' => 'Email when Contract is added to Service', ],
         ]);
     }
 

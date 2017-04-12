@@ -224,7 +224,7 @@ class SettingsController extends PageController
 
         $this->validate($request, [
             'name' => 'required|string|max:255|validNotification',
-            'type' => 'required|string|max:10',
+            'type' => 'required|string|max:10|validNotificationType:name',
             'value' => 'required|boolean'
         ]);
 
