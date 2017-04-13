@@ -21,6 +21,16 @@ class PermissionRoleCompany extends Model
         return $query->whereIn('role_id', $rolesIds);
     }
 
+    public function scopePermissions($query)
+    {
+        $permissionsIds = $query->pluck('permission_id');
+        return Permission::whereIn('id', $permissionsIds);
+    }
+
+    // ********************
+    //    Relationships
+    // ********************
+
     public function permission()
     {
         return $this->belongsTo(Permission::class);

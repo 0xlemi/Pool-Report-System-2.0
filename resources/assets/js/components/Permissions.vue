@@ -73,11 +73,11 @@
 	                                <br>
 									<div class="col-md-6">
 										<h5><strong>Work Orders:</strong></h5>
-		                                <checkbox-list :data="permissions.workorder.this"></checkbox-list>
+		                                <checkbox-list :data="permissions.workorder"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Works:</strong></h5>
-		                                <checkbox-list :data="permissions.workorder.work"></checkbox-list>
+		                                <checkbox-list :data="permissions.work"></checkbox-list>
 									</div>
 								</div>
                             </div>
@@ -87,19 +87,19 @@
 	                                <br>
 									<div class="col-md-6">
 										<h5><strong>Services:</strong></h5>
-	                                	<checkbox-list :data="permissions.service.this"></checkbox-list>
+	                                	<checkbox-list :data="permissions.service"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Contract:</strong></h5>
-	                                	<checkbox-list :data="permissions.service.contract"></checkbox-list>
+	                                	<checkbox-list :data="permissions.contract"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Chemical:</strong></h5>
-	                                	<checkbox-list :data="permissions.service.chemical"></checkbox-list>
+	                                	<checkbox-list :data="permissions.chemical"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Equipment:</strong></h5>
-	                                	<checkbox-list :data="permissions.service.equipment"></checkbox-list>
+	                                	<checkbox-list :data="permissions.equipment"></checkbox-list>
 									</div>
 								</div>
                             </div>
@@ -127,11 +127,11 @@
 	                                <br>
 									<div class="col-md-6">
 										<h5><strong>Invoices:</strong></h5>
-		                                <checkbox-list :data="permissions.invoice.this"></checkbox-list>
+		                                <checkbox-list :data="permissions.invoice"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Payments:</strong></h5>
-		                                <checkbox-list :data="permissions.invoice.payments"></checkbox-list>
+		                                <checkbox-list :data="permissions.payment"></checkbox-list>
 									</div>
 								</div>
                             </div>

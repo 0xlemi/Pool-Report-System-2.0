@@ -18,6 +18,7 @@ use App\Service;
 use App\MissingHistory;
 
 use DB;
+use App\Permission;
 use App\WorkOrder;
 use App\Report;
 use App\Role;
@@ -72,6 +73,36 @@ class Company extends Model
 
 
     //******** MISCELLANEOUS ********
+
+
+    public function allPermissions(...$roles)
+    {
+        $permissions = $this->permissionRoleCompany()
+                                    ->ofRole(...$roles)
+                                    ->permissions()
+                                    ->get()
+                                    ->transform(function ($item){
+                                        return [
+                                            'id' => $item->id,
+                                            'element' => $item->element,
+                                            'action' => $item->action,
+                                            'text' => $item->text,
+                                        ];
+                                    });
+        return Permission::all()->transform(function($item) use ($permissions){
+            $value = false;
+            if($permissions->where('element', $item->element)->contains('action', $item->action)){
+                $value = true;
+            }
+            return [
+                'id' => $item->id,
+                'element' => $item->element,
+                'action' => $item->action,
+                'text' => $item->text,
+                'value' => $value,
+            ];
+        })->groupBy('element');
+    }
 
     /**
      * Get all the services where there is an active contract

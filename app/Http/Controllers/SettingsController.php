@@ -90,11 +90,10 @@ class SettingsController extends PageController
         $permissions = null;
         if ($user->can('permissions', Setting::class)) {
             $permissions = (object)[
-                'supervisor' => $company->permissionRoleCompany()->ofRole('sup'),
-                'technician' => $company->permissionRoleCompany()->ofRole('tech'),
+                'supervisor' => $company->allPermissions('sup'),
+                'technician' => $company->allPermissions('tech'),
             ];
         }
-        dd($company->permissionRoleCompany()->ofRole('sup')->get()->toArray());
 
         return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
