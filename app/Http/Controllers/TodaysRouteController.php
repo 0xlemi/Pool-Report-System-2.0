@@ -8,6 +8,7 @@ use Carbon\Carbon;
 
 
 use App\Http\Requests;
+use App\Http\Requests\CreateReportRequest;
 use App\PRS\Helpers\ReportHelpers;
 use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\Service;
@@ -82,23 +83,40 @@ class TodaysRouteController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
-        $service_id = $service_seq_id;
-        $technicians = $this->userRoleCompanyHelpers->transformForDropdown($admin->techniciansInOrder()->get());
+        $service = $service_seq_id;
+        $technicians = $this->userRoleCompanyHelpers->transformForDropdown(
+                                            $company->userRoleCompanies()
+                                                ->ofRole('admin', 'sup', 'tech')
+                                                ->get()
+                                        );
 
-        return view('todaysroute.createReport', compact('technicians', 'service_id'));
+        return view('todaysroute.createReport', compact('technicians', 'service'));
     }
 
     public function storeReport(Request $request)
     {
+        $company = $this->loggedCompany();
+
+        $this->validate($request, [
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'ph' => 'required|integer|between:1,5',
+            'chlorine' => 'required|integer|between:1,5',
+            'temperature' => 'required|integer|between:1,5',
+            'turbidity' => 'required|integer|between:1,4',
+            'salt' => 'required|integer|between:1,5',
+            'photo1' => 'required|mimes:jpg,jpeg,png',
+            'photo2' => 'required|mimes:jpg,jpeg,png',
+            'photo3' => 'required|mimes:jpg,jpeg,png',
+        ]);
+
         $this->authorize('create', Report::class);
 
-        $admin = $this->loggedUserAdministrator();
-
-        $completed_at = Carbon::now($admin->timezone);
-        $service = $admin->services()->bySeqId($request->service_id);
-        $technician = $admin->technicianBySeqId($request->technician_id);
+        $completed_at = Carbon::now($company->timezone);
+        $service = $company->services()->bySeqId($request->service);
+        $person = $company->userRoleCompanies()->bySeqId($request->person);
 
         $on_time = 'onTime';
         if($service->hasServiceContract()){
@@ -107,12 +125,12 @@ class TodaysRouteController extends PageController
                     $completed_at,
                     $service->serviceContract->start_time,
                     $service->serviceContract->end_time,
-                    $admin->timezone
+                    $company->timezone
                 );
         }
 
         $report = $service->reports()->create([
-            'technician_id' => $technician->id,
+            'user_role_company_id' => $person->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
             'ph' => $request->ph,

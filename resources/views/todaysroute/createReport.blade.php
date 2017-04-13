@@ -24,17 +24,17 @@
 					<form method="POST" action="{{ url('todaysroute/report') }}" enctype="multipart/form-data">
 						{{ csrf_field() }}
 
-                        <input type="hidden" name='service_id' value="{{ $service_id }}">
+                        <input type="hidden" name='service' value="{{ $service }}">
 
-						<div class="form-group row {{($errors->has('technician'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Technician</label>
+						<div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Person</label>
 							<div class="col-sm-10">
-								<dropdown :key.sync="dropdownKey2"
+								<dropdown :key.sync="{{ old('person') }}"
 											:options="{{ $technicians }}"
-											:name="'technician_id'">
+											:name="'person'">
 								</dropdown>
-								@if ($errors->has('technician'))
-									<small class="text-muted">{{ $errors->first('technician') }}</small>
+								@if ($errors->has('person'))
+									<small class="text-muted">{{ $errors->first('person') }}</small>
 								@endif
 							</div>
 						</div>

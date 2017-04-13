@@ -47,7 +47,7 @@ class DataTableController extends PageController
             'daysFromToday' => 'integer|between:0,6'
         ]);
         $daysFromToday = ($request->daysFromToday) ?: 0;
-        $services = $this->loggedUserAdministrator()
+        $services = $this->loggedCompany()
                         ->servicesDoIn(Carbon::now()->addDays($daysFromToday));
 
         return response()->json([
