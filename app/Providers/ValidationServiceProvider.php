@@ -41,6 +41,10 @@ class ValidationServiceProvider extends ServiceProvider
         Validator::extend('validPermission', 'App\PRS\Validators\ValidPermission@validate');
         Validator::replacer('validPermission', 'App\PRS\Validators\ValidPermission@message');
 
+        // Validation condition to check if permission is vaild
+        Validator::extend('validRole', 'App\PRS\Validators\ValidRole@validate');
+        Validator::replacer('validRole', 'App\PRS\Validators\ValidRole@message');
+
         // Validation condition to language is supported
         Validator::extend('validLanguage', 'App\PRS\Validators\ValidLanguage@validate');
         Validator::replacer('validLanguage', 'App\PRS\Validators\ValidLanguage@message');

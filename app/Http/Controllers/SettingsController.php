@@ -257,7 +257,7 @@ class SettingsController extends PageController
         $this->validate($request, [
             'id' => 'required|max:255|validPermission',
             'checked' => 'required',
-            'role' => 'required|max:20',
+            'role' => 'required|max:20|validRole',
         ]);
 
         $company = $this->loggedCompany();
