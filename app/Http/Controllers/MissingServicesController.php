@@ -24,7 +24,7 @@ class MissingServicesController extends PageController
             $date = Carbon::parse($request->date);
         }
 
-        if($history = $company->missingHistories()->byDate($date)){
+        if($history = $company->missingHistories()->byDate($date)->first()){
             $numServicesMissing = $history->num_services_missing;
             $numServicesDone = $history->num_services_done;
             $services = $history->services;

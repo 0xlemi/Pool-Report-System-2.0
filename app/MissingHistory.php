@@ -27,7 +27,7 @@ class MissingHistory extends Model
 
     public function scopeByDate($query, Carbon $date)
     {
-        return $query->whereDate('date', $date_str)->first();
+        return $query->whereDate('date', $date->format('Y-m-d'));
     }
 
 
