@@ -29678,7 +29678,7 @@ exports.default = {
             this.$http.post(Laravel.url + 'settings/permissions', {
                 'id': permission.id,
                 'checked': !permission.value ? true : false,
-                'name': permission.text
+                'role': permission.role
             }).then(function (response) {
                 // if success do nothing
             }, function (response) {
@@ -29688,7 +29688,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-md-12\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;'notification_'+permission.id }}\" v-model=\"permission.value\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;'notification_'+permission.id }}\">{{&nbsp;permission.text }}</label>\n\t\t</div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"form-group row\" v-for=\"permission in data\">\n    <div class=\"col-md-12\">\n        <div class=\"checkbox-toggle\">\n\t\t\t<input type=\"checkbox\" id=\"{{&nbsp;'notify_'+permission.role+'_'+permission.id }}\" v-model=\"permission.value\" @click=\"sendRequest(permission)\">\n\t\t\t<label for=\"{{&nbsp;'notify_'+permission.role+'_'+permission.id }}\">{{&nbsp;permission.text }}</label>\n\t\t</div>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

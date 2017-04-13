@@ -16,10 +16,13 @@ use DateTime;
 use Auth;
 
 use App\User;
+use App\Role;
 use App\Setting;
 use App\Company;
 
 use App\Http\Requests;
+use App\PermissionRoleCompany;
+use App\Permission;
 use App\NotificationSetting;
 
 class SettingsController extends PageController
@@ -254,26 +257,39 @@ class SettingsController extends PageController
         $this->validate($request, [
             'id' => 'required|max:255|validPermission',
             'checked' => 'required',
+            'role' => 'required|max:20',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
-        $attributes = $admin->getAttributes();
+        $company = $this->loggedCompany();
+        $permission = Permission::findOrFail($request->id);
+        $role = Role::where('name', $request->role)->firstOrFail();
 
-        $columnName = $request->id;
         $checkedValue = strtolower($request->checked);
-        $checked = ($checkedValue  == 'true' || $checkedValue  == '1') ? true : false;
 
-        //check whether the id they are sending us is a real permission
-        if(isset($attributes[$columnName]))
-        {
-            $admin->$columnName = $checked;
-            if($admin->save()){
-                $checkedAfter = ($admin->$columnName) ? 'active' : 'inactive';
-                return $this->respondWithSuccess('Permission has been changed to: '.$checkedAfter);
+        $permissionRoleCompany = PermissionRoleCompany::where('company_id', $company->id)
+                                        ->where('permission_id', $permission->id)
+                                        ->where('role_id', $role->id)->first();
+
+        if(($checkedValue  == 'true') || ($checkedValue  == '1')){
+            // PermissionRoleCompany don't exist create one
+            if(!$permissionRoleCompany)
+            {
+                PermissionRoleCompany::create([
+                    'company_id' => $company->id,
+                    'permission_id' => $permission->id,
+                    'role_id' => $role->id,
+                ]);
+                return $this->respondWithSuccess('Permission has been changed to active');
             }
-            return $this->respondInternalError('Error while persisting the permission');
+        }else{
+            // PermissionRoleCompany don't exist create one
+            if($permissionRoleCompany)
+            {
+                $permissionRoleCompany->delete();
+                return $this->respondWithSuccess('Permission has been changed to inactive');
+            }
         }
-        return $this->respondNotFound('There is no permission with that id');
+        return $this->respondInternalError('Error while persisting the permission');
     }
 
     // *******************

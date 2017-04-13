@@ -81,25 +81,29 @@ class Company extends Model
                                     ->ofRole(...$roles)
                                     ->permissions()
                                     ->get()
-                                    ->transform(function ($item){
+                                    ->transform(function ($item) use ($roles){
+                                        $role = (count($roles) == 1)? $roles[0]: $roles;
                                         return [
                                             'id' => $item->id,
                                             'element' => $item->element,
                                             'action' => $item->action,
                                             'text' => $item->text,
+                                            'role' => $role,
                                         ];
                                     });
-        return Permission::all()->transform(function($item) use ($permissions){
+        return Permission::all()->transform(function($item) use ($permissions, $roles){
             $value = false;
             if($permissions->where('element', $item->element)->contains('action', $item->action)){
                 $value = true;
             }
+            $role = (count($roles) == 1)? $roles[0]: $roles;
             return [
                 'id' => $item->id,
                 'element' => $item->element,
                 'action' => $item->action,
                 'text' => $item->text,
                 'value' => $value,
+                'role' => $role,
             ];
         })->groupBy('element');
     }

@@ -8,6 +8,18 @@ use App\Permission;
 
 class PermissionRoleCompany extends Model
 {
+
+        /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'company_id',
+        'role_id',
+        'permission_id'
+    ];
+
     /**
      * The table associated with the model.
      *

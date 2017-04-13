@@ -15,13 +15,14 @@ class CreatePermissionRoleCompanyPivotTable extends Migration
     {
         Schema::create('permission_role_company', function (Blueprint $table) {
             $table->engine = 'InnoDB';
+            $table->increments('id');
             $table->integer('role_id')->unsigned();
             $table->integer('permission_id')->unsigned();
             $table->integer('company_id')->unsigned();
 
             $table->timestamps();
 
-            $table->primary(['role_id', 'permission_id', 'company_id']);
+            $table->unique(['role_id', 'permission_id', 'company_id']);
 
             $table->foreign('role_id')
                 ->references('id')
