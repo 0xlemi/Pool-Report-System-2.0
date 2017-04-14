@@ -15,22 +15,15 @@ class PaymentObserver
      */
     public function created(Payment $payment)
     {
-        // Notify:
-            // System admin
-            // Supervisors
-            // Payment Related Clients
-        // $authUser = \Auth::user();
-        // $admin = $payment->admin();
-        // $service = $payment->invoice->invoiceable->service;
-        //
-        // $admin->user->notify(new NewPaymentNotification($payment, $authUser));
-        // foreach ($admin->supervisors as $supervisor) {
-        //     $supervisor->user->notify(new NewPaymentNotification($payment, $authUser));
-        // }
-        // foreach ($service->clients as $client) {
-        //     $client->user->notify(new NewPaymentNotification($payment, $authUser));
-        // }
-
+        // Notifications
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new NewPaymentNotification($payment, $user));
+        }
+        foreach ($payment->invoice->invoiceable->service->userRoleCompanies as $client) {
+            $client->user->notify(new NewPaymentNotification($payment, $user));
+        }
     }
 
     /**

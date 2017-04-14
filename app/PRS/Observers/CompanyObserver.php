@@ -18,21 +18,21 @@ class CompanyObserver
      */
     public function deleting(Company $company)
     {
-        // // Cancel Stripe Subscription
-        // if ($admin->subscribed('main')) {
-        //     $admin->subscription('main')->cancelNow();
-        // }
-        //
-        // // Delete associated objects
-        // foreach ($admin->clients as $client) {
-        //     $client->delete();
-        // }
-        // foreach ($admin->supervisors as $supervisor) {
-        //     $supervisor->delete();
-        // }
-        // foreach ($admin->services as $service) {
-        //     $service->delete();
-        // }
+        // Cancel Stripe Subscription
+        if ($company->subscribed('main')) {
+            $company->subscription('main')->cancelNow();
+        }
+
+        // Delete associated objects
+        foreach ($company->userRoleCompanies() as $person) {
+            $person->delete();
+        }
+        foreach ($company->services as $service) {
+            $service->delete();
+        }
+        foreach ($company->permissionRoleCompanies as $permissionRoleCompany) {
+            $permissionRoleCompany->delete();
+        }
     }
 
     /**
@@ -43,10 +43,7 @@ class CompanyObserver
      */
     public function deleted(Company $company)
     {
-        // $user = $admin->user;
-        // dispatch(new DeleteImagesFromS3($admin->images));
-        // dispatch(new DeleteModels($user->notifications));
-        // $user->delete();
+        dispatch(new DeleteImagesFromS3($company->images));
     }
 
         public function created(Company $company)

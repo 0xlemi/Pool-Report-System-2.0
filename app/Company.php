@@ -77,7 +77,7 @@ class Company extends Model
 
     public function allPermissions(...$roles)
     {
-        $permissions = $this->permissionRoleCompany()
+        $permissions = $this->permissionRoleCompanies()
                                     ->ofRole(...$roles)
                                     ->permissions()
                                     ->get()
@@ -320,7 +320,7 @@ class Company extends Model
         return $this->hasMany(UserRoleCompany::class);
     }
 
-    public function permissionRoleCompany()
+    public function permissionRoleCompanies()
     {
         return $this->hasMany(PermissionRoleCompany::class);
     }

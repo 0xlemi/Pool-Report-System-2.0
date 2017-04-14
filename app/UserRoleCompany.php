@@ -164,11 +164,8 @@ class UserRoleCompany extends Model
 
     public function scopeOfRole($query, ...$roles)
     {
-        return $query->join('roles', function ($join) use ($roles){
-                    $join->on('role_id', '=', 'roles.id')
-                            ->whereIn('roles.name', $roles)
-                            ->select('user_role_company.*');
-                });
+        $rolesIds = Role::whereIn('name', $roles)->pluck('id');
+        return $query->whereIn('role_id', $rolesIds);
     }
 
     public function scopePaid($query, $paid)

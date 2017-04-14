@@ -15,21 +15,15 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice)
     {
-        // // Notify:
-        //     // System admin
-        //     // Supervisors
-        //     // Invoice Related Clients
-        // $authUser = \Auth::user();
-        // $admin = $invoice->admin();
-        // $service = $invoice->invoiceable->service;
-        // $admin->user->notify(new NewInvoiceNotification($invoice, $authUser));
-        // foreach ($admin->supervisors as $supervisor) {
-        //     $supervisor->user->notify(new NewInvoiceNotification($invoice, $authUser));
-        // }
-        // foreach ($service->clients as $client) {
-        //     $client->user->notify(new NewInvoiceNotification($invoice, $authUser));
-        // }
-
+        // Notifications
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new NewInvoiceNotification($invoice, $user));
+        }
+        foreach ($invoice->invoiceable->service->userRoleCompanies as $client) {
+            $client->user->notify(new NewInvoiceNotification($invoice, $user));
+        }
     }
 
     /**
@@ -40,5 +34,6 @@ class InvoiceObserver
      */
     public function deleted(Invoice $invoice)
     {
+        //
     }
 }

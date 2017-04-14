@@ -16,12 +16,12 @@ class ServiceObserver
      */
     public function created(Service $service)
     {
-        // $authUser = \Auth::user();
-        // $admin = $service->admin();
-        // $admin->user->notify(new NewServiceNotification($service, $authUser));
-        // foreach ($admin->supervisors as $supervisor) {
-        //     $supervisor->user->notify(new NewServiceNotification($service, $authUser));
-        // }
+        // Notifications
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new NewServiceNotification($service, $user));
+        }
     }
 
     /**

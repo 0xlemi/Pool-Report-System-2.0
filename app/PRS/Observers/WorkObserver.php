@@ -16,15 +16,15 @@ class WorkObserver
      */
     public function created(Work $work)
     {
-        // $authUser = \Auth::user();
-        // $admin = $work->workOrder->admin();
-        // $workOrder = $work->workOrder;
-        //
-        // $admin->user->notify(new AddedWorkNotification($work, $authUser));
-        // $workOrder->supervisor->user->notify(new AddedWorkNotification($work, $authUser));
-        // foreach ($workOrder->service->clients as $client) {
-        //     $client->user->notify(new AddedWorkNotification($work, $authUser));
-        // }
+        // Notifications
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new AddedWorkNotification($work, $user));
+        }
+        foreach ($work->workOrder->service->userRoleCompanies as $client) {
+            $client->user->notify(new AddedWorkNotification($work, $user));
+        }
     }
 
     /**

@@ -3,8 +3,10 @@
 namespace App\PRS\Observers;
 
 use App\User;
+use App\Notifications\NewUserRoleCompanyNotification;
 use App\Events\UserRegistered;
 use App\UserRoleCompany;
+
 
 class UserRoleCompanyObserver
 {
@@ -18,6 +20,35 @@ class UserRoleCompanyObserver
     public function created(UserRoleCompany $userRoleCompany)
     {
         $this->setNotificationsSettings($userRoleCompany);
+
+        // Update billing variables
+        if($userRoleCompany->isRole('sup', 'tech')){
+            dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
+        }
+
+        // Send Notifications
+        $user = auth()->user();
+        $people = $userRoleCompany->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person) {
+            // the supervisor creted should not be notified of his own creation
+            if(!($person->isRole('sup') && ($person->id == $userRoleCompany->id))){
+                $person->user->notify(new NewUserRoleCompanyNotification($userRoleCompany, $user));
+            }
+        }
+    }
+
+    /**
+     * Listen to the userRoleCompany saved event.
+     *
+     * @param  Technician  $userRoleCompany
+     * @return void
+     */
+    public function saved(UserRoleCompany $userRoleCompany)
+    {
+        // Update billing variables
+        if($userRoleCompany->isRole('sup', 'tech')){
+            dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
+        }
     }
 
     /**

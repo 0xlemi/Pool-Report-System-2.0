@@ -16,14 +16,15 @@ class ReportObserver
      */
     public function created(Report $report)
     {
-        // $authUser = \Auth::user();
-        // $admin = $report->admin();
-        //
-        // $admin->user->notify(new NewReportNotification($report, $authUser));
-        // $report->technician->supervisor->user->notify(new NewReportNotification($report, $authUser));
-        // foreach ($report->service->clients as $client) {
-        //     $client->user->notify(new NewReportNotification($report, $authUser));
-        // }
+        // Notifications
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new NewReportNotification($report, $user));
+        }
+        foreach ($report->service->userRoleCompanies as $client) {
+            $client->user->notify(new NewReportNotification($report, $user));
+        }
     }
 
     /**

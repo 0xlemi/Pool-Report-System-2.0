@@ -16,34 +16,31 @@ class ContractObserver
      */
     public function created(ServiceContract $contract)
     {
-        // // check invoice for date
-        // if($contract->checkIfTodayContractChargesInvoice(false)){
-        //
-        //     $now = Carbon::now($contract->admin()->timezone);
-        //     $month = $now->format('F');
-        //     $year = $now->format('Y');
-        //
-        //     $contract->invoices()->create([
-        //         'amount' => $contract->amount,
-        //         'currency' => $contract->currency,
-        //         'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
-        //         'admin_id' => $contract->admin()->id,
-        //     ]);
-        // }
+        // check invoice for date
+        if($contract->checkIfTodayContractChargesInvoice(false)){
 
-        // // Notify:
-        //     //  System Admin,
-        //     //  All Admin Supervisors,
-        //     //  Clients related to the service
-        // $authUser = \Auth::user();
-        // $admin = $contract->admin();
-        // $admin->user->notify(new AddedContractNotification($contract, $authUser));
-        // foreach ($admin->supervisors as $supervisor) {
-        //     $supervisor->user->notify(new AddedContractNotification($contract, $authUser));
-        // }
-        // foreach ($contract->service->clients as $client) {
-        //     $client->user->notify(new AddedContractNotification($contract, $authUser));
-        // }
+            $company = $contract->company;
+            $now = Carbon::now($company->timezone);
+            $month = $now->format('F');
+            $year = $now->format('Y');
+
+            $contract->invoices()->create([
+                'amount' => $contract->amount,
+                'currency' => $contract->currency,
+                'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
+                'company_id' => $company->id,
+            ]);
+        }
+
+        //  Notificitions
+        $user = auth()->user();
+        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        foreach ($people as $person){
+            $person->user->notify(new AddedContractNotification($contract, $user));
+        }
+        foreach ($contract->service->userRoleCompanies as $client) {
+            $client->user->notify(new AddedContractNotification($contract, $user));
+        }
 
     }
 

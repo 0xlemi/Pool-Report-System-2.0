@@ -15,23 +15,15 @@ class UserObserver
      */
     public function created(User $user)
     {
-
-        
-
+        // *** this needs to be verification token
         // $token = $user->activationToken()->create([
         //     'token' => str_random(128),
         // ]);
-        //
+
+        // use different type of authorization for api
         // $user->api_token = str_random(60);
-        // $user->remember_token = str_random(10);
-        //
-        // if($user->isTechnician()){
-        //     // since technician don't have email
-        //     // should be immediately be verified
-        //     $user->verified = 1;
-        // }
-        // $user->save();
-        //
-        // event(new UserRegistered($user));
+        $user->remember_token = str_random(10);
+
+        event(new UserRegistered($user));
     }
 }
