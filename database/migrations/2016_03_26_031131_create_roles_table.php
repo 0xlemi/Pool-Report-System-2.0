@@ -16,17 +16,18 @@ class CreateRolesTable extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->integer('id')->unsigned();
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('route');
             $table->string('text');
 
             $table->primary('id');
         });
 
         DB::table('roles')->insert([
-            ['id' => 1, 'name' => 'admin', 'text' => 'Company Administrator'],
-            ['id' => 2, 'name' => 'client', 'text' => 'Client'],
-            ['id' => 3, 'name' => 'sup', 'text' => 'Supervisor'],
-            ['id' => 4, 'name' => 'tech', 'text' => 'Technician'],
+            ['id' => 1, 'name' => 'admin', 'route' => '', 'text' => 'Company Administrator'],
+            ['id' => 2, 'name' => 'client', 'route' => 'clients', 'text' => 'Client'],
+            ['id' => 3, 'name' => 'sup', 'route' => 'supervisors', 'text' => 'Supervisor'],
+            ['id' => 4, 'name' => 'tech', 'route' => 'technicians', 'text' => 'Technician'],
         ]);
     }
 
