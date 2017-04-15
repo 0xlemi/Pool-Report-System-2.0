@@ -69,9 +69,9 @@ class User extends Authenticatable
 	public function selectUserRoleCompany(UserRoleCompany $userRoleCompany)
 	{
 		// Deselect all userRoleCompanies
-		$this->userRoleCompanies()->update(['selected', false]);
+		$this->userRoleCompanies()->update(['selected' => 0]);
 		// Select a userRoleCompany
-		$userRoleCompany->selected = true;
+		$userRoleCompany->selected = 1;
 		$userRoleCompany->save();
 	}
 

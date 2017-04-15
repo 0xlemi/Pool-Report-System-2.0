@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 use App\User;
-use App\Role;
+use App\UserRoleCompany;
 
 class VerificationToken extends Model
 {
@@ -20,9 +20,9 @@ class VerificationToken extends Model
     //   Relationships
     // *******************
 
-    public function user()
+    public function userRoleCompany()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(UserRoleCompany::class);
     }
 
 }

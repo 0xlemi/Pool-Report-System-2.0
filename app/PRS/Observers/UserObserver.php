@@ -17,5 +17,6 @@ class UserObserver
         // use different type of authorization for api
         // $user->api_token = str_random(60);
         $user->remember_token = str_random(10);
+        $user->save();
     }
 }
