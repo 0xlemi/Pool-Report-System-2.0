@@ -9,6 +9,8 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\Mail\NewTechnicianMail;
 use App\Mail\NewClientMail;
 use App\Mail\NewSupervisorMail;
+use App\UserRoleCompany;
+use App\PRS\Helpers\NotificationHelpers;
 
 class NewUserRoleCompanyNotification extends Notification implements ShouldQueue
 {

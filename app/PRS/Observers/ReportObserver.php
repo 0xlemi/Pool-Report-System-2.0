@@ -18,7 +18,7 @@ class ReportObserver
     {
         // Notifications
         $urc = auth()->user()->selectedUser;
-        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewReportNotification($report, $urc));
         }

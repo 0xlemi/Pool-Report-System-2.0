@@ -27,7 +27,7 @@ class WorkOrderObserver
             'admin_id' => $company->id,
         ]);
 
-        $people = $company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $people = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
