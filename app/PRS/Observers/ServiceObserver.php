@@ -20,7 +20,7 @@ class ServiceObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new NewServiceNotification($service, $user));
+            $person->notify(new NewServiceNotification($service, $user));
         }
     }
 

@@ -78,11 +78,11 @@ class HomeController extends PageController
         $user = $signer->user;
 
         // if the user is allready logged in send him to his settings
-        if($user == Auth::user()){
+        if($user == auth()->user()){
             return redirect('/settings');
         }
 
-        $notifications = $user->notificationSettings->getAll();
+        $notifications = $user->selectedUser->allNotificationSettings();
 
         return view('extras.emailSettings', compact('notifications', 'token'));
     }

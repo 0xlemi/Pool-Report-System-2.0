@@ -51,7 +51,7 @@ class ClientTransformer extends Transformer
             'photo' => $photo,
             'services' => $services,
             'notification_settings' => [
-                $client->user->notificationSettings->getAll()
+                $client->user->selectedUser->allNotificationSettings()
             ],
         ];
     }

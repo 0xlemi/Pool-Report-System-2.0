@@ -29,10 +29,10 @@ class WorkOrderObserver
 
         $people = $company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new NewWorkOrderNotification($workOrder, $user));
+            $person->notify(new NewWorkOrderNotification($workOrder, $user));
         }
         foreach ($workOrder->service->clients as $client) {
-            $client->user->notify(new NewWorkOrderNotification($workOrder, $user));
+            $client->notify(new NewWorkOrderNotification($workOrder, $user));
         }
 
     }

@@ -20,10 +20,10 @@ class ReportObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new NewReportNotification($report, $user));
+            $person->notify(new NewReportNotification($report, $user));
         }
         foreach ($report->service->userRoleCompanies as $client) {
-            $client->user->notify(new NewReportNotification($report, $user));
+            $client->notify(new NewReportNotification($report, $user));
         }
     }
 

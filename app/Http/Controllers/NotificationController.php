@@ -27,7 +27,9 @@ class NotificationController extends PageController
      */
     public function index(Request $request)
     {
-        $notifications = $request->user()->notifications()->paginate($this->paginationNumber);
+        $notifications = $request->user()->selectedUser
+                            ->notifications()
+                            ->paginate($this->paginationNumber);
 
         // mark the notifications as read
         $this->markPageAsRead($request);
@@ -37,8 +39,8 @@ class NotificationController extends PageController
 
     public function widget(Request $request)
     {
-        $notifications = $request->user()
-                                ->notifications()
+        $userRoleCompany = $request->user()->selectedUser;
+        $notifications = $userRoleCompany->notifications()
                                 ->take(4)
                                 ->get()
                                 ->transform(function($item){
@@ -53,13 +55,14 @@ class NotificationController extends PageController
 
         return response()->json([
             'notifications' => $notifications,
-            'unreadCount' => $request->user()->unreadNotifications()->count(),
+            'unreadCount' => $userRoleCompany->unreadNotifications()->count(),
         ]);
     }
 
     public function markWidgetAsRead(Request $request)
     {
         $request->user()
+            ->selectedUser
             ->notifications()
             ->take(4)
             ->get()
@@ -69,6 +72,7 @@ class NotificationController extends PageController
     public function markAllAsRead(Request $request)
     {
         $request->user()
+            ->selectedUser
             ->unreadNotifications
             ->markAsRead();
     }
@@ -76,6 +80,7 @@ class NotificationController extends PageController
     protected function markPageAsRead(Request $request)
     {
         $request->user()
+            ->selectedUser
             ->notifications()
             ->paginate($this->paginationNumber)
             ->markAsRead();

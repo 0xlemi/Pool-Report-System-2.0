@@ -55,7 +55,7 @@ class TechnicianTransformer extends Transformer
             'photo' => $photo,
             'supervisor' => $this->supervisorPreviewTransformer->transform($technician->supervisor),
             'notification_settings' => [
-                $technician->user->notificationSettings->getAll()
+                $technician->user->selectedUser->allNotificationSettings()
             ],
         ];
     }

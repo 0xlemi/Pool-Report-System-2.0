@@ -21,7 +21,7 @@ class AdministratorTransformer extends Transformer
             'facebook' => $admin->facebook,
             'twitter' => $admin->twitter,
             'notification_settings' => [
-                $admin->user->notificationSettings->getAll()
+                $admin->user->selectedUser->allNotificationSettings()
             ],
             'permissions' => $admin->permissions()->getAll(),
         ];

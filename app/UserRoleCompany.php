@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\Traits\Model\ImageTrait;
 use App\Work;
@@ -21,6 +22,7 @@ class UserRoleCompany extends Model
 
     use SortableTrait;
     use ImageTrait;
+    use Notifiable;
 
 	/**
      * The table associated with the model.

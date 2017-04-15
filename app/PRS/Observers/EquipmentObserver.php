@@ -20,10 +20,10 @@ class EquipmentObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new AddedEquipmentNotification($equipment, $user));
+            $person->notify(new AddedEquipmentNotification($equipment, $user));
         }
         foreach ($equipment->service->userRoleCompanies as $client) {
-            $client->user->notify(new AddedEquipmentNotification($equipment, $user));
+            $client->notify(new AddedEquipmentNotification($equipment, $user));
         }
     }
 

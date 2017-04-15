@@ -20,10 +20,10 @@ class WorkObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new AddedWorkNotification($work, $user));
+            $person->notify(new AddedWorkNotification($work, $user));
         }
         foreach ($work->workOrder->service->userRoleCompanies as $client) {
-            $client->user->notify(new AddedWorkNotification($work, $user));
+            $client->notify(new AddedWorkNotification($work, $user));
         }
     }
 

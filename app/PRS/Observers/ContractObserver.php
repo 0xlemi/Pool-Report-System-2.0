@@ -36,10 +36,10 @@ class ContractObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new AddedContractNotification($contract, $user));
+            $person->notify(new AddedContractNotification($contract, $user));
         }
         foreach ($contract->service->userRoleCompanies as $client) {
-            $client->user->notify(new AddedContractNotification($contract, $user));
+            $client->notify(new AddedContractNotification($contract, $user));
         }
 
     }

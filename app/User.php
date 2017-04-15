@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
@@ -21,7 +20,6 @@ use App\UrlSigner;
 class User extends Authenticatable
 {
 	use ImageTrait;
-    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +50,6 @@ class User extends Authenticatable
 
     protected $appends = [
         'fullName',
-		'notificationSettings',
 		'selectedUser'
     ];
 
@@ -109,10 +106,6 @@ class User extends Authenticatable
 
     //******** VALUE OBJECTS ********
 
-    // public function getNotificationSettingsAttribute()
-    // {
-    //     return new notificationSettings($this, resolve(UserHelpers::class));
-    // }
 
 
     //******** Relationships ********

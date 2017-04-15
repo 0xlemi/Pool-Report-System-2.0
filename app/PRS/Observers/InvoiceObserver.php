@@ -19,10 +19,10 @@ class InvoiceObserver
         $user = auth()->user();
         $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->user->notify(new NewInvoiceNotification($invoice, $user));
+            $person->notify(new NewInvoiceNotification($invoice, $user));
         }
         foreach ($invoice->invoiceable->service->userRoleCompanies as $client) {
-            $client->user->notify(new NewInvoiceNotification($invoice, $user));
+            $client->notify(new NewInvoiceNotification($invoice, $user));
         }
     }
 

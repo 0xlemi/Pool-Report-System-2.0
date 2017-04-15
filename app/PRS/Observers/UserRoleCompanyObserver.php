@@ -32,7 +32,7 @@ class UserRoleCompanyObserver
         foreach ($people as $person) {
             // the supervisor creted should not be notified of his own creation
             if(!($person->isRole('sup') && ($person->id == $userRoleCompany->id))){
-                $person->user->notify(new NewUserRoleCompanyNotification($userRoleCompany, $user));
+                $person->notify(new NewUserRoleCompanyNotification($userRoleCompany, $user));
             }
         }
     }
