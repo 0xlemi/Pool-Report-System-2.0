@@ -3,7 +3,6 @@
 namespace App\PRS\Observers;
 
 use App\User;
-use App\Events\UserRoleCompanyRegistered;
 
 class UserObserver
 {

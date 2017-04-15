@@ -2,10 +2,11 @@
 
 namespace App\PRS\Observers;
 
+use DB;
 use App\User;
 use App\Notifications\NewUserRoleCompanyNotification;
-use App\Events\UserRoleCompanyRegistered;
 use App\UserRoleCompany;
+use App\Jobs\CreateAndSendVerificationToken;
 
 
 class UserRoleCompanyObserver
@@ -26,7 +27,10 @@ class UserRoleCompanyObserver
             dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
         }
 
-        event(new UserRoleCompanyRegistered($userRoleCompany));
+        // Means the User was just created and needs verification
+        if($userRoleCompany->user->userRoleCompanies()->count() == 1){
+            dispatch(new CreateAndSendVerificationToken($userRoleCompany));
+        }
 
         // Send Notifications
         $urc = auth()->user()->selectedUser;
