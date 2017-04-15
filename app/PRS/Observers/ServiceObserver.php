@@ -17,10 +17,10 @@ class ServiceObserver
     public function created(Service $service)
     {
         // Notifications
-        $user = auth()->user();
-        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $urc = auth()->user()->selectedUser;
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new NewServiceNotification($service, $user));
+            $person->notify(new NewServiceNotification($service, $urc));
         }
     }
 

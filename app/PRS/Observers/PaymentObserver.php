@@ -16,13 +16,13 @@ class PaymentObserver
     public function created(Payment $payment)
     {
         // Notifications
-        $user = auth()->user();
-        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $urc = auth()->user()->selectedUser;
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new NewPaymentNotification($payment, $user));
+            $person->notify(new NewPaymentNotification($payment, $urc));
         }
         foreach ($payment->invoice->invoiceable->service->userRoleCompanies as $client) {
-            $client->notify(new NewPaymentNotification($payment, $user));
+            $client->notify(new NewPaymentNotification($payment, $urc));
         }
     }
 

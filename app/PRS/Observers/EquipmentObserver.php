@@ -17,13 +17,13 @@ class EquipmentObserver
     public function created(Equipment $equipment)
     {
         // Notifications
-        $user = auth()->user();
-        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $urc = auth()->user()->selectedUser;
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new AddedEquipmentNotification($equipment, $user));
+            $person->notify(new AddedEquipmentNotification($equipment, $urc));
         }
         foreach ($equipment->service->userRoleCompanies as $client) {
-            $client->notify(new AddedEquipmentNotification($equipment, $user));
+            $client->notify(new AddedEquipmentNotification($equipment, $urc));
         }
     }
 

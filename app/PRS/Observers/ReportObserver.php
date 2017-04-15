@@ -17,13 +17,13 @@ class ReportObserver
     public function created(Report $report)
     {
         // Notifications
-        $user = auth()->user();
-        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $urc = auth()->user()->selectedUser;
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new NewReportNotification($report, $user));
+            $person->notify(new NewReportNotification($report, $urc));
         }
         foreach ($report->service->userRoleCompanies as $client) {
-            $client->notify(new NewReportNotification($report, $user));
+            $client->notify(new NewReportNotification($report, $urc));
         }
     }
 

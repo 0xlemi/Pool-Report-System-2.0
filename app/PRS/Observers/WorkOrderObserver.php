@@ -16,7 +16,7 @@ class WorkOrderObserver
      */
     public function created(WorkOrder $workOrder)
     {
-        $user = auth()->user();
+        $urc = auth()->user()->selectedUser;
         $company = $workOrder->company;
 
         // create invoice
@@ -29,10 +29,10 @@ class WorkOrderObserver
 
         $people = $company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new NewWorkOrderNotification($workOrder, $user));
+            $person->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
         foreach ($workOrder->service->clients as $client) {
-            $client->notify(new NewWorkOrderNotification($workOrder, $user));
+            $client->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
 
     }

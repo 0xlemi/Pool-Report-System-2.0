@@ -27,12 +27,12 @@ class UserRoleCompanyObserver
         }
 
         // Send Notifications
-        $user = auth()->user();
+        $urc = auth()->user()->selectedUser;
         $people = $userRoleCompany->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person) {
             // the supervisor creted should not be notified of his own creation
             if(!($person->isRole('sup') && ($person->id == $userRoleCompany->id))){
-                $person->notify(new NewUserRoleCompanyNotification($userRoleCompany, $user));
+                $person->notify(new NewUserRoleCompanyNotification($userRoleCompany, $urc));
             }
         }
     }

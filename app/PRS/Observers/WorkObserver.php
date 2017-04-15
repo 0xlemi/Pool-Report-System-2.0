@@ -17,13 +17,13 @@ class WorkObserver
     public function created(Work $work)
     {
         // Notifications
-        $user = auth()->user();
-        $people = $user->selectedUser->company->userRoleCompanies()->ofRole('admin', 'supervisor');
+        $urc = auth()->user()->selectedUser;
+        $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor');
         foreach ($people as $person){
-            $person->notify(new AddedWorkNotification($work, $user));
+            $person->notify(new AddedWorkNotification($work, $urc));
         }
         foreach ($work->workOrder->service->userRoleCompanies as $client) {
-            $client->notify(new AddedWorkNotification($work, $user));
+            $client->notify(new AddedWorkNotification($work, $urc));
         }
     }
 
