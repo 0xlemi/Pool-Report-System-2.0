@@ -13,6 +13,7 @@ use App\PRS\Traits\Model\ImageTrait;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
+use App\VerificationToken;
 use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
@@ -65,6 +66,15 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification($token));
     }
 
+	public function selectUserRoleCompany(UserRoleCompany $userRoleCompany)
+	{
+		// Deselect all userRoleCompanies
+		$this->userRoleCompanies()->update(['selected', false]);
+		// Select a userRoleCompany
+		$userRoleCompany->selected = true;
+		$userRoleCompany->save();
+	}
+
 	/**
 	 * Check if between the user's UserRoleCompany if it has one of the roles
 	 * and is associated to the company
@@ -109,11 +119,6 @@ class User extends Authenticatable
 
 
     //******** Relationships ********
-
-    public function activationToken()
-    {
-        return $this->hasOne(ActivationToken::class);
-    }
 
     public function userRoleCompanies()
     {

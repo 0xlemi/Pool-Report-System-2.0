@@ -4,7 +4,7 @@ namespace App\PRS\Observers;
 
 use App\User;
 use App\Notifications\NewUserRoleCompanyNotification;
-use App\Events\UserRegistered;
+use App\Events\UserRoleCompanyRegistered;
 use App\UserRoleCompany;
 
 
@@ -25,6 +25,8 @@ class UserRoleCompanyObserver
         if($userRoleCompany->isRole('sup', 'tech')){
             dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
         }
+
+        event(new UserRoleCompanyRegistered($userRoleCompany));
 
         // Send Notifications
         $urc = auth()->user()->selectedUser;

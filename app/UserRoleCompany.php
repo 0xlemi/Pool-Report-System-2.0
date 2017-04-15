@@ -221,6 +221,11 @@ class UserRoleCompany extends Model
     {
         return $this->hasMany(UrlSigner::class);
     }
+    
+    public function verificationToken()
+    {
+        return $this->hasOne(VerificationToken::class);
+    }
 
 
 

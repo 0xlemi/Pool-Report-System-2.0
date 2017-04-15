@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\User;
+use App\UserRoleCompany;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -10,19 +10,19 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserRegistered
+class UserRoleCompanyRegistered
 {
     use SerializesModels;
 
-    public $user;
+    public $userRoleCompany;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserRoleCompany $userRoleCompany)
     {
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
     }
 }

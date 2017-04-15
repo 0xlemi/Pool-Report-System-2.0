@@ -33,10 +33,10 @@ Route::get('/home', 'HomeController@home')->middleware('auth');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
-// Activation
-Route::get('activate/token/{token}', 'Auth\ActivationController@activate')->name('auth.activate');
-Route::post('activate/password', 'Auth\ActivationController@setPassword');
-Route::get('activate/resend', 'Auth\ActivationController@resend')->name('auth.activate.resend');
+// Verification
+Route::get('activate/token/{token}', 'Auth\VerificationController@activate')->name('auth.activate');
+Route::post('activate/password', 'Auth\VerificationController@setPassword');
+// Route::get('activate/resend', 'Auth\VerificationController@resend')->name('auth.activate.resend');
 
 // change email settings from link
 Route::group(['middleware' => ['throttle:500'] ], function (){

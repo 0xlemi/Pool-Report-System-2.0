@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
 	protected $toTruncate = [
-		'activation_tokens',
+		'verification_tokens',
 		'chemicals',
 		'companies',
 		'equipment',

@@ -13,8 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\UserRegistered' => [
-            'App\Listeners\SendActivationEmail',
+        'App\Events\UserRoleCompanyRegistered' => [
+            'App\Listeners\SendVerificationEmail',
         ],
     ];
 

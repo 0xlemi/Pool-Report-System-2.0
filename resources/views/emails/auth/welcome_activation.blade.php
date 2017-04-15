@@ -227,7 +227,7 @@ td {
                         <tr>
                           <td align="center" width="250" valign="middle" class="em_pad"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
                               <tr>
-                                <td width="100%" align="center" style="font-size: 30px; color: rgb(51, 51, 51); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 34px;"  cu-identify="element_08244225362305473">You're pool company<div><div><span style="font-weight: bold;">{{ $admin->company_name }}</span></div></td>
+                                <td width="100%" align="center" style="font-size: 30px; color: rgb(51, 51, 51); font-family: Lato, Arial, sans-serif; font-weight: 400; line-height: 34px;"  cu-identify="element_08244225362305473">You're pool company<div><div><span style="font-weight: bold;">{{ $company->name }}</span></div></td>
                               </tr>
                             </table></td>
                         </tr>

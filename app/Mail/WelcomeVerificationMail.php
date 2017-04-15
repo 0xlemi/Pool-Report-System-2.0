@@ -6,25 +6,25 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Administrator;
-use App\ActivationToken;
+use App\Company;
+use App\VerificationToken;
 
-class WelcomeActivationMail extends Mailable
+class WelcomeVerificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $token;
-    public $admin;
+    public $company;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(ActivationToken $token, Administrator $admin)
+    public function __construct(VerificationToken $token, Company $company)
     {
         $this->token = $token;
-        $this->admin = $admin;
+        $this->company = $company;
     }
 
     /**

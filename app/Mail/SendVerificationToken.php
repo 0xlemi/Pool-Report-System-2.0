@@ -6,9 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\ActivationToken;
+use App\VerificationToken;
 
-class SendActivationToken extends Mailable implements ShouldQueue
+class SendVerificationToken extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class SendActivationToken extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ActivationToken $token)
+    public function __construct(VerificationToken $token)
     {
         $this->token = $token;
     }

@@ -15,8 +15,8 @@ use Auth;
 use Mail;
 use Validator;
 use App\Service;
-use App\Mail\SendActivationToken;
-use App\Mail\WelcomeActivationMail;
+use App\Mail\SendVerificationToken;
+use App\Mail\WelcomeVerificationMail;
 use Carbon\Carbon;
 
 class UserController extends ApiController
@@ -212,14 +212,14 @@ class UserController extends ApiController
             return response('Your account is already verified, just login.', 400);
         }
 
-        $token = $user->activationToken()->create([
+        $token = $user->verificationToken()->create([
             'token' => str_random(128),
         ]);
 
         if($user->isAdministrator){
-            Mail::to($user)->send(new SendActivationToken($user->activationToken));
+            Mail::to($user)->send(new SendVerificationToken($user->verificationToken));
         }
-        Mail::to($user)->send(new WelcomeActivationMail($user->activationToken));
+        Mail::to($user)->send(new WelcomeVerificationMail($user->verificationToken));
 
         return response('Email sent, please check your inbox and verify your account.', 403);
 
