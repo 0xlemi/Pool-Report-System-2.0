@@ -10,13 +10,14 @@ use App\User;
 use App\WorkOrder;
 use App\PRS\Helpers\NotificationHelpers;
 use App\Mail\NewWorkOrderMail;
+use App\UserRoleCompany;
 
 class NewWorkOrderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $workOrder;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -24,10 +25,10 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(WorkOrder $workOrder, $user)
+    public function __construct(WorkOrder $workOrder, UserRoleCompany $userRoleCompany)
     {
         $this->workOrder = $workOrder;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -63,7 +64,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     {
         $workOrder = $this->workOrder;
 
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($workOrder->icon()),
             'link' => "workorders/{$workOrder->seq_id}",

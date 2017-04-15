@@ -55,14 +55,11 @@ class UserRoleCompany extends Model
 		}
     }
 
-	public function hasPermission(...$permissions)
+	public function hasPermission($element, $action)
 	{
-		$permissiosCompany = $this->role->permissionsFromCompany($this->company)->get();
-		foreach ($permissions as $permission) {
-        	if ($permissiosCompany->contains('name', $permission)){
-				return true;
-			}
-		}
+        return $this->role->permissionsFromCompany($this->company)
+                            ->where('element', $element)
+                            ->contains('action', $action);
 	}
 
     public function hasNotificationSetting($name, $type)

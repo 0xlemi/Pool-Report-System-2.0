@@ -29,7 +29,7 @@ class ContractPolicy
      */
     public function view(User $user, ServiceContract $serviceContract)
     {
-        return $user->selectedUser->hasPermission('contract_view');
+        return $user->selectedUser->hasPermission('contract', 'view');
     }
 
     /**
@@ -40,7 +40,7 @@ class ContractPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('contract_create');
+        return $user->selectedUser->hasPermission('contract', 'create');
     }
 
     /**
@@ -52,12 +52,12 @@ class ContractPolicy
      */
     public function update(User $user, ServiceContract $serviceContract)
     {
-        return $user->selectedUser->hasPermission('contract_update');
+        return $user->selectedUser->hasPermission('contract', 'update');
     }
 
     public function toggleActivation(User $user)
     {
-        return $user->selectedUser->hasPermission('contract_deactivate');
+        return $user->selectedUser->hasPermission('contract', 'deactivate');
     }
 
     /**
@@ -69,6 +69,6 @@ class ContractPolicy
      */
     public function delete(User $user, ServiceContract $serviceContract)
     {
-        return $user->selectedUser->hasPermission('contract_delete');
+        return $user->selectedUser->hasPermission('contract', 'delete');
     }
 }

@@ -22,7 +22,7 @@ class EquipmentPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('equipment_view');
+        return $user->selectedUser->hasPermission('equipment', 'view');
     }
 
     /**
@@ -38,7 +38,7 @@ class EquipmentPolicy
             // return $user->userable()->hasEquipment($equipment->id);
             return false; // temporary
         }
-        return $user->selectedUser->hasPermission('equipment_view');
+        return $user->selectedUser->hasPermission('equipment', 'view');
         return false;
     }
 
@@ -50,7 +50,7 @@ class EquipmentPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('equipment_create');
+        return $user->selectedUser->hasPermission('equipment', 'create');
     }
 
     /**
@@ -62,17 +62,17 @@ class EquipmentPolicy
      */
     public function update(User $user, Equipment $equipment)
     {
-        return $user->selectedUser->hasPermission('equipment_update');
+        return $user->selectedUser->hasPermission('equipment', 'update');
     }
 
     public function addPhoto(User $user, Equipment $equipment)
     {
-        return $user->selectedUser->hasPermission('equipment_addPhoto');
+        return $user->selectedUser->hasPermission('equipment', 'addPhoto');
     }
 
     public function removePhoto(User $user, Equipment $equipment)
     {
-        return $user->selectedUser->hasPermission('equipment_removePhoto');
+        return $user->selectedUser->hasPermission('equipment', 'removePhoto');
     }
 
     /**
@@ -84,6 +84,6 @@ class EquipmentPolicy
      */
     public function delete(User $user, Equipment $equipment)
     {
-        return $user->selectedUser->hasPermission('equipment_delete');
+        return $user->selectedUser->hasPermission('equipment', 'delete');
     }
 }

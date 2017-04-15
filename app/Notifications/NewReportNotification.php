@@ -10,6 +10,7 @@ use App\Mail\NewReportMail;
 use App\Report;
 use App\User;
 use App\PRS\Helpers\NotificationHelpers;
+use App\UserRoleCompany;
 
 
 class NewReportNotification extends Notification implements ShouldQueue
@@ -17,7 +18,7 @@ class NewReportNotification extends Notification implements ShouldQueue
     use Queueable;
 
     private $report;
-    private $user;
+    private $userRoleCompany;
     protected $helper;
 
     /**
@@ -25,10 +26,10 @@ class NewReportNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Report $report, $user)
+    public function __construct(Report $report, UserRoleCompany $userRoleCompany)
     {
         $this->report = $report;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -63,7 +64,7 @@ class NewReportNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $report = $this->report;
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($report->icon()),
             'link' => "reports/{$report->seq_id}",

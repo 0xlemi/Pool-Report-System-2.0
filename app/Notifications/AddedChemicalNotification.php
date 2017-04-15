@@ -9,13 +9,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Chemical;
 use App\PRS\Helpers\NotificationHelpers;
+use App\UserRoleCompany;
 
 class AddedChemicalNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $chemical;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -23,10 +24,10 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Chemical $chemical, $user)
+    public function __construct(Chemical $chemical, UserRoleCompany $userRoleCompany)
     {
         $this->chemical = $chemical;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -49,7 +50,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return null;    
+        return null;
     }
 
     /**
@@ -61,7 +62,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->chemical->service;
-        $person =  $helper->userStyled($this->user);
+        $person =  $helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($service->icon()),
             'title' => "New <strong>Chemical</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",

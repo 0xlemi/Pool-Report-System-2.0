@@ -10,13 +10,14 @@ use App\User;
 use App\Supervisor;
 use App\PRS\Helpers\NotificationHelpers;
 use App\Mail\NewSupervisorMail;
+use App\UserRoleCompany;
 
 class NewSupervisorNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $supervisor;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -24,10 +25,10 @@ class NewSupervisorNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Supervisor $supervisor, $user)
+    public function __construct(Supervisor $supervisor, UserRoleCompany $userRoleCompany)
     {
         $this->supervisor = $supervisor;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -63,7 +64,7 @@ class NewSupervisorNotification extends Notification implements ShouldQueue
     {
         $supervisor = $this->supervisor;
 
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($supervisor->icon()),
             'link' => "supervisors/{$supervisor->seq_id}",

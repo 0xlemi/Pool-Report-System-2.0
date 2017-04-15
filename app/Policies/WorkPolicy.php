@@ -22,7 +22,7 @@ class WorkPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('work_view');
+        return $user->selectedUser->hasPermission('work', 'view');
     }
 
     /**
@@ -41,7 +41,7 @@ class WorkPolicy
             // return $user->userable()->hasWork($work->id);
             return false; // temporary
         }
-        return $user->selectedUser->hasPermission('work_view');
+        return $user->selectedUser->hasPermission('work', 'view');
     }
 
     /**
@@ -52,7 +52,7 @@ class WorkPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('work_create');
+        return $user->selectedUser->hasPermission('work', 'create');
     }
 
     /**
@@ -64,17 +64,17 @@ class WorkPolicy
      */
     public function update(User $user, Work $work)
     {
-        return $user->selectedUser->hasPermission('work_update');
+        return $user->selectedUser->hasPermission('work', 'update');
     }
 
     public function addPhoto(User $user, Work $work)
     {
-        return $user->selectedUser->hasPermission('work_addPhoto');
+        return $user->selectedUser->hasPermission('work', 'addPhoto');
     }
 
     public function removePhoto(User $user, Work $work)
     {
-        return $user->selectedUser->hasPermission('work_removePhoto');
+        return $user->selectedUser->hasPermission('work', 'removePhoto');
     }
 
     /**
@@ -86,6 +86,6 @@ class WorkPolicy
      */
     public function delete(User $user, Work $work)
     {
-        return $user->selectedUser->hasPermission('work_delete');
+        return $user->selectedUser->hasPermission('work', 'delete');
     }
 }

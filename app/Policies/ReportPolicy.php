@@ -22,37 +22,37 @@ class ReportPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('report_view');
+        return $user->selectedUser->hasPermission('report', 'view');
     }
 
     public function view(User $user, Report $report)
     {
-        return $user->selectedUser->hasPermission('report_view');
+        return $user->selectedUser->hasPermission('report', 'view');
     }
 
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('report_create');
+        return $user->selectedUser->hasPermission('report', 'create');
     }
 
     public function update(User $user, Report $report)
     {
-        return $user->selectedUser->hasPermission('report_update');
+        return $user->selectedUser->hasPermission('report', 'update');
     }
 
     public function addPhoto(User $user, Report $report)
     {
-        return $user->selectedUser->hasPermission('report_addPhoto');
+        return $user->selectedUser->hasPermission('report', 'addPhoto');
     }
 
     public function removePhoto(User $user, Report $report)
     {
-        return $user->selectedUser->hasPermission('report_removePhoto');
+        return $user->selectedUser->hasPermission('report', 'removePhoto');
     }
 
     public function delete(User $user, Report $report)
     {
-        return $user->selectedUser->hasPermission('report_delete');
+        return $user->selectedUser->hasPermission('report', 'delete');
     }
 
 

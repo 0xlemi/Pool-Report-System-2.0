@@ -9,13 +9,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\Equipment;
 use App\PRS\Helpers\NotificationHelpers;
+use App\UserRoleCompany;
 
 class AddedEquipmentNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $equipment;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -23,10 +24,10 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Equipment $equipment, $user)
+    public function __construct(Equipment $equipment, UserRoleCompany $userRoleCompany)
     {
         $this->equipment = $equipment;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -49,7 +50,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return null;    
+        return null;
     }
 
     /**
@@ -61,7 +62,7 @@ class AddedEquipmentNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->equipment->service();
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
 
         return [
             'icon' => \Storage::url($this->equipment->icon()),

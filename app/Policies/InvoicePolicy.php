@@ -22,7 +22,7 @@ class InvoicePolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('invoice_view');
+        return $user->selectedUser->hasPermission('invoice', 'view');
     }
 
     /**
@@ -34,7 +34,7 @@ class InvoicePolicy
      */
     public function view(User $user, Invoice $invoice)
     {
-        return $user->selectedUser->hasPermission('invoice_view');
+        return $user->selectedUser->hasPermission('invoice', 'view');
     }
 
     /**
@@ -46,6 +46,6 @@ class InvoicePolicy
      */
     public function delete(User $user, Invoice $invoice)
     {
-        return $user->selectedUser->hasPermission('invoice_delete');
+        return $user->selectedUser->hasPermission('invoice', 'delete');
     }
 }

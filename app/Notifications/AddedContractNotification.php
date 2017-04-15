@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
 use App\ServiceContract;
+use App\UserRoleCompany;
 use App\PRS\Helpers\NotificationHelpers;
 
 class AddedContractNotification extends Notification implements ShouldQueue
@@ -15,7 +16,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $contract;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -23,10 +24,10 @@ class AddedContractNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(ServiceContract $contract, $user)
+    public function __construct(ServiceContract $contract, UserRoleCompany $userRoleCompany)
     {
         $this->contract = $contract;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -49,7 +50,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return null;    
+        return null;
     }
 
     /**
@@ -61,7 +62,7 @@ class AddedContractNotification extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         $service = $this->contract->service;
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($service->icon()),
             'link' => "services/{$service->seq_id}",

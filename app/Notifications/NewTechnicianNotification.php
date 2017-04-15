@@ -13,13 +13,14 @@ use App\Mail\NewTechnicianMail;
 use Carbon\Carbon;
 use Storage;
 use Mail;
+use App\UserRoleCompany;
 
 class NewTechnicianNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $technician;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -27,10 +28,10 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Technician $technician, $user)
+    public function __construct(Technician $technician, UserRoleCompany $userRoleCompany)
     {
         $this->technician = $technician;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -66,7 +67,7 @@ class NewTechnicianNotification extends Notification implements ShouldQueue
     {
         $technician = $this->technician;
 
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($technician->icon()),
             'link' => "technicians/{$technician->seq_id}",

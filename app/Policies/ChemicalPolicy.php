@@ -22,7 +22,7 @@ class ChemicalPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('chemical_view');
+        return $user->selectedUser->hasPermission('chemical', 'view');
     }
 
     /**
@@ -34,7 +34,7 @@ class ChemicalPolicy
      */
     public function view(User $user, Chemical $chemical)
     {
-        return $user->selectedUser->hasPermission('chemical_view');
+        return $user->selectedUser->hasPermission('chemical', 'view');
     }
 
     /**
@@ -45,7 +45,7 @@ class ChemicalPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('chemical_create');
+        return $user->selectedUser->hasPermission('chemical', 'create');
     }
 
     /**
@@ -57,7 +57,7 @@ class ChemicalPolicy
      */
     public function update(User $user, Chemical $chemical)
     {
-        return $user->selectedUser->hasPermission('chemical_update');
+        return $user->selectedUser->hasPermission('chemical', 'update');
     }
 
     /**
@@ -69,6 +69,6 @@ class ChemicalPolicy
      */
     public function delete(User $user, Chemical $chemical)
     {
-        return $user->selectedUser->hasPermission('chemical_delete');
+        return $user->selectedUser->hasPermission('chemical', 'delete');
     }
 }

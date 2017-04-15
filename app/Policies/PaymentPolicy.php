@@ -22,7 +22,7 @@ class PaymentPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('payment_view');
+        return $user->selectedUser->hasPermission('payment', 'view');
     }
 
     /**
@@ -34,7 +34,7 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        return $user->selectedUser->hasPermission('payment_view');
+        return $user->selectedUser->hasPermission('payment', 'view');
     }
 
     /**
@@ -45,7 +45,7 @@ class PaymentPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('payment_create');
+        return $user->selectedUser->hasPermission('payment', 'create');
     }
 
     /**
@@ -57,6 +57,6 @@ class PaymentPolicy
      */
     public function delete(User $user, Payment $payment)
     {
-        return $user->selectedUser->hasPermission('payment_delete');
+        return $user->selectedUser->hasPermission('payment', 'delete');
     }
 }

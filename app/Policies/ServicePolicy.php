@@ -22,26 +22,26 @@ class ServicePolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('service_view');
+        return $user->selectedUser->hasPermission('service', 'view');
     }
 
     public function view(User $user, Service $service)
     {
-        return $user->selectedUser->hasPermission('service_view');
+        return $user->selectedUser->hasPermission('service', 'view');
     }
 
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('service_create');
+        return $user->selectedUser->hasPermission('service', 'create');
     }
 
     public function update(User $user, Service $service)
     {
-        return $user->selectedUser->hasPermission('service_update');
+        return $user->selectedUser->hasPermission('service', 'update');
     }
 
     public function delete(User $user, Service $service)
     {
-        return $user->selectedUser->hasPermission('service_delete');
+        return $user->selectedUser->hasPermission('service', 'delete');
     }
 }

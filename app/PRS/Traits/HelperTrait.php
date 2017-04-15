@@ -13,20 +13,14 @@ trait HelperTrait{
                 ->format('l jS \\of F Y h:i:s A');
     }
 
-    function styleEmailPermissions($user)
+    function styleEmailPermissions($userRoleCompany)
     {
-        $result = '';
-        $num = 0;
-        if($user->notificationSettings->hasPermission('notify_report_created', 'mail')){
-            $result .= '<span class="label label-primary">New Report is Created</span><br>';
-            $num++;
-        }
+        $result = '<span class="label label-default">Never Receives Emails</span>';
 
-        if($num == 0){
-            return '<span class="label label-default">Never Receives Emails</span>';
+        if($userRoleCompany->hasNotificationSetting('notify_report_created', 'mail')){
+            $result = '<span class="label label-primary">New Report is Created</span><br>';
         }
         return $result;
-
     }
 
 }

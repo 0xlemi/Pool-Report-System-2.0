@@ -22,7 +22,7 @@ class WorkOrderPolicy
 
     public function list(User $user)
     {
-        return $user->selectedUser->hasPermission('workorder_view');
+        return $user->selectedUser->hasPermission('workorder', 'view');
     }
 
     /**
@@ -39,7 +39,7 @@ class WorkOrderPolicy
             // return $user->selectedUser->hasWorkOrder($workOrder->seq_id);
             return false; // temporary
         }
-        return $user->selectedUser->hasPermission('workorder_view');
+        return $user->selectedUser->hasPermission('workorder', 'view');
     }
 
     /**
@@ -50,7 +50,7 @@ class WorkOrderPolicy
      */
     public function create(User $user)
     {
-        return $user->selectedUser->hasPermission('workorder_create');
+        return $user->selectedUser->hasPermission('workorder', 'create');
     }
 
     /**
@@ -63,7 +63,7 @@ class WorkOrderPolicy
     public function update(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        return ($user->selectedUser->hasPermission('workorder_update') && $isNotFinished );
+        return ($user->selectedUser->hasPermission('workorder', 'update') && $isNotFinished );
     }
 
     /**
@@ -76,17 +76,17 @@ class WorkOrderPolicy
     public function finish(User $user, WorkOrder $workOrder)
     {
         $isNotFinished = !$workOrder->end()->finished();
-        return ($user->selectedUser->hasPermission('workorder_finish') && $isNotFinished );
+        return ($user->selectedUser->hasPermission('workorder', 'finish') && $isNotFinished );
     }
 
     public function addPhoto(User $user, WorkOrder $workOrder)
     {
-        return $user->selectedUser->hasPermission('workorder_addPhoto');
+        return $user->selectedUser->hasPermission('workorder', 'addPhoto');
     }
 
     public function removePhoto(User $user, WorkOrder $workOrder)
     {
-        return $user->selectedUser->hasPermission('workorder_removePhoto');
+        return $user->selectedUser->hasPermission('workorder', 'removePhoto');
     }
 
     /**
@@ -98,6 +98,6 @@ class WorkOrderPolicy
      */
     public function delete(User $user, WorkOrder $workOrder)
     {
-        return $user->selectedUser->hasPermission('workorder_delete');
+        return $user->selectedUser->hasPermission('workorder', 'delete');
     }
 }

@@ -10,13 +10,14 @@ use App\User;
 use App\Client;
 use App\PRS\Helpers\NotificationHelpers;
 use App\Mail\NewClientMail;
+use App\UserRoleCompany;
 
 class NewClientNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $client;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -24,10 +25,10 @@ class NewClientNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Client $client, $user)
+    public function __construct(Client $client, UserRoleCompany $userRoleCompany)
     {
         $this->client = $client;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
 
@@ -63,7 +64,7 @@ class NewClientNotification extends Notification implements ShouldQueue
     {
         $client = $this->client;
 
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($client->icon()),
             'link' => "clients/{$client->seq_id}",
