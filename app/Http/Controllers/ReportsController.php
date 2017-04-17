@@ -87,9 +87,8 @@ class ReportsController extends PageController
                                         ->ofRole('admin', 'sup', 'tech')
                                         ->seqIdOrdered()->get()
                         );
-        $tags = $company->tags();
 
-        return view('reports.create', compact('services', 'people', 'tags'));
+        return view('reports.create', compact('services', 'people'));
     }
 
     /**
@@ -206,7 +205,7 @@ class ReportsController extends PageController
                                             ->ofRole('admin', 'sup', 'tech')
                                             ->seqIdOrdered()->get()
                                     );
-        $tags = $company->tags();
+        $globalChemicals = $company->globalChemicals;
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($company->timezone)
@@ -214,7 +213,7 @@ class ReportsController extends PageController
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'people', 'tags'));
+        return view('reports.edit', compact('report', 'people', 'globalChemicals'));
     }
 
     public function getPhoto(Request $request, $seq_id)

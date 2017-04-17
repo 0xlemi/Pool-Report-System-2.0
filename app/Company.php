@@ -65,12 +65,6 @@ class Company extends Model
 
     //******** VALUE OBJECTS ********
 
-    public function tags()
-    {
-        return new Tags($this->phTags(), $this->chlorineTags(),
-                        $this->temperatureTags(), $this->turbidityTags(),
-                        $this->saltTags());
-    }
 
 
     //******** MISCELLANEOUS ********
@@ -253,51 +247,6 @@ class Company extends Model
                 }
                 return false;
             });
-    }
-
-
-    protected function phTags()
-    {
-        return new Tag($this->ph_very_low,
-                        $this->ph_low,
-                        $this->ph_perfect,
-                        $this->ph_high,
-                        $this->ph_very_high);
-    }
-
-    protected function chlorineTags()
-    {
-        return new Tag($this->chlorine_very_low,
-                        $this->chlorine_low,
-                        $this->chlorine_perfect,
-                        $this->chlorine_high,
-                        $this->chlorine_very_high);
-    }
-
-    protected function temperatureTags()
-    {
-        return new Tag($this->temperature_very_low,
-                        $this->temperature_low,
-                        $this->temperature_perfect,
-                        $this->temperature_high,
-                        $this->temperature_very_high);
-    }
-
-    protected function turbidityTags()
-    {
-        return new TagTurbidity($this->turbidity_perfect,
-                        $this->turbidity_low,
-                        $this->turbidity_high,
-                        $this->turbidity_very_high);
-    }
-
-    protected function saltTags()
-    {
-        return new Tag($this->salt_very_low,
-                        $this->salt_low,
-                        $this->salt_perfect,
-                        $this->salt_high,
-                        $this->salt_very_high);
     }
 
     // ******************************

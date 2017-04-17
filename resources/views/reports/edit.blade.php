@@ -51,6 +51,7 @@
 							</div>
 						</div>
 
+						@foreach()
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">PH</label>
 							<div class="col-md-3 col-lg-3 col-xl-4">
@@ -68,78 +69,7 @@
 								</select>
 							</div>
 						</div>
-
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Chlorine</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="chlorine">
-									@foreach($tags->chlorine()->asArrayWithColor() as $key => $tag)
-									<option data-content='
-										<span class="glyphicon glyphicon-asterisk"
-												style="color: {{$tag->color}};">
-										</span>
-										&nbsp;&nbsp;{{$tag->text}}'
-										value="{{$key}}"
-										{{ ($report->chlorine == $key) ? 'selected':''}}>
-									</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Temperature</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="temperature">
-									@foreach($tags->temperature()->asArrayWithColor() as $key => $tag)
-									<option data-content='
-										<span class="glyphicon glyphicon-asterisk"
-												style="color: {{$tag->color}};">
-										</span>
-										&nbsp;&nbsp;{{$tag->text}}'
-										value="{{$key}}"
-										{{ ($report->temperature == $key) ? 'selected':''}}>
-									</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Turbidity</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="turbidity">
-									@foreach($tags->turbidity()->asArrayWithColor() as $key => $tag)
-									<option data-content='
-										<span class="glyphicon glyphicon-asterisk"
-												style="color: {{$tag->color}};">
-										</span>
-										&nbsp;&nbsp;{{$tag->text}}'
-										value="{{$key}}"
-										{{ ($report->turbidity == $key) ? 'selected':''}}>
-									</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Salt</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="salt">
-									@foreach($tags->salt()->asArrayWithColor() as $key => $tag)
-									<option data-content='
-										<span class="glyphicon glyphicon-asterisk"
-												style="color: {{$tag->color}};">
-										</span>
-										&nbsp;&nbsp;{{$tag->text}}'
-										value="{{$key}}"
-										{{ ($report->salt == $key) ? 'selected':''}}>
-									</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
+						@endforeach
 
 						<br>
 						<br>
