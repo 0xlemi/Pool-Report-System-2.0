@@ -29,7 +29,7 @@
 							</div>
 						</div>
 						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Compleated at:</label>
+							<label class="col-sm-2 form-control-label">completed at:</label>
 							<div class="col-sm-10">
 								<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->completed()->format('d M Y h:i:s A') }}"></p>
 							</div>
