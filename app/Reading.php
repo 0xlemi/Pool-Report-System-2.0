@@ -1,0 +1,34 @@
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Report;
+use App\Chemical;
+
+class Reading extends Model
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'value',
+        'chemical_id'
+    ];
+
+    // ******************
+    //    Relationships
+    // ******************
+
+    public function report()
+    {
+        return $this->belongsTo(Report::class);
+    }
+
+    public function chemical()
+    {
+        return $this->belongsTo(Chemical::class);
+    }
+}

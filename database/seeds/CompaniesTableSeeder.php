@@ -2,8 +2,11 @@
 
 use Illuminate\Database\Seeder;
 use App\Company;
+use App\Chemical;
+use App\GlobalChemical;
 use App\UserRoleCompany;
 use App\User;
+use App\Label;
 
 class CompaniesTableSeeder extends Seeder
 {
@@ -17,6 +20,9 @@ class CompaniesTableSeeder extends Seeder
         Company::flushEventListeners();
         User::flushEventListeners();
         UserRoleCompany::flushEventListeners();
+        Chemical::flushEventListeners();
+        GlobalChemical::flushEventListeners();
+        Label::flushEventListeners();
         // Image::flushEventListeners();
 
         $company1 = factory(Company::class)->create([
@@ -70,28 +76,25 @@ class CompaniesTableSeeder extends Seeder
         ]);
 
 
-
+        // Make Other UserRoleCompany on the same user to test changeURC Functionality
         $urcOwnCompanyClient1 = factory(UserRoleCompany::class)->create([
             'user_id' => $user1->id,
     		'role_id' => 2,
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
-
         $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
             'user_id' => $user1->id,
     		'role_id' => 3,
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
-
         $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
             'user_id' => $user2->id,
     		'role_id' => 2,
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
-
         $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
             'user_id' => $user2->id,
     		'role_id' => 4,
@@ -99,7 +102,152 @@ class CompaniesTableSeeder extends Seeder
     		'selected' => false,
         ]);
 
+        // ***************************
+        //   Create Global Chemicals
+        // ***************************
 
+        $chlorine1 = $company1->globalChemicals()->create([
+            'name' =>  'Chlorine',
+            'units' => 'Grams'
+        ]);
+            $chlorine1->labels()->create([
+                'name' => '0.6 PPM',
+                'value' => 1
+            ]);
+            $chlorine1->labels()->create([
+                'name' => '1.0 PPM',
+                'value' => 2
+            ]);
+            $chlorine1->labels()->create([
+                'name' => '1.5 PPM',
+                'value' => 3
+            ]);
+            $chlorine1->labels()->create([
+                'name' => '2.0 PPM',
+                'value' => 4
+            ]);
+            $chlorine1->labels()->create([
+                'name' => '3.0 PPM',
+                'value' => 5
+            ]);
+        $ph1 = $company1->globalChemicals()->create([
+            'name' =>  'PH Adjuster',
+            'units' => 'Grams'
+        ]);
+            $ph1->labels()->create([
+                'name' => '6.8 pH',
+                'value' => 1
+            ]);
+            $ph1->labels()->create([
+                'name' => '7.2 pH',
+                'value' => 2
+            ]);
+            $ph1->labels()->create([
+                'name' => '7.5 pH',
+                'value' => 3
+            ]);
+            $ph1->labels()->create([
+                'name' => '7.8 pH',
+                'value' => 4
+            ]);
+            $ph1->labels()->create([
+                'name' => '8.2 pH',
+                'value' => 5
+            ]);
+        $salt1 = $company1->globalChemicals()->create([
+            'name' =>  'Salt',
+            'units' => 'PPM'
+        ]);
+            $salt1->labels()->create([
+                'name' => 'Very Low',
+                'value' => 1
+            ]);
+            $salt1->labels()->create([
+                'name' => 'Low',
+                'value' => 2
+            ]);
+            $salt1->labels()->create([
+                'name' => 'Perfect',
+                'value' => 3
+            ]);
+            $salt1->labels()->create([
+                'name' => 'High',
+                'value' => 4
+            ]);
+            $salt1->labels()->create([
+                'name' => 'Very High',
+                'value' => 5
+            ]);
+
+        $chlorine2 = $company2->globalChemicals()->create([
+            'name' =>  'Chlorine',
+            'units' => 'Grams'
+        ]);
+            $chlorine2->labels()->create([
+                'name' => '0.6 PPM',
+                'value' => 1
+            ]);
+            $chlorine2->labels()->create([
+                'name' => '1.0 PPM',
+                'value' => 2
+            ]);
+            $chlorine2->labels()->create([
+                'name' => '1.5 PPM',
+                'value' => 3
+            ]);
+            $chlorine2->labels()->create([
+                'name' => '2.0 PPM',
+                'value' => 4
+            ]);
+            $chlorine2->labels()->create([
+                'name' => '3.0 PPM',
+                'value' => 5
+            ]);
+
+        $ph2 = $company2->globalChemicals()->create([
+            'name' =>  'PH Adjuster',
+            'units' => 'Grams'
+        ]);
+            $ph2->labels()->create([
+                'name' => '6.8 pH',
+                'value' => 1
+            ]);
+            $ph2->labels()->create([
+                'name' => '7.2 pH',
+                'value' => 2
+            ]);
+            $ph2->labels()->create([
+                'name' => '7.5 pH',
+                'value' => 3
+            ]);
+            $ph2->labels()->create([
+                'name' => '7.8 pH',
+                'value' => 4
+            ]);
+            $ph2->labels()->create([
+                'name' => '8.2 pH',
+                'value' => 5
+            ]);
+
+        $salt2 = $company2->globalChemicals()->create([
+            'name' =>  'Salt',
+            'units' => 'PPM'
+        ]);
+            $salt2->labels()->create([
+                'name' => 'Low',
+                'value' => 1
+            ]);
+            $salt2->labels()->create([
+                'name' => 'Perfect',
+                'value' => 2
+            ]);
+            $salt2->labels()->create([
+                'name' => 'High',
+                'value' => 3
+            ]);
+
+
+        // Notification Settings
         DB::table('urc_notify_setting')->insert([
             [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany1->id ],// Notification when Report is Created
             [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany1->id ],// Notification when Work Order is Created
@@ -144,6 +292,7 @@ class CompaniesTableSeeder extends Seeder
             [ 'notify_setting_id' => 20, 'urc_id' => $userRoleCompany2->id ],// Email when Payment is Created
         ]);
 
+        // Permissions for companies
         DB::table('permission_role_company')->insert([
             // Supervisor
             ['role_id' => 3, 'permission_id' => 1, 'company_id' => 1],// Show Reports

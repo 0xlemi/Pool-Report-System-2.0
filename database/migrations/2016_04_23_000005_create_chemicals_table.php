@@ -15,12 +15,17 @@ class CreateChemicalsTable extends Migration
     {
         Schema::create('chemicals', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
             $table->decimal('amount', 9, 2);
-            $table->string('units');
+            $table->integer('global_chemical_id')->unsigned();
             $table->integer('service_id')->unsigned();
             $table->timestamps();
 
+            $table->unique(['global_chemical_id', 'service_id']);
+
+            $table->foreign('global_chemical_id')
+                ->references('id')
+                ->on('global_chemicals')
+                ->onDelete('cascade');
             $table->foreign('service_id')
                 ->references('id')
                 ->on('services')

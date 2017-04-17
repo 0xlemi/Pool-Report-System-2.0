@@ -16,6 +16,7 @@ use App\Invoice;
 use App\Payment;
 use App\Service;
 use App\MissingHistory;
+use App\GlobalChemical;
 
 use DB;
 use App\Permission;
@@ -366,6 +367,11 @@ class Company extends Model
         return Payment::join('invoices', 'invoices.id', '=', 'payments.invoice_id')
                     ->where('company_id', '=', $this->id)
                     ->select('payments.*');
+    }
+
+    public function globalChemicals()
+    {
+        return $this->hasMany(GlobalChemical::class);
     }
 
     public function missingHistories()

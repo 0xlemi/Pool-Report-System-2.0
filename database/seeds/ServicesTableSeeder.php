@@ -85,9 +85,19 @@ class ServicesTableSeeder extends Seeder
 
             }
 
-            for ($e=0; $e < rand(2,5); $e++) {
-                factory(Chemical::class)->create([
-                    'service_id' => $service->id,
+            for ($e=0; $e < rand(1,3); $e++) {
+
+                // Getting a valid Global Chemical ID
+                $usedGlobalChemicals = $service->chemicals()
+                            ->join('global_chemicals', 'global_chemical_id', '=', 'global_chemicals.id')
+                            ->pluck('global_chemicals.id')->toArray();
+                $global_chemical_id = $service->company->globalChemicals()
+                                                ->whereNotIn('global_chemicals.id', $usedGlobalChemicals)
+                                                ->get()->random()->id;
+
+                $service->chemicals()->create([
+                    'amount' => number_format(rand(100,1000000)/100, 2, '.', ''),
+                    'global_chemical_id' => $global_chemical_id,
                 ]);
             }
 

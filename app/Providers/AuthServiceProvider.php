@@ -19,7 +19,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Work' => 'App\Policies\WorkPolicy',
         'App\Service' => 'App\Policies\ServicePolicy',
         'App\ServiceContract' => 'App\Policies\ContractPolicy',
-        'App\Chemical' => 'App\Policies\ChemicalPolicy',
+        // 'App\Chemical' => 'App\Policies\ChemicalPolicy',
         'App\Equipment' => 'App\Policies\EquipmentPolicy',
         'App\Invoice' => 'App\Policies\InvoicePolicy',
         'App\Payment' => 'App\Policies\PaymentPolicy',

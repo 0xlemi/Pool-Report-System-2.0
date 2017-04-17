@@ -101,12 +101,9 @@ class Service extends Model
         return ($this->serviceContract()->get()->count() > 0);
     }
 
-    /**
-     * Get associated ServiceContract with this service
-     */
     public function chemicals()
     {
-        return $this->hasMany(Chemical::class);
+        return $this->hasMany(Chemical::class);    
     }
 
     /**

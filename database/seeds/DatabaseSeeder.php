@@ -7,6 +7,9 @@ class DatabaseSeeder extends Seeder
 	protected $toTruncate = [
 		'verification_tokens',
 		'chemicals',
+		'global_chemicals',
+		'readings',
+		'labels',
 		'companies',
 		'equipment',
 		'images',
@@ -47,7 +50,7 @@ class DatabaseSeeder extends Seeder
     	$this->call(EquipmentTableSeeder::class);
     	$this->call(WorkOrdersTableSeeder::class);
     	$this->call(WorksTableSeeder::class);
-    	$this->call(ReportsTableSeeder::class);
+    	// $this->call(ReportsTableSeeder::class);
     }
 
 

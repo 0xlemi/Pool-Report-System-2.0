@@ -93,22 +93,6 @@ $factory->define(App\Equipment::class, function (Faker\Generator $faker){
 	];
 });
 
-$factory->define(App\Chemical::class, function (Faker\Generator $faker){
-    $chemicals = [
-        'Choline',
-        'Salt',
-        'Stain Remover',
-        'Clarifier',
-        'PH reducer',
-        'PH increaser',
-    ];
-    return [
-        'name' => $faker->randomElement($chemicals),
-        'amount' => number_format(rand(100,1000000)/100, 2, '.', ''),
-        'units' => 'units',
-    ];
-});
-
 $factory->define(App\ServiceContract::class, function (Faker\Generator $faker){
     $validCurrencies = config('constants.currencies');
     return [
