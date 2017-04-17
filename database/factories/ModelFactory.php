@@ -144,11 +144,6 @@ $factory->define(App\Report::class, function (Faker\Generator $faker){
 	return [
 		'completed' => $faker->dateTimeThisMonth()->format('Y-m-d H:i:s'),
 		'on_time' => $faker->randomElement(['early', 'onTime', 'late']),
-        'ph' => $faker->numberBetween(1, 5),
-        'chlorine' => $faker->numberBetween(1, 5),
-        'temperature' => $faker->numberBetween(1, 5),
-        'turbidity' => $faker->numberBetween(1, 4),
-        'salt' => $faker->numberBetween(1, 5),
         'latitude' => number_format($faker->latitude(23.049486, 23.061333),6,'.',''),
         'longitude' => number_format($faker->longitude(-109.706683, -109.695697),6,'.',''),
         'altitude' => number_format(($faker->numberBetween(0, 500000)/100),2,'.',''),

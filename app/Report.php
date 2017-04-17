@@ -12,9 +12,10 @@ use Mail;
 use Carbon\Carbon;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Traits\Model\SortableTrait;
-use App\PRS\ValueObjects\Report\OnTime;
-use App\PRS\ValueObjects\Report\Reading;
-use App\PRS\ValueObjects\Report\Turbidity;
+// use App\PRS\ValueObjects\Report\OnTime;
+// use App\PRS\ValueObjects\Report\Reading;
+// use App\PRS\ValueObjects\Report\Turbidity;
+use App\Reading;
 use App\UserRoleCompany;
 use App\Client;
 use App\Image;
@@ -76,6 +77,11 @@ class Report extends Model
         return $this->belongsTo(UserRoleCompany::class);
     }
 
+    public function readings()
+    {
+        return $this->hasMany(Reading::class);
+    }
+
     //******** VALUE OBJECTS ********
 
     public function completed()
@@ -88,30 +94,30 @@ class Report extends Model
         return new OnTime($this->on_time);
     }
 
-    public function ph()
-    {
-        return new Reading($this->ph, $this->company->tags()->ph());
-    }
-
-    public function chlorine()
-    {
-        return new Reading($this->chlorine, $this->company->tags()->chlorine());
-    }
-
-    public function temperature()
-    {
-        return new Reading($this->temperature, $this->company->tags()->temperature());
-    }
-
-    public function turbidity()
-    {
-        return new Turbidity($this->turbidity, $this->company->tags()->turbidity());
-    }
-
-    public function salt()
-    {
-        return new Reading($this->salt, $this->company->tags()->salt());
-    }
+    // public function ph()
+    // {
+    //     return new Reading($this->ph, $this->company->tags()->ph());
+    // }
+    //
+    // public function chlorine()
+    // {
+    //     return new Reading($this->chlorine, $this->company->tags()->chlorine());
+    // }
+    //
+    // public function temperature()
+    // {
+    //     return new Reading($this->temperature, $this->company->tags()->temperature());
+    // }
+    //
+    // public function turbidity()
+    // {
+    //     return new Turbidity($this->turbidity, $this->company->tags()->turbidity());
+    // }
+    //
+    // public function salt()
+    // {
+    //     return new Reading($this->salt, $this->company->tags()->salt());
+    // }
 
 
 }

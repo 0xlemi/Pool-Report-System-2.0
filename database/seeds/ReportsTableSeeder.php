@@ -45,6 +45,20 @@ class ReportsTableSeeder extends Seeder
                 'user_role_company_id' => $userRoleCompany->id,
             ]);
 
+            // Add Readings
+            for ($a=0; $a < $service->chemicals()->count(); $a++) {
+                // Getting a valid and unsed Chemical ID
+                $usedChemicals = $report->readings()->pluck('chemical_id')->toArray();
+                $chemicalId = $service->chemicals()
+                                        ->whereNotIn('chemicals.id', $usedChemicals)
+                                        ->get()->random()->id;
+
+                $report->readings()->create([
+                    'value' => rand(1, 5),
+                    'chemical_id' => $chemicalId
+                ]);
+            }
+
     		// create images link it to report
     		for ($e=1; $e <= 3; $e++) {
     			$img = $this->seederHelper->get_random_image("report/{$e}", 50);

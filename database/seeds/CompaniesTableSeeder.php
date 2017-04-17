@@ -234,16 +234,24 @@ class CompaniesTableSeeder extends Seeder
             'units' => 'PPM'
         ]);
             $salt2->labels()->create([
-                'name' => 'Low',
+                'name' => 'Very Low',
                 'value' => 1
             ]);
             $salt2->labels()->create([
-                'name' => 'Perfect',
+                'name' => 'Low',
                 'value' => 2
             ]);
             $salt2->labels()->create([
-                'name' => 'High',
+                'name' => 'Perfect',
                 'value' => 3
+            ]);
+            $salt2->labels()->create([
+                'name' => 'High',
+                'value' => 4
+            ]);
+            $salt2->labels()->create([
+                'name' => 'Very High',
+                'value' => 5
             ]);
 
 
