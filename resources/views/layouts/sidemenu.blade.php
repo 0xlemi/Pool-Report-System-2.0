@@ -26,7 +26,7 @@
 
         <li class="red {{ Request::is('service*')? 'opened':'' }}">
             <a href="{{ url('/service') }}">
-                <i class="font-icon glyphicon glyphicon-home"></i>
+                <i class="glyphicon glyphicon-home"></i>
                 <span class="lbl">Services</span>
             </a>
         </li>
@@ -71,7 +71,7 @@
             @can('list', App\Service::class)
             <li class="red {{ Request::is('services*')? 'opened':'' }}">
                 <a href="{{ url('/services') }}">
-                    <i class="font-icon glyphicon glyphicon-home"></i>
+                    <i class="glyphicon glyphicon-home"></i>
                     <span class="lbl">Services</span>
                 </a>
             </li>
@@ -80,7 +80,7 @@
             @can('list', [App\UserRoleCompany::class, 'client'])
             <li class="blue {{ Request::is('clients*')? 'opened':'' }}">
                 <a href="{{ url('/clients') }}">
-                    <i class="font-icon glyphicon glyphicon-user"></i>
+                    <i class="glyphicon glyphicon-user"></i>
                     <span class="lbl">Clients</span>
                 </a>
             </li>
@@ -89,7 +89,7 @@
             @can('list', [App\UserRoleCompany::class, 'sup'])
             <li class="orange-red {{ Request::is('supervisors*')? 'opened':'' }}">
                 <a href="{{ url('/supervisors') }}">
-                    <i class="font-icon glyphicon glyphicon-eye-open"></i>
+                    <i class="glyphicon glyphicon-eye-open"></i>
                     <span class="lbl">Supervisors</span>
                 </a>
             </li>
@@ -98,7 +98,7 @@
             @can('list', [App\UserRoleCompany::class, 'tech'])
             <li class="magenta {{ Request::is('technicians*')? 'opened':'' }}">
                 <a href="{{ url('/technicians') }}">
-                    <i class="font-icon glyphicon glyphicon-wrench"></i>
+                    <i class="glyphicon glyphicon-wrench"></i>
                     <span class="lbl">Technicians</span>
                 </a>
             </li>

@@ -83,6 +83,7 @@ function isset(strVariableName) {
     let locationShow = require('./components/locationShow.vue');
     let reportIndex = require('./components/ReportIndex.vue');
     let changeTechnicianPassword = require('./components/changeTechnicianPassword.vue');
+    let rolePicker = require('./components/rolePicker.vue');
 
 
     let mainVue = new Vue({
@@ -90,6 +91,7 @@ function isset(strVariableName) {
         components: {
             // header
             notificationsWidget,
+            rolePicker,
             // generic
             alert,
             dropdown,
@@ -137,7 +139,7 @@ function isset(strVariableName) {
             supervisorTable,
             // technician
             technicianTable,
-            changeTechnicianPassword, 
+            changeTechnicianPassword,
             // invoice
             invoiceTable,
             payments,

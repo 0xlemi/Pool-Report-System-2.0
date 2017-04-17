@@ -29,6 +29,8 @@ class CompaniesTableSeeder extends Seeder
     	]);
 
     	$user1 = factory(User::class)->create([
+            'name' => 'Luis',
+            'last_name' => 'Espinosa',
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
             'verified' => 1,
@@ -52,6 +54,8 @@ class CompaniesTableSeeder extends Seeder
     	]);
 
     	$user2 = factory(User::class)->create([
+            'name' => 'Pepe',
+            'last_name' => 'Gonzales',
     		'email' => 'pepe@example.com',
     		'password' => bcrypt('password'),
             'verified' => 1,
@@ -63,6 +67,36 @@ class CompaniesTableSeeder extends Seeder
     		'role_id' => 1,
     		'company_id' => $company2->id,
     		'selected' => true,
+        ]);
+
+
+
+        $urcOwnCompanyClient1 = factory(UserRoleCompany::class)->create([
+            'user_id' => $user1->id,
+    		'role_id' => 2,
+    		'company_id' => $company1->id,
+    		'selected' => false,
+        ]);
+
+        $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
+            'user_id' => $user1->id,
+    		'role_id' => 3,
+    		'company_id' => $company2->id,
+    		'selected' => false,
+        ]);
+
+        $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
+            'user_id' => $user2->id,
+    		'role_id' => 2,
+    		'company_id' => $company2->id,
+    		'selected' => false,
+        ]);
+
+        $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
+            'user_id' => $user2->id,
+    		'role_id' => 4,
+    		'company_id' => $company1->id,
+    		'selected' => false,
         ]);
 
 

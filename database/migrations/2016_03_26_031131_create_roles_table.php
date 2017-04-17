@@ -18,16 +18,17 @@ class CreateRolesTable extends Migration
             $table->integer('id')->unsigned();
             $table->string('name')->unique();
             $table->string('route');
+            $table->string('icon');
             $table->string('text');
 
             $table->primary('id');
         });
 
         DB::table('roles')->insert([
-            ['id' => 1, 'name' => 'admin', 'route' => '', 'text' => 'Company Administrator'],
-            ['id' => 2, 'name' => 'client', 'route' => 'clients', 'text' => 'Client'],
-            ['id' => 3, 'name' => 'sup', 'route' => 'supervisors', 'text' => 'Supervisor'],
-            ['id' => 4, 'name' => 'tech', 'route' => 'technicians', 'text' => 'Technician'],
+            ['id' => 1, 'name' => 'admin', 'icon' => 'glyphicon glyphicon-cog', 'route' => '', 'text' => 'Company Administrator'],
+            ['id' => 2, 'name' => 'client', 'icon' => 'glyphicon glyphicon-user', 'route' => 'clients', 'text' => 'Client'],
+            ['id' => 3, 'name' => 'sup', 'icon' => 'glyphicon glyphicon-eye-open', 'route' => 'supervisors', 'text' => 'Supervisor'],
+            ['id' => 4, 'name' => 'tech', 'icon' => 'glyphicon glyphicon-wrench', 'route' => 'technicians', 'text' => 'Technician'],
         ]);
     }
 

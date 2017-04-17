@@ -11,6 +11,8 @@
             <div class="site-header-content-in">
                 <div class="site-header-shown">
 
+                    <role-picker :selected-user="{{ $selectedUser }}" :companies="{{ $roles }}"></role-picker>
+
                     <notifications-widget></notifications-widget>
 
                     <!-- <div class="dropdown dropdown-notification messages">

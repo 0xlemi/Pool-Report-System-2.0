@@ -72,7 +72,7 @@ class User extends Authenticatable
 		$this->userRoleCompanies()->update(['selected' => 0]);
 		// Select a userRoleCompany
 		$userRoleCompany->selected = 1;
-		$userRoleCompany->save();
+		return $userRoleCompany->save();
 	}
 
 	/**

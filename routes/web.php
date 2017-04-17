@@ -33,6 +33,8 @@ Route::get('/home', 'HomeController@home')->middleware('auth');
 
 Route::get('/logout', 'Auth\LoginController@logout');
 
+Route::get('/change/role/{id}', 'UserRoleCompanyController@change');
+
 // Verification
 Route::get('activate/token/{token}', 'Auth\VerificationController@activate')->name('auth.activate');
 Route::post('activate/password', 'Auth\VerificationController@setPassword');

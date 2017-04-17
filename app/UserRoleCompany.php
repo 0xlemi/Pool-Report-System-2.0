@@ -57,9 +57,10 @@ class UserRoleCompany extends Model
 
 	public function hasPermission($element, $action)
 	{
-        return $this->role->permissionsFromCompany($this->company)
-                            ->where('element', $element)
+        if($permissionsFromCompany = $this->role->permissionsFromCompany($this->company)){
+            return $permissionsFromCompany->where('element', $element)
                             ->contains('action', $action);
+        }
 	}
 
     public function hasNotificationSetting($name, $type)
@@ -221,7 +222,7 @@ class UserRoleCompany extends Model
     {
         return $this->hasMany(UrlSigner::class);
     }
-    
+
     public function verificationToken()
     {
         return $this->hasOne(VerificationToken::class);
