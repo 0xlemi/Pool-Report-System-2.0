@@ -18,6 +18,22 @@ class Label extends Model
 	];
 
     // ******************
+    //      Scopes
+    // ******************
+
+    public function scopeWhereValue($query, int $value)
+    {
+        if($label = $query->where('labels.value', $value)->first()){
+            return $label;
+        }
+        return collect([
+            'name' => 'Unknown',
+            'color' => 'ADB7BE',
+            'value' => 0,
+        ]);
+    }
+
+    // ******************
     //   Relationships
     // ******************
 

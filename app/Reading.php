@@ -31,4 +31,9 @@ class Reading extends Model
     {
         return $this->belongsTo(Chemical::class);
     }
+
+    public function globalChemical()
+    {
+        return $this->chemical->globalChemical();    
+    }
 }

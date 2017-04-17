@@ -155,8 +155,17 @@ class ReportsController extends PageController
 
         $this->authorize('view', $report);
         $images = $this->imageTransformer->transformCollection($report->images);
+        $readings = $report->readings->transform(function ($reading){
+            $globalChemical = $reading->globalChemical;
+            return (object)[
+                'chemical_name' => $globalChemical->name,
+                'color' => $globalChemical->labels()->whereValue($reading->value)->color,
+                'name' => $globalChemical->labels()->whereValue($reading->value)->name,
+                'value' => $reading->value,
+            ];
+        })->flatten();
 
-        return view('reports.show', compact('report', 'images'));
+        return view('reports.show', compact('report', 'images', 'readings'));
     }
 
     //****************************************

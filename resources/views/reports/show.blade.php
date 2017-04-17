@@ -52,36 +52,19 @@
 								<p class="form-control-static"><input type="text" readonly class="form-control" id="inputPassword" value="{{ $report->userRoleCompany->user->fullName }}"></p>
 							</div>
 						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">PH</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{!! $report->ph()->styled() !!}</p>
+						@foreach($readings as $reading)
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">{{ $reading->chemical_name }}</label>
+								<div class="col-sm-10">
+									<div class="input-group">
+										<div class="input-group-addon">
+											<span class="fa fa-circle" style="color: #{{ $reading->color }};" ></span>
+										</div>
+										<input type="text" readonly class="form-control" value="{{ $reading->name }}">
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Chlorine</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{!! $report->chlorine()->styled() !!}</p>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Temperature</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{!! $report->temperature()->styled() !!}</p>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Turbidity</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{!! $report->turbidity()->styled() !!}</p>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Salt</label>
-							<div class="col-sm-10">
-								<p class="form-control-static">{!! $report->salt()->styled() !!}</p>
-							</div>
-						</div>
+						@endforeach
 					</form>
 					<br>
 					<h4>Pool Photos</h4>
