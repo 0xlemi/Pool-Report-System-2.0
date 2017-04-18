@@ -19,6 +19,15 @@ class Reading extends Model
     ];
 
     // ******************
+    //      Scopes
+    // ******************
+
+    public function scopeOfChemical($query, Chemical $chemical)
+    {
+        return $query->where('chemical_id', $chemical->id)->first();
+    }
+
+    // ******************
     //    Relationships
     // ******************
 
@@ -34,6 +43,6 @@ class Reading extends Model
 
     public function globalChemical()
     {
-        return $this->chemical->globalChemical();    
+        return $this->chemical->globalChemical();
     }
 }

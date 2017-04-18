@@ -205,15 +205,15 @@ class ReportsController extends PageController
                                             ->ofRole('admin', 'sup', 'tech')
                                             ->seqIdOrdered()->get()
                                     );
-        $globalChemicals = $company->globalChemicals;
-
+        $chemicals = $report->service->chemicals;
+        // {{ ($report->readings()->ofChemical($chemical)->value == $label->value) ? 'selected':''}}
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($company->timezone)
                     ->format('m/d/Y h:i:s A');
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'people', 'globalChemicals'));
+        return view('reports.edit', compact('report', 'people', 'chemicals'));
     }
 
     public function getPhoto(Request $request, $seq_id)

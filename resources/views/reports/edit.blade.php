@@ -51,20 +51,20 @@
 							</div>
 						</div>
 
-						@foreach()
+						@foreach($chemicals as $chemical)
 						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">PH</label>
+							<label class="col-sm-2 form-control-label">{{ $chemical->globalChemical->name }}</label>
 							<div class="col-md-3 col-lg-3 col-xl-4">
 								<select class="bootstrap-select bootstrap-select-arrow" name="ph">
-									@foreach($tags->ph()->asArrayWithColor() as $key => $tag)
-									<option data-content='
-										<span class="glyphicon glyphicon-asterisk"
-												style="color: {{$tag->color}};">
-										</span>
-										&nbsp;&nbsp;{{$tag->text}}'
-										value="{{$key}}"
-										{{ ($report->ph == $key) ? 'selected':''}}>
-									</option>
+									@foreach($chemical->globalChemical->labels as $label)
+										<option data-content='
+											<span class="fa fa-circle"
+													style="color:#{{ $label->color }};">
+											</span>
+											&nbsp;&nbsp;{{ $label->name }}'
+											value="{{ $label->value }}"
+											{{ ($report->readings()->ofChemical($chemical)->value == $label->value) ? 'selected':''}}>
+										</option>
 									@endforeach
 								</select>
 							</div>
