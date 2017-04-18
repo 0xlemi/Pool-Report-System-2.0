@@ -17,6 +17,11 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        // Validation condition to check if report readings are vaild
+        Validator::extend('validReading', 'App\PRS\Validators\ValidReading@validate');
+        Validator::replacer('validReading', 'App\PRS\Validators\ValidReading@message');
+
         // Validation condition to check if object exists in the admin system based on seq_id and administartor
         Validator::extend('validConstant', 'App\PRS\Validators\ValidConstant@validate');
         Validator::replacer('validConstant', 'App\PRS\Validators\ValidConstant@message');

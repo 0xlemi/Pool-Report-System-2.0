@@ -29,7 +29,7 @@ class UpdateReportRequest extends FormRequest
             'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'completed_at' => 'date',
             'readings' => 'array',
-            'readings.*' => 'required'
+            'readings.*' => 'required|validReading:'.$this->service
         ];
     }
 }

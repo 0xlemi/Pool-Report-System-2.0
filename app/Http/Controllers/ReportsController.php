@@ -88,6 +88,18 @@ class ReportsController extends PageController
                                         ->seqIdOrdered()->get()
                         );
 
+        $chemicals = $report->service->chemicals()->get()
+            ->transform(function ($chemical) {
+                return (object)[
+                    'id' => $chemical->id,
+                    'name' => $chemical->globalChemical->name,
+                    'labels' => $chemical->globalChemical
+                                        ->labels()
+                                        ->select('name', 'color', 'value')
+                                        ->get(),
+                ];
+            });
+
         return view('reports.create', compact('services', 'people'));
     }
 
@@ -216,6 +228,7 @@ class ReportsController extends PageController
                                                         ->get(),
                                 ];
                             });
+        $readings = $report->readings()->get()->pluck('value', 'chemical_id')->toArray();
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($company->timezone)
@@ -223,7 +236,7 @@ class ReportsController extends PageController
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'people', 'chemicals'));
+        return view('reports.edit', compact('report', 'people', 'chemicals', 'readings'));
     }
 
     public function getPhoto(Request $request, $seq_id)
@@ -279,8 +292,6 @@ class ReportsController extends PageController
     public function update(UpdateReportRequest $request, $seq_id)
     {
 
-        dd($request->all());
-
         $company = $this->loggedCompany();
         $report = $company->reports()->bySeqId($seq_id);
 
@@ -293,11 +304,14 @@ class ReportsController extends PageController
 
         $report->user_role_company_id   = $person->id;
         $report->completed              = $completed_at;
-        $report->ph                     = $request->ph;
-        $report->chlorine               = $request->chlorine;
-        $report->temperature            = $request->temperature;
-        $report->turbidity              = $request->turbidity;
-        $report->salt                   = $request->salt;
+        foreach ($request->readings as $chemical_id => $value) {
+            $reading = $report->readings()->updateOrCreate(
+                [ 'chemical_id' => $chemical_id ],
+                [ 'value' => $value ]
+            );
+        }
+
+
 
         if($report->save()){
             flash()->success('Updated', 'The report was successfuly updated');

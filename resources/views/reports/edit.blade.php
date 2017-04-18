@@ -26,6 +26,8 @@
 						{{ csrf_field() }}
 						{{ method_field('PATCH') }}
 
+						<input type="hidden" name="service" value="{{ $report->service->seq_id }}">
+
 						<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Compleated at:</label>
 							<div class="col-sm-10">
@@ -53,7 +55,7 @@
 
 
 						@foreach($chemicals as $chemical)
-							<div class="form-group row">
+							<div class="form-group row {{($errors->has('readings.'.$chemical->id))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">{{ $chemical->name }}</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
 									<select class="bootstrap-select bootstrap-select-arrow" name="readings[{{ $chemical->id }}]">
@@ -64,10 +66,13 @@
 												</span>
 												&nbsp;&nbsp;{{ $label->name }}'
 												value="{{ $label->value }}"
-												{{ ($report->readings()->ofChemical($chemical->id)->value == $label->value) ? 'selected':''}}>
+												{{ ((isset($readings[$chemical->id])) && ($readings[$chemical->id] == $label->value)) ? 'selected':''}}>
 											</option>
 										@endforeach
 									</select>
+									@if($errors->has('readings.'.$chemical->id))
+										<small class="text-muted">{{ $errors->first('readings.'.$chemical->id) }}</small>
+									@endif
 								</div>
 							</div>
 						@endforeach

@@ -17,24 +17,6 @@ class CreateReportRequest extends Request
     }
 
     /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'service.min' => 'You must choose a service',
-            'technician.min' => 'You must choose a technician',
-            'ph.between' => 'You must choose a valid ph value',
-            'chlorine.between' => 'You must choose a valid chlorine value',
-            'temperature.between' => 'You must choose a valid temperature value',
-            'turbidity.between' => 'You must choose a valid turbidity value',
-            'salt.between' => 'You must choose a valid salt value',
-        ];
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -47,11 +29,8 @@ class CreateReportRequest extends Request
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
             'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'completed_at' => 'required|date',
-            'ph' => 'required|integer|between:1,5',
-            'chlorine' => 'required|integer|between:1,5',
-            'temperature' => 'required|integer|between:1,5',
-            'turbidity' => 'required|integer|between:1,4',
-            'salt' => 'required|integer|between:1,5',
+            'readings' => 'array',
+            'readings.*' => 'required|validReading',
             'photo1' => 'required|mimes:jpg,jpeg,png',
             'photo2' => 'required|mimes:jpg,jpeg,png',
             'photo3' => 'required|mimes:jpg,jpeg,png',
