@@ -6,6 +6,7 @@ use App\Chemical;
 use App\GlobalChemical;
 use App\UserRoleCompany;
 use App\User;
+use App\Image;
 use App\Label;
 
 class CompaniesTableSeeder extends Seeder
@@ -23,7 +24,7 @@ class CompaniesTableSeeder extends Seeder
         Chemical::flushEventListeners();
         GlobalChemical::flushEventListeners();
         Label::flushEventListeners();
-        // Image::flushEventListeners();
+        Image::flushEventListeners();
 
         $company1 = factory(Company::class)->create([
             'name' => 'Hidroequipos',
@@ -112,22 +113,27 @@ class CompaniesTableSeeder extends Seeder
         ]);
             $chlorine1->labels()->create([
                 'name' => '0.6 PPM',
+                'color' => 'FDFFCD',
                 'value' => 1
             ]);
             $chlorine1->labels()->create([
                 'name' => '1.0 PPM',
+                'color' => 'E6DFD5',
                 'value' => 2
             ]);
             $chlorine1->labels()->create([
                 'name' => '1.5 PPM',
+                'color' => 'AD8CD3',
                 'value' => 3
             ]);
             $chlorine1->labels()->create([
                 'name' => '2.0 PPM',
+                'color' => 'A069BD',
                 'value' => 4
             ]);
             $chlorine1->labels()->create([
                 'name' => '3.0 PPM',
+                'color' => '7D1A98',
                 'value' => 5
             ]);
         $ph1 = $company1->globalChemicals()->create([
@@ -136,22 +142,27 @@ class CompaniesTableSeeder extends Seeder
         ]);
             $ph1->labels()->create([
                 'name' => '6.8 pH',
+                'color' => 'FFB204',
                 'value' => 1
             ]);
             $ph1->labels()->create([
                 'name' => '7.2 pH',
+                'color' => 'EB6C05',
                 'value' => 2
             ]);
             $ph1->labels()->create([
                 'name' => '7.5 pH',
+                'color' => 'DF3A04',
                 'value' => 3
             ]);
             $ph1->labels()->create([
                 'name' => '7.8 pH',
+                'color' => 'DF1803',
                 'value' => 4
             ]);
             $ph1->labels()->create([
                 'name' => '8.2 pH',
+                'color' => 'D80317',
                 'value' => 5
             ]);
         $salt1 = $company1->globalChemicals()->create([
@@ -160,22 +171,27 @@ class CompaniesTableSeeder extends Seeder
         ]);
             $salt1->labels()->create([
                 'name' => 'Very Low',
+                'color' => 'DFE0E1',
                 'value' => 1
             ]);
             $salt1->labels()->create([
                 'name' => 'Low',
+                'color' => 'C0C1C4',
                 'value' => 2
             ]);
             $salt1->labels()->create([
                 'name' => 'Perfect',
+                'color' => '8B8C8F',
                 'value' => 3
             ]);
             $salt1->labels()->create([
                 'name' => 'High',
+                'color' => '4C4D4F',
                 'value' => 4
             ]);
             $salt1->labels()->create([
                 'name' => 'Very High',
+                'color' => '131313',
                 'value' => 5
             ]);
 
@@ -185,72 +201,85 @@ class CompaniesTableSeeder extends Seeder
         ]);
             $chlorine2->labels()->create([
                 'name' => '0.6 PPM',
+                'color' => 'FDFFCD',
                 'value' => 1
             ]);
             $chlorine2->labels()->create([
                 'name' => '1.0 PPM',
+                'color' => 'E6DFD5',
                 'value' => 2
             ]);
             $chlorine2->labels()->create([
                 'name' => '1.5 PPM',
+                'color' => 'AD8CD3',
                 'value' => 3
             ]);
             $chlorine2->labels()->create([
                 'name' => '2.0 PPM',
+                'color' => 'A069BD',
                 'value' => 4
             ]);
             $chlorine2->labels()->create([
                 'name' => '3.0 PPM',
+                'color' => '7D1A98',
                 'value' => 5
             ]);
-
         $ph2 = $company2->globalChemicals()->create([
             'name' =>  'PH Adjuster',
             'units' => 'Grams'
         ]);
             $ph2->labels()->create([
                 'name' => '6.8 pH',
+                'color' => 'FFB204',
                 'value' => 1
             ]);
             $ph2->labels()->create([
                 'name' => '7.2 pH',
+                'color' => 'EB6C05',
                 'value' => 2
             ]);
             $ph2->labels()->create([
                 'name' => '7.5 pH',
+                'color' => 'DF3A04',
                 'value' => 3
             ]);
             $ph2->labels()->create([
                 'name' => '7.8 pH',
+                'color' => 'DF1803',
                 'value' => 4
             ]);
             $ph2->labels()->create([
                 'name' => '8.2 pH',
+                'color' => 'D80317',
                 'value' => 5
             ]);
-
         $salt2 = $company2->globalChemicals()->create([
             'name' =>  'Salt',
             'units' => 'PPM'
         ]);
             $salt2->labels()->create([
                 'name' => 'Very Low',
+                'color' => 'DFE0E1',
                 'value' => 1
             ]);
             $salt2->labels()->create([
                 'name' => 'Low',
+                'color' => 'C0C1C4',
                 'value' => 2
             ]);
             $salt2->labels()->create([
                 'name' => 'Perfect',
+                'color' => '8B8C8F',
                 'value' => 3
             ]);
             $salt2->labels()->create([
                 'name' => 'High',
+                'color' => '4C4D4F',
                 'value' => 4
             ]);
             $salt2->labels()->create([
                 'name' => 'Very High',
+                'color' => '131313',
                 'value' => 5
             ]);
 
