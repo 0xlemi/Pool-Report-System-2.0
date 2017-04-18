@@ -205,8 +205,18 @@ class ReportsController extends PageController
                                             ->ofRole('admin', 'sup', 'tech')
                                             ->seqIdOrdered()->get()
                                     );
-        $chemicals = $report->service->chemicals;
-        // {{ ($report->readings()->ofChemical($chemical)->value == $label->value) ? 'selected':''}}
+        $chemicals = $report->service->chemicals()->get()
+                            ->transform(function ($chemical) {
+                                return (object)[
+                                    'id' => $chemical->id,
+                                    'name' => $chemical->globalChemical->name,
+                                    'labels' => $chemical->globalChemical
+                                                        ->labels()
+                                                        ->select('name', 'color', 'value')
+                                                        ->get(),
+                                ];
+                            });
+
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($company->timezone)
                     ->format('m/d/Y h:i:s A');
@@ -268,6 +278,8 @@ class ReportsController extends PageController
      */
     public function update(UpdateReportRequest $request, $seq_id)
     {
+
+        dd($request->all());
 
         $company = $this->loggedCompany();
         $report = $company->reports()->bySeqId($seq_id);

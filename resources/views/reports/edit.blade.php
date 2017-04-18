@@ -51,24 +51,25 @@
 							</div>
 						</div>
 
+
 						@foreach($chemicals as $chemical)
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">{{ $chemical->globalChemical->name }}</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="ph">
-									@foreach($chemical->globalChemical->labels as $label)
-										<option data-content='
-											<span class="fa fa-circle"
-													style="color:#{{ $label->color }};">
-											</span>
-											&nbsp;&nbsp;{{ $label->name }}'
-											value="{{ $label->value }}"
-											{{ ($report->readings()->ofChemical($chemical)->value == $label->value) ? 'selected':''}}>
-										</option>
-									@endforeach
-								</select>
+							<div class="form-group row">
+								<label class="col-sm-2 form-control-label">{{ $chemical->name }}</label>
+								<div class="col-md-3 col-lg-3 col-xl-4">
+									<select class="bootstrap-select bootstrap-select-arrow" name="readings[{{ $chemical->id }}]">
+										@foreach($chemical->labels as $label)
+											<option data-content='
+												<span class="fa fa-circle"
+														style="color:#{{ $label->color }};">
+												</span>
+												&nbsp;&nbsp;{{ $label->name }}'
+												value="{{ $label->value }}"
+												{{ ($report->readings()->ofChemical($chemical->id)->value == $label->value) ? 'selected':''}}>
+											</option>
+										@endforeach
+									</select>
+								</div>
 							</div>
-						</div>
 						@endforeach
 
 						<br>

@@ -22,9 +22,9 @@ class Reading extends Model
     //      Scopes
     // ******************
 
-    public function scopeOfChemical($query, Chemical $chemical)
+    public function scopeOfChemical($query, int $chemical_id)
     {
-        return $query->where('chemical_id', $chemical->id)->first();
+        return $query->where('chemical_id', $chemical_id)->first();
     }
 
     // ******************

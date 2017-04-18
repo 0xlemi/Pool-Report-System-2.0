@@ -17,24 +17,6 @@ class UpdateReportRequest extends FormRequest
     }
 
     /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'service.min' => 'You must choose a service',
-            'technician.min' => 'You must choose a technician',
-            'ph.between' => 'You must choose a valid ph value',
-            'chlorine.between' => 'You must choose a valid chlorine value',
-            'temperature.between' => 'You must choose a valid temperature value',
-            'turbidity.between' => 'You must choose a valid turbidity value',
-            'salt.between' => 'You must choose a valid salt value',
-        ];
-    }
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -46,11 +28,8 @@ class UpdateReportRequest extends FormRequest
         return [
             'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'completed_at' => 'date',
-            'ph' => 'integer|between:1,5',
-            'chlorine' => 'integer|between:1,5',
-            'temperature' => 'integer|between:1,5',
-            'turbidity' => 'integer|between:1,4',
-            'salt' => 'integer|between:1,5',
+            'readings' => 'array',
+            'readings.*' => 'required'
         ];
     }
 }
