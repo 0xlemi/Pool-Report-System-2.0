@@ -85,14 +85,25 @@ class TodaysRouteController extends PageController
 
         $company = $this->loggedCompany();
 
-        $service = $service_seq_id;
+        $service = $company->services()->bySeqId($service_seq_id);
         $technicians = $this->userRoleCompanyHelpers->transformForDropdown(
                                             $company->userRoleCompanies()
                                                 ->ofRole('admin', 'sup', 'tech')
                                                 ->get()
                                         );
+        $chemicals = $service->chemicals
+            ->transform(function ($chemical) {
+                return (object)[
+                    'id' => $chemical->id,
+                    'name' => $chemical->globalChemical->name,
+                    'labels' => $chemical->globalChemical
+                                        ->labels()
+                                        ->select('name', 'color', 'value')
+                                        ->get(),
+                ];
+            });
 
-        return view('todaysroute.createReport', compact('technicians', 'service'));
+        return view('todaysroute.createReport', compact('technicians', 'service', 'chemicals'));
     }
 
     public function storeReport(Request $request)
@@ -102,11 +113,8 @@ class TodaysRouteController extends PageController
         $this->validate($request, [
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
             'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
-            'ph' => 'required|integer|between:1,5',
-            'chlorine' => 'required|integer|between:1,5',
-            'temperature' => 'required|integer|between:1,5',
-            'turbidity' => 'required|integer|between:1,4',
-            'salt' => 'required|integer|between:1,5',
+            'readings' => 'array',
+            'readings.*' => 'required|validReading:'.$request->service,
             'photo1' => 'required|mimes:jpg,jpeg,png',
             'photo2' => 'required|mimes:jpg,jpeg,png',
             'photo3' => 'required|mimes:jpg,jpeg,png',
@@ -133,12 +141,13 @@ class TodaysRouteController extends PageController
             'user_role_company_id' => $person->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
-            'ph' => $request->ph,
-            'chlorine' => $request->chlorine,
-            'temperature' => $request->temperature,
-            'turbidity' => $request->turbidity,
-            'salt' => $request->salt,
         ]);
+        foreach ($request->readings as $chemical_id => $value) {
+            $reading = $report->readings()->create([
+                'chemical_id' => $chemical_id,
+                'value' => $value,
+            ]);
+        }
 
         // add the 3 main photos
         $image1 = $report->addImageFromForm($request->file('photo1'));

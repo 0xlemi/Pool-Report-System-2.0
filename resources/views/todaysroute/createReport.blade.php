@@ -24,7 +24,7 @@
 					<form method="POST" action="{{ url('todaysroute/report') }}" enctype="multipart/form-data">
 						{{ csrf_field() }}
 
-                        <input type="hidden" name='service' value="{{ $service }}">
+                        <input type="hidden" name='service' value="{{ $service->seq_id }}">
 
 						<div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Person</label>
@@ -39,260 +39,32 @@
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('ph'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">PH</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="ph">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose an option'
-															value="0"
-															{{ (old('ph') == 0) ? 'selected':'' }}
-															>Choose an option
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FA424A;">
-															</span>&nbsp;&nbsp;Very High'
-															value="5"
-															{{ (old('ph') == 5) ? 'selected':'' }}
-															>Very High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FDAD2A;">
-															</span>&nbsp;&nbsp;High'
-															value="4"
-															{{ (old('ph') == 4) ? 'selected':'' }}
-															>High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #46C35F;">
-															</span>&nbsp;&nbsp;Perfect'
-															value="3"
-															{{ (old('ph') == 3) ? 'selected':'' }}
-															>Perfect
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #00A8FF;">
-															</span>&nbsp;&nbsp;Low'
-															value="2"
-															{{ (old('ph') == 2) ? 'selected':'' }}
-															>Low
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #AC6BEC;">
-															</span>&nbsp;&nbsp;Very Low'
-															value="1"
-															{{ (old('ph') == 1) ? 'selected':'' }}
-															>Very Low
-									</option>
-								</select>
-								@if ($errors->has('ph'))
-									<small class="text-muted">{{ $errors->first('ph') }}</small>
-								@endif
-							</div>
-						</div>
-						<div class="form-group row {{($errors->has('chlorine'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Chlorine</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="chlorine">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose an option'
-															value="0"
-															{{ (old('chlorine') == 0) ? 'selected':'' }}
-															>Choose an option
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FA424A;">
-															</span>&nbsp;&nbsp;Very High'
-															value="5"
-															{{ (old('chlorine') == 5) ? 'selected':'' }}
-															>Very High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FDAD2A;">
-															</span>&nbsp;&nbsp;High'
-															value="4"
-															{{ (old('chlorine') == 4) ? 'selected':'' }}
-															>High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #46C35F;">
-															</span>&nbsp;&nbsp;Perfect'
-															value="3"
-															{{ (old('chlorine') == 3) ? 'selected':'' }}
-															>Perfect
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #00A8FF;">
-															</span>&nbsp;&nbsp;Low'
-															value="2"
-															{{ (old('chlorine') == 2) ? 'selected':'' }}
-															>Low
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #AC6BEC;">
-															</span>&nbsp;&nbsp;Very Low'
-															value="1"
-															{{ (old('chlorine') == 1) ? 'selected':'' }}
-															>Very Low
-									</option>
-								</select>
-								@if ($errors->has('chlorine'))
-									<small class="text-muted">{{ $errors->first('chlorine') }}</small>
-								@endif
-							</div>
-						</div>
-						<div class="form-group row {{($errors->has('temperature'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Temperature</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="temperature">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose an option'
-															value="0"
-															{{ (old('temperature') == 0) ? 'selected':'' }}
-															>Choose an option
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FA424A;">
-															</span>&nbsp;&nbsp;Very High'
-															value="5"
-															{{ (old('temperature') == 5) ? 'selected':'' }}
-															>Very High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FDAD2A;">
-															</span>&nbsp;&nbsp;High'
-															value="4"
-															{{ (old('temperature') == 4) ? 'selected':'' }}
-															>High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #46C35F;">
-															</span>&nbsp;&nbsp;Perfect'
-															value="3"
-															{{ (old('temperature') == 3) ? 'selected':'' }}
-															>Perfect
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #00A8FF;">
-															</span>&nbsp;&nbsp;Low'
-															value="2"
-															{{ (old('temperature') == 2) ? 'selected':'' }}
-															>Low
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #AC6BEC;">
-															</span>&nbsp;&nbsp;Very Low'
-															value="1"
-															{{ (old('temperature') == 1) ? 'selected':'' }}
-															>Very Low
-									</option>
-								</select>
-								@if ($errors->has('temperature'))
-									<small class="text-muted">{{ $errors->first('temperature') }}</small>
-								@endif
-							</div>
-						</div>
-						<div class="form-group row {{($errors->has('turbidity'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Turbidity</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="turbidity">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose an option'
-															value="0"
-															{{ (old('turbidity') == 0) ? 'selected':'' }}
-															>Choose an option
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FA424A;">
-															</span>&nbsp;&nbsp;Very High'
-															value="4"
-															{{ (old('turbidity') == 4) ? 'selected':'' }}
-															>Very High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FDAD2A;">
-															</span>&nbsp;&nbsp;High'
-															value="3"
-															{{ (old('turbidity') == 3) ? 'selected':'' }}
-															>High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #00A8FF;">
-															</span>&nbsp;&nbsp;Low'
-															value="2"
-															{{ (old('turbidity') == 2) ? 'selected':'' }}
-															>Low
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #46C35F;">
-															</span>&nbsp;&nbsp;Perfect'
-															value="1"
-															{{ (old('turbidity') == 1) ? 'selected':'' }}
-															>Perfect
-									</option>
-								</select>
-								@if ($errors->has('turbidity'))
-									<small class="text-muted">{{ $errors->first('turbidity') }}</small>
-								@endif
-							</div>
-						</div>
-						<div class="form-group row {{($errors->has('salt'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Salt</label>
-							<div class="col-md-3 col-lg-3 col-xl-4">
-								<select class="bootstrap-select bootstrap-select-arrow" name="salt">
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #000;">
-															</span>&nbsp;&nbsp;Choose an option'
-															value="0"
-															{{ (old('salt') == 0) ? 'selected':'' }}
-															>Choose an option
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FA424A;">
-															</span>&nbsp;&nbsp;Very High'
-															value="5"
-															{{ (old('salt') == 5) ? 'selected':'' }}
-															>Very High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #FDAD2A;">
-															</span>&nbsp;&nbsp;High'
-															value="5"
-															{{ (old('salt') == 4) ? 'selected':'' }}
-															>High
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #46C35F;">
-															</span>&nbsp;&nbsp;Perfect'
-															value="3"
-															{{ (old('salt') == 3) ? 'selected':'' }}
-															>Perfect
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #00A8FF;">
-															</span>&nbsp;&nbsp;Low'
-															value="2"
-															{{ (old('salt') == 2) ? 'selected':'' }}
-															>Low
-									</option>
-									<option data-content='<span class="glyphicon glyphicon-asterisk"
-															style="color: #AC6BEC;">
-															</span>&nbsp;&nbsp;Very Low'
-															value="1"
-															{{ (old('salt') == 1) ? 'selected':'' }}
-															>Very Low
-									</option>
-								</select>
-								@if ($errors->has('salt'))
-									<small class="text-muted">{{ $errors->first('salt') }}</small>
-								@endif
-							</div>
-						</div>
 						<br>
+
+						@foreach($chemicals as $chemical)
+							<div class="form-group row {{($errors->has('readings.'.$chemical->id))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">{{ $chemical->name }}</label>
+								<div class="col-md-3 col-lg-3 col-xl-4">
+									<select class="bootstrap-select bootstrap-select-arrow" name="readings[{{ $chemical->id }}]">
+										@foreach($chemical->labels as $label)
+											<option data-content='
+												<span class="fa fa-circle"
+														style="color:#{{ $label->color }};">
+												</span>
+												&nbsp;&nbsp;{{ $label->name }}'
+												value="{{ $label->value }}">
+											</option>
+										@endforeach
+									</select>
+									@if($errors->has('readings.'.$chemical->id))
+										<small class="text-muted">{{ $errors->first('readings.'.$chemical->id) }}</small>
+									@endif
+								</div>
+							</div>
+						@endforeach
+
+						<br>
+						
 						<div class="form-group row">
 							<label class="col-sm-3 form-control-label">Photo 1 (Full Pool)</label>
 							<div class="col-sm-9">
