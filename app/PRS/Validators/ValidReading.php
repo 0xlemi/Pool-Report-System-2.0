@@ -10,7 +10,6 @@ class ValidReading
 
     public function validate($attribute, $value, $parameters, $validator)
     {
-        $dd($validator);
         $service_id = (isset($parameters[0])) ? $parameters[0] : '';
         $chemical_id = explode('.', $attribute)[1];
 

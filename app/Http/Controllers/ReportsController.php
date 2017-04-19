@@ -75,7 +75,7 @@ class ReportsController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
         $this->authorize('create', Report::class);
 
@@ -88,7 +88,35 @@ class ReportsController extends PageController
                                         ->seqIdOrdered()->get()
                         );
 
-        $chemicals = $report->service->chemicals()->get()
+
+        return view('reports.create', compact('services', 'people'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createAddReadings(Request $request)
+    {
+        $this->authorize('create', Report::class);
+
+        $company = $this->loggedCompany();
+
+        $this->validate($request, [
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'completed_at' => 'required|date',
+        ]);
+
+        $service = $this->loggedCompany()->services()->bySeqId($request->service);
+        $info = (object)[
+            'service' => $request->service,
+            'person' => $request->person,
+            'completed_at' => $request->completed_at
+        ];
+
+        $chemicals = $service->chemicals
             ->transform(function ($chemical) {
                 return (object)[
                     'id' => $chemical->id,
@@ -100,7 +128,8 @@ class ReportsController extends PageController
                 ];
             });
 
-        return view('reports.create', compact('services', 'people'));
+
+        return view('reports.createAddReadings', compact('info', 'chemicals'));
     }
 
     /**
@@ -134,12 +163,13 @@ class ReportsController extends PageController
             'user_role_company_id' => $person->id,
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
-            'ph' => $request->ph,
-            'chlorine' => $request->chlorine,
-            'temperature' => $request->temperature,
-            'turbidity' => $request->turbidity,
-            'salt' => $request->salt,
         ]);
+        foreach ($request->readings as $chemical_id => $value) {
+            $reading = $report->readings()->create([
+                'chemical_id' => $chemical_id,
+                'value' => $value,
+            ]);
+        }
 
         // add the 3 main photos
         $image1 = $report->addImageFromForm($request->file('photo1'));

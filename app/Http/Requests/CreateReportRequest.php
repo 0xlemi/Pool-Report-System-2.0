@@ -30,10 +30,20 @@ class CreateReportRequest extends Request
             'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'completed_at' => 'required|date',
             'readings' => 'array',
-            'readings.*' => 'required|validReading',
+            'readings.*' => 'required|validReading:'.$this->service,
             'photo1' => 'required|mimes:jpg,jpeg,png',
             'photo2' => 'required|mimes:jpg,jpeg,png',
             'photo3' => 'required|mimes:jpg,jpeg,png',
         ];
+    }
+
+     /**
+     * Get the URL to redirect to on a validation error.
+     *
+     * @return string
+     */
+    protected function getRedirectUrl()
+    {
+        return url('reports/create');
     }
 }

@@ -116,7 +116,10 @@ Route::get('notifications/widget', 'NotificationController@widget');
 Route::post('notifications/read/widget', 'NotificationController@markWidgetAsRead');
 Route::post('notifications/read/all', 'NotificationController@markAllAsRead');
 
+// Reports
 Route::resource('reports', 'ReportsController');
+Route::post('reports/readings', 'ReportsController@createAddReadings');
+
 Route::resource('workorders', 'WorkOrderController');
 Route::resource('works', 'WorkController', ['only' => [
     'show', 'update', 'destroy'

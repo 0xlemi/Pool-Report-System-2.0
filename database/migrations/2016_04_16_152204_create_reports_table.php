@@ -17,11 +17,6 @@ class CreateReportsTable extends Migration
             $table->increments('id');
             $table->dateTime('completed');
             $table->enum('on_time', ['early', 'onTime', 'late', 'noContract']);
-            $table->unsignedTinyInteger('ph');
-            $table->unsignedTinyInteger('chlorine');
-            $table->unsignedTinyInteger('temperature');
-            $table->unsignedTinyInteger('turbidity');
-            $table->unsignedTinyInteger('salt')->nullable();
             $table->decimal('latitude', 9, 6)->nullable();
             $table->decimal('longitude', 9, 6)->nullable();
             $table->decimal('altitude', 8, 2)->nullable();
