@@ -23,10 +23,11 @@ class CreateChemicalRequest extends FormRequest
      */
     public function rules()
     {
+        $company = auth()->user()->selectedUser->company;
+
         return [
-            'name' => 'required|string|max:255',
+            'global_chemical' => 'required|integer|existsBasedOnCompany:global_chemicals,'.$company->id,
             'amount' => 'required|numeric',
-            'units' => 'required|string|max:225',
         ];
     }
 }

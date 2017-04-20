@@ -109,10 +109,12 @@ class Company extends Model
      */
     public function servicesWithActiveContract($order = 'asc')
     {
-        return $this->services()->join('service_contracts', function ($join) {
-            $join->on('services.id', '=', 'service_contracts.service_id')
-                 ->where('service_contracts.active', '=', 1);
-        })->select('services.*')->orderBy('seq_id', $order);
+        $serviceArray = $this->services()->join('service_contracts', function ($join) {
+                $join->on('services.id', '=', 'service_contracts.service_id')
+                     ->where('service_contracts.active', '=', 1);
+            })->select('services.id')->get()->toArray();
+
+		return Service::whereIn('id', $serviceArray)->orderBy('seq_id', $order);
     }
 
     /**

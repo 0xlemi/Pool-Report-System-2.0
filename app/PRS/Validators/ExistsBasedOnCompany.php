@@ -33,8 +33,16 @@ class ExistsBasedOnCompany
         elseif($table == 'user_role_company')
         {
             try {
-                $company->userRoleCompanies()
-                            ->bySeqId($seq_id);
+                $company->userRoleCompanies()->bySeqId($seq_id);
+            }catch(ModelNotFoundException $e){
+                return false;
+            }
+            return true;
+        }
+        elseif($table == 'global_chemicals')
+        {
+            try {
+                $company->globalChemicals()->bySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }

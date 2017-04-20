@@ -85,7 +85,8 @@
 						</contract>
 
 						<chemical service-id="{{ $service->seq_id }}"
-						    base-url="{{ url('chemicals').'/' }}">
+						    base-url="{{ url('chemicals').'/' }}"
+							:global-chemicals="{{ $globalChemicals }}">
 						</chemical>
 
 						<equipment service-id="{{ $service->seq_id }}">

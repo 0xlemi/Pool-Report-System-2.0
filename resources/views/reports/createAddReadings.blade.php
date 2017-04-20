@@ -129,7 +129,7 @@
 						<hr>
 						<p style="float: right;">
 							<a  class="btn btn-warning"
-							href="{{ url('reports') }}">
+							href="{{ url('reports/create') }}">
 							<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back</a>
 							<button  class="btn btn-success"
 							type='submit'>

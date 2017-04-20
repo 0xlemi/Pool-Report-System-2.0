@@ -24,9 +24,7 @@ class UpdateChemicalRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255',
             'amount' => 'numeric',
-            'units' => 'string|max:225',
         ];
     }
 }

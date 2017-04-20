@@ -9,6 +9,7 @@ use JavaScript;
 
 use App\Service;
 use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Helpers\GlobalChemicalHelpers;
 use App\PRS\Transformers\ImageTransformer;
 
 use App\Http\Requests;
@@ -115,18 +116,26 @@ class ServicesController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($seq_id)
+    public function show(GlobalChemicalHelpers $helper, $seq_id)
     {
-        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
+        $company = $this->loggedCompany();
+        $service = $company->services()->bySeqId($seq_id);
 
         $this->authorize('view', $service);
 
         $clients = $service->userRoleCompanies()->get();
+
+        // Get Unused Global Chemicals
+        $usedChemicalsIds = $service->chemicals()
+                ->join('global_chemicals', 'global_chemicals.id', '=', 'chemicals.global_chemical_id')
+                ->pluck('global_chemicals.id')->toArray();
+        $globalChemicals = $helper->transformForDropdown($company->globalChemicals()->whereNotIn('id', $usedChemicalsIds )->get());
+
         $image = null;
         if($service->images->count() > 0){
             $image = $this->imageTransformer->transform($service->images->first());
         }
-        return view('services.show', compact('service', 'clients', 'image'));
+        return view('services.show', compact('service', 'clients', 'image', 'globalChemicals'));
     }
 
     /**

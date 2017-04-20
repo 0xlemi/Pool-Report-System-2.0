@@ -29707,13 +29707,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 
+var dropdown = require('./dropdown.vue');
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
 
 exports.default = {
-	props: ['serviceId', 'baseUrl'],
+	props: ['serviceId', 'baseUrl', 'globalChemicals'],
 	components: {
+		dropdown: dropdown,
 		alert: alert,
 		BootstrapTable: BootstrapTable
 	},
@@ -29731,6 +29733,7 @@ exports.default = {
 			alertActiveList: false,
 			alertActiveEdit: false,
 
+			globalChemicalId: 0,
 			name: '',
 			amount: '',
 			units: '',
@@ -29815,6 +29818,9 @@ exports.default = {
 		rowClicked: function rowClicked(id) {
 			this.chemicalId = id;
 			this.getValues(id);
+		},
+		dropdownChanged: function dropdownChanged(key) {
+			this.globalChemicalId = key;
 		}
 	},
 	methods: {
@@ -29860,9 +29866,8 @@ exports.default = {
 			}).spin(clickEvent.target);
 
 			this.$http.post(this.serviceUrl, {
-				name: this.name,
-				amount: this.amount,
-				units: this.units
+				global_chemical: this.globalChemicalId,
+				amount: this.amount
 			}).then(function (response) {
 				_this2.changeFocus(2);
 				_this2.getList();
@@ -29896,9 +29901,7 @@ exports.default = {
 			}).spin(clickEvent.target);
 
 			this.$http.patch(this.chemicalUrl, {
-				name: this.name,
-				amount: this.amount,
-				units: this.units
+				amount: this.amount
 			}).then(function (response) {
 				// refresh the information
 				_this3.changeFocus(2);
@@ -30004,7 +30007,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Chemical managment -->\n<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Chemical\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: PH, PPM, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n        <!-- <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\"  >test</button> -->\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Chemical managment -->\n<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('global_chemical'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Global Chemical</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\n\t\t\t\t\t\t\t<dropdown :key=\"0\" :options=\"globalChemicals\" :name=\"'globalChemical'\">\n\t\t\t\t\t\t\t</dropdown>\n\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('global_chemical')\" class=\"text-muted\">{{ validationErrors.global_chemical[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Chemical\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" readonly=\"\" v-model=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" readonly=\"\" v-model=\"units\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -30015,7 +30018,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-59c29947", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":193,"./alert.vue":203,"spin":170,"vue":185,"vue-hot-reload-api":182}],210:[function(require,module,exports){
+},{"./BootstrapTable.vue":193,"./alert.vue":203,"./dropdown.vue":221,"spin":170,"vue":185,"vue-hot-reload-api":182}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31368,6 +31371,7 @@ exports.default = {
         updateSelected: function updateSelected(newSelected) {
             this.selected = newSelected;
             this.key = newSelected.key;
+            this.$dispatch('dropdownChanged', this.key);
         }
     },
     watch: {

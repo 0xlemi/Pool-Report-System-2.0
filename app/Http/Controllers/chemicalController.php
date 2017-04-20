@@ -33,17 +33,18 @@ class chemicalController extends PageController
     {
         $this->authorize('list', Chemical::class);
 
-        $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
+        $service = $this->loggedCompany()->services()->bySeqId($serviceSeqId);
 
         $chemicals = $service->chemicals()
                         ->get()
                         ->transform(function($item){
-                            return (object) array(
-                                'id' => $item->id,
-                                'name' => $item->name,
-                                'amount' => $item->amount,
-                                'units' => $item->units,
-                            );
+                            $globalChemical = $item->globalChemical;
+                            return (object) [
+                                    'id' => $item->id,
+                                    'name' => $globalChemical->name,
+                                    'amount' => $item->amount,
+                                    'units' => $globalChemical->units,
+                                ];
                         });
         return response()->json([
             'data' => $chemicals
@@ -60,12 +61,14 @@ class chemicalController extends PageController
     {
         $this->authorize('create', Chemical::class);
 
-        $admin = $this->loggedUserAdministrator();
-        $service = $admin->services()->bySeqId($serviceSeqId);
+        $company = $this->loggedCompany();
+        $service = $company->services()->bySeqId($serviceSeqId);
 
-        $chemicalId = $service->chemicals()->create($request->all())->id;
+        $chemical = $service->chemicals()->create([
+                'amount' => $request->amount,
+                'global_chemical_id' => $request->global_chemical,
+            ]);
 
-        $chemical = Chemical::findOrFail($chemicalId);
         if($chemical){
             return response()->json([
                 'message' => 'Chemical was successfully created.'
@@ -87,7 +90,9 @@ class chemicalController extends PageController
     {
         $this->authorize('update', $chemical);
 
-        $chemical->update($request->all());
+        $chemical->update([
+            'amount' => $request->amount,
+        ]);
 
         return response()->json([
             'message' => 'Chemical was successfully updated.'

@@ -37,8 +37,9 @@ export default {
             return key+' '+label;
         },
         updateSelected (newSelected) {
-          this.selected = newSelected;
-          this.key = newSelected.key;
+            this.selected = newSelected;
+            this.key = newSelected.key;
+            this.$dispatch('dropdownChanged', this.key);    
         }
     },
     watch: {

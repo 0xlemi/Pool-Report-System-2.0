@@ -27,11 +27,16 @@
 
 					<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
-					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
-						<label class="col-sm-2 form-control-label">Name</label>
+					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('global_chemical'))}">
+						<label class="col-sm-2 form-control-label">Global Chemical</label>
 						<div class="col-sm-10">
-							<input type="text" name="name" class="form-control" v-model="name">
-							<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
+
+							<dropdown :key="0"
+								:options="globalChemicals"
+								:name="'globalChemical'">
+							</dropdown>
+
+							<small v-if="checkValidationError('global_chemical')" class="text-muted">{{ validationErrors.global_chemical[0] }}</small>
 						</div>
 					</div>
 
@@ -40,15 +45,6 @@
 						<div class="col-sm-10">
 							<input type="number" name="amount" class="form-control" v-model="amount">
 							<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-						</div>
-					</div>
-
-                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
-						<label class="col-sm-2 form-control-label">Units</label>
-						<div class="col-sm-10">
-							<input type="text" name="units" class="form-control"
-									placeholder="Example: PH, PPM, etc..." v-model="units">
-							<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
 						</div>
 					</div>
 
@@ -72,11 +68,10 @@
 
 					<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
 
-					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('name'))}">
+					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Name</label>
 						<div class="col-sm-10">
-							<input type="text" name="name" class="form-control" v-model="name">
-							<small v-if="checkValidationError('name')" class="text-muted">{{ validationErrors.name[0] }}</small>
+							<input type="text" name="name" class="form-control" readonly v-model="name">
 						</div>
 					</div>
 
@@ -88,12 +83,10 @@
 						</div>
 					</div>
 
-                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('units'))}">
+                    <div class="form-group row">
 						<label class="col-sm-2 form-control-label">Units</label>
 						<div class="col-sm-10">
-							<input type="text" name="units" class="form-control"
-									placeholder="Example: PH, PPM, etc..." v-model="units">
-							<small v-if="checkValidationError('units')" class="text-muted">{{ validationErrors.units[0] }}</small>
+							<input type="text" name="units" class="form-control" readonly v-model="units">
 						</div>
 					</div>
 
@@ -109,7 +102,6 @@
 		</p>
 
         <button type="button" class="btn btn-default" data-dismiss="modal" v-if="!isFocus(3)">Close</button>
-        <!-- <button type="button" class="btn btn-default" data-dismiss="modal"  >test</button> -->
 
 		<button type="button" class="btn btn-warning" v-if="isFocus(3) || isFocus(1)" @click="changeFocus(2)">
 			<i class="glyphicon glyphicon-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go back
@@ -131,13 +123,15 @@
 
 <script>
 
+var dropdown = require('./dropdown.vue');
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
 
   export default {
-    props: ['serviceId', 'baseUrl'],
+    props: ['serviceId', 'baseUrl', 'globalChemicals'],
 	components: {
+		dropdown,
 		alert,
 		BootstrapTable
 	},
@@ -155,6 +149,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			alertActiveList: false,
 			alertActiveEdit: false,
 
+			globalChemicalId: 0,
             name: '',
             amount: '',
             units: '',
@@ -243,6 +238,9 @@ var BootstrapTable = require('./BootstrapTable.vue');
 		rowClicked(id){
 			this.chemicalId = id;
 			this.getValues(id);
+		},
+		dropdownChanged(key){
+			this.globalChemicalId = key;
 		}
 	},
     methods: {
@@ -283,9 +281,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
             }).spin(clickEvent.target);
 
 			this.$http.post(this.serviceUrl, {
-                name: this.name,
+				global_chemical: this.globalChemicalId,
                 amount: this.amount,
-                units: this.units,
             }).then((response) => {
                 this.changeFocus(2);
 				this.getList();
@@ -318,9 +315,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
             }).spin(clickEvent.target);
 
             this.$http.patch(this.chemicalUrl, {
-        		name: this.name,
                 amount: this.amount,
-                units: this.units,
             }).then((response) => {
 				// refresh the information
                 this.changeFocus(2);
