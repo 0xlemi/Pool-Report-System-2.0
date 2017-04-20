@@ -46,7 +46,7 @@ class ReportsTableSeeder extends Seeder
             ]);
 
             // Add Readings
-            for ($a=0; $a < $service->chemicals()->count() - 1; $a++) {
+            for ($a=0; $a < $service->chemicals()->count() - rand(0,1); $a++) {
                 // Getting a valid and unsed Chemical ID
                 $usedChemicals = $report->readings()->pluck('chemical_id')->toArray();
                 $chemicalId = $service->chemicals()

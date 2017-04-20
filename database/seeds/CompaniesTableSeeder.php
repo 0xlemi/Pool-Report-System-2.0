@@ -112,27 +112,27 @@ class CompaniesTableSeeder extends Seeder
             'units' => 'Grams'
         ]);
             $chlorine1->labels()->create([
-                'name' => '0.6 PPM',
+                'name' => '0.5 PPM - Low',
                 'color' => 'FDFFCD',
                 'value' => 1
             ]);
             $chlorine1->labels()->create([
-                'name' => '1.0 PPM',
+                'name' => '1.0 PPM - Pool OK',
                 'color' => 'E6DFD5',
                 'value' => 2
             ]);
             $chlorine1->labels()->create([
-                'name' => '1.5 PPM',
+                'name' => '2.0 PPM - Pool OK',
                 'color' => 'AD8CD3',
                 'value' => 3
             ]);
             $chlorine1->labels()->create([
-                'name' => '2.0 PPM',
+                'name' => '3.0 PPM - Spa OK',
                 'color' => 'A069BD',
                 'value' => 4
             ]);
             $chlorine1->labels()->create([
-                'name' => '3.0 PPM',
+                'name' => '5.0 PPM - High',
                 'color' => '7D1A98',
                 'value' => 5
             ]);
@@ -141,27 +141,27 @@ class CompaniesTableSeeder extends Seeder
             'units' => 'Grams'
         ]);
             $ph1->labels()->create([
-                'name' => '6.8 pH',
+                'name' => '6.8 pH - Low',
                 'color' => 'FFB204',
                 'value' => 1
             ]);
             $ph1->labels()->create([
-                'name' => '7.2 pH',
+                'name' => '7.2 pH - Low',
                 'color' => 'EB6C05',
                 'value' => 2
             ]);
             $ph1->labels()->create([
-                'name' => '7.5 pH',
+                'name' => '7.5 pH - OK',
                 'color' => 'DF3A04',
                 'value' => 3
             ]);
             $ph1->labels()->create([
-                'name' => '7.8 pH',
+                'name' => '7.8 pH - OK',
                 'color' => 'DF1803',
                 'value' => 4
             ]);
             $ph1->labels()->create([
-                'name' => '8.2 pH',
+                'name' => '8.2 pH - High',
                 'color' => 'D80317',
                 'value' => 5
             ]);
@@ -194,33 +194,150 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '131313',
                 'value' => 5
             ]);
+        $hardness1 = $company1->globalChemicals()->create([
+            'name' =>  'Hardness',
+            'units' => 'PPM'
+        ]);
+            $hardness1->labels()->create([
+                'name' => '0 PPM - Low',
+                'color' => '00179B',
+                'value' => 1
+            ]);
+            $hardness1->labels()->create([
+                'name' => '100 PPM - Low',
+                'color' => '2738AE',
+                'value' => 2
+            ]);
+            $hardness1->labels()->create([
+                'name' => '250 PPM - OK',
+                'color' => '3F2296',
+                'value' => 3
+            ]);
+            $hardness1->labels()->create([
+                'name' => '500 PPM - OK',
+                'color' => '792D8F',
+                'value' => 4
+            ]);
+            $hardness1->labels()->create([
+                'name' => '1000 PPM - High',
+                'color' => '861888',
+                'value' => 5
+            ]);
+        $bromine1 = $company1->globalChemicals()->create([
+            'name' =>  'Bromine',
+            'units' => 'PPM'
+        ]);
+            $bromine1->labels()->create([
+                'name' => '1 PPM - OK',
+                'color' => 'FEFEB6',
+                'value' => 1
+            ]);
+            $bromine1->labels()->create([
+                'name' => '2 PPM - OK',
+                'color' => 'E7F9A5',
+                'value' => 2
+            ]);
+            $bromine1->labels()->create([
+                'name' => '5 PPM - Perfect',
+                'color' => 'BCDD8C',
+                'value' => 3
+            ]);
+            $bromine1->labels()->create([
+                'name' => '10 PPM - OK',
+                'color' => '90C479',
+                'value' => 4
+            ]);
+            $bromine1->labels()->create([
+                'name' => '20 PPM - OK',
+                'color' => '37A75B',
+                'value' => 5
+            ]);
+        $alkalinity1 = $company1->globalChemicals()->create([
+            'name' =>  'Alkalinity',
+            'units' => 'PPM'
+        ]);
+            $alkalinity1->labels()->create([
+                'name' => '20 PPM - Low',
+                'color' => 'E4C512',
+                'value' => 1
+            ]);
+            $alkalinity1->labels()->create([
+                'name' => '60 PPM - OK',
+                'color' => 'A3A42C',
+                'value' => 2
+            ]);
+            $alkalinity1->labels()->create([
+                'name' => '120 PPM - OK',
+                'color' => '456D31',
+                'value' => 3
+            ]);
+            $alkalinity1->labels()->create([
+                'name' => '180 PPM - High',
+                'color' => '1F5732',
+                'value' => 4
+            ]);
+            $alkalinity1->labels()->create([
+                'name' => '240 PPM - High',
+                'color' => '1E4652',
+                'value' => 5
+            ]);
+        $cyanuricAcid1 = $company1->globalChemicals()->create([
+            'name' =>  'Cyanuric Acid',
+            'units' => 'PPM'
+        ]);
+            $cyanuricAcid1->labels()->create([
+                'name' => '0 PPM - Low',
+                'color' => 'E88101',
+                'value' => 1
+            ]);
+            $cyanuricAcid1->labels()->create([
+                'name' => '30-50 PPM - Perfect',
+                'color' => 'CD6106',
+                'value' => 2
+            ]);
+            $cyanuricAcid1->labels()->create([
+                'name' => '100 PPM - OK',
+                'color' => 'B72228',
+                'value' => 3
+            ]);
+            $cyanuricAcid1->labels()->create([
+                'name' => '150 PPM - High',
+                'color' => 'B3047B',
+                'value' => 4
+            ]);
+            $cyanuricAcid1->labels()->create([
+                'name' => '300 PPM - High',
+                'color' => '6C057A',
+                'value' => 5
+            ]);
 
+        // For Company 2
         $chlorine2 = $company2->globalChemicals()->create([
             'name' =>  'Chlorine',
             'units' => 'Grams'
         ]);
             $chlorine2->labels()->create([
-                'name' => '0.6 PPM',
+                'name' => '0.5 PPM - Low',
                 'color' => 'FDFFCD',
                 'value' => 1
             ]);
             $chlorine2->labels()->create([
-                'name' => '1.0 PPM',
+                'name' => '1.0 PPM - Pool OK',
                 'color' => 'E6DFD5',
                 'value' => 2
             ]);
             $chlorine2->labels()->create([
-                'name' => '1.5 PPM',
+                'name' => '2.0 PPM - Pool OK',
                 'color' => 'AD8CD3',
                 'value' => 3
             ]);
             $chlorine2->labels()->create([
-                'name' => '2.0 PPM',
+                'name' => '3.0 PPM - Spa OK',
                 'color' => 'A069BD',
                 'value' => 4
             ]);
             $chlorine2->labels()->create([
-                'name' => '3.0 PPM',
+                'name' => '5.0 PPM - High',
                 'color' => '7D1A98',
                 'value' => 5
             ]);
@@ -229,27 +346,27 @@ class CompaniesTableSeeder extends Seeder
             'units' => 'Grams'
         ]);
             $ph2->labels()->create([
-                'name' => '6.8 pH',
+                'name' => '6.8 pH - Low',
                 'color' => 'FFB204',
                 'value' => 1
             ]);
             $ph2->labels()->create([
-                'name' => '7.2 pH',
+                'name' => '7.2 pH - Low',
                 'color' => 'EB6C05',
                 'value' => 2
             ]);
             $ph2->labels()->create([
-                'name' => '7.5 pH',
+                'name' => '7.5 pH - OK',
                 'color' => 'DF3A04',
                 'value' => 3
             ]);
             $ph2->labels()->create([
-                'name' => '7.8 pH',
+                'name' => '7.8 pH - OK',
                 'color' => 'DF1803',
                 'value' => 4
             ]);
             $ph2->labels()->create([
-                'name' => '8.2 pH',
+                'name' => '8.2 pH - High',
                 'color' => 'D80317',
                 'value' => 5
             ]);
@@ -282,6 +399,124 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '131313',
                 'value' => 5
             ]);
+        $hardness2 = $company2->globalChemicals()->create([
+            'name' =>  'Hardness',
+            'units' => 'PPM'
+        ]);
+            $hardness2->labels()->create([
+                'name' => '0 PPM - Low',
+                'color' => '00179B',
+                'value' => 1
+            ]);
+            $hardness2->labels()->create([
+                'name' => '100 PPM - Low',
+                'color' => '2738AE',
+                'value' => 2
+            ]);
+            $hardness2->labels()->create([
+                'name' => '250 PPM - OK',
+                'color' => '3F2296',
+                'value' => 3
+            ]);
+            $hardness2->labels()->create([
+                'name' => '500 PPM - OK',
+                'color' => '792D8F',
+                'value' => 4
+            ]);
+            $hardness2->labels()->create([
+                'name' => '1000 PPM - High',
+                'color' => '861888',
+                'value' => 5
+            ]);
+        $bromine2 = $company2->globalChemicals()->create([
+            'name' =>  'Bromine',
+            'units' => 'PPM'
+        ]);
+            $bromine2->labels()->create([
+                'name' => '1 PPM - OK',
+                'color' => 'FEFEB6',
+                'value' => 1
+            ]);
+            $bromine2->labels()->create([
+                'name' => '2 PPM - OK',
+                'color' => 'E7F9A5',
+                'value' => 2
+            ]);
+            $bromine2->labels()->create([
+                'name' => '5 PPM - Perfect',
+                'color' => 'BCDD8C',
+                'value' => 3
+            ]);
+            $bromine2->labels()->create([
+                'name' => '10 PPM - OK',
+                'color' => '90C479',
+                'value' => 4
+            ]);
+            $bromine2->labels()->create([
+                'name' => '20 PPM - OK',
+                'color' => '37A75B',
+                'value' => 5
+            ]);
+        $alkalinity2 = $company2->globalChemicals()->create([
+            'name' =>  'Alkalinity',
+            'units' => 'PPM'
+        ]);
+            $alkalinity2->labels()->create([
+                'name' => '20 PPM - Low',
+                'color' => 'E4C512',
+                'value' => 1
+            ]);
+            $alkalinity2->labels()->create([
+                'name' => '60 PPM - OK',
+                'color' => 'A3A42C',
+                'value' => 2
+            ]);
+            $alkalinity2->labels()->create([
+                'name' => '120 PPM - OK',
+                'color' => '456D31',
+                'value' => 3
+            ]);
+            $alkalinity2->labels()->create([
+                'name' => '180 PPM - High',
+                'color' => '1F5732',
+                'value' => 4
+            ]);
+            $alkalinity2->labels()->create([
+                'name' => '240 PPM - High',
+                'color' => '1E4652',
+                'value' => 5
+            ]);
+        $cyanuricAcid2 = $company2->globalChemicals()->create([
+            'name' =>  'Cyanuric Acid',
+            'units' => 'PPM'
+        ]);
+            $cyanuricAcid2->labels()->create([
+                'name' => '0 PPM - Low',
+                'color' => 'E88101',
+                'value' => 1
+            ]);
+            $cyanuricAcid2->labels()->create([
+                'name' => '30-50 PPM - Perfect',
+                'color' => 'CD6106',
+                'value' => 2
+            ]);
+            $cyanuricAcid2->labels()->create([
+                'name' => '100 PPM - OK',
+                'color' => 'B72228',
+                'value' => 3
+            ]);
+            $cyanuricAcid2->labels()->create([
+                'name' => '150 PPM - High',
+                'color' => 'B3047B',
+                'value' => 4
+            ]);
+            $cyanuricAcid2->labels()->create([
+                'name' => '300 PPM - High',
+                'color' => '6C057A',
+                'value' => 5
+            ]);
+
+
 
 
         // Notification Settings

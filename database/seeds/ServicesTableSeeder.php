@@ -85,7 +85,7 @@ class ServicesTableSeeder extends Seeder
 
             }
 
-            for ($e=0; $e < rand(2,3); $e++) {
+            for ($e=0; $e < rand(6,7); $e++) {
 
                 // Getting a valid Global Chemical ID
                 $usedGlobalChemicals = $service->chemicals()
