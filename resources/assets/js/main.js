@@ -84,6 +84,7 @@ function isset(strVariableName) {
     let reportIndex = require('./components/ReportIndex.vue');
     let changeTechnicianPassword = require('./components/changeTechnicianPassword.vue');
     let rolePicker = require('./components/rolePicker.vue');
+    let chat = require('./components/chat.vue');
 
 
     let mainVue = new Vue({
@@ -100,6 +101,7 @@ function isset(strVariableName) {
             deleteButton,
             timezoneDropdown,
             emailVerificationNotice,
+            chat,
             // notifications
             AllNotificationsAsReadButton,
             // settings

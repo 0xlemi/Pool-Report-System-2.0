@@ -115,12 +115,12 @@
 
         @endrole
 
-        <!-- <li class="green {{ Request::is('chat*')? 'opened':'' }}">
+        <li class="green {{ Request::is('chat*')? 'opened':'' }}">
             <a href="{{ url('/chat') }}">
                 <i class="font-icon font-icon-comments"></i>
                 <span class="lbl">Chat</span>
             </a>
-        </li> -->
+        </li>
 
         </ul>
     </section>
