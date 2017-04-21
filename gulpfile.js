@@ -14,13 +14,11 @@ require('laravel-elixir-vueify');
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss', 'public/css/sass.css')
-    	.less('app.less', 'public/css/less.css')
+    mix.less('app.less', 'public/css/less.css')
     	.styles([
     		'bootstrap-table.css',
             'font-awesome.min.css',
     		'dropzone.css',
-        	'app.css',
             'bootstrap-fileupload.css',
             'bootstrap-toggle.css',
             'bootstrap-clockpicker.css',
@@ -35,5 +33,5 @@ elixir(function(mix) {
             'bootstrap.js',
             'main.js'
         ])
-    	.version(['css/sass.css', 'css/less.css', 'css/main.css', 'js/bundle.js']);
+    	.version(['css/less.css', 'css/main.css', 'js/bundle.js']);
 });
