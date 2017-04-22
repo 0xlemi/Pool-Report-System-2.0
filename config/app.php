@@ -225,6 +225,7 @@ return [
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'ImageHTML' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
+        'Uuid' => Webpatser\Uuid\Uuid::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
     ],
 

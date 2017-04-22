@@ -24,6 +24,9 @@ class CreateUserRoleCompanyPivotTable extends Migration
             $table->string('address');
             $table->text('about');
 
+            $table->uuid('chat_id');
+            $table->string('chat_token');
+
             $table->unsignedTinyInteger('type')->default(1); // Type meaning depends on the role
 
             $table->boolean('selected')->default(false); // We need to know which urc the user wants to use rigth now

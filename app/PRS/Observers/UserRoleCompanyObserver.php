@@ -3,6 +3,7 @@
 namespace App\PRS\Observers;
 
 use DB;
+use Uuid;
 use App\User;
 use App\Notifications\NewUserRoleCompanyNotification;
 use App\UserRoleCompany;
@@ -32,6 +33,11 @@ class UserRoleCompanyObserver
         if($userRoleCompany->user->userRoleCompanies()->count() == 1){
             dispatch(new CreateAndSendVerificationToken($userRoleCompany));
         }
+
+        // Generate Chat Id and Token
+        // $userRoleCompany->chat_id  = Uuid::generate();
+        // $userRoleCompany->chat_token  = );
+        // $userRoleCompany->save();
 
         // Send Notifications
         $urc = auth()->user()->selectedUser;

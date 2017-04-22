@@ -16,8 +16,8 @@
 	<title>{{ config('app.name', 'Pool Report System') }}</title>
 
     <!-- Styles -->
-    <link href="{{ elixir('css/main.css') }}" rel="stylesheet">
     <link href="{{ elixir('css/less.css') }}" rel="stylesheet">
+    <link href="{{ elixir('css/main.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
 	<script>
