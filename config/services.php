@@ -35,4 +35,8 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'sendbird' => [
+        'Api_Token' => env('SENDBIRD_TOKEN')
+    ],
+
 ];

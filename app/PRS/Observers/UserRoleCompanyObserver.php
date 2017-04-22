@@ -9,6 +9,7 @@ use App\Notifications\NewUserRoleCompanyNotification;
 use App\UserRoleCompany;
 use App\Jobs\UpdateSubscriptionQuantity;
 use App\Jobs\CreateAndSendVerificationToken;
+use App\PRS\Classes\SendBird;
 
 
 class UserRoleCompanyObserver
@@ -36,8 +37,13 @@ class UserRoleCompanyObserver
 
         // Generate Chat Id and Token
         // $userRoleCompany->chat_id  = Uuid::generate();
-        // $userRoleCompany->chat_token  = );
+        //
+        // $user = $userRoleCompany->user;
+        // $nickname = str_slug($user->fullName, '.');
+        // $userRoleCompany->chat_nickname  = $nickname;
         // $userRoleCompany->save();
+        // SendBird::createUser($userRoleCompany);
+        // // $userRoleCompany->chat_token  = );
 
         // Send Notifications
         $urc = auth()->user()->selectedUser;

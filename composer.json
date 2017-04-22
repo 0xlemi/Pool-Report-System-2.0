@@ -18,7 +18,8 @@
         "sentry/sentry": "^1.6",
         "sentry/sentry-laravel": "^0.6.1",
         "barryvdh/laravel-debugbar": "^2.3",
-        "webpatser/laravel-uuid": "^2.0"
+        "webpatser/laravel-uuid": "^2.0",
+        "kozz/laravel-guzzle-provider": "~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -171,6 +171,7 @@ return [
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+        Kozz\Laravel\Providers\Guzzle::class,
         // Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
@@ -220,13 +221,18 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        // Third Party
         'Intervention' => Intervention\Image\Facades\Image::class,
         'JavaScript' => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
         'ImageHTML' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
+        'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
+
+        // Custom
+        // 'SendBird' => App\PRS\Classes\SendBird::class,
     ],
 
 ];

@@ -52,6 +52,8 @@ class UserTableSeeder extends Seeder
     		]);
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
+                'chat_id' => Uuid::generate()->string,
+                'chat_nickname' => str_slug($user->fullName.' '.str_random(5), '.'),
                 'user_id' => $user->id,
                 'role_id' => 2,
                 'company_id' => $company->id,
@@ -98,6 +100,9 @@ class UserTableSeeder extends Seeder
     		$user = factory(User::class)->create();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
+
+                'chat_id' => Uuid::generate()->string,
+                'chat_nickname' => str_slug($user->fullName.' '.str_random(5), '.'),
                 'user_id' => $user->id,
                 'role_id' => 3,
                 'company_id' => $company_id,
@@ -148,6 +153,8 @@ class UserTableSeeder extends Seeder
     		$user = factory(User::class)->create();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
+                'chat_id' => Uuid::generate()->string,
+                'chat_nickname' => str_slug($user->fullName.' '.str_random(5), '.'),
                 'user_id' => $user->id,
                 'role_id' => 4,
                 'company_id' => $company_id,

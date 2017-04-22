@@ -45,6 +45,8 @@ class CompaniesTableSeeder extends Seeder
         ]);
 
         $userRoleCompany1 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
             'user_id' => $user1->id,
     		'role_id' => 1,
     		'company_id' => $company1->id,
@@ -70,6 +72,8 @@ class CompaniesTableSeeder extends Seeder
     	]);
 
         $userRoleCompany2 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
             'user_id' => $user2->id,
     		'role_id' => 1,
     		'company_id' => $company2->id,
@@ -79,24 +83,32 @@ class CompaniesTableSeeder extends Seeder
 
         // Make Other UserRoleCompany on the same user to test changeURC Functionality
         $urcOwnCompanyClient1 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
             'user_id' => $user1->id,
     		'role_id' => 2,
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
         $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
             'user_id' => $user1->id,
     		'role_id' => 3,
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
         $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
             'user_id' => $user2->id,
     		'role_id' => 2,
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
         $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
+            'chat_id' => Uuid::generate()->string,
+            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
             'user_id' => $user2->id,
     		'role_id' => 4,
     		'company_id' => $company1->id,

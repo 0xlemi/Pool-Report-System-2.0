@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Http\Request;
 use App\Jobs\RecordServiceHistory;
+use App\PRS\Classes\SendBird;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +13,6 @@ use App\Jobs\RecordServiceHistory;
 | to using a Closure or controller method. Build something great!
 |
 */
-
 
 Auth::routes();
 Route::auth();
