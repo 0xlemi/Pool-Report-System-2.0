@@ -311,36 +311,21 @@
 </template>
 
 <script>
-var SendBird = require("sendbird");
 import modal from './modal.vue';
 import bootstrapTable from './BootstrapTable.vue';
 
 export default {
+    props: ['sb', 'currentUser'],
     components:{
         modal,
         bootstrapTable,
     },
     data(){
         return {
-            sb: {},
-            currentUser: {},
+
         }
     },
     methods: {
-        startSendBird(){
-            let vue = this;
-            this.sb = new SendBird({
-                appId: '19AA8038-0207-416F-95E2-BF118EA1D93E',
-            });
-            this.sb.connect('lem_456', function(user, error) {
-                if (error) {
-                    console.error(error);
-                    return;
-                }
-                console.log(user);
-                vue.currentUser = user;
-            });
-        },
         createPrivateChannel(userIds){
             this.sb.GroupChannel.createChannelWithUserIds(userIds, true, 'Private Chat', '', '', '', function(createdChannel, error){
                 if (error) {
@@ -353,9 +338,7 @@ export default {
     },
     ready(){
         let vue = this;
-        this.startSendBird();
-
-        setTimeout(function(){ vue.createPrivateChannel(['pepe_123']) }, 3000);
+        // setTimeout(function(){ vue.createPrivateChannel(['pepe_123']) }, 3000);
 
         // sb.GroupChannel.createChannelWithUserIds(userIds , true, 'hello', '', 'json: {}', '', function(createdChannel, error){
         //     if (error) {

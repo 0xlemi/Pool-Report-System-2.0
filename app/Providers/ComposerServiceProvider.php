@@ -35,6 +35,12 @@ class ComposerServiceProvider extends ServiceProvider
                                 'text', 'icon')
                         ->get()->groupBy('company_name');
                 $view->with('roles', $urc);
+
+                $view->with('chat', (object)[
+                    'id' => $selectedUser->chat_id,
+                    'nickname' => $selectedUser->chat_nickname,
+                    'token' => $selectedUser->chat_token,
+                ]);
             }
         });
     }

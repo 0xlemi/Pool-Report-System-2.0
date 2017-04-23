@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\PRS\Classes\SendBird;
 
 class ChatController extends Controller
 {
@@ -25,6 +26,14 @@ class ChatController extends Controller
      */
     public function home()
     {
+        $urc = auth()->user()->selectedUser;
+
+
+        // $sendBird = new SendBird($urc);
+
+        // dd(SendBird::createUser($urc));
+        // dd($sendBird->newToken());
+        // dd($sendBird->checkIfUserExists());
         return view('chat.home');
     }
 

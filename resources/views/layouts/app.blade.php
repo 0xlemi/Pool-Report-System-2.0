@@ -24,6 +24,7 @@
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
             'url' => url('/').'/',
+			'chat' => $chat,
         ]); ?>
     </script>
 </head>

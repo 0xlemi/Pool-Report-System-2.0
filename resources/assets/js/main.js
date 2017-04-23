@@ -3,6 +3,7 @@ var dateFormat 		= require('dateformat');
 // Vue imports
 var Vue 			= require('vue');
 
+var SendBird        = require("sendbird");
 var Spinner         = require("spin");
 var Dropzone 		= require("dropzone");
 var swal 			= require("sweetalert");
@@ -89,6 +90,10 @@ function isset(strVariableName) {
 
     let mainVue = new Vue({
         el: 'body',
+        data:{
+            sb: {},
+            currentUser: {},
+        },
         components: {
             // header
             notificationsWidget,
@@ -148,6 +153,20 @@ function isset(strVariableName) {
 
         },
         directives: { FormToAjax },
+        ready(){
+            let vue = this;
+            this.sb = new SendBird({
+                appId: '19AA8038-0207-416F-95E2-BF118EA1D93E',
+            });
+            this.sb.connect(Laravel.chat.id, Laravel.chat.token, function(user, error) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                console.log(user);
+                vue.currentUser = user;
+            });
+        }
     });
 
 
