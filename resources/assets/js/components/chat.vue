@@ -9,6 +9,9 @@
     Settings
 </modal>
 
+
+<alert type="danger" :message="alertMessage" :active="alertActive"></alert>
+
 <section class="chat-list">
     <div class="chat-list-search chat-list-settings-header">
         <div class="row">
@@ -28,13 +31,13 @@
         </div>
     </div><!--.chat-list-search-->
     <div class="chat-list-in scrollable-block">
-        <div class="chat-list-item online">
+        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item online">
             <div class="chat-list-item-photo">
-                <img src="img/photo-64-1.jpg" alt="">
+                <img :src="channel.members[1].profileUrl" alt="">
             </div>
             <div class="chat-list-item-header">
                 <div class="chat-list-item-name">
-                    <span class="name">Matt McGill</span>
+                    <span class="name">{{ channel.members[1].nickname }}</span>
                 </div>
                 <div class="chat-list-item-date">16:59</div>
             </div>
@@ -43,39 +46,9 @@
                     <div class="icon">
                         <i class="font-icon font-icon-pencil-thin"></i>
                     </div>
-                    Matt McGill typing a message
+                    typing a message
                 </div>
-                <div class="chat-list-item-count">3</div>
-            </div>
-        </div>
-        <div class="chat-list-item">
-            <div class="chat-list-item-photo">
-                <img src="img/photo-64-2.jpg" alt="">
-            </div>
-            <div class="chat-list-item-header">
-                <div class="chat-list-item-name">
-                    <span class="name">Matthew Heath</span>
-                </div>
-                <div class="chat-list-item-date">16:59</div>
-            </div>
-            <div class="chat-list-item-cont">
-                <div class="chat-list-item-txt">Anything that's easy or has no difficulty; something that is a certainty</div>
-                <div class="chat-list-item-count">100</div>
-            </div>
-        </div>
-        <div class="chat-list-item selected">
-            <div class="chat-list-item-photo">
-                <img src="img/photo-64-3.jpg" alt="">
-            </div>
-            <div class="chat-list-item-header">
-                <div class="chat-list-item-name">
-                    <span class="name">Vasilisa</span>
-                </div>
-                <div class="chat-list-item-date">05 Aug</div>
-            </div>
-            <div class="chat-list-item-cont">
-                <div class="chat-list-item-txt">no</div>
-                <div class="chat-list-item-dot"></div>
+                <div v-if="channel.unreadMessageCount > 0" class="chat-list-item-count">{{channel.unreadMessageCount}}</div>
             </div>
         </div>
     </div><!--.chat-list-in-->
@@ -129,155 +102,41 @@
 
         <div class="chat-dialog-area scrollable-block">
             <div class="messenger-dialog-area">
-                <div class="messenger-message-container">
-                    <div class="avatar">
-                        <img src="img/avatar-1-32.png">
-                    </div>
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                <div v-for="message in messageList" class="messenger-message-container" :class="{'from bg-blue': isCurrent(message._sender)}">
+                    <span v-if="isCurrent(message._sender)">
+                        <div class="messages">
+                            <ul>
+                                <li>
+                                    <div class="time-ago">1:26</div>
+                                    <div class="message">
+                                        <div>
+                                            {{ message.message }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="avatar chat-list-item-photo">
+                            <img :src="message._sender.profileUrl">
+                        </div>
+                    </span>
+                    <span v-else>
+                        <div class="avatar">
+                            <img :src="message._sender.profileUrl">
+                        </div>
+                        <div class="messages">
+                            <ul>
+                                <li>
+                                    <div class="message">
+                                        <div>
+                                            {{ message.message }}
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="messenger-message-container from bg-blue">
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="avatar chat-list-item-photo">
-                        <img src="img/photo-64-1.jpg">
-                    </div>
-                </div>
-                <div class="messenger-message-container">
-                    <div class="avatar">
-                        <img src="img/avatar-1-32.png">
-                    </div>
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                    </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
-                                    </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="messenger-message-container from bg-blue">
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="avatar chat-list-item-photo">
-                        <img src="img/photo-64-1.jpg">
-                    </div>
-                </div>
-                <div class="messenger-message-container">
-                    <div class="avatar">
-                        <img src="img/avatar-1-32.png">
-                    </div>
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                    </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                            <li>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
-                                    </div>
-                                </div>
-                                <div class="time-ago">1:26</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="messenger-message-container from bg-blue">
-                    <div class="messages">
-                        <ul>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="time-ago">1:26</div>
-                                <div class="message">
-                                    <div>
-                                        Lorem Ipsum is simply dummy text...
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="avatar chat-list-item-photo">
-                        <img src="img/photo-64-1.jpg">
-                    </div>
+                                    <div class="time-ago">1:26</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </span>
                 </div>
             </div>
         </div>
@@ -285,8 +144,9 @@
         <div class="chat-area-bottom">
             <form class="write-message">
                 <div class="form-group">
-                    <textarea rows="1" class="form-control" placeholder="Type a message"></textarea>
+                    <textarea rows="1" class="form-control" placeholder="Type a message" v-model="currentMessage"></textarea>
                     <div class="dropdown dropdown-typical dropup attach">
+                        <button @click="sendMessage(currentMessage)" :disabled="chatDisabled" type="button" class="btn btn-rounded float-left">Send</button>
                         <a class="dropdown-toggle dropdown-toggle-txt"
                            id="dd-chat-attach"
                            data-target="#"
@@ -312,6 +172,7 @@
 
 <script>
 import modal from './modal.vue';
+import alert from './alert.vue';
 import bootstrapTable from './BootstrapTable.vue';
 import urcTable from './urcTable.vue';
 
@@ -319,46 +180,112 @@ export default {
     props: ['sb', 'currentUser'],
     components:{
         modal,
+        alert,
         bootstrapTable,
         urcTable,
     },
     data(){
         return {
+            alertMessage: '',
+            alertActive: false,
+            channelList: {},
+            messageList: {},
 
+            currentChannel: null,
+            currentMessage: '',
         }
     },
     events: {
-        newChat(userSedId){
+        newChat(seqId){
             this.$broadcast('closeModal', 'addChat');
             this.openPrivateChat(seqId);
         }
     },
+    computed: {
+        chatDisabled(){
+            return (this.currentChannel == null);
+        },
+    },
     methods: {
-        openPrivateChannel(seqId){
-            
+        // Actions
+        changeChannel(channel){
+            this.currentChannel = channel;
+            this.getMessages(channel);
+        },
+        sendMessage(text){
+            let vue = this;
+            this.currentChannel.sendUserMessage(text, null, 'regular', function(message, error){
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                vue.getMessages(vue.currentChannel);
+                vue.currentMessage = '';
+            });
+        },
+        // Lists
+        getChannels(){
+            let vue = this;
+            let channelListQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
+            channelListQuery.includeEmpty = true;
+            channelListQuery.limit = 100; // pagination limit could be set up to 100
+
+            if (channelListQuery.hasNext) {
+                channelListQuery.next(function(channelList, error){
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    vue.channelList = channelList;
+                });
+            }
+        },
+        getMessages(channel){
+            let vue = this;
+            var messageListQuery = channel.createPreviousMessageListQuery();
+            messageListQuery.load(20, true, function(messageList, error){
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                vue.messageList = messageList.reverse();
+            });
+        },
+        // Creation
+        openPrivateChat(seqId){
+            this.$http.get(Laravel.url+'chat/id/'+seqId).then(response => {
+                let chatId = response.data.chat_id;
+                this.createPrivateChannel([chatId]);
+            },response => {
+                this.alertMessage = 'There was a problem creating the conversetion.';
+                this.alertActive = true;
+            });
+
+        },
+        createPrivateChannel(userIds){
+            let vue = this;
             this.sb.GroupChannel.createChannelWithUserIds(userIds, true, 'Private Chat', '', '', '', function(createdChannel, error){
                 if (error) {
                     console.error(error);
                     return;
                 }
-
+                // if successfull refresh the channel list
+                vue.getChannels();
             });
+        },
+        // Random
+        isCurrent(user){
+            if(user){
+                return (this.currentUser.userId == user.userId)
+            }
+            return false;
         }
     },
     ready(){
         let vue = this;
-        // setTimeout(function(){ vue.createPrivateChannel(['pepe_123']) }, 3000);
-
-        // sb.GroupChannel.createChannelWithUserIds(userIds , true, 'hello', '', 'json: {}', '', function(createdChannel, error){
-        //     if (error) {
-        //         console.error(error);
-        //         return;
-        //     }
-        //
-        //     console.log(createdChannel);
-        // });
-
-
+        setTimeout(function () {
+            vue.getChannels();
+        }, 3000);
     }
 }
 </script>

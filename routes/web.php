@@ -140,7 +140,10 @@ Route::resource('invoices', 'InvoiceController', ['only' => [
 Route::resource('payments', 'PaymentController', ['only' => [
     'show', 'destroy'
 ]]);
+
+// Chat
 Route::get('chat', 'ChatController@home');
+Route::get('chat/id/{seqId}', 'ChatController@userChatId');
 
 
 Route::post(

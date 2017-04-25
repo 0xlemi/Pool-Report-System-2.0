@@ -27785,6 +27785,10 @@ var _modal = require('./modal.vue');
 
 var _modal2 = _interopRequireDefault(_modal);
 
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
 var _BootstrapTable = require('./BootstrapTable.vue');
 
 var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
@@ -27799,46 +27803,121 @@ exports.default = {
     props: ['sb', 'currentUser'],
     components: {
         modal: _modal2.default,
+        alert: _alert2.default,
         bootstrapTable: _BootstrapTable2.default,
         urcTable: _urcTable2.default
     },
     data: function data() {
-        return {};
+        return {
+            alertMessage: '',
+            alertActive: false,
+            channelList: {},
+            messageList: {},
+
+            currentChannel: null,
+            currentMessage: ''
+        };
     },
 
     events: {
-        newChat: function newChat(userSedId) {
+        newChat: function newChat(seqId) {
             this.$broadcast('closeModal', 'addChat');
-            console.log('newChat Recived');
+            this.openPrivateChat(seqId);
+        }
+    },
+    computed: {
+        chatDisabled: function chatDisabled() {
+            return this.currentChannel == null;
         }
     },
     methods: {
+        // Actions
+        changeChannel: function changeChannel(channel) {
+            this.currentChannel = channel;
+            this.getMessages(channel);
+        },
+        sendMessage: function sendMessage(text) {
+            var vue = this;
+            this.currentChannel.sendUserMessage(text, null, 'regular', function (message, error) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                vue.getMessages(vue.currentChannel);
+                vue.currentMessage = '';
+            });
+        },
+
+        // Lists
+        getChannels: function getChannels() {
+            var vue = this;
+            var channelListQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
+            channelListQuery.includeEmpty = true;
+            channelListQuery.limit = 100; // pagination limit could be set up to 100
+
+            if (channelListQuery.hasNext) {
+                channelListQuery.next(function (channelList, error) {
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    vue.channelList = channelList;
+                });
+            }
+        },
+        getMessages: function getMessages(channel) {
+            var vue = this;
+            var messageListQuery = channel.createPreviousMessageListQuery();
+            messageListQuery.load(20, true, function (messageList, error) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                vue.messageList = messageList.reverse();
+            });
+        },
+
+        // Creation
+        openPrivateChat: function openPrivateChat(seqId) {
+            var _this = this;
+
+            this.$http.get(Laravel.url + 'chat/id/' + seqId).then(function (response) {
+                var chatId = response.data.chat_id;
+                _this.createPrivateChannel([chatId]);
+            }, function (response) {
+                _this.alertMessage = 'There was a problem creating the conversetion.';
+                _this.alertActive = true;
+            });
+        },
         createPrivateChannel: function createPrivateChannel(userIds) {
+            var vue = this;
             this.sb.GroupChannel.createChannelWithUserIds(userIds, true, 'Private Chat', '', '', '', function (createdChannel, error) {
                 if (error) {
                     console.error(error);
                     return;
                 }
+                // if successfull refresh the channel list
+                vue.getChannels();
             });
+        },
+
+        // Random
+        isCurrent: function isCurrent(user) {
+            if (user) {
+                return this.currentUser.userId == user.userId;
+            }
+            return false;
         }
     },
     ready: function ready() {
         var vue = this;
-        // setTimeout(function(){ vue.createPrivateChannel(['pepe_123']) }, 3000);
-
-        // sb.GroupChannel.createChannelWithUserIds(userIds , true, 'hello', '', 'json: {}', '', function(createdChannel, error){
-        //     if (error) {
-        //         console.error(error);
-        //         return;
-        //     }
-        //
-        //     console.log(createdChannel);
-        // });
-
+        setTimeout(function () {
+            vue.getChannels();
+        }, 3000);
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal title=\"New Chat\" id=\"addChat\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <div class=\"chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    <div class=\"icon\">\n                        <i class=\"font-icon font-icon-pencil-thin\"></i>\n                    </div>\n                    Matt McGill typing a message\n                </div>\n                <div class=\"chat-list-item-count\">3</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-2.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matthew Heath</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">Anything that's easy or has no difficulty; something that is a certainty</div>\n                <div class=\"chat-list-item-count\">100</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item selected\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-3.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Vasilisa</span>\n                </div>\n                <div class=\"chat-list-item-date\">05 Aug</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">no</div>\n                <div class=\"chat-list-item-dot\"></div>\n            </div>\n        </div>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    Matt McGill typing a message\n                </div>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <div class=\"checkbox-toggle\">\n                <input type=\"checkbox\" id=\"check-toggle-2\" checked=\"\">\n                <label for=\"check-toggle-2\">Disable notifications</label>\n            </div>\n        </section>\n        <section class=\"chat-profiles\">\n            <header>Profile on facebook</header>\n            <a href=\"#\">http://facebook.com/startui</a>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <div class=\"chat-list-item online\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Thomas Bryan</span>\n                </div>\n                <div class=\"chat-list-item-txt writing\">Last seen 05 aug 2015 at 18:04</div>\n            </div>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\">\n            <div class=\"messenger-dialog-area\">\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea rows=\"1\" class=\"form-control\" placeholder=\"Type a message\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal title=\"New Chat\" id=\"addChat\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n\n<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <div v-for=\"channel in channelList\" @click=\"changeChannel(channel)\" class=\"chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img :src=\"channel.members[1].profileUrl\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">{{ channel.members[1].nickname }}</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    <div class=\"icon\">\n                        <i class=\"font-icon font-icon-pencil-thin\"></i>\n                    </div>\n                    typing a message\n                </div>\n                <div v-if=\"channel.unreadMessageCount > 0\" class=\"chat-list-item-count\">{{channel.unreadMessageCount}}</div>\n            </div>\n        </div>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    Matt McGill typing a message\n                </div>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <div class=\"checkbox-toggle\">\n                <input type=\"checkbox\" id=\"check-toggle-2\" checked=\"\">\n                <label for=\"check-toggle-2\">Disable notifications</label>\n            </div>\n        </section>\n        <section class=\"chat-profiles\">\n            <header>Profile on facebook</header>\n            <a href=\"#\">http://facebook.com/startui</a>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <div class=\"chat-list-item online\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Thomas Bryan</span>\n                </div>\n                <div class=\"chat-list-item-txt writing\">Last seen 05 aug 2015 at 18:04</div>\n            </div>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\">\n            <div class=\"messenger-dialog-area\">\n                <div v-for=\"message in messageList\" class=\"messenger-message-container\" :class=\"{'from bg-blue': isCurrent(message._sender)}\">\n                    <span v-if=\"isCurrent(message._sender)\">\n                        <div class=\"messages\">\n                            <ul>\n                                <li>\n                                    <div class=\"time-ago\">1:26</div>\n                                    <div class=\"message\">\n                                        <div>\n                                            {{ message.message }}\n                                        </div>\n                                    </div>\n                                </li>\n                            </ul>\n                        </div>\n                        <div class=\"avatar chat-list-item-photo\">\n                            <img :src=\"message._sender.profileUrl\">\n                        </div>\n                    </span>\n                    <span v-else=\"\">\n                        <div class=\"avatar\">\n                            <img :src=\"message._sender.profileUrl\">\n                        </div>\n                        <div class=\"messages\">\n                            <ul>\n                                <li>\n                                    <div class=\"message\">\n                                        <div>\n                                            {{ message.message }}\n                                        </div>\n                                    </div>\n                                    <div class=\"time-ago\">1:26</div>\n                                </li>\n                            </ul>\n                        </div>\n                    </span>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea rows=\"1\" class=\"form-control\" placeholder=\"Type a message\" v-model=\"currentMessage\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <button @click=\"sendMessage(currentMessage)\" :disabled=\"chatDisabled\" type=\"button\" class=\"btn btn-rounded float-left\">Send</button>\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -27849,7 +27928,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":198,"./modal.vue":238,"./urcTable.vue":257,"vue":186,"vue-hot-reload-api":183}],214:[function(require,module,exports){
+},{"./BootstrapTable.vue":198,"./alert.vue":208,"./modal.vue":238,"./urcTable.vue":257,"vue":186,"vue-hot-reload-api":183}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

@@ -46,7 +46,7 @@ class CompaniesTableSeeder extends Seeder
 
         $userRoleCompany1 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user1->fullName.' - '.title_case('admin'),
             'user_id' => $user1->id,
     		'role_id' => 1,
     		'company_id' => $company1->id,
@@ -73,7 +73,7 @@ class CompaniesTableSeeder extends Seeder
 
         $userRoleCompany2 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user2->fullName.' - '.title_case('admin'),
             'user_id' => $user2->id,
     		'role_id' => 1,
     		'company_id' => $company2->id,
@@ -84,7 +84,7 @@ class CompaniesTableSeeder extends Seeder
         // Make Other UserRoleCompany on the same user to test changeURC Functionality
         $urcOwnCompanyClient1 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user1->fullName.' - '.title_case('client'),
             'user_id' => $user1->id,
     		'role_id' => 2,
     		'company_id' => $company1->id,
@@ -92,7 +92,7 @@ class CompaniesTableSeeder extends Seeder
         ]);
         $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user1->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user1->fullName.' - '.title_case('sup'),
             'user_id' => $user1->id,
     		'role_id' => 3,
     		'company_id' => $company2->id,
@@ -100,7 +100,7 @@ class CompaniesTableSeeder extends Seeder
         ]);
         $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user2->fullName.' - '.title_case('client'),
             'user_id' => $user2->id,
     		'role_id' => 2,
     		'company_id' => $company2->id,
@@ -108,7 +108,7 @@ class CompaniesTableSeeder extends Seeder
         ]);
         $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
-            'chat_nickname' => str_slug($user2->fullName.' '.str_random(5), '.'),
+            'chat_nickname' => $user2->fullName.' - '.title_case('tech'),
             'user_id' => $user2->id,
     		'role_id' => 4,
     		'company_id' => $company1->id,
