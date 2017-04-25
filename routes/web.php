@@ -172,6 +172,7 @@ Route::get('datatables/reports', 'DataTableController@reports');
 Route::get('datatables/workorders', 'DataTableController@workOrders');
 Route::get('datatables/works/{workOrderSeqId}', 'DataTableController@works');
 Route::get('datatables/services', 'DataTableController@services');
+Route::get('datatables/urc', 'DataTableController@userRoleCompanies');
 Route::get('datatables/clients', 'DataTableController@clients');
 Route::get('datatables/supervisors', 'DataTableController@supervisors');
 Route::get('datatables/technicians', 'DataTableController@technicians');

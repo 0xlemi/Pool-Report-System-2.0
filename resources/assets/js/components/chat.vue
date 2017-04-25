@@ -1,5 +1,5 @@
 <template>
-<modal title="New Chat" id="addChat">
+<modal title="New Chat" id="addChat" modal-class="modal-lg">
     <div class="col-md-12">
 		<urc-table></urc-table>
     </div>
@@ -313,20 +313,29 @@
 <script>
 import modal from './modal.vue';
 import bootstrapTable from './BootstrapTable.vue';
+import urcTable from './urcTable.vue';
 
 export default {
     props: ['sb', 'currentUser'],
     components:{
         modal,
         bootstrapTable,
+        urcTable,
     },
     data(){
         return {
 
         }
     },
+    events: {
+        newChat(userSedId){
+            this.$broadcast('closeModal', 'addChat');
+            this.openPrivateChat(seqId);
+        }
+    },
     methods: {
-        createPrivateChannel(userIds){
+        openPrivateChannel(seqId){
+            
             this.sb.GroupChannel.createChannelWithUserIds(userIds, true, 'Private Chat', '', '', '', function(createdChannel, error){
                 if (error) {
                     console.error(error);

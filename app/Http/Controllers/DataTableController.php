@@ -112,6 +112,19 @@ class DataTableController extends PageController
                 );
     }
 
+    public function userRoleCompanies(UserRoleCompanyDatatableTransformer $transformer)
+    {
+        // $this->authorize('list', [UserRoleCompany::class, 'client']);
+
+        $userRoleCompanies = $this->loggedCompany()
+                                    ->userRoleCompanies()
+                                    ->seqIdOrdered()->get();
+
+        return response()->json(
+                    $transformer->transformCollection($userRoleCompanies)
+                );
+    }
+
     public function clients(UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'client']);

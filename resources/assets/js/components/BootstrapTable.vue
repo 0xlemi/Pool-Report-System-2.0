@@ -780,6 +780,10 @@ var BootstrapTable = {
         colorTable(e){
             this.clearRowClasses(e.path[3].rows);
             e.path[1].classList.add('table_active');
+            let table = this;
+            setTimeout(function(){
+                table.clearRowClasses(e.path[3].rows)
+            }, 3000);
         },
         selectId(id){
             this.objectId = id;

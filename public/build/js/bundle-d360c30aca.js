@@ -26119,6 +26119,10 @@ var BootstrapTable = {
         colorTable: function colorTable(e) {
             this.clearRowClasses(e.path[3].rows);
             e.path[1].classList.add('table_active');
+            var table = this;
+            setTimeout(function () {
+                table.clearRowClasses(e.path[3].rows);
+            }, 3000);
         },
         selectId: function selectId(id) {
             this.objectId = id;
@@ -27785,18 +27789,29 @@ var _BootstrapTable = require('./BootstrapTable.vue');
 
 var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
 
+var _urcTable = require('./urcTable.vue');
+
+var _urcTable2 = _interopRequireDefault(_urcTable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
     props: ['sb', 'currentUser'],
     components: {
         modal: _modal2.default,
-        bootstrapTable: _BootstrapTable2.default
+        bootstrapTable: _BootstrapTable2.default,
+        urcTable: _urcTable2.default
     },
     data: function data() {
         return {};
     },
 
+    events: {
+        newChat: function newChat(userSedId) {
+            this.$broadcast('closeModal', 'addChat');
+            console.log('newChat Recived');
+        }
+    },
     methods: {
         createPrivateChannel: function createPrivateChannel(userIds) {
             this.sb.GroupChannel.createChannelWithUserIds(userIds, true, 'Private Chat', '', '', '', function (createdChannel, error) {
@@ -27823,7 +27838,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal title=\"New Chat\" id=\"addChat\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <div class=\"chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    <div class=\"icon\">\n                        <i class=\"font-icon font-icon-pencil-thin\"></i>\n                    </div>\n                    Matt McGill typing a message\n                </div>\n                <div class=\"chat-list-item-count\">3</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-2.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matthew Heath</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">Anything that's easy or has no difficulty; something that is a certainty</div>\n                <div class=\"chat-list-item-count\">100</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item selected\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-3.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Vasilisa</span>\n                </div>\n                <div class=\"chat-list-item-date\">05 Aug</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">no</div>\n                <div class=\"chat-list-item-dot\"></div>\n            </div>\n        </div>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    Matt McGill typing a message\n                </div>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <div class=\"checkbox-toggle\">\n                <input type=\"checkbox\" id=\"check-toggle-2\" checked=\"\">\n                <label for=\"check-toggle-2\">Disable notifications</label>\n            </div>\n        </section>\n        <section class=\"chat-profiles\">\n            <header>Profile on facebook</header>\n            <a href=\"#\">http://facebook.com/startui</a>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <div class=\"chat-list-item online\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Thomas Bryan</span>\n                </div>\n                <div class=\"chat-list-item-txt writing\">Last seen 05 aug 2015 at 18:04</div>\n            </div>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\">\n            <div class=\"messenger-dialog-area\">\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea rows=\"1\" class=\"form-control\" placeholder=\"Type a message\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<modal title=\"New Chat\" id=\"addChat\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <div class=\"chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    <div class=\"icon\">\n                        <i class=\"font-icon font-icon-pencil-thin\"></i>\n                    </div>\n                    Matt McGill typing a message\n                </div>\n                <div class=\"chat-list-item-count\">3</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-2.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matthew Heath</span>\n                </div>\n                <div class=\"chat-list-item-date\">16:59</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">Anything that's easy or has no difficulty; something that is a certainty</div>\n                <div class=\"chat-list-item-count\">100</div>\n            </div>\n        </div>\n        <div class=\"chat-list-item selected\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-3.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Vasilisa</span>\n                </div>\n                <div class=\"chat-list-item-date\">05 Aug</div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt\">no</div>\n                <div class=\"chat-list-item-dot\"></div>\n            </div>\n        </div>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item online\">\n            <div class=\"chat-list-item-photo\">\n                <img src=\"img/photo-64-1.jpg\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Matt McGill</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div class=\"chat-list-item-txt writing\">\n                    Matt McGill typing a message\n                </div>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <div class=\"checkbox-toggle\">\n                <input type=\"checkbox\" id=\"check-toggle-2\" checked=\"\">\n                <label for=\"check-toggle-2\">Disable notifications</label>\n            </div>\n        </section>\n        <section class=\"chat-profiles\">\n            <header>Profile on facebook</header>\n            <a href=\"#\">http://facebook.com/startui</a>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <div class=\"chat-list-item online\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">Thomas Bryan</span>\n                </div>\n                <div class=\"chat-list-item-txt writing\">Last seen 05 aug 2015 at 18:04</div>\n            </div>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\">\n            <div class=\"messenger-dialog-area\">\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n                <div class=\"messenger-message-container\">\n                    <div class=\"avatar\">\n                        <img src=\"img/avatar-1-32.png\">\n                    </div>\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                            <li>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                                <div class=\"time-ago\">1:26</div>\n                            </li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"messenger-message-container from bg-blue\">\n                    <div class=\"messages\">\n                        <ul>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    </div>\n                                </div>\n                            </li>\n                            <li>\n                                <div class=\"time-ago\">1:26</div>\n                                <div class=\"message\">\n                                    <div>\n                                        Lorem Ipsum is simply dummy text...\n                                    </div>\n                                </div>\n                            </li>\n                        </ul>\n                    </div>\n                    <div class=\"avatar chat-list-item-photo\">\n                        <img src=\"img/photo-64-1.jpg\">\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea rows=\"1\" class=\"form-control\" placeholder=\"Type a message\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -27834,7 +27849,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":198,"./modal.vue":238,"vue":186,"vue-hot-reload-api":183}],214:[function(require,module,exports){
+},{"./BootstrapTable.vue":198,"./modal.vue":238,"./urcTable.vue":257,"vue":186,"vue-hot-reload-api":183}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32074,6 +32089,130 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _BootstrapTable = require('./BootstrapTable.vue');
+
+var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    props: ['tableUrl'],
+    components: {
+        alert: _alert2.default,
+        BootstrapTable: _BootstrapTable2.default
+    },
+    data: function data() {
+        return {
+            // alert
+            alertMessage: '',
+            alertActive: false,
+
+            data: [],
+            tableOptions: {
+                iconsPrefix: 'font-icon',
+                toggle: 'table',
+                sidePagination: 'client',
+                pagination: 'true',
+                classes: 'table',
+                icons: {
+                    paginationSwitchDown: 'font-icon-arrow-square-down',
+                    paginationSwitchUp: 'font-icon-arrow-square-down up',
+                    refresh: 'font-icon-refresh',
+                    toggle: 'font-icon-list-square',
+                    columns: 'font-icon-list-rotate',
+                    export: 'font-icon-download'
+                },
+                paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+                paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+                pageSize: 10,
+                pageList: [5, 10, 20],
+                search: true,
+                showExport: true,
+                exportTypes: ['excel', 'pdf'],
+                minimumCountColumns: 2,
+                showFooter: false,
+
+                uniqueId: 'id',
+                idField: 'id'
+            },
+            columns: [{
+                field: 'id',
+                title: '#',
+                sortable: true
+            }, {
+                field: 'name',
+                title: 'Name',
+                sortable: true
+            }, {
+                field: 'email',
+                title: 'Email',
+                sortable: true
+            }, {
+                field: 'role',
+                title: 'Role',
+                sortable: true
+            }, {
+                field: 'type',
+                title: 'Type',
+                sortable: true
+            }, {
+                field: 'language',
+                title: 'Language',
+                sortable: true
+            }]
+        };
+    },
+
+    events: {
+        rowClicked: function rowClicked(id) {
+            this.$dispatch('newChat', id);
+            this.$broadcast('refreshTable');
+        }
+    },
+    methods: {
+        getList: function getList(finished) {
+            var _this = this;
+
+            var listUrl = Laravel.url + 'datatables/urc';
+            this.$broadcast('disableTable');
+            this.$http.get(listUrl).then(function (response) {
+                _this.data = response.data;
+                _this.validationErrors = {};
+                _this.$broadcast('refreshTable');
+            }, function (response) {
+                _this.alertMessage = "The information could not be retrieved, please try again.";
+                _this.alertActive = true;
+                _this.$broadcast('enableTable');
+            });
+        }
+    },
+    ready: function ready() {
+        this.getList();
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"tableOptions\">\n\t    <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n    </bootstrap-table>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1f3ef786", module.exports)
+  } else {
+    hotAPI.update("_v-1f3ef786", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":198,"./alert.vue":208,"vue":186,"vue-hot-reload-api":183}],258:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _indexTable = require('./indexTable.vue');
 
 var _indexTable2 = _interopRequireDefault(_indexTable);
@@ -32127,7 +32266,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":186,"vue-hot-reload-api":183}],258:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":186,"vue-hot-reload-api":183}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32191,7 +32330,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":228,"./photoList.vue":246,"vue":186,"vue-hot-reload-api":183}],259:[function(require,module,exports){
+},{"./dropzone.vue":228,"./photoList.vue":246,"vue":186,"vue-hot-reload-api":183}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32271,7 +32410,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":246,"vue":186,"vue-hot-reload-api":183}],260:[function(require,module,exports){
+},{"./photoList.vue":246,"vue":186,"vue-hot-reload-api":183}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32331,7 +32470,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":186,"vue-hot-reload-api":183}],261:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":186,"vue-hot-reload-api":183}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32742,7 +32881,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":198,"./alert.vue":208,"./dropdown.vue":227,"./dropzone.vue":228,"./photoList.vue":246,"spin":171,"vue":186,"vue-hot-reload-api":183}],262:[function(require,module,exports){
+},{"./BootstrapTable.vue":198,"./alert.vue":208,"./dropdown.vue":227,"./dropzone.vue":228,"./photoList.vue":246,"spin":171,"vue":186,"vue-hot-reload-api":183}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32826,7 +32965,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":186,"vue-hot-reload-api":183}],263:[function(require,module,exports){
+},{"vue":186,"vue-hot-reload-api":183}],264:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -32972,6 +33111,7 @@ $(document).ready(function () {
 		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
 		directives: { FormToAjax: FormToAjax },
 		ready: function ready() {
+			// Try to make this only rune once
 			var vue = this;
 			this.sb = new SendBird({
 				appId: '19AA8038-0207-416F-95E2-BF118EA1D93E'
@@ -32981,7 +33121,7 @@ $(document).ready(function () {
 					console.error(error);
 					return;
 				}
-				console.log(user);
+				console.log('chat ready');
 				vue.currentUser = user;
 			});
 		}
@@ -33684,6 +33824,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":197,"./components/ClientReports.vue":202,"./components/Permissions.vue":204,"./components/ReportIndex.vue":205,"./components/addressFields.vue":207,"./components/alert.vue":208,"./components/billing.vue":209,"./components/changeTechnicianPassword.vue":212,"./components/chat.vue":213,"./components/chemical.vue":215,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/invoiceTable.vue":234,"./components/locationShow.vue":236,"./components/missingServices.vue":237,"./components/notificationsWidget.vue":241,"./components/payments.vue":244,"./components/photo.vue":245,"./components/photoList.vue":246,"./components/profile.vue":247,"./components/rolePicker.vue":249,"./components/routeTable.vue":250,"./components/serviceClientTable.vue":251,"./components/serviceTable.vue":252,"./components/settings.vue":253,"./components/supervisorTable.vue":254,"./components/technicianTable.vue":255,"./components/timezoneDropdown.vue":256,"./components/workOrderClientTable.vue":257,"./components/workOrderPhotosEdit.vue":258,"./components/workOrderPhotosShow.vue":259,"./components/workOrderTable.vue":260,"./components/works.vue":261,"./directives/FormToAjax.vue":262,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":169,"spin":171,"sweetalert":180,"vue":186,"vue-resource":185}]},{},[195,193,192,194,196,263]);
+},{"./components/AllNotificationsAsReadButton.vue":197,"./components/ClientReports.vue":202,"./components/Permissions.vue":204,"./components/ReportIndex.vue":205,"./components/addressFields.vue":207,"./components/alert.vue":208,"./components/billing.vue":209,"./components/changeTechnicianPassword.vue":212,"./components/chat.vue":213,"./components/chemical.vue":215,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/invoiceTable.vue":234,"./components/locationShow.vue":236,"./components/missingServices.vue":237,"./components/notificationsWidget.vue":241,"./components/payments.vue":244,"./components/photo.vue":245,"./components/photoList.vue":246,"./components/profile.vue":247,"./components/rolePicker.vue":249,"./components/routeTable.vue":250,"./components/serviceClientTable.vue":251,"./components/serviceTable.vue":252,"./components/settings.vue":253,"./components/supervisorTable.vue":254,"./components/technicianTable.vue":255,"./components/timezoneDropdown.vue":256,"./components/workOrderClientTable.vue":258,"./components/workOrderPhotosEdit.vue":259,"./components/workOrderPhotosShow.vue":260,"./components/workOrderTable.vue":261,"./components/works.vue":262,"./directives/FormToAjax.vue":263,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":169,"spin":171,"sweetalert":180,"vue":186,"vue-resource":185}]},{},[195,193,192,194,196,264]);
 
 //# sourceMappingURL=bundle.js.map

@@ -86,12 +86,13 @@ export default {
     },
     events: {
 		rowClicked(id){
-            this.$broadcast('newChat', userId);
+            this.$dispatch('newChat', id);
+			this.$broadcast('refreshTable');
 		}
 	},
     methods: {
         getList(finished){
-			let listUrl = Laravel.url+'/datatable/urc';
+			let listUrl = Laravel.url+'datatables/urc';
 			this.$broadcast('disableTable');
             this.$http.get(listUrl).then((response) => {
 				this.data = response.data;
@@ -105,7 +106,6 @@ export default {
         }
     },
     ready(){
-        this.getList();
         this.getList();
     }
 }

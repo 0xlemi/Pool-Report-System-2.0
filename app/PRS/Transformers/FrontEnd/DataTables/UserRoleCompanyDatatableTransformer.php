@@ -33,8 +33,9 @@ class UserRoleCompanyDatatableTransformer extends Transformer
             'name' => $user->fullName,
             'email' => $user->email,
             'type' => $this->helper->styledTypeClient($user->type, true, false),
-            'cellphone' => $user->cellphone,
+            'cellphone' => $userRoleCompany->cellphone,
             'role' => $userRoleCompany->role->text,
+            'language' => $user->language,
         ];
     }
 
