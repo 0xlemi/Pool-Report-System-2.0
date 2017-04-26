@@ -31,15 +31,16 @@
         </div>
     </div><!--.chat-list-search-->
     <div class="chat-list-in scrollable-block">
-        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item online">
+        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item" :class="{'selected' : (currentChannel.url == channel.url)}">
+            <span v-if="removeCurrentUserFromMembers(channel.members)"></span>
             <div class="chat-list-item-photo">
-                <img :src="channel.members[1].profileUrl" alt="">
+                <img :src="channel.members[0].profileUrl" alt="">
             </div>
             <div class="chat-list-item-header">
                 <div class="chat-list-item-name">
-                    <span class="name">{{ channel.members[1].nickname }}</span>
+                    <span class="name">{{ channel.members[0].nickname }}</span>
                 </div>
-                <div class="chat-list-item-date">16:59</div>
+                <div class="chat-list-item-date">seen at {{channel.members[0].lastSeenAt}}</div>
             </div>
             <div class="chat-list-item-cont">
                 <div class="chat-list-item-txt writing">
@@ -92,16 +93,23 @@
 <section class="chat-area">
     <div class="chat-area-in">
         <div class="chat-area-header">
-            <div class="chat-list-item online">
-                <div class="chat-list-item-name">
-                    <span class="name">Thomas Bryan</span>
+            <span v-if="currentChannel">
+                <div class="chat-list-item" style="text-align: center" :class="{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}">
+                    <div class="chat-list-item-name">
+                        <span class="name">{{currentChannel.members[0].nickname}}</span>
+                    </div>
+                    <div class="chat-list-item-txt writing">Last seen {{currentChannel.members[0].lastSeenAt}}</div>
                 </div>
-                <div class="chat-list-item-txt writing">Last seen 05 aug 2015 at 18:04</div>
-            </div>
+            </span>
+
+            <span v-else>
+                <div class="clean">Start a conversation</div>
+            </span>
         </div><!--.chat-area-header-->
 
         <div class="chat-dialog-area scrollable-block">
-            <div class="messenger-dialog-area">
+            <div  class="messenger-dialog-area">
+                <span v-if="currentChannel">
                 <div v-for="message in messageList" class="messenger-message-container" :class="{'from bg-blue': isCurrent(message._sender)}">
                     <span v-if="isCurrent(message._sender)">
                         <div class="messages">
@@ -138,13 +146,27 @@
                         </div>
                     </span>
                 </div>
+                </span>
+                <span v-else>
+                    <br><br><br><br><br>
+                    <div class="chat-dialog-clean">
+            			<div class="chat-dialog-clean-in">
+            				<i class="font-icon font-icon-mail-2"></i>
+            				<div class="caption">Select a Colleague</div>
+            				<div class="txt">To start a conversation, select a colleague or client on the left in the list or use search box.</div>
+            			</div>
+            		</div>
+                </span>
             </div>
+
+
+
         </div>
 
         <div class="chat-area-bottom">
             <form class="write-message">
                 <div class="form-group">
-                    <textarea rows="1" class="form-control" placeholder="Type a message" v-model="currentMessage"></textarea>
+                    <textarea @keydown.enter="sendMessage(currentMessage)" rows="1" class="form-control" placeholder="Type a message" v-model="currentMessage"></textarea>
                     <div class="dropdown dropdown-typical dropup attach">
                         <button @click="sendMessage(currentMessage)" :disabled="chatDisabled" type="button" class="btn btn-rounded float-left">Send</button>
                         <a class="dropdown-toggle dropdown-toggle-txt"
@@ -168,6 +190,7 @@
         </div><!--.chat-area-bottom-->
     </div><!--.chat-area-in-->
 </section><!--.chat-area-->
+
 </template>
 
 <script>
@@ -196,10 +219,13 @@ export default {
         }
     },
     events: {
+        chatReady(user){
+            this.getChannels();
+        },
         newChat(seqId){
             this.$broadcast('closeModal', 'addChat');
             this.openPrivateChat(seqId);
-        }
+        },
     },
     computed: {
         chatDisabled(){
@@ -213,15 +239,17 @@ export default {
             this.getMessages(channel);
         },
         sendMessage(text){
-            let vue = this;
-            this.currentChannel.sendUserMessage(text, null, 'regular', function(message, error){
-                if (error) {
-                    console.error(error);
-                    return;
-                }
-                vue.getMessages(vue.currentChannel);
-                vue.currentMessage = '';
-            });
+            if(this.currentChannel && (text != '')){
+                let vue = this;
+                this.currentChannel.sendUserMessage(text, null, 'regular', function(message, error){
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    vue.getMessages(vue.currentChannel);
+                    vue.currentMessage = '';
+                });
+            }
         },
         // Lists
         getChannels(){
@@ -249,6 +277,7 @@ export default {
                     return;
                 }
                 vue.messageList = messageList.reverse();
+                channel.markAsRead();
             });
         },
         // Creation
@@ -279,13 +308,20 @@ export default {
                 return (this.currentUser.userId == user.userId)
             }
             return false;
-        }
+        },
+        removeCurrentUserFromMembers(members){
+            let userId = this.currentUser.userId;
+            for(var i = 0; i < members.length; i++) {
+                if(members[i].userId == userId) {
+                    members.splice(i, 1);
+                    break;
+                }
+            }
+            return members;
+        },
     },
     ready(){
-        let vue = this;
-        setTimeout(function () {
-            vue.getChannels();
-        }, 3000);
+        //
     }
 }
 </script>

@@ -164,8 +164,8 @@ function isset(strVariableName) {
                     console.error(error);
                     return;
                 }
-                console.log('chat ready');
                 vue.currentUser = user;
+                vue.$broadcast('chatReady', user);
             });
         }
     });
