@@ -40,15 +40,18 @@
                 <div class="chat-list-item-name">
                     <span class="name">{{ channel.members[0].nickname }}</span>
                 </div>
-                <div class="chat-list-item-date">seen at {{channel.members[0].lastSeenAt}}</div>
+                <div class="chat-list-item-date">last seen {{channel.members[0].lastSeenAt}}</div>
             </div>
             <div class="chat-list-item-cont">
-                <div class="chat-list-item-txt writing">
+                <div v-if="channel.isTyping()" class="chat-list-item-txt writing">
                     <div class="icon">
                         <i class="font-icon font-icon-pencil-thin"></i>
                     </div>
                     typing a message
                 </div>
+                <span v-else >
+                    <div v-if="channel.lastMessage" class="chat-list-item-txt">{{ channel.lastMessage.message }}</div>
+                </span>
                 <div v-if="channel.unreadMessageCount > 0" class="chat-list-item-count">{{channel.unreadMessageCount}}</div>
             </div>
         </div>
@@ -109,54 +112,43 @@
 
         <div class="chat-dialog-area scrollable-block">
             <div  class="messenger-dialog-area">
-                <span v-if="currentChannel">
-                <div v-for="message in messageList" class="messenger-message-container" :class="{'from bg-blue': isCurrent(message._sender)}">
-                    <span v-if="isCurrent(message._sender)">
-                        <div class="messages">
-                            <ul>
-                                <li>
-                                    <div class="time-ago">1:26</div>
-                                    <div class="message">
-                                        <div>
-                                            {{ message.message }}
+                    <div v-for="message in messageList" class="messenger-message-container" style="width: 100%" :class="{'from bg-blue': isCurrent(message._sender)}">
+                        <span v-if="isCurrent(message._sender)">
+                            <div class="messages">
+                                <ul>
+                                    <li>
+                                        <div class="time-ago">1:26</div>
+                                        <div class="message">
+                                            <div>
+                                                {{ message.message }}
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="avatar chat-list-item-photo">
-                            <img :src="message._sender.profileUrl">
-                        </div>
-                    </span>
-                    <span v-else>
-                        <div class="avatar">
-                            <img :src="message._sender.profileUrl">
-                        </div>
-                        <div class="messages">
-                            <ul>
-                                <li>
-                                    <div class="message">
-                                        <div>
-                                            {{ message.message }}
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="avatar chat-list-item-photo">
+                                <img :src="message._sender.profileUrl">
+                            </div>
+                        </span>
+                        <span v-else>
+                            <div class="avatar">
+                                <img :src="message._sender.profileUrl">
+                            </div>
+                            <div class="messages">
+                                <ul>
+                                    <li>
+                                        <div class="message">
+                                            <div>
+                                                {{ message.message }}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="time-ago">1:26</div>
-                                </li>
-                            </ul>
-                        </div>
-                    </span>
-                </div>
-                </span>
-                <span v-else>
-                    <br><br><br><br><br>
-                    <div class="chat-dialog-clean">
-            			<div class="chat-dialog-clean-in">
-            				<i class="font-icon font-icon-mail-2"></i>
-            				<div class="caption">Select a Colleague</div>
-            				<div class="txt">To start a conversation, select a colleague or client on the left in the list or use search box.</div>
-            			</div>
-            		</div>
-                </span>
+                                        <div class="time-ago">1:26</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </span>
+                    </div>
+
             </div>
 
 
@@ -220,7 +212,16 @@ export default {
     },
     events: {
         chatReady(user){
+            let vue = this;
             this.getChannels();
+            var ChannelHandler = new this.sb.ChannelHandler();
+            ChannelHandler.onMessageReceived = function(channel, message){
+                vue.$emit('newMessage', {
+                    channel: channel,
+                    message: message
+                });
+            };
+            this.sb.addChannelHandler('message_receiver', ChannelHandler);
         },
         newChat(seqId){
             this.$broadcast('closeModal', 'addChat');
@@ -247,6 +248,7 @@ export default {
                         return;
                     }
                     vue.getMessages(vue.currentChannel);
+                    vue.changeLastMassage(text);
                     vue.currentMessage = '';
                 });
             }
@@ -256,7 +258,7 @@ export default {
             let vue = this;
             let channelListQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
             channelListQuery.includeEmpty = true;
-            channelListQuery.limit = 100; // pagination limit could be set up to 100
+            channelListQuery.limit = 50; // pagination limit could be set up to 100
 
             if (channelListQuery.hasNext) {
                 channelListQuery.next(function(channelList, error){
@@ -319,9 +321,23 @@ export default {
             }
             return members;
         },
+        changeLastMassage(message){
+            let channelUrl = this.currentChannel.url;
+            for(var i = 0; i < this.channelList.length; i++) {
+                if(this.channelList[i].url == channelUrl) {
+                    this.channelList[i].lastMessage.message = message;
+                    break;
+                }
+            }
+        },
     },
     ready(){
+        // let vue = this;
         //
+        // //
+        // setTimeout(function () {
+        //     console.log(vue.currentUser);
+        // }, 5000);
     }
 }
 </script>
