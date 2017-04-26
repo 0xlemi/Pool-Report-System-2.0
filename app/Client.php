@@ -226,16 +226,18 @@ class Client extends Model
 	 * tested
 	 * @param array $seq_ids
 	 */
-	public function setServices(array $seq_ids)
+	public function setServices($seq_ids)
 	{
-	    foreach ($seq_ids as $seq_id) {
-			if($service = $this->admin()->serviceBySeqId($seq_id)){
-				$service_id = $service->id;
-				if(!$this->hasService($seq_id)){
-					$this->services()->attach($service_id);
+		if($seq_ids){
+		    foreach ($seq_ids as $seq_id) {
+				if($service = $this->admin()->serviceBySeqId($seq_id)){
+					$service_id = $service->id;
+					if(!$this->hasService($seq_id)){
+						$this->services()->attach($service_id);
+					}
 				}
-			}
-	    }
+		    }
+		}
 	}
 
 	/**
