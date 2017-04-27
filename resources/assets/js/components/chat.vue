@@ -31,7 +31,7 @@
         </div>
     </div><!--.chat-list-search-->
     <div class="chat-list-in scrollable-block">
-        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item" :class="{'selected' : (currentChannel.url == channel.url)}">
+        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item" :class="{'selected' : isCurrentChannel(channel)}">
             <span v-if="removeCurrentUserFromMembers(channel.members)"></span>
             <div class="chat-list-item-photo">
                 <img :src="channel.members[0].profileUrl" alt="">
@@ -99,7 +99,7 @@
             <span v-if="currentChannel">
                 <div class="chat-list-item" style="text-align: center" :class="{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}">
                     <div class="chat-list-item-name">
-                        <span class="name">{{currentChannel.members[0].nickname}}</span>
+                        <span @click="test" class="name">{{currentChannel.members[0].nickname}}</span>
                     </div>
                     <div class="chat-list-item-txt writing">Last seen {{currentChannel.members[0].lastSeenAt}}</div>
                 </div>
@@ -110,11 +110,11 @@
             </span>
         </div><!--.chat-area-header-->
 
-        <div class="chat-dialog-area scrollable-block">
-            <div  class="messenger-dialog-area">
-                    <div v-for="message in messageList" class="messenger-message-container" style="width: 100%" :class="{'from bg-blue': isCurrent(message._sender)}">
-                        <span v-if="isCurrent(message._sender)">
-                            <div class="messages">
+        <div class="chat-dialog-area scrollable-block" id="chatBox">
+            <div class="messenger-dialog-area">
+                    <div v-for="message in messageList" class="messenger-message-container" style="width: 100%" :class="{'from bg-blue': isCurrentUser(message._sender)}">
+                        <span v-if="isCurrentUser(message._sender)">
+                            <div class="messages" style="width: 100%" >
                                 <ul>
                                     <li>
                                         <div class="time-ago">1:26</div>
@@ -148,11 +148,7 @@
                             </div>
                         </span>
                     </div>
-
             </div>
-
-
-
         </div>
 
         <div class="chat-area-bottom">
@@ -227,6 +223,11 @@ export default {
             this.$broadcast('closeModal', 'addChat');
             this.openPrivateChat(seqId);
         },
+        newMessage(info){
+            if(this.currentChannel && (this.currentChannel.url == info.channel.url)){
+                this.getMessages(this.currentChannel);
+            }
+        }
     },
     computed: {
         chatDisabled(){
@@ -280,6 +281,9 @@ export default {
                 }
                 vue.messageList = messageList.reverse();
                 channel.markAsRead();
+                setTimeout(function () {
+                    vue.scrollToTheBottom();
+                }, 100);
             });
         },
         // Creation
@@ -305,9 +309,15 @@ export default {
             });
         },
         // Random
-        isCurrent(user){
-            if(user){
+        isCurrentUser(user){
+            if(user && this.currentUser){
                 return (this.currentUser.userId == user.userId)
+            }
+            return false;
+        },
+        isCurrentChannel(channel){
+            if(channel && this.currentChannel){
+                return (this.currentChannel.url == channel.url)
             }
             return false;
         },
@@ -325,11 +335,27 @@ export default {
             let channelUrl = this.currentChannel.url;
             for(var i = 0; i < this.channelList.length; i++) {
                 if(this.channelList[i].url == channelUrl) {
-                    this.channelList[i].lastMessage.message = message;
+                    if(this.channelList[i].lastMessage){
+                        this.channelList[i].lastMessage.message = message;
+                    }else{
+                        // In the case of newly created channels
+                        this.channelList[i]['lastMessage'] = {
+                            message: message
+                        };
+                    }
                     break;
                 }
             }
         },
+        scrollToTheBottom(){
+            // gives a few bugs with the ui (ask in startui comments)
+            let pane = $('#chatBox').jScrollPane();
+            pane.data('jsp').scrollToBottom();
+        },
+        // Make sure to remove this after testing
+        test(){
+            //
+        }
     },
     ready(){
         // let vue = this;
