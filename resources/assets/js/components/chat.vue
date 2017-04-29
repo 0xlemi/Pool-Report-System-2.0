@@ -64,19 +64,22 @@
         <a href="#"><span class="fa fa-video-camera"></span></a>
         <a href="#"><span class="fa fa-info-circle"></span></a>
     </div><!--.chat-list-search-->
-    <div class="chat-list-in">
+    <div v-if="currentChannel" class="chat-list-in">
         <section class="chat-user-info chat-list-item online">
             <div class="chat-list-item-photo">
                 <img src="img/photo-64-1.jpg" alt="">
             </div>
             <div class="chat-list-item-header">
                 <div class="chat-list-item-name">
-                    <span class="name">Matt McGill</span>
+                    <span class="name">{{currentChannel.members[0].nickname}}</span>
                 </div>
             </div>
             <div class="chat-list-item-cont">
-                <div class="chat-list-item-txt writing">
+                <div v-if="currentChannel.isTyping()" class="chat-list-item-txt writing">
                     Matt McGill typing a message
+                </div>
+                <div class="chat-list-item-txt writing">
+                    Last seen {{currentChannel.members[0].lastSeenAt}}
                 </div>
             </div>
         </section>
@@ -87,8 +90,7 @@
             </div>
         </section>
         <section class="chat-profiles">
-            <header>Profile on facebook</header>
-            <a href="#">http://facebook.com/startui</a>
+            <button @click="deleteCurrentChannel()" type="button" class="btn btn-danger">Delete Chat</button>
         </section>
     </div>
 </section>
@@ -112,6 +114,7 @@
 
         <div class="chat-dialog-area scrollable-block" id="chatBox">
             <div class="messenger-dialog-area">
+                <span>
                     <div v-for="message in messageList" class="messenger-message-container" style="width: 100%" :class="{'from bg-blue': isCurrentUser(message._sender)}">
                         <span v-if="isCurrentUser(message._sender)">
                             <div class="messages" style="width: 100%" >
@@ -148,6 +151,7 @@
                             </div>
                         </span>
                     </div>
+                </span>
             </div>
         </div>
 
@@ -218,6 +222,13 @@ export default {
                 });
             };
             this.sb.addChannelHandler('message_receiver', ChannelHandler);
+
+            ChannelHandler.onUserLeft = function (groupChannel, user) {
+                vue.$emit('leftChannel', {
+                    channel: channel,
+                    user: user
+                });
+            };
         },
         newChat(seqId){
             this.$broadcast('closeModal', 'addChat');
@@ -227,7 +238,9 @@ export default {
             if(this.currentChannel && (this.currentChannel.url == info.channel.url)){
                 this.getMessages(this.currentChannel);
             }
-        }
+            this.moveChannelToTopOfList(info.channel);
+            console.log(info);
+        },
     },
     computed: {
         chatDisabled(){
@@ -251,8 +264,21 @@ export default {
                     vue.getMessages(vue.currentChannel);
                     vue.changeLastMassage(text);
                     vue.currentMessage = '';
+                    vue.moveChannelToTopOfList(vue.currentChannel);
                 });
             }
+        },
+        deleteCurrentChannel(){
+            let vue = this;
+            this.currentChannel.leave(function(response, error) {
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+            });
+            vue.clearMessages();
+            vue.removeChannelFromChannelList(vue.currentChannel);
+            vue.currentChannel = null;
         },
         // Lists
         getChannels(){
@@ -315,11 +341,28 @@ export default {
             }
             return false;
         },
+        clearChannels(){
+            this.channelList = {};
+        },
         isCurrentChannel(channel){
             if(channel && this.currentChannel){
                 return (this.currentChannel.url == channel.url)
             }
             return false;
+        },
+        removeChannelFromChannelList(channel){
+            let url = channel.url;
+            for(var i = 0; i < this.channelList.length; i++) {
+                if(this.channelList[i].url == url) {
+                    return this.channelList.splice(i, 1)[0];
+                }
+            }
+        },
+        moveChannelToTopOfList(channel){
+            let item = this.removeChannelFromChannelList(channel);
+            if(item){
+                this.channelList.splice(0, 0, item);
+            }
         },
         removeCurrentUserFromMembers(members){
             let userId = this.currentUser.userId;
@@ -330,6 +373,9 @@ export default {
                 }
             }
             return members;
+        },
+        clearMessages(){
+            this.messageList = {};
         },
         changeLastMassage(message){
             let channelUrl = this.currentChannel.url;
