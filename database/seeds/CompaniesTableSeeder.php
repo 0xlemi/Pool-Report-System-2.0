@@ -8,6 +8,7 @@ use App\UserRoleCompany;
 use App\User;
 use App\Image;
 use App\Label;
+use App\Jobs\SendBird\CreateUser;
 
 class CompaniesTableSeeder extends Seeder
 {
@@ -52,6 +53,7 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company1->id,
     		'selected' => true,
         ]);
+        dispatch(new CreateUser($userRoleCompany1));
 
         $company2 = factory(Company::class)->create([
             'name' => 'Generic Pool Company',
@@ -79,6 +81,7 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company2->id,
     		'selected' => true,
         ]);
+        dispatch(new CreateUser($userRoleCompany2));
 
 
         // Make Other UserRoleCompany on the same user to test changeURC Functionality
@@ -90,6 +93,8 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
+        dispatch(new CreateUser($urcOwnCompanyClient1));
+
         $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
             'chat_nickname' => $user1->fullName.' - '.title_case('sup'),
@@ -98,6 +103,8 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
+        dispatch(new CreateUser($urcOtherCompanySupervisor1));
+
         $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
             'chat_nickname' => $user2->fullName.' - '.title_case('client'),
@@ -106,6 +113,8 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
+        dispatch(new CreateUser($urcOwnCompanyClient2));
+
         $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
             'chat_id' => Uuid::generate()->string,
             'chat_nickname' => $user2->fullName.' - '.title_case('tech'),
@@ -114,6 +123,7 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
+        dispatch(new CreateUser($urcOtherCompanyTechnician2));
 
         // ***************************
         //   Create Global Chemicals

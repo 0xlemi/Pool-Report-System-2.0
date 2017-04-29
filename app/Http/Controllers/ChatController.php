@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
-use App\PRS\Classes\SendBird;
 
 class ChatController extends PageController
 {
@@ -27,13 +26,6 @@ class ChatController extends PageController
      */
     public function home()
     {
-        // $urc = auth()->user()->selectedUser;
-
-
-        // $urc = $this->loggedCompany()->userRoleCompanies()->bySeqId(3);
-        // $sendBird = new SendBird($urc);
-        // dd($sendBird->create());
-        // dd($sendBird->checkIfUserExists());
         return view('chat.home');
     }
 

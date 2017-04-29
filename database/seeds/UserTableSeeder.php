@@ -6,6 +6,7 @@ use App\Service;
 use App\User;
 use App\Image;
 use App\PRS\Helpers\SeederHelpers;
+use App\Jobs\SendBird\CreateUser;
 
 class UserTableSeeder extends Seeder
 {
@@ -58,6 +59,7 @@ class UserTableSeeder extends Seeder
                 'role_id' => 2,
                 'company_id' => $company->id,
             ]);
+            dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
@@ -107,6 +109,7 @@ class UserTableSeeder extends Seeder
                 'role_id' => 3,
                 'company_id' => $company_id,
             ]);
+            dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
@@ -159,6 +162,7 @@ class UserTableSeeder extends Seeder
                 'role_id' => 4,
                 'company_id' => $company_id,
             ]);
+            dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created

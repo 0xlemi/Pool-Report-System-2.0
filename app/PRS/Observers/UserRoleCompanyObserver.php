@@ -9,6 +9,7 @@ use App\Notifications\NewUserRoleCompanyNotification;
 use App\UserRoleCompany;
 use App\Jobs\UpdateSubscriptionQuantity;
 use App\Jobs\CreateAndSendVerificationToken;
+use App\Jobs\SendBird\CreateUser;
 use App\PRS\Classes\SendBird;
 
 
@@ -24,6 +25,7 @@ class UserRoleCompanyObserver
     public function created(UserRoleCompany $userRoleCompany)
     {
         $this->setNotificationsSettings($userRoleCompany);
+        $user = $userRoleCompany->user;
 
         // Update billing variables
         if($userRoleCompany->isRole('sup', 'tech')){
@@ -31,19 +33,15 @@ class UserRoleCompanyObserver
         }
 
         // Means the User was just created and needs verification
-        if($userRoleCompany->user->userRoleCompanies()->count() == 1){
+        if($user->userRoleCompanies()->count() == 1){
             dispatch(new CreateAndSendVerificationToken($userRoleCompany));
         }
 
-        // Generate Chat Id and Token
-        // $userRoleCompany->chat_id  = Uuid::generate();
-        //
-        // $user = $userRoleCompany->user;
-        // $nickname = str_slug($user->fullName, '.');
-        // $userRoleCompany->chat_nickname  = $nickname;
-        // $userRoleCompany->save();
-        // SendBird::createUser($userRoleCompany);
-        // // $userRoleCompany->chat_token  = );
+        // Create SendBirdUser
+        $userRoleCompany->chat_id = Uuid::generate()->string;
+        $userRoleCompany->chat_nickname = $user->fullName.' - '.title_case('tech');
+        $userRoleCompany->save();
+        dispatch(new CreateUser($userRoleCompany));
 
         // Send Notifications
         $urc = auth()->user()->selectedUser;

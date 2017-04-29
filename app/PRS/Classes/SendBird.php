@@ -9,14 +9,7 @@ use GuzzleHttp\Psr7\Response;
 
 class SendBird{
 
-    protected $urc;
-
-    public function __construct(UserRoleCompany $urc)
-    {
-        $this->urc = $urc;
-    }
-
-    public function create()
+    public static function create(UserRoleCompany $urc)
     {
         $response = Guzzle::post(
             'https://api.sendbird.com/v3/users',
@@ -25,24 +18,27 @@ class SendBird{
                     'Api-Token' => env('SENDBIRD_TOKEN')
                 ],
                 'json' => [
-                    "user_id" =>  $this->urc->chat_id,
-                    "nickname" =>  $this->urc->chat_nickname,
-                    "profile_url" =>  Storage::url($this->urc->icon()),
+                    "user_id" =>  $urc->chat_id,
+                    "nickname" =>  $urc->chat_nickname,
+                    "profile_url" =>  Storage::url($urc->icon()),
                     "issue_access_token" => true
                 ]
             ]
         );
-        $object = $this->getResponseObject($response);
-        $this->urc->chat_token = $object->access_token;
-        $this->urc->save();
-        return $object;
+        if($response->getStatusCode() == 200){
+            $object = json_decode($response->getBody()->getContents());
+            $urc->chat_token = $object->access_token;
+            $urc->save();
+            return $object;
+        }
     }
 
     /**
      * Check if this URC is allready registerd in SendBird
      * @return boolean
      */
-    public function exists(){
+    public static function exists()
+    {
         $response = Guzzle::get(
             'https://api.sendbird.com/v3/users',
             [
@@ -50,49 +46,53 @@ class SendBird{
                     'Api-Token' => env('SENDBIRD_TOKEN')
                 ],
                 'json' => [
-                    "user_ids" =>  json_encode([ $this->urc->chat_id ]),
+                    "user_ids" =>  json_encode([ $urc->chat_id ]),
                     "show_bot" => false
                 ]
             ]
         );
-        return count($this->getResponseObject($response)->users) > 0;
+        return count(json_decode($response->getBody()->getContents())->users) > 0;
     }
 
-    public function get()
+    public static function get(UserRoleCompany $urc)
     {
         $response = Guzzle::get(
-            'https://api.sendbird.com/v3/users/'.$this->urc->chat_id,
+            'https://api.sendbird.com/v3/users/'.$urc->chat_id,
             [
                 'headers' => [
                     'Api-Token' => env('SENDBIRD_TOKEN')
                 ]
             ]
         );
-        return $this->getResponseObject($response);
+        if($response->getStatusCode() == 200){
+            return json_decode($response->getBody()->getContents());
+        }
     }
 
-    public function update($refreshToken)
+    public static function update(UserRoleCompany $urc)
     {
         $response = Guzzle::put(
-            'https://api.sendbird.com/v3/users/'.$this->urc->chat_id,
+            'https://api.sendbird.com/v3/users/'.$urc->chat_id,
             [
                 'headers' => [
                     'Api-Token' => env('SENDBIRD_TOKEN')
                 ],
                 'json' => [
-                    "user_id" =>  $this->urc->chat_id,
-                    "nickname" =>  $this->urc->chat_nickname,
-                    "profile_url" =>  Storage::url($this->urc->icon()),
+                    "user_id" =>  $urc->chat_id,
+                    "nickname" =>  $urc->chat_nickname,
+                    "profile_url" =>  Storage::url($urc->icon()),
                 ]
             ]
         );
-        return $this->getResponseObject($response);
+        if($response->getStatusCode() == 200){
+            return json_decode($response->getBody()->getContents());
+        }
     }
 
-    public function newToken()
+    public static function newToken(UserRoleCompany $urc)
     {
         $response = Guzzle::put(
-            'https://api.sendbird.com/v3/users/'.$this->urc->chat_id,
+            'https://api.sendbird.com/v3/users/'.$urc->chat_id,
             [
                 'headers' => [
                     'Api-Token' => env('SENDBIRD_TOKEN')
@@ -102,17 +102,11 @@ class SendBird{
                 ]
             ]
         );
-        $object = $this->getResponseObject($response);
-        $this->urc->chat_token = $object->access_token;
-        $this->urc->save();
-        return $object;
-    }
-
-    protected function getResponseObject(Response $response)
-    {
         if($response->getStatusCode() == 200){
-            return json_decode($response->getBody()->getContents());
+            $object = json_decode($response->getBody()->getContents());
+            $urc->chat_token = $object->access_token;
+            $urc->save();
+            return $object;
         }
     }
-
 }

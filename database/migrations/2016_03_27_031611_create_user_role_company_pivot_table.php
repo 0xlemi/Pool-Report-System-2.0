@@ -27,7 +27,7 @@ class CreateUserRoleCompanyPivotTable extends Migration
             // SendBird Chat
             $table->uuid('chat_id')->unique();
             $table->string('chat_nickname');
-            $table->string('chat_token')->unique()->nullable();
+            $table->string('chat_token')->nullable();
 
             $table->unsignedTinyInteger('type')->default(1); // Type meaning depends on the role
 

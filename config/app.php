@@ -231,8 +231,6 @@ return [
         'Uuid' => Webpatser\Uuid\Uuid::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
-        // Custom
-        // 'SendBird' => App\PRS\Classes\SendBird::class,
     ],
 
 ];
