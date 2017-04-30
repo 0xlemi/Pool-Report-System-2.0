@@ -26,7 +26,8 @@ class ChatController extends PageController
      */
     public function home()
     {
-        return view('chat.home');
+        $soundUrl = \Storage::url('sounds/chatNotification.mp3');
+        return view('chat.home', compact('soundUrl'));
     }
 
     public function userChatId($seqId)

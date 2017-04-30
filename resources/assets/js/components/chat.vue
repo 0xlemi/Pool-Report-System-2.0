@@ -1,4 +1,6 @@
 <template>
+<audio v-el:audio :src="soundUrl" preload="auto"></audio>
+
 <modal title="New Chat" id="addChat" modal-class="modal-lg">
     <div class="col-md-12">
 		<urc-table></urc-table>
@@ -210,7 +212,7 @@ import bootstrapTable from './BootstrapTable.vue';
 import urcTable from './urcTable.vue';
 
 export default {
-    props: ['sb', 'currentUser'],
+    props: ['sb', 'currentUser', 'soundUrl'],
     components:{
         modal,
         alert,
@@ -258,7 +260,7 @@ export default {
                 this.getMessages(this.currentChannel);
             }
             this.moveChannelToTopOfList(info.channel);
-            console.log(info);
+            this.playSound(this.$els.audio);
         },
     },
     computed: {
@@ -420,9 +422,15 @@ export default {
         moment(date){
             return moment.unix(date / 1000);
         },
+        playSound(audio){
+            if (audio.paused) {
+                audio.play();
+            }else{
+                audio.currentTime = 0
+            }
+        },
         // Make sure to remove this after testing
         test(){
-            //
         }
     },
     ready(){
