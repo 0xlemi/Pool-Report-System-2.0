@@ -31,7 +31,8 @@
         </div>
     </div><!--.chat-list-search-->
     <div class="chat-list-in scrollable-block">
-        <div v-for="channel in channelList" @click="changeChannel(channel)" class="chat-list-item" :class="{'selected' : isCurrentChannel(channel)}">
+        <div v-for="channel in channelList" @click="changeChannel(channel)"
+                class="chat-list-item" :class="{'selected' : isCurrentChannel(channel) , 'online' : (channel.members[0].connectionStatus == 'online')}">
             <span v-if="removeCurrentUserFromMembers(channel.members)"></span>
             <div class="chat-list-item-photo">
                 <img :src="channel.members[0].profileUrl" alt="">
@@ -40,7 +41,11 @@
                 <div class="chat-list-item-name">
                     <span class="name">{{ channel.members[0].nickname }}</span>
                 </div>
-                <div class="chat-list-item-date">last seen {{channel.members[0].lastSeenAt}}</div>
+                <div v-if="channel.members[0].connectionStatus == 'online'" class="chat-list-item-date">online</div>
+                <span v-else>
+                    <div v-if="channel.members[0].lastSeenAt == 0" class="chat-list-item-date">never</div>
+                    <div v-else class="chat-list-item-date">{{moment(channel.members[0].lastSeenAt).fromNow(true)}}</div>
+                </span>
             </div>
             <div class="chat-list-item-cont">
                 <div v-if="channel.isTyping()" class="chat-list-item-txt writing">
@@ -60,14 +65,14 @@
 
 <section class="chat-list-info">
     <div class="chat-list-search chat-list-settings-header">
-        <a href="#"><span class="fa fa-phone"></span></a>
+        <!-- <a href="#"><span class="fa fa-phone"></span></a>
         <a href="#"><span class="fa fa-video-camera"></span></a>
-        <a href="#"><span class="fa fa-info-circle"></span></a>
+        <a href="#"><span class="fa fa-info-circle"></span></a> -->
     </div><!--.chat-list-search-->
     <div v-if="currentChannel" class="chat-list-in">
-        <section class="chat-user-info chat-list-item online">
+        <section class="chat-user-info chat-list-item" :class="{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}">
             <div class="chat-list-item-photo">
-                <img src="img/photo-64-1.jpg" alt="">
+                <img :src="currentChannel.members[0].profileUrl" alt="">
             </div>
             <div class="chat-list-item-header">
                 <div class="chat-list-item-name">
@@ -76,20 +81,16 @@
             </div>
             <div class="chat-list-item-cont">
                 <div v-if="currentChannel.isTyping()" class="chat-list-item-txt writing">
-                    Matt McGill typing a message
+                    {{currentChannel.members[0].nickname}} typing a message
                 </div>
-                <div class="chat-list-item-txt writing">
-                    Last seen {{currentChannel.members[0].lastSeenAt}}
-                </div>
+                <div v-if="currentChannel.members[0].connectionStatus == 'online'" class="chat-list-item-txt writing">Is online</div>
+                <span v-else>
+                    <div v-if="currentChannel.members[0].lastSeenAt == 0" class="chat-list-item-txt writing">Never been online</div>
+                    <div v-else class="chat-list-item-txt writing">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>
+                </span>
             </div>
         </section>
         <section class="chat-settings">
-            <div class="checkbox-toggle">
-                <input type="checkbox" id="check-toggle-2" checked="">
-                <label for="check-toggle-2">Disable notifications</label>
-            </div>
-        </section>
-        <section class="chat-profiles">
             <button @click="deleteCurrentChannel()" type="button" class="btn btn-danger">Delete Chat</button>
         </section>
     </div>
@@ -103,7 +104,11 @@
                     <div class="chat-list-item-name">
                         <span @click="test" class="name">{{currentChannel.members[0].nickname}}</span>
                     </div>
-                    <div class="chat-list-item-txt writing">Last seen {{currentChannel.members[0].lastSeenAt}}</div>
+                    <div v-if="currentChannel.members[0].connectionStatus == 'online'" class="chat-list-item-txt writing">Is online</div>
+                    <span v-else>
+                        <div v-if="currentChannel.members[0].lastSeenAt == 0" class="chat-list-item-txt writing">Never been online</div>
+                        <div v-else class="chat-list-item-txt writing">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>
+                    </span>
                 </div>
             </span>
 
@@ -120,7 +125,12 @@
                             <div class="messages" style="width: 100%" >
                                 <ul>
                                     <li>
-                                        <div class="time-ago">1:26</div>
+                                        <div v-if="moment(message.createdAt).isSame(new Date(), 'day')" class="time-ago" style="white-space:nowrap;">
+                                            {{moment(message.createdAt).format('h:mm:ss a')}}
+                                        </div>
+                                        <div v-else class="time-ago" style="white-space:nowrap;">
+                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}
+                                        </div>
                                         <div class="message">
                                             <div>
                                                 {{ message.message }}
@@ -145,7 +155,12 @@
                                                 {{ message.message }}
                                             </div>
                                         </div>
-                                        <div class="time-ago">1:26</div>
+                                        <div v-if="moment(message.createdAt).isSame(new Date(), 'day')" class="time-ago" style="white-space:nowrap;">
+                                            {{moment(message.createdAt).format('h:mm:ss a')}}
+                                        </div>
+                                        <div v-else class="time-ago" style="white-space:nowrap;">
+                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -186,6 +201,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import modal from './modal.vue';
 import alert from './alert.vue';
 import bootstrapTable from './BootstrapTable.vue';
@@ -229,6 +245,7 @@ export default {
                     user: user
                 });
             };
+            this.sb.addChannelHandler('user_left', ChannelHandler);
         },
         newChat(seqId){
             this.$broadcast('closeModal', 'addChat');
@@ -398,12 +415,17 @@ export default {
             let pane = $('#chatBox').jScrollPane();
             pane.data('jsp').scrollToBottom();
         },
+        moment(date){
+            return moment.unix(date / 1000);
+        },
         // Make sure to remove this after testing
         test(){
             //
         }
     },
     ready(){
+        // moment().format();
+        // console.log(moment("1995-12-25"));
         // let vue = this;
         //
         // //
