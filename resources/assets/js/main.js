@@ -153,6 +153,7 @@ function isset(strVariableName) {
 
         },
         directives: { FormToAjax },
+
         ready(){
             // Try to make this only rune once
             let vue = this;
@@ -165,6 +166,20 @@ function isset(strVariableName) {
                     return;
                 }
                 vue.currentUser = user;
+                let ChannelHandler = new vue.sb.ChannelHandler();
+                ChannelHandler.onMessageReceived = function(channel, message){
+                    vue.$broadcast('newMessage', {
+                        channel: channel,
+                        message: message
+                    });
+                };
+                ChannelHandler.onUserLeft = function (groupChannel, user) {
+                    vue.$broadcast('leftChannel', {
+                        channel: channel,
+                        user: user
+                    });
+                };
+                vue.sb.addChannelHandler('mainChannel', ChannelHandler);
                 vue.$broadcast('chatReady', user);
             });
         }

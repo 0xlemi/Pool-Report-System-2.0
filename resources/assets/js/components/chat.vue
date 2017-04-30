@@ -232,24 +232,7 @@ export default {
     },
     events: {
         chatReady(user){
-            let vue = this;
             this.getChannels();
-            var ChannelHandler = new this.sb.ChannelHandler();
-            ChannelHandler.onMessageReceived = function(channel, message){
-                vue.$emit('newMessage', {
-                    channel: channel,
-                    message: message
-                });
-            };
-            this.sb.addChannelHandler('message_receiver', ChannelHandler);
-
-            ChannelHandler.onUserLeft = function (groupChannel, user) {
-                vue.$emit('leftChannel', {
-                    channel: channel,
-                    user: user
-                });
-            };
-            this.sb.addChannelHandler('user_left', ChannelHandler);
         },
         newChat(seqId){
             this.$broadcast('closeModal', 'addChat');

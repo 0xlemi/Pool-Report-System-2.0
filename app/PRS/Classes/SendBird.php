@@ -89,6 +89,21 @@ class SendBird{
         }
     }
 
+    public static function unreadMessageCount(UserRoleCompany $urc)
+    {
+        $response = Guzzle::get(
+            'https://api.sendbird.com/v3/users/'.$urc->chat_id.'/unread_count',
+            [
+                'headers' => [
+                    'Api-Token' => env('SENDBIRD_TOKEN')
+                ]
+            ]
+        );
+        if($response->getStatusCode() == 200){
+            return json_decode($response->getBody()->getContents());
+        }
+    }
+
     public static function newToken(UserRoleCompany $urc)
     {
         $response = Guzzle::put(

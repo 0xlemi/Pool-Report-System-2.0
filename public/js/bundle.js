@@ -32290,24 +32290,7 @@ exports.default = {
 
     events: {
         chatReady: function chatReady(user) {
-            var vue = this;
             this.getChannels();
-            var ChannelHandler = new this.sb.ChannelHandler();
-            ChannelHandler.onMessageReceived = function (channel, message) {
-                vue.$emit('newMessage', {
-                    channel: channel,
-                    message: message
-                });
-            };
-            this.sb.addChannelHandler('message_receiver', ChannelHandler);
-
-            ChannelHandler.onUserLeft = function (groupChannel, user) {
-                vue.$emit('leftChannel', {
-                    channel: channel,
-                    user: user
-                });
-            };
-            this.sb.addChannelHandler('user_left', ChannelHandler);
         },
         newChat: function newChat(seqId) {
             this.$broadcast('closeModal', 'addChat');
@@ -37779,6 +37762,7 @@ $(document).ready(function () {
 			routeTable: routeTable
 		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
 		directives: { FormToAjax: FormToAjax },
+
 		ready: function ready() {
 			// Try to make this only rune once
 			var vue = this;
@@ -37791,6 +37775,20 @@ $(document).ready(function () {
 					return;
 				}
 				vue.currentUser = user;
+				var ChannelHandler = new vue.sb.ChannelHandler();
+				ChannelHandler.onMessageReceived = function (channel, message) {
+					vue.$broadcast('newMessage', {
+						channel: channel,
+						message: message
+					});
+				};
+				ChannelHandler.onUserLeft = function (groupChannel, user) {
+					vue.$broadcast('leftChannel', {
+						channel: channel,
+						user: user
+					});
+				};
+				vue.sb.addChannelHandler('mainChannel', ChannelHandler);
 				vue.$broadcast('chatReady', user);
 			});
 		}
