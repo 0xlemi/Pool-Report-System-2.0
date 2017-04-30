@@ -31,35 +31,37 @@
         </div>
     </div><!--.chat-list-search-->
     <div class="chat-list-in scrollable-block">
-        <div v-for="channel in channelList" @click="changeChannel(channel)"
-                class="chat-list-item" :class="{'selected' : isCurrentChannel(channel) , 'online' : (channel.members[0].connectionStatus == 'online')}">
-            <span v-if="removeCurrentUserFromMembers(channel.members)"></span>
-            <div class="chat-list-item-photo">
-                <img :src="channel.members[0].profileUrl" alt="">
-            </div>
-            <div class="chat-list-item-header">
-                <div class="chat-list-item-name">
-                    <span class="name">{{ channel.members[0].nickname }}</span>
+        <span>
+            <div v-for="channel in channelList" @click="changeChannel(channel)"
+                    class="chat-list-item" :class="{'selected' : isCurrentChannel(channel) , 'online' : (channel.members[0].connectionStatus == 'online')}">
+                <span v-if="removeCurrentUserFromMembers(channel.members)"></span>
+                <div class="chat-list-item-photo">
+                    <img :src="channel.members[0].profileUrl" alt="">
                 </div>
-                <div v-if="channel.members[0].connectionStatus == 'online'" class="chat-list-item-date">online</div>
-                <span v-else>
-                    <div v-if="channel.members[0].lastSeenAt == 0" class="chat-list-item-date">never</div>
-                    <div v-else class="chat-list-item-date">{{moment(channel.members[0].lastSeenAt).fromNow(true)}}</div>
-                </span>
-            </div>
-            <div class="chat-list-item-cont">
-                <div v-if="channel.isTyping()" class="chat-list-item-txt writing">
-                    <div class="icon">
-                        <i class="font-icon font-icon-pencil-thin"></i>
+                <div class="chat-list-item-header">
+                    <div class="chat-list-item-name">
+                        <span class="name">{{ channel.members[0].nickname }}</span>
                     </div>
-                    typing a message
+                    <div v-if="channel.members[0].connectionStatus == 'online'" class="chat-list-item-date">online</div>
+                    <span v-else>
+                        <div v-if="channel.members[0].lastSeenAt == 0" class="chat-list-item-date">never</div>
+                        <div v-else class="chat-list-item-date">{{moment(channel.members[0].lastSeenAt).fromNow(true)}}</div>
+                    </span>
                 </div>
-                <span v-else >
-                    <div v-if="channel.lastMessage" class="chat-list-item-txt">{{ channel.lastMessage.message }}</div>
-                </span>
-                <div v-if="channel.unreadMessageCount > 0" class="chat-list-item-count">{{channel.unreadMessageCount}}</div>
+                <div class="chat-list-item-cont">
+                    <div v-if="channel.isTyping()" class="chat-list-item-txt writing">
+                        <div class="icon">
+                            <i class="font-icon font-icon-pencil-thin"></i>
+                        </div>
+                        typing a message
+                    </div>
+                    <span v-else >
+                        <div v-if="channel.lastMessage" class="chat-list-item-txt">{{ channel.lastMessage.message }}</div>
+                    </span>
+                    <div v-if="channel.unreadMessageCount > 0" class="chat-list-item-count">{{channel.unreadMessageCount}}</div>
+                </div>
             </div>
-        </div>
+        </span>
     </div><!--.chat-list-in-->
 </section><!--.chat-list-->
 
