@@ -31367,7 +31367,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e506934", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ChemicalChart.vue":200,"./ClientReportStaff.vue":202,"./panel.vue":243,"./photoList.vue":247,"vue":187,"vue-hot-reload-api":184}],202:[function(require,module,exports){
+},{"./ChemicalChart.vue":200,"./ClientReportStaff.vue":202,"./panel.vue":244,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],202:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.contact-row[_v-1cd3303c]:hover {\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    top: 0px;\n    left: 0px;\n}\n.contact-row[_v-1cd3303c]:active {\n    background-color: #337ab7;\n}\n")
 'use strict';
@@ -31409,7 +31409,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1cd3303c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":239,"./photo.vue":246,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],203:[function(require,module,exports){
+},{"./modal.vue":240,"./photo.vue":247,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31631,7 +31631,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-cf2fc28e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./datePicker.vue":225,"./reportTable.vue":249,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
+},{"./datePicker.vue":225,"./reportTable.vue":250,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32239,7 +32239,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51ddf0a4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./modal.vue":239,"spin":172,"vue":187,"vue-hot-reload-api":184}],214:[function(require,module,exports){
+},{"./alert.vue":209,"./modal.vue":240,"spin":172,"vue":187,"vue-hot-reload-api":184}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32269,7 +32269,7 @@ var _urcTable2 = _interopRequireDefault(_urcTable);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['sb', 'currentUser', 'soundUrl'],
+    props: ['sb', 'currentUser'],
     components: {
         modal: _modal2.default,
         alert: _alert2.default,
@@ -32302,7 +32302,6 @@ exports.default = {
                 this.getMessages(this.currentChannel);
             }
             this.moveChannelToTopOfList(info.channel);
-            this.playSound(this.$els.audio);
         }
     },
     computed: {
@@ -32371,6 +32370,7 @@ exports.default = {
                 }
                 vue.messageList = messageList.reverse();
                 channel.markAsRead();
+                vue.$dispatch('messageViewed', channel);
                 setTimeout(function () {
                     vue.scrollToTheBottom();
                 }, 100);
@@ -32468,13 +32468,6 @@ exports.default = {
         moment: function moment(date) {
             return _moment3.default.unix(date / 1000);
         },
-        playSound: function playSound(audio) {
-            if (audio.paused) {
-                audio.play();
-            } else {
-                audio.currentTime = 0;
-            }
-        },
 
         // Make sure to remove this after testing
         test: function test() {}
@@ -32491,7 +32484,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<audio v-el:audio=\"\" :src=\"soundUrl\" preload=\"auto\"></audio>\n\n<modal title=\"New Chat\" id=\"addChat\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n\n<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <span>\n            <div v-for=\"channel in channelList\" @click=\"changeChannel(channel)\" class=\"chat-list-item\" :class=\"{'selected' : isCurrentChannel(channel) , 'online' : (channel.members[0].connectionStatus == 'online')}\">\n                <span v-if=\"removeCurrentUserFromMembers(channel.members)\"></span>\n                <div class=\"chat-list-item-photo\">\n                    <img :src=\"channel.members[0].profileUrl\" alt=\"\">\n                </div>\n                <div class=\"chat-list-item-header\">\n                    <div class=\"chat-list-item-name\">\n                        <span class=\"name\">{{ channel.members[0].nickname }}</span>\n                    </div>\n                    <div v-if=\"channel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-date\">online</div>\n                    <span v-else=\"\">\n                        <div v-if=\"channel.members[0].lastSeenAt == 0\" class=\"chat-list-item-date\">never</div>\n                        <div v-else=\"\" class=\"chat-list-item-date\">{{moment(channel.members[0].lastSeenAt).fromNow(true)}}</div>\n                    </span>\n                </div>\n                <div class=\"chat-list-item-cont\">\n                    <div v-if=\"channel.isTyping()\" class=\"chat-list-item-txt writing\">\n                        <div class=\"icon\">\n                            <i class=\"font-icon font-icon-pencil-thin\"></i>\n                        </div>\n                        typing a message\n                    </div>\n                    <span v-else=\"\">\n                        <div v-if=\"channel.lastMessage\" class=\"chat-list-item-txt\">{{ channel.lastMessage.message }}</div>\n                    </span>\n                    <div v-if=\"channel.unreadMessageCount > 0\" class=\"chat-list-item-count\">{{channel.unreadMessageCount}}</div>\n                </div>\n            </div>\n        </span>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <!-- <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a> -->\n    </div><!--.chat-list-search-->\n    <div v-if=\"currentChannel\" class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item\" :class=\"{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}\">\n            <div class=\"chat-list-item-photo\">\n                <img :src=\"currentChannel.members[0].profileUrl\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">{{currentChannel.members[0].nickname}}</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div v-if=\"currentChannel.isTyping()\" class=\"chat-list-item-txt writing\">\n                    {{currentChannel.members[0].nickname}} typing a message\n                </div>\n                <div v-if=\"currentChannel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-txt writing\">Is online</div>\n                <span v-else=\"\">\n                    <div v-if=\"currentChannel.members[0].lastSeenAt == 0\" class=\"chat-list-item-txt writing\">Never been online</div>\n                    <div v-else=\"\" class=\"chat-list-item-txt writing\">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>\n                </span>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <button @click=\"deleteCurrentChannel()\" type=\"button\" class=\"btn btn-danger\">Delete Chat</button>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <span v-if=\"currentChannel\">\n                <div class=\"chat-list-item\" style=\"text-align: center\" :class=\"{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}\">\n                    <div class=\"chat-list-item-name\">\n                        <span @click=\"test\" class=\"name\">{{currentChannel.members[0].nickname}}</span>\n                    </div>\n                    <div v-if=\"currentChannel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-txt writing\">Is online</div>\n                    <span v-else=\"\">\n                        <div v-if=\"currentChannel.members[0].lastSeenAt == 0\" class=\"chat-list-item-txt writing\">Never been online</div>\n                        <div v-else=\"\" class=\"chat-list-item-txt writing\">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>\n                    </span>\n                </div>\n            </span>\n\n            <span v-else=\"\">\n                <div class=\"clean\">Start a conversation</div>\n            </span>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\" id=\"chatBox\">\n            <div class=\"messenger-dialog-area\">\n                <span>\n                    <div v-for=\"message in messageList\" class=\"messenger-message-container\" style=\"width: 100%\" :class=\"{'from bg-blue': isCurrentUser(message._sender)}\">\n                        <span v-if=\"isCurrentUser(message._sender)\">\n                            <div class=\"messages\" style=\"width: 100%\">\n                                <ul>\n                                    <li>\n                                        <div v-if=\"moment(message.createdAt).isSame(new Date(), 'day')\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('h:mm:ss a')}}\n                                        </div>\n                                        <div v-else=\"\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}\n                                        </div>\n                                        <div class=\"message\">\n                                            <div>\n                                                {{ message.message }}\n                                            </div>\n                                        </div>\n                                    </li>\n                                </ul>\n                            </div>\n                            <div class=\"avatar chat-list-item-photo\">\n                                <img :src=\"message._sender.profileUrl\">\n                            </div>\n                        </span>\n                        <span v-else=\"\">\n                            <div class=\"avatar\">\n                                <img :src=\"message._sender.profileUrl\">\n                            </div>\n                            <div class=\"messages\">\n                                <ul>\n                                    <li>\n                                        <div class=\"message\">\n                                            <div>\n                                                {{ message.message }}\n                                            </div>\n                                        </div>\n                                        <div v-if=\"moment(message.createdAt).isSame(new Date(), 'day')\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('h:mm:ss a')}}\n                                        </div>\n                                        <div v-else=\"\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}\n                                        </div>\n                                    </li>\n                                </ul>\n                            </div>\n                        </span>\n                    </div>\n                </span>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea @keydown.enter=\"sendMessage(currentMessage)\" rows=\"1\" class=\"form-control\" placeholder=\"Type a message\" v-model=\"currentMessage\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <button @click=\"sendMessage(currentMessage)\" :disabled=\"chatDisabled\" type=\"button\" class=\"btn btn-rounded float-left\">Send</button>\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<modal title=\"New Chat\" id=\"addChat\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n\t\t<urc-table></urc-table>\n    </div>\n</modal>\n\n<modal title=\"Chat Settings\" id=\"chatSettings\">\n    Settings\n</modal>\n\n\n<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n<section class=\"chat-list\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <div class=\"row\">\n            <div class=\"col-sm-2 col-lg-2 action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'chatSettings')\">\n                    <span class=\"font-icon font-icon-cogwheel\"></span>\n                </a>\n            </div>\n            <div class=\"col-sm-8 col-lg-8 text-center description\">\n                Messenger\n            </div>\n            <div class=\"col-sm-2 col-lg-2 text-right action\">\n                <a v-on:click.stop.prevent=\"$broadcast('openModal', 'addChat')\">\n                    <span class=\"glyphicon glyphicon-plus\"></span>\n                </a>\n            </div>\n        </div>\n    </div><!--.chat-list-search-->\n    <div class=\"chat-list-in scrollable-block\">\n        <span>\n            <div v-for=\"channel in channelList\" @click=\"changeChannel(channel)\" class=\"chat-list-item\" :class=\"{'selected' : isCurrentChannel(channel) , 'online' : (channel.members[0].connectionStatus == 'online')}\">\n                <span v-if=\"removeCurrentUserFromMembers(channel.members)\"></span>\n                <div class=\"chat-list-item-photo\">\n                    <img :src=\"channel.members[0].profileUrl\" alt=\"\">\n                </div>\n                <div class=\"chat-list-item-header\">\n                    <div class=\"chat-list-item-name\">\n                        <span class=\"name\">{{ channel.members[0].nickname }}</span>\n                    </div>\n                    <div v-if=\"channel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-date\">online</div>\n                    <span v-else=\"\">\n                        <div v-if=\"channel.members[0].lastSeenAt == 0\" class=\"chat-list-item-date\">never</div>\n                        <div v-else=\"\" class=\"chat-list-item-date\">{{moment(channel.members[0].lastSeenAt).fromNow(true)}}</div>\n                    </span>\n                </div>\n                <div class=\"chat-list-item-cont\">\n                    <div v-if=\"channel.isTyping()\" class=\"chat-list-item-txt writing\">\n                        <div class=\"icon\">\n                            <i class=\"font-icon font-icon-pencil-thin\"></i>\n                        </div>\n                        typing a message\n                    </div>\n                    <span v-else=\"\">\n                        <div v-if=\"channel.lastMessage\" class=\"chat-list-item-txt\">{{ channel.lastMessage.message }}</div>\n                    </span>\n                    <div v-if=\"channel.unreadMessageCount > 0\" class=\"chat-list-item-count\">{{channel.unreadMessageCount}}</div>\n                </div>\n            </div>\n        </span>\n    </div><!--.chat-list-in-->\n</section><!--.chat-list-->\n\n<section class=\"chat-list-info\">\n    <div class=\"chat-list-search chat-list-settings-header\">\n        <!-- <a href=\"#\"><span class=\"fa fa-phone\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-video-camera\"></span></a>\n        <a href=\"#\"><span class=\"fa fa-info-circle\"></span></a> -->\n    </div><!--.chat-list-search-->\n    <div v-if=\"currentChannel\" class=\"chat-list-in\">\n        <section class=\"chat-user-info chat-list-item\" :class=\"{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}\">\n            <div class=\"chat-list-item-photo\">\n                <img :src=\"currentChannel.members[0].profileUrl\" alt=\"\">\n            </div>\n            <div class=\"chat-list-item-header\">\n                <div class=\"chat-list-item-name\">\n                    <span class=\"name\">{{currentChannel.members[0].nickname}}</span>\n                </div>\n            </div>\n            <div class=\"chat-list-item-cont\">\n                <div v-if=\"currentChannel.isTyping()\" class=\"chat-list-item-txt writing\">\n                    {{currentChannel.members[0].nickname}} typing a message\n                </div>\n                <div v-if=\"currentChannel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-txt writing\">Is online</div>\n                <span v-else=\"\">\n                    <div v-if=\"currentChannel.members[0].lastSeenAt == 0\" class=\"chat-list-item-txt writing\">Never been online</div>\n                    <div v-else=\"\" class=\"chat-list-item-txt writing\">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>\n                </span>\n            </div>\n        </section>\n        <section class=\"chat-settings\">\n            <button @click=\"deleteCurrentChannel()\" type=\"button\" class=\"btn btn-danger\">Delete Chat</button>\n        </section>\n    </div>\n</section>\n\n<section class=\"chat-area\">\n    <div class=\"chat-area-in\">\n        <div class=\"chat-area-header\">\n            <span v-if=\"currentChannel\">\n                <div class=\"chat-list-item\" style=\"text-align: center\" :class=\"{ 'online' : (currentChannel.members[0].connectionStatus == 'online')}\">\n                    <div class=\"chat-list-item-name\">\n                        <span @click=\"test\" class=\"name\">{{currentChannel.members[0].nickname}}</span>\n                    </div>\n                    <div v-if=\"currentChannel.members[0].connectionStatus == 'online'\" class=\"chat-list-item-txt writing\">Is online</div>\n                    <span v-else=\"\">\n                        <div v-if=\"currentChannel.members[0].lastSeenAt == 0\" class=\"chat-list-item-txt writing\">Never been online</div>\n                        <div v-else=\"\" class=\"chat-list-item-txt writing\">Last seen {{moment(currentChannel.members[0].lastSeenAt).fromNow()}}</div>\n                    </span>\n                </div>\n            </span>\n\n            <span v-else=\"\">\n                <div class=\"clean\">Start a conversation</div>\n            </span>\n        </div><!--.chat-area-header-->\n\n        <div class=\"chat-dialog-area scrollable-block\" id=\"chatBox\">\n            <div class=\"messenger-dialog-area\">\n                <span>\n                    <div v-for=\"message in messageList\" class=\"messenger-message-container\" style=\"width: 100%\" :class=\"{'from bg-blue': isCurrentUser(message._sender)}\">\n                        <span v-if=\"isCurrentUser(message._sender)\">\n                            <div class=\"messages\" style=\"width: 100%\">\n                                <ul>\n                                    <li>\n                                        <div v-if=\"moment(message.createdAt).isSame(new Date(), 'day')\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('h:mm:ss a')}}\n                                        </div>\n                                        <div v-else=\"\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}\n                                        </div>\n                                        <div class=\"message\">\n                                            <div>\n                                                {{ message.message }}\n                                            </div>\n                                        </div>\n                                    </li>\n                                </ul>\n                            </div>\n                            <div class=\"avatar chat-list-item-photo\">\n                                <img :src=\"message._sender.profileUrl\">\n                            </div>\n                        </span>\n                        <span v-else=\"\">\n                            <div class=\"avatar\">\n                                <img :src=\"message._sender.profileUrl\">\n                            </div>\n                            <div class=\"messages\">\n                                <ul>\n                                    <li>\n                                        <div class=\"message\">\n                                            <div>\n                                                {{ message.message }}\n                                            </div>\n                                        </div>\n                                        <div v-if=\"moment(message.createdAt).isSame(new Date(), 'day')\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('h:mm:ss a')}}\n                                        </div>\n                                        <div v-else=\"\" class=\"time-ago\" style=\"white-space:nowrap;\">\n                                            {{moment(message.createdAt).format('DD/MM/YY h:mm:ss a')}}\n                                        </div>\n                                    </li>\n                                </ul>\n                            </div>\n                        </span>\n                    </div>\n                </span>\n            </div>\n        </div>\n\n        <div class=\"chat-area-bottom\">\n            <form class=\"write-message\">\n                <div class=\"form-group\">\n                    <textarea @keydown.enter=\"sendMessage(currentMessage)\" rows=\"1\" class=\"form-control\" placeholder=\"Type a message\" v-model=\"currentMessage\"></textarea>\n                    <div class=\"dropdown dropdown-typical dropup attach\">\n                        <button @click=\"sendMessage(currentMessage)\" :disabled=\"chatDisabled\" type=\"button\" class=\"btn btn-rounded float-left\">Send</button>\n                        <a class=\"dropdown-toggle dropdown-toggle-txt\" id=\"dd-chat-attach\" data-target=\"#\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">\n                            <span class=\"font-icon fa fa-file-o\"></span>\n                        </a>\n                        <div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dd-chat-attach\">\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-photo\"></i>Photo</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-cam-video\"></i>Video</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-sound\"></i>Audio</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-page\"></i>Document</a>\n                            <a class=\"dropdown-item\" href=\"#\"><i class=\"font-icon font-icon-earth\"></i>Map</a>\n                        </div>\n                    </div>\n                </div>\n            </form>\n        </div><!--.chat-area-bottom-->\n    </div><!--.chat-area-in-->\n</section><!--.chat-area-->\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -32502,7 +32495,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":239,"./urcTable.vue":258,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./urcTable.vue":259,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32889,7 +32882,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-657f0ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":239,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
+},{"./modal.vue":240,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33074,7 +33067,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3998b644", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":239,"./photoList.vue":247,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33320,7 +33313,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-091f5cd2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":239,"./photoList.vue":247,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],221:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33938,7 +33931,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./timezoneDropdown.vue":257,"spin":172,"vue":187,"vue-hot-reload-api":184}],225:[function(require,module,exports){
+},{"./alert.vue":209,"./timezoneDropdown.vue":258,"spin":172,"vue":187,"vue-hot-reload-api":184}],225:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
 "use strict";
@@ -34235,7 +34228,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":244,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],229:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":245,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],229:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34373,7 +34366,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2bc03898", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":247,"vue":187,"vue-hot-reload-api":184}],231:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],231:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34869,7 +34862,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":247,"spin":172,"vue":187,"vue-hot-reload-api":184}],233:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],233:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35001,7 +34994,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":247,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],234:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35347,7 +35340,78 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-136361f2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":239,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
+},{"./modal.vue":240,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    props: ['sb', 'currentUser', 'soundUrl'],
+    data: function data() {
+        return {
+            hasUnreadMessage: false,
+            channel: {}
+        };
+    },
+
+    events: {
+        chatReady: function chatReady() {
+            this.checkIfHasNewMessages();
+        },
+        newMessage: function newMessage(info) {
+            this.hasUnreadMessage = true;
+            this.playSound(this.$els.audio);
+        },
+        messageViewed: function messageViewed(channel) {
+            this.hasUnreadMessage = false;
+        }
+    },
+    methods: {
+        checkIfHasNewMessages: function checkIfHasNewMessages() {
+            var vue = this;
+            var channelListQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
+            channelListQuery.includeEmpty = true;
+            channelListQuery.limit = 1; // pagination limit could be set up to 100
+
+            if (channelListQuery.hasNext) {
+                channelListQuery.next(function (channelList, error) {
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    if (channelList.length > 0 && channelList[0].unreadMessageCount > 0) {
+                        vue.channel = channelList[0];
+                        vue.hasUnreadMessage = true;
+                    }
+                });
+            }
+        },
+        goToChat: function goToChat() {
+            window.location = Laravel.url + 'chat';
+        },
+        playSound: function playSound(audio) {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.currentTime = 0;
+            }
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<audio v-el:audio=\"\" :src=\"soundUrl\" preload=\"auto\"></audio>\n<div class=\"dropdown dropdown-notification messages\">\n    <a @click.prevent=\"goToChat()\" class=\"header-alarm\" :class=\"{'active' : hasUnreadMessage}\">\n        <i class=\"font-icon-mail\"></i>\n    </a>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-c517a1b6", module.exports)
+  } else {
+    hotAPI.update("_v-c517a1b6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":187,"vue-hot-reload-api":184}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35488,7 +35552,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],239:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35527,7 +35591,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-756e4770", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],240:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35548,7 +35612,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],241:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35606,7 +35670,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-528515e3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],242:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35670,7 +35734,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":240,"vue":187,"vue-hot-reload-api":184}],243:[function(require,module,exports){
+},{"./notification.vue":241,"vue":187,"vue-hot-reload-api":184}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35703,9 +35767,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-28d12fc2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],244:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],245:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35985,7 +36049,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],246:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],247:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36018,7 +36082,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1168d54d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],247:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],248:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36067,7 +36131,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photo.vue":246,"vue":187,"vue-hot-reload-api":184}],248:[function(require,module,exports){
+},{"./photo.vue":247,"vue":187,"vue-hot-reload-api":184}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36091,7 +36155,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-626e3884", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],249:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36225,7 +36289,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e51ec856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./missingServices.vue":238,"vue":187,"vue-hot-reload-api":184}],250:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./missingServices.vue":239,"vue":187,"vue-hot-reload-api":184}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36265,7 +36329,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4acf9cce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/object/keys":5,"vue":187,"vue-hot-reload-api":184}],251:[function(require,module,exports){
+},{"babel-runtime/core-js/object/keys":5,"vue":187,"vue-hot-reload-api":184}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36394,7 +36458,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],252:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36454,7 +36518,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-12e0b07a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],253:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36514,7 +36578,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36603,7 +36667,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":224,"./deleteAccount.vue":226,"./notificationSettings.vue":241,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
+},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":224,"./deleteAccount.vue":226,"./notificationSettings.vue":242,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36654,7 +36718,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36709,7 +36773,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36735,7 +36799,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8165b142", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36859,7 +36923,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1f3ef786", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],259:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36919,7 +36983,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36983,7 +37047,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":229,"./photoList.vue":247,"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
+},{"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37063,7 +37127,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":247,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
+},{"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37123,7 +37187,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37534,7 +37598,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"./dropzone.vue":229,"./photoList.vue":247,"spin":172,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37618,7 +37682,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -37711,6 +37775,7 @@ $(document).ready(function () {
 	var changeTechnicianPassword = require('./components/changeTechnicianPassword.vue');
 	var rolePicker = require('./components/rolePicker.vue');
 	var chat = require('./components/chat.vue');
+	var messagesWidget = require('./components/messagesWidget.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -37721,6 +37786,7 @@ $(document).ready(function () {
 		components: (_components = {
 			// header
 			notificationsWidget: notificationsWidget,
+			messagesWidget: messagesWidget,
 			rolePicker: rolePicker,
 			// generic
 			alert: alert,
@@ -37763,7 +37829,11 @@ $(document).ready(function () {
 			routeTable: routeTable
 		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
 		directives: { FormToAjax: FormToAjax },
-
+		events: {
+			messageViewed: function messageViewed(channel) {
+				this.$broadcast('messageViewed', channel);
+			}
+		},
 		ready: function ready() {
 			// Try to make this only rune once
 			var vue = this;
@@ -38492,6 +38562,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":203,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/chemical.vue":216,"./components/clientContract.vue":217,"./components/clientEquipment.vue":218,"./components/clientTable.vue":219,"./components/clientWorks.vue":220,"./components/contract.vue":221,"./components/countries.vue":222,"./components/deleteButton.vue":227,"./components/dropdown.vue":228,"./components/editReportPhotos.vue":230,"./components/emailVerificationNotice.vue":231,"./components/equipment.vue":232,"./components/finishWorkOrderButton.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/missingServices.vue":238,"./components/notificationsWidget.vue":242,"./components/payments.vue":245,"./components/photo.vue":246,"./components/photoList.vue":247,"./components/profile.vue":248,"./components/rolePicker.vue":250,"./components/routeTable.vue":251,"./components/serviceClientTable.vue":252,"./components/serviceTable.vue":253,"./components/settings.vue":254,"./components/supervisorTable.vue":255,"./components/technicianTable.vue":256,"./components/timezoneDropdown.vue":257,"./components/workOrderClientTable.vue":259,"./components/workOrderPhotosEdit.vue":260,"./components/workOrderPhotosShow.vue":261,"./components/workOrderTable.vue":262,"./components/works.vue":263,"./directives/FormToAjax.vue":264,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,265]);
+},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":203,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/chemical.vue":216,"./components/clientContract.vue":217,"./components/clientEquipment.vue":218,"./components/clientTable.vue":219,"./components/clientWorks.vue":220,"./components/contract.vue":221,"./components/countries.vue":222,"./components/deleteButton.vue":227,"./components/dropdown.vue":228,"./components/editReportPhotos.vue":230,"./components/emailVerificationNotice.vue":231,"./components/equipment.vue":232,"./components/finishWorkOrderButton.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/profile.vue":249,"./components/rolePicker.vue":251,"./components/routeTable.vue":252,"./components/serviceClientTable.vue":253,"./components/serviceTable.vue":254,"./components/settings.vue":255,"./components/supervisorTable.vue":256,"./components/technicianTable.vue":257,"./components/timezoneDropdown.vue":258,"./components/workOrderClientTable.vue":260,"./components/workOrderPhotosEdit.vue":261,"./components/workOrderPhotosShow.vue":262,"./components/workOrderTable.vue":263,"./components/works.vue":264,"./directives/FormToAjax.vue":265,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,266]);
 
 //# sourceMappingURL=bundle.js.map

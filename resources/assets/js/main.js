@@ -155,7 +155,11 @@ function isset(strVariableName) {
 
         },
         directives: { FormToAjax },
-
+        events:{
+            messageViewed(channel){
+                this.$broadcast('messageViewed', channel);
+            }
+        },
         ready(){
             // Try to make this only rune once
             let vue = this;

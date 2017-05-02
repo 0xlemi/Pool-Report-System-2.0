@@ -40,6 +40,7 @@ class ComposerServiceProvider extends ServiceProvider
                     'id' => $selectedUser->chat_id,
                     'nickname' => $selectedUser->chat_nickname,
                     'token' => $selectedUser->chat_token,
+                    'sound' => \Storage::url('sounds/chatNotification.mp3'),
                 ]);
             }
         });
