@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Requests;
+use App\PRS\Classes\SendBird;
 
 class ChatController extends PageController
 {
@@ -27,6 +28,22 @@ class ChatController extends PageController
     public function home()
     {
         return view('chat.home');
+    }
+
+    public function unreadCount($seqId)
+    {
+        try {
+            $urc = $this->loggedCompany()->userRoleCompanies()->bySeqId($seqId);
+        } catch (ModelNotFoundException $e) {
+            return response([
+                'error' => 'There is no user with that id.',
+            ], 400);
+        }
+
+        $count = SendBird::unreadMessageCount($urc);
+        return response([
+            'data' => $count
+        ]);
     }
 
     public function userChatId($seqId)

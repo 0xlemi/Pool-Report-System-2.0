@@ -35347,7 +35347,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.default = {
-    props: ['sb', 'currentUser', 'soundUrl'],
+    props: ['selectedUser', 'soundUrl'],
     data: function data() {
         return {
             hasUnreadMessage: false,
@@ -35363,29 +35363,20 @@ exports.default = {
             this.hasUnreadMessage = true;
             this.playSound(this.$els.audio);
         },
-        messageViewed: function messageViewed(channel) {
-            this.hasUnreadMessage = false;
+        messageViewed: function messageViewed() {
+            this.checkIfHasNewMessages();
         }
     },
     methods: {
         checkIfHasNewMessages: function checkIfHasNewMessages() {
-            var vue = this;
-            var channelListQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
-            channelListQuery.includeEmpty = true;
-            channelListQuery.limit = 1; // pagination limit could be set up to 100
+            var _this = this;
 
-            if (channelListQuery.hasNext) {
-                channelListQuery.next(function (channelList, error) {
-                    if (error) {
-                        console.error(error);
-                        return;
-                    }
-                    if (channelList.length > 0 && channelList[0].unreadMessageCount > 0) {
-                        vue.channel = channelList[0];
-                        vue.hasUnreadMessage = true;
-                    }
-                });
-            }
+            var url = Laravel.url + 'chat/unreadcount/' + this.selectedUser.id;
+            this.$http.get(url).then(function (response) {
+                _this.hasUnreadMessage = response.data.data > 0;
+            }, function (response) {
+                console.log('error trying to get unread messages count');
+            });
         },
         goToChat: function goToChat() {
             window.location = Laravel.url + 'chat';

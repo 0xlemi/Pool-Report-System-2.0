@@ -142,6 +142,7 @@ Route::resource('payments', 'PaymentController', ['only' => [
 // Chat
 Route::get('chat', 'ChatController@home');
 Route::get('chat/id/{seqId}', 'ChatController@userChatId');
+Route::get('chat/unreadcount/{seqId}', 'ChatController@unreadCount');
 
 
 Route::post(

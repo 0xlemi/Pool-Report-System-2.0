@@ -21,6 +21,7 @@ class ComposerServiceProvider extends ServiceProvider
                 // Selected UserRoleCompany
                 $selectedUser = $user->selectedUser;
                 $view->with('selectedUser', collect([
+                    'id' => $selectedUser->seq_id,
                     'company_name' => $selectedUser->company->name,
                     'icon' => $selectedUser->role->icon,
                 ]));

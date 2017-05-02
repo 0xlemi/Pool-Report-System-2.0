@@ -100,7 +100,7 @@ class SendBird{
             ]
         );
         if($response->getStatusCode() == 200){
-            return json_decode($response->getBody()->getContents());
+            return json_decode($response->getBody()->getContents())->unread_count;
         }
     }
 
