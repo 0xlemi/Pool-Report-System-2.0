@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Jobs\SendBird\DeleteAllUsers;
 
 class DatabaseSeeder extends Seeder
 {
@@ -43,6 +44,7 @@ class DatabaseSeeder extends Seeder
     {
     	// cleaning up
     	$this->truncate_tables();
+		dispatch(new DeleteAllUsers());
 
     	$this->call(CompaniesTableSeeder::class);
     	$this->call(ServicesTableSeeder::class);

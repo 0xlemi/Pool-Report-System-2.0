@@ -86,6 +86,7 @@ function isset(strVariableName) {
     let changeTechnicianPassword = require('./components/changeTechnicianPassword.vue');
     let rolePicker = require('./components/rolePicker.vue');
     let chat = require('./components/chat.vue');
+    let messagesWidget = require('./components/messagesWidget.vue');
 
 
     let mainVue = new Vue({
@@ -97,6 +98,7 @@ function isset(strVariableName) {
         components: {
             // header
             notificationsWidget,
+            messagesWidget,
             rolePicker,
             // generic
             alert,

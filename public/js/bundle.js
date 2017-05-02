@@ -32284,7 +32284,8 @@ exports.default = {
             messageList: {},
 
             currentChannel: null,
-            currentMessage: ''
+            currentMessage: '',
+            messagePaginationNumber: 30
         };
     },
 
@@ -32363,7 +32364,7 @@ exports.default = {
         getMessages: function getMessages(channel) {
             var vue = this;
             var messageListQuery = channel.createPreviousMessageListQuery();
-            messageListQuery.load(20, true, function (messageList, error) {
+            messageListQuery.load(this.messagePaginationNumber, true, function (messageList, error) {
                 if (error) {
                     console.error(error);
                     return;

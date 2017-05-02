@@ -104,6 +104,36 @@ class SendBird{
         }
     }
 
+    public static function getAll()
+    {
+        $response = Guzzle::get(
+            'https://api.sendbird.com/v3/users?limit=100',
+            [
+                'headers' => [
+                    'Api-Token' => env('SENDBIRD_TOKEN')
+                ]
+            ]
+        );
+        if($response->getStatusCode() == 200){
+            return json_decode($response->getBody()->getContents());
+        }
+    }
+
+    public static function delete($userId)
+    {
+        $response = Guzzle::delete(
+            'https://api.sendbird.com/v3/users/'.$userId,
+            [
+                'headers' => [
+                    'Api-Token' => env('SENDBIRD_TOKEN')
+                ]
+            ]
+        );
+        if($response->getStatusCode() == 200){
+            return true;
+        }
+    }
+
     public static function newToken(UserRoleCompany $urc)
     {
         $response = Guzzle::put(

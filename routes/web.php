@@ -1,7 +1,5 @@
 <?php
 use Illuminate\Http\Request;
-use App\Jobs\RecordServiceHistory;
-use App\PRS\Classes\SendBird;
 
 /*
 |--------------------------------------------------------------------------

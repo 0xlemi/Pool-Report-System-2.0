@@ -228,6 +228,7 @@ export default {
 
             currentChannel: null,
             currentMessage: '',
+            messagePaginationNumber: 30,
         }
     },
     events: {
@@ -304,7 +305,7 @@ export default {
         getMessages(channel){
             let vue = this;
             var messageListQuery = channel.createPreviousMessageListQuery();
-            messageListQuery.load(20, true, function(messageList, error){
+            messageListQuery.load(this.messagePaginationNumber, true, function(messageList, error){
                 if (error) {
                     console.error(error);
                     return;
