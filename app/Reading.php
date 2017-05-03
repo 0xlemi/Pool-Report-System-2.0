@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Report;
-use App\Chemical;
+use App\Measurement;
 
 class Reading extends Model
 {
@@ -15,16 +15,16 @@ class Reading extends Model
      */
     protected $fillable = [
         'value',
-        'chemical_id'
+        'measurement_id'
     ];
 
     // ******************
     //      Scopes
     // ******************
 
-    public function scopeOfChemical($query, int $chemical_id)
+    public function scopeOfMeasurement($query, int $measurement_id)
     {
-        return $query->where('chemical_id', $chemical_id)->first();
+        return $query->where('measurement_id', $measurement_id)->first();
     }
 
     // ******************
@@ -36,13 +36,13 @@ class Reading extends Model
         return $this->belongsTo(Report::class);
     }
 
-    public function chemical()
+    public function measurement()
     {
-        return $this->belongsTo(Chemical::class);
+        return $this->belongsTo(Measurement::class);
     }
 
-    public function globalChemical()
+    public function globalMeasurement()
     {
-        return $this->chemical->globalChemical();
+        return $this->measurement->globalMeasurement();
     }
 }

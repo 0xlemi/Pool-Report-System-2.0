@@ -17,26 +17,26 @@
 </div>
 <div class="col-md-12">
     <div class="col-xxl-6 col-xl-12">
-        <panel title="Chemicals">
-            <chemical-chart
+        <panel title="Measurements">
+            <measurement-chart
             :values="values"
             :tags="tags"
             :height="187">
-            </chemical-chart>
+        </measurement-chart>
         </panel>
     </div>
     <div class="col-xxl-3 col-xl-6">
         <panel title="Temperature">
-            <chemical-chart
+            <measurement-chart
             :values="temperature"
             :tags="tags"
             :height="400">
-            </chemical-chart>
+        </measurement-chart>
         </panel>
     </div>
     <div class="col-xxl-3 col-xl-6">
         <panel title="Turbidity">
-            <chemical-chart
+            <measurement-chart
             :values="turbidity"
             :tags="[
                 'Very High',
@@ -45,7 +45,7 @@
                 'Perfect',
             ]"
             :height="400">
-            </chemical-chart>
+        </measurement-chart>
         </panel>
     </div>
 </div>
@@ -64,7 +64,7 @@
 
 <script>
 import photoList from './photoList.vue';
-import chemicalChart from './ChemicalChart.vue';
+import measurementChart from './MeasurementChart.vue';
 import clientReportStaff from './ClientReportStaff.vue';
 import panel from './panel.vue';
 
@@ -73,7 +73,7 @@ export default {
     props: ['report'],
     components:{
         photoList,
-        chemicalChart,
+        measurementChart,
         clientReportStaff,
         panel
     },

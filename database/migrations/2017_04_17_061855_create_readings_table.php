@@ -17,16 +17,16 @@ class CreateReadingsTable extends Migration
             $table->increments('id');
             $table->integer('value')->unsigned();
             $table->integer('report_id')->unsigned();
-            $table->integer('chemical_id')->unsigned();
+            $table->integer('measurement_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('report_id')
                 ->references('id')
                 ->on('reports')
                 ->onDelete('cascade');
-            $table->foreign('chemical_id')
+            $table->foreign('measurement_id')
                 ->references('id')
-                ->on('chemicals')
+                ->on('measurements')
                 ->onDelete('cascade');
         });
     }

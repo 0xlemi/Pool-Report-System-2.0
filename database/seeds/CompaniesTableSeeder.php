@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Seeder;
 use App\Company;
-use App\Chemical;
-use App\GlobalChemical;
+use App\Measurement;
+use App\GlobalMeasurement;
 use App\UserRoleCompany;
 use App\User;
 use App\Image;
@@ -22,8 +22,8 @@ class CompaniesTableSeeder extends Seeder
         Company::flushEventListeners();
         User::flushEventListeners();
         UserRoleCompany::flushEventListeners();
-        Chemical::flushEventListeners();
-        GlobalChemical::flushEventListeners();
+        Measurement::flushEventListeners();
+        GlobalMeasurement::flushEventListeners();
         Label::flushEventListeners();
         Image::flushEventListeners();
 
@@ -126,10 +126,10 @@ class CompaniesTableSeeder extends Seeder
         dispatch(new CreateUser($urcOtherCompanyTechnician2));
 
         // ***************************
-        //   Create Global Chemicals
+        //   Create Global Measurements
         // ***************************
 
-        $chlorine1 = $company1->globalChemicals()->create([
+        $chlorine1 = $company1->globalMeasurements()->create([
             'name' =>  'Chlorine',
             'units' => 'Grams'
         ]);
@@ -158,7 +158,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '7D1A98',
                 'value' => 5
             ]);
-        $ph1 = $company1->globalChemicals()->create([
+        $ph1 = $company1->globalMeasurements()->create([
             'name' =>  'PH Adjuster',
             'units' => 'Grams'
         ]);
@@ -187,7 +187,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => 'D80317',
                 'value' => 5
             ]);
-        $salt1 = $company1->globalChemicals()->create([
+        $salt1 = $company1->globalMeasurements()->create([
             'name' =>  'Salt',
             'units' => 'PPM'
         ]);
@@ -216,7 +216,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '131313',
                 'value' => 5
             ]);
-        $hardness1 = $company1->globalChemicals()->create([
+        $hardness1 = $company1->globalMeasurements()->create([
             'name' =>  'Hardness',
             'units' => 'PPM'
         ]);
@@ -245,7 +245,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '861888',
                 'value' => 5
             ]);
-        $bromine1 = $company1->globalChemicals()->create([
+        $bromine1 = $company1->globalMeasurements()->create([
             'name' =>  'Bromine',
             'units' => 'PPM'
         ]);
@@ -274,7 +274,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '37A75B',
                 'value' => 5
             ]);
-        $alkalinity1 = $company1->globalChemicals()->create([
+        $alkalinity1 = $company1->globalMeasurements()->create([
             'name' =>  'Alkalinity',
             'units' => 'PPM'
         ]);
@@ -303,7 +303,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '1E4652',
                 'value' => 5
             ]);
-        $cyanuricAcid1 = $company1->globalChemicals()->create([
+        $cyanuricAcid1 = $company1->globalMeasurements()->create([
             'name' =>  'Cyanuric Acid',
             'units' => 'PPM'
         ]);
@@ -334,7 +334,7 @@ class CompaniesTableSeeder extends Seeder
             ]);
 
         // For Company 2
-        $chlorine2 = $company2->globalChemicals()->create([
+        $chlorine2 = $company2->globalMeasurements()->create([
             'name' =>  'Chlorine',
             'units' => 'Grams'
         ]);
@@ -363,7 +363,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '7D1A98',
                 'value' => 5
             ]);
-        $ph2 = $company2->globalChemicals()->create([
+        $ph2 = $company2->globalMeasurements()->create([
             'name' =>  'PH Adjuster',
             'units' => 'Grams'
         ]);
@@ -392,7 +392,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => 'D80317',
                 'value' => 5
             ]);
-        $salt2 = $company2->globalChemicals()->create([
+        $salt2 = $company2->globalMeasurements()->create([
             'name' =>  'Salt',
             'units' => 'PPM'
         ]);
@@ -421,7 +421,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '131313',
                 'value' => 5
             ]);
-        $hardness2 = $company2->globalChemicals()->create([
+        $hardness2 = $company2->globalMeasurements()->create([
             'name' =>  'Hardness',
             'units' => 'PPM'
         ]);
@@ -450,7 +450,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '861888',
                 'value' => 5
             ]);
-        $bromine2 = $company2->globalChemicals()->create([
+        $bromine2 = $company2->globalMeasurements()->create([
             'name' =>  'Bromine',
             'units' => 'PPM'
         ]);
@@ -479,7 +479,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '37A75B',
                 'value' => 5
             ]);
-        $alkalinity2 = $company2->globalChemicals()->create([
+        $alkalinity2 = $company2->globalMeasurements()->create([
             'name' =>  'Alkalinity',
             'units' => 'PPM'
         ]);
@@ -508,7 +508,7 @@ class CompaniesTableSeeder extends Seeder
                 'color' => '1E4652',
                 'value' => 5
             ]);
-        $cyanuricAcid2 = $company2->globalChemicals()->create([
+        $cyanuricAcid2 = $company2->globalMeasurements()->create([
             'name' =>  'Cyanuric Acid',
             'units' => 'PPM'
         ]);
@@ -552,7 +552,7 @@ class CompaniesTableSeeder extends Seeder
             [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany1->id ],// Notification when Invoice is Created
             [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany1->id ],// Notification when Payment is Created
             [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany1->id ],// Notification when Work is added to Work Order
-            [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany1->id ],// Notification when Chemical is added to Service
+            [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany1->id ],// Notification when Measurement is added to Service
             [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany1->id ],// Notification when Equipment is added to Service
             [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany1->id ],// Notification when Contract is added to Service
             [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany1->id ],// Email when Report is Created
@@ -573,7 +573,7 @@ class CompaniesTableSeeder extends Seeder
             [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany2->id ],// Notification when Invoice is Created
             [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany2->id ],// Notification when Payment is Created
             [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany2->id ],// Notification when Work is added to Work Order
-            [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany2->id ],// Notification when Chemical is added to Service
+            [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany2->id ],// Notification when Measurement is added to Service
             [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany2->id ],// Notification when Equipment is added to Service
             [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany2->id ],// Notification when Contract is added to Service
             [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany2->id ],// Email when Report is Created
@@ -616,10 +616,10 @@ class CompaniesTableSeeder extends Seeder
             ['role_id' => 3 ,'permission_id' => 25, 'company_id' => 1 ],// Create New Contract
             ['role_id' => 3 ,'permission_id' => 26, 'company_id' => 1 ],// Edit Contract
             ['role_id' => 3 ,'permission_id' => 27, 'company_id' => 1 ],// Toggle Contract Activation
-            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => 1 ],// Show Chemicals
-            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => 1 ],// Create New Chemical
-            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => 1 ],// Edit Chemicals
-            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => 1 ],// Delete Chemical
+            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => 1 ],// Show Measurements
+            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => 1 ],// Create New Measurement
+            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => 1 ],// Edit Measurements
+            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => 1 ],// Delete Measurement
             ['role_id' => 3 ,'permission_id' => 33, 'company_id' => 1 ],// Show Equipment
             ['role_id' => 3 ,'permission_id' => 34, 'company_id' => 1 ],// Create New Equipment
             ['role_id' => 3 ,'permission_id' => 35, 'company_id' => 1 ],// Edit Equipment
@@ -650,8 +650,8 @@ class CompaniesTableSeeder extends Seeder
             ['role_id' => 4 ,'permission_id' => 15, 'company_id' => 1 ],// Create New Work
             ['role_id' => 4 ,'permission_id' => 17, 'company_id' => 1 ],// Add Before Photos for Work
             ['role_id' => 4 ,'permission_id' => 20, 'company_id' => 1 ],// Show Services
-            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => 1 ],// Show Chemicals
-            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => 1 ],// Create New Chemical
+            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => 1 ],// Show Measurements
+            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => 1 ],// Create New Measurement
             ['role_id' => 4 ,'permission_id' => 33, 'company_id' => 1 ],// Show Equipment
             ['role_id' => 4 ,'permission_id' => 34, 'company_id' => 1 ],// Create New Equipment
             ['role_id' => 4 ,'permission_id' => 36, 'company_id' => 1 ],// Add Photos for Equipment
@@ -687,10 +687,10 @@ class CompaniesTableSeeder extends Seeder
             ['role_id' => 3 ,'permission_id' => 25, 'company_id' => 2 ],// Create New Contract
             ['role_id' => 3 ,'permission_id' => 26, 'company_id' => 2 ],// Edit Contract
             ['role_id' => 3 ,'permission_id' => 27, 'company_id' => 2 ],// Toggle Contract Activation
-            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => 2 ],// Show Chemicals
-            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => 2 ],// Create New Chemical
-            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => 2 ],// Edit Chemicals
-            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => 2 ],// Delete Chemical
+            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => 2 ],// Show Measurements
+            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => 2 ],// Create New Measurement
+            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => 2 ],// Edit Measurements
+            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => 2 ],// Delete Measurement
             ['role_id' => 3 ,'permission_id' => 33, 'company_id' => 2 ],// Show Equipment
             ['role_id' => 3 ,'permission_id' => 34, 'company_id' => 2 ],// Create New Equipment
             ['role_id' => 3 ,'permission_id' => 35, 'company_id' => 2 ],// Edit Equipment
@@ -721,8 +721,8 @@ class CompaniesTableSeeder extends Seeder
             ['role_id' => 4 ,'permission_id' => 15, 'company_id' => 2 ],// Create New Work
             ['role_id' => 4 ,'permission_id' => 17, 'company_id' => 2 ],// Add Before Photos for Work
             ['role_id' => 4 ,'permission_id' => 20, 'company_id' => 2 ],// Show Services
-            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => 2 ],// Show Chemicals
-            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => 2 ],// Create New Chemical
+            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => 2 ],// Show Measurements
+            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => 2 ],// Create New Measurement
             ['role_id' => 4 ,'permission_id' => 33, 'company_id' => 2 ],// Show Equipment
             ['role_id' => 4 ,'permission_id' => 34, 'company_id' => 2 ],// Create New Equipment
             ['role_id' => 4 ,'permission_id' => 36, 'company_id' => 2 ],// Add Photos for Equipment

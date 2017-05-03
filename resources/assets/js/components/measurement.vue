@@ -2,17 +2,17 @@
 
 <!-- Button -->
 <div class="form-group row">
-	<label class="col-sm-2 form-control-label">Chemicals</label>
+	<label class="col-sm-2 form-control-label">Measurements</label>
 	<div class="col-sm-10">
 		<button type="button" class="btn btn-info" @click="getList"
-				data-toggle="modal" data-target="#chemicalModal">
-			<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals
+				data-toggle="modal" data-target="#measurementModal">
+			<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Measurements
 		</button>
 	</div>
 </div>
 
-<!-- Modal for Chemical managment -->
-<div class="modal fade" id="chemicalModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- Modal for Measurement managment -->
+<div class="modal fade" id="measurementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" :class="{'modal-lg' : (focus == 2)}" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -22,21 +22,21 @@
       <div class="modal-body">
 			<div class="row">
 
-                <!-- Create new Chemical -->
+                <!-- Create new Measurement -->
                 <div class="col-md-12" v-show="isFocus(1)">
 
 					<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
-					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('global_chemical'))}">
-						<label class="col-sm-2 form-control-label">Global Chemical</label>
+					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('global_measurement'))}">
+						<label class="col-sm-2 form-control-label">Global Measurement</label>
 						<div class="col-sm-10">
 
 							<dropdown :key="0"
-								:options="globalChemicals"
-								:name="'globalChemical'">
+								:options="globalMeasurements"
+								:name="'globalMeasurement'">
 							</dropdown>
 
-							<small v-if="checkValidationError('global_chemical')" class="text-muted">{{ validationErrors.global_chemical[0] }}</small>
+							<small v-if="checkValidationError('global_measurement')" class="text-muted">{{ validationErrors.global_measurement[0] }}</small>
 						</div>
 					</div>
 
@@ -50,20 +50,20 @@
 
                 </div>
 
-                <!-- Index Chemical -->
+                <!-- Index Measurement -->
                 <div class="col-md-12" v-show="isFocus(2)">
 
 					<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
 					<bootstrap-table :columns="columns" :data="data" :options="options">
 						<button type="button" class="btn btn-primary" @click="goToCreate" >
-							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Chemical
+							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Measurement
 						</button>
 					</bootstrap-table>
 
                 </div>
 
-                <!-- Edit Chemical -->
+                <!-- Edit Measurement -->
                 <div class="col-md-12" v-show="isFocus(3)">
 
 					<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
@@ -129,7 +129,7 @@ var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
 
   export default {
-    props: ['serviceId', 'baseUrl', 'globalChemicals'],
+    props: ['serviceId', 'baseUrl', 'globalMeasurements'],
 	components: {
 		dropdown,
 		alert,
@@ -138,7 +138,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
     data () {
         return {
             focus: 2, // 1=create, 2=index, 3=edit
-            chemicalId: 0,
+            measurementId: 0,
             validationErrors: {},
 
 			// alert
@@ -149,7 +149,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			alertActiveList: false,
 			alertActiveEdit: false,
 
-			globalChemicalId: 0,
+			globalMeasurementId: 0,
             name: '',
             amount: '',
             units: '',
@@ -207,7 +207,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				// clickToSelect: true,
 
 				toolbarButton: true,
-				toolbarButtonText: 'Add Chemical',
+				toolbarButtonText: 'Add Measurement',
 		    }
         }
     },
@@ -215,32 +215,32 @@ var BootstrapTable = require('./BootstrapTable.vue');
         serviceUrl: function(){
             return this.baseUrl+this.serviceId;
         },
-		chemicalUrl: function(){
-            return this.baseUrl+this.chemicalId;
+		measurementUrl: function(){
+            return this.baseUrl+this.measurementId;
 		},
 		title: function(){
             switch (this.focus){
                 case 1:
-                return 'New Chemical';
+                return 'New Measurement';
                 break;
                 case 2:
-                return 'Chemicals List';
+                return 'Measurements List';
                 break;
                 case 3:
-                return 'Edit Chemical';
+                return 'Edit Measurement';
                 break;
                 default:
-                return 'Chemicals';
+                return 'Measurements';
             }
         }
     },
 	events: {
 		rowClicked(id){
-			this.chemicalId = id;
+			this.measurementId= id;
 			this.getValues(id);
 		},
 		dropdownChanged(key){
-			this.globalChemicalId = key;
+			this.globalMeasurementId= key;
 		}
 	},
     methods: {
@@ -256,11 +256,11 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.alertActiveList = true;
             });
         },
-		getValues(chemicalId){
-			let chemical = this.data.find(data => data.id === chemicalId)
-			this.name = chemical.name;
-			this.amount = chemical.amount;
-			this.units = chemical.units;
+		getValues(measurementId){
+			let measurement = this.data.find(data => data.id === measurementId)
+			this.name = measurement.name;
+			this.amount = measurement.amount;
+			this.units = measurement.units;
 			this.focus = 3;
 		},
 		create(){
@@ -281,7 +281,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
             }).spin(clickEvent.target);
 
 			this.$http.post(this.serviceUrl, {
-				global_chemical: this.globalChemicalId,
+				global_measurement: this.globalMeasurementId,
                 amount: this.amount,
             }).then((response) => {
                 this.changeFocus(2);
@@ -291,7 +291,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 					this.validationErrors = response.data;
 					this.revertButton(clickEvent, buttonTag);
 				}else{
-					this.alertMessageCreate = "The chemical could not be created, please try again."
+					this.alertMessageCreate = "The measurement could not be created, please try again."
 					this.alertActiveCreate = true;
 					this.revertButton(clickEvent, buttonTag);
 				}
@@ -314,7 +314,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-            this.$http.patch(this.chemicalUrl, {
+            this.$http.patch(this.measurementUrl, {
                 amount: this.amount,
             }).then((response) => {
 				// refresh the information
@@ -324,7 +324,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 					this.validationErrors = response.data;
 					this.revertButton(clickEvent, buttonTag);
 				}else{
-					this.alertMessageEdit = "The chemical could not be updated, please try again."
+					this.alertMessageEdit = "The measurement could not be updated, please try again."
 					this.alertActiveEdit = true;
 					this.revertButton(clickEvent, buttonTag);
 				}
@@ -335,7 +335,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			let clickEvent = event;
 			swal({
                 title: "Are you sure?",
-                text: "Chemical is going to permanently deleted!",
+                text: "Measurement is going to permanently deleted!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -364,11 +364,11 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-            this.$http.delete(this.chemicalUrl).then((response) => {
+            this.$http.delete(this.measurementUrl).then((response) => {
 				// clear values
 				this.changeFocus(2);
             }, (response) => {
-				this.alertMessageEdit = "The chemical could not be destroyed, please try again."
+				this.alertMessageEdit = "The measurement could not be destroyed, please try again."
 				this.alertActiveEdit = true;
 				this.revertButton(clickEvent, buttonTag);
             });

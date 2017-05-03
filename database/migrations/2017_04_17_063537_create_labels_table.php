@@ -18,14 +18,14 @@ class CreateLabelsTable extends Migration
             $table->string('name');
             $table->string('color')->default('ADB7BE');
             $table->tinyInteger('value')->unsigned()->default(1);
-            $table->integer('global_chemical_id')->unsigned();
+            $table->integer('global_measurement_id')->unsigned();
             $table->timestamps();
 
-            $table->unique(['value', 'global_chemical_id']);
+            $table->unique(['value', 'global_measurement_id']);
 
-            $table->foreign('global_chemical_id')
+            $table->foreign('global_measurement_id')
                 ->references('id')
-                ->on('global_chemicals')
+                ->on('global_measurements')
                 ->onDelete('cascade');
         });
     }

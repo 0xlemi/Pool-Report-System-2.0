@@ -41,8 +41,8 @@ export default {
     				sortable: true,
                 },
     			{
-    		        field: 'chemicals',
-    		        title: 'Chemicals',
+    		        field: 'measurements',
+    		        title: 'Measurements',
     				sortable: true,
                 },
     			{

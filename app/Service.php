@@ -8,7 +8,7 @@ use Intervention;
 
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Traits\Model\SortableTrait;
-use App\Chemical;
+use App\Measurement;
 use App\ServiceContract;
 use App\UserRoleCompany;
 
@@ -101,9 +101,9 @@ class Service extends Model
         return ($this->serviceContract()->get()->count() > 0);
     }
 
-    public function chemicals()
+    public function measurements()
     {
-        return $this->hasMany(Chemical::class);    
+        return $this->hasMany(Measurement::class);
     }
 
     /**

@@ -16,7 +16,7 @@ use App\Invoice;
 use App\Payment;
 use App\Service;
 use App\MissingHistory;
-use App\GlobalChemical;
+use App\GlobalMeasurement;
 
 use DB;
 use App\Permission;
@@ -320,9 +320,9 @@ class Company extends Model
                     ->select('payments.*');
     }
 
-    public function globalChemicals()
+    public function globalMeasurements()
     {
-        return $this->hasMany(GlobalChemical::class);
+        return $this->hasMany(GlobalMeasurement::class);
     }
 
     public function missingHistories()

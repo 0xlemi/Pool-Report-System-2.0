@@ -116,12 +116,12 @@ class ReportsController extends PageController
             'completed_at' => $request->completed_at
         ];
 
-        $chemicals = $service->chemicals
-            ->transform(function ($chemical) {
+        $measurements = $service->measurements
+            ->transform(function ($measurement) {
                 return (object)[
-                    'id' => $chemical->id,
-                    'name' => $chemical->globalChemical->name,
-                    'labels' => $chemical->globalChemical
+                    'id' => $measurement->id,
+                    'name' => $measurement->globalMeasurement->name,
+                    'labels' => $measurement->globalMeasurement
                                         ->labels()
                                         ->select('name', 'color', 'value')
                                         ->get(),
@@ -129,7 +129,7 @@ class ReportsController extends PageController
             });
 
 
-        return view('reports.createAddReadings', compact('info', 'chemicals'));
+        return view('reports.createAddReadings', compact('info', 'measurements'));
     }
 
     /**
@@ -164,9 +164,9 @@ class ReportsController extends PageController
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
         ]);
-        foreach ($request->readings as $chemical_id => $value) {
+        foreach ($request->readings as $measurement_id => $value) {
             $reading = $report->readings()->create([
-                'chemical_id' => $chemical_id,
+                'measurement_id' => $measurement_id,
                 'value' => $value,
             ]);
         }
@@ -197,11 +197,11 @@ class ReportsController extends PageController
         $this->authorize('view', $report);
         $images = $this->imageTransformer->transformCollection($report->images);
         $readings = $report->readings->transform(function ($reading){
-            $globalChemical = $reading->globalChemical;
+            $globalMeasurement = $reading->globalMeasurement;
             return (object)[
-                'chemical_name' => $globalChemical->name,
-                'color' => $globalChemical->labels()->whereValue($reading->value)->color,
-                'name' => $globalChemical->labels()->whereValue($reading->value)->name,
+                'measurement_name' => $globalMeasurement->name,
+                'color' => $globalMeasurement->labels()->whereValue($reading->value)->color,
+                'name' => $globalMeasurement->labels()->whereValue($reading->value)->name,
                 'value' => $reading->value,
             ];
         })->flatten();
@@ -247,18 +247,18 @@ class ReportsController extends PageController
                                             ->ofRole('admin', 'sup', 'tech')
                                             ->seqIdOrdered()->get()
                                     );
-        $chemicals = $report->service->chemicals()->get()
-                            ->transform(function ($chemical) {
+        $measurements = $report->service->measurements()->get()
+                            ->transform(function ($measurement) {
                                 return (object)[
-                                    'id' => $chemical->id,
-                                    'name' => $chemical->globalChemical->name,
-                                    'labels' => $chemical->globalChemical
+                                    'id' => $measurement->id,
+                                    'name' => $measurement->globalMeasurement->name,
+                                    'labels' => $measurement->globalMeasurement
                                                         ->labels()
                                                         ->select('name', 'color', 'value')
                                                         ->get(),
                                 ];
                             });
-        $readings = $report->readings()->get()->pluck('value', 'chemical_id')->toArray();
+        $readings = $report->readings()->get()->pluck('value', 'measurement_id')->toArray();
 
         $date = (new Carbon($report->completed, 'UTC'))
                     ->setTimezone($company->timezone)
@@ -266,7 +266,7 @@ class ReportsController extends PageController
         JavaScript::put([
             'defaultDate' => $date,
         ]);
-        return view('reports.edit', compact('report', 'people', 'chemicals', 'readings'));
+        return view('reports.edit', compact('report', 'people', 'measurements', 'readings'));
     }
 
     public function getPhoto(Request $request, $seq_id)
@@ -334,9 +334,9 @@ class ReportsController extends PageController
 
         $report->user_role_company_id   = $person->id;
         $report->completed              = $completed_at;
-        foreach ($request->readings as $chemical_id => $value) {
+        foreach ($request->readings as $measurement_id => $value) {
             $reading = $report->readings()->updateOrCreate(
-                [ 'chemical_id' => $chemical_id ],
+                [ 'measurement_id' => $measurement_id ],
                 [ 'value' => $value ]
             );
         }

@@ -7,15 +7,15 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use App\User;
-use App\Chemical;
+use App\Measurement;
 use App\PRS\Helpers\NotificationHelpers;
 use App\UserRoleCompany;
 
-class AddedChemicalNotification extends Notification implements ShouldQueue
+class AddedMeasurementNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected $chemical;
+    protected $measurement;
     protected $userRoleCompany;
     protected $helper;
 
@@ -24,9 +24,9 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Chemical $chemical, UserRoleCompany $userRoleCompany)
+    public function __construct(Measurement $measurement, UserRoleCompany $userRoleCompany)
     {
-        $this->chemical = $chemical;
+        $this->measurement = $measurement;
         $this->userRoleCompany = $userRoleCompany;
         $this->helper = new NotificationHelpers();
     }
@@ -39,7 +39,7 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return $this->helper->channels($notifiable, 'notify_chemical_added');
+        return $this->helper->channels($notifiable, 'notify_measurement_added');
     }
 
     /**
@@ -61,12 +61,12 @@ class AddedChemicalNotification extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
-        $service = $this->chemical->service;
+        $service = $this->measurement->service;
         $person =  $helper->personStyled($this->userRoleCompany);
         return [
             'icon' => \Storage::url($service->icon()),
-            'title' => "New <strong>Chemical</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
-            'message' => "New <strong>Chemical</strong> has been added to the <strong>Service</strong>
+            'title' => "New <strong>Measurement</strong> was added to <strong>Service</strong> \"{$service->seq_id} {$service->name}\"",
+            'message' => "New <strong>Measurement</strong> has been added to the <strong>Service</strong>
                             (<a href=\"../services/{$service->seq_id}\">{$service->name}</a>) by {$person}.",
         ];
     }

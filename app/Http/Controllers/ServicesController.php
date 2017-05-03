@@ -9,7 +9,7 @@ use JavaScript;
 
 use App\Service;
 use App\PRS\Helpers\ServiceHelpers;
-use App\PRS\Helpers\GlobalChemicalHelpers;
+use App\PRS\Helpers\GlobalMeasurementHelpers;
 use App\PRS\Transformers\ImageTransformer;
 
 use App\Http\Requests;
@@ -116,7 +116,7 @@ class ServicesController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(GlobalChemicalHelpers $helper, $seq_id)
+    public function show(GlobalMeasurementHelpers $helper, $seq_id)
     {
         $company = $this->loggedCompany();
         $service = $company->services()->bySeqId($seq_id);
@@ -125,17 +125,17 @@ class ServicesController extends PageController
 
         $clients = $service->userRoleCompanies()->get();
 
-        // Get Unused Global Chemicals
-        $usedChemicalsIds = $service->chemicals()
-                ->join('global_chemicals', 'global_chemicals.id', '=', 'chemicals.global_chemical_id')
-                ->pluck('global_chemicals.id')->toArray();
-        $globalChemicals = $helper->transformForDropdown($company->globalChemicals()->whereNotIn('id', $usedChemicalsIds )->get());
+        // Get Unused Global Measurements
+        $usedMeasurementsIds = $service->measurements()
+                ->join('global_measurements', 'global_measurements.id', '=', 'measurements.global_measurement_id')
+                ->pluck('global_measurements.id')->toArray();
+        $globalMeasurements = $helper->transformForDropdown($company->globalMeasurements()->whereNotIn('id', $usedMeasurementsIds )->get());
 
         $image = null;
         if($service->images->count() > 0){
             $image = $this->imageTransformer->transform($service->images->first());
         }
-        return view('services.show', compact('service', 'clients', 'image', 'globalChemicals'));
+        return view('services.show', compact('service', 'clients', 'image', 'globalMeasurements'));
     }
 
     /**

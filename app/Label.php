@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\GlobalChemical;
+use App\GlobalMeasurement;
 
 class Label extends Model
 {
@@ -37,9 +37,9 @@ class Label extends Model
     //   Relationships
     // ******************
 
-    public function globalChemical()
+    public function globalMeasurement()
     {
-        $this->belongsTo(GlobalChemical::class);
+        $this->belongsTo(GlobalMeasurement::class);
     }
 
 }

@@ -75,12 +75,12 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 		Route::get('equipment/{equipment}', 'Api\EquipmentController@show');
 		Route::post('equipment/{equipment}', 'Api\EquipmentController@update');
 		Route::delete('equipment/{equipment}', 'Api\EquipmentController@destroy');
-		// Chemicals
-		Route::get('services/{serviceSeqId}/chemicals', 'Api\ChemicalController@index');
-		Route::post('services/{serviceSeqId}/chemicals', 'Api\ChemicalController@store');
-		Route::get('chemicals/{chemical}', 'Api\ChemicalController@show');
-		Route::post('chemicals/{chemical}', 'Api\ChemicalController@update');
-		Route::delete('chemicals/{chemical}', 'Api\ChemicalController@destroy');
+		// Measurements
+		Route::get('services/{serviceSeqId}/measurements', 'Api\MeasurementController@index');
+		Route::post('services/{serviceSeqId}/measurements', 'Api\MeasurementController@store');
+		Route::get('measurements/{measurement}', 'Api\MeasurementController@show');
+		Route::post('measurements/{measurement}', 'Api\MeasurementController@update');
+		Route::delete('measurements/{measurement}', 'Api\MeasurementController@destroy');
 
 
 	// Client

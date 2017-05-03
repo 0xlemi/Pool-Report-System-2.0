@@ -77,10 +77,10 @@ class CompanyObserver
             ['role_id' => 3 ,'permission_id' => 25, 'company_id' => $company->id ],// Create New Contract
             ['role_id' => 3 ,'permission_id' => 26, 'company_id' => $company->id ],// Edit Contract
             ['role_id' => 3 ,'permission_id' => 27, 'company_id' => $company->id ],// Toggle Contract Activation
-            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => $company->id ],// Show Chemicals
-            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => $company->id ],// Create New Chemical
-            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => $company->id ],// Edit Chemicals
-            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => $company->id ],// Delete Chemical
+            ['role_id' => 3 ,'permission_id' => 29, 'company_id' => $company->id ],// Show Measurements
+            ['role_id' => 3 ,'permission_id' => 30, 'company_id' => $company->id ],// Create New Measurement
+            ['role_id' => 3 ,'permission_id' => 31, 'company_id' => $company->id ],// Edit Measurements
+            ['role_id' => 3 ,'permission_id' => 32, 'company_id' => $company->id ],// Delete Measurement
             ['role_id' => 3 ,'permission_id' => 33, 'company_id' => $company->id ],// Show Equipment
             ['role_id' => 3 ,'permission_id' => 34, 'company_id' => $company->id ],// Create New Equipment
             ['role_id' => 3 ,'permission_id' => 35, 'company_id' => $company->id ],// Edit Equipment
@@ -111,8 +111,8 @@ class CompanyObserver
             ['role_id' => 4 ,'permission_id' => 15, 'company_id' => $company->id ],// Create New Work
             ['role_id' => 4 ,'permission_id' => 17, 'company_id' => $company->id ],// Add Before Photos for Work
             ['role_id' => 4 ,'permission_id' => 20, 'company_id' => $company->id ],// Show Services
-            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => $company->id ],// Show Chemicals
-            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => $company->id ],// Create New Chemical
+            ['role_id' => 4 ,'permission_id' => 29, 'company_id' => $company->id ],// Show Measurements
+            ['role_id' => 4 ,'permission_id' => 30, 'company_id' => $company->id ],// Create New Measurement
             ['role_id' => 4 ,'permission_id' => 33, 'company_id' => $company->id ],// Show Equipment
             ['role_id' => 4 ,'permission_id' => 34, 'company_id' => $company->id ],// Create New Equipment
             ['role_id' => 4 ,'permission_id' => 36, 'company_id' => $company->id ],// Add Photos for Equipment

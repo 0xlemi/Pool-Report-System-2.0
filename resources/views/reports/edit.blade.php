@@ -54,24 +54,24 @@
 						</div>
 
 
-						@foreach($chemicals as $chemical)
-							<div class="form-group row {{($errors->has('readings.'.$chemical->id))? 'form-group-error':''}}">
-								<label class="col-sm-2 form-control-label">{{ $chemical->name }}</label>
+						@foreach($measurements as $measurement)
+							<div class="form-group row {{($errors->has('readings.'.$measurement->id))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">{{ $measurement->name }}</label>
 								<div class="col-md-3 col-lg-3 col-xl-4">
-									<select class="bootstrap-select bootstrap-select-arrow" name="readings[{{ $chemical->id }}]">
-										@foreach($chemical->labels as $label)
+									<select class="bootstrap-select bootstrap-select-arrow" name="readings[{{ $measurement->id }}]">
+										@foreach($measurement->labels as $label)
 											<option data-content='
 												<span class="fa fa-circle"
 														style="color:#{{ $label->color }};">
 												</span>
 												&nbsp;&nbsp;{{ $label->name }}'
 												value="{{ $label->value }}"
-												{{ ((isset($readings[$chemical->id])) && ($readings[$chemical->id] == $label->value)) ? 'selected':''}}>
+												{{ ((isset($readings[$measurement->id])) && ($readings[$measurement->id] == $label->value)) ? 'selected':''}}>
 											</option>
 										@endforeach
 									</select>
-									@if($errors->has('readings.'.$chemical->id))
-										<small class="text-muted">{{ $errors->first('readings.'.$chemical->id) }}</small>
+									@if($errors->has('readings.'.$measurement->id))
+										<small class="text-muted">{{ $errors->first('readings.'.$measurement->id) }}</small>
 									@endif
 								</div>
 							</div>

@@ -7,8 +7,8 @@ class DatabaseSeeder extends Seeder
 {
 	protected $toTruncate = [
 		'verification_tokens',
-		'chemicals',
-		'global_chemicals',
+		'measurements',
+		'global_measurements',
 		'readings',
 		'labels',
 		'companies',

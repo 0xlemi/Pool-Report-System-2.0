@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class GlobalChemicalController extends Controller
+class GlobalMeasurementController extends Controller
 {
     //
 }

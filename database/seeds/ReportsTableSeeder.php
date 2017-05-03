@@ -46,16 +46,16 @@ class ReportsTableSeeder extends Seeder
             ]);
 
             // Add Readings
-            for ($a=0; $a < $service->chemicals()->count() - rand(0,1); $a++) {
-                // Getting a valid and unsed Chemical ID
-                $usedChemicals = $report->readings()->pluck('chemical_id')->toArray();
-                $chemicalId = $service->chemicals()
-                                        ->whereNotIn('chemicals.id', $usedChemicals)
+            for ($a=0; $a < $service->measurements()->count() - rand(0,1); $a++) {
+                // Getting a valid and unsed Measurement ID
+                $usedMeasurements = $report->readings()->pluck('measurement_id')->toArray();
+                $measurementId = $service->measurements()
+                                        ->whereNotIn('measurements.id', $usedMeasurements)
                                         ->get()->random()->id;
 
                 $report->readings()->create([
                     'value' => rand(1, 5),
-                    'chemical_id' => $chemicalId
+                    'measurement_id' => $measurementId
                 ]);
             }
 

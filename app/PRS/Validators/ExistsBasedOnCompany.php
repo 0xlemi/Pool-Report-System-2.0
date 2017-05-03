@@ -39,10 +39,10 @@ class ExistsBasedOnCompany
             }
             return true;
         }
-        elseif($table == 'global_chemicals')
+        elseif($table == 'global_measurements')
         {
             try {
-                $company->globalChemicals()->bySeqId($seq_id);
+                $company->globalMeasurements()->bySeqId($seq_id);
             }catch(ModelNotFoundException $e){
                 return false;
             }

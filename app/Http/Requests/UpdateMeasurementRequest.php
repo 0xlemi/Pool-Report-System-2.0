@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateChemicalRequest extends FormRequest
+class UpdateMeasurementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,8 @@ class CreateChemicalRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->selectedUser->company;
-
         return [
-            'global_chemical' => 'required|integer|existsBasedOnCompany:global_chemicals,'.$company->id,
-            'amount' => 'required|numeric',
+            'amount' => 'numeric',
         ];
     }
 }

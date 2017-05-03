@@ -84,10 +84,10 @@
 					        :currencies="{{ json_encode(config('constants.currencies')) }}">
 						</contract>
 
-						<chemical service-id="{{ $service->seq_id }}"
-						    base-url="{{ url('chemicals').'/' }}"
-							:global-chemicals="{{ $globalChemicals }}">
-						</chemical>
+						<measurement service-id="{{ $service->seq_id }}"
+						    base-url="{{ url('measurements').'/' }}"
+							:global-measurements="{{ $globalMeasurements }}">
+						</measurement>
 
 						<equipment service-id="{{ $service->seq_id }}">
 						</equipment>

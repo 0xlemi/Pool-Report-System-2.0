@@ -12,7 +12,7 @@ use App\Notifications\NewServiceNotification;
 use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\AddedContractNotification;
-use App\Chemical;
+use App\Measurement;
 use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
 {
@@ -35,7 +35,7 @@ class ServicesTableSeeder extends Seeder
 
         // Disable observers
         Service::flushEventListeners();
-        Chemical::flushEventListeners();
+        Measurement::flushEventListeners();
         ServiceContract::flushEventListeners();
         Invoice::flushEventListeners();
         Payment::flushEventListeners();
@@ -87,17 +87,17 @@ class ServicesTableSeeder extends Seeder
 
             for ($e=0; $e < rand(6,7); $e++) {
 
-                // Getting a valid Global Chemical ID
-                $usedGlobalChemicals = $service->chemicals()
-                            ->join('global_chemicals', 'global_chemical_id', '=', 'global_chemicals.id')
-                            ->pluck('global_chemicals.id')->toArray();
-                $global_chemical_id = $service->company->globalChemicals()
-                                                ->whereNotIn('global_chemicals.id', $usedGlobalChemicals)
+                // Getting a valid Global Measurement ID
+                $usedGlobalMeasurements = $service->measurements()
+                            ->join('global_measurements', 'global_measurement_id', '=', 'global_measurements.id')
+                            ->pluck('global_measurements.id')->toArray();
+                $global_measurement_id = $service->company->globalMeasurements()
+                                                ->whereNotIn('global_measurements.id', $usedGlobalMeasurements)
                                                 ->get()->random()->id;
 
-                $service->chemicals()->create([
+                $service->measurements()->create([
                     'amount' => number_format(rand(100,1000000)/100, 2, '.', ''),
-                    'global_chemical_id' => $global_chemical_id,
+                    'global_measurement_id' => $global_measurement_id,
                 ]);
             }
 

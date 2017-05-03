@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Service;
 use App\Reading;
-use App\GlobalChemical;
+use App\GlobalMeasurement;
 
-class Chemical extends Model
+class Measurement extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -16,7 +16,7 @@ class Chemical extends Model
      */
     protected $fillable = [
         'amount',
-        'global_chemical_id'
+        'global_measurement_id'
     ];
 
     // *******************
@@ -28,9 +28,9 @@ class Chemical extends Model
         return $this->belongsTo(Service::class);
     }
 
-    public function globalChemical()
+    public function globalMeasurement()
     {
-        return $this->belongsTo(GlobalChemical::class);
+        return $this->belongsTo(GlobalMeasurement::class);
     }
 
     public function readings()

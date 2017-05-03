@@ -50,7 +50,7 @@ function isset(strVariableName) {
     let alert       = require('./components/alert.vue');
     let billing       = require('./components/billing.vue');
     let contract       = require('./components/contract.vue');
-    let chemical       = require('./components/chemical.vue');
+    let measurement     = require('./components/measurement.vue');
     let equipment       = require('./components/equipment.vue');
     let works       = require('./components/works.vue');
     let payments       = require('./components/payments.vue');
@@ -102,7 +102,7 @@ function isset(strVariableName) {
             messagesWidget,
             rolePicker,
             // sideMenu
-            unreadMessagesCounter, 
+            unreadMessagesCounter,
             // generic
             alert,
             dropdown,
@@ -139,7 +139,7 @@ function isset(strVariableName) {
             serviceTable,
             countries,
             contract,
-            chemical,
+            measurement,
             equipment,
             routeTable,
             deleteButton,

@@ -91,19 +91,19 @@ class TodaysRouteController extends PageController
                                                 ->ofRole('admin', 'sup', 'tech')
                                                 ->get()
                                         );
-        $chemicals = $service->chemicals
-            ->transform(function ($chemical) {
+        $measurements = $service->measurements
+            ->transform(function ($measurement) {
                 return (object)[
-                    'id' => $chemical->id,
-                    'name' => $chemical->globalChemical->name,
-                    'labels' => $chemical->globalChemical
+                    'id' => $measurement->id,
+                    'name' => $measurement->globalMeasurement->name,
+                    'labels' => $measurement->globalMeasurement
                                         ->labels()
                                         ->select('name', 'color', 'value')
                                         ->get(),
                 ];
             });
 
-        return view('todaysroute.createReport', compact('technicians', 'service', 'chemicals'));
+        return view('todaysroute.createReport', compact('technicians', 'service', 'measurements'));
     }
 
     public function storeReport(Request $request)
@@ -142,9 +142,9 @@ class TodaysRouteController extends PageController
             'completed' => $completed_at->setTimezone('UTC'),
             'on_time' => $on_time,
         ]);
-        foreach ($request->readings as $chemical_id => $value) {
+        foreach ($request->readings as $measurement_id => $value) {
             $reading = $report->readings()->create([
-                'chemical_id' => $chemical_id,
+                'measurement_id' => $measurement_id,
                 'value' => $value,
             ]);
         }

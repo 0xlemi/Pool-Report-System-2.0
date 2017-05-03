@@ -68,7 +68,7 @@ class UserTableSeeder extends Seeder
                 [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany->id ],// Notification when Invoice is Created
                 [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany->id ],// Notification when Payment is Created
                 [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Measurement is added to Service
                 [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
                 [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
                 [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
@@ -121,7 +121,7 @@ class UserTableSeeder extends Seeder
                 [ 'notify_setting_id' => 7, 'urc_id' => $userRoleCompany->id ],// Notification when Invoice is Created
                 [ 'notify_setting_id' => 8, 'urc_id' => $userRoleCompany->id ],// Notification when Payment is Created
                 [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Measurement is added to Service
                 [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
                 [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
                 [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created
@@ -169,7 +169,7 @@ class UserTableSeeder extends Seeder
                 [ 'notify_setting_id' => 2, 'urc_id' => $userRoleCompany->id ],// Notification when Work Order is Created
                 [ 'notify_setting_id' => 3, 'urc_id' => $userRoleCompany->id ],// Notification when Service is Created
                 [ 'notify_setting_id' => 9, 'urc_id' => $userRoleCompany->id ],// Notification when Work is added to Work Order
-                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Chemical is added to Service
+                [ 'notify_setting_id' => 10, 'urc_id' => $userRoleCompany->id ],// Notification when Measurement is added to Service
                 [ 'notify_setting_id' => 11, 'urc_id' => $userRoleCompany->id ],// Notification when Equipment is added to Service
                 [ 'notify_setting_id' => 12, 'urc_id' => $userRoleCompany->id ],// Notification when Contract is added to Service
                 [ 'notify_setting_id' => 13, 'urc_id' => $userRoleCompany->id ],// Email when Report is Created

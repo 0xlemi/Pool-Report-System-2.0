@@ -35,7 +35,7 @@ class CreateNotificationSettingsTable extends Migration
             [ 'id' => 7, 'name' => 'notify_invoice_created', 'type' => 'database', 'text' => 'Notify when Invoice is Created', ],
             [ 'id' => 8, 'name' => 'notify_payment_created', 'type' => 'database', 'text' => 'Notify when Payment is Created', ],
             [ 'id' => 9, 'name' => 'notify_work_added', 'type' => 'database', 'text' => 'Notify when Work is added to Work Order', ],
-            [ 'id' => 10, 'name' => 'notify_chemical_added', 'type' => 'database', 'text' => 'Notify when Chemical is added to Service', ],
+            [ 'id' => 10, 'name' => 'notify_measurement_added', 'type' => 'database', 'text' => 'Notify when Measurement is added to Service', ],
             [ 'id' => 11, 'name' => 'notify_equipment_added', 'type' => 'database', 'text' => 'Notify when Equipment is added to Service', ],
             [ 'id' => 12, 'name' => 'notify_contract_added', 'type' => 'database', 'text' => 'Notify when Contract is added to Service', ],
 
@@ -48,7 +48,7 @@ class CreateNotificationSettingsTable extends Migration
             [ 'id' => 19, 'name' => 'notify_invoice_created', 'type' => 'mail', 'text' => 'Email when Invoice is Created', ],
             [ 'id' => 20, 'name' => 'notify_payment_created', 'type' => 'mail', 'text' => 'Email when Payment is Created', ],
             // [ 'id' => num,'name' => 'notify_work_added', 'type' => 'mail', 'text' => 'Email when Work is added to Work Order', ],
-            // [ 'id' => num,'name' => 'notify_chemical_added', 'type' => 'mail', 'text' => 'Email when Chemical is added to Service', ],
+            // [ 'id' => num,'name' => 'notify_measurement_added', 'type' => 'mail', 'text' => 'Email when Measurement is added to Service', ],
             // [ 'id' => num,'name' => 'notify_equipment_added', 'type' => 'mail', 'text' => 'Email when Equipment is added to Service', ],
             // [ 'id' => num,'name' => 'notify_contract_added', 'type' => 'mail', 'text' => 'Email when Contract is added to Service', ],
         ]);

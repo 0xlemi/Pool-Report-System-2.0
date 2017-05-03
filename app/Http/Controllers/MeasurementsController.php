@@ -5,12 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Requests\CreateChemicalRequest;
-use App\Http\Requests\UpdateChemicalRequest;
-use App\Chemical;
-use App\Notifications\AddedChemicalNotification;
+use App\Http\Requests\CreateMeasurementRequest;
+use App\Http\Requests\UpdateMeasurementRequest;
+use App\Measurement;
 
-class chemicalController extends PageController
+class MeasurementsController extends PageController
 {
 
     /**
@@ -31,23 +30,23 @@ class chemicalController extends PageController
      */
     public function index($serviceSeqId)
     {
-        $this->authorize('list', Chemical::class);
+        $this->authorize('list', Measurement::class);
 
         $service = $this->loggedCompany()->services()->bySeqId($serviceSeqId);
 
-        $chemicals = $service->chemicals()
+        $measurements = $service->measurements()
                         ->get()
                         ->transform(function($item){
-                            $globalChemical = $item->globalChemical;
+                            $globalMeasurement = $item->globalMeasurement;
                             return (object) [
                                     'id' => $item->id,
-                                    'name' => $globalChemical->name,
+                                    'name' => $globalMeasurement->name,
                                     'amount' => $item->amount,
-                                    'units' => $globalChemical->units,
+                                    'units' => $globalMeasurement->units,
                                 ];
                         });
         return response()->json([
-            'data' => $chemicals
+            'data' => $measurements
         ]);
     }
 
@@ -57,25 +56,25 @@ class chemicalController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateChemicalRequest $request, $serviceSeqId)
+    public function store(CreateMeasurementRequest $request, $serviceSeqId)
     {
-        $this->authorize('create', Chemical::class);
+        $this->authorize('create', Measurement::class);
 
         $company = $this->loggedCompany();
         $service = $company->services()->bySeqId($serviceSeqId);
 
-        $chemical = $service->chemicals()->create([
+        $measurement = $service->measurements()->create([
                 'amount' => $request->amount,
-                'global_chemical_id' => $request->global_chemical,
+                'global_measurement_id' => $request->global_measurement,
             ]);
 
-        if($chemical){
+        if($measurement){
             return response()->json([
-                'message' => 'Chemical was successfully created.'
+                'message' => 'Measurement was successfully created.'
             ]);
         }
         return response()->json([
-                'error' => 'Chemical was not created, please try again.'
+                'error' => 'Measurement was not created, please try again.'
             ], 500);
     }
 
@@ -86,16 +85,16 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateChemicalRequest $request, Chemical $chemical)
+    public function update(UpdateMeasurementRequest $request, Measurement $measurement)
     {
-        $this->authorize('update', $chemical);
+        $this->authorize('update', $measurement);
 
-        $chemical->update([
+        $measurement->update([
             'amount' => $request->amount,
         ]);
 
         return response()->json([
-            'message' => 'Chemical was successfully updated.'
+            'message' => 'Measurement was successfully updated.'
         ]);
     }
 
@@ -105,17 +104,17 @@ class chemicalController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Chemical $chemical)
+    public function destroy(Measurement $measurement)
     {
-        $this->authorize('delete', $chemical);
+        $this->authorize('delete', $measurement);
 
-        if($chemical->delete()){
+        if($measurement->delete()){
             return response()->json([
-                'message' => 'Chemical was successfully deleted.'
+                'message' => 'Measurement was successfully deleted.'
             ]);
         }
         return response()->json([
-                'error' => 'Chemical was not deleted, please try again.'
+                'error' => 'Measurement was not deleted, please try again.'
             ], 500);
     }
 }

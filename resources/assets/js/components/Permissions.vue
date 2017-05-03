@@ -94,8 +94,8 @@
 	                                	<checkbox-list :data="permissions.contract"></checkbox-list>
 									</div>
 									<div class="col-md-6">
-										<h5><strong>Chemical:</strong></h5>
-	                                	<checkbox-list :data="permissions.chemical"></checkbox-list>
+										<h5><strong>Measurement:</strong></h5>
+	                                	<checkbox-list :data="permissions.measurement"></checkbox-list>
 									</div>
 									<div class="col-md-6">
 										<h5><strong>Equipment:</strong></h5>

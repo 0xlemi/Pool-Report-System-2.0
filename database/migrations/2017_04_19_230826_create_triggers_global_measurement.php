@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTriggersGlobalChemical extends Migration
+class CreateTriggersGlobalMeasurement extends Migration
 {
     /**
      * Run the migrations.
@@ -14,11 +14,11 @@ class CreateTriggersGlobalChemical extends Migration
     public function up()
     {
         DB::unprepared("
-            CREATE TRIGGER trg_global_chemicals_bi_seq
-            BEFORE INSERT ON global_chemicals
+            CREATE TRIGGER trg_global_measurements_bi_seq
+            BEFORE INSERT ON global_measurements
             FOR EACH ROW
             BEGIN
-              SET NEW.seq_id = (SELECT f_gen_seq('global_chemicals',NEW.company_id));
+              SET NEW.seq_id = (SELECT f_gen_seq('global_measurements',NEW.company_id));
             END
         ");
     }
@@ -30,6 +30,6 @@ class CreateTriggersGlobalChemical extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_global_chemicals_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_global_measurements_bi_seq');
     }
 }

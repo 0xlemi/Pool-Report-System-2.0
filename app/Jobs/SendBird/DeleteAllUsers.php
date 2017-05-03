@@ -20,7 +20,7 @@ class DeleteAllUsers //implements ShouldQueue
      */
     public function handle()
     {
-        $max_loop_iterations = 1000;
+        $maxLoopIterations = 10;
         $i = 0;
         $urcs = SendBird::getAll()->users;
         while (count($urcs) > 0) {

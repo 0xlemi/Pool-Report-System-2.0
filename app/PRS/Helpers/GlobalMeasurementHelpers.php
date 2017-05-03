@@ -6,19 +6,19 @@ use Carbon\Carbon;
 use App\PRS\Traits\HelperTrait;
 use Illuminate\Database\Eloquent\Collection;
 
-class GlobalChemicalHelpers
+class GlobalMeasurementHelpers
 {
 
     use HelperTrait;
 
     /**
      * Transform collection of supervisors to generate dropdown options
-     * @param  Collection $globalChemicals
+     * @param  Collection $globalMeasurements
      * @return Collection
      */
-    public function transformForDropdown(Collection $globalChemicals)
+    public function transformForDropdown(Collection $globalMeasurements)
     {
-        return $globalChemicals
+        return $globalMeasurements
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,

@@ -111,11 +111,11 @@ trait FactoryTrait
        ]);
    }
 
-   public function createChemical(Service $service)
+   public function createMeasurement(Service $service)
    {
        // change this to factory()
-       return $service->chemicals()->create([
-           'name' => 'Some Chemical',
+       return $service->measurements()->create([
+           'name' => 'Some Measurement',
            'amount' => 25,
            'units' => 'grams',
        ]);

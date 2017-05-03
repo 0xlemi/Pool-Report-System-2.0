@@ -31189,86 +31189,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _vueChartjs = require('vue-chartjs');
-
-exports.default = _vueChartjs.Bar.extend({
-    props: ['values', 'tags'],
-    ready: function ready() {
-
-        var info = {
-            labels: [],
-            backgroundColor: [],
-            borderColor: [],
-            data: []
-        };
-        for (var i = 0; i < this.values.length; i++) {
-            info.labels.push(this.values[i].tag);
-            info.backgroundColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 0.2)');
-            info.borderColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 1)');
-            info.data.push(this.values[i].data);
-        }
-        var tags = this.tags;
-        function tagsValue(value) {
-            return tags[value - 1];
-        }
-        this.render({
-            labels: info.labels,
-            datasets: [{
-                backgroundColor: info.backgroundColor,
-                borderColor: info.borderColor,
-                borderWidth: 1,
-                data: info.data
-            }]
-        }, {
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false
-            },
-            responsive: true,
-            // maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    barPercentage: .6
-                }],
-                yAxes: [{
-                    ticks: {
-                        userCallback: tagsValue,
-                        min: 0,
-                        max: tags.length,
-                        stepSize: 1
-                    }
-                }]
-            }
-        });
-    }
-});
-if (module.exports.__esModule) module.exports = module.exports.default
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  if (!module.hot.data) {
-    hotAPI.createRecord("_v-5ed9b9e7", module.exports)
-  } else {
-    hotAPI.update("_v-5ed9b9e7", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":187,"vue-chartjs":182,"vue-hot-reload-api":184}],201:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
 var _photoList = require('./photoList.vue');
 
 var _photoList2 = _interopRequireDefault(_photoList);
 
-var _ChemicalChart = require('./ChemicalChart.vue');
+var _MeasurementChart = require('./MeasurementChart.vue');
 
-var _ChemicalChart2 = _interopRequireDefault(_ChemicalChart);
+var _MeasurementChart2 = _interopRequireDefault(_MeasurementChart);
 
 var _ClientReportStaff = require('./ClientReportStaff.vue');
 
@@ -31284,7 +31211,7 @@ exports.default = {
     props: ['report'],
     components: {
         photoList: _photoList2.default,
-        chemicalChart: _ChemicalChart2.default,
+        measurementChart: _MeasurementChart2.default,
         clientReportStaff: _ClientReportStaff2.default,
         panel: _panel2.default
     },
@@ -31356,7 +31283,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Chemicals\">\n            <chemical-chart :values=\"values\" :tags=\"tags\" :height=\"187\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Temperature\">\n            <chemical-chart :values=\"temperature\" :tags=\"tags\" :height=\"400\">\n            </chemical-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Turbidity\">\n            <chemical-chart :values=\"turbidity\" :tags=\"[\n                'Very High',\n                'High',\n                'Low',\n                'Perfect',\n            ]\" :height=\"400\">\n            </chemical-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Staff\">\n            <client-report-staff :supervisor=\"report.supervisor\" :technician=\"report.technician\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Measurements\">\n            <measurement-chart :values=\"values\" :tags=\"tags\" :height=\"187\">\n        </measurement-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Temperature\">\n            <measurement-chart :values=\"temperature\" :tags=\"tags\" :height=\"400\">\n        </measurement-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Turbidity\">\n            <measurement-chart :values=\"turbidity\" :tags=\"[\n                'Very High',\n                'High',\n                'Low',\n                'Perfect',\n            ]\" :height=\"400\">\n        </measurement-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Staff\">\n            <client-report-staff :supervisor=\"report.supervisor\" :technician=\"report.technician\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31367,7 +31294,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e506934", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ChemicalChart.vue":200,"./ClientReportStaff.vue":202,"./panel.vue":244,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],202:[function(require,module,exports){
+},{"./ClientReportStaff.vue":201,"./MeasurementChart.vue":204,"./panel.vue":244,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],201:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.contact-row[_v-1cd3303c]:hover {\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    top: 0px;\n    left: 0px;\n}\n.contact-row[_v-1cd3303c]:active {\n    background-color: #337ab7;\n}\n")
 'use strict';
@@ -31409,7 +31336,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1cd3303c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"./photo.vue":247,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],203:[function(require,module,exports){
+},{"./modal.vue":240,"./photo.vue":247,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31451,7 +31378,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6f685e6f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReportsGroup.vue":204,"./datePicker.vue":225,"vue":187,"vue-hot-reload-api":184}],204:[function(require,module,exports){
+},{"./ClientReportsGroup.vue":203,"./datePicker.vue":224,"vue":187,"vue-hot-reload-api":184}],203:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-5440d800]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n.announcement-box[_v-5440d800]{\n    padding: 80px 0;\n}\n.announcement-text[_v-5440d800]{\n    text-align: center;\n}\n")
 'use strict';
@@ -31531,7 +31458,80 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5440d800", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReport.vue":201,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],205:[function(require,module,exports){
+},{"./ClientReport.vue":200,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],204:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vueChartjs = require('vue-chartjs');
+
+exports.default = _vueChartjs.Bar.extend({
+    props: ['values', 'tags'],
+    ready: function ready() {
+
+        var info = {
+            labels: [],
+            backgroundColor: [],
+            borderColor: [],
+            data: []
+        };
+        for (var i = 0; i < this.values.length; i++) {
+            info.labels.push(this.values[i].tag);
+            info.backgroundColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 0.2)');
+            info.borderColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 1)');
+            info.data.push(this.values[i].data);
+        }
+        var tags = this.tags;
+        function tagsValue(value) {
+            return tags[value - 1];
+        }
+        this.render({
+            labels: info.labels,
+            datasets: [{
+                backgroundColor: info.backgroundColor,
+                borderColor: info.borderColor,
+                borderWidth: 1,
+                data: info.data
+            }]
+        }, {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            responsive: true,
+            // maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    barPercentage: .6
+                }],
+                yAxes: [{
+                    ticks: {
+                        userCallback: tagsValue,
+                        min: 0,
+                        max: tags.length,
+                        stepSize: 1
+                    }
+                }]
+            }
+        });
+    }
+});
+if (module.exports.__esModule) module.exports = module.exports.default
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-a62cec52", module.exports)
+  } else {
+    hotAPI.update("_v-a62cec52", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":187,"vue-chartjs":182,"vue-hot-reload-api":184}],205:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: red;\n}\n")
 'use strict';
@@ -31575,7 +31575,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<button type=\"button\" class=\"btn\" :class=\"button.class\" data-toggle=\"modal\" data-target=\"#{{'permissionsModal'+tabsNumber}}\" _v-22ce5c3f=\"\">\n\t\t<i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;&nbsp;\n        {{ button.tag }}\n</button>\n\n<!-- Modal for Permissions -->\n<div class=\"modal fade\" id=\"{{'permissionsModal'+tabsNumber}}\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" _v-22ce5c3f=\"\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\" _v-22ce5c3f=\"\">\n    <div class=\"modal-content\" _v-22ce5c3f=\"\">\n      <div class=\"modal-header\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" _v-22ce5c3f=\"\"><span aria-hidden=\"true\" _v-22ce5c3f=\"\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\" _v-22ce5c3f=\"\"><i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;{{ button.tag }}</h4>\n      </div>\n      <div class=\"modal-body\" _v-22ce5c3f=\"\">\n\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n                <div class=\"col-md-12\" _v-22ce5c3f=\"\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\" _v-22ce5c3f=\"\"></alert>\n\n                    <section class=\"tabs-section\" _v-22ce5c3f=\"\">\n                    \t<div class=\"tabs-section-nav tabs-section-nav-inline\" _v-22ce5c3f=\"\">\n                    \t\t<ul class=\"nav\" role=\"tablist\" _v-22ce5c3f=\"\">\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link active\" href=\"#tabs-{{ tabsNumber }}-tab-1\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tReports\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-2\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tWork Orders\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-3\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tServices\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-4\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tClients\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-5\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tSupervisors\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-6\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tTechnicians\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n\t\t\t\t\t\t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-7\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tInvoices &amp; Payments\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t</ul>\n                    \t</div><!--.tabs-section-nav-->\n\n                    \t<div class=\"tab-content\" _v-22ce5c3f=\"\">\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-{{ tabsNumber }}-tab-1\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Reports:</strong></h5>\n                                <checkbox-list :data=\"permissions.report\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-2\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Work Orders:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.workorder\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Works:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.work\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-3\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Services:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.service\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Contract:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.contract\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Chemical:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.chemical\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Equipment:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.equipment\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-4\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Clients:</strong></h5>\n                                <checkbox-list :data=\"permissions.client\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-5\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Supervisors:</strong></h5>\n                                <checkbox-list :data=\"permissions.supervisor\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-6\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Technicians:</strong></h5>\n                                <checkbox-list :data=\"permissions.technician\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n\t\t\t\t\t\t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-7\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Invoices:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.invoice\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Payments:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.payment\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n                    \t</div><!--.tab-content-->\n                    </section><!--.tabs-section-->\n                </div>\n            </div>\n      </div>\n      <div class=\"modal-footer\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-22ce5c3f=\"\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<button type=\"button\" class=\"btn\" :class=\"button.class\" data-toggle=\"modal\" data-target=\"#{{'permissionsModal'+tabsNumber}}\" _v-22ce5c3f=\"\">\n\t\t<i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;&nbsp;\n        {{ button.tag }}\n</button>\n\n<!-- Modal for Permissions -->\n<div class=\"modal fade\" id=\"{{'permissionsModal'+tabsNumber}}\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" _v-22ce5c3f=\"\">\n  <div class=\"modal-dialog modal-lg\" role=\"document\" _v-22ce5c3f=\"\">\n    <div class=\"modal-content\" _v-22ce5c3f=\"\">\n      <div class=\"modal-header\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" _v-22ce5c3f=\"\"><span aria-hidden=\"true\" _v-22ce5c3f=\"\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\" _v-22ce5c3f=\"\"><i :class=\"button.icon\" _v-22ce5c3f=\"\"></i>&nbsp;&nbsp;{{ button.tag }}</h4>\n      </div>\n      <div class=\"modal-body\" _v-22ce5c3f=\"\">\n\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n                <div class=\"col-md-12\" _v-22ce5c3f=\"\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\" _v-22ce5c3f=\"\"></alert>\n\n                    <section class=\"tabs-section\" _v-22ce5c3f=\"\">\n                    \t<div class=\"tabs-section-nav tabs-section-nav-inline\" _v-22ce5c3f=\"\">\n                    \t\t<ul class=\"nav\" role=\"tablist\" _v-22ce5c3f=\"\">\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link active\" href=\"#tabs-{{ tabsNumber }}-tab-1\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tReports\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-2\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tWork Orders\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-3\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tServices\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-4\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tClients\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-5\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tSupervisors\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-6\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tTechnicians\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n\t\t\t\t\t\t\t\t<li class=\"nav-item\" _v-22ce5c3f=\"\">\n                    \t\t\t\t<a class=\"nav-link\" href=\"#tabs-{{ tabsNumber }}-tab-7\" role=\"tab\" data-toggle=\"tab\" _v-22ce5c3f=\"\">\n                    \t\t\t\t\tInvoices &amp; Payments\n                    \t\t\t\t</a>\n                    \t\t\t</li>\n                    \t\t</ul>\n                    \t</div><!--.tabs-section-nav-->\n\n                    \t<div class=\"tab-content\" _v-22ce5c3f=\"\">\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-{{ tabsNumber }}-tab-1\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Reports:</strong></h5>\n                                <checkbox-list :data=\"permissions.report\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-2\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Work Orders:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.workorder\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Works:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.work\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-3\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Services:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.service\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Contract:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.contract\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Measurement:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.measurement\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Equipment:</strong></h5>\n\t                                \t<checkbox-list :data=\"permissions.equipment\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-4\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Clients:</strong></h5>\n                                <checkbox-list :data=\"permissions.client\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-5\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Supervisors:</strong></h5>\n                                <checkbox-list :data=\"permissions.supervisor\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n                    \t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-6\" _v-22ce5c3f=\"\">\n                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Technicians:</strong></h5>\n                                <checkbox-list :data=\"permissions.technician\" _v-22ce5c3f=\"\"></checkbox-list>\n                            </div>\n\n\t\t\t\t\t\t\t<div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-{{ tabsNumber }}-tab-7\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t<div class=\"row\" _v-22ce5c3f=\"\">\n\t                                <br _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Invoices:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.invoice\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"col-md-6\" _v-22ce5c3f=\"\">\n\t\t\t\t\t\t\t\t\t\t<h5 _v-22ce5c3f=\"\"><strong _v-22ce5c3f=\"\">Payments:</strong></h5>\n\t\t                                <checkbox-list :data=\"permissions.payment\" _v-22ce5c3f=\"\"></checkbox-list>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n                            </div>\n                    \t</div><!--.tab-content-->\n                    </section><!--.tabs-section-->\n                </div>\n            </div>\n      </div>\n      <div class=\"modal-footer\" _v-22ce5c3f=\"\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-22ce5c3f=\"\">Close</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31631,7 +31631,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-cf2fc28e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./datePicker.vue":225,"./reportTable.vue":250,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
+},{"./datePicker.vue":224,"./reportTable.vue":250,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31778,7 +31778,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4aa75e68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./countries.vue":222,"./locationPicker.vue":236,"vue":187,"vue-hot-reload-api":184}],209:[function(require,module,exports){
+},{"./countries.vue":221,"./locationPicker.vue":235,"vue":187,"vue-hot-reload-api":184}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31906,7 +31906,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d571856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./creditCard.vue":223,"spin":172,"vue":187,"vue-hot-reload-api":184}],211:[function(require,module,exports){
+},{"./creditCard.vue":222,"spin":172,"vue":187,"vue-hot-reload-api":184}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32527,325 +32527,6 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-
-var dropdown = require('./dropdown.vue');
-var alert = require('./alert.vue');
-var Spinner = require("spin");
-var BootstrapTable = require('./BootstrapTable.vue');
-
-exports.default = {
-	props: ['serviceId', 'baseUrl', 'globalChemicals'],
-	components: {
-		dropdown: dropdown,
-		alert: alert,
-		BootstrapTable: BootstrapTable
-	},
-	data: function data() {
-		return {
-			focus: 2, // 1=create, 2=index, 3=edit
-			chemicalId: 0,
-			validationErrors: {},
-
-			// alert
-			alertMessageCreate: '',
-			alertMessageList: '',
-			alertMessageEdit: '',
-			alertActiveCreate: false,
-			alertActiveList: false,
-			alertActiveEdit: false,
-
-			globalChemicalId: 0,
-			name: '',
-			amount: '',
-			units: '',
-			columns: [{
-				title: 'Item ID',
-				field: 'id',
-				sortable: true,
-				visible: false
-			}, {
-				field: 'name',
-				title: 'Name',
-				sortable: true
-			}, {
-				field: 'amount',
-				title: 'Amount',
-				sortable: true
-			}, {
-				field: 'units',
-				title: 'Units',
-				sortable: true
-			}],
-			data: [],
-			options: {
-				iconsPrefix: 'font-icon',
-				toggle: 'table',
-				sidePagination: 'client',
-				pagination: 'true',
-				classes: 'table',
-				icons: {
-					paginationSwitchDown: 'font-icon-arrow-square-down',
-					paginationSwitchUp: 'font-icon-arrow-square-down up',
-					refresh: 'font-icon-refresh',
-					toggle: 'font-icon-list-square',
-					columns: 'font-icon-list-rotate',
-					export: 'font-icon-download'
-				},
-				paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-				paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
-				pageSize: 5,
-				pageList: [5, 10],
-				search: true,
-				showExport: true,
-				exportTypes: ['excel', 'pdf'],
-				minimumCountColumns: 2,
-				showFooter: false,
-
-				uniqueId: 'id',
-				idField: 'id',
-				// singleSelect: true,
-				// clickToSelect: true,
-
-				toolbarButton: true,
-				toolbarButtonText: 'Add Chemical'
-			}
-		};
-	},
-
-	computed: {
-		serviceUrl: function serviceUrl() {
-			return this.baseUrl + this.serviceId;
-		},
-		chemicalUrl: function chemicalUrl() {
-			return this.baseUrl + this.chemicalId;
-		},
-		title: function title() {
-			switch (this.focus) {
-				case 1:
-					return 'New Chemical';
-					break;
-				case 2:
-					return 'Chemicals List';
-					break;
-				case 3:
-					return 'Edit Chemical';
-					break;
-				default:
-					return 'Chemicals';
-			}
-		}
-	},
-	events: {
-		rowClicked: function rowClicked(id) {
-			this.chemicalId = id;
-			this.getValues(id);
-		},
-		dropdownChanged: function dropdownChanged(key) {
-			this.globalChemicalId = key;
-		}
-	},
-	methods: {
-		getList: function getList() {
-			var _this = this;
-
-			this.resetAlert('list');
-			this.$http.get(this.serviceUrl).then(function (response) {
-				_this.data = response.data.data;
-				_this.validationErrors = {};
-				_this.$broadcast('refreshTable');
-			}, function (response) {
-				_this.focus = 2;
-				_this.alertMessageList = "The information could not be retrieved, please try again.";
-				_this.alertActiveList = true;
-			});
-		},
-		getValues: function getValues(chemicalId) {
-			var chemical = this.data.find(function (data) {
-				return data.id === chemicalId;
-			});
-			this.name = chemical.name;
-			this.amount = chemical.amount;
-			this.units = chemical.units;
-			this.focus = 3;
-		},
-		create: function create() {
-			var _this2 = this;
-
-			var clickEvent = event;
-			// save button text for later
-			var buttonTag = clickEvent.target.innerHTML;
-
-			this.resetAlert('create');
-			// Disable the submit button to prevent repeated clicks:
-			clickEvent.target.disabled = true;
-			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
-			new Spinner({
-				left: "90%",
-				radius: 5,
-				length: 4,
-				width: 1
-			}).spin(clickEvent.target);
-
-			this.$http.post(this.serviceUrl, {
-				global_chemical: this.globalChemicalId,
-				amount: this.amount
-			}).then(function (response) {
-				_this2.changeFocus(2);
-				_this2.getList();
-			}, function (response) {
-				if (response.status == 422) {
-					_this2.validationErrors = response.data;
-					_this2.revertButton(clickEvent, buttonTag);
-				} else {
-					_this2.alertMessageCreate = "The chemical could not be created, please try again.";
-					_this2.alertActiveCreate = true;
-					_this2.revertButton(clickEvent, buttonTag);
-				}
-			});
-		},
-		update: function update() {
-			var _this3 = this;
-
-			var clickEvent = event;
-			// save button text for later
-			var buttonTag = clickEvent.target.innerHTML;
-
-			this.resetAlert('edit');
-			// Disable the submit button to prevent repeated clicks:
-			clickEvent.target.disabled = true;
-			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
-			new Spinner({
-				left: "90%",
-				radius: 5,
-				length: 4,
-				width: 1
-			}).spin(clickEvent.target);
-
-			this.$http.patch(this.chemicalUrl, {
-				amount: this.amount
-			}).then(function (response) {
-				// refresh the information
-				_this3.changeFocus(2);
-			}, function (response) {
-				if (response.status == 422) {
-					_this3.validationErrors = response.data;
-					_this3.revertButton(clickEvent, buttonTag);
-				} else {
-					_this3.alertMessageEdit = "The chemical could not be updated, please try again.";
-					_this3.alertActiveEdit = true;
-					_this3.revertButton(clickEvent, buttonTag);
-				}
-			});
-		},
-		destroy: function destroy() {
-			var vue = this;
-			var clickEvent = event;
-			swal({
-				title: "Are you sure?",
-				text: "Chemical is going to permanently deleted!",
-				type: "warning",
-				showCancelButton: true,
-				confirmButtonColor: "#DD6B55",
-				confirmButtonText: "Yes, delete it!",
-				cancelButtonText: "No, cancel!",
-				closeOnConfirm: true,
-				closeOnCancel: true
-			}, function (isConfirm) {
-				if (isConfirm) {
-					vue.destroyRequest(clickEvent);
-				}
-			});
-		},
-		destroyRequest: function destroyRequest(clickEvent) {
-			var _this4 = this;
-
-			// save button text for later
-			var buttonTag = clickEvent.target.innerHTML;
-
-			this.resetAlert('list');
-			// Disable the submit button to prevent repeated clicks:
-			clickEvent.target.disabled = true;
-			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
-			new Spinner({
-				left: "90%",
-				radius: 5,
-				length: 4,
-				width: 1
-			}).spin(clickEvent.target);
-
-			this.$http.delete(this.chemicalUrl).then(function (response) {
-				// clear values
-				_this4.changeFocus(2);
-			}, function (response) {
-				_this4.alertMessageEdit = "The chemical could not be destroyed, please try again.";
-				_this4.alertActiveEdit = true;
-				_this4.revertButton(clickEvent, buttonTag);
-			});
-		},
-		goToCreate: function goToCreate() {
-			this.clean();
-			this.changeFocus(1);
-		},
-		checkValidationError: function checkValidationError($fildName) {
-			return $fildName in this.validationErrors;
-		},
-		isFocus: function isFocus(num) {
-			return this.focus == num;
-		},
-		changeFocus: function changeFocus(num) {
-			if (num == 2) {
-				this.getList();
-			}
-			this.focus = num;
-		},
-		clean: function clean() {
-			this.validationErrors = {};
-
-			this.name = '';
-			this.amount = '';
-			this.units = '';
-		},
-		resetAlert: function resetAlert(alert) {
-			if (alert == 'create') {
-				this.alertMessageCreate = "";
-				this.alertActiveCreate = false;
-			} else if (alert == 'list') {
-				this.alertMessageList = "";
-				this.alertActiveList = false;
-			} else if (alert == 'edit') {
-				this.alertMessageEdit = "";
-				this.alertActiveEdit = false;
-			}
-		},
-		revertButton: function revertButton(clickEvent, buttonTag) {
-			// enable, remove spinner and set tab to the one before
-			clickEvent.target.disabled = false;
-			clickEvent.target.innerHTML = buttonTag;
-		}
-	},
-	ready: function ready() {
-		this.getList();
-	}
-};
-if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Chemicals</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#chemicalModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Chemicals\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Chemical managment -->\n<div class=\"modal fade\" id=\"chemicalModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('global_chemical'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Global Chemical</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\n\t\t\t\t\t\t\t<dropdown :key=\"0\" :options=\"globalChemicals\" :name=\"'globalChemical'\">\n\t\t\t\t\t\t\t</dropdown>\n\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('global_chemical')\" class=\"text-muted\">{{ validationErrors.global_chemical[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Chemical\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Chemical -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" readonly=\"\" v-model=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" readonly=\"\" v-model=\"units\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  if (!module.hot.data) {
-    hotAPI.createRecord("_v-59c29947", module.exports)
-  } else {
-    hotAPI.update("_v-59c29947", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"spin":172,"vue":187,"vue-hot-reload-api":184}],217:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
@@ -32873,7 +32554,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-657f0ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
+},{"./modal.vue":240,"vue":187,"vue-hot-reload-api":184}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33058,7 +32739,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3998b644", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33113,7 +32794,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-508d771e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],220:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33304,7 +32985,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-091f5cd2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],221:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33657,7 +33338,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51700a47", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],222:[function(require,module,exports){
+},{"./alert.vue":209,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],221:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33714,7 +33395,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6b0ea74f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],223:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33816,7 +33497,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3c764fc4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],224:[function(require,module,exports){
+},{"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],223:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33922,7 +33603,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./timezoneDropdown.vue":258,"spin":172,"vue":187,"vue-hot-reload-api":184}],225:[function(require,module,exports){
+},{"./alert.vue":209,"./timezoneDropdown.vue":258,"spin":172,"vue":187,"vue-hot-reload-api":184}],224:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
 "use strict";
@@ -33959,7 +33640,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-9a4c0a5e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],226:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],225:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34046,7 +33727,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1cd3f21d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":172,"vue":187,"vue-hot-reload-api":184}],227:[function(require,module,exports){
+},{"spin":172,"vue":187,"vue-hot-reload-api":184}],226:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34151,7 +33832,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8c88fc1c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"spin":172,"vue":187,"vue-hot-reload-api":184}],228:[function(require,module,exports){
+},{"spin":172,"vue":187,"vue-hot-reload-api":184}],227:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34219,7 +33900,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":245,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],229:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":245,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34288,7 +33969,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ecbe060", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"dropzone":87,"vue":187,"vue-hot-reload-api":184}],230:[function(require,module,exports){
+},{"dropzone":87,"vue":187,"vue-hot-reload-api":184}],229:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34357,7 +34038,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2bc03898", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],231:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34442,7 +34123,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5c1f512c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],232:[function(require,module,exports){
+},{"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],231:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34853,7 +34534,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],233:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],232:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34985,7 +34666,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],234:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],233:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35095,7 +34776,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],235:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35150,7 +34831,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-75470054", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],236:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],235:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -35274,7 +34955,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"jquery-locationpicker":90,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],237:[function(require,module,exports){
+},{"jquery-locationpicker":90,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],236:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35331,7 +35012,326 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-136361f2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
+},{"./modal.vue":240,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],237:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+
+var dropdown = require('./dropdown.vue');
+var alert = require('./alert.vue');
+var Spinner = require("spin");
+var BootstrapTable = require('./BootstrapTable.vue');
+
+exports.default = {
+	props: ['serviceId', 'baseUrl', 'globalMeasurements'],
+	components: {
+		dropdown: dropdown,
+		alert: alert,
+		BootstrapTable: BootstrapTable
+	},
+	data: function data() {
+		return {
+			focus: 2, // 1=create, 2=index, 3=edit
+			measurementId: 0,
+			validationErrors: {},
+
+			// alert
+			alertMessageCreate: '',
+			alertMessageList: '',
+			alertMessageEdit: '',
+			alertActiveCreate: false,
+			alertActiveList: false,
+			alertActiveEdit: false,
+
+			globalMeasurementId: 0,
+			name: '',
+			amount: '',
+			units: '',
+			columns: [{
+				title: 'Item ID',
+				field: 'id',
+				sortable: true,
+				visible: false
+			}, {
+				field: 'name',
+				title: 'Name',
+				sortable: true
+			}, {
+				field: 'amount',
+				title: 'Amount',
+				sortable: true
+			}, {
+				field: 'units',
+				title: 'Units',
+				sortable: true
+			}],
+			data: [],
+			options: {
+				iconsPrefix: 'font-icon',
+				toggle: 'table',
+				sidePagination: 'client',
+				pagination: 'true',
+				classes: 'table',
+				icons: {
+					paginationSwitchDown: 'font-icon-arrow-square-down',
+					paginationSwitchUp: 'font-icon-arrow-square-down up',
+					refresh: 'font-icon-refresh',
+					toggle: 'font-icon-list-square',
+					columns: 'font-icon-list-rotate',
+					export: 'font-icon-download'
+				},
+				paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+				paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+				pageSize: 5,
+				pageList: [5, 10],
+				search: true,
+				showExport: true,
+				exportTypes: ['excel', 'pdf'],
+				minimumCountColumns: 2,
+				showFooter: false,
+
+				uniqueId: 'id',
+				idField: 'id',
+				// singleSelect: true,
+				// clickToSelect: true,
+
+				toolbarButton: true,
+				toolbarButtonText: 'Add Measurement'
+			}
+		};
+	},
+
+	computed: {
+		serviceUrl: function serviceUrl() {
+			return this.baseUrl + this.serviceId;
+		},
+		measurementUrl: function measurementUrl() {
+			return this.baseUrl + this.measurementId;
+		},
+		title: function title() {
+			switch (this.focus) {
+				case 1:
+					return 'New Measurement';
+					break;
+				case 2:
+					return 'Measurements List';
+					break;
+				case 3:
+					return 'Edit Measurement';
+					break;
+				default:
+					return 'Measurements';
+			}
+		}
+	},
+	events: {
+		rowClicked: function rowClicked(id) {
+			this.measurementId = id;
+			this.getValues(id);
+		},
+		dropdownChanged: function dropdownChanged(key) {
+			this.globalMeasurementId = key;
+		}
+	},
+	methods: {
+		getList: function getList() {
+			var _this = this;
+
+			this.resetAlert('list');
+			this.$http.get(this.serviceUrl).then(function (response) {
+				_this.data = response.data.data;
+				_this.validationErrors = {};
+				_this.$broadcast('refreshTable');
+			}, function (response) {
+				_this.focus = 2;
+				_this.alertMessageList = "The information could not be retrieved, please try again.";
+				_this.alertActiveList = true;
+			});
+		},
+		getValues: function getValues(measurementId) {
+			var measurement = this.data.find(function (data) {
+				return data.id === measurementId;
+			});
+			this.name = measurement.name;
+			this.amount = measurement.amount;
+			this.units = measurement.units;
+			this.focus = 3;
+		},
+		create: function create() {
+			var _this2 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('create');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.post(this.serviceUrl, {
+				global_measurement: this.globalMeasurementId,
+				amount: this.amount
+			}).then(function (response) {
+				_this2.changeFocus(2);
+				_this2.getList();
+			}, function (response) {
+				if (response.status == 422) {
+					_this2.validationErrors = response.data;
+					_this2.revertButton(clickEvent, buttonTag);
+				} else {
+					_this2.alertMessageCreate = "The measurement could not be created, please try again.";
+					_this2.alertActiveCreate = true;
+					_this2.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		update: function update() {
+			var _this3 = this;
+
+			var clickEvent = event;
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('edit');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.patch(this.measurementUrl, {
+				amount: this.amount
+			}).then(function (response) {
+				// refresh the information
+				_this3.changeFocus(2);
+			}, function (response) {
+				if (response.status == 422) {
+					_this3.validationErrors = response.data;
+					_this3.revertButton(clickEvent, buttonTag);
+				} else {
+					_this3.alertMessageEdit = "The measurement could not be updated, please try again.";
+					_this3.alertActiveEdit = true;
+					_this3.revertButton(clickEvent, buttonTag);
+				}
+			});
+		},
+		destroy: function destroy() {
+			var vue = this;
+			var clickEvent = event;
+			swal({
+				title: "Are you sure?",
+				text: "Measurement is going to permanently deleted!",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonColor: "#DD6B55",
+				confirmButtonText: "Yes, delete it!",
+				cancelButtonText: "No, cancel!",
+				closeOnConfirm: true,
+				closeOnCancel: true
+			}, function (isConfirm) {
+				if (isConfirm) {
+					vue.destroyRequest(clickEvent);
+				}
+			});
+		},
+		destroyRequest: function destroyRequest(clickEvent) {
+			var _this4 = this;
+
+			// save button text for later
+			var buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('list');
+			// Disable the submit button to prevent repeated clicks:
+			clickEvent.target.disabled = true;
+			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+			new Spinner({
+				left: "90%",
+				radius: 5,
+				length: 4,
+				width: 1
+			}).spin(clickEvent.target);
+
+			this.$http.delete(this.measurementUrl).then(function (response) {
+				// clear values
+				_this4.changeFocus(2);
+			}, function (response) {
+				_this4.alertMessageEdit = "The measurement could not be destroyed, please try again.";
+				_this4.alertActiveEdit = true;
+				_this4.revertButton(clickEvent, buttonTag);
+			});
+		},
+		goToCreate: function goToCreate() {
+			this.clean();
+			this.changeFocus(1);
+		},
+		checkValidationError: function checkValidationError($fildName) {
+			return $fildName in this.validationErrors;
+		},
+		isFocus: function isFocus(num) {
+			return this.focus == num;
+		},
+		changeFocus: function changeFocus(num) {
+			if (num == 2) {
+				this.getList();
+			}
+			this.focus = num;
+		},
+		clean: function clean() {
+			this.validationErrors = {};
+
+			this.name = '';
+			this.amount = '';
+			this.units = '';
+		},
+		resetAlert: function resetAlert(alert) {
+			if (alert == 'create') {
+				this.alertMessageCreate = "";
+				this.alertActiveCreate = false;
+			} else if (alert == 'list') {
+				this.alertMessageList = "";
+				this.alertActiveList = false;
+			} else if (alert == 'edit') {
+				this.alertMessageEdit = "";
+				this.alertActiveEdit = false;
+			}
+		},
+		revertButton: function revertButton(clickEvent, buttonTag) {
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		}
+	},
+	ready: function ready() {
+		this.getList();
+	}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Measurements</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#measurementModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Measurements\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Measurement managment -->\n<div class=\"modal fade\" id=\"measurementModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('global_measurement'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Global Measurement</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\n\t\t\t\t\t\t\t<dropdown :key=\"0\" :options=\"globalMeasurements\" :name=\"'globalMeasurement'\">\n\t\t\t\t\t\t\t</dropdown>\n\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('global_measurement')\" class=\"text-muted\">{{ validationErrors.global_measurement[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Measurement\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" readonly=\"\" v-model=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" readonly=\"\" v-model=\"units\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-21652f97", module.exports)
+  } else {
+    hotAPI.update("_v-21652f97", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"spin":172,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36344,8 +36344,8 @@ exports.default = {
                 title: 'Address',
                 sortable: true
             }, {
-                field: 'chemicals',
-                title: 'Chemicals',
+                field: 'measurements',
+                title: 'Measurements',
                 sortable: true
             }, {
                 field: 'endTime',
@@ -36475,8 +36475,8 @@ exports.default = {
                 title: 'Service Days',
                 sortable: true
             }, {
-                field: 'chemicals',
-                title: 'Chemicals',
+                field: 'measurements',
+                title: 'Measurements',
                 sortable: true
             }, {
                 field: 'price',
@@ -36499,7 +36499,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-12e0b07a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36535,8 +36535,8 @@ exports.default = {
                 title: 'Service Days',
                 sortable: true
             }, {
-                field: 'chemicals',
-                title: 'Chemicals',
+                field: 'measurements',
+                title: 'Measurements',
                 sortable: true
             }, {
                 field: 'price',
@@ -36559,7 +36559,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36648,7 +36648,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":224,"./deleteAccount.vue":226,"./notificationSettings.vue":242,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
+},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":223,"./deleteAccount.vue":225,"./notificationSettings.vue":242,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36699,7 +36699,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36754,7 +36754,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37014,7 +37014,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37078,7 +37078,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
+},{"./dropzone.vue":228,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37218,7 +37218,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
+},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37629,7 +37629,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37770,7 +37770,7 @@ $(document).ready(function () {
 	var alert = require('./components/alert.vue');
 	var billing = require('./components/billing.vue');
 	var contract = require('./components/contract.vue');
-	var chemical = require('./components/chemical.vue');
+	var measurement = require('./components/measurement.vue');
 	var equipment = require('./components/equipment.vue');
 	var works = require('./components/works.vue');
 	var payments = require('./components/payments.vue');
@@ -37858,7 +37858,7 @@ $(document).ready(function () {
 			serviceTable: serviceTable,
 			countries: countries,
 			contract: contract,
-			chemical: chemical,
+			measurement: measurement,
 			equipment: equipment,
 			routeTable: routeTable
 		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
@@ -38596,6 +38596,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":203,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/chemical.vue":216,"./components/clientContract.vue":217,"./components/clientEquipment.vue":218,"./components/clientTable.vue":219,"./components/clientWorks.vue":220,"./components/contract.vue":221,"./components/countries.vue":222,"./components/deleteButton.vue":227,"./components/dropdown.vue":228,"./components/editReportPhotos.vue":230,"./components/emailVerificationNotice.vue":231,"./components/equipment.vue":232,"./components/finishWorkOrderButton.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/profile.vue":249,"./components/rolePicker.vue":251,"./components/routeTable.vue":252,"./components/serviceClientTable.vue":253,"./components/serviceTable.vue":254,"./components/settings.vue":255,"./components/supervisorTable.vue":256,"./components/technicianTable.vue":257,"./components/timezoneDropdown.vue":258,"./components/unreadMessagesCounter.vue":259,"./components/workOrderClientTable.vue":261,"./components/workOrderPhotosEdit.vue":262,"./components/workOrderPhotosShow.vue":263,"./components/workOrderTable.vue":264,"./components/works.vue":265,"./directives/FormToAjax.vue":266,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,267]);
+},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":202,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/invoiceTable.vue":234,"./components/locationShow.vue":236,"./components/measurement.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/profile.vue":249,"./components/rolePicker.vue":251,"./components/routeTable.vue":252,"./components/serviceClientTable.vue":253,"./components/serviceTable.vue":254,"./components/settings.vue":255,"./components/supervisorTable.vue":256,"./components/technicianTable.vue":257,"./components/timezoneDropdown.vue":258,"./components/unreadMessagesCounter.vue":259,"./components/workOrderClientTable.vue":261,"./components/workOrderPhotosEdit.vue":262,"./components/workOrderPhotosShow.vue":263,"./components/workOrderTable.vue":264,"./components/works.vue":265,"./directives/FormToAjax.vue":266,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,267]);
 
 //# sourceMappingURL=bundle.js.map

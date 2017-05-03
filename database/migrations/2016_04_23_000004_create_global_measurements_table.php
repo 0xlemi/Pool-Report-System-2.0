@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGlobalChemicalsTable extends Migration
+class CreateGlobalMeasurementsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateGlobalChemicalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('global_chemicals', function (Blueprint $table) {
+        Schema::create('global_measurements', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('seq_id')->unsigned();
             $table->string('name');
@@ -37,6 +37,6 @@ class CreateGlobalChemicalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('global_chemicals');
+        Schema::dropIfExists('global_measurements');
     }
 }

@@ -7,7 +7,7 @@ use App\Label;
 use App\Company;
 use App\PRS\Traits\Model\ImageTrait;
 
-class GlobalChemical extends Model
+class GlobalMeasurement extends Model
 {
 
     use ImageTrait;
@@ -38,7 +38,7 @@ class GlobalChemical extends Model
 
     public function scopeBySeqId($query, $seqId)
     {
-        return $query->where('global_chemicals.seq_id', $seqId)->firstOrFail();
+        return $query->where('global_measurements.seq_id', $seqId)->firstOrFail();
     }
 
     // *******************
