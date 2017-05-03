@@ -32495,7 +32495,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./urcTable.vue":259,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./urcTable.vue":260,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35350,8 +35350,7 @@ exports.default = {
     props: ['selectedUser', 'soundUrl'],
     data: function data() {
         return {
-            hasUnreadMessage: false,
-            channel: {}
+            hasUnreadMessage: false
         };
     },
 
@@ -36796,6 +36795,56 @@ if (module.hot) {(function () {  module.hot.accept()
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = {
+    props: ['selectedUser'],
+    data: function data() {
+        return {
+            unreadMessageCount: 0
+        };
+    },
+
+    events: {
+        chatReady: function chatReady() {
+            this.getUnreadMessageCount();
+        },
+        newMessage: function newMessage(info) {
+            this.unreadMessageCount++;
+        },
+        messageViewed: function messageViewed() {
+            this.getUnreadMessageCount();
+        }
+    },
+    methods: {
+        getUnreadMessageCount: function getUnreadMessageCount() {
+            var _this = this;
+
+            var url = Laravel.url + 'chat/unreadcount/' + this.selectedUser.id;
+            this.$http.get(url).then(function (response) {
+                _this.unreadMessageCount = response.data.data;
+            }, function (response) {
+                console.log('error trying to get unread messages count');
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<span v-if=\"unreadMessageCount > 0\" class=\"label label-custom label-pill label-danger\">{{ unreadMessageCount }}</span>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-73c1b0fc", module.exports)
+  } else {
+    hotAPI.update("_v-73c1b0fc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
 var _alert = require('./alert.vue');
 
@@ -36914,7 +36963,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1f3ef786", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36974,7 +37023,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37038,7 +37087,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
+},{"./dropzone.vue":229,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37118,7 +37167,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
+},{"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37178,7 +37227,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37589,7 +37638,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":228,"./dropzone.vue":229,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37673,7 +37722,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],267:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -37767,6 +37816,7 @@ $(document).ready(function () {
 	var rolePicker = require('./components/rolePicker.vue');
 	var chat = require('./components/chat.vue');
 	var messagesWidget = require('./components/messagesWidget.vue');
+	var unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -37779,6 +37829,8 @@ $(document).ready(function () {
 			notificationsWidget: notificationsWidget,
 			messagesWidget: messagesWidget,
 			rolePicker: rolePicker,
+			// sideMenu
+			unreadMessagesCounter: unreadMessagesCounter,
 			// generic
 			alert: alert,
 			dropdown: dropdown,
@@ -38553,6 +38605,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":203,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/chemical.vue":216,"./components/clientContract.vue":217,"./components/clientEquipment.vue":218,"./components/clientTable.vue":219,"./components/clientWorks.vue":220,"./components/contract.vue":221,"./components/countries.vue":222,"./components/deleteButton.vue":227,"./components/dropdown.vue":228,"./components/editReportPhotos.vue":230,"./components/emailVerificationNotice.vue":231,"./components/equipment.vue":232,"./components/finishWorkOrderButton.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/profile.vue":249,"./components/rolePicker.vue":251,"./components/routeTable.vue":252,"./components/serviceClientTable.vue":253,"./components/serviceTable.vue":254,"./components/settings.vue":255,"./components/supervisorTable.vue":256,"./components/technicianTable.vue":257,"./components/timezoneDropdown.vue":258,"./components/workOrderClientTable.vue":260,"./components/workOrderPhotosEdit.vue":261,"./components/workOrderPhotosShow.vue":262,"./components/workOrderTable.vue":263,"./components/works.vue":264,"./directives/FormToAjax.vue":265,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,266]);
+},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":203,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/chemical.vue":216,"./components/clientContract.vue":217,"./components/clientEquipment.vue":218,"./components/clientTable.vue":219,"./components/clientWorks.vue":220,"./components/contract.vue":221,"./components/countries.vue":222,"./components/deleteButton.vue":227,"./components/dropdown.vue":228,"./components/editReportPhotos.vue":230,"./components/emailVerificationNotice.vue":231,"./components/equipment.vue":232,"./components/finishWorkOrderButton.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/profile.vue":249,"./components/rolePicker.vue":251,"./components/routeTable.vue":252,"./components/serviceClientTable.vue":253,"./components/serviceTable.vue":254,"./components/settings.vue":255,"./components/supervisorTable.vue":256,"./components/technicianTable.vue":257,"./components/timezoneDropdown.vue":258,"./components/unreadMessagesCounter.vue":259,"./components/workOrderClientTable.vue":261,"./components/workOrderPhotosEdit.vue":262,"./components/workOrderPhotosShow.vue":263,"./components/workOrderTable.vue":264,"./components/works.vue":265,"./directives/FormToAjax.vue":266,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,267]);
 
 //# sourceMappingURL=bundle.js.map

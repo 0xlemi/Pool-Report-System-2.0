@@ -87,6 +87,7 @@ function isset(strVariableName) {
     let rolePicker = require('./components/rolePicker.vue');
     let chat = require('./components/chat.vue');
     let messagesWidget = require('./components/messagesWidget.vue');
+    let unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
 
 
     let mainVue = new Vue({
@@ -100,6 +101,8 @@ function isset(strVariableName) {
             notificationsWidget,
             messagesWidget,
             rolePicker,
+            // sideMenu
+            unreadMessagesCounter, 
             // generic
             alert,
             dropdown,

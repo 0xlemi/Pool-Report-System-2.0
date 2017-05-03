@@ -116,9 +116,10 @@
         @endrole
 
         <li class="green {{ Request::is('chat*')? 'opened':'' }}">
-            <a href="{{ url('/chat') }}">
+            <a href="{{ url('/chat') }}" class="label-right">
                 <i class="font-icon font-icon-comments"></i>
                 <span class="lbl">Chat</span>
+                <unread-messages-counter :selected-user="{{ $selectedUser }}"></unread-messages-counter>
             </a>
         </li>
 
