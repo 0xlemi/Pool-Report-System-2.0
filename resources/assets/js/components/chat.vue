@@ -122,7 +122,7 @@
 
         <div class="chat-dialog-area scrollable-block" id="chatBox">
             <div class="messenger-dialog-area">
-                <span>
+                <span v-if="messageList">
                     <div v-for="message in messageList" class="messenger-message-container" style="width: 100%" :class="{'from bg-blue': isCurrentUser(message._sender)}">
                         <span v-if="isCurrentUser(message._sender)">
                             <div class="messages" style="width: 100%" >
@@ -169,6 +169,16 @@
                             </div>
                         </span>
                     </div>
+                </span>
+                <span v-else>
+                    <div class="chat-dialog-clean">
+						<div class="chat-dialog-clean-in">
+                            <br><br>
+							<i class="font-icon font-icon-mail-2"></i>
+							<div class="caption">Select a Conversation</div>
+							<div class="txt">Don't have conversations ? Create one by clicking on the plus icon, then select colleague or a client on the list.</div>
+						</div>
+					</div>
                 </span>
             </div>
         </div>
@@ -223,7 +233,7 @@ export default {
             alertMessage: '',
             alertActive: false,
             channelList: {},
-            messageList: {},
+            messageList: null,
 
             currentChannel: null,
             currentMessage: '',
@@ -379,7 +389,7 @@ export default {
             return members;
         },
         clearMessages(){
-            this.messageList = {};
+            this.messageList = null;
         },
         changeLastMassage(message){
             let channelUrl = this.currentChannel.url;
@@ -410,14 +420,6 @@ export default {
         }
     },
     ready(){
-        // moment().format();
-        // console.log(moment("1995-12-25"));
-        // let vue = this;
-        //
-        // //
-        // setTimeout(function () {
-        //     console.log(vue.currentUser);
-        // }, 5000);
     }
 }
 </script>
