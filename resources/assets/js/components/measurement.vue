@@ -6,7 +6,7 @@
 	<div class="col-sm-10">
 		<button type="button" class="btn btn-info" @click="getList"
 				data-toggle="modal" data-target="#measurementModal">
-			<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Measurements
+			<i class="fa fa-area-chart"></i>&nbsp;&nbsp;&nbsp;Manage Measurements
 		</button>
 	</div>
 </div>
@@ -40,14 +40,6 @@
 						</div>
 					</div>
 
-                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
-						<label class="col-sm-2 form-control-label">Amount</label>
-						<div class="col-sm-10">
-							<input type="number" name="amount" class="form-control" v-model="amount">
-							<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-						</div>
-					</div>
-
                 </div>
 
                 <!-- Index Measurement -->
@@ -75,18 +67,15 @@
 						</div>
 					</div>
 
-                    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('amount'))}">
-						<label class="col-sm-2 form-control-label">Amount</label>
+					<div v-for="label in labels" class="form-group row">
+						<label class="col-sm-2 form-control-label"></label>
 						<div class="col-sm-10">
-							<input type="number" name="amount" class="form-control" v-model="amount">
-							<small v-if="checkValidationError('amount')" class="text-muted">{{ validationErrors.amount[0] }}</small>
-						</div>
-					</div>
-
-                    <div class="form-group row">
-						<label class="col-sm-2 form-control-label">Units</label>
-						<div class="col-sm-10">
-							<input type="text" name="units" class="form-control" readonly v-model="units">
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="fa fa-circle" :style="'color: #'+label.color" ></span>
+								</div>
+								<input type="text" readonly class="form-control" v-model="label.name">
+							</div>
 						</div>
 					</div>
 
@@ -111,9 +100,9 @@
 			Create
 		</button>
 
-        <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
+        <!-- <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
 			<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update
-		</button>
+		</button> -->
 
       </div>
     </div>
@@ -151,8 +140,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 
 			globalMeasurementId: 0,
             name: '',
-            amount: '',
-            units: '',
+			labels: {},
 			columns: [
 		      {
 		        title: 'Item ID',
@@ -163,16 +151,6 @@ var BootstrapTable = require('./BootstrapTable.vue');
 		      {
 		        field: 'name',
 		        title: 'Name',
-				sortable: true,
-		      },
-			  {
-		        field: 'amount',
-		        title: 'Amount',
-				sortable: true,
-			  },
-			  {
-		        field: 'units',
-		        title: 'Units',
 				sortable: true,
 		      }
 		    ],
@@ -212,13 +190,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
         }
     },
     computed: {
-        serviceUrl: function(){
-            return this.baseUrl+this.serviceId;
-        },
-		measurementUrl: function(){
-            return this.baseUrl+this.measurementId;
-		},
-		title: function(){
+		title(){
             switch (this.focus){
                 case 1:
                 return 'New Measurement';
@@ -246,7 +218,9 @@ var BootstrapTable = require('./BootstrapTable.vue');
     methods: {
         getList(){
 			this.resetAlert('list');
-			this.$http.get(this.serviceUrl).then((response) => {
+
+			let url = Laravel.url+'service/'+this.serviceId+'/measurements';
+			this.$http.get(url).then((response) => {
 				this.data = response.data.data;
 				this.validationErrors = {};
 				this.$broadcast('refreshTable');
@@ -257,11 +231,17 @@ var BootstrapTable = require('./BootstrapTable.vue');
             });
         },
 		getValues(measurementId){
-			let measurement = this.data.find(data => data.id === measurementId)
-			this.name = measurement.name;
-			this.amount = measurement.amount;
-			this.units = measurement.units;
-			this.focus = 3;
+			let url = Laravel.url+'measurements/'+measurementId;
+			this.$http.get(url).then((response) => {
+				let data = response.data.data;
+				this.name = data.name;
+				this.labels = data.labels;
+				this.focus = 3;
+            }, (response) => {
+				this.focus = 2;
+				this.alertMessageList = "The information could not be retrieved, please try again."
+				this.alertActiveList = true;
+            });
 		},
 		create(){
 
@@ -280,7 +260,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-			this.$http.post(this.serviceUrl, {
+			let url = Laravel.url+'service/'+this.serviceId+'/measurements';
+			this.$http.post(url, {
 				global_measurement: this.globalMeasurementId,
                 amount: this.amount,
             }).then((response) => {
@@ -297,39 +278,39 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				}
             });
 		},
-        update(){
-
-            let clickEvent = event;
-			// save button text for later
-            let buttonTag = clickEvent.target.innerHTML;
-
-			this.resetAlert('edit');
-            // Disable the submit button to prevent repeated clicks:
-            clickEvent.target.disabled = true;
-            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
-            new Spinner({
-                left: "90%",
-                radius: 5,
-                length: 4,
-                width: 1,
-            }).spin(clickEvent.target);
-
-            this.$http.patch(this.measurementUrl, {
-                amount: this.amount,
-            }).then((response) => {
-				// refresh the information
-                this.changeFocus(2);
-            }, (response) => {
-				if(response.status == 422){
-					this.validationErrors = response.data;
-					this.revertButton(clickEvent, buttonTag);
-				}else{
-					this.alertMessageEdit = "The measurement could not be updated, please try again."
-					this.alertActiveEdit = true;
-					this.revertButton(clickEvent, buttonTag);
-				}
-            });
-        },
+        // update(){
+		//
+        //     let clickEvent = event;
+		// 	// save button text for later
+        //     let buttonTag = clickEvent.target.innerHTML;
+		//
+		// 	this.resetAlert('edit');
+        //     // Disable the submit button to prevent repeated clicks:
+        //     clickEvent.target.disabled = true;
+        //     clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+        //     new Spinner({
+        //         left: "90%",
+        //         radius: 5,
+        //         length: 4,
+        //         width: 1,
+        //     }).spin(clickEvent.target);
+		//
+        //     this.$http.patch(url, {
+        //         amount: this.amount,
+        //     }).then((response) => {
+		// 		// refresh the information
+        //         this.changeFocus(2);
+        //     }, (response) => {
+		// 		if(response.status == 422){
+		// 			this.validationErrors = response.data;
+		// 			this.revertButton(clickEvent, buttonTag);
+		// 		}else{
+		// 			this.alertMessageEdit = "The measurement could not be updated, please try again."
+		// 			this.alertActiveEdit = true;
+		// 			this.revertButton(clickEvent, buttonTag);
+		// 		}
+        //     });
+        // },
 		destroy(){
 			let vue = this;
 			let clickEvent = event;
@@ -364,7 +345,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-            this.$http.delete(this.measurementUrl).then((response) => {
+			let url = Laravel.url+'measurements/'+this.measurementId;
+            this.$http.delete(url).then((response) => {
 				// clear values
 				this.changeFocus(2);
             }, (response) => {

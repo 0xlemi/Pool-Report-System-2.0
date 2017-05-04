@@ -15,7 +15,6 @@ class CreateMeasurementsTable extends Migration
     {
         Schema::create('measurements', function (Blueprint $table) {
             $table->increments('id');
-            $table->decimal('amount', 9, 2);
             $table->integer('global_measurement_id')->unsigned();
             $table->integer('service_id')->unsigned();
             $table->timestamps();

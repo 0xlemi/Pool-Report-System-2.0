@@ -27,7 +27,6 @@ class CreateMeasurementRequest extends FormRequest
 
         return [
             'global_measurement' => 'required|integer|existsBasedOnCompany:global_measurements,'.$company->id,
-            'amount' => 'required|numeric',
         ];
     }
 }

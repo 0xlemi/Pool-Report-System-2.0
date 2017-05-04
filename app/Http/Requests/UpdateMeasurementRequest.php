@@ -24,7 +24,6 @@ class UpdateMeasurementRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => 'numeric',
         ];
     }
 }

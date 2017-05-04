@@ -19,7 +19,6 @@ class GlobalMeasurement extends Model
 	 */
 	protected $fillable = [
         'name',
-        'units',
 	];
 
     /**

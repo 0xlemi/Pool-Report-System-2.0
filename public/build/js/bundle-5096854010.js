@@ -35048,8 +35048,7 @@ exports.default = {
 
 			globalMeasurementId: 0,
 			name: '',
-			amount: '',
-			units: '',
+			labels: {},
 			columns: [{
 				title: 'Item ID',
 				field: 'id',
@@ -35058,14 +35057,6 @@ exports.default = {
 			}, {
 				field: 'name',
 				title: 'Name',
-				sortable: true
-			}, {
-				field: 'amount',
-				title: 'Amount',
-				sortable: true
-			}, {
-				field: 'units',
-				title: 'Units',
 				sortable: true
 			}],
 			data: [],
@@ -35105,12 +35096,6 @@ exports.default = {
 	},
 
 	computed: {
-		serviceUrl: function serviceUrl() {
-			return this.baseUrl + this.serviceId;
-		},
-		measurementUrl: function measurementUrl() {
-			return this.baseUrl + this.measurementId;
-		},
 		title: function title() {
 			switch (this.focus) {
 				case 1:
@@ -35141,7 +35126,9 @@ exports.default = {
 			var _this = this;
 
 			this.resetAlert('list');
-			this.$http.get(this.serviceUrl).then(function (response) {
+
+			var url = Laravel.url + 'service/' + this.serviceId + '/measurements';
+			this.$http.get(url).then(function (response) {
 				_this.data = response.data.data;
 				_this.validationErrors = {};
 				_this.$broadcast('refreshTable');
@@ -35152,16 +35139,22 @@ exports.default = {
 			});
 		},
 		getValues: function getValues(measurementId) {
-			var measurement = this.data.find(function (data) {
-				return data.id === measurementId;
+			var _this2 = this;
+
+			var url = Laravel.url + 'measurements/' + measurementId;
+			this.$http.get(url).then(function (response) {
+				var data = response.data.data;
+				_this2.name = data.name;
+				_this2.labels = data.labels;
+				_this2.focus = 3;
+			}, function (response) {
+				_this2.focus = 2;
+				_this2.alertMessageList = "The information could not be retrieved, please try again.";
+				_this2.alertActiveList = true;
 			});
-			this.name = measurement.name;
-			this.amount = measurement.amount;
-			this.units = measurement.units;
-			this.focus = 3;
 		},
 		create: function create() {
-			var _this2 = this;
+			var _this3 = this;
 
 			var clickEvent = event;
 			// save button text for later
@@ -35178,57 +35171,58 @@ exports.default = {
 				width: 1
 			}).spin(clickEvent.target);
 
-			this.$http.post(this.serviceUrl, {
+			var url = Laravel.url + 'service/' + this.serviceId + '/measurements';
+			this.$http.post(url, {
 				global_measurement: this.globalMeasurementId,
 				amount: this.amount
 			}).then(function (response) {
-				_this2.changeFocus(2);
-				_this2.getList();
-			}, function (response) {
-				if (response.status == 422) {
-					_this2.validationErrors = response.data;
-					_this2.revertButton(clickEvent, buttonTag);
-				} else {
-					_this2.alertMessageCreate = "The measurement could not be created, please try again.";
-					_this2.alertActiveCreate = true;
-					_this2.revertButton(clickEvent, buttonTag);
-				}
-			});
-		},
-		update: function update() {
-			var _this3 = this;
-
-			var clickEvent = event;
-			// save button text for later
-			var buttonTag = clickEvent.target.innerHTML;
-
-			this.resetAlert('edit');
-			// Disable the submit button to prevent repeated clicks:
-			clickEvent.target.disabled = true;
-			clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
-			new Spinner({
-				left: "90%",
-				radius: 5,
-				length: 4,
-				width: 1
-			}).spin(clickEvent.target);
-
-			this.$http.patch(this.measurementUrl, {
-				amount: this.amount
-			}).then(function (response) {
-				// refresh the information
 				_this3.changeFocus(2);
+				_this3.getList();
 			}, function (response) {
 				if (response.status == 422) {
 					_this3.validationErrors = response.data;
 					_this3.revertButton(clickEvent, buttonTag);
 				} else {
-					_this3.alertMessageEdit = "The measurement could not be updated, please try again.";
-					_this3.alertActiveEdit = true;
+					_this3.alertMessageCreate = "The measurement could not be created, please try again.";
+					_this3.alertActiveCreate = true;
 					_this3.revertButton(clickEvent, buttonTag);
 				}
 			});
 		},
+
+		// update(){
+		//
+		//     let clickEvent = event;
+		// 	// save button text for later
+		//     let buttonTag = clickEvent.target.innerHTML;
+		//
+		// 	this.resetAlert('edit');
+		//     // Disable the submit button to prevent repeated clicks:
+		//     clickEvent.target.disabled = true;
+		//     clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+		//     new Spinner({
+		//         left: "90%",
+		//         radius: 5,
+		//         length: 4,
+		//         width: 1,
+		//     }).spin(clickEvent.target);
+		//
+		//     this.$http.patch(url, {
+		//         amount: this.amount,
+		//     }).then((response) => {
+		// 		// refresh the information
+		//         this.changeFocus(2);
+		//     }, (response) => {
+		// 		if(response.status == 422){
+		// 			this.validationErrors = response.data;
+		// 			this.revertButton(clickEvent, buttonTag);
+		// 		}else{
+		// 			this.alertMessageEdit = "The measurement could not be updated, please try again."
+		// 			this.alertActiveEdit = true;
+		// 			this.revertButton(clickEvent, buttonTag);
+		// 		}
+		//     });
+		// },
 		destroy: function destroy() {
 			var vue = this;
 			var clickEvent = event;
@@ -35265,7 +35259,8 @@ exports.default = {
 				width: 1
 			}).spin(clickEvent.target);
 
-			this.$http.delete(this.measurementUrl).then(function (response) {
+			var url = Laravel.url + 'measurements/' + this.measurementId;
+			this.$http.delete(url).then(function (response) {
 				// clear values
 				_this4.changeFocus(2);
 			}, function (response) {
@@ -35320,7 +35315,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Measurements</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#measurementModal\">\n\t\t\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Measurements\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Measurement managment -->\n<div class=\"modal fade\" id=\"measurementModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('global_measurement'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Global Measurement</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\n\t\t\t\t\t\t\t<dropdown :key=\"0\" :options=\"globalMeasurements\" :name=\"'globalMeasurement'\">\n\t\t\t\t\t\t\t</dropdown>\n\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('global_measurement')\" class=\"text-muted\">{{ validationErrors.global_measurement[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Measurement\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" readonly=\"\" v-model=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"number\" name=\"amount\" class=\"form-control\" v-model=\"amount\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" readonly=\"\" v-model=\"units\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button>\n\n      </div>\n    </div>\n  </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<div class=\"form-group row\">\n\t<label class=\"col-sm-2 form-control-label\">Measurements</label>\n\t<div class=\"col-sm-10\">\n\t\t<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#measurementModal\">\n\t\t\t<i class=\"fa fa-area-chart\"></i>&nbsp;&nbsp;&nbsp;Manage Measurements\n\t\t</button>\n\t</div>\n</div>\n\n<!-- Modal for Measurement managment -->\n<div class=\"modal fade\" id=\"measurementModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n                <!-- Create new Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('global_measurement'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Global Measurement</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\n\t\t\t\t\t\t\t<dropdown :key=\"0\" :options=\"globalMeasurements\" :name=\"'globalMeasurement'\">\n\t\t\t\t\t\t\t</dropdown>\n\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('global_measurement')\" class=\"text-muted\">{{ validationErrors.global_measurement[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n                <!-- Index Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Measurement\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n                </div>\n\n                <!-- Edit Measurement -->\n                <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" readonly=\"\" v-model=\"name\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div v-for=\"label in labels\" class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\"></label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t<span class=\"fa fa-circle\" :style=\"'color: #'+label.color\"></span>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"label.name\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\t\t\t</div>\n      </div>\n      <div class=\"modal-footer\">\n\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t</button>\n\t\t</p>\n\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t</button>\n\n        <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\tCreate\n\t\t</button>\n\n        <!-- <button type=\"button\" class=\"btn btn-success\" v-if=\"isFocus(3)\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update\n\t\t</button> -->\n\n      </div>\n    </div>\n  </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

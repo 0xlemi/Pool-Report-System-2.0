@@ -15,7 +15,6 @@ class Measurement extends Model
      * @var array
      */
     protected $fillable = [
-        'amount',
         'global_measurement_id'
     ];
 

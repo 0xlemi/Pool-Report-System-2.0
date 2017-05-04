@@ -91,8 +91,11 @@ Route::post('equipment/photos/{equipment}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{equipment}/{order}', 'EquipmentController@removePhoto');
 
 // Measurements
-Route::get('measurements/{serviceSeqId}', 'MeasurementsController@index');
-Route::post('measurements/{serviceSeqId}', 'MeasurementsController@store');
+Route::get('service/{serviceSeqId}/measurements', 'MeasurementsController@index');
+Route::post('service/{serviceSeqId}/measurements', 'MeasurementsController@store');
+Route::resource('measurements', 'MeasurementsController', ['only' => [
+    'show', 'update', 'destroy'
+]]);
 
 // Service Contracts
 Route::get('servicecontracts/{serviceSeqId}', 'ServiceContractsController@show');
@@ -125,9 +128,6 @@ Route::resource('works', 'WorkController', ['only' => [
 Route::resource('services', 'ServicesController');
 Route::resource('equipment', 'EquipmentController', ['only' => [
     'show', 'update', 'destroy'
-]]);
-Route::resource('measurements', 'measurementController', ['only' => [
-    'update', 'destroy'
 ]]);
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');

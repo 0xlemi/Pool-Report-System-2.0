@@ -17,7 +17,6 @@ class CreateGlobalMeasurementsTable extends Migration
             $table->increments('id');
             $table->integer('seq_id')->unsigned();
             $table->string('name');
-            $table->string('units');
             $table->integer('company_id')->unsigned();
             $table->timestamps();
 

@@ -38,11 +38,10 @@ class MeasurementsController extends PageController
                         ->get()
                         ->transform(function($item){
                             $globalMeasurement = $item->globalMeasurement;
+                            $labels = $globalMeasurement->labels()->pluck('name')->toArray();
                             return (object) [
                                     'id' => $item->id,
                                     'name' => $globalMeasurement->name,
-                                    'amount' => $item->amount,
-                                    'units' => $globalMeasurement->units,
                                 ];
                         });
         return response()->json([
@@ -64,7 +63,6 @@ class MeasurementsController extends PageController
         $service = $company->services()->bySeqId($serviceSeqId);
 
         $measurement = $service->measurements()->create([
-                'amount' => $request->amount,
                 'global_measurement_id' => $request->global_measurement,
             ]);
 
@@ -78,6 +76,20 @@ class MeasurementsController extends PageController
             ], 500);
     }
 
+    public function show(Measurement $measurement)
+    {
+        $this->authorize('update', $measurement);
+
+        $globalMeasurement = $measurement->globalMeasurement;
+        return response()->json([
+            'data' => (object)[
+                'name' => $globalMeasurement->name,
+                'labels' => $globalMeasurement->labels,
+            ]
+        ]);
+
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -88,10 +100,6 @@ class MeasurementsController extends PageController
     public function update(UpdateMeasurementRequest $request, Measurement $measurement)
     {
         $this->authorize('update', $measurement);
-
-        $measurement->update([
-            'amount' => $request->amount,
-        ]);
 
         return response()->json([
             'message' => 'Measurement was successfully updated.'
