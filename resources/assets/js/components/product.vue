@@ -2,17 +2,17 @@
 
 <!-- Button -->
 <div class="form-group row">
-	<label class="col-sm-2 form-control-label">Measurements</label>
+	<label class="col-sm-2 form-control-label">Products</label>
 	<div class="col-sm-10">
-		<button type="button" class="btn btn-warning" @click="getList"
-				data-toggle="modal" data-target="#measurementModal">
-			<i class="fa fa-area-chart"></i>&nbsp;&nbsp;&nbsp;Manage Measurements
+		<button type="button" class="btn btn-info" @click="getList"
+				data-toggle="modal" data-target="#productModal">
+			<i class="fa fa-flask"></i>&nbsp;&nbsp;&nbsp;Manage Products
 		</button>
 	</div>
 </div>
 
-<!-- Modal for Measurement managment -->
-<div class="modal fade" id="measurementModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<!-- Modal for Product managment -->
+<div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" :class="{'modal-lg' : (focus == 2)}" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -22,40 +22,45 @@
       <div class="modal-body">
 			<div class="row">
 
-                <!-- Create new Measurement -->
+                <!-- Create new Product -->
                 <div class="col-md-12" v-show="isFocus(1)">
 
 					<alert type="danger" :message="alertMessageCreate" :active="alertActiveCreate"></alert>
 
-					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('global_measurement'))}">
-						<label class="col-sm-2 form-control-label">Global Measurement</label>
+					<div class="form-group row" :class="{'form-group-error' : (checkValidationError('global_product'))}">
+						<label class="col-sm-2 form-control-label">Global Product</label>
 						<div class="col-sm-10">
-
 							<dropdown :key="0"
-								:options="globalMeasurements"
-								:name="'globalMeasurement'">
+								:options="globalProducts"
+								:name="'globalProduct'">
 							</dropdown>
-
-							<small v-if="checkValidationError('global_measurement')" class="text-muted">{{ validationErrors.global_measurement[0] }}</small>
+							<small v-if="checkValidationError('global_product')" class="text-muted">{{ validationErrors.global_product[0] }}</small>
 						</div>
+					</div>
+
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Amount</label>
+						<div class="col-sm-10">
+    						<input type="text" class="form-control" v-model="amount" placeholder="Amount">
+                        </div>
 					</div>
 
                 </div>
 
-                <!-- Index Measurement -->
+                <!-- Index Product -->
                 <div class="col-md-12" v-show="isFocus(2)">
 
 					<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
 					<bootstrap-table :columns="columns" :data="data" :options="options">
 						<button type="button" class="btn btn-primary" @click="goToCreate" >
-							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Measurement
+							<i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;&nbsp;Add Product
 						</button>
 					</bootstrap-table>
 
                 </div>
 
-                <!-- Edit Measurement -->
+                <!-- Edit Product -->
                 <div class="col-md-12" v-show="isFocus(3)">
 
 					<alert type="danger" :message="alertMessageEdit" :active="alertActiveEdit"></alert>
@@ -67,17 +72,44 @@
 						</div>
 					</div>
 
-					<div v-for="label in labels" class="form-group row">
-						<label class="col-sm-2 form-control-label"></label>
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Brand</label>
 						<div class="col-sm-10">
-							<div class="input-group">
-								<div class="input-group-addon">
-									<span class="fa fa-circle" :style="'color: #'+label.color" ></span>
-								</div>
-								<input type="text" readonly class="form-control" v-model="label.name">
-							</div>
+							<input type="text" name="name" class="form-control" readonly v-model="brand">
 						</div>
 					</div>
+
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Type</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" readonly v-model="type">
+						</div>
+					</div>
+
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Amount</label>
+						<div class="col-sm-10">
+                            <div class="input-group">
+    							<input type="text" class="form-control" v-model="amount" placeholder="Amount">
+    							<div class="input-group-addon">{{ units }}</div>
+    						</div>
+                        </div>
+					</div>
+
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Unit Price</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" readonly v-model="unitPrice">
+						</div>
+					</div>
+
+                    <div class="form-group row">
+						<label class="col-sm-2 form-control-label">Monthly Price</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" readonly v-model="monthlyPrice">
+						</div>
+					</div>
+
 
                 </div>
 
@@ -100,6 +132,10 @@
 			Create
 		</button>
 
+        <button type="button" class="btn btn-success" v-if="isFocus(3)" @click="update">
+			<i class="glyphicon glyphicon-ok"></i>&nbsp;&nbsp;&nbsp;Update
+		</button>
+
       </div>
     </div>
   </div>
@@ -114,7 +150,7 @@ var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
 
   export default {
-    props: ['serviceId', 'globalMeasurements'],
+    props: ['serviceId', 'globalProducts'],
 	components: {
 		dropdown,
 		alert,
@@ -123,7 +159,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
     data () {
         return {
             focus: 2, // 1=create, 2=index, 3=edit
-            measurementId: 0,
+            productId: 0,
             validationErrors: {},
 
 			// alert
@@ -134,21 +170,41 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			alertActiveList: false,
 			alertActiveEdit: false,
 
-			globalMeasurementId: 0,
+			globalProductId: 0,
             name: '',
-			labels: {},
+            brand: '',
+            type: '',
+            amount: 0,
+            units: '',
+            unitPrice: '',
+            monthlyPrice: '',
 			columns: [
-		      {
-		        title: 'Item ID',
-		        field: 'id',
-				sortable: true,
-				visible: false,
-		      },
-		      {
-		        field: 'name',
-		        title: 'Name',
-				sortable: true,
-		      }
+    		    {
+    		        title: 'Item ID',
+    		        field: 'id',
+    				sortable: true,
+    				visible: false,
+    		    },
+    		    {
+    		        field: 'name',
+    		        title: 'Name',
+    				sortable: true,
+                },
+                {
+    		       field: 'brand',
+    		        title: 'Brand',
+    				sortable: true,
+                },
+                {
+    		        field: 'monthly_amount',
+    		        title: 'Monthly Amount',
+    				sortable: true,
+                },
+                {
+    		        field: 'monthly_price',
+    		        title: 'Monthly Price',
+    				sortable: true,
+    		    }
 		    ],
 		    data: [],
 		    options: {
@@ -181,7 +237,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				// clickToSelect: true,
 
 				toolbarButton: true,
-				toolbarButtonText: 'Add Measurement',
+				toolbarButtonText: 'Add Product',
 		    }
         }
     },
@@ -189,33 +245,33 @@ var BootstrapTable = require('./BootstrapTable.vue');
 		title(){
             switch (this.focus){
                 case 1:
-                return 'New Measurement';
+                return 'New Product';
                 break;
                 case 2:
-                return 'Measurements List';
+                return 'Products List';
                 break;
                 case 3:
-                return 'Edit Measurement';
+                return 'Edit Product';
                 break;
                 default:
-                return 'Measurements';
+                return 'Products';
             }
         }
     },
 	events: {
 		rowClicked(id){
-			this.measurementId= id;
+			this.productId= id;
 			this.getValues(id);
 		},
 		dropdownChanged(key){
-			this.globalMeasurementId= key;
+			this.globalProductId= key;
 		}
 	},
     methods: {
         getList(){
 			this.resetAlert('list');
 
-			let url = Laravel.url+'service/'+this.serviceId+'/measurements';
+			let url = Laravel.url+'service/'+this.serviceId+'/products';
 			this.$http.get(url).then((response) => {
 				this.data = response.data.data;
 				this.validationErrors = {};
@@ -226,12 +282,17 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				this.alertActiveList = true;
             });
         },
-		getValues(measurementId){
-			let url = Laravel.url+'measurements/'+measurementId;
+		getValues(productId){
+			let url = Laravel.url+'products/'+productId;
 			this.$http.get(url).then((response) => {
 				let data = response.data.data;
-				this.name = data.name;
-				this.labels = data.labels;
+                this.name = data.name;
+                this.brand = data.brand;
+                this.type = data.type;
+                this.amount = data.amount;
+                this.units = data.units;
+                this.unitPrice = data.unit_price;
+                this.monthlyPrice = data.monthly_price;
 				this.focus = 3;
             }, (response) => {
 				this.focus = 2;
@@ -240,7 +301,6 @@ var BootstrapTable = require('./BootstrapTable.vue');
             });
 		},
 		create(){
-
 			let clickEvent = event;
 			// save button text for later
             let buttonTag = clickEvent.target.innerHTML;
@@ -256,9 +316,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-			let url = Laravel.url+'service/'+this.serviceId+'/measurements';
+			let url = Laravel.url+'service/'+this.serviceId+'/products';
 			this.$http.post(url, {
-				global_measurement: this.globalMeasurementId,
+				global_product: this.globalProductId,
+                amount: this.amount,
             }).then((response) => {
                 this.changeFocus(2);
 				this.getList();
@@ -267,18 +328,51 @@ var BootstrapTable = require('./BootstrapTable.vue');
 					this.validationErrors = response.data;
 					this.revertButton(clickEvent, buttonTag);
 				}else{
-					this.alertMessageCreate = "The measurement could not be created, please try again."
+					this.alertMessageCreate = "The product could not be created, please try again."
 					this.alertActiveCreate = true;
 					this.revertButton(clickEvent, buttonTag);
 				}
             });
 		},
+        update(){
+            let clickEvent = event;
+			// save button text for later
+            let buttonTag = clickEvent.target.innerHTML;
+
+			this.resetAlert('edit');
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1,
+            }).spin(clickEvent.target);
+
+			let url = Laravel.url+'products/'+this.productId;
+            this.$http.patch(url, {
+                amount: this.amount,
+            }).then((response) => {
+				// refresh the information
+                this.changeFocus(2);
+            }, (response) => {
+				if(response.status == 422){
+					this.validationErrors = response.data;
+					this.revertButton(clickEvent, buttonTag);
+				}else{
+					this.alertMessageEdit = "The product could not be updated, please try again."
+					this.alertActiveEdit = true;
+					this.revertButton(clickEvent, buttonTag);
+				}
+            });
+        },
 		destroy(){
 			let vue = this;
 			let clickEvent = event;
 			swal({
                 title: "Are you sure?",
-                text: "Measurement is going to permanently deleted!",
+                text: "Product is going to permanently deleted!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -307,12 +401,12 @@ var BootstrapTable = require('./BootstrapTable.vue');
                 width: 1,
             }).spin(clickEvent.target);
 
-			let url = Laravel.url+'measurements/'+this.measurementId;
+			let url = Laravel.url+'products/'+this.productId;
             this.$http.delete(url).then((response) => {
 				// clear values
 				this.changeFocus(2);
             }, (response) => {
-				this.alertMessageEdit = "The measurement could not be destroyed, please try again."
+				this.alertMessageEdit = "The product could not be destroyed, please try again."
 				this.alertActiveEdit = true;
 				this.revertButton(clickEvent, buttonTag);
             });
@@ -337,6 +431,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			this.validationErrors = {};
 
 			this.name = '';
+            this.amount = '';
+            this.units = '';
 		},
 		resetAlert(alert){
 			if(alert == 'create'){

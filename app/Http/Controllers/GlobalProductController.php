@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\GlobalProduct;
 use Illuminate\Http\Request;
 
-class GlobalProductController extends Controller
+class GlobalProductController extends PageController
 {
 
     /**

@@ -85,9 +85,12 @@
 						</contract>
 
 						<measurement service-id="{{ $service->seq_id }}"
-						    base-url="{{ url('measurements').'/' }}"
 							:global-measurements="{{ $globalMeasurements }}">
 						</measurement>
+
+						<product service-id="{{ $service->seq_id }}"
+							:global-products="{{ $globalProducts }}">
+						</product>
 
 						<equipment service-id="{{ $service->seq_id }}">
 						</equipment>
@@ -106,7 +109,7 @@
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Clients</label>
 								<div class="col-sm-10">
-									<button type="button" class="btn btn-warning"
+									<button type="button" class="btn btn-secondary"
 										data-toggle="modal"
 										data-target="#clientsModal">
 										<i class="font-icon glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;List of Clients</button>

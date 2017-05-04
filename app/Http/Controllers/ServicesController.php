@@ -9,6 +9,7 @@ use JavaScript;
 
 use App\Service;
 use App\PRS\Helpers\ServiceHelpers;
+use App\PRS\Helpers\GlobalProductHelpers;
 use App\PRS\Helpers\GlobalMeasurementHelpers;
 use App\PRS\Transformers\ImageTransformer;
 
@@ -116,7 +117,7 @@ class ServicesController extends PageController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(GlobalMeasurementHelpers $helper, $seq_id)
+    public function show($seq_id, GlobalMeasurementHelpers $measurementHelper, GlobalProductHelpers $productHelper)
     {
         $company = $this->loggedCompany();
         $service = $company->services()->bySeqId($seq_id);
@@ -129,13 +130,19 @@ class ServicesController extends PageController
         $usedMeasurementsIds = $service->measurements()
                 ->join('global_measurements', 'global_measurements.id', '=', 'measurements.global_measurement_id')
                 ->pluck('global_measurements.id')->toArray();
-        $globalMeasurements = $helper->transformForDropdown($company->globalMeasurements()->whereNotIn('id', $usedMeasurementsIds )->get());
+        $globalMeasurements = $measurementHelper->transformForDropdown($company->globalMeasurements()->whereNotIn('id', $usedMeasurementsIds )->get());
+
+        // Get Unused Global Products
+        $usedProductsIds = $service->products()
+                ->join('global_products', 'global_products.id', '=', 'products.global_product_id')
+                ->pluck('global_products.id')->toArray();
+        $globalProducts = $productHelper->transformForDropdown($company->globalProducts()->whereNotIn('id', $usedProductsIds )->get());
 
         $image = null;
         if($service->images->count() > 0){
             $image = $this->imageTransformer->transform($service->images->first());
         }
-        return view('services.show', compact('service', 'clients', 'image', 'globalMeasurements'));
+        return view('services.show', compact('service', 'clients', 'image', 'globalMeasurements', 'globalProducts'));
     }
 
     /**

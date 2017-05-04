@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class GlobalMeasurementController extends Controller
+class GlobalMeasurementController extends PageController
 {
     /**
      * Create a new controller instance.
@@ -15,6 +15,6 @@ class GlobalMeasurementController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     //
 }

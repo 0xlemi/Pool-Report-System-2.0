@@ -88,6 +88,7 @@ function isset(strVariableName) {
     let chat = require('./components/chat.vue');
     let messagesWidget = require('./components/messagesWidget.vue');
     let unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
+    let product = require('./components/product.vue');
 
 
     let mainVue = new Vue({
@@ -140,6 +141,7 @@ function isset(strVariableName) {
             countries,
             contract,
             measurement,
+            product, 
             equipment,
             routeTable,
             deleteButton,

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Product;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductController extends PageController
 {
 
     /**
@@ -52,17 +52,18 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $serviceSeqId)
     {
         $this->authorize('create', Product::class);
         $company = $this->loggedCompany();
         $service = $company->services()->bySeqId($serviceSeqId);
 
-        $measurement = $service->measurements()->create([
-                'global_measurement_id' => $request->global_measurement,
-            ]);
+        $product = $service->products()->create([
+            'global_product_id' => $request->global_product,
+            'amount' => $request->amount
+        ]);
 
-        if($measurement){
+        if($product){
             return response()->json([
                 'message' => 'Measurement was successfully created.'
             ]);
@@ -87,10 +88,11 @@ class ProductController extends Controller
             'data' => (object)[
                 'name' => $globalProduct->name,
                 'brand' => $globalProduct->brand,
-                'type' => $globalProduct->type.' '.$globalProduct->unit_currency,
-                'unit_price' => $globalProduct->price.' '.$globalProduct->unit_currency,
-                'monthly_amount' => $product->amount.' '.$globalProduct->units,
-                'monthly_price' => $product->amount*$globalProduct->unit_price.' '.$globalProduct->unit_currency,
+                'type' => $globalProduct->type,
+                'amount' => $product->amount,
+                'units' => $globalProduct->units,
+                'unit_price' => $globalProduct->unit_price.' '.$globalProduct->unit_currency.' per '.str_singular($globalProduct->units),
+                'monthly_price' => $product->amount*$globalProduct->unit_price.' '.$globalProduct->unit_currency.'/month',
             ]
         ]);
     }
