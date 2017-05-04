@@ -80,6 +80,10 @@ class CreatePermissionsTable extends Migration
             [ 'id' => 53, 'element' => 'payment', 'action' => 'view', 'text' => 'Create New Payment' ],
             [ 'id' => 54, 'element' => 'payment', 'action' => 'create', 'text' => 'Show Payments' ],
             [ 'id' => 55, 'element' => 'payment', 'action' => 'delete', 'text' => 'Delete Payments' ],
+            [ 'id' => 56, 'element' => 'product', 'action' => 'view', 'text' => 'Show Products' ],
+            [ 'id' => 57, 'element' => 'product', 'action' => 'create', 'text' => 'Create New Product' ],
+            [ 'id' => 58, 'element' => 'product', 'action' => 'update', 'text' => 'Edit Products' ],
+            [ 'id' => 59, 'element' => 'product', 'action' => 'delete', 'text' => 'Delete Product' ],
         ]);
     }
 

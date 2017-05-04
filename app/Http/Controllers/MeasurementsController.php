@@ -78,7 +78,7 @@ class MeasurementsController extends PageController
 
     public function show(Measurement $measurement)
     {
-        $this->authorize('update', $measurement);
+        $this->authorize('view', $measurement);
 
         $globalMeasurement = $measurement->globalMeasurement;
         return response()->json([
@@ -88,22 +88,6 @@ class MeasurementsController extends PageController
             ]
         ]);
 
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateMeasurementRequest $request, Measurement $measurement)
-    {
-        $this->authorize('update', $measurement);
-
-        return response()->json([
-            'message' => 'Measurement was successfully updated.'
-        ]);
     }
 
     /**

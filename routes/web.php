@@ -94,6 +94,13 @@ Route::delete('equipment/photos/{equipment}/{order}', 'EquipmentController@remov
 Route::get('service/{serviceSeqId}/measurements', 'MeasurementsController@index');
 Route::post('service/{serviceSeqId}/measurements', 'MeasurementsController@store');
 Route::resource('measurements', 'MeasurementsController', ['only' => [
+    'show', 'destroy'
+]]);
+
+// Prouducts
+Route::get('service/{serviceSeqId}/products', 'ProductController@index');
+Route::post('service/{serviceSeqId}/products', 'ProductController@store');
+Route::resource('products', 'ProductController', ['only' => [
     'show', 'update', 'destroy'
 ]]);
 

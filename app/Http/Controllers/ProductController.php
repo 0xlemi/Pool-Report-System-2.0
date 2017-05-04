@@ -7,24 +7,43 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($serviceSeqId)
     {
-        //
-    }
+        $this->authorize('list', Product::class);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $service = $this->loggedCompany()->services()->bySeqId($serviceSeqId);
+
+        $products = $service->products()
+                        ->get()
+                        ->transform(function($item){
+                            $globalProduct = $item->globalProduct;
+                            return (object) [
+                                    'id' => $item->id,
+                                    'name' => $globalProduct->name,
+                                    'brand' => $globalProduct->brand,
+                                    'monthly_amount' => $item->amount.' '.$globalProduct->units,
+                                    'monthly_price' => $item->amount*$globalProduct->unit_price.' '.$globalProduct->unit_currency,
+                                ];
+                        });
+        return response()->json([
+            'data' => $products
+        ]);
     }
 
     /**
@@ -35,7 +54,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create', Product::class);
+        $company = $this->loggedCompany();
+        $service = $company->services()->bySeqId($serviceSeqId);
+
+        $measurement = $service->measurements()->create([
+                'global_measurement_id' => $request->global_measurement,
+            ]);
+
+        if($measurement){
+            return response()->json([
+                'message' => 'Measurement was successfully created.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Measurement was not created, please try again.'
+            ], 500);
     }
 
     /**
@@ -46,18 +80,19 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
-    }
+        $this->authorize('view', $product);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
+        $globalProduct = $product->globalProduct;
+        return response()->json([
+            'data' => (object)[
+                'name' => $globalProduct->name,
+                'brand' => $globalProduct->brand,
+                'type' => $globalProduct->type.' '.$globalProduct->unit_currency,
+                'unit_price' => $globalProduct->price.' '.$globalProduct->unit_currency,
+                'monthly_amount' => $product->amount.' '.$globalProduct->units,
+                'monthly_price' => $product->amount*$globalProduct->unit_price.' '.$globalProduct->unit_currency,
+            ]
+        ]);
     }
 
     /**
@@ -69,7 +104,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $this->authorize('update', $product);
+
+        $product->update([
+            'amount' => $request->amount,
+        ]);
+
+        return response()->json([
+            'message' => 'Measurement was successfully updated.'
+        ]);
     }
 
     /**
@@ -80,6 +123,15 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $this->authorize('delete', $product);
+
+        if($product->delete()){
+            return response()->json([
+                'message' => 'Product was successfully deleted.'
+            ]);
+        }
+        return response()->json([
+                'error' => 'Product was not deleted, please try again.'
+            ], 500);
     }
 }

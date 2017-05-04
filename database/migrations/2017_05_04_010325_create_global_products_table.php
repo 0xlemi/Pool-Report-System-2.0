@@ -16,7 +16,7 @@ class CreateGlobalProductsTable extends Migration
         Schema::create('global_products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('brand')->nullable()->default(null);
+            $table->string('brand');
             $table->string('type')->nullable()->default(null);
             $table->string('units');
             $table->decimal('unit_price', 16, 2);
