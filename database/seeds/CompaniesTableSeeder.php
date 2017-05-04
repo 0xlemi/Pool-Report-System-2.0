@@ -126,12 +126,81 @@ class CompaniesTableSeeder extends Seeder
         dispatch(new CreateUser($urcOtherCompanyTechnician2));
 
         // ***************************
+        //   Create Global Products
+        // ***************************
+
+        $choline1 = $company1->globalProducts()->create([
+            'name' => 'Chlorine',
+            'brand' => 'Generic Brand',
+            'type' => 'Compact Tablets',
+            'units' => 'tablets',
+            'unit_price' => 0.55,
+            'unit_currency' => 'USD',
+        ]);
+        $sodaAsh1 = $company1->globalProducts()->create([
+            'name' => 'Soda Ash',
+            'brand' => 'Generic Brand',
+            'type' => 'Pouder',
+            'units' => 'pounds',
+            'unit_price' => 1.3,
+            'unit_currency' => 'USD',
+        ]);
+        $dryAcid1 = $company1->globalProducts()->create([
+            'name' => 'Dry Acid',
+            'brand' => 'Generic Brand',
+            'type' => 'Pouder',
+            'units' => 'pounds',
+            'unit_price' => 1.9,
+            'unit_currency' => 'USD',
+        ]);
+        $salt1 = $company1->globalProducts()->create([
+            'name' => 'Salt',
+            'brand' => 'Generic Brand',
+            'type' => 'Regular',
+            'units' => 'pounds',
+            'unit_price' => 0.08,
+            'unit_currency' => 'USD',
+        ]);
+
+        $choline2 = $company2->globalProducts()->create([
+            'name' => 'Chlorine',
+            'brand' => 'Generic Brand',
+            'type' => 'Compact Tablets',
+            'units' => 'tablets',
+            'unit_price' => 0.55,
+            'unit_currency' => 'USD',
+        ]);
+        $sodaAsh2 = $company2->globalProducts()->create([
+            'name' => 'Soda Ash',
+            'brand' => 'Generic Brand',
+            'type' => 'Pouder',
+            'units' => 'pounds',
+            'unit_price' => 1.3,
+            'unit_currency' => 'USD',
+        ]);
+        $dryAcid2 = $company2->globalProducts()->create([
+            'name' => 'Dry Acid',
+            'brand' => 'Generic Brand',
+            'type' => 'Pouder',
+            'units' => 'pounds',
+            'unit_price' => 1.9,
+            'unit_currency' => 'USD',
+        ]);
+        $salt2 = $company2->globalProducts()->create([
+            'name' => 'Salt',
+            'brand' => 'Generic Brand',
+            'type' => 'Regular',
+            'units' => 'pounds',
+            'unit_price' => 0.08,
+            'unit_currency' => 'USD',
+        ]);
+
+        // ***************************
         //   Create Global Measurements
         // ***************************
 
         $chlorine1 = $company1->globalMeasurements()->create([
             'name' =>  'Chlorine',
-            'units' => 'Grams'
         ]);
             $chlorine1->labels()->create([
                 'name' => '0.5 PPM - Low',
@@ -160,7 +229,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $ph1 = $company1->globalMeasurements()->create([
             'name' =>  'PH Adjuster',
-            'units' => 'Grams'
         ]);
             $ph1->labels()->create([
                 'name' => '6.8 pH - Low',
@@ -189,7 +257,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $salt1 = $company1->globalMeasurements()->create([
             'name' =>  'Salt',
-            'units' => 'PPM'
         ]);
             $salt1->labels()->create([
                 'name' => 'Very Low',
@@ -218,7 +285,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $hardness1 = $company1->globalMeasurements()->create([
             'name' =>  'Hardness',
-            'units' => 'PPM'
         ]);
             $hardness1->labels()->create([
                 'name' => '0 PPM - Low',
@@ -247,7 +313,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $bromine1 = $company1->globalMeasurements()->create([
             'name' =>  'Bromine',
-            'units' => 'PPM'
         ]);
             $bromine1->labels()->create([
                 'name' => '1 PPM - OK',
@@ -276,7 +341,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $alkalinity1 = $company1->globalMeasurements()->create([
             'name' =>  'Alkalinity',
-            'units' => 'PPM'
         ]);
             $alkalinity1->labels()->create([
                 'name' => '20 PPM - Low',
@@ -305,7 +369,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $cyanuricAcid1 = $company1->globalMeasurements()->create([
             'name' =>  'Cyanuric Acid',
-            'units' => 'PPM'
         ]);
             $cyanuricAcid1->labels()->create([
                 'name' => '0 PPM - Low',
@@ -336,7 +399,6 @@ class CompaniesTableSeeder extends Seeder
         // For Company 2
         $chlorine2 = $company2->globalMeasurements()->create([
             'name' =>  'Chlorine',
-            'units' => 'Grams'
         ]);
             $chlorine2->labels()->create([
                 'name' => '0.5 PPM - Low',
@@ -365,7 +427,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $ph2 = $company2->globalMeasurements()->create([
             'name' =>  'PH Adjuster',
-            'units' => 'Grams'
         ]);
             $ph2->labels()->create([
                 'name' => '6.8 pH - Low',
@@ -394,7 +455,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $salt2 = $company2->globalMeasurements()->create([
             'name' =>  'Salt',
-            'units' => 'PPM'
         ]);
             $salt2->labels()->create([
                 'name' => 'Very Low',
@@ -423,7 +483,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $hardness2 = $company2->globalMeasurements()->create([
             'name' =>  'Hardness',
-            'units' => 'PPM'
         ]);
             $hardness2->labels()->create([
                 'name' => '0 PPM - Low',
@@ -452,7 +511,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $bromine2 = $company2->globalMeasurements()->create([
             'name' =>  'Bromine',
-            'units' => 'PPM'
         ]);
             $bromine2->labels()->create([
                 'name' => '1 PPM - OK',
@@ -481,7 +539,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $alkalinity2 = $company2->globalMeasurements()->create([
             'name' =>  'Alkalinity',
-            'units' => 'PPM'
         ]);
             $alkalinity2->labels()->create([
                 'name' => '20 PPM - Low',
@@ -510,7 +567,6 @@ class CompaniesTableSeeder extends Seeder
             ]);
         $cyanuricAcid2 = $company2->globalMeasurements()->create([
             'name' =>  'Cyanuric Acid',
-            'units' => 'PPM'
         ]);
             $cyanuricAcid2->labels()->create([
                 'name' => '0 PPM - Low',

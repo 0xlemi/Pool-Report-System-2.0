@@ -31,6 +31,8 @@ class CreateTriggersCompany extends Migration
                 VALUES ('payments', NEW.id, 10000);
                 INSERT INTO `seq` (`name`, `company_id`, `val`)
                 VALUES ('global_measurements', NEW.id, 0);
+                INSERT INTO `seq` (`name`, `company_id`, `val`)
+                VALUES ('global_products', NEW.id, 0);
             END
         ");
     }

@@ -85,7 +85,7 @@ class ServicesTableSeeder extends Seeder
 
             }
 
-            for ($e=0; $e < rand(6,7); $e++) {
+            for($e=0; $e < rand(6,7); $e++) {
 
                 // Getting a valid Global Measurement ID
                 $usedGlobalMeasurements = $service->measurements()
@@ -96,8 +96,23 @@ class ServicesTableSeeder extends Seeder
                                                 ->get()->random()->id;
 
                 $service->measurements()->create([
-                    'amount' => number_format(rand(100,1000000)/100, 2, '.', ''),
                     'global_measurement_id' => $global_measurement_id,
+                ]);
+            }
+
+            for($e=0; $e < rand(3,4); $e++) {
+
+                // Getting a valid Global Product ID
+                $usedGlobalProducts = $service->products()
+                            ->join('global_products', 'global_product_id', '=', 'global_products.id')
+                            ->pluck('global_products.id')->toArray();
+                $global_product_id = $service->company->globalProducts()
+                                                ->whereNotIn('global_products.id', $usedGlobalProducts)
+                                                ->get()->random()->id;
+
+                $service->products()->create([
+                    'amount' => number_format(rand(100,100000)/100, 2, '.', ''),
+                    'global_product_id' => $global_product_id,
                 ]);
             }
 

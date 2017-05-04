@@ -8,6 +8,7 @@ use Intervention;
 
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Traits\Model\SortableTrait;
+use App\Product;
 use App\Measurement;
 use App\ServiceContract;
 use App\UserRoleCompany;
@@ -104,6 +105,11 @@ class Service extends Model
     public function measurements()
     {
         return $this->hasMany(Measurement::class);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 
     /**

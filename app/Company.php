@@ -19,6 +19,7 @@ use App\MissingHistory;
 use App\GlobalMeasurement;
 
 use DB;
+use App\GlobalProduct;
 use App\Permission;
 use App\WorkOrder;
 use App\Report;
@@ -323,6 +324,11 @@ class Company extends Model
     public function globalMeasurements()
     {
         return $this->hasMany(GlobalMeasurement::class);
+    }
+
+    public function globalProducts()
+    {
+        return $this->hasMany(GlobalProduct::class);
     }
 
     public function missingHistories()
