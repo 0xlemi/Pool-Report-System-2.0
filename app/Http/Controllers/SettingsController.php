@@ -68,6 +68,7 @@ class SettingsController extends PageController
                 'facebook' => $company->facebook,
                 'twitter' => $company->twitter,
                 'timezoneList' => timezoneList(),
+                'currencies' => config('constants.currencies'),
             ];
         }
 

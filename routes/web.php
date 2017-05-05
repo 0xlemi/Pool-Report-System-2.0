@@ -65,9 +65,12 @@ Route::get('reports/emailPreview', 'ReportsController@emailPreview');
 Route::get('reports/photos/{seq_id}', 'ReportsController@getPhoto');
 Route::post('reports/photos/{seq_id}', 'ReportsController@addPhoto');
 Route::delete('reports/photos/{seq_id}/{order}', 'ReportsController@removePhoto');
+Route::post('reports/readings', 'ReportsController@createAddReadings');
+Route::resource('reports', 'ReportsController');
 
 // Technician
 Route::post('technicians/password/{seq_id}', 'TechniciansController@updatePassword');
+Route::resource('technicians', 'TechniciansController');
 
 // Work Orders
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
@@ -77,18 +80,32 @@ Route::post('workorders/photos/before/{seq_id}', 'WorkOrderController@addPhotoBe
 Route::post('workorders/photos/after/{seq_id}', 'WorkOrderController@addPhotoAfter');
 Route::delete('workorders/photos/before/{seq_id}/{order}', 'WorkOrderController@removePhotoBefore');
 Route::delete('workorders/photos/after/{seq_id}/{order}', 'WorkOrderController@removePhotoAfter');
+Route::resource('workorders', 'WorkOrderController');
 
 // Works
 Route::get('service/{workOrderSeqId}/works', 'WorkController@index');
 Route::post('service/{workOrderSeqId}/works', 'WorkController@store');
 Route::post('works/photos/{work}', 'WorkController@addPhoto');
 Route::delete('works/photos/{work}/{order}', 'WorkController@removePhoto');
+Route::resource('works', 'WorkController', ['only' => [
+    'show', 'update', 'destroy'
+]]);
+
+// Global Product
+Route::post('globalproducts/photos/{globalProduct}', 'GlobalProductController@addPhoto');
+Route::delete('globalproducts/photos/{globalProduct}/{order}', 'GlobalProductController@removePhoto');
+Route::resource('globalproducts', 'GlobalProductController', ['only' => [
+    'index', 'store', 'show', 'update', 'destroy'
+]]);
 
 // Equipment
 Route::get('service/{service_seq_id}/equipment', 'EquipmentController@index');
 Route::post('service/{workOrderSeqId}/equipment', 'EquipmentController@store');
 Route::post('equipment/photos/{equipment}', 'EquipmentController@addPhoto');
 Route::delete('equipment/photos/{equipment}/{order}', 'EquipmentController@removePhoto');
+Route::resource('equipment', 'EquipmentController', ['only' => [
+    'show', 'update', 'destroy'
+]]);
 
 // Measurements
 Route::get('service/{serviceSeqId}/measurements', 'MeasurementsController@index');
@@ -117,6 +134,9 @@ Route::get('missingservices', 'MissingServicesController@index');
 // Payments
 Route::get('invoices/{invoiceSeqId}/payments', 'PaymentController@index');
 Route::post('invoices/{invoiceSeqId}/payments', 'PaymentController@store');
+Route::resource('payments', 'PaymentController', ['only' => [
+    'show', 'destroy'
+]]);
 
 // Notifications
 Route::get('notifications', 'NotificationController@index');
@@ -124,26 +144,12 @@ Route::get('notifications/widget', 'NotificationController@widget');
 Route::post('notifications/read/widget', 'NotificationController@markWidgetAsRead');
 Route::post('notifications/read/all', 'NotificationController@markAllAsRead');
 
-// Reports
-Route::resource('reports', 'ReportsController');
-Route::post('reports/readings', 'ReportsController@createAddReadings');
 
-Route::resource('workorders', 'WorkOrderController');
-Route::resource('works', 'WorkController', ['only' => [
-    'show', 'update', 'destroy'
-]]);
 Route::resource('services', 'ServicesController');
-Route::resource('equipment', 'EquipmentController', ['only' => [
-    'show', 'update', 'destroy'
-]]);
 Route::resource('clients', 'ClientsController');
 Route::resource('supervisors', 'SupervisorsController');
-Route::resource('technicians', 'TechniciansController');
 Route::resource('invoices', 'InvoiceController', ['only' => [
     'index', 'show', 'destroy'
-]]);
-Route::resource('payments', 'PaymentController', ['only' => [
-    'show', 'destroy'
 ]]);
 
 // Chat
@@ -159,20 +165,20 @@ Route::post(
 
 // Settings
 Route::get('settings', 'SettingsController@index');
-
+// profile
 Route::post('settings/profile', 'SettingsController@profile');
 Route::post('settings/changeEmail', 'SettingsController@changeEmail');
 Route::post('settings/changePassword', 'SettingsController@changePassword');
 Route::delete('settings/delete', 'SettingsController@deleteAccount');
-
+// customization
 Route::post('settings/customization', 'SettingsController@customization');
-
+// notifications
 Route::post('settings/notifications', 'SettingsController@notifications');
-
+// billing
 Route::post('settings/subscribe', 'SettingsController@subscribe');
 Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
 Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
-
+// permissions
 Route::post('settings/permissions', 'SettingsController@permissions');
 
 // Datatables

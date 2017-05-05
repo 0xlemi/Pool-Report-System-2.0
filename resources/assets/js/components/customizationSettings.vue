@@ -45,18 +45,28 @@
     	<i class="font-icon font-icon-ok"></i>&nbsp;&nbsp;&nbsp;Save
     </button>
 
+    <hr>
+
+    <div class="form-group row">
+    	<div class="col-sm-10">
+            <global-products :currencies="currencies"></global-products>
+    	</div>
+    </div>
+
 </template>
 
 <script>
 import alert from './alert.vue';
 import timezoneDropdown from './timezoneDropdown.vue';
+import globalProducts from './globalProducts.vue';
 var Spinner = require("spin");
 
 export default {
-    props: ['name', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList' ],
+    props: ['name', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList', 'currencies'],
 	components:{
 		alert,
-        timezoneDropdown
+        timezoneDropdown,
+        globalProducts
 	},
 	data(){
 		return {

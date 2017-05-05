@@ -31294,7 +31294,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e506934", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReportStaff.vue":201,"./MeasurementChart.vue":204,"./panel.vue":244,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],201:[function(require,module,exports){
+},{"./ClientReportStaff.vue":201,"./MeasurementChart.vue":204,"./panel.vue":245,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],201:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.contact-row[_v-1cd3303c]:hover {\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    top: 0px;\n    left: 0px;\n}\n.contact-row[_v-1cd3303c]:active {\n    background-color: #337ab7;\n}\n")
 'use strict';
@@ -31336,7 +31336,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1cd3303c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"./photo.vue":247,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],202:[function(require,module,exports){
+},{"./modal.vue":241,"./photo.vue":248,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],202:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31631,7 +31631,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-cf2fc28e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./datePicker.vue":224,"./reportTable.vue":251,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
+},{"./datePicker.vue":224,"./reportTable.vue":252,"vue":187,"vue-hot-reload-api":184}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -31778,7 +31778,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4aa75e68", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./countries.vue":221,"./locationPicker.vue":235,"vue":187,"vue-hot-reload-api":184}],209:[function(require,module,exports){
+},{"./countries.vue":221,"./locationPicker.vue":236,"vue":187,"vue-hot-reload-api":184}],209:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32239,7 +32239,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-51ddf0a4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./modal.vue":240,"spin":172,"vue":187,"vue-hot-reload-api":184}],214:[function(require,module,exports){
+},{"./alert.vue":209,"./modal.vue":241,"spin":172,"vue":187,"vue-hot-reload-api":184}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32486,7 +32486,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./urcTable.vue":261,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":241,"./urcTable.vue":262,"moment":168,"vue":187,"vue-hot-reload-api":184}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32554,7 +32554,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-657f0ff2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"vue":187,"vue-hot-reload-api":184}],217:[function(require,module,exports){
+},{"./modal.vue":241,"vue":187,"vue-hot-reload-api":184}],217:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32739,7 +32739,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3998b644", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":241,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],218:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32794,7 +32794,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-508d771e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],219:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32985,7 +32985,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-091f5cd2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":240,"./photoList.vue":248,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],220:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./modal.vue":241,"./photoList.vue":249,"babel-runtime/helpers/defineProperty":8,"vue":187,"vue-hot-reload-api":184}],220:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -33512,15 +33512,20 @@ var _timezoneDropdown = require('./timezoneDropdown.vue');
 
 var _timezoneDropdown2 = _interopRequireDefault(_timezoneDropdown);
 
+var _globalProducts = require('./globalProducts.vue');
+
+var _globalProducts2 = _interopRequireDefault(_globalProducts);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Spinner = require("spin");
 
 exports.default = {
-	props: ['name', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList'],
+	props: ['name', 'timezone', 'website', 'facebook', 'twitter', 'timezoneList', 'currencies'],
 	components: {
 		alert: _alert2.default,
-		timezoneDropdown: _timezoneDropdown2.default
+		timezoneDropdown: _timezoneDropdown2.default,
+		globalProducts: _globalProducts2.default
 	},
 	data: function data() {
 		return {
@@ -33592,7 +33597,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n    \t<label class=\"form-label semibold\">Company Name</label>\n    \t<input type=\"text\" class=\"form-control\" v-model=\"name\">\n\t    <small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('timezone'))}\">\n    \t<label class=\"form-label semibold\">Timezone</label>\n        <timezone-dropdown class=\"bootstrap-select bootstrap-select-arrow\" :timezone.sync=\"timezone\" :timezone-list=\"timezoneList\"></timezone-dropdown>\n\t    <small v-if=\"checkValidationError('timezone')\" class=\"text-muted\">{{ validationErrors.timezone[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('website'))}\">\n    \t<label class=\"form-label semibold\">Website</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"website\">\n        </div>\n\t    <small v-if=\"checkValidationError('website')\" class=\"text-muted\">{{ validationErrors.website[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('facebook'))}\">\n    \t<label class=\"form-label semibold\">Facebook</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"facebook\">\n        </div>\n\t    <small v-if=\"checkValidationError('facebook')\" class=\"text-muted\">{{ validationErrors.facebook[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('twitter'))}\">\n    \t<label class=\"form-label semibold\">Twitter</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"twitter\">\n        </div>\n\t    <small v-if=\"checkValidationError('twitter')\" class=\"text-muted\">{{ validationErrors.twitter[0] }}</small>\n    </fieldset>\n\n    <button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n    \t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n    </button>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n    \t<label class=\"form-label semibold\">Company Name</label>\n    \t<input type=\"text\" class=\"form-control\" v-model=\"name\">\n\t    <small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('timezone'))}\">\n    \t<label class=\"form-label semibold\">Timezone</label>\n        <timezone-dropdown class=\"bootstrap-select bootstrap-select-arrow\" :timezone.sync=\"timezone\" :timezone-list=\"timezoneList\"></timezone-dropdown>\n\t    <small v-if=\"checkValidationError('timezone')\" class=\"text-muted\">{{ validationErrors.timezone[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('website'))}\">\n    \t<label class=\"form-label semibold\">Website</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"website\">\n        </div>\n\t    <small v-if=\"checkValidationError('website')\" class=\"text-muted\">{{ validationErrors.website[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('facebook'))}\">\n    \t<label class=\"form-label semibold\">Facebook</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.facebook.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"facebook\">\n        </div>\n\t    <small v-if=\"checkValidationError('facebook')\" class=\"text-muted\">{{ validationErrors.facebook[0] }}</small>\n    </fieldset>\n\n    <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('twitter'))}\">\n    \t<label class=\"form-label semibold\">Twitter</label>\n    \t<div class=\"input-group\">\n            <div class=\"input-group-addon\">http://www.twitter.com/</div>\n            <input type=\"text\" class=\"form-control\" v-model=\"twitter\">\n        </div>\n\t    <small v-if=\"checkValidationError('twitter')\" class=\"text-muted\">{{ validationErrors.twitter[0] }}</small>\n    </fieldset>\n\n    <button class=\"btn btn-success\" type=\"button\" @click=\"save\">\n    \t<i class=\"font-icon font-icon-ok\"></i>&nbsp;&nbsp;&nbsp;Save\n    </button>\n\n    <hr>\n\n    <div class=\"form-group row\">\n    \t<div class=\"col-sm-10\">\n            <global-products :currencies=\"currencies\"></global-products>\n    \t</div>\n    </div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -33603,7 +33608,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./timezoneDropdown.vue":259,"spin":172,"vue":187,"vue-hot-reload-api":184}],224:[function(require,module,exports){
+},{"./alert.vue":209,"./globalProducts.vue":233,"./timezoneDropdown.vue":260,"spin":172,"vue":187,"vue-hot-reload-api":184}],224:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
 "use strict";
@@ -33900,7 +33905,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-131aa5c6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./partials/basicNameIconOptionPartial.html":245,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],228:[function(require,module,exports){
+},{"./partials/basicNameIconOptionPartial.html":246,"vue":187,"vue-hot-reload-api":184,"vue-multiselect":185}],228:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -34038,7 +34043,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-2bc03898", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],230:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],230:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34534,7 +34539,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7561f529", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],232:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":249,"spin":172,"vue":187,"vue-hot-reload-api":184}],232:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34666,7 +34671,398 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-fa98d952", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],233:[function(require,module,exports){
+},{"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":249,"spin":172,"vue":187,"vue-datetime-picker/src/vue-datetime-picker.js":183,"vue-hot-reload-api":184}],233:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+				value: true
+});
+
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _photoList = require('./photoList.vue');
+
+var _photoList2 = _interopRequireDefault(_photoList);
+
+var _dropzone = require('./dropzone.vue');
+
+var _dropzone2 = _interopRequireDefault(_dropzone);
+
+var _BootstrapTable = require('./BootstrapTable.vue');
+
+var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+				props: ['currencies'],
+				components: {
+								alert: _alert2.default,
+								photoList: _photoList2.default,
+								dropzone: _dropzone2.default,
+								BootstrapTable: _BootstrapTable2.default
+				},
+				data: function data() {
+								var _ref;
+
+								return _ref = {
+												focus: 2, // 1=create, 2=list, 3=show, 4=edit
+												validationErrors: {},
+
+												id: 0,
+												name: null,
+												type: null,
+												brand: null,
+												units: null,
+												price: null,
+												currency: null,
+
+												showName: null,
+												showType: null,
+												showBrand: null,
+												showPrice: null
+								}, (0, _defineProperty3.default)(_ref, 'showPrice', null), (0, _defineProperty3.default)(_ref, 'photos', {}), (0, _defineProperty3.default)(_ref, 'alertMessageCreate', ''), (0, _defineProperty3.default)(_ref, 'alertMessageList', ''), (0, _defineProperty3.default)(_ref, 'alertMessageShow', ''), (0, _defineProperty3.default)(_ref, 'alertMessageEdit', ''), (0, _defineProperty3.default)(_ref, 'alertActiveCreate', false), (0, _defineProperty3.default)(_ref, 'alertActiveList', false), (0, _defineProperty3.default)(_ref, 'alertActiveShow', false), (0, _defineProperty3.default)(_ref, 'alertActiveEdit', false), (0, _defineProperty3.default)(_ref, 'data', []), (0, _defineProperty3.default)(_ref, 'columns', [{
+												field: 'id',
+												title: '#',
+												sortable: true
+								}, {
+												field: 'name',
+												title: 'Name',
+												sortable: true
+								}, {
+												field: 'brand',
+												title: 'Brand',
+												sortable: true
+								}, {
+												field: 'type',
+												title: 'Type',
+												sortable: true
+								}, {
+												field: 'price',
+												title: 'Price',
+												sortable: true
+								}]), (0, _defineProperty3.default)(_ref, 'options', {
+												iconsPrefix: 'font-icon',
+												toggle: 'table',
+												sidePagination: 'client',
+												pagination: 'true',
+												classes: 'table',
+												icons: {
+																paginationSwitchDown: 'font-icon-arrow-square-down',
+																paginationSwitchUp: 'font-icon-arrow-square-down up',
+																refresh: 'font-icon-refresh',
+																toggle: 'font-icon-list-square',
+																columns: 'font-icon-list-rotate',
+																export: 'font-icon-download'
+												},
+												paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
+												paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
+												pageSize: 5,
+												pageList: [5, 10],
+												search: true,
+												showExport: true,
+												exportTypes: ['excel', 'pdf'],
+												minimumCountColumns: 2,
+												showFooter: false,
+
+												uniqueId: 'id',
+												idField: 'id'
+								}), _ref;
+				},
+
+				computed: {
+								modalTitle: function modalTitle() {
+												switch (this.focus) {
+																case 1:
+																				return 'Add Global Product';
+																				break;
+																case 2:
+																				return 'Global Product List';
+																				break;
+																case 3:
+																				return this.name;
+																				break;
+																case 4:
+																				return 'Edit Global Product';
+																				break;
+																default:
+																				return 'Global Product';
+												}
+								},
+								dropzoneUrl: function dropzoneUrl() {
+												return 'globalproducts/photos/' + this.id;
+								}
+				},
+				events: {
+								rowClicked: function rowClicked(id) {
+												this.id = id;
+												this.getValues(id, true);
+								},
+								photoUploaded: function photoUploaded() {
+												this.getValues(this.id);
+								}
+				},
+				methods: {
+								getList: function getList() {
+												var _this = this;
+
+												this.$http.get(Laravel.url + 'globalproducts').then(function (response) {
+																_this.data = response.data.data;
+																_this.validationErrors = {};
+																_this.$broadcast('refreshTable');
+												}, function (response) {
+																_this.focus = 2;
+																_this.alertMessageList = "The information could not be retrieved, please try again.";
+																_this.alertActiveList = true;
+												});
+								},
+								getValues: function getValues(id) {
+												var _this2 = this;
+
+												var changeFocus = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+												this.$http.get(Laravel.url + 'globalproducts/' + id).then(function (response) {
+																var data = response.data.data;
+
+																_this2.name = data.name;
+																_this2.type = data.type;
+																_this2.brand = data.brand;
+																_this2.price = data.unit_price;
+																_this2.currency = data.unit_currency;
+																_this2.units = data.units;
+
+																_this2.showName = data.name;
+																_this2.showType = data.type;
+																_this2.showBrand = data.brand;
+																_this2.showPrice = data.price;
+
+																_this2.photos = data.photos;
+
+																if (changeFocus) {
+																				_this2.changeFocus(3);
+																}
+												}, function (response) {
+																_this2.focus = 2;
+																_this2.alertMessageList = "The information could not be retrieved, please try again.";
+																_this2.alertActiveList = true;
+												});
+								},
+								create: function create() {
+												var _this3 = this;
+
+												var clickEvent = event;
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('create');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Creating';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.post(Laravel.url + 'globalproducts', {
+																name: this.name,
+																brand: this.brand,
+																type: this.type,
+																units: this.units,
+																unit_price: this.price,
+																unit_currency: this.currency
+												}).then(function (response) {
+																_this3.changeFocus(2);
+																_this3.getList();
+												}, function (response) {
+																if (response.status == 422) {
+																				_this3.validationErrors = response.data;
+																				_this3.revertButton(clickEvent, buttonTag);
+																} else {
+																				_this3.alertMessageCreate = "The globalproduct could not be created, please try again.";
+																				_this3.alertActiveCreate = true;
+																				_this3.revertButton(clickEvent, buttonTag);
+																}
+												});
+								},
+								update: function update() {
+												var _this4 = this;
+
+												var clickEvent = event;
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('edit');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saving';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.patch(Laravel.url + 'globalproducts/' + this.id, {
+																name: this.name,
+																brand: this.brand,
+																type: this.type,
+																units: this.units,
+																unit_price: this.price,
+																unit_currency: this.currency
+												}).then(function (response) {
+																// refresh the information
+																_this4.getValues(_this4.id, true);
+												}, function (response) {
+																if (response.status == 422) {
+																				_this4.validationErrors = response.data;
+																				_this4.revertButton(clickEvent, buttonTag);
+																} else {
+																				_this4.alertMessageEdit = "The globalproducts could not be updated, please try again.";
+																				_this4.alertActiveEdit = true;
+																				_this4.revertButton(clickEvent, buttonTag);
+																}
+												});
+								},
+								destroy: function destroy() {
+												var vue = this;
+												var clickEvent = event;
+												swal({
+																title: "Are you sure?",
+																text: "Global Product is going to permanently deleted!",
+																type: "warning",
+																showCancelButton: true,
+																confirmButtonColor: "#DD6B55",
+																confirmButtonText: "Yes, delete it!",
+																cancelButtonText: "No, cancel!",
+																closeOnConfirm: true,
+																closeOnCancel: true
+												}, function (isConfirm) {
+																if (isConfirm) {
+																				vue.destroyRequest(clickEvent);
+																}
+												});
+								},
+								destroyRequest: function destroyRequest(clickEvent) {
+												var _this5 = this;
+
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
+
+												this.resetAlert('show');
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loading';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
+
+												this.$http.delete(Laravel.url + 'globalproducts/' + this.id).then(function (response) {
+																_this5.clean();
+																_this5.changeFocus(2);
+												}, function (response) {
+																_this5.alertMessageShow = "The globalproduct could not be destroyed, please try again.";
+																_this5.alertActiveShow = true;
+																_this5.revertButton(clickEvent, buttonTag);
+												});
+								},
+								goToCreate: function goToCreate() {
+												this.clean();
+												this.changeFocus(1);
+								},
+								clean: function clean() {
+												this.name = '';
+												this.type = '';
+												this.brand = '';
+												this.price = '';
+												this.currency = '';
+												this.units = '';
+
+												this.showName = '';
+												this.showType = '';
+												this.showBrand = '';
+												this.showModel = '';
+												this.showPrice = '';
+
+												this.photos = {};
+
+												this.validationErrors = {};
+								},
+								changeFocus: function changeFocus(num) {
+												if (num == 2) {
+																this.getList();
+												}
+												this.focus = num;
+								},
+								goBack: function goBack() {
+												switch (this.focus) {
+																case 1:
+																				this.changeFocus(2);
+																				break;
+																case 3:
+																				this.changeFocus(2);
+																				break;
+																case 4:
+																				this.changeFocus(3);
+																				break;
+												}
+								},
+								resetAlert: function resetAlert(alert) {
+												if (alert == 'create') {
+																this.alertMessageCreate = "";
+																this.alertActiveCreate = false;
+												} else if (alert == 'list') {
+																this.alertMessageList = "";
+																this.alertActiveList = false;
+												} else if (alert == 'show') {
+																this.alertMessageShow = "";
+																this.alertActiveShow = false;
+												} else if (alert == 'edit') {
+																this.alertMessageEdit = "";
+																this.alertActiveEdit = false;
+												}
+								},
+								isFocus: function isFocus(num) {
+												return this.focus == num;
+								},
+								checkValidationError: function checkValidationError($fildName) {
+												return $fildName in this.validationErrors;
+								},
+								revertButton: function revertButton(clickEvent, buttonTag) {
+												// enable, remove spinner and set tab to the one before
+												clickEvent.target.disabled = false;
+												clickEvent.target.innerHTML = buttonTag;
+								}
+				},
+				ready: function ready() {
+								this.getList();
+				}
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#globalProductModal\">\n\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Global Products</button>\n\n\n<!-- Modal for globalproducts managment -->\n<div class=\"modal fade\" id=\"globalProductModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n\n                <!-- Create Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" placeholder=\"Example: Chlorine, Salt, Filter, etc...\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" placeholder=\"Example: Industrial, Concentrated, etc...\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: pounds, tablets, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\n                <!-- List -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Global Product\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n\t\t\t\t</div>\n\n\n                <!-- Show Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showBrand\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showPrice\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<br>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<h5>Photos</h5>\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"false\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\n\t\t\t\t<!-- Edit Global Product -->\n                <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t</div>\n                                    <div class=\"input-group-addon\">\n                                        per {{ units }}\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<hr>\n\t\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"true\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"col-md-12\">\n\t            \t\t<dropzone :url=\"dropzoneUrl\"></dropzone>\n\t\t\t\t\t</div>\n\n                </div><!-- End Edit Global Product -->\n\n\t\t\t</div>\n        </div>\n      <div class=\"modal-footer\">\n\t\t<span style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button class=\"btn btn-danger\" type=\"button\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Delete</button>\n\t\t</span>\n\n        <button v-if=\"!isFocus(4)\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t\t<button v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back</button>\n        <button v-if=\"isFocus(1)\" class=\"btn btn-success\" type=\"button\" @click=\"create\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Add Global Product</button>\n\t\t<button v-if=\"isFocus(3)\" type=\"button\" class=\"btn btn-primary\" @click=\"changeFocus(4)\">\n\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit</button>\n        <button v-if=\"isFocus(4)\" class=\"btn btn-success\" type=\"button\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-585e631c", module.exports)
+  } else {
+    hotAPI.update("_v-585e631c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropzone.vue":228,"./photoList.vue":249,"babel-runtime/helpers/defineProperty":8,"spin":172,"vue":187,"vue-hot-reload-api":184}],234:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34776,7 +35172,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],234:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],235:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -34831,7 +35227,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-75470054", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],235:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],236:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.red[_v-57881798] {\n\tcolor: #FA424A;\n}\n")
 'use strict';
@@ -34955,7 +35351,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-57881798", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"jquery-locationpicker":90,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],236:[function(require,module,exports){
+},{"jquery-locationpicker":90,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],237:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -35012,7 +35408,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-136361f2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":240,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],237:[function(require,module,exports){
+},{"./modal.vue":241,"gmaps.core":88,"gmaps.markers":89,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35289,7 +35685,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-21652f97", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"spin":172,"vue":187,"vue-hot-reload-api":184}],238:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"spin":172,"vue":187,"vue-hot-reload-api":184}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35350,7 +35746,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-c517a1b6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],239:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35491,7 +35887,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7e05d63f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],240:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35530,7 +35926,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-756e4770", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],241:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],242:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35551,7 +35947,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5f10d720", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],242:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35609,7 +36005,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-528515e3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],243:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35673,7 +36069,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-563ab3b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./notification.vue":241,"vue":187,"vue-hot-reload-api":184}],244:[function(require,module,exports){
+},{"./notification.vue":242,"vue":187,"vue-hot-reload-api":184}],245:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35706,9 +36102,9 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-28d12fc2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],245:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],246:[function(require,module,exports){
 module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35988,7 +36384,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],247:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"spin":172,"vue":187,"vue-hot-reload-api":184}],248:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36021,7 +36417,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1168d54d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],248:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],249:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -36070,7 +36466,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5566088b", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photo.vue":247,"vue":187,"vue-hot-reload-api":184}],249:[function(require,module,exports){
+},{"./photo.vue":248,"vue":187,"vue-hot-reload-api":184}],250:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36407,7 +36803,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-02232e6c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"spin":172,"vue":187,"vue-hot-reload-api":184}],250:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"spin":172,"vue":187,"vue-hot-reload-api":184}],251:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36431,7 +36827,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-626e3884", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],251:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36565,7 +36961,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e51ec856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./missingServices.vue":239,"vue":187,"vue-hot-reload-api":184}],252:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./missingServices.vue":240,"vue":187,"vue-hot-reload-api":184}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36605,7 +37001,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4acf9cce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/object/keys":5,"vue":187,"vue-hot-reload-api":184}],253:[function(require,module,exports){
+},{"babel-runtime/core-js/object/keys":5,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36734,7 +37130,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],254:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36794,7 +37190,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-12e0b07a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],255:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36854,7 +37250,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],256:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36932,7 +37328,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li v-if=\"profile\" class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"customization\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"notifications\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"billing\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"permissions\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div v-if=\"profile\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings :name=\"profile.name\" :last-name=\"profile.lastName\">\n                        </account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <delete-account url=\"settings/delete/\" :icon=\"profile.deleteIcon\">\n                    </delete-account>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            <div v-if=\"customization\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <customization-settings :name=\"customization.name\" :timezone=\"customization.timezone\" :website=\"customization.website\" :facebook=\"customization.facebook\" :twitter=\"customization.twitter\" :timezone-list=\"customization.timezoneList\">\n                    </customization-settings>\n                </div>\n            </div>\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            <div v-if=\"notifications\" class=\"row\">\n                <div class=\"col-md-12\">\n\t\t\t\t\t<alert type=\"danger\" :message=\"notificationAlertMessage\" :active=\"notificationAlertActive\"></alert>\n                    <div class=\"col-md-12\">\n                        <notification-settings :settings=\"notifications.settings\">\n                        </notification-settings>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div v-if=\"billing\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div v-if=\"permissions\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<section class=\"tabs-section\">\n\n    <!-- Tab Navigation -->\n    <div class=\"tabs-section-nav\">\n        <div class=\"tbl\">\n            <ul class=\"nav\" role=\"tablist\">\n\n                <li v-if=\"profile\" class=\"nav-item\">\n                    <a class=\"nav-link active\" href=\"#tabs-1-tab-1\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-user\"></i>&nbsp;\n                            Profile\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"customization\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-2\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-build\"></i>&nbsp;\n                            Customization\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"notifications\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-3\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-mail\"></i>&nbsp;\n                            Notifications\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"billing\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-4\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"glyphicon glyphicon-credit-card\"></i>&nbsp;\n                            Billing\n                        </span>\n                    </a>\n                </li>\n\n                <li v-if=\"permissions\" class=\"nav-item\">\n                    <a class=\"nav-link\" href=\"#tabs-1-tab-5\" role=\"tab\" data-toggle=\"tab\">\n                        <span class=\"nav-link-in\">\n                            <i class=\"font-icon font-icon-lock\"></i>&nbsp;\n                            Permissions\n                        </span>\n                    </a>\n                </li>\n\n            </ul>\n        </div>\n    </div><!--.tabs-section-nav-->\n\n    <!-- Tabs Content -->\n    <div class=\"tab-content\">\n\n        <!-- Profile -->\n        <div role=\"tabpanel\" class=\"tab-pane fade in active\" id=\"tabs-1-tab-1\">\n            <div v-if=\"profile\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <div class=\"col-md-12\">\n                        <account-settings :name=\"profile.name\" :last-name=\"profile.lastName\">\n                        </account-settings>\n                    </div>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <change-email></change-email>\n                </div>\n                <div class=\"col-md-12\">\n                    <br>\n                    <change-password></change-password>\n                </div>\n                <div class=\"col-md-12\">\n                    <hr>\n                    <delete-account url=\"settings/delete/\" :icon=\"profile.deleteIcon\">\n                    </delete-account>\n                </div>\n            </div>\n        </div>\n\n        <!-- Costumization -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-2\">\n            <div v-if=\"customization\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <customization-settings :name=\"customization.name\" :timezone=\"customization.timezone\" :website=\"customization.website\" :facebook=\"customization.facebook\" :twitter=\"customization.twitter\" :timezone-list=\"customization.timezoneList\" :currencies=\"customization.currencies\">\n                    </customization-settings>\n                </div>\n            </div>\n        </div>\n\n        <!-- Notifications -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-3\">\n            <div v-if=\"notifications\" class=\"row\">\n                <div class=\"col-md-12\">\n\t\t\t\t\t<alert type=\"danger\" :message=\"notificationAlertMessage\" :active=\"notificationAlertActive\"></alert>\n                    <div class=\"col-md-12\">\n                        <notification-settings :settings=\"notifications.settings\">\n                        </notification-settings>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n        <!-- Billing -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-4\">\n            <div v-if=\"billing\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n                    <billing :subscribed=\"billing.subscribed\" :last-four=\"billing.lastFour\" :plan=\"billing.plan\" :active-objects=\"billing.activeObjects\" :billable-objects=\"billing.billableObjects\" :free-objects=\"billing.freeObjects\">\n                    </billing>\n                </div>\n            </div>\n        </div>\n\n        <!-- Permissions -->\n        <div role=\"tabpanel\" class=\"tab-pane fade\" id=\"tabs-1-tab-5\">\n            <div v-if=\"permissions\" class=\"row\">\n                <div class=\"col-md-12\">\n                    <br>\n    \t                <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Supervisor Permissions:</h5>\n                        <permissions :permissions=\"permissions.supervisor\" tabs-number=\"2\" :button=\"{ tag: 'Manage Permissions', class: 'btn-warning', icon: 'glyphicon glyphicon-eye-open'}\">\n                        </permissions>\n                    </div>\n                    <br>\n                    <div class=\"form-group\">\n\t\t\t\t\t\t<h5 class=\"semibold\">Technician Permissions:</h5>\n                        <permissions :permissions=\"permissions.technician\" tabs-number=\"3\" :button=\"{ tag: 'Manage Permissions', class: 'btn-info', icon: 'glyphicon glyphicon-wrench'}\">\n                        </permissions>\n                    </div>\n                </div>\n            </div>\n        </div>\n\n    </div><!--.tab-content-->\n\n</section><!--.tabs-section-->\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -36943,7 +37339,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":223,"./deleteAccount.vue":225,"./notificationSettings.vue":242,"vue":187,"vue-hot-reload-api":184}],257:[function(require,module,exports){
+},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":223,"./deleteAccount.vue":225,"./notificationSettings.vue":243,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36994,7 +37390,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37049,7 +37445,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],259:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37075,7 +37471,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8165b142", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],260:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37125,7 +37521,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-73c1b0fc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],261:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37249,7 +37645,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1f3ef786", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],262:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37309,7 +37705,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],263:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37373,7 +37769,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":228,"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],264:[function(require,module,exports){
+},{"./dropzone.vue":228,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37453,7 +37849,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":248,"vue":187,"vue-hot-reload-api":184}],265:[function(require,module,exports){
+},{"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37513,7 +37909,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":233,"vue":187,"vue-hot-reload-api":184}],266:[function(require,module,exports){
+},{"./indexTable.vue":234,"vue":187,"vue-hot-reload-api":184}],267:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -37924,7 +38320,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"./dropzone.vue":228,"./photoList.vue":248,"spin":172,"vue":187,"vue-hot-reload-api":184}],267:[function(require,module,exports){
+},{"./BootstrapTable.vue":199,"./alert.vue":209,"./dropdown.vue":227,"./dropzone.vue":228,"./photoList.vue":249,"spin":172,"vue":187,"vue-hot-reload-api":184}],268:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38008,7 +38404,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":187,"vue-hot-reload-api":184}],268:[function(require,module,exports){
+},{"vue":187,"vue-hot-reload-api":184}],269:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -38104,6 +38500,7 @@ $(document).ready(function () {
 	var messagesWidget = require('./components/messagesWidget.vue');
 	var unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
 	var product = require('./components/product.vue');
+	var globalProducts = require('./components/globalProducts.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -38134,6 +38531,7 @@ $(document).ready(function () {
 			billing: billing,
 			settings: settings,
 			profile: profile,
+			globalProducts: globalProducts,
 			// Client Interface
 			clientReports: clientReports,
 			workOrderClientTable: workOrderClientTable,
@@ -38893,6 +39291,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":202,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/invoiceTable.vue":234,"./components/locationShow.vue":236,"./components/measurement.vue":237,"./components/messagesWidget.vue":238,"./components/missingServices.vue":239,"./components/notificationsWidget.vue":243,"./components/payments.vue":246,"./components/photo.vue":247,"./components/photoList.vue":248,"./components/product.vue":249,"./components/profile.vue":250,"./components/rolePicker.vue":252,"./components/routeTable.vue":253,"./components/serviceClientTable.vue":254,"./components/serviceTable.vue":255,"./components/settings.vue":256,"./components/supervisorTable.vue":257,"./components/technicianTable.vue":258,"./components/timezoneDropdown.vue":259,"./components/unreadMessagesCounter.vue":260,"./components/workOrderClientTable.vue":262,"./components/workOrderPhotosEdit.vue":263,"./components/workOrderPhotosShow.vue":264,"./components/workOrderTable.vue":265,"./components/works.vue":266,"./directives/FormToAjax.vue":267,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,268]);
+},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":202,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/globalProducts.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/measurement.vue":238,"./components/messagesWidget.vue":239,"./components/missingServices.vue":240,"./components/notificationsWidget.vue":244,"./components/payments.vue":247,"./components/photo.vue":248,"./components/photoList.vue":249,"./components/product.vue":250,"./components/profile.vue":251,"./components/rolePicker.vue":253,"./components/routeTable.vue":254,"./components/serviceClientTable.vue":255,"./components/serviceTable.vue":256,"./components/settings.vue":257,"./components/supervisorTable.vue":258,"./components/technicianTable.vue":259,"./components/timezoneDropdown.vue":260,"./components/unreadMessagesCounter.vue":261,"./components/workOrderClientTable.vue":263,"./components/workOrderPhotosEdit.vue":264,"./components/workOrderPhotosShow.vue":265,"./components/workOrderTable.vue":266,"./components/works.vue":267,"./directives/FormToAjax.vue":268,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,269]);
 
 //# sourceMappingURL=bundle.js.map

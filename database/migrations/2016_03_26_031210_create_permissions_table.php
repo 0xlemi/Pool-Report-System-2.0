@@ -84,6 +84,16 @@ class CreatePermissionsTable extends Migration
             [ 'id' => 57, 'element' => 'product', 'action' => 'create', 'text' => 'Create New Product' ],
             [ 'id' => 58, 'element' => 'product', 'action' => 'update', 'text' => 'Edit Products' ],
             [ 'id' => 59, 'element' => 'product', 'action' => 'delete', 'text' => 'Delete Product' ],
+            [ 'id' => 60, 'element' => 'globalmeasurement', 'action' => 'view', 'text' => 'Show Global Measurments' ],
+            [ 'id' => 61, 'element' => 'globalmeasurement', 'action' => 'create', 'text' => 'Create New Global Measurment' ],
+            [ 'id' => 62, 'element' => 'globalmeasurement', 'action' => 'update', 'text' => 'Edit Global Measurments' ],
+            [ 'id' => 63, 'element' => 'globalmeasurement', 'action' => 'delete', 'text' => 'Delete Global Measurment' ],
+            [ 'id' => 64, 'element' => 'globalproduct', 'action' => 'view', 'text' => 'Show Global Products' ],
+            [ 'id' => 65, 'element' => 'globalproduct', 'action' => 'create', 'text' => 'Create New Global Product' ],
+            [ 'id' => 66, 'element' => 'globalproduct', 'action' => 'update', 'text' => 'Edit Global Products' ],
+            [ 'id' => 67, 'element' => 'globalproduct', 'action' => 'addPhoto', 'text' => 'Add Photos for Global Product' ],
+            [ 'id' => 68, 'element' => 'globalproduct', 'action' => 'removePhoto', 'text' => 'Remove Photos for Global Product' ],
+            [ 'id' => 69, 'element' => 'globalproduct', 'action' => 'delete', 'text' => 'Delete Global Product' ],
         ]);
     }
 

@@ -95,7 +95,8 @@
                         :website="customization.website"
                         :facebook="customization.facebook"
                         :twitter="customization.twitter"
-                        :timezone-list="customization.timezoneList">
+                        :timezone-list="customization.timezoneList"
+                        :currencies="customization.currencies">
                     </customization-settings>
                 </div>
             </div>

@@ -89,6 +89,7 @@ function isset(strVariableName) {
     let messagesWidget = require('./components/messagesWidget.vue');
     let unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
     let product = require('./components/product.vue');
+    let globalProducts = require('./components/globalProducts.vue');
 
 
     let mainVue = new Vue({
@@ -120,6 +121,7 @@ function isset(strVariableName) {
             billing,
             settings,
             profile,
+            globalProducts,
             // Client Interface
             clientReports,
             workOrderClientTable,
@@ -141,7 +143,7 @@ function isset(strVariableName) {
             countries,
             contract,
             measurement,
-            product, 
+            product,
             equipment,
             routeTable,
             deleteButton,
