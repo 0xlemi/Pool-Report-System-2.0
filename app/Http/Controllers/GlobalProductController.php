@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\PRS\Transformers\FrontEnd\DataTables\GlobalProductDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\GlobalProductFrontTransformer;
+use App\Http\Requests\UpdateGlobalProductRequest;
+use App\Http\Requests\CreateGlobalProductRequest;
 
 class GlobalProductController extends PageController
 {
@@ -44,7 +46,7 @@ class GlobalProductController extends PageController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateGlobalProductRequest $request)
     {
         $this->authorize('create', Product::class);
 
@@ -94,7 +96,7 @@ class GlobalProductController extends PageController
      * @param  \App\GlobalProduct  $globalProduct
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $seqId)
+    public function update(UpdateGlobalProductRequest $request, $seqId)
     {
         try {
             $globalProduct = $this->loggedCompany()->globalProducts()->bySeqId($seqId);

@@ -28,8 +28,8 @@ class CreateGlobalProductRequest extends FormRequest
             'brand' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'units' => 'required|string|max:255',
-            // 'unit_price' => 'required|string|max:255',
-            // 'unit_currency' => 'required|string|max:255',
+            'unit_price' => 'required|numeric',
+            'unit_currency' => 'required|string|size:3|validCurrency',
         ];
     }
 }
