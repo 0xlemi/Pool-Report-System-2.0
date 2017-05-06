@@ -36,10 +36,9 @@ class EquipmentPolicy
     {
         if($user->selectedUser->isRole('client')){
             // return $user->userable()->hasEquipment($equipment->id);
-            return false; // temporary
+            return true; // temporary
         }
         return $user->selectedUser->hasPermission('equipment', 'view');
-        return false;
     }
 
     /**

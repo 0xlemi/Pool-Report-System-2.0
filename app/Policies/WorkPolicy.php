@@ -34,12 +34,12 @@ class WorkPolicy
      */
     public function view(User $user, Work $work)
     {
-        if($user->selectedUser->isRole('admin')){
+        if($user->selectedUser->isRole('client')){
             // ****** Security Bug ********
             // client can look at works that are not his
             // To resolve: need to fix this function so the client->works()
             // return $user->userable()->hasWork($work->id);
-            return false; // temporary
+            return true; // temporary
         }
         return $user->selectedUser->hasPermission('work', 'view');
     }
