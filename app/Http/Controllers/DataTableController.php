@@ -82,10 +82,10 @@ class DataTableController extends PageController
             'finished' => 'required|boolean',
         ]);
 
-        $operator = ($request->finished) ? '!=' : '=';
         $workOrders = $this->loggedCompany()
-                        ->workOrders()->seqIdOrdered()->get()
-                        ->where('end', $operator, null);
+                        ->workOrders()
+                        ->finished($request->finished)
+                        ->seqIdOrdered()->get();
 
         return response()->json(
                     $transformer->transformCollection($workOrders)

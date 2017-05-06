@@ -38,16 +38,11 @@ class ReportFrontTransformer extends Transformer
      */
     public function transform(Report $report)
     {
-        $supervisor = $report->supervisor();
-        $technician = $report->technician;
+        $urc = $report->userRoleCompany;
 
-        $supervisorPhoto = null;
-        if($supervisor->imageExists()){
-            $supervisorPhoto = $this->imageTransformer->transform($supervisor->image(1, false));
-        }
-        $technicianPhoto = null;
-        if($technician->imageExists()){
-            $technicianPhoto = $this->imageTransformer->transform($technician->image(1, false));
+        $urcPhoto = null;
+        if($urc->imageExists()){
+            $urcPhoto = $this->imageTransformer->transform($urc->image(1, false));
         }
 
         return [
@@ -62,23 +57,14 @@ class ReportFrontTransformer extends Transformer
             'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
             'service' => $this->servicePreviewTransformer
                             ->transform($report->service),
-            'supervisor' => [
-                'id' => $supervisor->seq_id,
-                'full_name' => $supervisor->name.' '.$supervisor->last_name,
-                'email' => $supervisor->user->email,
-                'cellphone' => $supervisor->cellphone,
-                'address' => $supervisor->address,
-                'language' => $supervisor->language,
-                'photo' => $supervisorPhoto,
-            ],
-            'technician' => [
-                'id' => $technician->seq_id,
-                'full_name' => $technician->name.' '.$technician->last_name,
-                'username' => $technician->user->email,
-                'cellphone' => $technician->cellphone,
-                'address' => $technician->address,
-                'language' => $technician->language,
-                'photo' => $technicianPhoto,
+            'urc' => [
+                'id' => $urc->seq_id,
+                'full_name' => $urc->name.' '.$urc->last_name,
+                'username' => $urc->user->email,
+                'cellphone' => $urc->cellphone,
+                'address' => $urc->address,
+                'language' => $urc->language,
+                'photo' => $urcPhoto,
             ],
         ];
     }

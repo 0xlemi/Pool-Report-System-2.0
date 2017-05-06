@@ -64,6 +64,12 @@ class WorkOrder extends Model
         return $query->where('work_orders.seq_id', $seqId)->firstOrFail();
     }
 
+    public function scopeFinished($query, $finished = true)
+    {
+        $operator = ($finished) ? '!=' : '=';
+        return $query->where('end', $operator, null);
+    }
+
 
     // ************************
     //      Relationships

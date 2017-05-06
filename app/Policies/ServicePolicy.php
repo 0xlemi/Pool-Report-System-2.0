@@ -27,6 +27,11 @@ class ServicePolicy
 
     public function view(User $user, Service $service)
     {
+        if($user->selectedUser->isRole('client')){
+            // only if this client owns this workorder
+            // return $user->selectedUser->hasWorkOrder($workOrder->seq_id);
+            return true; // temporary
+        }
         return $user->selectedUser->hasPermission('service', 'view');
     }
 

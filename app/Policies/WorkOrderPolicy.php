@@ -37,7 +37,7 @@ class WorkOrderPolicy
         if($user->selectedUser->isRole('client')){
             // only if this client owns this workorder
             // return $user->selectedUser->hasWorkOrder($workOrder->seq_id);
-            return false; // temporary
+            return true; // temporary
         }
         return $user->selectedUser->hasPermission('workorder', 'view');
     }

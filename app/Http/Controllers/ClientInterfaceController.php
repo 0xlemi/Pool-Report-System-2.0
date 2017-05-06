@@ -26,13 +26,13 @@ class ClientInterfaceController extends PageController
 
     public function reports(Request $request)
     {
-        if(!$request->user()->isClient()){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
 
-        $admin = $request->user()->admin();
-        $client = $request->user()->userable();
-        $today = Carbon::today($admin->timezone)->toDateString();
+        $company = $client->company;
+        $today = Carbon::today($company->timezone)->toDateString();
 
         JavaScript::put([
             'enabledDates' => $client->datesWithReport(),
@@ -44,7 +44,8 @@ class ClientInterfaceController extends PageController
 
     public function reportsByDate(Request $request, ReportFrontTransformer $reportTransformer)
     {
-        if(!$request->user()->isClient()){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             return response('You are not a Client', 403);
         }
 
@@ -52,9 +53,8 @@ class ClientInterfaceController extends PageController
             'date' => 'validDateReportFormat'
         ]);
 
-        $admin = $request->user()->admin();
-        $client = $request->user()->userable();
-        $date = (new Carbon($request->date, $admin->timezone));
+        $company = $client->company;
+        $date = (new Carbon($request->date, $company->timezone));
         $reports = $reportTransformer->transformCollection($client->reportsByDate($date));
 
         return response([
@@ -64,7 +64,7 @@ class ClientInterfaceController extends PageController
 
     public function workOrders(Request $request)
     {
-        if(!$request->user()->isClient()){
+        if(!$request->user()->selectedUser->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
         return view('clientInterface.workorder.index');
@@ -72,7 +72,8 @@ class ClientInterfaceController extends PageController
 
     public function workOrderTable(Request $request, WorkOrderDatatableTransformer $workOrderTransformer)
     {
-        if(!$request->user()->isClient()){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             return response('You are not a Client', 403);
         }
 
@@ -80,36 +81,32 @@ class ClientInterfaceController extends PageController
             'finished' => 'required|boolean'
         ]);
 
-        $admin = $request->user()->admin();
-        $client = $request->user()->userable();
-        $workOrders = $client->workOrdersFinished($request->finished)->get();
+        $workOrders = $client->clientWorkOrders()
+                            ->finished($request->finished)
+                            ->seqIdOrdered('desc')->get();
 
         return response($workOrderTransformer->transformCollection($workOrders));
     }
 
     public function workOrderShow(Request $request,
-                            ImageTransformer $imageTransformer,
-                            TechnicianHelpers $technicianHelpers,
-                            $seq_id)
+                            ImageTransformer $imageTransformer, $seq_id)
     {
-        if(!$request->user()->isClient()){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
 
-        $admin = $this->loggedUserAdministrator();
-        $workOrder = $admin->workOrders()->bySeqId($seq_id);
+        $company = $client->company;
+        $workOrder = $company->workOrders()->bySeqId($seq_id);
 
         $this->authorize('view', $workOrder);
-
-        $imagesBeforeWork = $imageTransformer->transformCollection($workOrder->imagesBeforeWork());
-        $imagesAfterWork = $imageTransformer->transformCollection($workOrder->imagesAfterWork());
 
         return view('clientInterface.workorder.show', compact('workOrder'));
     }
 
     public function services(Request $request)
     {
-        if(!$request->user()->isClient()){
+        if(!$request->user()->selectedUser->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
         return view('clientInterface.service.index');
@@ -117,7 +114,8 @@ class ClientInterfaceController extends PageController
 
     public function serviceTable(Request $request, ServiceDatatableTransformer $serviceTransformer)
     {
-        if(!$request->user()->isClient()){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             return response('You are not a Client', 403);
         }
 
@@ -125,27 +123,24 @@ class ClientInterfaceController extends PageController
             'contract' => 'required|boolean'
         ]);
 
-        $client = $request->user()->userable();
 
         if($request->contract){
-            $services = $client->servicesWithActiveContract()->get();
+            $services = $client->services()->withActiveContract()->seqIdOrdered()->get();
         }else{
-            $services = $client->serviceWithNoContractOrInactive()->get();
+            $services = $client->services()->withoutActiveContract()->seqIdOrdered()->get();
         }
 
         return response($serviceTransformer->transformCollection($services));
 
     }
 
-    public function serviceShow(Request $request,
-                            ImageTransformer $imageTransformer,
-                            $seq_id)
+    public function serviceShow(Request $request, ImageTransformer $imageTransformer, $seq_id)
     {
-        if(!$request->user()->isClient()){
+        if(!$request->user()->selectedUser->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
 
-        $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
+        $service = $this->loggedCompany()->services()->bySeqId($seq_id);
         $image = $imageTransformer->transform($service->images->first());
         $contract = null;
         if($service->hasServiceContract()){
@@ -160,7 +155,7 @@ class ClientInterfaceController extends PageController
 
     public function statement(Request $request)
     {
-        if(!$request->user()->isClient()){
+        if(!$request->user()->selectedUser->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
 

@@ -36,7 +36,7 @@ class ServicePreviewTransformer extends Transformer
         return [
             'id' => $service->seq_id,
             'name' => $service->name,
-            'href' => url("api/v1/services/{$service->seq_id}?api_token={$this->getUser()->api_token}"),
+            // 'href' => url("api/v1/services/{$service->seq_id}?api_token={$this->user()->api_token}"),
             'photo' => $photo,
         ];
     }
