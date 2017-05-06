@@ -233,9 +233,6 @@ class UserRoleCompany extends Model
     }
 
 
-
-
-
 	// public function getTypeAttribute()
     // {
     //     return new Type($this->userable_type);

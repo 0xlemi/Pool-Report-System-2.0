@@ -2,21 +2,15 @@
 import { Bar } from 'vue-chartjs'
 
 export default Bar.extend({
-    props: ['values', 'tags'],
+    props: ['title', 'color', 'value', 'tags'],
     ready () {
 
         let info = {
-            labels: [],
-            backgroundColor: [],
-            borderColor: [],
-            data: [],
+            labels: [this.title],
+            backgroundColor: ['rgba('+this.color.red+', '+this.color.green+', '+this.color.blue+', 0.5)'],
+            borderColor: ['rgba('+this.color.red+', '+this.color.green+', '+this.color.blue+', 1)'],
+            data: [this.value],
         };
-        for (var i = 0; i < this.values.length; i++) {
-            info.labels.push(this.values[i].tag);
-            info.backgroundColor.push('rgba('+this.values[i].color.red+', '+this.values[i].color.green+', '+this.values[i].color.blue+', 0.2)');
-            info.borderColor.push('rgba('+this.values[i].color.red+', '+this.values[i].color.green+', '+this.values[i].color.blue+', 1)');
-            info.data.push(this.values[i].data);
-        }
         let tags = this.tags;
         function tagsValue(value) {
             return tags[value-1];

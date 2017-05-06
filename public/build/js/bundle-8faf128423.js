@@ -31193,9 +31193,9 @@ var _photoList = require('./photoList.vue');
 
 var _photoList2 = _interopRequireDefault(_photoList);
 
-var _MeasurementChart = require('./MeasurementChart.vue');
+var _ReadingChart = require('./ReadingChart.vue');
 
-var _MeasurementChart2 = _interopRequireDefault(_MeasurementChart);
+var _ReadingChart2 = _interopRequireDefault(_ReadingChart);
 
 var _ClientReportStaff = require('./ClientReportStaff.vue');
 
@@ -31211,57 +31211,13 @@ exports.default = {
     props: ['report'],
     components: {
         photoList: _photoList2.default,
-        measurementChart: _MeasurementChart2.default,
+        readingChart: _ReadingChart2.default,
         clientReportStaff: _ClientReportStaff2.default,
         panel: _panel2.default
     },
     data: function data() {
         return {
-            morePhotos: false,
-            values: [{
-                tag: 'PH',
-                data: this.report.ph,
-                color: {
-                    red: 255,
-                    green: 99,
-                    blue: 132
-                }
-            }, {
-                tag: 'Chlorine',
-                data: this.report.chlorine,
-                color: {
-                    red: 54,
-                    green: 162,
-                    blue: 235
-                }
-            }, {
-                tag: 'Salt',
-                data: this.report.salt,
-                color: {
-                    red: 255,
-                    green: 206,
-                    blue: 86
-                }
-            }],
-            temperature: [{
-                tag: 'Temperature',
-                data: this.report.temperature,
-                color: {
-                    red: 255,
-                    green: 99,
-                    blue: 132
-                }
-            }],
-            turbidity: [{
-                tag: 'Turbidity',
-                data: this.report.turbidity,
-                color: {
-                    red: 75,
-                    green: 192,
-                    blue: 192
-                }
-            }],
-            tags: ['Very Low', 'Low', 'Perfect', 'High', 'Very High']
+            morePhotos: false
         };
     },
 
@@ -31283,7 +31239,7 @@ exports.default = {
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Measurements\">\n            <measurement-chart :values=\"values\" :tags=\"tags\" :height=\"187\">\n        </measurement-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Temperature\">\n            <measurement-chart :values=\"temperature\" :tags=\"tags\" :height=\"400\">\n        </measurement-chart>\n        </panel>\n    </div>\n    <div class=\"col-xxl-3 col-xl-6\">\n        <panel title=\"Turbidity\">\n            <measurement-chart :values=\"turbidity\" :tags=\"[\n                'Very High',\n                'High',\n                'Low',\n                'Perfect',\n            ]\" :height=\"400\">\n        </measurement-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Staff\">\n            <client-report-staff :supervisor=\"report.supervisor\" :technician=\"report.technician\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"col-md-12\">\n    <br>\n    <h3 class=\"with-border semibold\">&nbsp;&nbsp;&nbsp;Pool Photos</h3>\n    <div class=\"col-xl-8 col-xl-offset-2 col-lg-12 col-lg-offset-0\">\n        <photo-list :data=\"photos\" :can-delete=\"false\" list-class=\"col-xxl-4 col-xl-4 col-lg-4 col-md-4 col-sm-5 m-b-md\">\n    \t</photo-list>\n        <button v-if=\"report.photos.length > 3\" @click=\"morePhotos = !morePhotos\" type=\"button\" class=\"btn btn-block btn-default-outline\">\n            {{ photosButtonMessage }}\n        </button>\n        <br>\n        <br>\n    </div>\n</div>\n<div class=\"col-md-12\">\n    <div v-for=\"reading in report.readings\" class=\"col-xxl-3 col-xl-6\">\n        <panel :title=\"reading.title\">\n            <reading-chart :title=\"reading.title\" :color=\"reading.color\" :value=\"reading.value\" :tags=\"reading.tags\" :height=\"400\">\n            </reading-chart>\n        </panel>\n    </div>\n</div>\n\n<div class=\"col-md-12\">\n    <div class=\"col-xxl-6 col-xl-12\">\n        <panel title=\"Report made by\">\n            <client-report-staff :person=\"report.urc\">\n            </client-report-staff>\n        </panel>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31294,7 +31250,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5e506934", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./ClientReportStaff.vue":201,"./MeasurementChart.vue":204,"./panel.vue":245,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],201:[function(require,module,exports){
+},{"./ClientReportStaff.vue":201,"./ReadingChart.vue":205,"./panel.vue":245,"./photoList.vue":249,"vue":187,"vue-hot-reload-api":184}],201:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.contact-row[_v-1cd3303c]:hover {\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    top: 0px;\n    left: 0px;\n}\n.contact-row[_v-1cd3303c]:active {\n    background-color: #337ab7;\n}\n")
 'use strict';
@@ -31314,14 +31270,14 @@ var _photo2 = _interopRequireDefault(_photo);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-    props: ['supervisor', 'technician'],
+    props: ['person'],
     components: {
         modal: _modal2.default,
         photo: _photo2.default
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"contact-row-list\" _v-1cd3303c=\"\">\n    <article @click=\"$broadcast('openModal', 'supervisorModal')\" class=\"contact-row\" _v-1cd3303c=\"\">\n\t    <div class=\"user-card-row\" _v-1cd3303c=\"\">\n            <div class=\"tbl-row\" _v-1cd3303c=\"\">\n                <div class=\"tbl-cell tbl-cell-photo\" _v-1cd3303c=\"\">\n                    <img :src=\"supervisor.photo.icon\" :alt=\"supervisor.photo.title\" _v-1cd3303c=\"\">\n                </div>\n                <div class=\"tbl-cell\" _v-1cd3303c=\"\">\n                    <p class=\"user-card-row-name\" _v-1cd3303c=\"\">{{ supervisor.full_name }}</p>\n                    <p class=\"user-card-row-mail\" _v-1cd3303c=\"\">{{ supervisor.email }}</p>\n                </div>\n                <div class=\"tbl-cell tbl-cell-status\" _v-1cd3303c=\"\">Supervisor</div>\n            </div>\n        </div>\n    </article>\n    <article @click=\"$broadcast('openModal', 'technicianModal')\" class=\"contact-row\" _v-1cd3303c=\"\">\n\t    <div class=\"user-card-row\" _v-1cd3303c=\"\">\n            <div class=\"tbl-row\" _v-1cd3303c=\"\">\n                <div class=\"tbl-cell tbl-cell-photo\" _v-1cd3303c=\"\">\n                    <img :src=\"technician.photo.icon\" :alt=\"technician.photo.title\" _v-1cd3303c=\"\">\n                </div>\n                <div class=\"tbl-cell\" _v-1cd3303c=\"\">\n                    <p class=\"user-card-row-name\" _v-1cd3303c=\"\">{{ technician.full_name }}</p>\n                    <p class=\"user-card-row-mail\" _v-1cd3303c=\"\">{{ technician.username }}</p>\n                </div>\n                <div class=\"tbl-cell tbl-cell-status\" _v-1cd3303c=\"\">Technician</div>\n            </div>\n        </div>\n    </article>\n</div>\n\n<modal title=\"Supervisor\" id=\"supervisorModal\" _v-1cd3303c=\"\">\n    <div class=\"col-md-12\" _v-1cd3303c=\"\">\n\n        <div v-if=\"supervisor.photo\" class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Supervisor photo</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<div class=\"col-md-5\" _v-1cd3303c=\"\">\n\t\t\t\t\t<photo :image=\"supervisor.photo\" :can-delete=\"false\" _v-1cd3303c=\"\"></photo>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n        <div class=\"form-group row\" _v-1cd3303c=\"\">\n\t        <label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">ID</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.id\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Name</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.full_name\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Email</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.email\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Mobile Phone</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.cellphone\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Address Line</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.address\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Language</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"supervisor.language\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n    </div>\n</modal>\n\n<modal title=\"Technician\" id=\"technicianModal\" _v-1cd3303c=\"\">\n    <div class=\"col-md-12\" _v-1cd3303c=\"\">\n\n        <div v-if=\"technician.photo\" class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Technician photo</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<div class=\"col-md-5\" _v-1cd3303c=\"\">\n\t\t\t\t\t<photo :image=\"technician.photo\" :can-delete=\"false\" _v-1cd3303c=\"\"></photo>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n        <div class=\"form-group row\" _v-1cd3303c=\"\">\n\t        <label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">ID</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.id\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Name</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.full_name\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Username</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.username\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Mobile Phone</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.cellphone\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Address Line</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.address\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Language</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"technician.language\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n    </div>\n</modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"contact-row-list\" _v-1cd3303c=\"\">\n    <article @click=\"$broadcast('openModal', 'personModal')\" class=\"contact-row\" _v-1cd3303c=\"\">\n\t    <div class=\"user-card-row\" _v-1cd3303c=\"\">\n            <div class=\"tbl-row\" _v-1cd3303c=\"\">\n                <div class=\"tbl-cell tbl-cell-photo\" _v-1cd3303c=\"\">\n                    <img :src=\"person.photo.icon\" :alt=\"person.photo.title\" _v-1cd3303c=\"\">\n                </div>\n                <div class=\"tbl-cell\" _v-1cd3303c=\"\">\n                    <p class=\"user-card-row-name\" _v-1cd3303c=\"\">{{ person.full_name }}</p>\n                    <p class=\"user-card-row-mail\" _v-1cd3303c=\"\">{{ person.email }}</p>\n                </div>\n                <div class=\"tbl-cell tbl-cell-status\" _v-1cd3303c=\"\">{{ person.role }}</div>\n            </div>\n        </div>\n    </article>\n</div>\n\n<modal :title=\"person.role\" id=\"personModal\" _v-1cd3303c=\"\">\n    <div class=\"col-md-12\" _v-1cd3303c=\"\">\n\n        <div v-if=\"person.photo\" class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">{{ person.role }} photo</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<div class=\"col-md-5\" _v-1cd3303c=\"\">\n\t\t\t\t\t<photo :image=\"person.photo\" :can-delete=\"false\" _v-1cd3303c=\"\"></photo>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\n        <div class=\"form-group row\" _v-1cd3303c=\"\">\n\t        <label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">ID</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.id\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Name</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.full_name\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Email</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.email\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Mobile Phone</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.cellphone\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Address Line</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.address\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n\t\t<div class=\"form-group row\" _v-1cd3303c=\"\">\n\t\t\t<label class=\"col-sm-2 form-control-label\" _v-1cd3303c=\"\">Language</label>\n\t\t\t<div class=\"col-sm-10\" _v-1cd3303c=\"\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"person.language\" _v-1cd3303c=\"\">\n\t\t\t</div>\n\t\t</div>\n\n    </div>\n</modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -31459,79 +31415,6 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./ClientReport.vue":200,"./alert.vue":209,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],204:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _vueChartjs = require('vue-chartjs');
-
-exports.default = _vueChartjs.Bar.extend({
-    props: ['values', 'tags'],
-    ready: function ready() {
-
-        var info = {
-            labels: [],
-            backgroundColor: [],
-            borderColor: [],
-            data: []
-        };
-        for (var i = 0; i < this.values.length; i++) {
-            info.labels.push(this.values[i].tag);
-            info.backgroundColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 0.2)');
-            info.borderColor.push('rgba(' + this.values[i].color.red + ', ' + this.values[i].color.green + ', ' + this.values[i].color.blue + ', 1)');
-            info.data.push(this.values[i].data);
-        }
-        var tags = this.tags;
-        function tagsValue(value) {
-            return tags[value - 1];
-        }
-        this.render({
-            labels: info.labels,
-            datasets: [{
-                backgroundColor: info.backgroundColor,
-                borderColor: info.borderColor,
-                borderWidth: 1,
-                data: info.data
-            }]
-        }, {
-            legend: {
-                display: false
-            },
-            tooltips: {
-                enabled: false
-            },
-            responsive: true,
-            // maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    barPercentage: .6
-                }],
-                yAxes: [{
-                    ticks: {
-                        userCallback: tagsValue,
-                        min: 0,
-                        max: tags.length,
-                        stepSize: 1
-                    }
-                }]
-            }
-        });
-    }
-});
-if (module.exports.__esModule) module.exports = module.exports.default
-if (module.hot) {(function () {  module.hot.accept()
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), true)
-  if (!hotAPI.compatible) return
-  if (!module.hot.data) {
-    hotAPI.createRecord("_v-a62cec52", module.exports)
-  } else {
-    hotAPI.update("_v-a62cec52", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
-  }
-})()}
-},{"vue":187,"vue-chartjs":182,"vue-hot-reload-api":184}],205:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\nh1[_v-22ce5c3f] {\n  color: red;\n}\n")
 'use strict';
@@ -31590,7 +31473,74 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-22ce5c3f", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":209,"./checkboxList.vue":215,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],206:[function(require,module,exports){
+},{"./alert.vue":209,"./checkboxList.vue":215,"vue":187,"vue-hot-reload-api":184,"vueify/lib/insert-css":188}],205:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _vueChartjs = require('vue-chartjs');
+
+exports.default = _vueChartjs.Bar.extend({
+    props: ['title', 'color', 'value', 'tags'],
+    ready: function ready() {
+
+        var info = {
+            labels: [this.title],
+            backgroundColor: ['rgba(' + this.color.red + ', ' + this.color.green + ', ' + this.color.blue + ', 0.5)'],
+            borderColor: ['rgba(' + this.color.red + ', ' + this.color.green + ', ' + this.color.blue + ', 1)'],
+            data: [this.value]
+        };
+        var tags = this.tags;
+        function tagsValue(value) {
+            return tags[value - 1];
+        }
+        this.render({
+            labels: info.labels,
+            datasets: [{
+                backgroundColor: info.backgroundColor,
+                borderColor: info.borderColor,
+                borderWidth: 1,
+                data: info.data
+            }]
+        }, {
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            responsive: true,
+            // maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    barPercentage: .6
+                }],
+                yAxes: [{
+                    ticks: {
+                        userCallback: tagsValue,
+                        min: 0,
+                        max: tags.length,
+                        stepSize: 1
+                    }
+                }]
+            }
+        });
+    }
+});
+if (module.exports.__esModule) module.exports = module.exports.default
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-9634b0f2", module.exports)
+  } else {
+    hotAPI.update("_v-9634b0f2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":187,"vue-chartjs":182,"vue-hot-reload-api":184}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35051,7 +35001,7 @@ exports.default = {
 				}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#globalProductModal\">\n\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Global Products</button>\n\n\n<!-- Modal for globalproducts managment -->\n<div class=\"modal fade\" id=\"globalProductModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n\n                <!-- Create Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" placeholder=\"Example: Chlorine, Salt, Filter, etc...\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" placeholder=\"Example: Industrial, Concentrated, etc...\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: pounds, tablets, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\n                <!-- List -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Global Product\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n\t\t\t\t</div>\n\n\n                <!-- Show Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showBrand\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showPrice\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<br>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<h5>Photos</h5>\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"false\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\n\t\t\t\t<!-- Edit Global Product -->\n                <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t</div>\n                                    <div class=\"input-group-addon\">\n                                        per {{ units }}\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<hr>\n\t\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"true\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"col-md-12\">\n\t            \t\t<dropzone :url=\"dropzoneUrl\"></dropzone>\n\t\t\t\t\t</div>\n\n                </div><!-- End Edit Global Product -->\n\n\t\t\t</div>\n        </div>\n      <div class=\"modal-footer\">\n\t\t<span style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button class=\"btn btn-danger\" type=\"button\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Delete</button>\n\t\t</span>\n\n        <button v-if=\"!isFocus(4)\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t\t<button v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back</button>\n        <button v-if=\"isFocus(1)\" class=\"btn btn-success\" type=\"button\" @click=\"create\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Add Global Product</button>\n\t\t<button v-if=\"isFocus(3)\" type=\"button\" class=\"btn btn-primary\" @click=\"changeFocus(4)\">\n\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit</button>\n        <button v-if=\"isFocus(4)\" class=\"btn btn-success\" type=\"button\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<button type=\"button\" class=\"btn btn-info\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#globalProductModal\">\n\t<i class=\"fa fa-flask\"></i>&nbsp;&nbsp;&nbsp;Manage Global Products</button>\n\n\n<!-- Modal for globalproducts managment -->\n<div class=\"modal fade\" id=\"globalProductModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n  <div class=\"modal-dialog\" :class=\"{'modal-lg' : (focus == 2)}\" role=\"document\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ modalTitle }}</h4>\n      </div>\n      <div class=\"modal-body\">\n\t\t\t<div class=\"row\">\n\n\n                <!-- Create Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" placeholder=\"Example: Chlorine, Salt, PH Adjuster, etc...\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" placeholder=\"Example: Industrial, Concentrated, etc...\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" placeholder=\"Example: pounds, tablets, etc...\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                </div>\n\n\n                <!-- List -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Global Product\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</bootstrap-table>\n\n\t\t\t\t</div>\n\n\n                <!-- Show Global Product -->\n\t\t\t\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showBrand\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showType\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                    <div class=\"form-group row\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"showPrice\">\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<br>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<h5>Photos</h5>\n\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"false\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\n\t\t\t\t<!-- Edit Global Product -->\n                <div class=\"col-md-12\" v-show=\"isFocus(4)\">\n\n\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageEdit\" :active=\"alertActiveEdit\"></alert>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('name'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Name</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"name\" class=\"form-control\" v-model=\"name\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('name')\" class=\"text-muted\">{{ validationErrors.name[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                   <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('type'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"type\" class=\"form-control\" v-model=\"type\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('type')\" class=\"text-muted\">{{ validationErrors.type[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('brand'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Brand</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"brand\" class=\"form-control\" v-model=\"brand\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('brand')\" class=\"text-muted\">{{ validationErrors.brand[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('unit_price') || checkValidationError('unit_currency'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Price</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">$</div>\n\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" placeholder=\"Amount\" v-model=\"price\">\n\t\t\t\t\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t\t\t\t\t<select v-model=\"currency\">\n\t\t\t\t\t\t\t\t\t\t\t<option v-for=\"item in currencies\" value=\"{{item}}\">{{item}}</option>\n\t\t\t\t\t\t\t\t\t\t</select>\n\t\t\t\t\t\t\t\t\t</div>\n                                    <div class=\"input-group-addon\">\n                                        per {{ units }}\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_price')\" class=\"text-muted\">{{ validationErrors.unit_price[0] }}</small>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('unit_currency')\" class=\"text-muted\">{{ validationErrors.unit_currency[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('units'))}\">\n\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Units</label>\n\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t<input type=\"text\" name=\"units\" class=\"form-control\" v-model=\"units\">\n\t\t\t\t\t\t\t<small v-if=\"checkValidationError('units')\" class=\"text-muted\">{{ validationErrors.units[0] }}</small>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<div v-show=\"photos.length > 0\">\n\t\t\t\t\t\t<hr>\n\t\t\t\t\t\t<div class=\"col-md-12\">\n\t\t\t\t\t\t\t<photo-list :data=\"photos\" :object-id=\"id\" :can-delete=\"true\" :photos-url=\"'globalproducts/photos'\">\n\t\t\t\t\t\t\t</photo-list>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"col-md-12\">\n\t            \t\t<dropzone :url=\"dropzoneUrl\"></dropzone>\n\t\t\t\t\t</div>\n\n                </div><!-- End Edit Global Product -->\n\n\t\t\t</div>\n        </div>\n      <div class=\"modal-footer\">\n\t\t<span style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t<button class=\"btn btn-danger\" type=\"button\" @click=\"destroy\">\n\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Delete</button>\n\t\t</span>\n\n        <button v-if=\"!isFocus(4)\" type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n\t\t<button v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back</button>\n        <button v-if=\"isFocus(1)\" class=\"btn btn-success\" type=\"button\" @click=\"create\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Add Global Product</button>\n\t\t<button v-if=\"isFocus(3)\" type=\"button\" class=\"btn btn-primary\" @click=\"changeFocus(4)\">\n\t\t\t<i class=\"font-icon font-icon-pencil\"></i>&nbsp;&nbsp;&nbsp;Edit</button>\n        <button v-if=\"isFocus(4)\" class=\"btn btn-success\" type=\"button\" @click=\"update\">\n\t\t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Update</button>\n      </div>\n    </div>\n  </div>\n</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -37339,7 +37289,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":205,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":223,"./deleteAccount.vue":225,"./notificationSettings.vue":243,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
+},{"./Permissions.vue":204,"./accountSettings.vue":207,"./alert.vue":209,"./billing.vue":210,"./changeEmail.vue":211,"./changePassword.vue":212,"./customizationSettings.vue":223,"./deleteAccount.vue":225,"./notificationSettings.vue":243,"vue":187,"vue-hot-reload-api":184}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -39291,6 +39241,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":202,"./components/Permissions.vue":205,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/globalProducts.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/measurement.vue":238,"./components/messagesWidget.vue":239,"./components/missingServices.vue":240,"./components/notificationsWidget.vue":244,"./components/payments.vue":247,"./components/photo.vue":248,"./components/photoList.vue":249,"./components/product.vue":250,"./components/profile.vue":251,"./components/rolePicker.vue":253,"./components/routeTable.vue":254,"./components/serviceClientTable.vue":255,"./components/serviceTable.vue":256,"./components/settings.vue":257,"./components/supervisorTable.vue":258,"./components/technicianTable.vue":259,"./components/timezoneDropdown.vue":260,"./components/unreadMessagesCounter.vue":261,"./components/workOrderClientTable.vue":263,"./components/workOrderPhotosEdit.vue":264,"./components/workOrderPhotosShow.vue":265,"./components/workOrderTable.vue":266,"./components/works.vue":267,"./directives/FormToAjax.vue":268,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,269]);
+},{"./components/AllNotificationsAsReadButton.vue":198,"./components/ClientReports.vue":202,"./components/Permissions.vue":204,"./components/ReportIndex.vue":206,"./components/addressFields.vue":208,"./components/alert.vue":209,"./components/billing.vue":210,"./components/changeTechnicianPassword.vue":213,"./components/chat.vue":214,"./components/clientContract.vue":216,"./components/clientEquipment.vue":217,"./components/clientTable.vue":218,"./components/clientWorks.vue":219,"./components/contract.vue":220,"./components/countries.vue":221,"./components/deleteButton.vue":226,"./components/dropdown.vue":227,"./components/editReportPhotos.vue":229,"./components/emailVerificationNotice.vue":230,"./components/equipment.vue":231,"./components/finishWorkOrderButton.vue":232,"./components/globalProducts.vue":233,"./components/invoiceTable.vue":235,"./components/locationShow.vue":237,"./components/measurement.vue":238,"./components/messagesWidget.vue":239,"./components/missingServices.vue":240,"./components/notificationsWidget.vue":244,"./components/payments.vue":247,"./components/photo.vue":248,"./components/photoList.vue":249,"./components/product.vue":250,"./components/profile.vue":251,"./components/rolePicker.vue":253,"./components/routeTable.vue":254,"./components/serviceClientTable.vue":255,"./components/serviceTable.vue":256,"./components/settings.vue":257,"./components/supervisorTable.vue":258,"./components/technicianTable.vue":259,"./components/timezoneDropdown.vue":260,"./components/unreadMessagesCounter.vue":261,"./components/workOrderClientTable.vue":263,"./components/workOrderPhotosEdit.vue":264,"./components/workOrderPhotosShow.vue":265,"./components/workOrderTable.vue":266,"./components/works.vue":267,"./directives/FormToAjax.vue":268,"bootstrap-toggle":10,"dateformat":86,"dropzone":87,"jquery-locationpicker":90,"sendbird":170,"spin":172,"sweetalert":181,"vue":187,"vue-resource":186}]},{},[196,194,193,195,197,269]);
 
 //# sourceMappingURL=bundle.js.map

@@ -16,46 +16,23 @@
     </div>
 </div>
 <div class="col-md-12">
-    <div class="col-xxl-6 col-xl-12">
-        <panel title="Measurements">
-            <measurement-chart
-            :values="values"
-            :tags="tags"
-            :height="187">
-        </measurement-chart>
-        </panel>
-    </div>
-    <div class="col-xxl-3 col-xl-6">
-        <panel title="Temperature">
-            <measurement-chart
-            :values="temperature"
-            :tags="tags"
-            :height="400">
-        </measurement-chart>
-        </panel>
-    </div>
-    <div class="col-xxl-3 col-xl-6">
-        <panel title="Turbidity">
-            <measurement-chart
-            :values="turbidity"
-            :tags="[
-                'Very High',
-                'High',
-                'Low',
-                'Perfect',
-            ]"
-            :height="400">
-        </measurement-chart>
+    <div v-for="reading in report.readings" class="col-xxl-3 col-xl-6">
+        <panel :title="reading.title">
+            <reading-chart
+                :title="reading.title"
+                :color="reading.color"
+                :value="reading.value"
+                :tags="reading.tags"
+                :height="400">
+            </reading-chart>
         </panel>
     </div>
 </div>
 
 <div class="col-md-12">
     <div class="col-xxl-6 col-xl-12">
-        <panel title="Staff">
-            <client-report-staff
-                :supervisor="report.supervisor"
-                :technician="report.technician">
+        <panel title="Report Created by">
+            <client-report-staff :person="report.urc">
             </client-report-staff>
         </panel>
     </div>
@@ -64,7 +41,7 @@
 
 <script>
 import photoList from './photoList.vue';
-import measurementChart from './MeasurementChart.vue';
+import readingChart from './ReadingChart.vue';
 import clientReportStaff from './ClientReportStaff.vue';
 import panel from './panel.vue';
 
@@ -73,71 +50,13 @@ export default {
     props: ['report'],
     components:{
         photoList,
-        measurementChart,
+        readingChart,
         clientReportStaff,
         panel
     },
     data(){
         return {
             morePhotos: false,
-            values: [
-                {
-                    tag: 'PH',
-                    data: this.report.ph,
-                    color: {
-                        red: 255,
-                        green: 99,
-                        blue: 132,
-                    }
-                },
-                {
-                    tag: 'Chlorine',
-                    data: this.report.chlorine,
-                    color: {
-                        red: 54,
-                        green: 162,
-                        blue: 235,
-                    }
-                },
-                {
-                    tag: 'Salt',
-                    data: this.report.salt,
-                    color: {
-                        red: 255,
-                        green: 206,
-                        blue: 86,
-                    }
-                },
-            ],
-            temperature: [
-                {
-                    tag: 'Temperature',
-                    data: this.report.temperature,
-                    color: {
-                        red: 255,
-                        green: 99,
-                        blue: 132,
-                    }
-                },
-            ],
-            turbidity: [
-                {
-                    tag: 'Turbidity',
-                    data: this.report.turbidity,
-                    color: {
-                        red: 75,
-                        green: 192,
-                        blue: 192,
-                    }
-                },
-            ],
-            tags: [
-                'Very Low',
-                'Low',
-                'Perfect',
-                'High',
-                'Very High',
-            ],
         }
     },
     methods:{
