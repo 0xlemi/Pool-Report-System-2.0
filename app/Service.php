@@ -197,7 +197,7 @@ class Service extends Model
         $company = $this->company;
         $strDate = $date->toDateTimeString();
         $count = $this->reports()
-                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$company->timezone.'\'), "'.$strDate.'")'), '=', '0')
+			    ->whereDate(\DB::raw('CONVERT_TZ(completed,\'UTC\',\''.$company->timezone.'\')'), $strDate)
                 ->count();
         if($count > 0){
             return true;

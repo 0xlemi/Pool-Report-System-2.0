@@ -72,7 +72,7 @@ class ServiceContract extends Model
     {
         $strDate = $date->toDateTimeString();
         $count = $this->invoices()
-                ->where(\DB::raw('DATEDIFF(CONVERT_TZ(created_at,\'UTC\',\''.$this->company->timezone.'\'), "'.$strDate.'")'), '=', '0')
+			    ->whereDate(\DB::raw('CONVERT_TZ(created_at,\'UTC\',\''.$this->company->timezone.'\')'), $strDate)
                 ->count();
         if($count > 0){
             return true;

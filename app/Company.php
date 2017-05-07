@@ -264,7 +264,7 @@ class Company extends Model
     public function reportsByDate(Carbon $date){
         $date_str = $date->toDateTimeString();
         return $this->reports()
-                    ->where(\DB::raw('DATEDIFF(CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\'), "'.$date_str.'")'), '=', '0')
+			        ->whereDate(\DB::raw('CONVERT_TZ(completed,\'UTC\',\''.$this->timezone.'\')'), $date_str)
                     ->orderBy('seq_id');
     }
 

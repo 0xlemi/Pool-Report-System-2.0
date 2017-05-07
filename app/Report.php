@@ -47,6 +47,11 @@ class Report extends Model
         return $query->where('reports.seq_id', $seqId)->firstOrFail();
     }
 
+    public function scopeInDate($query, $strDate)
+    {
+		$query->whereDate(\DB::raw('CONVERT_TZ(completed,\'UTC\',\''.$company->timezone.'\')'), $strDate);
+    }
+
     //******** RELATIONSHIPS ********
 
     /**
