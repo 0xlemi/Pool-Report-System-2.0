@@ -167,6 +167,7 @@ return [
          * Third Party Service Providers
          */
         Laravel\Cashier\CashierServiceProvider::class,
+        Laravel\Passport\PassportServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Barryvdh\Snappy\ServiceProvider::class,

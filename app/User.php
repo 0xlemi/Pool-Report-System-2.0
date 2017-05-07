@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Laravel\Passport\HasApiTokens;
 use Carbon\Carbon;
 use App\PRS\ValueObjects\All\Type;
 use App\PRS\ValueObjects\User\NotificationSettings;
@@ -21,6 +22,8 @@ use App\UrlSigner;
 class User extends Authenticatable
 {
 	use ImageTrait;
+	use HasApiTokens;
+
 
     /**
      * The attributes that are mass assignable.
