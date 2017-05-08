@@ -11,21 +11,18 @@
 <template>
     <div>
         <div v-if="tokens.length > 0">
-            <div class="panel panel-default">
-                <div class="panel-heading">Authorized Applications</div>
+            <section class="card">
+                <header class="card-header">Authorized Applications</header>
 
-                <div class="panel-body">
+                <div class="card-block">
                     <!-- Authorized Tokens -->
-                    <table class="table table-borderless m-b-none">
-                        <thead>
+                    <table class="table">
+                        <tbody>
                             <tr>
                                 <th>Name</th>
                                 <th>Scopes</th>
                                 <th></th>
                             </tr>
-                        </thead>
-
-                        <tbody>
                             <tr v-for="token in tokens">
                                 <!-- Client Name -->
                                 <td style="vertical-align: middle;">
@@ -49,7 +46,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </template>

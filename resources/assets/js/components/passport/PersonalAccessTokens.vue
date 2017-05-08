@@ -31,14 +31,11 @@
 
                 <!-- Personal Access Tokens -->
                 <table class="table" v-if="tokens.length > 0">
-                    <thead>
+                    <tbody>
                         <tr>
                             <th>Name</th>
                             <th></th>
                         </tr>
-                    </thead>
-
-                    <tbody>
                         <tr v-for="token in tokens">
                             <!-- Client Name -->
                             <td style="vertical-align: middle;">
@@ -111,11 +108,11 @@
         <modal title="Personal Access Token" id="showToken">
             <div class="col-md-12">
                 <p>
-                    Here is your new personal access token. This is the only time it will be shown so don't lose it!
+                    Here is your new personal access token. <strong>This is the only time it will be shown so don't lose it!</strong>
                     You may now use this token to make API requests.
                 </p>
 
-                <pre class="code">{{ accessToken }}</pre>
+                <pre class="code"><code>{{ accessToken }}</code></pre>
             </div>
         </modal>
 
