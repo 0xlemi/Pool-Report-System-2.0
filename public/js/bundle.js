@@ -39491,9 +39491,16 @@ var _typeof2 = require('babel-runtime/helpers/typeof');
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
+var _modal = require('../modal.vue');
+
+var _modal2 = _interopRequireDefault(_modal);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+    components: {
+        modal: _modal2.default
+    },
     /*
      * The component's data.
      */
@@ -39528,10 +39535,6 @@ exports.default = {
         prepareComponent: function prepareComponent() {
             this.getTokens();
             this.getScopes();
-
-            $('#modal-create-token').on('shown.bs.modal', function () {
-                $('#create-token-name').focus();
-            });
         },
 
 
@@ -39556,14 +39559,6 @@ exports.default = {
             axios.get('/oauth/scopes').then(function (response) {
                 _this2.scopes = response.data;
             });
-        },
-
-
-        /**
-         * Show the form for creating new tokens.
-         */
-        showCreateTokenForm: function showCreateTokenForm() {
-            $('#modal-create-token').modal('show');
         },
 
 
@@ -39621,11 +39616,11 @@ exports.default = {
          * Show the given access token to the user.
          */
         showAccessToken: function showAccessToken(accessToken) {
-            $('#modal-create-token').modal('hide');
+            this.$broadcast('closeModal', 'createToken');
 
             this.accessToken = accessToken;
 
-            $('#modal-access-token').modal('show');
+            this.$broadcast('openModal', 'showToken');
         },
 
 
@@ -39642,7 +39637,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div _v-bfca9bd4=\"\">\n    <div _v-bfca9bd4=\"\">\n        <div class=\"panel panel-default\" _v-bfca9bd4=\"\">\n            <div class=\"panel-heading\" _v-bfca9bd4=\"\">\n                <div style=\"display: flex; justify-content: space-between; align-items: center;\" _v-bfca9bd4=\"\">\n                    <span _v-bfca9bd4=\"\">\n                        Personal Access Tokens\n                    </span>\n\n                    <a class=\"action-link\" @click=\"showCreateTokenForm\" _v-bfca9bd4=\"\">\n                        Create New Token\n                    </a>\n                </div>\n            </div>\n\n            <div class=\"panel-body\" _v-bfca9bd4=\"\">\n                <!-- No Tokens Notice -->\n                <p class=\"m-b-none\" v-if=\"tokens.length === 0\" _v-bfca9bd4=\"\">\n                    You have not created any personal access tokens.\n                </p>\n\n                <!-- Personal Access Tokens -->\n                <table class=\"table table-borderless m-b-none\" v-if=\"tokens.length > 0\" _v-bfca9bd4=\"\">\n                    <thead _v-bfca9bd4=\"\">\n                        <tr _v-bfca9bd4=\"\">\n                            <th _v-bfca9bd4=\"\">Name</th>\n                            <th _v-bfca9bd4=\"\"></th>\n                        </tr>\n                    </thead>\n\n                    <tbody _v-bfca9bd4=\"\">\n                        <tr v-for=\"token in tokens\" _v-bfca9bd4=\"\">\n                            <!-- Client Name -->\n                            <td style=\"vertical-align: middle;\" _v-bfca9bd4=\"\">\n                                {{ token.name }}\n                            </td>\n\n                            <!-- Delete Button -->\n                            <td style=\"vertical-align: middle;\" _v-bfca9bd4=\"\">\n                                <a class=\"action-link text-danger\" @click=\"revoke(token)\" _v-bfca9bd4=\"\">\n                                    Delete\n                                </a>\n                            </td>\n                        </tr>\n                    </tbody>\n                </table>\n            </div>\n        </div>\n    </div>\n\n    <!-- Create Token Modal -->\n    <div class=\"modal fade\" id=\"modal-create-token\" tabindex=\"-1\" role=\"dialog\" _v-bfca9bd4=\"\">\n        <div class=\"modal-dialog\" _v-bfca9bd4=\"\">\n            <div class=\"modal-content\" _v-bfca9bd4=\"\">\n                <div class=\"modal-header\" _v-bfca9bd4=\"\">\n                    <button type=\"button \" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" _v-bfca9bd4=\"\">×</button>\n\n                    <h4 class=\"modal-title\" _v-bfca9bd4=\"\">\n                        Create Token\n                    </h4>\n                </div>\n\n                <div class=\"modal-body\" _v-bfca9bd4=\"\">\n                    <!-- Form Errors -->\n                    <div class=\"alert alert-danger\" v-if=\"form.errors.length > 0\" _v-bfca9bd4=\"\">\n                        <p _v-bfca9bd4=\"\"><strong _v-bfca9bd4=\"\">Whoops!</strong> Something went wrong!</p>\n                        <br _v-bfca9bd4=\"\">\n                        <ul _v-bfca9bd4=\"\">\n                            <li v-for=\"error in form.errors\" _v-bfca9bd4=\"\">\n                                {{ error }}\n                            </li>\n                        </ul>\n                    </div>\n\n                    <!-- Create Token Form -->\n                    <form class=\"form-horizontal\" role=\"form\" @submit.prevent=\"store\" _v-bfca9bd4=\"\">\n                        <!-- Name -->\n                        <div class=\"form-group\" _v-bfca9bd4=\"\">\n                            <label class=\"col-md-4 control-label\" _v-bfca9bd4=\"\">Name</label>\n\n                            <div class=\"col-md-6\" _v-bfca9bd4=\"\">\n                                <input id=\"create-token-name\" type=\"text\" class=\"form-control\" name=\"name\" v-model=\"form.name\" _v-bfca9bd4=\"\">\n                            </div>\n                        </div>\n\n                        <!-- Scopes -->\n                        <div class=\"form-group\" v-if=\"scopes.length > 0\" _v-bfca9bd4=\"\">\n                            <label class=\"col-md-4 control-label\" _v-bfca9bd4=\"\">Scopes</label>\n\n                            <div class=\"col-md-6\" _v-bfca9bd4=\"\">\n                                <div v-for=\"scope in scopes\" _v-bfca9bd4=\"\">\n                                    <div class=\"checkbox\" _v-bfca9bd4=\"\">\n                                        <label _v-bfca9bd4=\"\">\n                                            <input type=\"checkbox\" @click=\"toggleScope(scope.id)\" :checked=\"scopeIsAssigned(scope.id)\" _v-bfca9bd4=\"\">\n\n                                                {{ scope.id }}\n                                        </label>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </form>\n                </div>\n\n                <!-- Modal Actions -->\n                <div class=\"modal-footer\" _v-bfca9bd4=\"\">\n                    <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-bfca9bd4=\"\">Close</button>\n\n                    <button type=\"button\" class=\"btn btn-primary\" @click=\"store\" _v-bfca9bd4=\"\">\n                        Create\n                    </button>\n                </div>\n            </div>\n        </div>\n    </div>\n\n    <!-- Access Token Modal -->\n    <div class=\"modal fade\" id=\"modal-access-token\" tabindex=\"-1\" role=\"dialog\" _v-bfca9bd4=\"\">\n        <div class=\"modal-dialog\" _v-bfca9bd4=\"\">\n            <div class=\"modal-content\" _v-bfca9bd4=\"\">\n                <div class=\"modal-header\" _v-bfca9bd4=\"\">\n                    <button type=\"button \" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" _v-bfca9bd4=\"\">×</button>\n\n                    <h4 class=\"modal-title\" _v-bfca9bd4=\"\">\n                        Personal Access Token\n                    </h4>\n                </div>\n\n                <div class=\"modal-body\" _v-bfca9bd4=\"\">\n                    <p _v-bfca9bd4=\"\">\n                        Here is your new personal access token. This is the only time it will be shown so don't lose it!\n                        You may now use this token to make API requests.\n                    </p>\n\n                    <pre _v-bfca9bd4=\"\"><code _v-bfca9bd4=\"\">{{ accessToken }}</code></pre>\n                </div>\n\n                <!-- Modal Actions -->\n                <div class=\"modal-footer\" _v-bfca9bd4=\"\">\n                    <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" _v-bfca9bd4=\"\">Close</button>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div _v-bfca9bd4=\"\">\n    <section class=\"card\" _v-bfca9bd4=\"\">\n        <header class=\"card-header\" _v-bfca9bd4=\"\">\n            <div style=\"display: flex; justify-content: space-between; align-items: center;\" _v-bfca9bd4=\"\">\n                <span _v-bfca9bd4=\"\">\n                    Personal Access Tokens\n                </span>\n\n                <a class=\"action-link\" @click=\"$broadcast('openModal', 'createToken')\" _v-bfca9bd4=\"\">\n                    Create New Token\n                </a>\n            </div>\n        </header>\n\n        <div class=\"card-block\" _v-bfca9bd4=\"\">\n            <!-- No Tokens Notice -->\n            <p class=\"m-b-none\" v-if=\"tokens.length === 0\" _v-bfca9bd4=\"\">\n                You have not created any personal access tokens.\n            </p>\n\n            <!-- Personal Access Tokens -->\n            <table class=\"table table-borderless m-b-none\" v-if=\"tokens.length > 0\" _v-bfca9bd4=\"\">\n                <thead _v-bfca9bd4=\"\">\n                    <tr _v-bfca9bd4=\"\">\n                        <th _v-bfca9bd4=\"\">Name</th>\n                        <th _v-bfca9bd4=\"\"></th>\n                    </tr>\n                </thead>\n\n                <tbody _v-bfca9bd4=\"\">\n                    <tr v-for=\"token in tokens\" _v-bfca9bd4=\"\">\n                        <!-- Client Name -->\n                        <td style=\"vertical-align: middle;\" _v-bfca9bd4=\"\">\n                            {{ token.name }}\n                        </td>\n\n                        <!-- Delete Button -->\n                        <td style=\"vertical-align: middle;\" _v-bfca9bd4=\"\">\n                            <a class=\"action-link text-danger\" @click=\"revoke(token)\" _v-bfca9bd4=\"\">\n                                Delete\n                            </a>\n                        </td>\n                    </tr>\n                </tbody>\n            </table>\n        </div>\n    </section>\n\n    <!-- Create Token Modal -->\n    <modal title=\"Create Token\" id=\"createToken\" _v-bfca9bd4=\"\">\n        <!-- Form Errors -->\n        <div class=\"alert alert-danger\" v-if=\"form.errors.length > 0\" _v-bfca9bd4=\"\">\n            <p _v-bfca9bd4=\"\"><strong _v-bfca9bd4=\"\">Whoops!</strong> Something went wrong!</p>\n            <br _v-bfca9bd4=\"\">\n            <ul _v-bfca9bd4=\"\">\n                <li v-for=\"error in form.errors\" _v-bfca9bd4=\"\">\n                    {{ error }}\n                </li>\n            </ul>\n        </div>\n\n        <!-- Create Token Form -->\n        <form class=\"form-horizontal\" role=\"form\" @submit.prevent=\"store\" _v-bfca9bd4=\"\">\n            <!-- Name -->\n            <div class=\"form-group\" _v-bfca9bd4=\"\">\n                <label class=\"col-md-4 control-label\" _v-bfca9bd4=\"\">Name</label>\n\n                <div class=\"col-md-6\" _v-bfca9bd4=\"\">\n                    <input id=\"create-token-name\" type=\"text\" class=\"form-control\" name=\"name\" v-model=\"form.name\" _v-bfca9bd4=\"\">\n                </div>\n            </div>\n\n            <!-- Scopes -->\n            <div class=\"form-group\" v-if=\"scopes.length > 0\" _v-bfca9bd4=\"\">\n                <label class=\"col-md-4 control-label\" _v-bfca9bd4=\"\">Scopes</label>\n\n                <div class=\"col-md-6\" _v-bfca9bd4=\"\">\n                    <div v-for=\"scope in scopes\" _v-bfca9bd4=\"\">\n                        <div class=\"checkbox\" _v-bfca9bd4=\"\">\n                            <label _v-bfca9bd4=\"\">\n                                <input type=\"checkbox\" @click=\"toggleScope(scope.id)\" :checked=\"scopeIsAssigned(scope.id)\" _v-bfca9bd4=\"\">\n\n                                    {{ scope.id }}\n                            </label>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </form>\n        <button slot=\"buttons\" type=\"button\" class=\"btn btn-primary\" @click=\"store\" _v-bfca9bd4=\"\">\n            Create\n        </button>\n    </modal>\n\n\n\n    <!-- Access Token Modal -->\n    <modal title=\"Personal Access Token\" id=\"showToken\" _v-bfca9bd4=\"\">\n        <div class=\"col-md-12\" _v-bfca9bd4=\"\">\n            <p _v-bfca9bd4=\"\">\n                Here is your new personal access token. This is the only time it will be shown so don't lose it!\n                You may now use this token to make API requests.\n            </p>\n\n            <pre class=\"code\" _v-bfca9bd4=\"\">{{ accessToken }}</pre>\n        </div>\n    </modal>\n\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -39657,7 +39652,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-bfca9bd4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/helpers/typeof":34,"vue":216,"vue-hot-reload-api":213,"vueify/lib/insert-css":217}],279:[function(require,module,exports){
+},{"../modal.vue":270,"babel-runtime/helpers/typeof":34,"vue":216,"vue-hot-reload-api":213,"vueify/lib/insert-css":217}],279:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
