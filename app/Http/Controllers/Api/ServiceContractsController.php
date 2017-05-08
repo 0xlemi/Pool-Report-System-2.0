@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Service;
 use App\PRS\Transformers\ContractTransformer;
 use App\PRS\Helpers\ContractHelpers;
+use App\PRS\Classes\Logged;
 use App\ServiceContract;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -35,7 +36,7 @@ class ServiceContractsController extends ApiController
     public function storeOrUpdate(Request $request, $serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
+            $service = Logged::company()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -55,7 +56,7 @@ class ServiceContractsController extends ApiController
     public function show($serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
+            $service = Logged::company()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -67,7 +68,7 @@ class ServiceContractsController extends ApiController
         }
 
         $serviceContract = $service->serviceContract;
-        if($this->getUser()->cannot('view', $serviceContract))
+        if(Logged::user()->cannot('view', $serviceContract))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -87,7 +88,7 @@ class ServiceContractsController extends ApiController
     public function destroy($serviceSeqId)
     {
         try {
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($serviceSeqId);
+            $service = Logged::company()->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
@@ -99,7 +100,7 @@ class ServiceContractsController extends ApiController
         }
 
         $serviceContract = $service->serviceContract;
-        if($this->getUser()->cannot('delete', $serviceContract))
+        if(Logged::user()->cannot('delete', $serviceContract))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -124,7 +125,7 @@ class ServiceContractsController extends ApiController
      */
     protected function store(Request $request, Service $service)
     {
-        if($this->getUser()->cannot('create', ServiceContract::class))
+        if(Logged::user()->cannot('create', ServiceContract::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -173,7 +174,7 @@ class ServiceContractsController extends ApiController
      */
     protected function update(Request $request, ServiceContract $contract)
     {
-        if($this->getUser()->cannot('update', $contract))
+        if(Logged::user()->cannot('update', $contract))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
