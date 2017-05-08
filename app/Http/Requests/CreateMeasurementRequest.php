@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\PRS\Classes\Logged;
 
 class CreateMeasurementRequest extends FormRequest
 {
@@ -23,7 +24,7 @@ class CreateMeasurementRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->selectedUser->company;
+        $company = Logged::company();
 
         return [
             'global_measurement' => 'required|integer|existsBasedOnCompany:global_measurements,'.$company->id,

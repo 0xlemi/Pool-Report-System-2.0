@@ -44,7 +44,7 @@ class UserRoleCompanyObserver
         dispatch(new CreateUser($userRoleCompany));
 
         // Send Notifications
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $userRoleCompany->company->userRoleCompanies()->ofRole('admin', 'sup')->get();
         foreach ($people as $person) {
             // the supervisor creted should not be notified of his own creation

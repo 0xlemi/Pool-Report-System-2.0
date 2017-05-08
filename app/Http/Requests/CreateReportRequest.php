@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\PRS\Classes\Logged;
 
 class CreateReportRequest extends Request
 {
@@ -23,7 +24,7 @@ class CreateReportRequest extends Request
      */
     public function rules()
     {
-        $company = auth()->user()->selectedUser->company;
+        $company = Logged::company();
 
         return [
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,

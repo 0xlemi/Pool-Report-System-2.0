@@ -103,9 +103,9 @@ class DataTableController extends PageController
         $company = $this->loggedCompany();
 
         if($request->status){
-            $services = $company->servicesWithActiveContract()->get();
+            $services = $company->services()->withActiveContract()->get();
         }else{
-            $services = $company->serviceWithNoContractOrInactive()->get();
+            $services = $company->services()->withoutActiveContract()->get();
         }
         return response()->json(
                     $transformer->transformCollection($services)

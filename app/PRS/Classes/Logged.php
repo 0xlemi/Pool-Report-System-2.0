@@ -11,7 +11,7 @@ class Logged{
      * Get the user that is logged in
      * @return User
      */
-    public function user()
+    public static function user()
     {
         $session_user = Auth::user();
         $api_user = Auth::guard('api')->user();
@@ -28,9 +28,9 @@ class Logged{
      * Get the company linked to the current logged in user
      * @return Company
      */
-    public function company()
+    public static function company()
     {
-        return $this->user()->selectedUser->company;
+        return self::user()->selectedUser->company;
     }
 
 }

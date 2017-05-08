@@ -17,7 +17,7 @@ class WorkObserver
     public function created(Work $work)
     {
         // Notifications
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new AddedWorkNotification($work, $urc));

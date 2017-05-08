@@ -17,7 +17,7 @@ class CheckActive
      */
     public function handle($request, Closure $next)
     {
-        $user = (new Logged)->user();
+        $user = Logged::user();
 
         if(!$user->selectedUser->paid){
             return response([

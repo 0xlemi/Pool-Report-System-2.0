@@ -13,13 +13,13 @@ use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Helpers\ServiceHelpers;
 
 use App\Service;
+use App\Company;
 
 use Auth;
 use DB;
 use Validator;
 use Illuminate\View\View;
 use App\Http\Requests\CreateServiceRequest;
-use App\Administrator;
 
 class ServicesController extends ApiController
 {
@@ -50,7 +50,7 @@ class ServicesController extends ApiController
     */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', Service::class))
+        if($this->loggedUser()->cant('list', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -61,22 +61,22 @@ class ServicesController extends ApiController
             'limit' => 'integer|between:1,25', // dont validate limit if preview is true
         ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = $this->loggedCompany();
 
         // make a preview transformation
         if($request->preview){
-            return $this->indexPreview($request, $admin);
+            return $this->indexPreview($request, $company);
         }
 
         $limit = ($request->limit)?: 5;
         if($request->has('contract')){
             if($request->contract){
-                $services = $admin->servicesWithActiveContract()->paginate($limit);
+                $services = $company->service()->withActiveContract()->paginate($limit);
             }else{
-                $services = $admin->serviceWithNoContractOrInactive()->paginate($limit);
+                $services = $company->services()->withoutActiveContract()->paginate($limit);
             }
         }else{
-            $services = $admin->services()->seqIdOrdered()->paginate($limit);
+            $services = $company->services()->seqIdOrdered()->paginate($limit);
         }
 
         return $this->respondWithPagination(
@@ -86,16 +86,16 @@ class ServicesController extends ApiController
 
     }
 
-    protected function indexPreview(Request $request, Administrator $admin)
+    protected function indexPreview(Request $request, Company $company)
     {
         if($request->has('contract')){
             if($request->contract){
-                $services = $admin->servicesWithActiveContract()->get();
+                $services = $company->service()->withActiveContract()->get();
             }else{
-                $services = $admin->serviceWithNoContractOrInactive()->get();
+                $services = $company->services()->withoutActiveContract()->get();
             }
         }else{
-            $services = $admin->services()->seqIdOrdered()->get();
+            $services = $company->services()->seqIdOrdered()->get();
         }
 
         return $this->respond([
@@ -111,11 +111,10 @@ class ServicesController extends ApiController
     */
     public function store(Request $request)
     {
-        if($this->getUser()->cannot('create', Service::class))
+        if($this->loggedUser()->cant('create', Service::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
-
         $this->validate($request, [
             'name' => 'required|string|max:20',
             'latitude' => 'required|numeric|between:-90,90',
@@ -129,10 +128,10 @@ class ServicesController extends ApiController
             'photo' => 'mimes:jpg,jpeg,png',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $admin = $this->loggedCompany();
 
         // Create service
-        $transaction = DB::transaction(function () use($request, $admin) {
+        $service = DB::transaction(function () use($request, $admin) {
 
             $service = $admin->services()->create(
                 array_merge(
@@ -148,11 +147,12 @@ class ServicesController extends ApiController
                 $photo = $service->addImageFromForm($request->file('photo'));
             }
 
+            return $service;
         });
 
         return $this->respondPersisted(
             'The service was successfuly created.',
-            $this->serviceTransformer->transform($admin->services(true)->first())
+            $this->serviceTransformer->transform(Service::find($service->id))
         );
 
     }
@@ -165,12 +165,12 @@ class ServicesController extends ApiController
     public function show($seq_id)
     {
         try {
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
+            $service = $this->loggedCompany()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('view', $service))
+        if($this->loggedUser()->cant('view', $service))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -194,12 +194,12 @@ class ServicesController extends ApiController
     public function update(Request $request, $seq_id)
     {
         try{
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
+            $service = $this->loggedCompany()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('update', $service))
+        if($this->loggedUser()->cant('update', $service))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -239,7 +239,7 @@ class ServicesController extends ApiController
 
         return $this->respondPersisted(
             'The service was successfully updated.',
-            $this->serviceTransformer->transform($this->loggedUserAdministrator()->services()->bySeqId($seq_id))
+            $this->serviceTransformer->transform($this->loggedCompany()->services()->bySeqId($seq_id))
         );
 
     }
@@ -253,12 +253,12 @@ class ServicesController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $service = $this->loggedUserAdministrator()->services()->bySeqId($seq_id);
+            $service = $this->loggedCompany()->services()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Service with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('delete', $service))
+        if($this->loggedUser()->cant('delete', $service))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

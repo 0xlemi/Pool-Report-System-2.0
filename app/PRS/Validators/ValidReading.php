@@ -3,6 +3,7 @@
 namespace App\PRS\Validators;
 use App\Report;
 use App\Measurement;
+use App\PRS\Classes\Logged;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ValidReading
@@ -15,7 +16,7 @@ class ValidReading
 
         // Check that the service seq_id sent through the parameters is correct
         try {
-            $service = auth()->user()->selectedUser->company->services()->bySeqId($service_id);
+            $service = Logged::user()->selectedUser->company->services()->bySeqId($service_id);
         } catch (ModelNotFoundException $e) {
             return false;
         }

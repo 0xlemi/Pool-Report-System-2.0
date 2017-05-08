@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\PRS\Classes\Logged;
 
 class CreateWorkOrderRequest extends FormRequest
 {
@@ -24,7 +25,7 @@ class CreateWorkOrderRequest extends FormRequest
      */
     public function rules()
     {
-        $company = auth()->user()->selectedUser->company;
+        $company = Logged::company();
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string',

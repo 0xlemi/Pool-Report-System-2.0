@@ -16,7 +16,7 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view)    {
-            if($user = auth()->user())
+            if($user = Logged::user())
             {
                 // Selected UserRoleCompany
                 $selectedUser = $user->selectedUser;

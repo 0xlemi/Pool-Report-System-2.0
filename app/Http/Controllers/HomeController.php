@@ -12,6 +12,7 @@ use DB;
 use Carbon\Carbon;
 use App\User;
 use App\PRS\Helpers\UserHelpers;
+use App\PRS\Classes\Logged;
 use App\UrlSigner;
 
 class HomeController extends PageController
@@ -78,7 +79,7 @@ class HomeController extends PageController
         $user = $signer->user;
 
         // if the user is allready logged in send him to his settings
-        if($user == auth()->user()){
+        if($user == Logged::user()){
             return redirect('/settings');
         }
 

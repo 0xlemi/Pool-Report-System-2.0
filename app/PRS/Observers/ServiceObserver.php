@@ -5,6 +5,7 @@ namespace App\PRS\Observers;
 use App\Service;
 use App\Notifications\NewServiceNotification;
 use App\Jobs\DeleteImagesFromS3;
+use App\PRS\Classes\Logged;
 
 class ServiceObserver
 {
@@ -17,7 +18,7 @@ class ServiceObserver
     public function created(Service $service)
     {
         // Notifications
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewServiceNotification($service, $urc));

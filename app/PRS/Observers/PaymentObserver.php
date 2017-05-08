@@ -16,7 +16,7 @@ class PaymentObserver
     public function created(Payment $payment)
     {
         // Notifications
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewPaymentNotification($payment, $urc));

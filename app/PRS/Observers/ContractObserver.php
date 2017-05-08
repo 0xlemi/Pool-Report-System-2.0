@@ -4,6 +4,7 @@ namespace App\PRS\Observers;
 
 use App\ServiceContract;
 use App\Notifications\AddedContractNotification;
+use App\PRS\Classes\Logged;
 use Carbon\Carbon;
 
 class ContractObserver
@@ -33,7 +34,7 @@ class ContractObserver
         }
 
         //  Notificitions
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new AddedContractNotification($contract, $urc));

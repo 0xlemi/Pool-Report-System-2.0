@@ -16,7 +16,7 @@ class CheckVerified
      */
     public function handle($request, Closure $next)
     {
-        $user = (new Logged)->user();
+        $user = Logged::user();
 
         if(!$user->verified){
             return response([

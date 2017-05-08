@@ -17,7 +17,7 @@ class ReportObserver
     public function created(Report $report)
     {
         // Notifications
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewReportNotification($report, $urc));

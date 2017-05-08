@@ -5,6 +5,7 @@ namespace App\PRS\Observers;
 use App\WorkOrder;
 use App\Notifications\NewWorkOrderNotification;
 use App\Jobs\DeleteImagesFromS3;
+use App\PRS\Classes\Logged;
 
 class WorkOrderObserver
 {
@@ -16,7 +17,7 @@ class WorkOrderObserver
      */
     public function created(WorkOrder $workOrder)
     {
-        $urc = auth()->user()->selectedUser;
+        $urc = Logged::user()->selectedUser;
         $company = $workOrder->company;
 
         // create invoice

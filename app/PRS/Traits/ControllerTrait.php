@@ -9,12 +9,12 @@ trait ControllerTrait{
 
     public function loggedUser()
     {
-        return (new Logged)->user()->selectedUser;
+        return Logged::user();
     }
 
     public function loggedCompany()
     {
-        return (new Logged)->company();
+        return Logged::company();
     }
 
 }

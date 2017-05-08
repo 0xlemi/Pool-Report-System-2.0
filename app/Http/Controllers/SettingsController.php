@@ -104,8 +104,6 @@ class SettingsController extends PageController
 
     public function developer()
     {
-        // $user = $this->loggedUser();
-        // $company = $this->loggedCompany();
         return view('settings.developer');
 
     }
