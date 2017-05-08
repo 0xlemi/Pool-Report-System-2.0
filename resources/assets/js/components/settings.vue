@@ -82,18 +82,6 @@
                         :icon="profile.deleteIcon">
                     </delete-account>
                 </div>
-                <div class="col-md-12">
-                    <hr>
-                    <clients></clients>
-                </div>
-                <div class="col-md-12">
-                    <hr>
-                    <authorized-clients></authorized-clients>
-                </div>
-                <div class="col-md-12">
-                    <hr>
-                    <personal-access-tokens></personal-access-tokens>
-                </div>
             </div>
         </div>
 
@@ -177,9 +165,6 @@ import customizationSettings from './customizationSettings.vue';
 import billing from './billing.vue';
 import Permissions from './Permissions.vue';
 import alert from './alert.vue';
-import authorizedClients from './passport/AuthorizedClients.vue';
-import clients from './passport/Clients.vue';
-import personalAccessTokens from './passport/PersonalAccessTokens.vue';
 
 export default {
     props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
@@ -193,9 +178,6 @@ export default {
         billing,
         Permissions,
         alert,
-        authorizedClients,
-        clients,
-        personalAccessTokens
     },
     data(){
 		return {

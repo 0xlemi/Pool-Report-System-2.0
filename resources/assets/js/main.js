@@ -89,6 +89,9 @@ function isset(strVariableName) {
     let messagesWidget = require('./components/messagesWidget.vue');
     let unreadMessagesCounter = require('./components/unreadMessagesCounter.vue');
     let product = require('./components/product.vue');
+    let passportAuthorizedClients = require('./components/passport/AuthorizedClients.vue');
+    let passportClients = require('./components/passport/Clients.vue');
+    let passportPersonalAccessTokens = require('./components/passport/PersonalAccessTokens.vue');
 
 
     let mainVue = new Vue({
@@ -120,6 +123,9 @@ function isset(strVariableName) {
             billing,
             settings,
             profile,
+            passportAuthorizedClients,
+            passportClients,
+            passportPersonalAccessTokens,
             // Client Interface
             clientReports,
             workOrderClientTable,

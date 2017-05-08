@@ -165,6 +165,7 @@ Route::post(
 
 // Settings
 Route::get('settings', 'SettingsController@index');
+Route::get('developer', 'SettingsController@developer');
 // profile
 Route::post('settings/profile', 'SettingsController@profile');
 Route::post('settings/changeEmail', 'SettingsController@changeEmail');

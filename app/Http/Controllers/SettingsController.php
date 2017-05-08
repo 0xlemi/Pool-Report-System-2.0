@@ -102,6 +102,14 @@ class SettingsController extends PageController
         return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
     }
 
+    public function developer()
+    {
+        // $user = $this->loggedUser();
+        // $company = $this->loggedCompany();
+        return view('settings.developer');
+
+    }
+
     public function profile(Request $request)
     {
         $this->authorize('profile', Setting::class);

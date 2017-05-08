@@ -45,6 +45,7 @@ class DatabaseSeeder extends Seeder
     	// cleaning up
     	$this->truncate_tables();
 		dispatch(new DeleteAllUsers());
+		Artisan::call('passport:install');
 
     	$this->call(CompaniesTableSeeder::class);
     	$this->call(ServicesTableSeeder::class);
