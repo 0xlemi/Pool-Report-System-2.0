@@ -2,6 +2,7 @@
 
 namespace App\PRS\Transformers;
 use App\Measurement;
+use App\PRS\Transformers\GlobalMeasurementTransformer;
 
 
 /**
@@ -9,6 +10,13 @@ use App\Measurement;
  */
 class MeasurementTransformer extends Transformer
 {
+
+    protected $transformer;
+
+    public function __construct(GlobalMeasurementTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
 
     /**
      * Transform Measurement into api readable array
@@ -20,9 +28,7 @@ class MeasurementTransformer extends Transformer
     {
         return [
             'id' => $measurement->id,
-            'name' => $measurement->name,
-            'amount' => $measurement->amount,
-            'units' => $measurement->units,
+            'global_measurement' => $this->transformer->transform($measurement->globalMeasurement),
         ];
     }
 
