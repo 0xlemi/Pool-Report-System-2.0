@@ -48,6 +48,15 @@ class ExistsBasedOnCompany
             }
             return true;
         }
+        elseif($table == 'global_products')
+        {
+            try {
+                $company->globalProducts()->bySeqId($seq_id);
+            }catch(ModelNotFoundException $e){
+                return false;
+            }
+            return true;
+        }
         return false;
     }
 
