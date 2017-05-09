@@ -4,6 +4,7 @@ namespace App\PRS\Observers;
 
 use App\Payment;
 use App\Notifications\NewPaymentNotification;
+use App\PRS\Classes\Logged;
 
 class PaymentObserver
 {

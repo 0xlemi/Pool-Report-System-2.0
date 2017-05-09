@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\PaymentTransformer;
+use App\PRS\Classes\Logged;
 use App\Payment;
 
 class PaymentController extends ApiController
@@ -26,13 +27,13 @@ class PaymentController extends ApiController
      */
     public function index(Request $request, $invoiceSeqId)
     {
-        if($this->getUser()->cannot('list', Payment::class))
+        if(Logged::user()->cannot('list', Payment::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         try {
-            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
+            $invoice = Logged::company()->invoices()->bySeqId($invoiceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }
@@ -59,13 +60,13 @@ class PaymentController extends ApiController
      */
     public function store(Request $request, $invoiceSeqId)
     {
-        if($this->getUser()->cannot('create', Payment::class))
+        if(Logged::user()->cannot('create', Payment::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         try {
-            $invoice = $this->loggedUserAdministrator()->invoices()->bySeqId($invoiceSeqId);
+            $invoice = Logged::company()->invoices()->bySeqId($invoiceSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Invoice with that id, does not exist.');
         }
@@ -94,12 +95,12 @@ class PaymentController extends ApiController
     public function show($seqId)
     {
         try {
-            $payment = $this->loggedUserAdministrator()->payments()->bySeqId($seqId);
+            $payment = Logged::company()->payments()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Payment with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('view', $payment))
+        if(Logged::user()->cannot('view', $payment))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -118,12 +119,12 @@ class PaymentController extends ApiController
     public function destroy($seqId)
     {
         try {
-            $payment = $this->loggedUserAdministrator()->payments()->bySeqId($seqId);
+            $payment = Logged::company()->payments()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Payment with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('delete', $payment))
+        if(Logged::user()->cannot('delete', $payment))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
