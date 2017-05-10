@@ -20,9 +20,9 @@ class CreateUserRoleCompanyPivotTable extends Migration
             $table->integer('role_id')->unsigned();
             $table->integer('company_id')->unsigned();
 
-            $table->string('cellphone');
-            $table->string('address');
-            $table->text('about');
+            $table->string('cellphone')->nullable();
+            $table->string('address')->nullable();
+            $table->text('about')->nullable();
 
             // SendBird Chat
             $table->uuid('chat_id')->unique();

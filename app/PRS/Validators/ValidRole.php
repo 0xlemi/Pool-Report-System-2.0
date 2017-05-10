@@ -14,7 +14,7 @@ class ValidRole
 
     public function message($message, $attribute)
     {
-        $roles = Role::all()->pluck('name');
+        $roles = Role::all()->pluck('name')->toArray();
         return "The {$attribute} is not a supported role. Suported roles: ".implode(', ', $roles);
     }
 

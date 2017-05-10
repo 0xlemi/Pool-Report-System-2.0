@@ -41,6 +41,9 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 	Route::post('admin/permissions', 'Api\AdministratorsController@permissions');
 	Route::delete('admin', 'Api\AdministratorsController@destroy');
 
+	// Company
+	Route::get('company', 'Api\CompanyController@show');
+	Route::delete('company', 'Api\CompanyController@destroy');
 
 	// Reports
 	Route::resource('reports', 'Api\ReportsController', ['except' => [
@@ -89,20 +92,8 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 		Route::delete('measurements/{measurement}', 'Api\MeasurementController@destroy');
 
 
-	// Client
-	Route::resource('clients', 'Api\ClientsController', ['except' => [
-		'create', 'edit'
-	]]);
-
-
-	// Supervisor
-	Route::resource('supervisors', 'Api\SupervisorsController', ['except' => [
-		'create', 'edit'
-	]]);
-
-
-	// Technician
-	Route::resource('technicians', 'Api\TechniciansController', ['except' => [
+	//  UserRoleCompany
+	Route::resource('userrolecompanies', 'Api\UserRoleCompanyController', ['except' => [
 		'create', 'edit'
 	]]);
 

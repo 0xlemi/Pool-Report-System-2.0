@@ -10,6 +10,8 @@ use App\UserRoleCompany;
 use App\Jobs\UpdateSubscriptionQuantity;
 use App\Jobs\CreateAndSendVerificationToken;
 use App\Jobs\SendBird\CreateUser;
+use App\Jobs\DeleteImagesFromS3;
+use App\PRS\Classes\Logged;
 use App\PRS\Classes\SendBird;
 
 

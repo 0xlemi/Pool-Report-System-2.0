@@ -8,7 +8,6 @@ use Auth;
 use JavaScript;
 use DB;
 
-use App\Client;
 use App\User;
 use App\Http\Requests;
 
@@ -239,8 +238,6 @@ class ClientsController extends PageController
         $client = $company->userRoleCompanies()->bySeqId($seq_id);
 
         $this->authorize('delete', $client);
-
-
 
         if($client->delete()){
             flash()->success('Deleted', 'The client successfully deleted.');
