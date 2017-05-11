@@ -28,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Invoice' => 'App\Policies\InvoicePolicy',
         'App\Payment' => 'App\Policies\PaymentPolicy',
         'App\Setting' => 'App\Policies\SettingPolicy',
+        'App\PermissionRoleCompany' => 'App\Policies\PermissionPolicy',
         'App\GlobalMeasurement' => 'App\Policies\GlobalMeasurementPolicy',
         'App\GlobalProduct' => 'App\Policies\GlobalProductPolicy',
     ];

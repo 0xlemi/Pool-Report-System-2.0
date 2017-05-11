@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\PRS\Classes\Logged;
 use App\PRS\Transformers\PermissionRoleCompanyTransformer;
 use App\PRS\Transformers\PermissionTransformer;
+use App\PermissionRoleCompany;
 use App\Permission;
 use App\Role;
 
@@ -39,6 +40,11 @@ class PermissionController extends ApiController
             'role' => 'string|validRole',
         ]);
 
+        if(Logged::user()->cannot('list', PermissionRoleCompany::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $company = Logged::company();
 
         $limit = ($request->limit)?: 5;
@@ -66,6 +72,11 @@ class PermissionController extends ApiController
             'limit' => 'integer|between:1,25',
         ]);
 
+        if(Logged::user()->cannot('list', PermissionRoleCompany::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
         $limit = ($request->limit)?: 5;
 
         $permissions = Permission::query()->paginate($limit);
@@ -89,6 +100,11 @@ class PermissionController extends ApiController
             'element' => 'required|string|validPermissionElement',
             'action' => 'required|string|validPermissionAction',
         ]);
+
+        if(Logged::user()->cannot('create', PermissionRoleCompany::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         $company = Logged::company();
         $role = Role::where('name', $request->role)->firstOrFail();
@@ -129,6 +145,11 @@ class PermissionController extends ApiController
             'element' => 'required|string|validPermissionElement',
             'action' => 'required|string|validPermissionAction',
         ]);
+
+        if(Logged::user()->cannot('view', PermissionRoleCompany::class))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
 
         $company = Logged::company();
         $role = Role::where('name', $request->role)->firstOrFail();
@@ -171,9 +192,15 @@ class PermissionController extends ApiController
         $prc = $company->permissionRoleCompanies()
                                 ->where('permission_id', '=', $permission->id)
                                 ->where('role_id', '=', $role->id)->first();
+
         // check that there is not already a PermissiorRoleCompany with the same Role, Pemission and Company
         if(!$prc){
             return response()->json([ 'message' => 'This Role dosn\'t have this permission, no need to remove it.']);
+        }
+
+        if(Logged::user()->cannot('delete', $prc))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         if($prc->delete()){
