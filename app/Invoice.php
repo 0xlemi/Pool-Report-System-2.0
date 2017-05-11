@@ -22,7 +22,7 @@ class Invoice extends Model
         'amount',
         'currency',
         'description',
-        'admin_id',
+        'company_id',
     ];
 
     // ************************

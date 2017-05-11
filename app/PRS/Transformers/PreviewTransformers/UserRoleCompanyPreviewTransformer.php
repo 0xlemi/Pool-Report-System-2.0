@@ -4,8 +4,6 @@ namespace App\PRS\Transformers\PreviewTransformers;
 
 use App\Supervisor;
 
-
-use App\PRS\Traits\ControllerTrait;
 use App\PRS\Transformers\Transformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\UserRolecompany;
@@ -15,8 +13,6 @@ use App\UserRolecompany;
  */
 class UserRolecompanyPreviewTransformer extends Transformer
 {
-
-    use ControllerTrait;
 
     private $imageTransformer;
 

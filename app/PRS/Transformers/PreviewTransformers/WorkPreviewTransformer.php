@@ -13,8 +13,6 @@ use App\Work;
 class WorkPreviewTransformer extends Transformer
 {
 
-    use ControllerTrait;
-
     private $imageTransformer;
 
     public function __construct(ImageTransformer $imageTransformer)
@@ -33,7 +31,7 @@ class WorkPreviewTransformer extends Transformer
         return [
             'id' => $work->id,
             'title' => $work->title,
-            'href' => url("api/v1/work/{$work->id}?api_token={$this->getUser()->api_token}"),
+            'href' => url("api/v1/work/{$work->id}"),
             'photo' => $photo,
         ];
     }

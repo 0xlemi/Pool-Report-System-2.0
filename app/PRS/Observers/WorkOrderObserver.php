@@ -25,14 +25,15 @@ class WorkOrderObserver
             'amount' => $workOrder->price,
             'currency' => $workOrder->currency,
             'description' => $workOrder->description,
-            'admin_id' => $company->id,
+            'company_id' => $company->id,
         ]);
 
         $people = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
             $person->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
-        foreach ($workOrder->service->clients as $client) {
+        $clients = $workOrder->service->userRoleCompanies;
+        foreach ($clients as $client) {
             $client->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
 

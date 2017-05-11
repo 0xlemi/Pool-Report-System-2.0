@@ -6,6 +6,7 @@ use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\PreviewTransformers\WorkPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
+use App\PRS\Transformers\PreviewTransformers\UserRolecompanyPreviewTransformer;
 
 use App\PRS\Traits\ControllerTrait;
 use App\PRS\Classes\Logged;
@@ -22,18 +23,18 @@ class WorkOrderTransformer extends Transformer
 
     private $workTransformer;
     private $serviceTransformer;
-    private $supervisorTransformer;
+    private $urcPreviewTransformer;
     private $imageTransformer;
 
     public function __construct(
                         WorkPreviewTransformer $workTransformer,
                         ServicePreviewTransformer $serviceTransformer,
-                        SupervisorPreviewTransformer $supervisorTransformer,
+                        UserRolecompanyPreviewTransformer $urcPreviewTransformer,
                         ImageTransformer $imageTransformer)
     {
         $this->workTransformer = $workTransformer;
         $this->serviceTransformer = $serviceTransformer;
-        $this->supervisorTransformer = $supervisorTransformer;
+        $this->urcPreviewTransformer = $urcPreviewTransformer;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -44,7 +45,7 @@ class WorkOrderTransformer extends Transformer
      */
     public function transform(WorkOrder $workOrder)
     {
-        $attributes =  [
+        return collect([
             'id' => $workOrder->seq_id,
             'title' => $workOrder->title,
             'description' => $workOrder->description,
@@ -53,20 +54,15 @@ class WorkOrderTransformer extends Transformer
             'price' => $workOrder->price,
             'currency' => $workOrder->currency,
             'service'=> $this->serviceTransformer->transform($workOrder->service),
-            'supervisor'=> $this->supervisorTransformer->transform($workOrder->supervisor),
+            'person'=> $this->urcPreviewTransformer->transform($workOrder->userRoleCompany),
             'works' => $this->workTransformer->transformCollection($workOrder->works()->get()),
             'photosBeforeWork' => $this->imageTransformer->transformCollection($workOrder->imagesBeforeWork()),
             'photosAfterWork' => $this->imageTransformer->transformCollection($workOrder->imagesAfterWork()),
-        ];
-
-        if($workOrder->end()->finished()){
-            // add the end attribute to array
-            $attributes = array_merge($attributes, [
-                'end' => $workOrder->end()
+        ])->when($workOrder->end()->finished(), function($collection) use ($workOrder){
+            return $collection->merge([
+                'end' => Carbon::parse($workOrder->end)->setTimezone($workOrder->company->timezone)
             ]);
-        }
-
-        return $attributes;
+        });
     }
 
 }

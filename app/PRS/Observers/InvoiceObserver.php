@@ -4,6 +4,7 @@ namespace App\PRS\Observers;
 
 use App\Invoice;
 use App\Notifications\NewInvoiceNotification;
+use App\PRS\Classes\Logged;
 
 class InvoiceObserver
 {

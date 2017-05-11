@@ -4,8 +4,6 @@ namespace App\PRS\Transformers\PreviewTransformers;
 
 use App\Service;
 
-use App\PRS\Traits\ControllerTrait;
-
 use App\PRS\Transformers\Transformer;
 use App\PRS\Transformers\ImageTransformer;
 
@@ -14,9 +12,6 @@ use App\PRS\Transformers\ImageTransformer;
  */
 class ServicePreviewTransformer extends Transformer
 {
-
-
-    use ControllerTrait;
 
     private $imageTransformer;
 

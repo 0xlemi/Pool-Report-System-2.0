@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\WorkOrderTransformer;
+use App\PRS\Classes\Logged;
 use App\WorkOrder;
 use App\Work;
 use Carbon\Carbon;
@@ -29,7 +30,7 @@ class WorkOrderController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', WorkOrder::class))
+        if(Logged::user()->cannot('list', WorkOrder::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -39,16 +40,16 @@ class WorkOrderController extends ApiController
             'finished' => 'boolean',
         ]);
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
 
         $limit = ($request->limit)?: 5;
-        $operator = ($request->finished) ? '!=' : '=';
         if($request->has('finished')){
-            $workOrders = $admin->workOrders()->seqIdOrdered()
-                            ->where('end', $operator, null)
-                            ->paginate($limit);
+            $workOrders = $company->workOrders()
+                                ->finished($request->finished)
+                                ->seqIdOrdered()
+                                ->paginate($limit);
         }else{
-            $workOrders = $admin->workOrders()->seqIdOrdered()
+            $workOrders = $company->workOrders()->seqIdOrdered()
                             ->paginate($limit);
         }
 
@@ -67,18 +68,18 @@ class WorkOrderController extends ApiController
      */
     public function store(Request $request)
     {
-        if($this->getUser()->cannot('create', WorkOrder::class))
+        if(Logged::user()->cannot('create', WorkOrder::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
 
         $this->validate($request,[
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'service' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
-            'supervisor' => 'required|integer|existsBasedOnCompany:supervisors,'.$admin->id,
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
@@ -86,19 +87,19 @@ class WorkOrderController extends ApiController
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
-        $service = $admin->services()->bySeqId($request->service);
-        $supervisor = $admin->supervisorBySeqId($request->supervisor);
+        $service = $company->services()->bySeqId($request->service);
+        $person = $company->userRoleCompanies()->bySeqId($request->person);
 
         // ***** Persisting *****
-        $workOrder = DB::transaction(function () use($request, $service, $supervisor) {
+        $workOrder = DB::transaction(function () use($request, $service, $person) {
 
             $workOrder = $service->workOrders()->create([
                 'title' => $request->title,
                 'description' => $request->description,
-                'start' => (new Carbon( $request->start))->setTimezone('UTC'),
+                'start' => (new Carbon($request->start))->setTimezone('UTC'),
                 'price' => $request->price,
                 'currency' => $request->currency,
-                'supervisor_id' => $supervisor->id,
+                'user_role_company_id' => $person->id,
             ]);
 
             // Add Photos before work
@@ -131,12 +132,12 @@ class WorkOrderController extends ApiController
     public function show($seq_id)
     {
         try{
-            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($seq_id);
+            $workOrder = Logged::company()->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('view', $workOrder))
+        if(Logged::user()->cannot('view', $workOrder))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -156,14 +157,14 @@ class WorkOrderController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
         try{
-            $workOrder = $admin->workOrders()->bySeqId($seq_id);
+            $workOrder = $company->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('update', $workOrder))
+        if(Logged::user()->cannot('update', $workOrder))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -174,7 +175,7 @@ class WorkOrderController extends ApiController
             'start' => 'date',
             'price' => 'numeric|max:10000000',
             'currency' => 'string|size:3',
-            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$admin->id,
+            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$company->id,
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' => 'array',
@@ -189,7 +190,7 @@ class WorkOrderController extends ApiController
         }
 
         // ***** Persisting *****
-        DB::transaction(function () use($request, $workOrder, $admin) {
+        DB::transaction(function () use($request, $workOrder, $company) {
 
             $workOrder->fill(array_map('htmlentities',
                     $request->except([
@@ -207,20 +208,20 @@ class WorkOrderController extends ApiController
                 $workOrder->start = (new Carbon($request->start))->setTimezone('UTC');
             }
             if(isset($request->supervisor)){
-                $workOrder->supervisor()->associate($admin->supervisorBySeqId($request->supervisor));
+                $workOrder->supervisor()->associate($company->supervisorBySeqId($request->supervisor));
             }
 
             $workOrder->save();
 
             //Delete Photos
-            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $workOrder)){
+            if(isset($request->remove_photos) && Logged::user()->can('removePhoto', $workOrder)){
                 foreach ($request->remove_photos as $order) {
                     $workOrder->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->add_photos) && $this->getUser()->can('addPhoto', $workOrder)){
+            if(isset($request->add_photos) && Logged::user()->can('addPhoto', $workOrder)){
                 foreach ($request->add_photos as $photo) {
                     $workOrder->addImageFromForm($photo);
                 }
@@ -229,7 +230,7 @@ class WorkOrderController extends ApiController
 
         return $this->respondPersisted(
             'Work Order was updated successfully.',
-            $this->workOrderTransformer->transform($admin->workOrders()->bySeqId($seq_id))
+            $this->workOrderTransformer->transform($company->workOrders()->bySeqId($seq_id))
         );
     }
 
@@ -241,14 +242,14 @@ class WorkOrderController extends ApiController
      */
     public function finish(Request $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
         try{
-            $workOrder = $admin->workOrders()->bySeqId($seq_id);
+            $workOrder = $company->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('finish', $workOrder))
+        if(Logged::user()->cannot('finish', $workOrder))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -267,7 +268,7 @@ class WorkOrderController extends ApiController
         ]);
 
         // ***** Persisting *****
-        $save = DB::transaction(function () use($request, $workOrder, $admin) {
+        $save = DB::transaction(function () use($request, $workOrder, $company) {
             $workOrder->end = (new Carbon( $request->end ))->setTimezone('UTC');
 
             // Add Photos
@@ -299,12 +300,12 @@ class WorkOrderController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($seq_id);
+            $workOrder = Logged::company()->workOrders()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('WorkOrder with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('delete', $workOrder))
+        if(Logged::user()->cannot('delete', $workOrder))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
