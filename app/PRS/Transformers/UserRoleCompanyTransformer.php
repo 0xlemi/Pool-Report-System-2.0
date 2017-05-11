@@ -8,6 +8,7 @@ use App\Service;
 use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\CompanyPreviewTransformer ;
 use App\PRS\Transformers\RoleTransformer;
+use App\PRS\Transformers\UserTransformer;
 use App\PRS\Transformers\ImageTransformer;
 
 use Auth;
@@ -22,16 +23,19 @@ class UserRoleCompanyTransformer extends Transformer
     private $imageTransformer;
     private $roleTransformer;
     private $companyTransformer;
+    private $userTransformer;
 
     public function __construct(ServicePreviewTransformer $servicePreviewTransformer,
                                 ImageTransformer $imageTransformer,
                                 RoleTransformer $roleTransformer,
-                                CompanyPreviewTransformer $companyTransformer)
+                                CompanyPreviewTransformer $companyTransformer,
+                                UserTransformer $userTransformer)
     {
         $this->servicePreviewTransformer = $servicePreviewTransformer;
         $this->imageTransformer = $imageTransformer;
         $this->roleTransformer = $roleTransformer;
         $this->companyTransformer = $companyTransformer;
+        $this->userTransformer = $userTransformer;
     }
 
     /**
@@ -49,11 +53,7 @@ class UserRoleCompanyTransformer extends Transformer
 
         return collect([
             'id' => $urc->seq_id,
-            'name' => $urc->user->name,
-            'last_name' => $urc->user->last_name,
-            'email' => $urc->user->email,
-            'language' => $urc->user->language,
-            'verified' => $urc->user->verified,
+            'user' => $this->userTransformer->transform($urc->user),
 
             'cellphone' => $urc->cellphone,
             'address' => $urc->address,

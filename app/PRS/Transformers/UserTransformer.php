@@ -19,7 +19,11 @@ class UserTransformer extends Transformer
     public function transform(User $user)
     {
         return [
-            
+            'name' => $user->name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'language' => $user->language,
+            'verified' => $user->verified,
         ];
     }
 

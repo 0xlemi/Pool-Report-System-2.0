@@ -37,13 +37,16 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 	Route::post('account/notifications', 'Api\UserController@notifications');
 
 
-	// Administrator
-	Route::post('admin/permissions', 'Api\AdministratorsController@permissions');
-	Route::delete('admin', 'Api\AdministratorsController@destroy');
-
 	// Company
 	Route::get('company', 'Api\CompanyController@show');
 	Route::delete('company', 'Api\CompanyController@destroy');
+
+	// Permissions
+	Route::get('permissions/list', 'Api\PermissionController@index');
+	Route::get('permissions/all', 'Api\PermissionController@all');
+	Route::post('permissions', 'Api\PermissionController@store');
+	Route::get('permissions', 'Api\PermissionController@show');
+	Route::delete('permissions', 'Api\PermissionController@destroy');
 
 	// Reports
 	Route::resource('reports', 'Api\ReportsController', ['except' => [

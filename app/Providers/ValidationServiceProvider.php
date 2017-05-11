@@ -17,6 +17,13 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Validation condition to check if report readings are vaild
+        Validator::extend('validPermissionElement', 'App\PRS\Validators\ValidPermissionElement@validate');
+        Validator::replacer('validPermissionElement', 'App\PRS\Validators\ValidPermissionElement@message');
+
+        // Validation condition to check if report readings are vaild
+        Validator::extend('validPermissionAction', 'App\PRS\Validators\ValidPermissionAction@validate');
+        Validator::replacer('validPermissionAction', 'App\PRS\Validators\ValidPermissionAction@message');
 
         // Validation condition to check if report readings are vaild
         Validator::extend('validReading', 'App\PRS\Validators\ValidReading@validate');
