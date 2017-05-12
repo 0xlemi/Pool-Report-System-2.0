@@ -17,6 +17,10 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Validation condition to check if checkReportCanAcceptReading are vaild
+        Validator::extend('checkReportCanAcceptReadingFromServiceId', 'App\PRS\Validators\CheckReportCanAcceptReadingFromServiceId@validate');
+        Validator::replacer('checkReportCanAcceptReadingFromServiceId', 'App\PRS\Validators\CheckReportCanAcceptReadingFromServiceId@message');
+
         // Validation condition to check if meassurment has the selected value lable are vaild
         Validator::extend('validMeasurementValue', 'App\PRS\Validators\ValidMeasurementValue@validate');
         Validator::replacer('validMeasurementValue', 'App\PRS\Validators\ValidMeasurementValue@message');

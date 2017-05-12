@@ -20,6 +20,8 @@ class CreateReadingsTable extends Migration
             $table->integer('measurement_id')->unsigned();
             $table->timestamps();
 
+            $table->unique(['report_id', 'measurement_id']);
+
             $table->foreign('report_id')
                 ->references('id')
                 ->on('reports')

@@ -24,6 +24,7 @@
         window.Laravel = <?php echo json_encode([
             'csrfToken' => csrf_token(),
             'url' => url('/').'/',
+			'sendbirdId' => config('services.sendbird.App_Id'),
 			'chat' => $chat,
         ]); ?>
     </script>

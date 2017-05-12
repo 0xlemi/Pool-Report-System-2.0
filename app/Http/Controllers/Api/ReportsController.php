@@ -233,21 +233,25 @@ class ReportsController extends ApiController
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
+        $service = $report->service;
         // Validate
         $this->validate($request, [
-            'technician' => 'integer|existsBasedOnCompany:technicians,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id, // check that is not a client
             'completed' => 'date',
-            'ph' => 'integer|between:1,5',
-            'chlorine' => 'integer|between:1,5',
-            'temperature' => 'integer|between:1,5',
-            'turbidity' => 'integer|between:1,4',
-            'salt' => 'integer|between:1,5',
+
             'latitude' => 'numeric|between:-90,90',
             'longitude' => 'numeric|between:-180,180',
             'accuracy' => 'numeric|between:0,100000',
-            'photo_1' => 'mimes:jpg,jpeg,png',
-            'photo_2' => 'mimes:jpg,jpeg,png',
-            'photo_3' => 'mimes:jpg,jpeg,png',
+
+            'add_readings' => 'array',
+            'add_readings.*' => 'required|array|checkReportCanAcceptReadingFromServiceId:'.$service->id.'|validMeasurementValue:measurement',
+            'add_readings.*.measurement' => 'required|integer',
+            'add_readings.*.value' => 'required|integer',
+
+            'remove_readings' => 'array',
+            'remove_readings.*' => 'required|array|checkReportCanAcceptReadingFromServiceId:'.$service->id,
+            'remove_readings.*.measurement' => 'required|integer',
+
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' => 'array',
@@ -255,44 +259,66 @@ class ReportsController extends ApiController
         ]);
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $report, $company) {
+        $transaction = DB::transaction(function () use($request, $report, $company, $service) {
 
-            // $service and $technician_id were checked allready
-            $report->fill(array_map('htmlentities', $request->except(
-                'on_time', 'technician_id', 'photo_1', 'photo_2', 'photo_3', 'add_photos', 'remove_photos'
-            )));
+            // $service and $person were checked allready
+            $report->fill(array_map('htmlentities', [
+                'completed' => $request->completed,
+                'latitude' => $request->latitude,
+                'longitude' => $request->longitude,
+                'accuracy' => $request->accuracy,
+            ]));
 
-            if(isset($request->service)){
+            if($request->has('service')){
                 $report->service()->associate($company->services()->bySeqId($request->service));
             }
-            if(isset($request->technician)){
-                $report->technician()->associate($company->services()->bySeqId($request->technician));
+
+            $person = $company->userRolecompanies()->bySeqId($request->person);
+            if($request->has('person')){
+                $report->userRoleCompany()->associate($person);
             }
 
             $report->save();
 
-            if(isset($request->photo_1)){
-                $report->deleteImage(1);
-                $report->addImageFromForm($request->file('photo_1'), 1);
-            }
-            if(isset($request->photo_2)){
-                $report->deleteImage(2);
-                $report->addImageFromForm($request->file('photo_2'), 2);
-            }
-            if(isset($request->photo_3)){
-                $report->deleteImage(3);
-                $report->addImageFromForm($request->file('photo_3'), 3);
+            // Remove Readings
+            if($request->has('remove_readings')){
+                foreach ($request->remove_readings as $reading) {
+                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+                    // dd($measurement->toArray());
+                    dd($service);
+                    dd($report->readings()->measurement()->get()->toArray());
+                    $reading = $report->readings()->where('measurement_id', $measurement->id)->firstOrFail();
+                    // dd([$measurement->id, $report->readings->toArray()]);
+                    $reading->delete();
+                }
             }
 
+            // Add Readings
+            if($request->has('add_readings')){
+                foreach ($request->add_readings as $reading) {
+                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+                    // if there is already a reading like this, dont create it
+                    if(!$report->readings->contains('measurement_id', $measurement->id)){
+                        $report->readings()->create([
+                            'measurement_id' => $measurement->id,
+                            'value' => $reading['value'],
+                        ]);
+                    }
+                }
+            }
+
+
             //Delete Photos
-            if(isset($request->remove_photos) && Logged::user()->can('removePhoto', $report)){
+            if($request->has('remove_photos') && Logged::user()->can('removePhoto', $report)){
                 foreach ($request->remove_photos as $order) {
                     $report->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->add_photos) && Logged::user()->can('addPhotos', $report)){
+            if($request->has('add_photos') && Logged::user()->can('addPhotos', $report)){
                 foreach ($request->add_photos as $photo) {
                     $report->addImageFromForm($photo);
                 }
@@ -302,7 +328,7 @@ class ReportsController extends ApiController
 
         return $this->respondPersisted(
             'The report was successfully updated.',
-            $this->reportTransformer->transform(Logged::company()->reports()->bySeqId($seq_id))
+            $this->reportTransformer->transform(Report::find($report->id))
         );
     }
 

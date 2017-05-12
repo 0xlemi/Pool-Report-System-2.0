@@ -36,6 +36,7 @@ return [
     ],
 
     'sendbird' => [
+        'App_Id' => env('SENDBIRD_ID'),
         'Api_Token' => env('SENDBIRD_TOKEN')
     ],
 

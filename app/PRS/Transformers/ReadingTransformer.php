@@ -28,6 +28,7 @@ class ReadingTransformer extends Transformer
     {
         $globalMeasurement = $reading->measurement->globalMeasurement;
         return [
+            'id' => $globalMeasurement->seq_id,
             'name' => $globalMeasurement->name,
             'label' => $this->labelTrasformer->transform($globalMeasurement->labels()->whereValue($reading->value)),
         ];

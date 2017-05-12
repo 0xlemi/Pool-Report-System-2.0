@@ -175,7 +175,7 @@ function isset(strVariableName) {
             // Try to make this only rune once
             let vue = this;
             this.sb = new SendBird({
-                appId: '19AA8038-0207-416F-95E2-BF118EA1D93E',
+                appId: Laravel.sendbirdId,
             });
             this.sb.connect(Laravel.chat.id, Laravel.chat.token, function(user, error) {
                 if (error) {
