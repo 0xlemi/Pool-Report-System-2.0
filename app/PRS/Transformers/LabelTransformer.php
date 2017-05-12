@@ -21,7 +21,6 @@ class LabelTransformer extends Transformer
     public function transform(Label $label)
     {
         return [
-            'id' => $label->id,
             'name' => $label->name,
             'color'=> $label->color,
             'value'=> $label->value,

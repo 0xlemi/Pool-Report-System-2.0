@@ -22,9 +22,10 @@ class Reading extends Model
     //      Scopes
     // ******************
 
-    public function scopeOfMeasurement($query, int $measurement_id)
+    public function scopeMeasurement($query)
     {
-        return $query->where('measurement_id', $measurement_id)->first();
+        $measurementIds = $query->pluck('measurement_id');
+        return Measurement::whereIn('id', $measurementIds);
     }
 
     // ******************

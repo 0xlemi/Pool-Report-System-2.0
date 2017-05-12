@@ -37,6 +37,16 @@ class Report extends Model
     ];
 
 
+    /**
+	 * Checks if client has service with this $seq_id
+	 * @param  integer  $seq_id
+	 * @return boolean
+	 */
+	public function hasReading($globalMeasurmentSeqId)
+	{
+        return $this->readings()->measurement()->global()->get()->contains('seq_id', $globalMeasurmentSeqId);
+	}
+
     // ******************************
     //            Scopes
     // ******************************

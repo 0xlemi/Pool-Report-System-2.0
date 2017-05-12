@@ -11,7 +11,7 @@ use App\UserRolecompany;
 /**
  * Transformer for the service class
  */
-class UserRolecompanyPreviewTransformer extends Transformer
+class UserRoleCompanyPreviewTransformer extends Transformer
 {
 
     private $imageTransformer;

@@ -5,6 +5,7 @@ namespace App\PRS\Observers;
 use App\Report;
 use App\Notifications\NewReportNotification;
 use App\Jobs\DeleteImagesFromS3;
+use App\PRS\Classes\Logged;
 
 class ReportObserver
 {

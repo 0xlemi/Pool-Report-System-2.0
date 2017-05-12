@@ -5,11 +5,13 @@ namespace App\PRS\Transformers;
 use App\Report;
 
 use App\PRS\Transformers\ServiceTransformer;
+use App\PRS\Transformers\ReadingTransformer;
 use App\PRS\Transformers\TechnicianTransformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
+use App\PRS\Transformers\PreviewTransformers\UserRoleCompanyPreviewTransformer;
 use Carbon\Carbon;
 
 
@@ -19,17 +21,20 @@ use Carbon\Carbon;
 class ReportTransformer extends Transformer
 {
 
+    private $readingTransformer;
     private $servicePreviewTransformer;
-    private $technicianPreviewTransformer;
+    private $urcPreviewTrasformer;
     private $imageTransformer;
 
     public function __construct(
+            ReadingTransformer $readingTransformer,
             ServicePreviewTransformer $servicePreviewTransformer,
-            TechnicianPreviewTransformer $technicianPreviewTransformer,
+            UserRoleCompanyPreviewTransformer $urcPreviewTrasformer,
             ImageTransformer $imageTransformer)
     {
+        $this->readingTransformer = $readingTransformer;
         $this->servicePreviewTransformer = $servicePreviewTransformer;
-        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
+        $this->urcPreviewTrasformer = $urcPreviewTrasformer;
         $this->imageTransformer = $imageTransformer;
     }
 
@@ -45,22 +50,18 @@ class ReportTransformer extends Transformer
             'id' => $report->seq_id,
             'completed' => $report->completed(),
             'on_time' => $report->on_time,
-            'ph' => $report->ph,
-            'chlorine' => $report->chlorine,
-            'temperature' => $report->temperature,
-            'turbidity' => $report->turbidity,
-            'salt' => $report->salt,
+            'readings' => $this->readingTransformer->transformCollection($report->readings),
             'location' =>
                 [
                     'latitude' => $report->latitude,
                     'longitude' => $report->longitude,
                     'accuracy' => $report->accuracy,
                 ],
-            'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
             'service' => $this->servicePreviewTransformer
-                            ->transform($report->service),
-            'technician' => $this->technicianPreviewTransformer
-                            ->transform($report->technician),
+                                ->transform($report->service),
+            'person' => $this->urcPreviewTrasformer
+                                ->transform($report->userRoleCompany),
+            'photos' => $this->imageTransformer->transformCollection($report->images()->get()),
         ];
     }
 

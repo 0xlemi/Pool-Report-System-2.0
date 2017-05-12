@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 
 use App\PRS\Transformers\ReportTransformer;
 use App\PRS\Helpers\ReportHelpers;
+use App\PRS\Classes\Logged;
 
 class ReportsController extends ApiController
 {
@@ -41,7 +42,7 @@ class ReportsController extends ApiController
      */
     public function index(Request $request)
     {
-        if($this->getUser()->cannot('list', Report::class))
+        if(Logged::user()->cannot('list', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -57,7 +58,7 @@ class ReportsController extends ApiController
             return $this->indexByDate($request->date, $limit);
         }
 
-        $reports = $this->loggedUserAdministrator()->reports()->seqIdOrdered()->paginate($limit);
+        $reports = Logged::company()->reports()->seqIdOrdered()->paginate($limit);
 
         return $this->respondWithPagination(
             $reports,
@@ -73,16 +74,16 @@ class ReportsController extends ApiController
      */
     public function indexByDate(String $date_str, int $limit)
     {
-        if($this->getUser()->cannot('list', Report::class))
+        if(Logged::user()->cannot('list', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
 
-        $date = (new Carbon($date_str, $admin->timezone))->setTimezone('UTC');
+        $date = new Carbon($date_str, $company->timezone);
 
-        $reports = $admin->reportsByDate($date)->paginate($limit);
+        $reports = $company->reportsByDate($date)->paginate($limit);
 
         return $this->respondWithPagination(
             $reports,
@@ -98,62 +99,75 @@ class ReportsController extends ApiController
      */
     public function store(Request $request)
     {
-        if($this->getUser()->cannot('create', Report::class))
+        if(Logged::user()->cannot('create', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
 
         // Validate
         $this->validate($request, [
-            'service' => 'required|integer|existsBasedOnCompany:services,'.$admin->id,
-            'technician' => 'required|integer|existsBasedOnCompany:technicians,'.$admin->id,
             'completed' => 'required|date',
-            'ph' => 'required|integer|between:1,5',
-            'chlorine' => 'required|integer|between:1,5',
-            'temperature' => 'required|integer|between:1,5',
-            'turbidity' => 'required|integer|between:1,4',
-            'salt' => 'required|integer|between:1,5',
+            'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+
+            'readings' => 'array',
+            'readings.*' => 'required|array|checkReportCanAcceptReading:service|validMeasurementValue:measurement',
+            'readings.*.measurement' => 'required|integer',
+            'readings.*.value' => 'required|integer',
+
             'latitude' => 'required|numeric|between:-90,90',
             'longitude' => 'required|numeric|between:-180,180',
             'altitude' => 'numeric|between:-100,9000',
             'accuracy' => 'required|numeric|between:0,100000',
+
             'add_photos' => 'required|array|size:3',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
-        $service = $admin->services()->bySeqId($request->service);
-        $technician = $admin->technicianBySeqId($request->technician);
 
+        $service = $company->services()->bySeqId($request->service);
+        $person = $company->userRoleCompanies()->bySeqId($request->person);
+
+
+        $completed_at = (new Carbon($request->completed_at, $company->timezone));
         // check if the report was made on time
         $on_time = 'noContract';
         if($service->hasServiceContract()){
             $on_time = $this->reportHelpers->checkOnTimeValue(
-                (new Carbon($request->completed, $admin->timezone)),
+                $completed_at,
                 $service->serviceContract->start_time,
                 $service->serviceContract->end_time,
-                $admin->timezone
+                $company->timezone
             );
         }
 
         // ***** Persisting *****
-        $report = DB::transaction(function () use($request, $service, $technician, $on_time) {
+        $report = DB::transaction(function () use($request, $service, $person, $on_time, $completed_at, $company) {
 
             // create report
             $report = $service->reports()->create(array_map('htmlentities', [
-                'technician_id' => $technician->id,
-                'completed' => $request->completed, // need to check what timezone is completed ***check***
+                'user_role_company_id' => $person->id,
+                'completed' => $completed_at->setTimezone('UTC'),
                 'on_time' => $on_time,
-                'ph' => $request->ph,
-                'chlorine' => $request->chlorine,
-                'temperature' => $request->temperature,
-                'turbidity' => $request->turbidity,
-                'salt' => $request->salt,
+
                 'latitude' => $request->latitude,
                 'longitude' => $request->longitude,
                 'altitude' => $request->altitude,
                 'accuracy' => $request->accuracy,
             ]));
+
+            // Add Readings
+            if(isset($request->readings)){
+                foreach ($request->readings as $reading) {
+                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+                    $report->readings()->create([
+                        'measurement_id' => $measurement->id,
+                        'value' => $reading['value'],
+                    ]);
+                }
+            }
 
             // Add Photos
             if(isset($request->add_photos)){
@@ -180,12 +194,12 @@ class ReportsController extends ApiController
     public function show($seq_id)
     {
         try {
-            $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+            $report = Logged::company()->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('view', $report))
+        if(Logged::user()->cannot('view', $report))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -207,21 +221,21 @@ class ReportsController extends ApiController
      */
     public function update(Request $request, $seq_id)
     {
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
         try {
-            $report = $admin->reports()->bySeqId($seq_id);
+            $report = $company->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('update', $report))
+        if(Logged::user()->cannot('update', $report))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
         // Validate
         $this->validate($request, [
-            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
+            'technician' => 'integer|existsBasedOnCompany:technicians,'.$company->id,
             'completed' => 'date',
             'ph' => 'integer|between:1,5',
             'chlorine' => 'integer|between:1,5',
@@ -241,7 +255,7 @@ class ReportsController extends ApiController
         ]);
 
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $report, $admin) {
+        $transaction = DB::transaction(function () use($request, $report, $company) {
 
             // $service and $technician_id were checked allready
             $report->fill(array_map('htmlentities', $request->except(
@@ -249,10 +263,10 @@ class ReportsController extends ApiController
             )));
 
             if(isset($request->service)){
-                $report->service()->associate($admin->services()->bySeqId($request->service));
+                $report->service()->associate($company->services()->bySeqId($request->service));
             }
             if(isset($request->technician)){
-                $report->technician()->associate($admin->services()->bySeqId($request->technician));
+                $report->technician()->associate($company->services()->bySeqId($request->technician));
             }
 
             $report->save();
@@ -271,14 +285,14 @@ class ReportsController extends ApiController
             }
 
             //Delete Photos
-            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $report)){
+            if(isset($request->remove_photos) && Logged::user()->can('removePhoto', $report)){
                 foreach ($request->remove_photos as $order) {
                     $report->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->add_photos) && $this->getUser()->can('addPhotos', $report)){
+            if(isset($request->add_photos) && Logged::user()->can('addPhotos', $report)){
                 foreach ($request->add_photos as $photo) {
                     $report->addImageFromForm($photo);
                 }
@@ -288,7 +302,7 @@ class ReportsController extends ApiController
 
         return $this->respondPersisted(
             'The report was successfully updated.',
-            $this->reportTransformer->transform($this->loggedUserAdministrator()->reports()->bySeqId($seq_id))
+            $this->reportTransformer->transform(Logged::company()->reports()->bySeqId($seq_id))
         );
     }
 
@@ -301,12 +315,12 @@ class ReportsController extends ApiController
     public function destroy($seq_id)
     {
         try{
-            $report = $this->loggedUserAdministrator()->reports()->bySeqId($seq_id);
+            $report = Logged::company()->reports()->bySeqId($seq_id);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Report with that id, does not exist.');
         }
 
-        if($this->getUser()->cannot('delete', $report))
+        if(Logged::user()->cannot('delete', $report))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

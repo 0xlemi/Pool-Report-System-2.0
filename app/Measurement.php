@@ -18,6 +18,17 @@ class Measurement extends Model
         'global_measurement_id'
     ];
 
+
+    // *******************
+    //      Scopes
+    // *******************
+
+    public function scopeGlobal($query)
+    {
+        $globalMeasurementIds = $query->pluck('global_measurement_id');
+        return GlobalMeasurement::whereIn('id', $globalMeasurementIds);
+    }
+
     // *******************
     //    Relationships
     // *******************
