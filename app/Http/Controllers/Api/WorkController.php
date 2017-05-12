@@ -10,6 +10,7 @@ use App\Work;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\PRS\Transformers\WorkTransformer;
+use App\PRS\Classes\Logged;
 
 class WorkController extends ApiController
 {
@@ -29,7 +30,7 @@ class WorkController extends ApiController
      */
     public function index(Request $request, $workOrderSeqId)
     {
-        if($this->getUser()->cannot('list', Work::class))
+        if(Logged::user()->cannot('list', Work::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -39,7 +40,7 @@ class WorkController extends ApiController
         ]);
 
         try {
-            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($workOrderSeqId);
+            $workOrder = Logged::company()->workOrders()->bySeqId($workOrderSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Work Order with that id, does not exist.');
         }
@@ -61,38 +62,38 @@ class WorkController extends ApiController
      */
     public function store(Request $request, $workOrderSeqId)
     {
-        if($this->getUser()->cannot('create', Work::class))
+        if(Logged::user()->cannot('create', Work::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
         $this->validate($request, [
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'quantity' => 'required|numeric',
             'units' => 'required|string|max:20',
             'cost' => 'required|numeric|max:10000000',
-            'technician' => 'required|integer|existsBasedOnCompany:technicians,'.$admin->id,
+            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'photos' => 'array',
             'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         try {
-            $workOrder = $this->loggedUserAdministrator()->workOrders()->bySeqId($workOrderSeqId);
+            $workOrder = $company->workOrders()->bySeqId($workOrderSeqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Work Order with that id, does not exist.');
         }
 
-        $technician = $this->loggedUserAdministrator()->technicianBySeqId($request->technician);
+        $person = $company->userRoleCompanies()->bySeqId($request->person);
 
         // ***** Persisting *****
-        $work = DB::transaction(function () use($request, $workOrder, $technician){
+        $work = DB::transaction(function () use($request, $workOrder, $person){
 
             $work = $workOrder->works()->create(array_merge(
                                 array_map('htmlentities', $request->except('photos')),
                                 [
-                                    'technician_id' => $technician->id,
+                                    'user_role_company_id' => $person->id,
                                 ]
                             ));
 
@@ -123,7 +124,7 @@ class WorkController extends ApiController
      */
     public function show(Work $work)
     {
-        if($this->getUser()->cannot('view', $work))
+        if(Logged::user()->cannot('view', $work))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -142,19 +143,19 @@ class WorkController extends ApiController
      */
     public function update(Request $request, Work $work)
     {
-        if($this->getUser()->cannot('update', $work))
+        if(Logged::user()->cannot('update', $work))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        $admin = $this->loggedUserAdministrator();
+        $company = Logged::company();
         $this->validate($request, [
             'title' => 'string|max:255',
             'description' => 'string',
             'quantity' => 'numeric',
             'units' => 'string|max:255',
             'cost' => 'numeric',
-            'technician' => 'integer|existsBasedOnCompany:technicians,'.$admin->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'add_photos' =>'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' =>'array',
@@ -163,31 +164,31 @@ class WorkController extends ApiController
 
 
         // ***** Persisting *****
-        DB::transaction(function () use($request, $work, $admin){
+        DB::transaction(function () use($request, $work, $company){
 
             $work->fill(array_map('htmlentities',
                     $request->except([
-                        'technician_id',
+                        'user_role_company_id',
                         'add_photos',
                         'remove_photos',
                     ])
             ));
 
-            if($request->has('technician')){
-                $work->technician()->associate($admin->technicianBySeqId($request->technician));
+            if($request->has('person')){
+                $work->userRoleCompany()->associate($company->userRoleCompanies()->bySeqId($request->person));
             }
 
             $work->save();
 
             //Delete Photos
-            if(isset($request->remove_photos) && $this->getUser()->can('removePhoto', $work)){
+            if(isset($request->remove_photos) && Logged::user()->can('removePhoto', $work)){
                 foreach ($request->remove_photos as $order) {
                     $work->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->add_photos) && $this->getUser()->can('addPhoto', $work)){
+            if(isset($request->add_photos) && Logged::user()->can('addPhoto', $work)){
                 foreach ($request->add_photos as $photo) {
                     $work->addImageFromForm($photo);
                 }
@@ -209,7 +210,7 @@ class WorkController extends ApiController
      */
     public function destroy(Work $work)
     {
-        if($this->getUser()->cannot('delete', $work))
+        if(Logged::user()->cannot('delete', $work))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }

@@ -4,6 +4,7 @@ namespace App\PRS\Transformers;
 
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\PreviewTransformers\TechnicianPreviewTransformer;
+use App\PRS\Transformers\PreviewTransformers\UserRoleCompanyPreviewTransformer;
 
 use Auth;
 use App\Technician;
@@ -16,13 +17,13 @@ class WorkTransformer extends Transformer
 {
 
     private $imageTransformer;
-    private $technicianPreviewTransformer;
+    private $urcTransformer;
 
     public function __construct(ImageTransformer $imageTransformer,
-                                TechnicianPreviewTransformer $technicianPreviewTransformer)
+                                UserRoleCompanyPreviewTransformer $urcTransformer)
     {
         $this->imageTransformer = $imageTransformer;
-        $this->technicianPreviewTransformer = $technicianPreviewTransformer;
+        $this->urcTransformer = $urcTransformer;
     }
 
     /**
@@ -46,7 +47,7 @@ class WorkTransformer extends Transformer
             'units' => $work->units,
             'cost' => $work->cost,
             'currency' => $work->workOrder->currency,
-            'technician' => $this->technicianPreviewTransformer->transform($work->technician),
+            'person' => $this->urcTransformer->transform($work->userRoleCompany),
             'photos' => $photos,
         ];
     }

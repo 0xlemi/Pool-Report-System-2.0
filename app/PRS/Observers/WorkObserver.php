@@ -5,6 +5,7 @@ namespace App\PRS\Observers;
 use App\Work;
 use App\Jobs\DeleteImagesFromS3;
 use App\Notifications\AddedWorkNotification;
+use App\PRS\Classes\Logged;
 
 class WorkObserver
 {
