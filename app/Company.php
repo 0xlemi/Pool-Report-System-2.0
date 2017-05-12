@@ -47,6 +47,8 @@ class Company extends Model
         'twitter',
         'timezone',
         'language',
+        'latitude',
+        'longitude',
     ];
 
 

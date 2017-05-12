@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 
 	// Company
 	Route::get('company', 'Api\CompanyController@show');
+	Route::post('company', 'Api\CompanyController@update');
 	Route::delete('company', 'Api\CompanyController@destroy');
 
 	// Permissions
