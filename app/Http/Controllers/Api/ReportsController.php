@@ -280,34 +280,34 @@ class ReportsController extends ApiController
 
             $report->save();
 
-            // Remove Readings
-            if($request->has('remove_readings')){
-                foreach ($request->remove_readings as $reading) {
-                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
-                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
-                    // dd($measurement->toArray());
-                    dd($service);
-                    dd($report->readings()->measurement()->get()->toArray());
-                    $reading = $report->readings()->where('measurement_id', $measurement->id)->firstOrFail();
-                    // dd([$measurement->id, $report->readings->toArray()]);
-                    $reading->delete();
-                }
-            }
-
-            // Add Readings
-            if($request->has('add_readings')){
-                foreach ($request->add_readings as $reading) {
-                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
-                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
-                    // if there is already a reading like this, dont create it
-                    if(!$report->readings->contains('measurement_id', $measurement->id)){
-                        $report->readings()->create([
-                            'measurement_id' => $measurement->id,
-                            'value' => $reading['value'],
-                        ]);
-                    }
-                }
-            }
+            // // Remove Readings
+            // if($request->has('remove_readings')){
+            //     foreach ($request->remove_readings as $reading) {
+            //         $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+            //         $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+            //         // dd($measurement->toArray());
+            //         dd($service);
+            //         dd($report->readings()->measurement()->get()->toArray());
+            //         $reading = $report->readings()->where('measurement_id', $measurement->id)->firstOrFail();
+            //         // dd([$measurement->id, $report->readings->toArray()]);
+            //         $reading->delete();
+            //     }
+            // }
+            //
+            // // Add Readings
+            // if($request->has('add_readings')){
+            //     foreach ($request->add_readings as $reading) {
+            //         $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+            //         $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+            //         // if there is already a reading like this, dont create it
+            //         if(!$report->readings->contains('measurement_id', $measurement->id)){
+            //             $report->readings()->create([
+            //                 'measurement_id' => $measurement->id,
+            //                 'value' => $reading['value'],
+            //             ]);
+            //         }
+            //     }
+            // }
 
 
             //Delete Photos
