@@ -249,7 +249,7 @@ class ReportsController extends ApiController
             'add_readings.*.value' => 'required|integer',
 
             'remove_readings' => 'array',
-            'remove_readings.*' => 'required|array|checkReportCanAcceptReadingFromServiceId:'.$service->id,
+            'remove_readings.*' => 'required|array|checkReportCanRemoveReadingFromServiceId:'.$service->id.','.$report->id,
             'remove_readings.*.measurement' => 'required|integer',
 
             'add_photos' => 'array',
@@ -269,10 +269,6 @@ class ReportsController extends ApiController
                 'accuracy' => $request->accuracy,
             ]));
 
-            if($request->has('service')){
-                $report->service()->associate($company->services()->bySeqId($request->service));
-            }
-
             $person = $company->userRolecompanies()->bySeqId($request->person);
             if($request->has('person')){
                 $report->userRoleCompany()->associate($person);
@@ -280,34 +276,30 @@ class ReportsController extends ApiController
 
             $report->save();
 
-            // // Remove Readings
-            // if($request->has('remove_readings')){
-            //     foreach ($request->remove_readings as $reading) {
-            //         $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
-            //         $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
-            //         // dd($measurement->toArray());
-            //         dd($service);
-            //         dd($report->readings()->measurement()->get()->toArray());
-            //         $reading = $report->readings()->where('measurement_id', $measurement->id)->firstOrFail();
-            //         // dd([$measurement->id, $report->readings->toArray()]);
-            //         $reading->delete();
-            //     }
-            // }
-            //
-            // // Add Readings
-            // if($request->has('add_readings')){
-            //     foreach ($request->add_readings as $reading) {
-            //         $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
-            //         $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
-            //         // if there is already a reading like this, dont create it
-            //         if(!$report->readings->contains('measurement_id', $measurement->id)){
-            //             $report->readings()->create([
-            //                 'measurement_id' => $measurement->id,
-            //                 'value' => $reading['value'],
-            //             ]);
-            //         }
-            //     }
-            // }
+            // Remove Readings
+            if($request->has('remove_readings')){
+                foreach ($request->remove_readings as $reading) {
+                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+                    $reading = $report->readings()->where('measurement_id', $measurement->id)->firstOrFail();
+                    $reading->delete();
+                }
+            }
+
+            // Add Readings
+            if($request->has('add_readings')){
+                foreach ($request->add_readings as $reading) {
+                    $globalMeasurement = $company->globalMeasurements()->bySeqId($reading['measurement']);
+                    $measurement = $service->measurements()->where('global_measurement_id', $globalMeasurement->id)->firstOrFail();
+                    // if there is already a reading like this, dont create it
+                    if(!$report->readings->contains('measurement_id', $measurement->id)){
+                        $report->readings()->create([
+                            'measurement_id' => $measurement->id,
+                            'value' => $reading['value'],
+                        ]);
+                    }
+                }
+            }
 
 
             //Delete Photos

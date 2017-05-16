@@ -18,6 +18,10 @@ class ValidationServiceProvider extends ServiceProvider
     public function boot()
     {
         // Validation condition to check if checkReportCanAcceptReading are vaild
+        Validator::extend('checkReportCanRemoveReadingFromServiceId', 'App\PRS\Validators\CheckReportCanRemoveReadingFromServiceId@validate');
+        Validator::replacer('checkReportCanRemoveReadingFromServiceId', 'App\PRS\Validators\CheckReportCanRemoveReadingFromServiceId@message');
+
+        // Validation condition to check if checkReportCanAcceptReading are vaild
         Validator::extend('checkReportCanAcceptReadingFromServiceId', 'App\PRS\Validators\CheckReportCanAcceptReadingFromServiceId@validate');
         Validator::replacer('checkReportCanAcceptReadingFromServiceId', 'App\PRS\Validators\CheckReportCanAcceptReadingFromServiceId@message');
 

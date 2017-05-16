@@ -46,7 +46,7 @@ class ReportsTableSeeder extends Seeder
             ]);
 
             // Add Readings
-            for ($a=0; $a < $service->measurements()->count() - rand(0,1); $a++) {
+            for ($a=0; $a < $service->measurements()->count() - rand(0,2); $a++) {
                 // Getting a valid and unsed Measurement ID
                 $usedMeasurements = $report->readings()->pluck('measurement_id')->toArray();
                 $measurementId = $service->measurements()
