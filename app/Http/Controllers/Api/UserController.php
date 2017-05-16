@@ -130,29 +130,6 @@ class UserController extends ApiController
         return $this->respondWithSuccess("Notification {$name} of type {$type} has been changed to: {$finalValue}");
     }
 
-    public function todaysRoute()
-    {
-        if($this->getUser()->cannot('list', Service::class))
-        {
-            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
-        }
-
-        $admin = $this->loggedUserAdministrator();
-
-        $todayServices = $admin->servicesDoToday();
-        $numberTotalServices = $admin->numberServicesDoToday();
-        $numberMissingServices = $todayServices->count();
-        return $this->respond(
-            [
-                'data' => [
-                    'numberTotalServicesToday' => $numberTotalServices,
-                    'numberServicesDoneToday' => $numberTotalServices - $numberMissingServices,
-                    'missingServicesToday' => $this->serviceTransformer->transformCollection($todayServices),
-                ]
-            ]
-        );
-    }
-
     public function constants(Request $request)
     {
         $this->validate($request, [

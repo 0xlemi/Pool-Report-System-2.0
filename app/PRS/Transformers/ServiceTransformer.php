@@ -65,9 +65,17 @@ class ServiceTransformer extends Transformer
                 ],
             'photo' => $photo,
             'contract' => $contract,
+            'products' => [
+                'number' => $service->products()->count(),
+                'href' => url("api/v1/services/{$service->seq_id}/products"),
+            ],
+            'measurements' => [
+                'number' => $service->measurements()->count(),
+                'href' => url("api/v1/services/{$service->seq_id}/measurements"),
+            ],
             'equipment' => [
                 'number' => $service->equipment()->count(),
-                'href' => url("api/v1/services/{$service->seq_id}/equipment?api_token={$this->logged->user()->api_token}"),
+                'href' => url("api/v1/services/{$service->seq_id}/equipment"),
             ],
         ];
     }

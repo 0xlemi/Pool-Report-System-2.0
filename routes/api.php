@@ -30,12 +30,13 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 
 
 	// User
-	Route::get('todaysroute', 'Api\UserController@todaysRoute');
 	Route::post('resettoken', 'Api\UserController@resetToken');
 	Route::get('account', 'Api\UserController@show');
 	Route::post('account', 'Api\UserController@update');
 	Route::post('account/notifications', 'Api\UserController@notifications');
 
+	// Todays Route
+	Route::get('todaysroute', 'Api\TodaysRouteController@index');
 
 	// Company
 	Route::get('company', 'Api\CompanyController@show');
