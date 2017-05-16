@@ -19,9 +19,7 @@ use Illuminate\Http\Request;
 
 // Authentication
 Route::group(['middleware' => ['throttle:10'] ], function (){
-	Route::post('login', 'Api\UserController@login');
-	Route::post('activate/resend', 'Api\UserController@resendVerificationEmail');
-	Route::post('signup', 'Api\AdministratorsController@store');
+	// Route::post('activate/resend', 'Api\UserController@resendVerificationEmail');
 });
 
 Route::post('constants', 'Api\UserController@constants');
@@ -30,7 +28,6 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 
 
 	// User
-	Route::post('resettoken', 'Api\UserController@resetToken');
 	Route::get('account', 'Api\UserController@show');
 	Route::post('account', 'Api\UserController@update');
 	Route::post('account/notifications', 'Api\UserController@notifications');
