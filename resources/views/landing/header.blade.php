@@ -48,6 +48,7 @@
                         <li><a href="{{url('/pricing')}}" class="smooth-scroll">Pricing</a></li>
                         <li><a href="{{url('/tutorials')}}" class="smooth-scroll">Tutorials</a></li>
                         <li><a href="{{url('/support')}}" class="smooth-scroll">Support</a></li>
+                        <li><a href="{{url('/docs')}}" class="smooth-scroll">Developers</a></li>
                         <!-- Dropdown Menu -->
                         <!-- <li class="dropdown">
                             <a id="dLabel" data-toggle="dropdown" data-target="#" href="#">Extras</a>

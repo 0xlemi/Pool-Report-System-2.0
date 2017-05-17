@@ -127,6 +127,11 @@ class HomeController extends PageController
         return view('extras.showMessage', compact('title', 'isSuccess'));
     }
 
+    public function docs()
+    {
+        return view('docs.index');
+    }
+
     public function terms()
     {
         return view('landing.terms');
@@ -151,7 +156,6 @@ class HomeController extends PageController
     {
         return view('landing.support');
     }
-
 
 
 }

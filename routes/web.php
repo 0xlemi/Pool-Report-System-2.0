@@ -22,6 +22,7 @@ Route::get('/features', 'HomeController@features');
 Route::get('/pricing', 'HomeController@pricing');
 Route::get('/tutorials', 'HomeController@tutorials');
 Route::get('/support', 'HomeController@support');
+Route::get('/docs', 'HomeController@docs');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');

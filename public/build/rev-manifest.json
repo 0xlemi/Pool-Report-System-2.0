@@ -1,5 +1,7 @@
 {
+  "css/docs.css": "css/docs-dc77113c99.css",
   "css/less.css": "css/less-b28cd80276.css",
   "css/main.css": "css/main-7f334c056d.css",
-  "js/bundle.js": "js/bundle-074f38ccfd.js"
+  "js/bundle.js": "js/bundle-074f38ccfd.js",
+  "js/docs.js": "js/docs-78ab3cdbe8.js"
 }
