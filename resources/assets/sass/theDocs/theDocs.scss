@@ -38,6 +38,12 @@
 @import "theDocs/variables";
 @import "theDocs/mixins";
 
+// Vendor
+@import 'vendors/bootstrap/css/bootstrap';
+@import 'vendors/font-awesome/scss/font-awesome';
+@import 'vendors/lity/lity';
+@import 'vendors/prism/prism';
+
 // Core CSS
 @import "theDocs/content";
 @import "theDocs/header";

@@ -20,13 +20,6 @@ software, pool service business management software">
     <!-- =========================
        STYLESHEETS
     ============================== -->
-    <!-- BOOTSTRAP CSS -->
-    <link rel="stylesheet" href="{{ url('css/landing/plugins/bootstrap.min.css') }}">
-
-    <!-- FONT ICONS -->
-    <link rel="stylesheet" href="{{ url('css/landing/icons/iconfont.css') }}">
-    <link rel="stylesheet" href="{{ url('css/landing/icons/font-awesome-4.7.0/css/font-awesome.min.css') }}">
-
     <!-- GOOGLE FONTS -->
     <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic" rel="stylesheet" type="text/css">
     <link href='//fonts.googleapis.com/css?family=Raleway:100,300,400,500%7CLato:300,400' rel='stylesheet' type='text/css'>
@@ -61,26 +54,15 @@ software, pool service business management software">
         <aside class="col-md-3 col-sm-3 sidebar sidebar-icon">
 
           <ul class="sidenav dropable sticky">
-            <li><a href="index.html"><i class="fa fa-home"></i> Overview</a></li>
             <li>
-              <a href="#"><i class="fa fa-columns"></i> Layouts</a>
+              <a href="#"><i class="fa fa-columns"></i> Quick Start</a>
               <ul>
-                <li><a href="layout_boxed_left-sidebar.html">Boxed - Left sidebar</a></li>
-                <li><a href="layout_boxed_right-sidebar.html">Boxed - Right sidebar</a></li>
-                <li><a href="layout_boxed_no-sidebar.html">Boxed - No sidebar</a></li>
-                <li><a href="layout_full_left-sidebar.html">Fullwidth - Left sidebar</a></li>
-                <li><a href="layout_full_right-sidebar.html">Fullwidth - Right sidebar</a></li>
-                <li><a href="layout_full_no-sidebar.html">Fullwidth - No sidebar</a></li>
-                <li><a href="layout_single-page-1.html">Single page - Sample 1</a></li>
-                <li><a href="layout_single-page-2.html">Single page - Sample 2</a></li>
-                <li><a href="layout_single-page-3.html">Single page - Sample 3</a></li>
-                <li><a href="layout_sidebar_boxed.html">Boxed sidebar</a></li>
-                <li><a href="layout_skin.html">Skins</a></li>
+                <li><a href="layout_boxed_left-sidebar.html">Authentication</a></li>
               </ul>
             </li>
 
             <li>
-              <a class="active" href="#"><i class="fa fa-th-large"></i> Components</a>
+              <a href="#"><i class="fa fa-th-large"></i> Users/Roles</a>
               <ul>
                 <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
                 <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
@@ -92,34 +74,98 @@ software, pool service business management software">
             </li>
 
             <li>
-              <a href="#"><i class="fa fa-css3"></i> Basic CSS</a>
+              <a href="#"><i class="fa fa-th-large"></i> Company</a>
               <ul>
-                <li><a href="css_typography.html">Typography</a></li>
-                <li><a href="css_button.html">Buttons</a></li>
-                <li><a href="css_label.html">Labels</a></li>
-                <li><a href="css_table.html">Tables</a></li>
-                <li><a href="css_alert.html">Alerts</a></li>
-                <li><a href="css_icon.html">Icons</a></li>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
               </ul>
             </li>
 
             <li>
-              <a href="#"><i class="fa fa-cubes"></i> Elements</a>
+              <a href="#"><i class="fa fa-th-large"></i> Services</a>
               <ul>
-                <li><a href="element_toc.html">Table of contents</a></li>
-                <li><a href="element_code.html">Code view</a></li>
-                <li><a href="element_view.html">Views</a></li>
-                <li><a href="element_promo.html">Promo</a></li>
-                <li><a href="element_files.html">Included files</a></li>
-                <li><a href="element_requirement.html">Requirements</a></li>
-                <li><a href="element_tab.html">Tabs</a></li>
-                <li><a href="element_step.html">Steps</a></li>
-                <li><a href="element_media.html">Media</a></li>
-                <li><a href="element_color.html">Color palette</a></li>
-                <li><a href="element_jumbotron.html">Jumbotron</a></li>
-                <li><a href="element_carousel.html">Carousel</a></li>
-                <li><a href="element_faq.html">FAQ</a></li>
-                <li><a href="element_mix.html">Mix</a></li>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Reports</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Todays Route</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Work Orders</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Inovices/Payments</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Chat</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#"><i class="fa fa-th-large"></i> Settings</a>
+              <ul>
+                <li><a href="component_navbar.html"><i class="fa fa-list-alt"></i> Navbar</a></li>
+                <li><a href="component_banner.html"><i class="fa fa-tv"></i> Banner</a></li>
+                <li><a href="component_sidebar.html"><i class="fa fa-th-list"></i> Sidebar - default</a></li>
+                <li><a href="component_sidebar_line.html"><i class="fa fa-th-list"></i> Sidebar - line</a></li>
+                <li><a class="active" href="component_sidebar_icon.html"><i class="fa fa-th-list"></i> Sidebar - icon</a></li>
+                <li><a href="component_footer.html"><i class="fa fa-copyright"></i> Footer</a></li>
               </ul>
             </li>
 
@@ -274,7 +320,7 @@ software, pool service business management software">
     <!-- END Footer -->
 
     <!-- Scripts -->
-    <script src="{{ elixir('js/docs.js') }}"></script>
+    <script src="{{ asset('storage/js/theDocs.all.min.js') }}"></script>
 
   </body>
 </html>

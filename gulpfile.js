@@ -32,12 +32,11 @@ elixir(function(mix) {
             'bootstrap-maxlenght.js',
             'bootstrap.js',
             'main.js'
-        ])
+        ], 'public/js/bundle.js')
         // Documentation Styles
         .sass([
             'theDocs/theDocs.scss',
             'theDocs/custom.css'
         ], 'public/css/docs.css')
-    	.browserify(['libs/theDocs/theDocs.all.min.js', 'libs/theDocs/custom.js'], 'public/js/docs.js')
-    	.version(['css/less.css', 'css/main.css', 'js/bundle.js', 'css/docs.css', 'js/docs.js']);
+    	.version(['css/less.css', 'css/main.css', 'js/bundle.js', 'css/docs.css']);
 });
