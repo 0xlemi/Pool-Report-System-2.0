@@ -22,7 +22,6 @@ Route::get('/features', 'HomeController@features');
 Route::get('/pricing', 'HomeController@pricing');
 Route::get('/tutorials', 'HomeController@tutorials');
 Route::get('/support', 'HomeController@support');
-Route::get('/docs', 'HomeController@docs');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');
@@ -44,6 +43,19 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::get('/unsubscribe/{token}', 'HomeController@emailOptions');
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
+
+// Documentation
+Route::get('/docs', 'DocumentationController@index');
+Route::get('/docs/quick', 'DocumentationController@quick');
+Route::get('/docs/user', 'DocumentationController@user');
+Route::get('/docs/company', 'DocumentationController@company');
+Route::get('/docs/service', 'DocumentationController@service');
+Route::get('/docs/report', 'DocumentationController@report');
+Route::get('/docs/todaysroute', 'DocumentationController@todaysroute');
+Route::get('/docs/workorder', 'DocumentationController@workorder');
+Route::get('/docs/invoice', 'DocumentationController@invoice');
+Route::get('/docs/chat', 'DocumentationController@chat');
+Route::get('/docs/setting', 'DocumentationController@setting');
 
 // Client Interface
 Route::get('report', 'ClientInterfaceController@reports');
