@@ -59,13 +59,7 @@ software, pool service business management software">
             </li>
 
             <li>
-              <a href="{{ url('docs/users') }}"><i class="glyphicon glyphicon-user"></i> Users/Roles</a>
-              <ul>
-                <li><a href="{{ url('docs') }}"><i class="glyphicon glyphicon-cog"></i> System Admin</a></li>
-                <li><a href="{{ url('docs') }}"><i class="glyphicon glyphicon-user"></i> Client</a></li>
-                <li><a href="{{ url('docs') }}"><i class="glyphicon glyphicon-eye-open"></i> Supervisor</a></li>
-                <li><a href="{{ url('docs') }}"><i class="glyphicon glyphicon-wrench"></i> Technician</a></li>
-              </ul>
+              <a href="{{ url('docs/user') }}"><i class="glyphicon glyphicon-user"></i> Users/Roles</a>
             </li>
 
             <li>
