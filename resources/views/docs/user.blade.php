@@ -187,17 +187,17 @@
     </tr>
     <tr>
       <td><a href="#view_user_role">View a user-role</a></td>
-      <td><h6 style="display: inline-block;"><span class="label label-success"><strong>GET</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies</td>
+      <td><h6 style="display: inline-block;"><span class="label label-success"><strong>GET</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies/{id}</td>
       <td>Returns <code>user-role</code> information.</td>
     </tr>
     <tr>
       <td><a href="#update_user_role">Update a user-role</a></td>
-      <td><h6 style="display: inline-block;"><span class="label label-default"><strong>PATCH</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies</td>
+      <td><h6 style="display: inline-block;"><span class="label label-default"><strong>PATCH</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies/{id}</td>
       <td>Updates <code>user-role</code> information.</td>
     </tr>
     <tr>
       <td><a href="#delete_user_role">Delete a user-role</a></td>
-      <td><h6 style="display: inline-block;"><span class="label label-danger"><strong>DELETE</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies</td>
+      <td><h6 style="display: inline-block;"><span class="label label-danger"><strong>DELETE</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/userrolecompanies/{id}</td>
       <td>Deletes the <code>user-role</code>.</td>
     </tr>
   </tbody>

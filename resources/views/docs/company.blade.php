@@ -49,12 +49,12 @@
       </tr>
       <tr>
         <td>latitude</td>
-        <td>string</td>
+        <td>numeric</td>
         <td>The <code>company</code> location latitude.</td>
       </tr>
       <tr>
         <td>longitude</td>
-        <td>string</td>
+        <td>numeric</td>
         <td>The <code>company</code> location longitude.</td>
       </tr>
     </tbody>
