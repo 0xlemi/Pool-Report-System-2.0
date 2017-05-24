@@ -702,5 +702,219 @@
     DELETE  {{url ('/api/v1/measurements/{measurement_id}') }}
 </pre>
 
+<br>
+<br>
+<br>
+
+<h1 id="product">Product</h1>
+
+<p>
+    <code>Products</code> help visualize the ammount of chemicals or compounds the pool uses monthly. to track inventory usage and expenses.
+</p>
+
+<h2>Resource Representation</h2>
+<h4>Product</h4>
+<div class="table-responsive">
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>type</th>
+        <th>description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>global_product</td>
+        <td>integer</td>
+        <td>The id of the global product, this measurement is related to.</i></td>
+      </tr>
+      <tr>
+        <td>amount</td>
+        <td>numeric</td>
+        <td>Monthly usage of that <code>global_product</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>Actions</h2>
+
+<div class="callout callout-info" role="alert">
+    <ul>
+        <li>
+            All endpoints are relative to <a class="link--copy">{{ url('/api/v1') }}</a>
+        </li>
+        <li>
+            All requests must be urlencoded.
+        </li>
+    </ul>
+</div>
+
+<table class="table table-bordered table-striped ">
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>HTTP request</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#list_measurement">List products</a></td>
+      <td><h6 style="display: inline-block;"><span class="label label-success"><strong>GET</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/services/{id}/products</td>
+      <td>Returns a list of all <code>products</code> in your company.</td>
+    </tr>
+    <tr>
+      <td><a href="#create_measurement">Create a products</a></td>
+      <td><h6 style="display: inline-block;"><span class="label label-warning"><strong>POST</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/services/{id}/products</td>
+      <td>Create new <code>product</code>.</td>
+    </tr>
+    <tr>
+      <td><a href="#view_product">View a product</a></td>
+      <td><h6 style="display: inline-block;"><span class="label label-success"><strong>GET</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/products/{id}</td>
+      <td>Returns <code>product</code> information.</td>
+    </tr>
+    <tr>
+      <td><a href="#update_product">Update a product</a></td>
+      <td><h6 style="display: inline-block;"><span class="label label-default"><strong>PATCH</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/products/{id}</td>
+      <td>Update <code>product</code> information.</td>
+    </tr>
+    <tr>
+      <td><a href="#delete_product">Delete a product</a></td>
+      <td><h6 style="display: inline-block;"><span class="label label-danger"><strong>DELETE</strong></span></h6>&nbsp;&nbsp;&nbsp;&nbsp;/products/{id}</td>
+      <td>Deletes the <code>product</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<h3 id="list_product">List Product</h3>
+
+<p>Returns a list of the <code>products</code> that the service has attached.</p>
+<p>You can query based on various parameters</p>
+<br>
+<pre>
+    GET  {{url ('/api/v1/services/{service_id}/products') }}
+</pre>
+<br>
+
+<h5>Optional query parameters</h5>
+
+<table class="table table-bordered table-striped ">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>limit</code></td>
+      <td>integer</td>
+      <td>The number of results to be displayed per page. This value must be between 1 and 25. <i>Default: 5</i></td>
+    </tr>
+    <tr>
+      <td><code>page</code></td>
+      <td>integer</td>
+      <td>Page of results selected.</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<h3 id="create_product">Create Product</h3>
+
+<p>Create the <code>product</code> information.</p>
+<br>
+<pre>
+    POST  {{url ('/api/v1/services/{service_id}/products') }}
+</pre>
+<br>
+
+<h5>Request body</h5>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>type</th>
+        <th>description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>global_product</code></td>
+        <td>integer</td>
+        <td>The id of the <code>global_product</code>, this <code>product</code> is related to.</i></td>
+      </tr>
+      <tr>
+        <td><code>amount</code></td>
+        <td>numeric</td>
+        <td>Monthly usage of that <code>global_product</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+<br>
+
+<h3 id="view_product">View Product</h3>
+
+<p>Returns <code>product</code> information.</p>
+<br>
+<pre>
+    GET  {{url ('/api/v1/products/{product_id}') }}
+</pre>
+
+<br>
+
+<h3 id="update_product">Update Product</h3>
+
+<p>Update the <code>product</code> information.</p>
+<br>
+<pre>
+    PATCH  {{url ('/api/v1/products/{product_id}') }}
+</pre>
+<br>
+
+<h5>Request body</h5>
+<table class="table table-bordered table-striped ">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+     <tr>
+        <td><code>amount</code></td>
+        <td>numeric</td>
+        <td>Monthly usage of that <code>global_product</code></td>
+      </tr>
+  </tbody>
+</table>
+
+<br>
+
+<h3 id="delete_product">Delete Product</h3>
+
+<p>Delete the <code>product</code>.</p>
+<br>
+<pre>
+    DELETE  {{url ('/api/v1/products/{product_id}') }}
+</pre>
+
+<br>
+<br>
+<br>
+
+<h1 id="equipment">Equipment</h1>
+
+<p>
+    <code>Equipment</code> is a record of the service pool equipment, machines and accessories.
+</p>
 
 @endsection
