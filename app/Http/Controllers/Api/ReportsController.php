@@ -99,7 +99,8 @@ class ReportsController extends ApiController
      */
     public function store(Request $request)
     {
-        if(Logged::user()->cannot('create', Report::class))
+        $user = Logged::user();
+        if($user->cannot('create', Report::class))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -110,7 +111,7 @@ class ReportsController extends ApiController
         $this->validate($request, [
             'completed' => 'required|date',
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
-            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
 
             'readings' => 'array',
             'readings.*' => 'required|array|checkReportCanAcceptReading:service|validMeasurementValue:measurement',
@@ -127,7 +128,16 @@ class ReportsController extends ApiController
         ]);
 
         $service = $company->services()->bySeqId($request->service);
-        $person = $company->userRoleCompanies()->bySeqId($request->person);
+        $urc = $user->selectedUser;
+        if($urc->ofRole('admin')){
+            if($request->has('person')){
+                $person = $company->userRoleCompanies()->bySeqId($request->person);
+            }else{
+                return response()->json([ 'person' => ['The person field is required'] ] , 422);
+            }
+        }else{
+            $person = $urc;
+        }
 
 
         $completed_at = (new Carbon($request->completed_at, $company->timezone));
@@ -228,7 +238,8 @@ class ReportsController extends ApiController
             return $this->respondNotFound('Report with that id, does not exist.');
         }
 
-        if(Logged::user()->cannot('update', $report))
+        $user = Logged::user();
+        if($user->cannot('update', $report))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -258,8 +269,9 @@ class ReportsController extends ApiController
             'remove_photos.*' => 'required|integer|min:4',
         ]);
 
+        $urc = $user->selectedUser;
         // ***** Persisting *****
-        $transaction = DB::transaction(function () use($request, $report, $company, $service) {
+        $transaction = DB::transaction(function () use($request, $report, $company, $service, $urc) {
 
             // $service and $person were checked allready
             $report->fill(array_map('htmlentities', [
@@ -269,8 +281,8 @@ class ReportsController extends ApiController
                 'accuracy' => $request->accuracy,
             ]));
 
-            $person = $company->userRolecompanies()->bySeqId($request->person);
-            if($request->has('person')){
+            if($urc->ofRole('admin') && $request->has('person')){
+                $person = $company->userRolecompanies()->bySeqId($request->person);
                 $report->userRoleCompany()->associate($person);
             }
 
