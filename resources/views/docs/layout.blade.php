@@ -82,14 +82,11 @@ software, pool service business management software">
             </li>
 
             <li>
-              <a href="{{ url('docs/todaysroute') }}"><i class="glyphicon glyphicon-road"></i> Todays Route</a>
+              <a href="{{ url('docs/workorder') }}"><i class="glyphicon glyphicon-briefcase"></i> Work Orders</a>
             </li>
 
             <li>
-              <a href="{{ url('docs/workorder') }}"><i class="glyphicon glyphicon-briefcase"></i> Work Orders</a>
-              <ul>
-                <li><a href="{{ url('docs/work') }}"><i class="fa fa-list-alt"></i> Work</a></li>
-              </ul>
+              <a href="{{ url('docs/todaysroute') }}"><i class="glyphicon glyphicon-road"></i> Todays Route</a>
             </li>
 
             <li>

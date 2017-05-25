@@ -122,8 +122,8 @@ class ReportsController extends ApiController
             'altitude' => 'numeric|between:-100,9000',
             'accuracy' => 'required|numeric|between:0,100000',
 
-            'add_photos' => 'required|array|size:3',
-            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'photos' => 'required|array|size:3',
+            'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         $service = $company->services()->bySeqId($request->service);
@@ -170,8 +170,8 @@ class ReportsController extends ApiController
             }
 
             // Add Photos
-            if(isset($request->add_photos)){
-                foreach ($request->add_photos as $photo) {
+            if($request->has('photos')){
+                foreach ($request->photos as $photo) {
                     $report->addImageFromForm($photo);
                 }
             }
