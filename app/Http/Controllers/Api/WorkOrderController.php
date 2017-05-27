@@ -83,8 +83,8 @@ class WorkOrderController extends ApiController
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
-            'add_photos' => 'array',
-            'add_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'photos' => 'array',
+            'photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
         $service = $company->services()->bySeqId($request->service);
@@ -103,8 +103,8 @@ class WorkOrderController extends ApiController
             ]);
 
             // Add Photos before work
-            if(isset($request->add_photos)){
-                foreach ($request->add_photos as $photo) {
+            if(isset($request->photos)){
+                foreach ($request->photos as $photo) {
                     $workOrder->addImageFromForm($photo);
                 }
             }
@@ -173,8 +173,6 @@ class WorkOrderController extends ApiController
             'title' => 'string|max:255',
             'description' => 'string',
             'start' => 'date',
-            'price' => 'numeric|max:10000000',
-            'currency' => 'string|size:3',
             'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$company->id,
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
