@@ -68,13 +68,6 @@ software, pool service business management software">
 
             <li>
               <a href="{{ url('docs/service') }}"><i class="fa fa-home"></i> Services</a>
-              <!-- <ul>
-                <li><a href="{{ url('docs/service') }}"><i class="fa fa-home"></i> Services</a></li>
-                <li><a href="{{ url('docs/service/contract') }}"><i class="glyphicon glyphicon-file"></i> Contract</a></li>
-                <li><a href="{{ url('docs/service/measurment') }}"><i class="fa fa-area-chart"></i> Measurments</a></li>
-                <li><a href="{{ url('docs/service/product') }}"><i class="fa fa-flask"></i> Product</a></li>
-                <li><a href="{{ url('docs/service/equipment') }}"><i class="glyphicon glyphicon-hdd"></i> Equipment</a></li>
-              </ul> -->
             </li>
 
             <li>
@@ -90,7 +83,7 @@ software, pool service business management software">
             </li>
 
             <li>
-              <a href="{{ url('docs/inovice') }}"><i class="glyphicon glyphicon-book"></i> Inovices/Payments</a>
+              <a href="{{ url('docs/invoice') }}"><i class="glyphicon glyphicon-book"></i> Inovices/Payments</a>
             </li>
 
             <li>

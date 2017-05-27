@@ -550,7 +550,7 @@
 
 <h3 id="view_work">View Work</h3>
 
-<p>Returns <code>workorder</code> information.</p>
+<p>Returns <code>work</code> information.</p>
 <br>
 <pre>
     GET  {{url ('/api/v1/work/{work_id}') }}
@@ -559,7 +559,7 @@
 
 <h3 id="update_work">Update Work</h3>
 
-<p>Update the <code>workorder</code> information.</p>
+<p>Update the <code>work</code> information.</p>
 <br>
 <pre>
     PATCH  {{url ('/api/v1/work/{work_id}') }}
