@@ -59,6 +59,9 @@ class UserRoleCompanyTransformer extends Transformer
             'address' => $urc->address,
             'about' => $urc->about,
 
+            'chat_id' => $urc->chat_id,
+            'chat_nickname' => $urc->chat_nickname,
+
             'selected' => $urc->selected,
             'accepted' => $urc->accepted,
             'paid' => $urc->paid,

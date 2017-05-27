@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\PRS\Transformers\UserTransformer;
 use App\PRS\Transformers\ServiceTransformer;
+use App\PRS\Transformers\UserRoleCompanyTransformer;
 use App\PRS\Helpers\UserHelpers;
 use App\PRS\Classes\Logged;
 use App\User;
@@ -23,7 +24,7 @@ use Carbon\Carbon;
 class UserController extends ApiController
 {
 
-    private $urcController;
+    protected $urcTransformer;
     protected $userTransformer;
     private $serviceTransformer;
     private $userHelpers;
@@ -34,12 +35,12 @@ class UserController extends ApiController
     * @return void
     */
     public function __construct(
-                                UserRoleCompanyController $urcController,
+                                UserRoleCompanyTransformer $urcTransformer,
                                 UserTransformer $userTransformer,
                                 ServiceTransformer $serviceTransformer,
                                 UserHelpers $userHelpers)
     {
-        $this->urcController = $urcController;
+        $this->urcTransformer = $urcTransformer;
         $this->userTransformer = $userTransformer;
         $this->serviceTransformer = $serviceTransformer;
         $this->userHelpers = $userHelpers;
@@ -47,12 +48,28 @@ class UserController extends ApiController
 
     /**
     * Get the information of the current user logged in
-    * @return [type] [description]
+    * @return response
     */
     public function show()
     {
         if($urc = Logged::user()->selectedUser){
-            return $this->urcController->show($urc->seq_id);
+            return $this->respond([
+                'data' => $this->urcTransformer->transform($urc),
+            ]);
+        }
+        return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
+    }
+
+    public function chat()
+    {
+        if($urc = Logged::user()->selectedUser){
+            return $this->respond([
+                'data' => (object)[
+                    'chat_id' => $urc->chat_id,
+                    'chat_nickname' => $urc->chat_nickname,
+                    'chat_token' => $urc->chat_token,
+                ],
+            ]);
         }
         return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this.');
     }

@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 
 	// User
 	Route::get('account', 'Api\UserController@show');
+	Route::get('account/chat', 'Api\UserController@chat');
 	Route::post('account', 'Api\UserController@update');
 	Route::post('account/notifications', 'Api\UserController@notifications');
 
