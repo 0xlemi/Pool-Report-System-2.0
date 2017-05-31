@@ -24,16 +24,16 @@ class GlobalMeasurementTransformer extends Transformer
 
     /**
      * Transform GlobalMeasurement to api friendly array
-     * @param  GlobalMeasurement $globalProduct
+     * @param  GlobalMeasurement $globalMeasurement
      * @return array
      */
-    public function transform(GlobalMeasurement $globalProduct)
+    public function transform(GlobalMeasurement $globalMeasurement)
     {
         return [
-            'id' => $globalProduct->seq_id,
-            'name'=> $globalProduct->name,
-            'labels' => $this->labelTransformer->transformCollection($globalProduct->labels),
-            'photos' => $this->imageTransformer->transformCollection($globalProduct->images),
+            'id' => $globalMeasurement->seq_id,
+            'name'=> $globalMeasurement->name,
+            'labels' => $this->labelTransformer->transformCollection($globalMeasurement->labels),
+            'photos' => $this->imageTransformer->transformCollection($globalMeasurement->images),
         ];
     }
 

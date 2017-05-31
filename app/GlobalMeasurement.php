@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Label;
 use App\Company;
 use App\PRS\Traits\Model\ImageTrait;
+use App\PRS\Traits\Model\SortableTrait;
 
 class GlobalMeasurement extends Model
 {
 
     use ImageTrait;
+    use SortableTrait;
 
 
     /**

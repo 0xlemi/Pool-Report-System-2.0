@@ -31,7 +31,7 @@ class GlobalProductController extends PageController
      */
     public function index(GlobalProductDatatableTransformer $transformer)
     {
-        $this->authorize('list', Product::class);
+        $this->authorize('list', GlobalProduct::class);
 
         $globalProducts = $this->loggedCompany()->globalProducts;
 
@@ -48,7 +48,7 @@ class GlobalProductController extends PageController
      */
     public function store(CreateGlobalProductRequest $request)
     {
-        $this->authorize('create', Product::class);
+        $this->authorize('create', GlobalProduct::class);
 
         $company = $this->loggedCompany();
 

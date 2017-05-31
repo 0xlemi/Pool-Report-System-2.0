@@ -16,11 +16,12 @@ class CreateGlobalMeasurementsTable extends Migration
         Schema::create('global_measurements', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            
+
             $table->integer('seq_id')->unsigned();
             $table->integer('company_id')->unsigned();
             $table->timestamps();
 
+            $table->unique(['name', 'company_id']);
             $table->unique(['seq_id', 'company_id']);
 
             $table->foreign('company_id')
