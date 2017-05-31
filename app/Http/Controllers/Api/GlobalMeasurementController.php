@@ -8,6 +8,7 @@ use App\PRS\Transformers\GlobalMeasurementTransformer;
 use App\PRS\Classes\Logged;
 use App\GlobalMeasurement;
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GlobalMeasurementController extends ApiController
 {
@@ -72,16 +73,16 @@ class GlobalMeasurementController extends ApiController
         $company = $this->loggedCompany();
 
         // Create global measurment
-        $globalMeasurment = DB::transaction(function () use($request, $company) {
+        $globalMeasurement = DB::transaction(function () use($request, $company) {
 
-            $globalMeasurment = $company->globalMeasurements()->create(
+            $globalMeasurement = $company->globalMeasurements()->create(
                     array_map('htmlentities', $request->except('labels', 'photos'))
             );
 
             // Add Labels
             if($request->has('labels')){
                 foreach($request->labels as $label) {
-                    $globalMeasurment->labels()->create([
+                    $globalMeasurement->labels()->create([
                         'name' => $label['name'],
                         'value' => $label['value'],
                         'color' => $label['color'],
@@ -92,16 +93,16 @@ class GlobalMeasurementController extends ApiController
             // Add Photos
             if(isset($request->photos)){
                 foreach ($request->photos as $photo) {
-                    $globalMeasurment->addImageFromForm($photo);
+                    $globalMeasurement->addImageFromForm($photo);
                 }
             }
 
-            return $globalMeasurment;
+            return $globalMeasurement;
         });
 
         return $this->respondPersisted(
             'The global measurement was successfuly created.',
-            $this->measurementTransformer->transform(GlobalMeasurement::find($globalMeasurment->id))
+            $this->measurementTransformer->transform(GlobalMeasurement::find($globalMeasurement->id))
         );
     }
 
@@ -114,19 +115,19 @@ class GlobalMeasurementController extends ApiController
     public function show($seqId)
     {
         try {
-            $globalMeasurment = Logged::company()->globalMeasurements()->bySeqId($seqId);
+            $globalMeasurement = Logged::company()->globalMeasurements()->bySeqId($seqId);
         }catch(ModelNotFoundException $e){
             return $this->respondNotFound('Global Measurment with that id, does not exist.');
         }
 
-        if(Logged::user()->cannot('view', $globalMeasurment))
+        if(Logged::user()->cannot('view', $globalMeasurement))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
 
-        if($globalMeasurment){
+        if($globalMeasurement){
             return $this->respond([
-                'data' => $this->measurementTransformer->transform($globalMeasurment),
+                'data' => $this->measurementTransformer->transform($globalMeasurement),
             ]);
         }
 
@@ -142,7 +143,13 @@ class GlobalMeasurementController extends ApiController
      */
     public function update(Request $request, $seqId)
     {
-        if($this->loggedUser()->cant('update', GlobalMeasurement::class))
+        try{
+            $globalMeasurement = Logged::company()->globalMeasurements()->bySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Global Measurment with that id, does not exist.');
+        }
+
+        if($this->loggedUser()->cant('update', $globalMeasurement))
         {
             return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
         }
@@ -164,39 +171,56 @@ class GlobalMeasurementController extends ApiController
             'remove_photos.*' => 'required|mimes:jpg,jpeg,png',
         ]);
 
-        $company = $this->loggedCompany();
-
         // Create global measurment
-        $globalMeasurment = DB::transaction(function () use($request, $company) {
+        DB::transaction(function () use($request, $globalMeasurement){
 
-            $globalMeasurment = $company->globalMeasurements()->create(
-                    array_map('htmlentities', $request->except('labels', 'photos'))
+            $globalMeasurement->update(
+                array_map('htmlentities', $request->only('name'))
             );
 
+            // Remove Labels
+            if($request->has('remove_labels')){
+                foreach ($request->remove_labels as $value) {
+                    $label = $globalMeasurement->labels()->where('value', $value)->first();
+                    if($label){
+                        $label->delete();
+                    }
+                }
+            }
+
             // Add Labels
-            if($request->has('labels')){
-                foreach($request->labels as $label) {
-                    $globalMeasurment->labels()->create([
-                        'name' => $label['name'],
-                        'value' => $label['value'],
-                        'color' => $label['color'],
-                    ]);
+            if($request->has('add_labels')){
+                foreach($request->add_labels as $label) {
+                    $hasLabel = $globalMeasurement->labels->contains('value', $label['value']);
+                    if(!$hasLabel){
+                        $globalMeasurement->labels()->create([
+                            'name' => $label['name'],
+                            'value' => $label['value'],
+                            'color' => $label['color'],
+                        ]);
+                    }
+                }
+            }
+
+            // Delete Photos
+            if(isset($request->remove_photos)){
+                foreach ($request->remove_photos as $order) {
+                    $globalMeasurement->deleteImage($order);
                 }
             }
 
             // Add Photos
-            if(isset($request->photos)){
-                foreach ($request->photos as $photo) {
-                    $globalMeasurment->addImageFromForm($photo);
+            if(isset($request->add_photos)){
+                foreach ($request->add_photos as $photo) {
+                    $globalMeasurement->addImageFromForm($photo);
                 }
             }
 
-            return $globalMeasurment;
         });
 
         return $this->respondPersisted(
-            'The global measurement was successfuly created.',
-            $this->measurementTransformer->transform(GlobalMeasurement::find($globalMeasurment->id))
+            'The global measurement was successfuly updated.',
+            $this->measurementTransformer->transform(GlobalMeasurement::find($globalMeasurement->id))
         );
     }
 
@@ -206,8 +230,23 @@ class GlobalMeasurementController extends ApiController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($seqId)
     {
-        //
+        try{
+            $globalMeasurement = Logged::company()->globalMeasurements()->bySeqId($seqId);
+        }catch(ModelNotFoundException $e){
+            return $this->respondNotFound('Global Measurment with that id, does not exist.');
+        }
+
+        if($this->loggedUser()->cant('delete', $globalMeasurement))
+        {
+            return $this->setStatusCode(403)->respondWithError('You don\'t have permission to access this. The administrator can grant you permission');
+        }
+
+        if($globalMeasurement->delete()){
+            return $this->respondWithSuccess('Global Measurment was successfully deleted.');
+        }
+
+        return $this->setStatusCode(500)->respondWithError('Global Measurment was not deleted. Please contact support.');
     }
 }
