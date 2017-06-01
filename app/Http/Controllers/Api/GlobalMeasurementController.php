@@ -12,7 +12,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GlobalMeasurementController extends ApiController
 {
-        protected $measurementTransformer;
+    
+    protected $measurementTransformer;
 
     public function __construct(GlobalMeasurementTransformer $measurementTransformer)
     {

@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\PRS\Traits\Model\ImageTrait;
 use App\Company;
+use App\PRS\Traits\Model\SortableTrait;
 
 class GlobalProduct extends Model
 {
 
     use ImageTrait;
+    use SortableTrait;
 
     /**
      * variables that can be mass assign

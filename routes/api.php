@@ -41,7 +41,13 @@ Route::group(['middleware' => ['auth:api', 'checkActive', 'checkVerified'] ], fu
 	Route::post('company', 'Api\CompanyController@update');
 	Route::delete('company', 'Api\CompanyController@destroy');
 
-	Route::resource('globalmeasurement', 'Api\GlobalMeasurementController', ['except' => [
+	// Global Measurments
+	Route::resource('globalmeasurements', 'Api\GlobalMeasurementController', ['except' => [
+		'create', 'edit'
+	]]);
+
+	// Global Products
+	Route::resource('globalproducts', 'Api\GlobalProductController', ['except' => [
 		'create', 'edit'
 	]]);
 
