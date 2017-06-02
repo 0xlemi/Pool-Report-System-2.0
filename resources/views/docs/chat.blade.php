@@ -15,11 +15,23 @@
 
 <h3>Get Sendbird Credentials</h3>
 
-<p>Returns the current logged <code>user</code> sendbird chat credentials.</p>
+<p>Returns the current logged <code>user-role</code> sendbird chat credentials.</p>
 <br>
 <pre>
     GET  {{url ('/api/v1/account/chat') }}
 </pre>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <br>
 
 @endsection
