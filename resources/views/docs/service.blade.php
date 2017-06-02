@@ -3,7 +3,7 @@
 @section('content')
 
 
-<h1>Service and Compontents</h1>
+<h1>Service and Components</h1>
 
 <ul class="toc">
   <li>

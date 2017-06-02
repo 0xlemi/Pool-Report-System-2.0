@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class GlobalMeasurementController extends ApiController
 {
-    
+
     protected $measurementTransformer;
 
     public function __construct(GlobalMeasurementTransformer $measurementTransformer)
@@ -169,7 +169,7 @@ class GlobalMeasurementController extends ApiController
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' => 'array',
-            'remove_photos.*' => 'required|mimes:jpg,jpeg,png',
+            'remove_photos.*' => 'required|integer',
         ]);
 
         // Create global measurment
