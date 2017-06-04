@@ -61,6 +61,7 @@ class UserRoleCompany extends Model
 	{
         if($permissionsFromCompany = $this->role->permissionsFromCompany($this->company)){
             return $permissionsFromCompany->where('element', $element)
+                            ->get()
                             ->contains('action', $action);
         }
 	}

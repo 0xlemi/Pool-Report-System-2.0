@@ -16,8 +16,8 @@ use Carbon\Carbon;
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     // factory dosnt work unless userable_id and userable_type are added
-    $name = $faker->name;
-    $lastName = $faker->lastName;
+    $name = str_replace(' ', '_', $faker->name);
+    $lastName = str_replace(' ', '_',$faker->lastName);
     return [
         'email' => $name.'.'.$lastName.'@example.com',
         'password' => bcrypt('password'),

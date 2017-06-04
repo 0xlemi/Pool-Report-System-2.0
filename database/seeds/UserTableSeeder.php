@@ -51,6 +51,8 @@ class UserTableSeeder extends Seeder
     		$user = factory(User::class)->create([
                 'name' => $faker->firstName($gender),
     		]);
+            $user->verified = true;
+            $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
                 'chat_id' => Uuid::generate()->string,
@@ -59,6 +61,8 @@ class UserTableSeeder extends Seeder
                 'role_id' => 2,
                 'company_id' => $company->id,
             ]);
+            $userRoleCompany->accepted = true;
+            $userRoleCompany->save();
             dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
@@ -100,6 +104,8 @@ class UserTableSeeder extends Seeder
             $company_id = rand(1,2);
 
     		$user = factory(User::class)->create();
+            $user->verified = true;
+            $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
 
@@ -109,6 +115,8 @@ class UserTableSeeder extends Seeder
                 'role_id' => 3,
                 'company_id' => $company_id,
             ]);
+            $userRoleCompany->accepted = true;
+            $userRoleCompany->save();
             dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
@@ -154,6 +162,8 @@ class UserTableSeeder extends Seeder
             $company_id = rand(1,2);
 
     		$user = factory(User::class)->create();
+            $user->verified = true;
+            $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
                 'chat_id' => Uuid::generate()->string,
@@ -162,6 +172,8 @@ class UserTableSeeder extends Seeder
                 'role_id' => 4,
                 'company_id' => $company_id,
             ]);
+            $userRoleCompany->accepted = true;
+            $userRoleCompany->save();
             dispatch(new CreateUser($userRoleCompany));
 
             DB::table('urc_notify_setting')->insert([
