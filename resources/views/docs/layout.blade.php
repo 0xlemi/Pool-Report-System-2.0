@@ -118,7 +118,7 @@ software, pool service business management software">
           </div>
           <div class="col-md-6 col-sm-6">
             <ul class="footer-menu">
-              <li><a href="page_changelog.html">Changelog</a></li>
+              <li><a href="{{ url('changelog') }}">Changelog</a></li>
               <li><a href="mailto:support@poolreportsystem.com">Contact us</a></li>
             </ul>
           </div>
