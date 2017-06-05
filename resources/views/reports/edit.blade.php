@@ -28,6 +28,7 @@
 
 						<input type="hidden" name="service" value="{{ $report->service->seq_id }}">
 
+        				@role('admin')
 						<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Compleated at:</label>
 							<div class="col-sm-10">
@@ -52,6 +53,7 @@
 								</dropdown>
 							</div>
 						</div>
+        				@endrole
 
 
 						@foreach($measurements as $measurement)

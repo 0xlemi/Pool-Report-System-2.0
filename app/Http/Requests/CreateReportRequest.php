@@ -28,8 +28,8 @@ class CreateReportRequest extends Request
 
         return [
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
-            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
-            'completed_at' => 'required|date',
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'completed_at' => 'date',
             'readings' => 'array',
             'readings.*' => 'required|validReading:'.$this->service,
             'photo1' => 'required|mimes:jpg,jpeg,png',

@@ -36,6 +36,7 @@
 							<br>
 						@endif
 
+        				@role('admin')
 						<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Compleated at:</label>
 							<div class="col-sm-10">
@@ -53,6 +54,20 @@
 							</div>
 						</div>
 
+						<div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
+							<label class="col-sm-2 form-control-label">Person</label>
+							<div class="col-sm-10">
+								<dropdown :key="{{ old('person') }}"
+											:options="{{ $people }}"
+											:name="'person'">
+								</dropdown>
+								@if ($errors->has('person'))
+									<small class="text-muted">{{ $errors->first('person') }}</small>
+								@endif
+							</div>
+						</div>
+        				@endrole
+
 						<div class="form-group row {{($errors->has('service'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Service</label>
 							<div class="col-sm-10">
@@ -66,18 +81,6 @@
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Person</label>
-							<div class="col-sm-10">
-								<dropdown :key="{{ old('person') }}"
-											:options="{{ $people }}"
-											:name="'person'">
-								</dropdown>
-								@if ($errors->has('person'))
-									<small class="text-muted">{{ $errors->first('person') }}</small>
-								@endif
-							</div>
-						</div>
 						<br>
 						<p style="float: right;">
 							<a  class="btn btn-warning"

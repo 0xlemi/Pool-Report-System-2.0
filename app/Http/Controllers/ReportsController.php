@@ -19,6 +19,7 @@ use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\TechnicianHelpers;
 use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Classes\Logged;
 use App\UserRoleCompany;
 use App\Service;
 class ReportsController extends PageController
@@ -54,7 +55,7 @@ class ReportsController extends PageController
     {
         $this->authorize('list', Report::class);
 
-        $company = $this->loggedCompany();
+        $company = Logged::company();
         $today = Carbon::today($company->timezone);
 
         $defaultTableUrl = url('datatables/reports').'?date='.$today->toDateString();
@@ -79,7 +80,7 @@ class ReportsController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $company = $this->loggedCompany();
+        $company = Logged::company();
 
         $services = $this->serviceHelpers->transformForDropdown($company->services()->seqIdOrdered()->get());
         $people = $this->userRoleCompanyHelpers->transformForDropdown(
@@ -101,15 +102,15 @@ class ReportsController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $company = $this->loggedCompany();
+        $company = Logged::company();
 
         $this->validate($request, [
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
-            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
-            'completed_at' => 'required|date',
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'completed_at' => 'date',
         ]);
 
-        $service = $this->loggedCompany()->services()->bySeqId($request->service);
+        $service = Logged::company()->services()->bySeqId($request->service);
         $info = (object)[
             'service' => $request->service,
             'person' => $request->person,
@@ -142,12 +143,30 @@ class ReportsController extends PageController
     {
         $this->authorize('create', Report::class);
 
-        $company = $this->loggedCompany();
+        $company = Logged::company();
 
-        $completed_at = (new Carbon($request->completed_at, $company->timezone));
-        $service = $this->loggedCompany()->services()->bySeqId($request->service);
-        $person = $this->loggedCompany()->userRoleCompanies()->bySeqId($request->person);
+        $urc = Logged::user()->selectedUser;
+        // Only Admins can set the person or the completed_at time
+        if($urc->isRole('admin')){
+            if($request->has('person')){
+                $person = $company->userRoleCompanies()->bySeqId($request->person);
+            }else{
+                flash()->error('Person is required', 'Person is required to create a report, please try again.');
+                return redirect()->back();
+            }
+            if($request->has('completed_at')){
+                $completed_at = (new Carbon($request->completed_at, $company->timezone));
+            }else{
+                flash()->error('Compleated_at is required', 'compleated_at field is required to create a report, please try again.');
+                return redirect()->back();
+            }
+        }else{
+            $person = $urc;
+            $completed_at = Carbon::now($company->timezone);
+        }
 
+
+        $service = $company->services()->bySeqId($request->service);
         $on_time = 'onTime';
         if($service->hasServiceContract()){
             $on_time = $this->reportHelpers->checkOnTimeValue(
@@ -192,7 +211,7 @@ class ReportsController extends PageController
      */
     public function show($seq_id)
     {
-        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
+        $report = Logged::company()->reports()->bySeqId($seq_id);
 
         $this->authorize('view', $report);
         $images = $this->imageTransformer->transformCollection($report->images);
@@ -214,7 +233,7 @@ class ReportsController extends PageController
     //****************************************
     // public function emailPreview(Request $request)
     // {
-    //     $report = $this->loggedCompany()->reports()->bySeqId($request->id);
+    //     $report = Logged::company()->reports()->bySeqId($request->id);
     //
     //     $url = $report->getEmailImage();
     //
@@ -237,7 +256,7 @@ class ReportsController extends PageController
      */
     public function edit($seq_id)
     {
-        $company = $this->loggedCompany();
+        $company = Logged::company();
         $report = $company->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
@@ -271,7 +290,7 @@ class ReportsController extends PageController
 
     public function getPhoto(Request $request, $seq_id)
     {
-        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
+        $report = Logged::company()->reports()->bySeqId($seq_id);
 
         $this->authorize('view', $report);
 
@@ -286,7 +305,7 @@ class ReportsController extends PageController
             'photo' => 'required|mimes:jpg,jpeg,png'
         ]);
 
-        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
+        $report = Logged::company()->reports()->bySeqId($seq_id);
 
         $this->authorize('addPhoto', $report);
 
@@ -297,7 +316,7 @@ class ReportsController extends PageController
 
     public function removePhoto($seq_id, $order)
     {
-        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
+        $report = Logged::company()->reports()->bySeqId($seq_id);
 
         $this->authorize('removePhoto', $report);
 
@@ -321,27 +340,31 @@ class ReportsController extends PageController
      */
     public function update(UpdateReportRequest $request, $seq_id)
     {
-
-        $company = $this->loggedCompany();
+        $company = Logged::company();
         $report = $company->reports()->bySeqId($seq_id);
 
         $this->authorize('update', $report);
 
-        $person = $company->UserRoleCompanies()->bySeqId($request->person);
-
-        $completed_at = (new Carbon($request->completed_at, $company->timezone))
+        $urc = Logged::user()->selectedUser;
+        // Only System Administrator can change the person and created_at
+        if($urc->isRole('admin')){
+            if($request->has('person')){
+                $person = $company->UserRoleCompanies()->bySeqId($request->person);
+                $report->user_role_company_id = $person->id;
+            }
+            if($request->has('completed_at')){
+                $completed_at = (new Carbon($request->completed_at, $company->timezone))
                             ->setTimezone('UTC');
+                $report->completed = $completed_at;
+            }
+        }
 
-        $report->user_role_company_id   = $person->id;
-        $report->completed              = $completed_at;
         foreach ($request->readings as $measurement_id => $value) {
             $reading = $report->readings()->updateOrCreate(
                 [ 'measurement_id' => $measurement_id ],
                 [ 'value' => $value ]
             );
         }
-
-
 
         if($report->save()){
             flash()->success('Updated', 'The report was successfuly updated');
@@ -361,7 +384,7 @@ class ReportsController extends PageController
      */
     public function destroy($seq_id)
     {
-        $report = $this->loggedCompany()->reports()->bySeqId($seq_id);
+        $report = Logged::company()->reports()->bySeqId($seq_id);
 
         $this->authorize('delete', $report);
 
