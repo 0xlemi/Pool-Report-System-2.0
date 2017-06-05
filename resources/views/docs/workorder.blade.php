@@ -197,7 +197,7 @@
      <tr>
         <td><code>person</code></td>
         <td>integer</td>
-        <td>The id of <code>user-role</code> who opened the workorder.</td>
+        <td>The id of <code>user-role</code> who opened the workorder. <i>Only System Admin can set this. Work orders created by other roles are going to be posted as themselves.</i></td>
       </tr>
        <tr>
         <td><code>service</code></td>
@@ -271,6 +271,11 @@
         <td><code>service</code></td>
         <td>integer</td>
         <td>The id of <code>service</code> <i>(pool)</i> this work order is acting upon.</td>
+      </tr>
+      <tr>
+        <td><code>person</code></td>
+        <td>integer</td>
+        <td>The id of <code>user-role</code> who opened the workorder. <i>Only System Admin can change this.</i></td>
       </tr>
       <tr>
         <td><code>title</code></td>
@@ -511,7 +516,7 @@
       <tr>
         <td><code>person</code></td>
         <td>integer</td>
-        <td>The id of <code>user-role</code> who opened the workorder.</td>
+        <td>The id of <code>user-role</code> who created the <code>work</code>. <i>Only System Admin can set this. Works created by other roles are going to be posted as themselves.</i></td>
       </tr>
       <tr>
         <td><code>title</code></td>
@@ -579,7 +584,7 @@
       <tr>
         <td><code>person</code></td>
         <td>integer</td>
-        <td>The id of <code>user-role</code> who opened the workorder.</td>
+        <td>The id of <code>user-role</code> who created the work. <i>Only System Admin can change this.</i></td>
       </tr>
       <tr>
         <td><code>title</code></td>

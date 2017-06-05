@@ -202,7 +202,7 @@
        <tr>
         <td><code>person</code></td>
         <td>integer</td>
-        <td>The <code>user-role</code> that is creating the report. <i>Only System Admin can select this, reports by other roles are gonig to be posted as themselves.</i></td>
+        <td>The <code>user-role</code> that is creating the report. <i>Only System Admin can set this. Reports created by other roles are going to be posted as themselves.</i></td>
       </tr>
       <tr>
         <td><code>photos</code></td>
