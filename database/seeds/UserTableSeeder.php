@@ -28,7 +28,6 @@ class UserTableSeeder extends Seeder
         $numOfClients = rand(100, 200);
         $numOfSupervisors = rand(10, 20);
         $numOfTechnicians = rand(20, 40);
-        $faker = Faker\Factory::create();
 
         UserRoleCompany::flushEventListeners();
         User::flushEventListeners();
@@ -48,9 +47,7 @@ class UserTableSeeder extends Seeder
             // find admin_id congruent with the service
             $company = Service::findOrFail($serviceId)->company;
 
-    		$user = factory(User::class)->create([
-                'name' => $faker->firstName($gender),
-    		]);
+    		$user = factory(User::class)->create();
             $user->verified = true;
             $user->save();
 

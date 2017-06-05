@@ -16,13 +16,12 @@ use Carbon\Carbon;
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     // factory dosnt work unless userable_id and userable_type are added
-    $name = str_replace(' ', '_', $faker->name);
-    $lastName = str_replace(' ', '_',$faker->lastName);
+    $name = $faker->name;
+    $lastName = $faker->lastName;
     return [
-        'email' => $name.'.'.$lastName.'@example.com',
+        'email' => str_replace(' ', '_', $name).'.'.str_replace(' ', '_',$lastName).'@example.com',
         'password' => bcrypt('password'),
         'remember_token' => str_random(10),
-        // 'api_token' => str_random(60),
 
         'name' => $name,
 		'last_name' => $lastName,
