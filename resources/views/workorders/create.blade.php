@@ -48,6 +48,7 @@
 							</div>
 						</div>
 
+        				@role('admin')
                         <div class="form-group row {{($errors->has('person'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Person</label>
 							<div class="col-sm-10">
@@ -60,6 +61,7 @@
 								@endif
 							</div>
 						</div>
+        				@endrole
 
                         <div class="form-group row {{($errors->has('price') || $errors->has('currency'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Price:</label>

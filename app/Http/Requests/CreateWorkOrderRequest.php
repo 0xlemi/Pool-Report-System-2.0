@@ -30,7 +30,7 @@ class CreateWorkOrderRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
-            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|validCurrency',

@@ -6,7 +6,7 @@ use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Transformers\PreviewTransformers\WorkPreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\ServicePreviewTransformer;
 use App\PRS\Transformers\PreviewTransformers\SupervisorPreviewTransformer;
-use App\PRS\Transformers\PreviewTransformers\UserRolecompanyPreviewTransformer;
+use App\PRS\Transformers\PreviewTransformers\UserRoleCompanyPreviewTransformer;
 
 use App\PRS\Traits\ControllerTrait;
 use App\PRS\Classes\Logged;
@@ -29,7 +29,7 @@ class WorkOrderTransformer extends Transformer
     public function __construct(
                         WorkPreviewTransformer $workTransformer,
                         ServicePreviewTransformer $serviceTransformer,
-                        UserRolecompanyPreviewTransformer $urcPreviewTransformer,
+                        UserRoleCompanyPreviewTransformer $urcPreviewTransformer,
                         ImageTransformer $imageTransformer)
     {
         $this->workTransformer = $workTransformer;

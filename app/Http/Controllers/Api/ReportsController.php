@@ -133,7 +133,7 @@ class ReportsController extends ApiController
         // Unlike the regular controller here everyone can set the completed_at time
         // because the mobile app can be offline and the time of entry is not the same
         // as the time it was sent to the api.
-        if($urc->ofRole('admin')){
+        if($urc->isRole('admin')){
             if($request->has('person')){
                 $person = $company->userRoleCompanies()->bySeqId($request->person);
             }else{
@@ -284,7 +284,7 @@ class ReportsController extends ApiController
                 'accuracy' => $request->accuracy,
             ]));
 
-            if($urc->ofRole('admin')){
+            if($urc->isRole('admin')){
                 if($request->has('person')){
                     $person = $company->userRolecompanies()->bySeqId($request->person);
                     $report->userRoleCompany()->associate($person);

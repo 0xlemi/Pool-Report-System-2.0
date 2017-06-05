@@ -14,6 +14,7 @@ use App\Http\Requests\UpdateWorkOrderRequest;
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
+use App\PRS\Classes\Logged;
 use App\WorkOrder;
 use App\Notifications\NewWorkOrderNotification;
 
@@ -88,15 +89,25 @@ class WorkOrderController extends PageController
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
         $service = $this->loggedCompany()->services()->bySeqId($request->service);
-        $userRoleCompany = $this->loggedCompany()
-                                        ->userRoleCompanies()
-                                        ->bySeqId($request->person);
+
+        $urc = Logged::user()->selectedUser;
+        // Only Admins can set the person
+        if($urc->isRole('admin') && $request->has('person')){
+            if($request->has('person')){
+                $person = $company->userRoleCompanies()->bySeqId($request->person);
+            }else{
+                flash()->error('Person is required', 'Person is required to create the Work Order, please try again.');
+                return redirect()->back();
+            }
+        }else{
+            $person = $urc;
+        }
 
         $workOrder = $service->workOrders()->create(array_merge(
                             array_map('htmlentities', $request->all()),
                             [
                                 'start' => $startDate,
-                                'user_role_company_id' => $userRoleCompany->id,
+                                'user_role_company_id' => $person->id,
                             ])
                     );
         $photo = true;
@@ -227,16 +238,22 @@ class WorkOrderController extends PageController
         }
 
         $startDate = (new Carbon($request->start, $company->timezone))->setTimezone('UTC');
-        $userRoleCompany = $company->userRoleCompanies()
-                                    ->bySeqId($request->person);
 
         $workOrder->fill(array_merge(
                             array_map('htmlentities', $request->except(['price', 'currency'])),
                             [
                                 'start' => $startDate,
-                                'user_role_company_id' => $userRoleCompany->id,
                             ]
                         ));
+
+        $urc = Logged::user()->selectedUser;
+        // Only System Administrator can change the person
+        if($urc->isRole('admin')){
+            if($request->has('person')){
+                $person = $company->UserRoleCompanies()->bySeqId($request->person);
+                $workOrder->user_role_company_id = $person->id;
+            }
+        }
 
         $workOrder->save();
 

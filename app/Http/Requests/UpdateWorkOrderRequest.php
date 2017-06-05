@@ -29,7 +29,7 @@ class UpdateWorkOrderRequest extends FormRequest
             'title' => 'string|max:255',
             'description' => 'string',
             'service' => 'integer|existsBasedOnCompany:services,'.$company->id,
-            'supervisor' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'date',
             'photo' => 'mimes:jpg,jpeg,png',
         ];

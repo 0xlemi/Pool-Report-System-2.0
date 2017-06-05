@@ -79,7 +79,7 @@ class WorkOrderController extends ApiController
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'service' => 'required|integer|existsBasedOnCompany:services,'.$company->id,
-            'person' => 'required|integer|existsBasedOnCompany:user_role_company,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'start' => 'required|date',
             'price' => 'required|numeric|max:10000000',
             'currency' => 'required|string|size:3',
@@ -88,7 +88,17 @@ class WorkOrderController extends ApiController
         ]);
 
         $service = $company->services()->bySeqId($request->service);
-        $person = $company->userRoleCompanies()->bySeqId($request->person);
+        $urc = Logged::user()->selectedUser;
+        // Only Admins can set the person
+        if($urc->isRole('admin')){
+            if($request->has('person')){
+                $person = $company->userRoleCompanies()->bySeqId($request->person);
+            }else{
+                return response()->json([ 'person' => ['The person field is required'] ] , 422);
+            }
+        }else{
+            $person = $urc;
+        }
 
         // ***** Persisting *****
         $workOrder = DB::transaction(function () use($request, $service, $person) {
@@ -173,7 +183,7 @@ class WorkOrderController extends ApiController
             'title' => 'string|max:255',
             'description' => 'string',
             'start' => 'date',
-            'supervisor' => 'integer|existsBasedOnCompany:supervisors,'.$company->id,
+            'person' => 'integer|existsBasedOnCompany:user_role_company,'.$company->id,
             'add_photos' => 'array',
             'add_photos.*' => 'required|mimes:jpg,jpeg,png',
             'remove_photos' => 'array',
@@ -193,7 +203,7 @@ class WorkOrderController extends ApiController
             $workOrder->fill(array_map('htmlentities',
                     $request->except([
                         'start',
-                        'supervisor_id',
+                        'user_role_company_id',
                         'add_photos',
                         'remove_photos',
                         'price',
@@ -205,8 +215,10 @@ class WorkOrderController extends ApiController
             if(isset($request->start)){
                 $workOrder->start = (new Carbon($request->start))->setTimezone('UTC');
             }
-            if(isset($request->supervisor)){
-                $workOrder->supervisor()->associate($company->supervisorBySeqId($request->supervisor));
+
+            $urc = Logged::user()->selectedUser;
+            if($urc->isRole('admin') && $request->has('person')){
+                $workOrder->userRoleCompany()->associate($company->userRolecompanies()->bySeqId($request->person));
             }
 
             $workOrder->save();
