@@ -170,11 +170,9 @@ return [
         Laravel\Passport\PassportServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
-        Barryvdh\Snappy\ServiceProvider::class,
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Kozz\Laravel\Providers\Guzzle::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-        // Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
 
@@ -226,13 +224,10 @@ return [
         // Third Party
         'Intervention' => Intervention\Image\Facades\Image::class,
         'JavaScript' => Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
-        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
-        'ImageHTML' => Barryvdh\Snappy\Facades\SnappyImage::class,
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
         'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 
