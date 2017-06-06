@@ -21,7 +21,7 @@ class CreateGlobalProductsTable extends Migration
             $table->string('units');
             $table->decimal('unit_price', 16, 2);
             $table->char('unit_currency', 3);
-            $table->text('description');
+            $table->text('description')->nullable();
 
             $table->integer('seq_id')->unsigned();
             $table->integer('company_id')->unsigned();
