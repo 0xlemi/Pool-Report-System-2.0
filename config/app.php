@@ -173,6 +173,7 @@ return [
         Barryvdh\Snappy\ServiceProvider::class,
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Kozz\Laravel\Providers\Guzzle::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
         // Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
@@ -230,6 +231,7 @@ return [
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
         'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
