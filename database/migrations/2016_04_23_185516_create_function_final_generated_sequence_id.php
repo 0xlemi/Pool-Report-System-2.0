@@ -13,14 +13,15 @@ class CreateFunctionFinalGeneratedSequenceId extends Migration
     public function up()
     {
         DB::unprepared('
-        CREATE FUNCTION f_gen_seq(p_seq_name VARCHAR(50) CHARSET utf8 COLLATE utf8_unicode_ci, p_company_id INT) RETURNS int(11)
-        BEGIN
-            UPDATE seq
-            SET val = last_insert_id(val+1)
-            WHERE `name` = p_seq_name AND
-                `company_id` = p_company_id;
-            RETURN last_insert_id();
-        END
+            CREATE FUNCTION f_gen_seq(p_seq_name VARCHAR(50), p_company_id INT) RETURNS BIGINT
+            AS $$
+            BEGIN
+                UPDATE seq
+                SET val = val+1
+                WHERE "name" = p_seq_name AND
+                    "company_id" = p_company_id
+                RETURNING val;
+            END; $$LANGUAGE plpgsql;
         ');
     }
 
@@ -31,6 +32,6 @@ class CreateFunctionFinalGeneratedSequenceId extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP FUNCTION IF EXISTS f_gen_seq');
+        DB::unprepared('DROP FUNCTION IF EXISTS f_gen_seq(VARCHAR(50),INT)');
     }
 }

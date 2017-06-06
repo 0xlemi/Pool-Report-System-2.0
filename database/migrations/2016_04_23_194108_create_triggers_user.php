@@ -12,14 +12,7 @@ class CreateTriggersUser extends Migration
      */
     public function up()
     {
-        // DB::unprepared("
-        //     CREATE TRIGGER trg_users_bi_seq
-        //     BEFORE INSERT ON users
-        //     FOR EACH ROW
-        //     BEGIN
-        //       SET NEW.seq_id = (SELECT f_gen_seq('users',NEW.company_id));
-        //     END
-        // ");
+        //
     }
 
     /**
@@ -29,6 +22,6 @@ class CreateTriggersUser extends Migration
      */
     public function down()
     {
-
+        //
     }
 }

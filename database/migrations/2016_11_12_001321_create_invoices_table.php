@@ -32,13 +32,14 @@ class CreateInvoicesTable extends Migration
                 ->onDelete('cascade');
         });
 
-        DB::unprepared("
-            ALTER TABLE `invoices`
-                ADD CHECK (invoiceable_type IN (
-                    'App\WorkOrder',
-                    'App\ServiceContract'
-                ));
-        ");
+        // ***********Need to transform this to progresql compatible***************
+        // DB::unprepared("
+        //     ALTER TABLE `invoices`
+        //         ADD CHECK (invoiceable_type IN (
+        //             'App\WorkOrder',
+        //             'App\ServiceContract'
+        //         ));
+        // ");
     }
 
     /**

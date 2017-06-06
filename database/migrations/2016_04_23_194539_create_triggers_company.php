@@ -12,29 +12,35 @@ class CreateTriggersCompany extends Migration
      */
     public function up()
     {
-        DB::unprepared("
+        DB::unprepared('
+            CREATE OR REPLACE FUNCTION p_company_ai_seq() RETURNS TRIGGER
+                AS $BODY$
+                BEGIN
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'user_role_company\', NEW.id, 0);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'services\', NEW.id, 0);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'reports\', NEW.id, 10000);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'work_orders\', NEW.id, 10000);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'invoices\', NEW.id, 10000);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'payments\', NEW.id, 10000);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'global_measurements\', NEW.id, 0);
+                    INSERT INTO "seq" ("name", "company_id", "val")
+                    VALUES (\'global_products\', NEW.id, 0);
+
+                    RETURN NEW;
+                END; $BODY$ LANGUAGE plpgsql;
+
             CREATE TRIGGER trg_company_ai_seq
-            AFTER INSERT ON companies
-            FOR EACH ROW
-            BEGIN
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('user_role_company', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('services', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('reports', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('work_orders', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('invoices', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('payments', NEW.id, 10000);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('global_measurements', NEW.id, 0);
-                INSERT INTO `seq` (`name`, `company_id`, `val`)
-                VALUES ('global_products', NEW.id, 0);
-            END
-        ");
+                AFTER INSERT ON companies
+                FOR EACH ROW
+                EXECUTE PROCEDURE p_company_ai_seq();
+        ');
     }
 
     /**
@@ -44,6 +50,7 @@ class CreateTriggersCompany extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_administrators_ai_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_company_ai_seq ON companies');
+        // DB::unprepared('DROP FUNCTION IF EXISTS p_company_ai_seq();');
     }
 }

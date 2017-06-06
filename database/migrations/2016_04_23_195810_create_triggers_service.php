@@ -12,14 +12,20 @@ class CreateTriggersService extends Migration
      */
     public function up()
     {
-        DB::unprepared("
-            CREATE TRIGGER trg_services_bi_seq
+        DB::unprepared('
+        CREATE OR REPLACE FUNCTION p_services_bi_seq() RETURNS TRIGGER
+            AS $BODY$
+            BEGIN
+                NEW.seq_id := (SELECT f_gen_seq(\'services\',NEW.company_id));
+
+                RETURN NEW;
+            END; $BODY$ LANGUAGE plpgsql;
+
+        CREATE TRIGGER trg_services_bi_seq
             BEFORE INSERT ON services
             FOR EACH ROW
-            BEGIN
-              SET NEW.seq_id = (SELECT f_gen_seq('services',NEW.company_id));
-            END
-        ");
+            EXECUTE PROCEDURE p_services_bi_seq();
+        ');
     }
 
     /**
@@ -29,6 +35,6 @@ class CreateTriggersService extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_services_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_services_bi_seq on services;');
     }
 }
