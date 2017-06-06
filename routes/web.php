@@ -23,6 +23,10 @@ Route::get('/pricing', 'HomeController@pricing');
 Route::get('/tutorials', 'HomeController@tutorials');
 Route::get('/support', 'HomeController@support');
 
+// Stripe connect
+Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
+Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
+
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');
 

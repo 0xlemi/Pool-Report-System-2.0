@@ -29,10 +29,16 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    // 'stripe' => [
+    //     'model' => App\Company::class,
+    //     'key' => env('STRIPE_KEY'),
+    //     'secret' => env('STRIPE_SECRET'),
+    // ],
+
     'stripe' => [
-        'model' => App\Company::class,
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
+        'client_id' => env('STRIPE_CLIENT_ID'),
+        'client_secret' => env('STRIPE_SECRET'),
+        'redirect' => 'http://your-callback-url',
     ],
 
     'sendbird' => [

@@ -173,6 +173,7 @@ return [
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Kozz\Laravel\Providers\Guzzle::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
+        \SocialiteProviders\Manager\ServiceProvider::class,
 
     ],
 
