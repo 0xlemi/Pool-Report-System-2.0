@@ -26,6 +26,7 @@ Route::get('/support', 'HomeController@support');
 // Stripe connect
 Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
 Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
+Route::get('/connect/remove', 'Stripe\ConnectController@removeAccount');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');
@@ -174,10 +175,10 @@ Route::get('chat', 'ChatController@home');
 Route::get('chat/id/{seqId}', 'ChatController@userChatId');
 Route::get('chat/unreadcount/{seqId}', 'ChatController@unreadCount');
 
-
+// Stripe
 Route::post(
     'stripe/webhook',
-    '\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook'
+    'Stripe\WebhookController@handleWebhook'
 );
 
 // Settings
