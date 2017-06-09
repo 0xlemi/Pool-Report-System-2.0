@@ -1,6 +1,6 @@
 <template>
 
-    <button type="button" class="btn" :class="button.class" data-toggle="modal" data-target="#creditCardModal">
+    <button type="button" class="btn btn-inline" :class="button.class" data-toggle="modal" data-target="#creditCardModal">
 			<i class="glyphicon glyphicon-credit-card"></i>&nbsp;&nbsp;&nbsp;
             {{ button.tag }}
 	</button>

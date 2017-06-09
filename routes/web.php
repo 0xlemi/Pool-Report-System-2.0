@@ -26,7 +26,7 @@ Route::get('/support', 'HomeController@support');
 // Stripe connect
 Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
 Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
-Route::get('/connect/remove', 'Stripe\ConnectController@removeAccount');
+Route::post('/connect/remove', 'Stripe\ConnectController@removeAccount');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');

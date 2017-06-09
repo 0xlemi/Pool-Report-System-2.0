@@ -38,5 +38,6 @@ elixir(function(mix) {
             'theDocs/theDocs.scss',
             'theDocs/custom.css'
         ], 'public/css/docs.css')
+        .less('error.less', 'public/css/error.css')
     	.version(['css/less.css', 'css/main.css', 'js/bundle.js', 'css/docs.css']);
 });

@@ -12,7 +12,7 @@
 
 <h3>Todays Route List</h3>
 
-<p>Returns a list of the <code>services</code> do today, or some other day.</p>
+<p>Returns a list of the <code>services</code> due today. Or in some other day.</p>
 <p>You can query based on various parameters</p>
 <br>
 <pre>

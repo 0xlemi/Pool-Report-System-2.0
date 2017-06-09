@@ -37,7 +37,7 @@
                     <a class="nav-link" href="#tabs-1-tab-4" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="glyphicon glyphicon-credit-card"></i>&nbsp;
-                            Billing
+                            Billing & Payments
                         </span>
                     </a>
                 </li>
@@ -122,7 +122,7 @@
                 <div class="col-md-12">
                     <br>
                     <billing :subscribed="billing.subscribed" :last-four="billing.lastFour" :plan="billing.plan" :active-objects="billing.activeObjects"
-                                :billable-objects="billing.billableObjects" :free-objects="billing.freeObjects">
+                                :billable-objects="billing.billableObjects" :free-objects="billing.freeObjects" :connect="billing.connect">
                     </billing>
                 </div>
             </div>

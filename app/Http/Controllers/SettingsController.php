@@ -80,6 +80,18 @@ class SettingsController extends PageController
         }
 
         $billing = null;
+        $connect = null;
+        if($company->connect_id != null){
+            $connect = (object)[
+                'email' => $company->connect_email,
+                'businessName' => $company->connect_business_name,
+                'businessUrl' => $company->connect_business_url,
+                'country' => $company->connect_country,
+                'currency' => strtoupper($company->connect_currency),
+                'supportEmail' => $company->connect_support_email,
+                'supportPhone' => $company->connect_support_phone,
+            ];
+        }
         if ($user->can('billing', Setting::class)) {
             $billing = (object)[
                 'subscribed' => $company->subscribed('main'),
@@ -88,6 +100,7 @@ class SettingsController extends PageController
                 'activeObjects' => $company->objectActiveCount(),
                 'billableObjects' => $company->billableObjects(),
                 'freeObjects' => $company->free_objects,
+                'connect' => $connect,
             ];
         }
 
