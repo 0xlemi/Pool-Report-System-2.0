@@ -35,11 +35,15 @@ class ConnectController extends Controller
             abort(403, 'You need to be System Administrator to do this operation');
         }
         if($request->error == 'access_denied'){
-            abort(403, 'Access to stripe was denied. Please try again and accept when it ask you for access to stripe account or contact us at support@poolreportsystem.com');
+            flash()->overlay(
+                                'Access to stripe was denied',
+                                'Please try again, and accept when it ask you for access to stripe account. Or contact us at support@poolreportsystem.com',
+                                'error'
+                            );
+            return redirect('settings');
         }
 
-        $user = Socialite::driver('stripe');
-        // $user = Socialite::driver('stripe')->stateless()->user();
+        $user = Socialite::driver('stripe')->stateless()->user();
         $company = Logged::company();
         $company->connect_id = $user->id;
         $company->connect_email = $user->email;
