@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Stripe;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Cashier\Http\Controllers\WebhookController as CashierController;
+use App\Company;
 
 class WebhookController extends CashierController
 {
@@ -15,7 +16,14 @@ class WebhookController extends CashierController
      */
     public function handleAccountApplicationDeauthorized($payload)
     {
-        // $userRoleCompany = DB::
+        info($payload['data']['object']);
+        $companyConnectId = $payload['data']['object'];
+        // info('{'.$companyConnectId.'}');
+        // try {
+        //     $company = Company::where('connect_id', $companyConnectId)->firstOrFail();
+        // } catch (ModelNotFoundException $e) {
+        //     return response()->json(['error' => 'No Company with that connect_id'], 404);
+        // }
         // $company->connect_id = null;
         // $company->connect_email = null;
         // $company->connect_token = null;

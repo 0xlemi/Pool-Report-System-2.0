@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Socialite;
 use Guzzle;
+use Stripe\Stripe;
+use Stripe\Account;
+use GuzzleHttp\Exception\ClientException;
 use App\PRS\Classes\Logged;
 
 class ConnectController extends Controller
@@ -71,33 +74,39 @@ class ConnectController extends Controller
             return response()->json([ 'message' => 'The system don\'t have a stripe account associated.'], 403);
         }
 
-        $response = Guzzle::post(
-            'https://connect.stripe.com/oauth/deauthorize',
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer '.env('STRIPE_SECRET')
-                ],
-                'form_params' => [
-                    'client_id' => env('STRIPE_KEY'),
-                    'stripe_user_id' => $company->connect_id
+        try {
+            $response = Guzzle::post(
+                'https://connect.stripe.com/oauth/deauthorize',
+                [
+                    'headers' => [
+                        'Authorization' => 'Bearer '.env('STRIPE_SECRET')
+                    ],
+                    'form_params' => [
+                        'client_id' => config('services.stripe.client_id'),
+                        'stripe_user_id' => $company->connect_id
+                    ]
                 ]
-            ]
-        );
-        if($response->getStatusCode() == 200){
-            $company->connect_id = null;
-            $company->connect_email = null;
-            $company->connect_token = null;
-            $company->connect_refresh_token = null;
-            $company->connect_business_name = null;
-            $company->connect_business_url = null;
-            $company->connect_country = null;
-            $company->connect_currency = null;
-            $company->connect_support_email = null;
-            $company->connect_support_phone = null;
-            $company->save();
-            return response()->json([ 'message' => 'Stripe Account Removal Successfull']);
+            );
+        } catch (ClientException $e) {
+            return response()->json([ 'error' => 'We could not remove your stripe account from Pool Report System, please log in into your Stipe account and remove it there.'], 500);
         }
-        return response()->json([ 'error' => 'We could not remove your stripe account from Pool Report System, please log in into your Stipe account and remove it there.'], 500);
+        // *******************************************
+        //    There is a bug in which if there is no instance of the object in stripe
+        //    but there is in the system it will not let you dissconnect
+        // ********************************************
+
+        $company->connect_id = null;
+        $company->connect_email = null;
+        $company->connect_token = null;
+        $company->connect_refresh_token = null;
+        $company->connect_business_name = null;
+        $company->connect_business_url = null;
+        $company->connect_country = null;
+        $company->connect_currency = null;
+        $company->connect_support_email = null;
+        $company->connect_support_phone = null;
+        $company->save();
+        return response()->json([ 'message' => 'Stripe Account Removal Successfull']);
     }
 
 }

@@ -33,6 +33,7 @@ return [
         'model' => App\Company::class,
         'key' => env('STRIPE_MAIN_KEY'),
         'secret' => env('STRIPE_SECRET'),
+        'client_id' => env('STRIPE_KEY'),
     ],
 
     'sendbird' => [
