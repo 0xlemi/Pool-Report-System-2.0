@@ -88,12 +88,14 @@ class ConnectController extends Controller
                 ]
             );
         } catch (ClientException $e) {
-            return response()->json([ 'error' => 'We could not remove your stripe account from Pool Report System, please log in into your Stipe account and remove it there.'], 500);
+            $error = json_decode($e->getResponse()->getBody()->getContents());
+            // If throws invalid client error it means that they diconnected from the stripe account.
+            // And continue with the removal if that is the case.
+            // if is other error then throw a failed message
+            if($error->error =! 'invalid_client'){
+                return response()->json([ 'error' => 'We could not remove your stripe account from Pool Report System, please log in into your Stipe account and remove it there.'], 500);
+            }
         }
-        // *******************************************
-        //    There is a bug in which if there is no instance of the object in stripe
-        //    but there is in the system it will not let you dissconnect
-        // ********************************************
 
         $company->connect_id = null;
         $company->connect_email = null;

@@ -16,25 +16,8 @@ class WebhookController extends CashierController
      */
     public function handleAccountApplicationDeauthorized($payload)
     {
-        info($payload['data']['object']);
-        $companyConnectId = $payload['data']['object'];
-        // info('{'.$companyConnectId.'}');
-        // try {
-        //     $company = Company::where('connect_id', $companyConnectId)->firstOrFail();
-        // } catch (ModelNotFoundException $e) {
-        //     return response()->json(['error' => 'No Company with that connect_id'], 404);
-        // }
-        // $company->connect_id = null;
-        // $company->connect_email = null;
-        // $company->connect_token = null;
-        // $company->connect_refresh_token = null;
-        // $company->connect_business_name = null;
-        // $company->connect_business_url = null;
-        // $company->connect_country = null;
-        // $company->connect_currency = null;
-        // $company->connect_support_email = null;
-        // $company->connect_support_phone = null;
-        // $company->save();
+        // This is usless because stripe don't send the account id
+        // Resarch more to see if there is something to do.
     }
 
 }
