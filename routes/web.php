@@ -23,10 +23,15 @@ Route::get('/pricing', 'HomeController@pricing');
 Route::get('/tutorials', 'HomeController@tutorials');
 Route::get('/support', 'HomeController@support');
 
-// Stripe connect
-Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
-Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
-Route::post('/connect/remove', 'Stripe\ConnectController@removeAccount');
+// Stripe
+    // Connect
+    Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
+    Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
+    Route::post('/connect/remove', 'Stripe\ConnectController@removeAccount');
+    // Subscription
+    Route::post('settings/subscribe', 'Stripe\SubscriptionController@subscribe');
+    Route::post('settings/downgradeSubscription', 'Stripe\SubscriptionController@downgradeSubscription');
+    Route::post('settings/upgradeSubscription', 'Stripe\SubscriptionController@upgradeSubscription');
 
 // magic link login
 Route::get('/signin/{token}', 'HomeController@signIn');
@@ -193,10 +198,6 @@ Route::delete('settings/delete', 'SettingsController@deleteAccount');
 Route::post('settings/customization', 'SettingsController@customization');
 // notifications
 Route::post('settings/notifications', 'SettingsController@notifications');
-// billing
-Route::post('settings/subscribe', 'SettingsController@subscribe');
-Route::post('settings/downgradeSubscription', 'SettingsController@downgradeSubscription');
-Route::post('settings/upgradeSubscription', 'SettingsController@upgradeSubscription');
 // permissions
 Route::post('settings/permissions', 'SettingsController@permissions');
 

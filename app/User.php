@@ -14,6 +14,7 @@ use App\PRS\Traits\Model\ImageTrait;
 
 use Hash;
 use App\Notifications\ResetPasswordNotification;
+use App\PaymentSources;
 use App\VerificationToken;
 use App\Company;
 use App\UserRoleCompany;
@@ -117,6 +118,11 @@ class User extends Authenticatable
 
 
     //******** Relationships ********
+
+	public function paymentSources()
+	{
+		return $this->hasMany(PaymentSources::class);
+	}
 
     public function userRoleCompanies()
     {

@@ -162,6 +162,7 @@ return [
         App\Providers\PermissionServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ValidationServiceProvider::class,
+        App\Providers\PaymentGatewayServiceProvider::class,
 
         /**
          * Third Party Service Providers

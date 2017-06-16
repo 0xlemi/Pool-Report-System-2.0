@@ -111,4 +111,13 @@ class ConnectController extends Controller
         return response()->json([ 'message' => 'Stripe Account Removal Successfull']);
     }
 
+    /**
+     * Save client customer information .
+     * @return [type] [description]
+     */
+    public function createCustomer()
+    {
+
+    }
+
 }

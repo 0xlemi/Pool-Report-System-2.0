@@ -24,6 +24,10 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->char('language', 2)->default('en');
 
+            // Stripe
+            // This is for charging the clients
+            $table->string('stripe_id')->nullable()->index();
+
             // $table->string('api_token', 60)->unique();
             $table->rememberToken();
             $table->timestamps();
