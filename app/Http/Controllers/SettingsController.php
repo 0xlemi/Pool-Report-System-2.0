@@ -80,19 +80,19 @@ class SettingsController extends PageController
         }
 
         $billing = null;
-        $connect = null;
-        if($company->connect_id != null){
-            $connect = (object)[
-                'email' => $company->connect_email,
-                'businessName' => $company->connect_business_name,
-                'businessUrl' => $company->connect_business_url,
-                'country' => $company->connect_country,
-                'currency' => strtoupper($company->connect_currency),
-                'supportEmail' => $company->connect_support_email,
-                'supportPhone' => $company->connect_support_phone,
-            ];
-        }
         if ($user->can('billing', Setting::class)) {
+            $connect = null;
+            if($company->connect_id != null){
+                $connect = (object)[
+                    'email' => $company->connect_email,
+                    'businessName' => $company->connect_business_name,
+                    'businessUrl' => $company->connect_business_url,
+                    'country' => $company->connect_country,
+                    'currency' => strtoupper($company->connect_currency),
+                    'supportEmail' => $company->connect_support_email,
+                    'supportPhone' => $company->connect_support_phone,
+                ];
+            }
             $billing = (object)[
                 'subscribed' => $company->subscribed('main'),
                 'lastFour' => $company->card_last_four,
@@ -104,6 +104,13 @@ class SettingsController extends PageController
             ];
         }
 
+        $payment = null;
+        if($userRoleCompany->isRole('client')){
+            $payment = (object)[
+                'connect' => ($company->stripe_id) ? true : false ,
+            ];
+        }
+
         $permissions = null;
         if ($user->can('permissions', Setting::class)) {
             $permissions = (object)[
@@ -112,7 +119,7 @@ class SettingsController extends PageController
             ];
         }
 
-        return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'permissions'));
+        return view('settings.index', compact('profile', 'customization', 'notifications', 'billing', 'payment', 'permissions'));
     }
 
     public function developer()

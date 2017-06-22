@@ -33,7 +33,7 @@
                 Using {{ activeObjects }} out of your {{ freeObjects  }} free users.
             </p>
 			<br>
-			<credit-card :last-four="lastFour">
+			<credit-card :last-four="lastFour" route="">
         	</credit-card>
             <div v-if="subscribed">
 				<br>

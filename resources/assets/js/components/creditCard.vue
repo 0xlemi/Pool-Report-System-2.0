@@ -74,7 +74,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
-            <!-- Is "type" button so is not going to submit -->
+            <!-- Is Type button so is not going to submit -->
             <button v-if="lastFour" type="button" class="btn btn-primary" @click="submitCreditCard">
                 Update Credit Card
             </button>

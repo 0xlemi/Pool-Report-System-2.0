@@ -42,8 +42,17 @@
                     </a>
                 </li>
 
-                <li v-if="permissions" class="nav-item">
+                <li v-if="payment" class="nav-item">
                     <a class="nav-link" href="#tabs-1-tab-5" role="tab" data-toggle="tab">
+                        <span class="nav-link-in">
+                            <i class="glyphicon glyphicon-credit-card"></i>&nbsp;
+                            Billing
+                        </span>
+                    </a>
+                </li>
+
+                <li v-if="permissions" class="nav-item">
+                    <a class="nav-link" href="#tabs-1-tab-6" role="tab" data-toggle="tab">
                         <span class="nav-link-in">
                             <i class="font-icon font-icon-lock"></i>&nbsp;
                             Permissions
@@ -128,8 +137,19 @@
             </div>
         </div>
 
-        <!-- Permissions -->
+        <!-- Payment -->
         <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-5">
+            <div v-if="payment" class="row">
+                <div class="col-md-12">
+                    <br>
+                    <payment-client :has-connect="payment.connect">
+                    </payment-client>
+                </div>
+            </div>
+        </div>
+
+        <!-- Permissions -->
+        <div role="tabpanel" class="tab-pane fade" id="tabs-1-tab-6">
             <div v-if="permissions" class="row">
                 <div class="col-md-12">
                     <br>
@@ -163,11 +183,12 @@ import changePassword from './changePassword.vue';
 import deleteAccount from './deleteAccount.vue';
 import customizationSettings from './customizationSettings.vue';
 import billing from './billing.vue';
+import paymentClient from './paymentClient.vue';
 import Permissions from './Permissions.vue';
 import alert from './alert.vue';
 
 export default {
-    props: ['profile', 'customization', 'notifications', 'billing', 'permissions'],
+    props: ['profile', 'customization', 'notifications', 'billing', 'payment', 'permissions'],
     components: {
         accountSettings,
         customizationSettings,
@@ -176,6 +197,7 @@ export default {
         changePassword,
         deleteAccount,
         billing,
+        paymentClient,
         Permissions,
         alert,
     },

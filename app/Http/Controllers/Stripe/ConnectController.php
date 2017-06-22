@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Socialite;
 use Guzzle;
+use Stripe\Customer;
 use Stripe\Stripe;
 use Stripe\Account;
 use GuzzleHttp\Exception\ClientException;
@@ -113,11 +114,26 @@ class ConnectController extends Controller
 
     /**
      * Save client customer information .
-     * @return [type] [description]
+     * @return response
      */
-    public function createCustomer()
+    public function createCustomer(Request $request)
     {
+        $user = Logged::user();
+        if(!$user->selectedUser->isRole('client')){
+            return response()->json([ 'message' => 'You need to be client to run this operation.'], 403);
+        }
 
+        $company = Logged::company();
+
+        $customer = Customer::create([
+            'email' => $user->email,
+            'description' => 'Customer for '.$company->name,
+            'source' => $request->stripeToken
+        ]);
+
+        if($company->stripe_id == null){
+            return response()->json([ 'message' => 'The system don\'t have a stripe account associated.'], 403);
+        }
     }
 
 }

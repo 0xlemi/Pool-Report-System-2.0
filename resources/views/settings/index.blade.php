@@ -20,6 +20,7 @@
             :customization="{{ json_encode($customization) }}"
             :notifications="{{ json_encode($notifications) }}"
             :billing="{{ json_encode($billing) }}"
+            :payment="{{ json_encode($payment) }}"
             :permissions="{{ json_encode($permissions) }}">
         </settings>
     </div><!--.col- -->
