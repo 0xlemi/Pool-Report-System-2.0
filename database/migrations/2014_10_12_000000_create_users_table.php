@@ -27,6 +27,9 @@ class CreateUsersTable extends Migration
             // Stripe
             // This is for charging the clients
             $table->string('stripe_id')->nullable()->index();
+            $table->string('card_token')->nullable();
+            $table->string('card_brand')->nullable();
+            $table->string('card_last_four')->nullable();
 
             // $table->string('api_token', 60)->unique();
             $table->rememberToken();

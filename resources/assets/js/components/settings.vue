@@ -142,7 +142,7 @@
             <div v-if="payment" class="row">
                 <div class="col-md-12">
                     <br>
-                    <payment-client :has-connect="payment.connect">
+                    <payment-client :has-connect="payment.connect" :last-four="payment.lastFour">
                     </payment-client>
                 </div>
             </div>

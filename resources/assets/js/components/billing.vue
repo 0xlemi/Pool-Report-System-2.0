@@ -9,8 +9,7 @@
                 subscription for {{ billableObjects }} users
             </p>
 			<br>
-			<credit-card :last-four="lastFour">
-        	</credit-card>
+			<credit-card :last-four="lastFour" route="settings/subscribe"></credit-card>
 			<div style="float:right">
 	            <button type="button" class="btn btn-danger-outline btn-sm" @click="downgradeSubscription">
 	        		<i class="glyphicon glyphicon-arrow-down"></i>&nbsp;&nbsp;&nbsp;
@@ -33,8 +32,7 @@
                 Using {{ activeObjects }} out of your {{ freeObjects  }} free users.
             </p>
 			<br>
-			<credit-card :last-four="lastFour" route="">
-        	</credit-card>
+			<credit-card :last-four="lastFour" route="settings/subscribe"></credit-card>
             <div v-if="subscribed">
 				<br>
                 <button type="button" class="btn btn-success-outline" @click="upgradeSubscription">

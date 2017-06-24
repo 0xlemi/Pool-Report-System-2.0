@@ -28,6 +28,8 @@ Route::get('/support', 'HomeController@support');
     Route::get('/connect/login', 'Stripe\ConnectController@redirectToProvider');
     Route::get('/connect/login/callback', 'Stripe\ConnectController@handleProviderCallback');
     Route::post('/connect/remove', 'Stripe\ConnectController@removeAccount');
+    Route::post('/connect/customer', 'Stripe\ConnectController@createCustomer');
+    Route::delete('/connect/customer', 'Stripe\ConnectController@removeCustomer');
     // Subscription
     Route::post('settings/subscribe', 'Stripe\SubscriptionController@subscribe');
     Route::post('settings/downgradeSubscription', 'Stripe\SubscriptionController@downgradeSubscription');

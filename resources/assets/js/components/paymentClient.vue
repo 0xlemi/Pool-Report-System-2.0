@@ -1,21 +1,30 @@
 <template>
     <div class="col-md-12">
         <div v-if="hasConnect">
-            <h4 class="semibold">Payments</h4>
-        	<credit-card :last-four="">
-        	</credit-card>
-            <div v-if="hasCard">
-                <div style="float:right">
-    	            <button type="button" class="btn btn-danger-outline btn-sm" @click="removeCard">
-    	        		<i class="glyphicon glyphicon-arrow-down"></i>&nbsp;&nbsp;&nbsp;
-    	        	    Remove credit card
-    	        	</button>
-    	            <small class="text-muted">
-    	                are going to be set to inactive.
-    	            </small>
-    			</div>
+
+            <div v-if="lastFour">
+                <h4 class="semibold">Payment Source</h4>
+                <credit-card :last-four="lastFour" route="connect/customer" button-tag="Add Credit Card">
+                	<span slot="buttonsBefore" style="float: left;">
+            			<button class="btn btn-danger-outline btn-sm" type="button" @click="destroy">
+            				<i class="font-icon font-icon-close-2"></i>&nbsp;&nbsp;&nbsp;
+                            Remove credit card
+                        </button>
+            		</span>
+        	    </credit-card>
+                <br>
             </div>
             <div v-else>
+                <h4 class="semibold">Pay Your Pool Service Online.</h4>
+                <p>
+                    Your <strong>credit card is never going to be changed automatically</strong>.<br>
+                    We are going to ask you first every time.<br>
+                </p>
+                <credit-card :last-four="lastFour" route="connect/customer" button-tag="Add Credit Card">
+                    <i class="glyphicon glyphicon-plus"></i>&nbsp;&nbsp;
+                    Add Credit Card
+                </credit-card>
+                <br>
             </div>
         </div>
         <div v-else style="text-align:center">
@@ -41,6 +50,39 @@ export default {
     components:{
 		creditCard
 	},
+    methods: {
+        destroy(){
+            let clickEvent = event;
+			// save button text for later
+            let buttonTag = clickEvent.target.innerHTML;
+
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removing';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1,
+            }).spin(clickEvent.target);
+
+            this.$http.delete(Laravel.url+'connect/customer').then((response) => {
+                swal("Credit Card Removed", "Your credit card was successfully removed.", "success");
+                this.$broadcast('closeModal', 'creditCardModal')
+                this.revertButton(clickEvent, buttonTag);
+                this.lastFour = null;
+            }, (response) => {
+                swal("Credit card couldn't be removed", "send us a email to support@poolreportsystem.com", "error");
+                this.revertButton(clickEvent, buttonTag);
+            });
+
+        },
+        revertButton(clickEvent, buttonTag){
+			// enable, remove spinner and set tab to the one before
+			clickEvent.target.disabled = false;
+			clickEvent.target.innerHTML = buttonTag;
+		}
+    }
 
 }
 </script>

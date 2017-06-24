@@ -162,4 +162,9 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.statement');
     }
 
+    public function clientContracts()
+    {
+        //
+    }
+
 }

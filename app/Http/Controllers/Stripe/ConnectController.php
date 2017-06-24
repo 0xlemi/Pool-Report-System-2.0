@@ -120,10 +120,23 @@ class ConnectController extends Controller
     {
         $user = Logged::user();
         if(!$user->selectedUser->isRole('client')){
-            return response()->json([ 'message' => 'You need to be client to run this operation.'], 403);
+            return response()->json([ 'error' => 'You need to be client to run this operation.'], 403);
         }
 
         $company = Logged::company();
+
+        if($company->connect_id == null){
+            flash()->overlay('We cannot add your Credit Card',
+                    'Your pool company don\'t support receiving payments throught the platform.',
+                    'error');
+            return redirect()->back();
+        }
+
+        // If it was registered as stripe client remove him
+        if($user->stripe_id){
+            $oldCustomer = Customer::retrieve($user->stripe_id);
+            $oldCustomer->delete();
+        }
 
         $customer = Customer::create([
             'email' => $user->email,
@@ -131,9 +144,49 @@ class ConnectController extends Controller
             'source' => $request->stripeToken
         ]);
 
-        if($company->stripe_id == null){
-            return response()->json([ 'message' => 'The system don\'t have a stripe account associated.'], 403);
+        $card = $customer->sources->data[0];
+
+        $user->stripe_id = $customer->id;
+        $user->card_token = $card->id;
+        $user->card_brand = $card->brand;
+        $user->card_last_four = $card->last4;
+        $user->save();
+
+        if($customer){
+            flash()->overlay('Credit Card added',
+                    'Your credit card was added successfully.',
+                    'success');
+            return redirect()->back();
         }
+        flash()->overlay('Error adding your creditcard',
+                'Send us an email to support@poolreprotsystem to add it manualy.',
+                'error');
+        return redirect()->back();
+    }
+
+    public function removeCustomer()
+    {
+        $user = Logged::user();
+        if(!$user->selectedUser->isRole('client')){
+            return response()->json([ 'error' => 'You need to be client to run this operation.'], 403);
+        }
+
+        if($user->stripe_id){
+            // Remove stripe customer
+            $oldCustomer = Customer::retrieve($user->stripe_id);
+            $response = $oldCustomer->delete();
+            if($response->getLastResponse()->json['deleted']){
+                // remove info in the database
+                $user->stripe_id = null;
+                $user->card_token = null;
+                $user->card_brand = null;
+                $user->card_last_four = null;
+                $user->save();
+                return response()->json([ 'message' => 'Customer removed successfully']);
+            }
+        }
+        return response()->json([ 'error' => 'Credit Card was not removed.'], 500);
+
     }
 
 }

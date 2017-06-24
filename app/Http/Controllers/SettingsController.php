@@ -107,7 +107,8 @@ class SettingsController extends PageController
         $payment = null;
         if($userRoleCompany->isRole('client')){
             $payment = (object)[
-                'connect' => ($company->stripe_id) ? true : false ,
+                'connect' => ($company->connect_id) ? true : false,
+                'lastFour' => ($user->stripe_id && $user->card_token)? $user->card_last_four : null,
             ];
         }
 
