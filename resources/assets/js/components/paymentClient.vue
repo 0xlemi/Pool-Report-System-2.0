@@ -4,6 +4,12 @@
 
             <div v-if="lastFour">
                 <h4 class="semibold">Payment Source</h4>
+                <p>
+                    <strong>You are ready to pay your pool service online.</strong><br>
+                    To pay just go to statement, click on the invoice then inside the invoice click pay.<br>
+                    <i>Remember we don't charge your credit card automatically. (for security reasons)</i> <br>
+                    You need to click the button pay on the invoice.
+                </p>
                 <credit-card :last-four="lastFour" route="connect/customer" button-tag="Add Credit Card">
                 	<span slot="buttonsBefore" style="float: left;">
             			<button class="btn btn-danger-outline btn-sm" type="button" @click="destroy">
@@ -12,6 +18,7 @@
                         </button>
             		</span>
         	    </credit-card>
+                <br>
                 <br>
             </div>
             <div v-else>
