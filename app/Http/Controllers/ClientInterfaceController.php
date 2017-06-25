@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use JavaScript;
 use App\PRS\Transformers\FrontEnd\ReportFrontTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\ServiceDatatableTransformer;
+use App\PRS\Transformers\FrontEnd\DataTables\InvoiceDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Helpers\TechnicianHelpers;
@@ -162,9 +163,13 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.statement');
     }
 
-    public function clientContracts()
+    public function invoicesTable(Request $request, InvoiceDatatableTransformer $transformer)
     {
-        //
+        if(!$request->user()->selectedUser->isRole('client')){
+            abort(403, 'Only clients can view this page.');
+        }
+
     }
+
 
 }

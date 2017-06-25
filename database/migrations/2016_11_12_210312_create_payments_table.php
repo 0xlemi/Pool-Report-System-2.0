@@ -16,6 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->decimal('amount', 16, 2);
+            $table->enum('method', ['cash', 'transfer', 'check', 'credit_card', 'debit', 'atm_withdrawals', 'connect']);
             $table->boolean('verified')->default(false); // Is this payment was through Stripe connect or not
             $table->integer('invoice_id')->unsigned();
             $table->integer('seq_id')->unsigned()->index();

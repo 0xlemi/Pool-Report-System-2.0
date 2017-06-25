@@ -201,6 +201,12 @@ class UserRoleCompany extends Model
         return $this->belongsToMany(Service::class , 'urc_service', 'urc_id', 'service_id');
     }
 
+	// this is intended for clients
+    public function invoices()
+    {
+        
+    }
+
     // reports he has created
     public function reports()
     {

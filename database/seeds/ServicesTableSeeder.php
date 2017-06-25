@@ -76,8 +76,20 @@ class ServicesTableSeeder extends Seeder
                     $invoice = Invoice::findOrFail($invoiceId);
                     $numberPayments = rand(0,3);
                     for ($a=0; $a < $numberPayments; $a++) {
+                        $methods = [
+                            'cash',
+                            'transfer',
+                            'check',
+                            'credit_card',
+                            'debit',
+                            'atm_withdrawals',
+                            'connect'
+                        ];
+                        $method = $methods[rand(0,6)];
                         $paymentId = $invoice->payments()->create([
                             'amount' => $invoice->amount / $numberPayments,
+                            'method' => $method,
+                            'verified' => ($method == 'connect'),
                         ])->id;
                         $payment = Payment::findOrFail($paymentId);
                     }
