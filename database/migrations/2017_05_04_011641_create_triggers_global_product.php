@@ -13,14 +13,20 @@ class CreateTriggersGlobalProduct extends Migration
      */
     public function up()
     {
-        DB::unprepared("
+        DB::unprepared('
+            CREATE OR REPLACE FUNCTION p_global_products_bi_seq() RETURNS TRIGGER
+                AS $BODY$
+                BEGIN
+                    NEW.seq_id := (SELECT f_gen_seq(\'global_products\',NEW.company_id));
+
+                    RETURN NEW;
+                END; $BODY$ LANGUAGE plpgsql;
+
             CREATE TRIGGER trg_global_products_bi_seq
-            BEFORE INSERT ON global_products
-            FOR EACH ROW
-            BEGIN
-              SET NEW.seq_id = (SELECT f_gen_seq('global_products',NEW.company_id));
-            END
-        ");
+                BEFORE INSERT ON global_products
+                FOR EACH ROW
+                EXECUTE PROCEDURE p_global_products_bi_seq();
+        ');
     }
 
     /**
@@ -30,6 +36,6 @@ class CreateTriggersGlobalProduct extends Migration
      */
     public function down()
     {
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_global_products_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_global_products_bi_seq ON global_products;');
     }
 }

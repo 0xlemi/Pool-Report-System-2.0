@@ -61,11 +61,9 @@ class DatabaseSeeder extends Seeder
 	 * Cleans the tables
 	 */
 	protected function truncate_tables(){
-		DB::unprepared('SET FOREIGN_KEY_CHECKS = 0;');
 		foreach($this->toTruncate as $table){
-			DB::table($table)->truncate();
+			DB::statement("TRUNCATE {$table} CASCADE");
 		}
-		DB::unprepared('SET FOREIGN_KEY_CHECKS = 1;');
 	}
 
 }

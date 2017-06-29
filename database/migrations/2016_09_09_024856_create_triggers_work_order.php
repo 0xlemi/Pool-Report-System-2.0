@@ -13,45 +13,25 @@ class CreateTriggersWorkOrder extends Migration
      */
     public function up()
     {
-        // DB::unprepared("
-        //     CREATE TRIGGER trg_work_orders_bi_seq
-        //     BEFORE INSERT ON work_orders
-        //     FOR EACH ROW
-        //     BEGIN
-        //         DECLARE v_admin1 INT;
-        //         DECLARE v_admin2 INT;
-        //         DECLARE msg VARCHAR(255);
-        //
-        //         SELECT admin_id INTO v_admin1
-        //         FROM services
-        //         WHERE id = NEW.service_id;
-        //
-        //         SELECT admin_id INTO v_admin2
-        //         FROM supervisors
-        //         WHERE id = NEW.supervisor_id;
-        //
-        //         IF v_admin1 <> v_admin2 THEN
-        //         SET msg = CONCAT('WORKORDERUSERERROR: SERVICE AND SUPERVISOR HAS INCONSISTENT ADMIN');
-        //         SIGNAL SQLSTATE '99993' SET MESSAGE_TEXT = msg;
-        //         ELSE
-        //             SET NEW.seq_id = (SELECT f_gen_seq('work_orders', v_admin1));
-        //         END IF;
-        //     END
-        // ");
-        DB::unprepared("
+        DB::unprepared('
+            CREATE OR REPLACE FUNCTION p_work_orders_bi_seq() RETURNS TRIGGER
+                AS $$
+                  DECLARE v_company_id INT;
+                BEGIN
+                    SELECT company_id INTO v_company_id
+                    FROM services
+                    WHERE id = NEW.service_id;
+
+                    NEW.seq_id := (SELECT f_gen_seq(\'work_orders\',v_company_id));
+
+                    RETURN NEW;
+                END; $$ LANGUAGE plpgsql;
+
             CREATE TRIGGER trg_work_orders_bi_seq
                 BEFORE INSERT ON work_orders
                 FOR EACH ROW
-                BEGIN
-
-                DECLARE v_company_id INT;
-                SELECT company_id INTO v_company_id
-                FROM services
-                WHERE id = NEW.service_id;
-
-                SET NEW.seq_id = (SELECT f_gen_seq('work_orders',v_company_id));
-            END
-        ");
+                EXECUTE PROCEDURE p_work_orders_bi_seq();
+        ');
     }
 
     /**
@@ -61,7 +41,6 @@ class CreateTriggersWorkOrder extends Migration
      */
     public function down()
     {
-        // DB::unprepared('DROP TRIGGER IF EXISTS trg_work_orders_bi_seq');
-        DB::unprepared('DROP TRIGGER IF EXISTS trg_work_orders_bi_seq');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_work_orders_bi_seq ON work_orders;');
     }
 }

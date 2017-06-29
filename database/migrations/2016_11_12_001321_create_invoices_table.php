@@ -18,7 +18,7 @@ class CreateInvoicesTable extends Migration
             $table->dateTime('closed')->nullable()->default(null);
             $table->decimal('amount', 16, 2);
             $table->char('currency', 3);
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->morphs('invoiceable');
             $table->integer('seq_id')->unsigned()->index();
             $table->integer('company_id')->unsigned();
@@ -32,13 +32,13 @@ class CreateInvoicesTable extends Migration
                 ->onDelete('cascade');
         });
 
-        DB::unprepared("
-            ALTER TABLE `invoices`
+        DB::unprepared('
+            ALTER TABLE invoices
                 ADD CHECK (invoiceable_type IN (
-                    'App\WorkOrder',
-                    'App\ServiceContract'
+                    \'App\WorkOrder\',
+                    \'App\ServiceContract\'
                 ));
-        ");
+        ');
     }
 
     /**
