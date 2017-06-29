@@ -173,13 +173,9 @@ return [
         Laracasts\Utilities\JavaScript\JavaScriptServiceProvider::class,
         Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
         Kozz\Laravel\Providers\Guzzle::class,
-<<<<<<< HEAD
         Laravel\Socialite\SocialiteServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
-||||||| merged common ancestors
         // Barryvdh\Debugbar\ServiceProvider::class,
-=======
->>>>>>> postgresql
 
     ],
 
@@ -234,12 +230,8 @@ return [
         'Sentry' => Sentry\SentryLaravel\SentryFacade::class,
         'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
-<<<<<<< HEAD
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-||||||| merged common ancestors
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
-=======
->>>>>>> postgresql
 
     ],
 
