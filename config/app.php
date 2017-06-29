@@ -175,6 +175,7 @@ return [
         Kozz\Laravel\Providers\Guzzle::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         \SocialiteProviders\Manager\ServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
         // Barryvdh\Debugbar\ServiceProvider::class,
 
     ],
@@ -231,6 +232,8 @@ return [
         'Guzzle' => Kozz\Laravel\Facades\Guzzle::class,
         'Uuid' => Webpatser\Uuid\Uuid::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         // 'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
