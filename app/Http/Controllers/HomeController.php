@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\User;
 use App\PRS\Helpers\UserHelpers;
 use App\PRS\Classes\Logged;
+use App\Service;
 use App\UrlSigner;
 
 class HomeController extends PageController

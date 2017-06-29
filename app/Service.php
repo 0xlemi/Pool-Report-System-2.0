@@ -8,7 +8,9 @@ use Intervention;
 
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Traits\Model\SortableTrait;
+use App\WorkOrder;
 use App\Product;
+use App\Invoice;
 use App\Measurement;
 use App\ServiceContract;
 use App\UserRoleCompany;
@@ -56,6 +58,15 @@ class Service extends Model
     public function scopeBySeqId($query, $seqId)
     {
         return $query->where('services.seq_id', $seqId)->firstOrFail();
+    }
+
+    public function scopeHaveInvoiceForMonth($query, int $month, int $year = null)
+    {
+        // $services = $query->whereMonth('created_at', $month);
+        // if($year){
+        //     return $services->whereYear('created_at', $year);
+        // }
+        // return $services;
     }
 
     /**
@@ -159,6 +170,12 @@ class Service extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function invoices()
+    {
+        // return $this->hasMany(WorkOrder::class);
+        // return $this->hasManyThrough(Invoice::class, WorkOrder::class, 'service_id', 'invoiceable_id');
     }
 
     /**

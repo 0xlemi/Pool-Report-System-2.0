@@ -252,7 +252,7 @@ class Company extends Model
     }
 
     /**
-     * Get invoices associated with this user
+     * Get invoices associated with this company
      */
     public function invoices()
     {
@@ -260,7 +260,7 @@ class Company extends Model
     }
 
     /**
-     * Get invoices associated with this user
+     * Get invoices associated with this company
      */
     public function payments()
     {
