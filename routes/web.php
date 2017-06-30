@@ -56,6 +56,9 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
 
+// Query
+Route::get('/query/allserviceswithsumofthismonthinvoices', 'QueryController@allServicesWithSumOfThisMonthInvoicesRemovingPayments');
+
 // Documentation
 Route::get('/docs', 'DocumentationController@index');
 Route::get('/docs/quick', 'DocumentationController@quick');

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\PRS\Traits\Model\ImageTrait;
 use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\WorkOrder\End;
+use App\Invoice;
 
 use Carbon\Carbon;
 
@@ -62,6 +63,13 @@ class WorkOrder extends Model
     public function scopeBySeqId($query, $seqId)
     {
         return $query->where('work_orders.seq_id', $seqId)->firstOrFail();
+    }
+
+    public function scopeInvoices($query)
+    {
+        $invoicesIdArray = $query->join('invoices', 'work_orders.id', '=', 'invoices.invoiceable_id')
+                    ->select('invoices.id')->get()->toArray();
+        return Invoice::whereIn('invoices.id', $invoicesIdArray);
     }
 
     public function scopeFinished($query, $finished = true)

@@ -34,6 +34,49 @@ class Invoice extends Model
         return $query->where('invoices.seq_id', $seqId)->firstOrFail();
     }
 
+    public function scopeCurrency($query, $currency)
+    {
+        return $query->where('invoices.currency', $currency);
+    }
+
+    public function scopeUnpaid($query)
+    {
+        return $query->whereNull('invoices.closed');
+    }
+
+    public function scopePaid()
+    {
+        return $query->whereNotNull('invoices.closed');
+    }
+
+    /**
+     * Get the total amount subtracting the payment amounts
+     * NOTE: make sure you only send services of the same currency otherwise is not gonig to work
+     * @param  $query  Illuminate\Database\Query\Builder
+     * @return Int       Total sum minus the sum of the payments
+     */
+    public function scopeSumSubtractingPayments($query)
+    {
+        $sumPayments = $query->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+        $sumInvoices = $query->sum('invoices.amount');
+        return (integer)($sumInvoices - $sumPayments);
+    }
+
+    public function scopeOnMonth($query, int $month, int $year = null)
+    {
+        $invoices = $query->whereMonth('invoices.created_at', $month);
+        if(!$year){
+            $year = Carbon::today()->format('Y');
+        }
+        return $invoices->whereYear('invoices.created_at', $year);
+    }
+
+    public function scopeThisMonth($query)
+    {
+        $month = Carbon::today()->format('m');
+        return $query->onMonth($month);
+    }
+
     // *****************************
     //      Relationships
     // *****************************
