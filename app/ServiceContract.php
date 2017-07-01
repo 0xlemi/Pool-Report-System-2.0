@@ -39,6 +39,16 @@ class ServiceContract extends Model
         // 'service_id'
 	];
 
+    protected $appends = [
+		'price'
+    ];
+
+    //************** ATTRIBUTES *************
+    public function getPriceAttribute()
+    {
+        return $this->amount.' '.$this->currency;
+    }
+
     //******** RELATIONSHIPS ********
 
     /**

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\PRS\Traits\Model\SortableTrait;
 use App\PRS\ValueObjects\Invoice\TypeInvoice;
+use App\PRS\Classes\Logged;
 use App\Payment;
 use Carbon\Carbon;
 
@@ -49,31 +50,36 @@ class Invoice extends Model
         return $query->whereNotNull('invoices.closed');
     }
 
-    /**
-     * Get the total amount subtracting the payment amounts
-     * NOTE: make sure you only send services of the same currency otherwise is not gonig to work
-     * @param  $query  Illuminate\Database\Query\Builder
-     * @return Int       Total sum minus the sum of the payments
-     */
-    public function scopeSumSubtractingPayments($query)
-    {
-        $sumPayments = $query->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
-        $sumInvoices = $query->sum('invoices.amount');
-        return (integer)($sumInvoices - $sumPayments);
-    }
+    // /**
+    //  * Get the total amount subtracting the payment amounts
+    //  * NOTE: make sure you only send services of the same currency otherwise is not gonig to work
+    //  * @param  $query  Illuminate\Database\Query\Builder
+    //  * @return Int       Total sum minus the sum of the payments
+    //  */
+    // public function scopeSumSubtractingPayments($query)
+    // {
+    //     $sumPayments = $query->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+    //     $sumInvoices = $query->sum('invoices.amount');
+    //     if(round($sumInvoices - $sumPayments, 2) == 0){
+    //         return 0;
+    //     }
+    //     return $sumInvoices - $sumPayments;
+    // }
 
     public function scopeOnMonth($query, int $month, int $year = null)
     {
+        $company = Logged::company();
         $invoices = $query->whereMonth('invoices.created_at', $month);
         if(!$year){
-            $year = Carbon::today()->format('Y');
+            $year = Carbon::today($company->timezone)->format('Y');
         }
         return $invoices->whereYear('invoices.created_at', $year);
     }
 
     public function scopeThisMonth($query)
     {
-        $month = Carbon::today()->format('m');
+        $company = Logged::company();
+        $month = Carbon::today($company->timezone)->format('m');
         return $query->onMonth($month);
     }
 

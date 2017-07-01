@@ -32,24 +32,68 @@ class QueryController extends PageController
         dd($total);
     }
 
-    public function allServicesWithSumOfThisMonthInvoicesRemovingPayments()
+    public function allServicesWithSumOfThisMonthContractInvoicesSubtractingPayments()
     {
-
         $company = Logged::company();
         $services =$company->services->transform(function($service){
+            $price = 'no contract';
+            $total = 'no contract';
+            if($contract = $service->serviceContract){
+                $price = $contract->price;
+                $total = [];
+                $currencies = config('constants.currencies');
+                foreach ($currencies as $currency) {
+                    $services = $contract->invoices()
+                                            ->unpaid()->thisMonth()
+                                            ->currency($currency);
+                    $invoicesTotal = $services->sum('invoices.amount');
+                    $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+                    $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
+                }
+            }
             return (object)[
                 'id' => $service->seq_id,
                 'name' => $service->name,
-                'balance' => $service->workOrders()->invoices()
-                                        ->unpaid()->thisMonth()
-                                        ->currency('USD')
-                                        ->sumSubtractingPayments()
+                'address' => $service->address_line,
+                'price' => $price,
+                'contract_balance' => $total
             ];
         });
-        dd($services->toArray());
-        // $service = $company->services()->bySeqId(5);
-        // dd($service->workOrders()->invoices()->get()->toArray());
 
+        return response()->json($services);
+    }
+
+    // NEEDS TO OPTIMIZE
+    public function allServicesWithSumOfThisMonthWorkOrdersInvoicesSubtractingPayments()
+    {
+        $company = Logged::company();
+        $services =$company->services->transform(function($service){
+
+            $total = [];
+            $currencies = config('constants.currencies');
+            foreach ($currencies as $currency) {
+                $services = $service->workOrders()->invoices()
+                                        ->unpaid()->thisMonth()
+                                        ->currency($currency);
+                $invoicesTotal = $services->sum('invoices.amount');
+                $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+                $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
+            }
+
+            $price = 'no contract';
+            if($contract = $service->serviceContract){
+                $price = $contract->price;
+            }
+            return (object)[
+                'id' => $service->seq_id,
+                'name' => $service->name,
+                'address' => $service->address_line,
+                'price' => $price,
+                'work_orders_balance' => $total
+            ];
+        });
+
+        return response()->json($services);
     }
 
 
