@@ -14,27 +14,8 @@
 
 		<h3 class="semibold">Reports</h3>
 		<br>
-		<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reportModal">Services for the Month</button>
+		<services-contract-invoices-this-month></services-contract-invoices-this-month>
+
     </div>
 </div>
-
-<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" class="" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Service pending payments for the month</h4>
-      </div>
-      <div class="modal-body">
-			<div class="row">
-				hello
-			</div>
-        </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 @endsection

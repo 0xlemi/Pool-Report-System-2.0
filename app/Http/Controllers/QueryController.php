@@ -19,23 +19,31 @@ class QueryController extends PageController
         $this->middleware('auth');
     }
 
-    public function totalNotPaidThisMonth()
-    {
-        $company = Logged::company();
-        $total = [];
-        $currencies = config('constants.currencies');
-        foreach ($currencies as $currency) {
-            $total[$currency] = $company->services()
-                                ->workOrders()->invoices()->unpaid()->thisMonth()
-                                ->currency($currency)->sumSubtractingPayments();
-        }
-        dd($total);
-    }
+    // public function totalNotPaidThisMonth()
+    // {
+    //     $company = Logged::company();
+    //     $total = [];
+    //     $currencies = config('constants.currencies');
+    //     foreach ($currencies as $currency) {
+    //         $total[$currency] = $company->services()
+    //                             ->workOrders()->invoices()->unpaid()->thisMonth()
+    //                             ->currency($currency)->sumSubtractingPayments();
+    //     }
+    //     dd($total);
+    // }
 
-    public function allServicesWithSumOfThisMonthContractInvoicesSubtractingPayments()
+    // NEEDS TO OPTIMIZE
+    public function allServicesWithSumOfThisMonthContractInvoicesSubtractingPayments(Request $request)
     {
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+        ]);
+
+        $limit = ($request->limit)?: 10;
+
         $company = Logged::company();
-        $services =$company->services->transform(function($service){
+        $servicesPaginated = $company->services()->paginate($limit);
+        $services = $servicesPaginated->transform(function($service){
             $price = 'no contract';
             $total = 'no contract';
             if($contract = $service->serviceContract){
@@ -60,7 +68,25 @@ class QueryController extends PageController
             ];
         });
 
-        return response()->json($services);
+
+        $data = array_merge(
+            [
+                'data' => $services
+            ],
+            [
+                'paginator' => [
+                    'total' => $servicesPaginated->total(),
+                    'per_page' => $servicesPaginated->perPage(),
+                    'current_page' => $servicesPaginated->currentPage(),
+                    'last_page' => $servicesPaginated->lastPage(),
+                    'next_page_url' => $servicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
+                    'from' => $servicesPaginated->firstItem(),
+                    'to' => $servicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     // NEEDS TO OPTIMIZE
