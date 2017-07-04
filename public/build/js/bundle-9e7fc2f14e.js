@@ -40312,12 +40312,38 @@ exports.default = _vue2.default.extend({
     },
     data: function data() {
         return {
-            columns: ['id', 'name', 'address', 'price'],
-            itemActions: [{ name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' }, { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button' }, { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }]
+            columns: [{
+                name: 'id',
+                sortField: 'id',
+                title: '#'
+            }, {
+                name: 'name',
+                sortField: 'name'
+            }, {
+                name: 'address',
+                sortField: 'address'
+            }, {
+                name: 'price',
+                sortField: 'price'
+            }],
+            itemActions: [{ name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' }, { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button' }, { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }],
+            moreParams: [],
+            searchFor: ''
+
         };
     },
 
     methods: {
+        setFilter: function setFilter() {
+            this.moreParams = ['filter=' + this.searchFor];
+            this.$nextTick(function () {
+                this.$broadcast('vuetable:refresh');
+            });
+        },
+        resetFilter: function resetFilter() {
+            this.searchFor = '';
+            this.setFilter();
+        },
         viewProfile: function viewProfile(id) {
             console.log('view profile with id:', id);
         }
@@ -40336,7 +40362,7 @@ exports.default = _vue2.default.extend({
 
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\">Services for the Month</button>\n\n<modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\">\n    <div class=\"col-md-12\">\n        <div class=\"table-responsive\">\n            <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\"></vuetable>\n        </div>\n    </div>\n</modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\">\n        <div class=\"col-md-12\">\n            <div class=\"col-md-5\">\n\n            </div>\n            <div class=\"col-md-7\">\n                <div class=\"input-group pull-right\">\n\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\">\n\t\t\t\t\t<div class=\"input-group-btn\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\">\n                <br>\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" :append-params=\"moreParams\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
