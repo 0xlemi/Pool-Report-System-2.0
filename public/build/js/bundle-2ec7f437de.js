@@ -40333,11 +40333,26 @@ exports.default = _vue2.default.extend({
             }],
             itemActions: [{ name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' }, { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button' }, { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }],
             moreParams: [],
-            searchFor: ''
+            searchFor: '',
+            loading: false
         };
     },
 
+    computed: {
+        vuetableWrapper: function vuetableWrapper() {
+            if (this.loading) {
+                return 'vuetable-wrapper loading';
+            }
+            return 'vuetable-wrapper';
+        }
+    },
     methods: {
+        viewProfile: function viewProfile(id) {
+            console.log('view profile with id:', id);
+        },
+
+        /** Other Functions **/
+        // search
         setFilter: function setFilter() {
             this.moreParams = ['filter=' + this.searchFor];
             this.$nextTick(function () {
@@ -40348,11 +40363,8 @@ exports.default = _vue2.default.extend({
             this.searchFor = '';
             this.setFilter();
         },
-        viewProfile: function viewProfile(id) {
-            console.log('view profile with id:', id);
-        },
 
-        /** Other Functions **/
+        // highlight
         preg_quote: function preg_quote(str) {
             return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
         },
@@ -40361,6 +40373,12 @@ exports.default = _vue2.default.extend({
         }
     },
     events: {
+        'vuetable:loading': function vuetableLoading() {
+            this.loading = true;
+        },
+        'vuetable:loaded': function vuetableLoaded() {
+            this.loading = false;
+        },
         'vuetable:action': function vuetableAction(action, data) {
             console.log('vuetable:action', action, data);
 
@@ -40380,7 +40398,6 @@ exports.default = _vue2.default.extend({
             });
         },
         'vuetable:load-success': function vuetableLoadSuccess(response) {
-            console.log('main.js: total = ', response.data.data);
             var data = response.data.data;
             if (this.searchFor !== '') {
                 for (n in data) {
@@ -40400,7 +40417,7 @@ exports.default = _vue2.default.extend({
 
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\" _v-5404efb2=\"\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\" _v-5404efb2=\"\">\n        <div class=\"col-md-12\" _v-5404efb2=\"\">\n            <div class=\"col-md-5\" _v-5404efb2=\"\">\n\n            </div>\n            <div class=\"col-md-7\" _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-5404efb2=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-5404efb2=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" _v-5404efb2=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" _v-5404efb2=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\" _v-5404efb2=\"\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\" _v-5404efb2=\"\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\" _v-5404efb2=\"\">\n        <div class=\"col-md-12\" _v-5404efb2=\"\">\n            <div class=\"col-md-5\" _v-5404efb2=\"\">\n\n            </div>\n            <div class=\"col-md-7\" _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-5404efb2=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-5404efb2=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <vuetable v-ref:vuetable=\"\" api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-5404efb2=\"\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

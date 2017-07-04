@@ -12,16 +12,16 @@
 					<div class="input-group-addon">
 						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 					</div>
-					<input v-model="searchFor" @keyup.enter="setFilter" type="text" class="form-control" placeholder="Search">
+					<input v-model="searchFor" @keyup.enter="setFilter" type="text" class="form-control" placeholder="Search" :disabled="loading">
 					<div class="input-group-btn">
-                        <button type="button" class="btn btn-primary" @click="setFilter">Go</button>
-                        <button type="button" class="btn btn-default" @click="resetFilter">Reset</button>
+                        <button type="button" class="btn btn-primary" @click="setFilter" :disabled="loading">Go</button>
+                        <button type="button" class="btn btn-default" @click="resetFilter" :disabled="loading">Reset</button>
 					</div>
 				</div>
             </div>
             <div class="table-responsive">
                 <br>
-                <vuetable
+                <vuetable v-ref:vuetable
                     api-url="http://prs.dev/query/servicescontractinvoices"
                     pagination-component="vuetable-pagination-bootstrap"
                     pagination-path="paginator"
@@ -34,9 +34,8 @@
                     descending-icon="glyphicon glyphicon-chevron-down"
                     pagination-class="fixed-table-pagination"
                     pagination-info-class="pull-left pagination-detail"
-                    wrapper-class="vuetable-wrapper "
+                    :wrapper-class="vuetableWrapper"
                     table-wrapper=".vuetable-wrapper"
-                    loading-class="loading"
                 ></vuetable>
             </div>
         </div>
@@ -88,10 +87,24 @@ export default Vue.extend({
             ],
             moreParams: [],
             searchFor: '',
+            loading: false,
+        }
+    },
+    computed:{
+        vuetableWrapper(){
+            if(this.loading){
+                return 'vuetable-wrapper loading';
+            }
+                return 'vuetable-wrapper';
         }
     },
     methods: {
-         setFilter(){
+        viewProfile(id){
+            console.log('view profile with id:', id)
+        },
+        /** Other Functions **/
+        // search
+        setFilter(){
             this.moreParams = [
                 'filter=' + this.searchFor
             ]
@@ -103,11 +116,8 @@ export default Vue.extend({
             this.searchFor = ''
             this.setFilter()
         },
-        viewProfile(id){
-            console.log('view profile with id:', id)
-        },
-        /** Other Functions **/
-         preg_quote: function( str ) {
+        // highlight
+        preg_quote: function( str ) {
             return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
         },
         highlight(needle, haystack) {
@@ -118,6 +128,12 @@ export default Vue.extend({
         },
     },
     events: {
+        'vuetable:loading': function(){
+            this.loading = true;
+        },
+        'vuetable:loaded': function(){
+            this.loading = false;
+        },
         'vuetable:action': function(action, data) {
             console.log('vuetable:action', action, data)
 
@@ -137,7 +153,6 @@ export default Vue.extend({
             })
         },
         'vuetable:load-success': function(response) {
-            console.log('main.js: total = ', response.data.data)
             var data = response.data.data
             if (this.searchFor !== '') {
                 for (n in data) {
