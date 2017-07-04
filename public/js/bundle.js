@@ -40279,6 +40279,8 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./indexTable.vue":263,"vue":214,"vue-hot-reload-api":211}],290:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n/* Loading Animation: */\n.vuetable-wrapper[_v-5404efb2] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-5404efb2] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-5404efb2]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40350,8 +40352,12 @@ exports.default = _vue2.default.extend({
             console.log('view profile with id:', id);
         },
 
-        gender: function gender(value) {
-            return value == 'M' ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Male</span>' : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Female</span>';
+        /** Other Functions **/
+        preg_quote: function preg_quote(str) {
+            return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+        },
+        highlight: function highlight(needle, haystack) {
+            return haystack.replace(new RegExp('(' + this.preg_quote(needle) + ')', 'ig'), '<mark>$1</mark>');
         }
     },
     events: {
@@ -40374,12 +40380,12 @@ exports.default = _vue2.default.extend({
             });
         },
         'vuetable:load-success': function vuetableLoadSuccess(response) {
-            console.log('main.js: total = ', response.data.total);
+            console.log('main.js: total = ', response.data.data);
             var data = response.data.data;
             if (this.searchFor !== '') {
                 for (n in data) {
                     data[n].name = this.highlight(this.searchFor, data[n].name);
-                    data[n].email = this.highlight(this.searchFor, data[n].email);
+                    data[n].address = this.highlight(this.searchFor, data[n].address);
                 }
             }
         },
@@ -40394,18 +40400,22 @@ exports.default = _vue2.default.extend({
 
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\">\n        <div class=\"col-md-12\">\n            <div class=\"col-md-5\">\n\n            </div>\n            <div class=\"col-md-7\">\n                <div class=\"input-group pull-right\">\n\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\">\n\t\t\t\t\t<div class=\"input-group-btn\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\">\n                <br>\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\" _v-5404efb2=\"\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\" _v-5404efb2=\"\">\n        <div class=\"col-md-12\" _v-5404efb2=\"\">\n            <div class=\"col-md-5\" _v-5404efb2=\"\">\n\n            </div>\n            <div class=\"col-md-7\" _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-5404efb2=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-5404efb2=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" _v-5404efb2=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" _v-5404efb2=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\" _v-5404efb2=\"\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n/* Loading Animation: */\n.vuetable-wrapper[_v-5404efb2] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-5404efb2] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-5404efb2]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-5404efb2", module.exports)
   } else {
     hotAPI.update("_v-5404efb2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":270,"./vuetablePaginationBootstrap.vue":297,"vue":214,"vue-hot-reload-api":211,"vuetable/src/components/Vuetable.vue":216}],291:[function(require,module,exports){
+},{"./modal.vue":270,"./vuetablePaginationBootstrap.vue":297,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

@@ -106,18 +106,16 @@ export default Vue.extend({
         viewProfile(id){
             console.log('view profile with id:', id)
         },
-        gender: function(value) {
-              return value == 'M'
-                ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Male</span>'
-                : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Female</span>'
-            },
         /** Other Functions **/
-        // highlight: function(needle, haystack) {
-        //     return haystack.replace(
-        //         new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
-        //         '<span class="highlight">$1</span>'
-        //     )
-        // },
+         preg_quote: function( str ) {
+            return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+        },
+        highlight(needle, haystack) {
+            return haystack.replace(
+                new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
+                '<mark>$1</mark>'
+            )
+        },
     },
     events: {
         'vuetable:action': function(action, data) {
@@ -139,12 +137,12 @@ export default Vue.extend({
             })
         },
         'vuetable:load-success': function(response) {
-            console.log('main.js: total = ', response.data.total)
+            console.log('main.js: total = ', response.data.data)
             var data = response.data.data
             if (this.searchFor !== '') {
                 for (n in data) {
                     data[n].name = this.highlight(this.searchFor, data[n].name)
-                    data[n].email = this.highlight(this.searchFor, data[n].email)
+                    data[n].address = this.highlight(this.searchFor, data[n].address)
                 }
             }
         },
@@ -159,3 +157,47 @@ export default Vue.extend({
 
 });
 </script>
+
+<style scoped>
+    /* Loading Animation: */
+    .vuetable-wrapper {
+        opacity: 1;
+        position: relative;
+        filter: alpha(opacity=100); /* IE8 and earlier */
+    }
+    .vuetable-wrapper.loading {
+      opacity:0.4;
+       transition: opacity .3s ease-in-out;
+       -moz-transition: opacity .3s ease-in-out;
+       -webkit-transition: opacity .3s ease-in-out;
+    }
+    .vuetable-wrapper.loading:after {
+      position: absolute;
+      content: '';
+      top: 40%;
+      left: 50%;
+      margin: -30px 0 0 -30px;
+      border-radius: 100%;
+      -webkit-animation-fill-mode: both;
+              animation-fill-mode: both;
+      border: 4px solid #000;
+      height: 60px;
+      width: 60px;
+      background: transparent !important;
+      display: inline-block;
+      -webkit-animation: pulse 1s 0s ease-in-out infinite;
+              animation: pulse 1s 0s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0% {
+        -webkit-transform: scale(0.6);
+                transform: scale(0.6); }
+      50% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+             border-width: 12px; }
+      100% {
+        -webkit-transform: scale(0.6);
+                transform: scale(0.6); }
+    }
+</style>
