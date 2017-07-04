@@ -40314,22 +40314,24 @@ exports.default = _vue2.default.extend({
         return {
             columns: [{
                 name: 'id',
-                sortField: 'id',
+                sortField: 'seq_id',
                 title: '#'
             }, {
                 name: 'name',
                 sortField: 'name'
             }, {
                 name: 'address',
-                sortField: 'address'
+                sortField: 'address_line'
             }, {
                 name: 'price',
-                sortField: 'price'
+                title: 'Monthly Price'
+            }, {
+                name: 'contract_balance',
+                title: 'Monthly Balance'
             }],
             itemActions: [{ name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' }, { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button' }, { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }],
             moreParams: [],
             searchFor: ''
-
         };
     },
 
@@ -40346,23 +40348,53 @@ exports.default = _vue2.default.extend({
         },
         viewProfile: function viewProfile(id) {
             console.log('view profile with id:', id);
+        },
+
+        gender: function gender(value) {
+            return value == 'M' ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Male</span>' : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Female</span>';
         }
     },
     events: {
         'vuetable:action': function vuetableAction(action, data) {
             console.log('vuetable:action', action, data);
+
             if (action == 'view-item') {
-                this.viewProfile(data.id);
+                sweetAlert(action, data.name);
+            } else if (action == 'edit-item') {
+                sweetAlert(action, data.name);
+            } else if (action == 'delete-item') {
+                sweetAlert(action, data.name);
+            }
+        },
+        'vuetable:cell-dblclicked': function vuetableCellDblclicked(item, field, event) {
+            var self = this;
+            console.log('cell-dblclicked: old value =', item[field.name]);
+            this.$editable(event, function (value) {
+                console.log('$editable callback:', value);
+            });
+        },
+        'vuetable:load-success': function vuetableLoadSuccess(response) {
+            console.log('main.js: total = ', response.data.total);
+            var data = response.data.data;
+            if (this.searchFor !== '') {
+                for (n in data) {
+                    data[n].name = this.highlight(this.searchFor, data[n].name);
+                    data[n].email = this.highlight(this.searchFor, data[n].email);
+                }
             }
         },
         'vuetable:load-error': function vuetableLoadError(response) {
-            console.log('Load Error: ', response);
+            if (response.status == 400) {
+                sweetAlert('Something\'s Wrong!', response.data.message, 'error');
+            } else {
+                sweetAlert('Oops', E_SERVER_ERROR, 'error');
+            }
         }
     }
 
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\">\n        <div class=\"col-md-12\">\n            <div class=\"col-md-5\">\n\n            </div>\n            <div class=\"col-md-7\">\n                <div class=\"input-group pull-right\">\n\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\">\n\t\t\t\t\t<div class=\"input-group-btn\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\">\n                <br>\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" :append-params=\"moreParams\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\">Services for the Month</button>\n\n    <modal title=\"Service contracts pending payments for the month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\">\n        <div class=\"col-md-12\">\n            <div class=\"col-md-5\">\n\n            </div>\n            <div class=\"col-md-7\">\n                <div class=\"input-group pull-right\">\n\t\t\t\t\t<div class=\"input-group-addon\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\">\n\t\t\t\t\t<div class=\"input-group-btn\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\">\n                <br>\n                <vuetable api-url=\"http://prs.dev/query/servicescontractinvoices\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" wrapper-class=\"vuetable-wrapper \" loading-class=\"loading\"></vuetable>\n            </div>\n        </div>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

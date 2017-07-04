@@ -27,13 +27,11 @@
                     pagination-path="paginator"
                     table-wrapper="#content"
                     :fields="columns"
-
+                    :append-params="moreParams"
 
                     table-class="table table-bordered table-hover"
                     ascending-icon="glyphicon glyphicon-chevron-up"
                     descending-icon="glyphicon glyphicon-chevron-down"
-
-                    :append-params="moreParams"
                     pagination-class="fixed-table-pagination"
                     pagination-info-class="pull-left pagination-detail"
                     wrapper-class="vuetable-wrapper "
@@ -63,7 +61,7 @@ export default Vue.extend({
             columns: [
                 {
                     name: 'id',
-                    sortField: 'id',
+                    sortField: 'seq_id',
                     title: '#'
                 },
                 {
@@ -72,12 +70,16 @@ export default Vue.extend({
                 },
                 {
                     name: 'address',
-                    sortField: 'address',
+                    sortField: 'address_line',
                 },
                 {
                     name: 'price',
-                    sortField: 'price',
+                    title: 'Monthly Price',
                 },
+                {
+                    name: 'contract_balance',
+                    title: 'Monthly Balance'
+                }
 			],
             itemActions: [
                 { name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' },
@@ -86,11 +88,10 @@ export default Vue.extend({
             ],
             moreParams: [],
             searchFor: '',
-
         }
     },
     methods: {
-         setFilter: function() {
+         setFilter(){
             this.moreParams = [
                 'filter=' + this.searchFor
             ]
@@ -98,23 +99,61 @@ export default Vue.extend({
                 this.$broadcast('vuetable:refresh')
             })
         },
-        resetFilter: function() {
+        resetFilter(){
             this.searchFor = ''
             this.setFilter()
         },
-        viewProfile: function(id) {
+        viewProfile(id){
             console.log('view profile with id:', id)
-        }
+        },
+        gender: function(value) {
+              return value == 'M'
+                ? '<span class="label label-info"><i class="glyphicon glyphicon-star"></i> Male</span>'
+                : '<span class="label label-success"><i class="glyphicon glyphicon-heart"></i> Female</span>'
+            },
+        /** Other Functions **/
+        // highlight: function(needle, haystack) {
+        //     return haystack.replace(
+        //         new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
+        //         '<span class="highlight">$1</span>'
+        //     )
+        // },
     },
     events: {
         'vuetable:action': function(action, data) {
             console.log('vuetable:action', action, data)
+
             if (action == 'view-item') {
-                this.viewProfile(data.id)
+                sweetAlert(action, data.name)
+            } else if (action == 'edit-item') {
+                sweetAlert(action, data.name)
+            } else if (action == 'delete-item') {
+                sweetAlert(action, data.name)
+            }
+        },
+        'vuetable:cell-dblclicked': function(item, field, event) {
+            var self = this
+            console.log('cell-dblclicked: old value =', item[field.name])
+            this.$editable(event, function(value) {
+                console.log('$editable callback:', value)
+            })
+        },
+        'vuetable:load-success': function(response) {
+            console.log('main.js: total = ', response.data.total)
+            var data = response.data.data
+            if (this.searchFor !== '') {
+                for (n in data) {
+                    data[n].name = this.highlight(this.searchFor, data[n].name)
+                    data[n].email = this.highlight(this.searchFor, data[n].email)
+                }
             }
         },
         'vuetable:load-error': function(response) {
-            console.log('Load Error: ', response)
+            if (response.status == 400) {
+                sweetAlert('Something\'s Wrong!', response.data.message, 'error')
+            } else {
+                sweetAlert('Oops', E_SERVER_ERROR, 'error')
+            }
         }
     }
 
