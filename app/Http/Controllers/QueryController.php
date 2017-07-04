@@ -49,22 +49,22 @@ class QueryController extends PageController
             if($contract = $service->serviceContract){
                 $price = $contract->price;
                 $total = [];
-                $currencies = config('constants.currencies');
-                foreach ($currencies as $currency) {
-                    $services = $contract->invoices()
-                                            ->unpaid()->thisMonth()
-                                            ->currency($currency);
-                    $invoicesTotal = $services->sum('invoices.amount');
-                    $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
-                    $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
-                }
+                // $currencies = config('constants.currencies');
+                // foreach ($currencies as $currency) {
+                //     $services = $contract->invoices()
+                //                             ->unpaid()->thisMonth()
+                //                             ->currency($currency);
+                //     $invoicesTotal = $services->sum('invoices.amount');
+                //     $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+                //     $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
+                // }
             }
             return (object)[
                 'id' => $service->seq_id,
                 'name' => $service->name,
                 'address' => $service->address_line,
                 'price' => $price,
-                'contract_balance' => $total
+                // 'contract_balance' => $total
             ];
         });
 
