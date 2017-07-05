@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\PRS\Classes\Logged;
 use DB;
+use PDF;
 
 class QueryController extends PageController
 {
@@ -33,8 +34,64 @@ class QueryController extends PageController
     //     dd($total);
     // }
 
+    public function servicesContractMonthlyBalancePDF()
+    {
+        $company = Logged::company();
+        $data = $company->services->transform(function($service){
+            $price = 'No Contract';
+            $total = 'No Contract';
+            if($contract = $service->serviceContract){
+                $price = $contract->price;
+                // $total = [];
+                $total = '';
+                $currencies = config('constants.currencies');
+                foreach ($currencies as $currency) {
+                    $services = $contract->invoices()
+                                            ->unpaid()->thisMonth()
+                                            ->currency($currency);
+                    $invoicesTotal = $services->sum('invoices.amount');
+                    $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+                    $currencyTotal = round($invoicesTotal - $paymentTotal, 2);
+                    if($currencyTotal > 0){
+                        $total .= $currencyTotal." ".$currency.", ";
+                    }
+                    // $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
+                }
+                if($total == ''){
+                    $total = 'All Paid';
+                }else{
+                    $total = rtrim($total,", ");
+                }
+            }
+            return (object)[
+                'id' => $service->seq_id,
+                'name' => $service->name,
+                'address' => $service->address_line,
+                'price' => $price,
+                'contract_balance' => $total
+            ];
+        });
+         $titles = [
+            '#',
+            'Name',
+            'Address',
+            'Monthly Price',
+            'Monthly Balance'
+        ];
+        $attributes = [
+            'id',
+            'name',
+            'address',
+            'price',
+            'contract_balance'
+        ];
+        // return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
+        $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data'));
+        return $pdf->inline();
+    }
+
     // NEEDS TO OPTIMIZE
-    public function allServicesWithSumOfThisMonthContractInvoicesSubtractingPayments(Request $request)
+    public function servicesContractMonthlyBalance(Request $request)
     {
         $this->validate($request, [
             'limit' => 'integer|between:1,25',
@@ -112,7 +169,7 @@ class QueryController extends PageController
     }
 
     // NEEDS TO OPTIMIZE
-    public function allServicesWithSumOfThisMonthWorkOrdersInvoicesSubtractingPayments()
+    public function servicesWorkOrderMonthlyBalance()
     {
         $company = Logged::company();
         $services =$company->services->transform(function($service){

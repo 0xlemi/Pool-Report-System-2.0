@@ -22,7 +22,7 @@
             <div class="table-responsive">
                 <br>
                 <vuetable v-ref:vuetable
-                    api-url="http://prs.dev/query/servicescontractinvoices"
+                    :api-url="url"
                     pagination-component="vuetable-pagination-bootstrap"
                     pagination-path="paginator"
                     table-wrapper="#content"
@@ -39,6 +39,9 @@
                 ></vuetable>
             </div>
         </div>
+        <a href="{{ url }}/pdf" slot="buttonsBefore" class="btn btn-danger pull-left" target="_blank">
+            <span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;&nbsp;Get PDF
+        </a>
     </modal>
 
 </template>
@@ -80,14 +83,15 @@ export default Vue.extend({
                     title: 'Monthly Balance'
                 }
 			],
-            itemActions: [
-                { name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' },
-                { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button'},
-                { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }
-            ],
+            // itemActions: [
+            //     { name: 'view-item', label: '', icon: 'zoom icon', class: 'ui teal button' },
+            //     { name: 'edit-item', label: '', icon: 'edit icon', class: 'ui orange button'},
+            //     { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }
+            // ],
             moreParams: [],
             searchFor: '',
             loading: false,
+            url: Laravel.url+'query/servicescontractinvoices'
         }
     },
     computed:{

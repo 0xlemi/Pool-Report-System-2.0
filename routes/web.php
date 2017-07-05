@@ -57,8 +57,9 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 });
 
 // Query
-Route::get('/query/servicesworkorderinvoices', 'QueryController@allServicesWithSumOfThisMonthWorkOrdersInvoicesSubtractingPayments');
-Route::get('/query/servicescontractinvoices', 'QueryController@allServicesWithSumOfThisMonthContractInvoicesSubtractingPayments');
+Route::get('/query/servicesworkorderinvoices', 'QueryController@servicesWorkOrderMonthlyBalance');
+Route::get('/query/servicescontractinvoices', 'QueryController@servicesContractMonthlyBalance');
+Route::get('/query/servicescontractinvoices/pdf', 'QueryController@servicesContractMonthlyBalancePDF');
 
 // Documentation
 Route::get('/docs', 'DocumentationController@index');
