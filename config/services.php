@@ -34,6 +34,7 @@ return [
         'key' => env('STRIPE_MAIN_KEY'),
         'secret' => env('STRIPE_SECRET'),
         'client_id' => env('STRIPE_KEY'),
+        'client_secret' => env('STRIPE_SECRET'),
     ],
 
     'sendbird' => [
