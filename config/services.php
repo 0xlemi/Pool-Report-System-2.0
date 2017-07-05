@@ -35,6 +35,7 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'client_id' => env('STRIPE_KEY'),
         'client_secret' => env('STRIPE_SECRET'),
+        'redirect' => env('STRIPE_REDIRECT_URI')
     ],
 
     'sendbird' => [
