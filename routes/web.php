@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Http\Request;
+use App\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,6 +56,10 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
     Route::get('/unsubscribe/{token}', 'HomeController@emailOptions');
     Route::post('/unsubscribe', 'HomeController@changeEmailOptions');
 });
+
+// Device Magic Mobile App
+Route::post('devicemagic/forms', 'Mobile\DeviceMagicController@forms');
+Route::get('devicemagic/resource', 'Mobile\DeviceMagicController@updateResource');
 
 // Query
 Route::get('/query/servicesworkorderinvoices', 'QueryController@servicesWorkOrderMonthlyBalance');

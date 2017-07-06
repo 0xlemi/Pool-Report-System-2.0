@@ -43,4 +43,8 @@ return [
         'Api_Token' => env('SENDBIRD_TOKEN')
     ],
 
+    'devicemagic' => [
+        'token' => env('DEVICE_MAGIC_TOKEN')
+    ]
+
 ];

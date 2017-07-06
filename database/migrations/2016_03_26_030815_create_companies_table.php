@@ -26,6 +26,9 @@ class CreateCompaniesTable extends Migration
             $table->decimal('latitude', 9, 6)->nullable();
             $table->decimal('longitude', 9, 6)->nullable();
 
+            // Device Magic
+            $table->string('resource_id')->nullable();
+
             // Billing
                 $table->integer('free_objects')->default(2);
                 // Stripe

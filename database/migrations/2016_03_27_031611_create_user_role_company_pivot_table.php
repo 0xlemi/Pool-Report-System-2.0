@@ -24,6 +24,9 @@ class CreateUserRoleCompanyPivotTable extends Migration
             $table->string('address')->nullable();
             $table->text('about')->nullable();
 
+            // Device Magic
+            $table->string('device_id')->nullable();
+
             // SendBird Chat
             $table->uuid('chat_id')->unique();
             $table->string('chat_nickname');
