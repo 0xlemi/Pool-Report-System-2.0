@@ -28,6 +28,7 @@ class CreateCompaniesTable extends Migration
 
             // Device Magic
             $table->string('resource_id')->nullable();
+            $table->string('group_id')->unique()->nullable();
 
             // Billing
                 $table->integer('free_objects')->default(2);

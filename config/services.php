@@ -44,7 +44,8 @@ return [
     ],
 
     'devicemagic' => [
-        'token' => env('DEVICE_MAGIC_TOKEN')
+        'token' => env('DEVICE_MAGIC_TOKEN'),
+        'organization_id' => env('DEVICE_MAGIC_ORGANIZATION_ID')
     ]
 
 ];
