@@ -12,22 +12,12 @@ use GuzzleHttp\Exception\ClientException;
 
 class Group {
 
-    public function addForm(Company $company, int $formId)
-    {
-        if($groupId = $this->getId($company)){
-
-        }
-        return null;
-
-    }
-
     public function addDevice(Company $company, string $deviceId)
     {
         if($groupId = $this->getId($company)){
 
         }
         return null;
-
     }
 
     /**

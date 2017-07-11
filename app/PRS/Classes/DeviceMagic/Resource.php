@@ -79,7 +79,7 @@ class Resource{
             if($e->getResponse()->getStatusCode() == 404){
                 $company->resource_id = null;
                 $company->save();
-                return response()->json(['message' => 'Cannot update resource that don\'t exitst. Please try again'], 404);
+                return response()->json(['message' => 'Cannot update resource that don\'t exists. Please try again'], 404);
             }
         }
 
