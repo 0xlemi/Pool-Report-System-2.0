@@ -35,70 +35,66 @@ class QueryController extends PageController
     //     dd($total);
     // }
 
-    public function servicesContractMonthlyBalancePDF()
+        // NEEDS TO OPTIMIZE
+    public function servicesContractMonthlyBalance(Request $request)
     {
-        $company = Logged::company();
-        $data = $company->services->transform(function($service){
-            $price = 'No Contract';
-            $total = 'No Contract';
-            if($contract = $service->serviceContract){
-                $price = $contract->price;
-                // $total = [];
-                $total = '';
-                $currencies = config('constants.currencies');
-                foreach ($currencies as $currency) {
-                    $services = $contract->invoices()
-                                            ->unpaid()->thisMonth()
-                                            ->currency($currency);
-                    $invoicesTotal = $services->sum('invoices.amount');
-                    $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
-                    $currencyTotal = round($invoicesTotal - $paymentTotal, 2);
-                    if($currencyTotal > 0){
-                        $total .= $currencyTotal." ".$currency.", ";
-                    }
-                    // $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
-                }
-                if($total == ''){
-                    $total = 'All Paid';
-                }else{
-                    $total = rtrim($total,", ");
-                }
-            }
-            return (object)[
-                'id' => $service->seq_id,
-                'name' => $service->name,
-                'address' => $service->address_line,
-                'price' => $price,
-                'contract_balance' => $total
-            ];
-        });
+        $filter = $this->serviceContractFilter($request);
+        // Paginate
+        $servicesPaginated = $filter->services->paginate($filter->limit);
+
+        $services = $this->serviceContractTrasformer($servicesPaginated, $filter->month, $filter->year, $filter->onTime);
+
+        $data = array_merge(
+            [
+                'data' => $services
+            ],
+            [
+                'paginator' => [
+                    'total' => $servicesPaginated->total(),
+                    'per_page' => $servicesPaginated->perPage(),
+                    'current_page' => $servicesPaginated->currentPage(),
+                    'last_page' => $servicesPaginated->lastPage(),
+                    'next_page_url' => $servicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
+                    'from' => $servicesPaginated->firstItem(),
+                    'to' => $servicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
+    }
+
+    public function servicesContractMonthlyBalancePDF(Request $request)
+    {
+        $filter = $this->serviceContractFilter($request);
+        $data = $this->serviceContractTrasformer($filter->services->get(), $filter->month, $filter->year, $filter->onTime);
          $titles = [
             '#',
             'Name',
             'Address',
             'Monthly Price',
-            'Monthly Balance'
+            'Payments of Month'
         ];
         $attributes = [
             'id',
             'name',
             'address',
             'price',
-            'contract_balance'
+            'payments_month'
         ];
-        // return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
-        $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data'));
-        return $pdf->inline();
+        return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
+        // $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data'));
+        // return $pdf->inline();
     }
 
-    // NEEDS TO OPTIMIZE
-    public function servicesContractMonthlyBalance(Request $request)
+    protected function serviceContractFilter(Request $request)
     {
         $this->validate($request, [
             'limit' => 'integer|between:1,25',
             'contract' => 'boolean',
             'month' => 'required_with:year|integer|between:1,12',
-            'year' => 'required_with:month|integer|between:2016,2050'
+            'year' => 'required_with:month|integer|between:2016,2050',
+            'ontime' => 'boolean'
         ]);
 
         $limit = ($request->limit)?: 10;
@@ -132,11 +128,21 @@ class QueryController extends PageController
             $sort = explode('|', $request->sort);
             $allServices = $allServices->orderBy($sort[0], $sort[1]);
         }
-        // Paginate
-        $servicesPaginated = $allServices->paginate($limit);
-        $services = $servicesPaginated->transform(function($service) use ($month, $year){
+
+        return (object)[
+            'services' => $allServices,
+            'month' => $month,
+            'year' => $year,
+            'limit' => $limit,
+            'onTime' => $request->ontime,
+        ];
+    }
+
+    protected function serviceContractTrasformer($query, $month, $year, $onTime = null)
+    {
+        return $query->transform(function($service) use ($month, $year, $onTime){
             $price = 'No Contract';
-            $total = 'All Paid';
+            $total = 'None';
             // If has Contract make all the balance math if not don't bother
             if($contract = $service->serviceContract){
                 // Check if the contract is inactive
@@ -155,8 +161,14 @@ class QueryController extends PageController
                                             ->currency($currency);
                     // Sum the amount of the invoices
                     // $invoicesTotal = $invoices->sum('invoices.amount');
-                    // Sum the amount of the payments in all the invoices
-                    $paymentTotal = $invoices->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+
+                    // Get all the Payments from that invoice
+                    $payments = $invoices->payments();
+                    if(!($onTime == null)){
+                        // Filtern depending if they where done on time or not
+                        $payments = $payments->onTime( (boolean) $onTime);
+                    }
+                    $paymentTotal  = $payments->sum('payments.amount');
                     // Get the balance
                     // $currencyTotal = round($invoicesTotal - $paymentTotal, 2);
                     // If is more than zero add it to the string
@@ -166,7 +178,7 @@ class QueryController extends PageController
                     // $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
                 }
                 if($total == ''){
-                    $total = 'All Paid';
+                    $total = 'None';
                 }else{
                     $total = rtrim($total,", ");
                 }
@@ -179,27 +191,9 @@ class QueryController extends PageController
                 'payments_month' => $total
             ];
         });
-
-
-        $data = array_merge(
-            [
-                'data' => $services
-            ],
-            [
-                'paginator' => [
-                    'total' => $servicesPaginated->total(),
-                    'per_page' => $servicesPaginated->perPage(),
-                    'current_page' => $servicesPaginated->currentPage(),
-                    'last_page' => $servicesPaginated->lastPage(),
-                    'next_page_url' => $servicesPaginated->nextPageUrl(),
-                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
-                    'from' => $servicesPaginated->firstItem(),
-                    'to' => $servicesPaginated->lastItem(),
-                ]
-            ]
-        );
-        return response()->json($data);
     }
+
+
 
     // NEEDS TO OPTIMIZE
     public function servicesWorkOrderMonthlyBalance()

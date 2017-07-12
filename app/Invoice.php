@@ -35,6 +35,14 @@ class Invoice extends Model
         return $query->where('invoices.seq_id', $seqId)->firstOrFail();
     }
 
+    public function scopePayments($query)
+    {
+        $paymentsIdArray = $query->join('payments', 'invoices.id', '=', 'payments.invoice_id')
+                    ->select('payments.id')->get()->toArray();
+
+        return Payment::whereIn('payments.id', $paymentsIdArray);
+    }
+
     public function scopeCurrency($query, $currency)
     {
         return $query->where('invoices.currency', $currency);

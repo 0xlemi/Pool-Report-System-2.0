@@ -71,6 +71,7 @@ class ServicesTableSeeder extends Seeder
                         'closed' => (rand(0,1)) ? Carbon::createFromDate(2016, rand(1,12), rand(1,28)) : NULL,
                         'amount' => $contract->amount,
                         'currency' => $contract->currency,
+                        'pay_before' => Carbon::now()->addDays(20),
                         'company_id' => $company->id,
                     ])->id;
                     $invoice = Invoice::findOrFail($invoiceId);

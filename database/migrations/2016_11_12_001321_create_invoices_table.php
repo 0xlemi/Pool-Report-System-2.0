@@ -19,6 +19,7 @@ class CreateInvoicesTable extends Migration
             $table->decimal('amount', 16, 2);
             $table->char('currency', 3);
             $table->text('description')->nullable();
+            $table->dateTime('pay_before');
             $table->morphs('invoiceable');
             $table->integer('seq_id')->unsigned()->index();
             $table->integer('company_id')->unsigned();

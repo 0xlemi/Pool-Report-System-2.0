@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Payment extends Model
 {
@@ -32,6 +33,17 @@ class Payment extends Model
     public function scopeBySeqId($query, $seqId)
     {
         return $query->where('payments.seq_id', $seqId)->firstOrFail();
+    }
+
+    public function scopeOnTime($query, $isOnTime = true)
+    {
+        $operator = '<';
+        if($isOnTime){
+            $operator = '>';
+        }
+        return $query->join('invoices', 'payments.invoice_id', '=', 'invoices.id')
+                        ->select('payments.*', 'invoices.pay_before')
+                        ->whereDate('pay_before', $operator, Carbon::now());
     }
 
     // ************************

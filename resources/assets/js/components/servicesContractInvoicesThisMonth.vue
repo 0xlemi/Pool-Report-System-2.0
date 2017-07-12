@@ -1,8 +1,8 @@
 <template>
 
-    <button type="button" class="btn btn-primary btn-sm" @click="$broadcast('openModal', 'serviceContractsInovice')">Services for the Month</button>
+    <button type="button" class="btn btn-primary btn-sm" @click="$broadcast('openModal', 'serviceContractsInovice')">Services Contract Payments in Month</button>
 
-    <modal title="Service contracts pending payments for the month" id="serviceContractsInovice" modal-class="modal-lg">
+    <modal title="Service Contract Payments in Month" id="serviceContractsInovice" modal-class="modal-lg">
         <div class="col-md-12">
             <div class="col-md-6">
                 <div class="btn-group">
@@ -15,18 +15,6 @@
 						<button class="dropdown-item" @click="filterActive('0')">No Contract or Inactive</button>
 					</div>
 				</div>
-                <div class="btn-group">
-					<button type="button" class="btn btn-inline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						{{ selectedMonth }}
-					</button>
-					<div class="dropdown-menu">
-
-						<button v-for="month in months" class="dropdown-item"
-                                @click="filterMonth(month.month, month.year, $index)">
-                            {{ month.monthText+" "+month.year }}
-                        </button>
-					</div>
-				</div>
             </div>
             <div class="col-md-6">
                 <div class="input-group pull-right">
@@ -37,6 +25,36 @@
 					<div class="input-group-btn">
                         <button type="button" class="btn btn-primary" @click="setFilter" :disabled="loading">Go</button>
                         <button type="button" class="btn btn-default" @click="resetFilter" :disabled="loading">Reset</button>
+					</div>
+				</div>
+            </div>
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <br>
+                <div class="input-group pull-right">
+					<div class="input-group-addon">Invoices charged in </div>
+                    <div class="input-group-btn">
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						{{ selectedMonth }}
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+                        	<button v-for="month in months" class="dropdown-item"
+                                    @click="filterMonth(month.month, month.year, $index)">
+                                {{ month.monthText+" "+month.year }}
+                            </button>
+						</div>
+					</div>
+					<div class="input-group-addon">where payments are</div>
+                    <div class="input-group-btn">
+						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    {{ onTimeOption }}
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+    						<button class="dropdown-item" @click="filterOnTime('')">All</button>
+    						<button class="dropdown-item" @click="filterOnTime('1')">On Time</button>
+    						<button class="dropdown-item" @click="filterOnTime('0')">Late</button>
+						</div>
 					</div>
 				</div>
             </div>
@@ -117,7 +135,7 @@ export default Vue.extend({
                 },
                 {
                     name: 'payments_month',
-                    title: 'Payments of '+this.selectedMonth
+                    title: 'Payments on Month'
                 }
 			],
 
@@ -191,6 +209,7 @@ export default Vue.extend({
             // ],
             moreParams: [],
             activeOption: 'All',
+            onTimeOption: 'All',
             currentMonth: Number(moment().format("MM"))-1,
             searchFor: '',
             loading: false,
@@ -213,6 +232,22 @@ export default Vue.extend({
             console.log('view profile with id:', id)
         },
         /** Other Functions **/
+        filterOnTime(onTime){
+            if(onTime == ''){
+                this.onTimeOption = "All";
+            }else if(onTime == '1'){
+                this.onTimeOption = "On Time";
+            }else if(onTime == '0'){
+                this.onTimeOption = "Late";
+            }
+            this.moreParams = [
+                'ontime=' + onTime
+            ]
+            this.$nextTick(function() {
+                this.$broadcast('vuetable:refresh')
+            });
+
+        },
         filterMonth(month, year, index){
             console.log([month, year, index]);
             this.currentMonth = index;
