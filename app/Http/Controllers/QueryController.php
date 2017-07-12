@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\PRS\Classes\Logged;
 use DB;
 use PDF;
+use Carbon\Carbon;
 
 class QueryController extends PageController
 {
@@ -95,40 +96,72 @@ class QueryController extends PageController
     {
         $this->validate($request, [
             'limit' => 'integer|between:1,25',
+            'contract' => 'boolean',
+            'month' => 'required_with:year|integer|between:1,12',
+            'year' => 'required_with:month|integer|between:2016,2050'
         ]);
 
         $limit = ($request->limit)?: 10;
 
         $company = Logged::company();
-        $allServices = $company->services();
+
+        $month = Carbon::today($company->timezone)->month;
+        $year = Carbon::today($company->timezone)->year;
+        if($request->has('month')){
+            $month = $request->month;
+            $year = $request->year;
+        }
+
+        if(!$request->has('contract')){ // If they dont send anything then all services
+            $allServices = $company->services();
+        }elseif($request->contract){ // if they send contract as true only active contracts
+            $allServices = $company->services()->withActiveContract();
+        }else{ // if they send contract as false only inactive contracts
+            $allServices = $company->services()->withoutActiveContract();
+        }
+
+        // Filter by search
         if($request->filter){
             $escapedInput = str_replace('%', '\\%', $request->filter);
             $allServices = $allServices->where('services.name', 'ilike', '%'.$escapedInput.'%' )
                                     ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
         }
         // Sort needs validation of some kind
+        // Order the table by different columns
         if($request->has('sort')){
             $sort = explode('|', $request->sort);
             $allServices = $allServices->orderBy($sort[0], $sort[1]);
         }
+        // Paginate
         $servicesPaginated = $allServices->paginate($limit);
-        $services = $servicesPaginated->transform(function($service){
+        $services = $servicesPaginated->transform(function($service) use ($month, $year){
             $price = 'No Contract';
-            $total = 'No Contract';
+            $total = 'All Paid';
+            // If has Contract make all the balance math if not don't bother
             if($contract = $service->serviceContract){
-                $price = $contract->price;
+                // Check if the contract is inactive
+                $price = "Inactive";
+                if($contract->active){
+                    $price = $contract->price;
+                }
                 // $total = [];
                 $total = '';
+                // Need to do the math for each supported currency
                 $currencies = config('constants.currencies');
                 foreach ($currencies as $currency) {
-                    $services = $contract->invoices()
-                                            ->unpaid()->thisMonth()
+                    // Get all the invoices that are for the month
+                    $invoices = $contract->invoices()
+                                            ->unpaid()->onMonth($month, $year)
                                             ->currency($currency);
-                    $invoicesTotal = $services->sum('invoices.amount');
-                    $paymentTotal = $services->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
-                    $currencyTotal = round($invoicesTotal - $paymentTotal, 2);
-                    if($currencyTotal > 0){
-                        $total .= $currencyTotal." ".$currency.", ";
+                    // Sum the amount of the invoices
+                    // $invoicesTotal = $invoices->sum('invoices.amount');
+                    // Sum the amount of the payments in all the invoices
+                    $paymentTotal = $invoices->join('payments', 'invoices.id', '=', 'payments.invoice_id')->sum('payments.amount');
+                    // Get the balance
+                    // $currencyTotal = round($invoicesTotal - $paymentTotal, 2);
+                    // If is more than zero add it to the string
+                    if($paymentTotal > 0){
+                        $total .= $paymentTotal." ".$currency.", ";
                     }
                     // $total[$currency] = round($invoicesTotal - $paymentTotal, 2);
                 }
@@ -143,7 +176,7 @@ class QueryController extends PageController
                 'name' => $service->name,
                 'address' => $service->address_line,
                 'price' => $price,
-                'contract_balance' => $total
+                'payments_month' => $total
             ];
         });
 
