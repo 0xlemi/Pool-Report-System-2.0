@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\PRS\Classes\Logged;
 use DB;
 use PDF;
+use Uuid;
+use Excel;
 use Carbon\Carbon;
 
 class QueryController extends PageController
@@ -64,6 +66,25 @@ class QueryController extends PageController
         return response()->json($data);
     }
 
+    public function servicesContractMonthlyBalanceExcel(Request $request)
+    {
+        $filter = $this->serviceContractFilter($request);
+        $data = $this->serviceContractTrasformer($filter->services->get(), $filter->month, $filter->year, $filter->onTime, false);
+        $data = $data->toArray();
+
+        $uuid = Uuid::generate();
+        $excel = Excel::create($uuid, function($excel) use ($data){
+
+            // Call writer methods here
+            $excel->sheet('services', function($sheet) use ($data){
+
+                $sheet->fromArray($data);
+
+            });
+
+        })->export('xlsx');
+    }
+
     public function servicesContractMonthlyBalancePDF(Request $request)
     {
         $filter = $this->serviceContractFilter($request);
@@ -82,13 +103,13 @@ class QueryController extends PageController
                 $contractText = '(Active Contract)';
             }
         }
-        $mothText = Carbon::createFromDate(null , $filter->month)->format('F');
+        $monthText = Carbon::createFromDate(null , $filter->month)->format('F');
         $titles = [
             '#',
             'Name',
             'Address',
             'Monthly Price',
-            "Sum of {$onTimeText} Payments of {$mothText}"
+            "Sum of {$onTimeText} Payments of {$monthText}"
         ];
         $attributes = [
             'id',
@@ -154,9 +175,9 @@ class QueryController extends PageController
         ];
     }
 
-    protected function serviceContractTrasformer($query, $month, $year, $onTime = null)
+    protected function serviceContractTrasformer($query, $month, $year, $onTime = null, $object = true)
     {
-        return $query->transform(function($service) use ($month, $year, $onTime){
+        return $query->transform(function($service) use ($month, $year, $onTime, $object){
             $price = 'No Contract';
             $total = 'None';
             // If has Contract make all the balance math if not don't bother
@@ -199,13 +220,17 @@ class QueryController extends PageController
                     $total = rtrim($total,", ");
                 }
             }
-            return (object)[
+            $result = [
                 'id' => $service->seq_id,
                 'name' => $service->name,
                 'address' => $service->address_line,
                 'price' => $price,
                 'payments_month' => $total
             ];
+            if($object){
+                return (object) $result;
+            }
+            return $result;
         });
     }
 

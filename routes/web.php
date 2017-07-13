@@ -66,6 +66,7 @@ Route::get('devicemagic/group', 'Mobile\DeviceMagicController@group');
 Route::get('/query/servicesworkorderinvoices', 'QueryController@servicesWorkOrderMonthlyBalance');
 Route::get('/query/servicescontractinvoices', 'QueryController@servicesContractMonthlyBalance');
 Route::get('/query/servicescontractinvoices/pdf', 'QueryController@servicesContractMonthlyBalancePDF');
+Route::get('/query/servicescontractinvoices/excel', 'QueryController@servicesContractMonthlyBalanceExcel');
 
 // Documentation
 Route::get('/docs', 'DocumentationController@index');

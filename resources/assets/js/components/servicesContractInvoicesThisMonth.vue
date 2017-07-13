@@ -81,9 +81,15 @@
                 ></vuetable>
             </div>
         </div>
-        <a :href="pdfUrl" slot="buttonsBefore" class="btn btn-danger pull-left" :class="{'disabled' : loading}" target="_blank">
-            <span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;&nbsp;Get PDF
-        </a>
+        <span slot="buttonsBefore">
+            <a :href="pdfUrl" slot="buttonsBefore" class="btn btn-danger pull-left" :class="{'disabled' : loading}" target="_blank">
+                <span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;&nbsp;Get PDF
+            </a>
+            &nbsp;&nbsp;
+            <a :href="excelUrl"  class="btn btn-success pull-left" :class="{'disabled' : loading}" target="_blank">
+                <span class="fa fa-file-excel-o"></span>&nbsp;&nbsp;&nbsp;Get Excel
+            </a>
+        </span>
     </modal>
 
 </template>
@@ -218,7 +224,8 @@ export default Vue.extend({
             searchFor: '',
             loading: false,
             url: Laravel.url+'query/servicescontractinvoices',
-            pdfUrl: Laravel.url+'query/servicescontractinvoices'+'/pdf?'
+            pdfUrl: Laravel.url+'query/servicescontractinvoices/pdf',
+            excelUrl: Laravel.url+'query/servicescontractinvoices/excel'
         }
     },
     computed:{
@@ -253,9 +260,7 @@ export default Vue.extend({
 
         },
         filterMonth(month, year, index){
-            console.log([month, year, index]);
             this.currentMonth = index;
-
             this.totalParams['month'] = 'month=' + Number(month);
             this.totalParams['year'] = 'year=' + Number(year);
             this.updateParams()
@@ -297,6 +302,7 @@ export default Vue.extend({
             this.moreParams = moreParams;
             let params = moreParams.join("&");
             this.pdfUrl = this.url+'/pdf?'+params;
+            this.excelUrl = this.url+'/excel?'+params;
         },
         // highlight
         preg_quote: function( str ) {
