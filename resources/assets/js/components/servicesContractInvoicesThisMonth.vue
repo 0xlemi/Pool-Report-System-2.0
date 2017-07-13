@@ -4,19 +4,22 @@
 
     <modal title="Service Contract Payments in Month" id="serviceContractsInovice" modal-class="modal-lg">
         <div class="col-md-12">
-            <div class="col-md-6">
-                <div class="btn-group">
-					<button type="button" class="btn btn-inline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						{{ activeOption }}
-					</button>
-					<div class="dropdown-menu">
-						<button class="dropdown-item" @click="filterActive('')">All</button>
-						<button class="dropdown-item" @click="filterActive('1')">Active Contract</button>
-						<button class="dropdown-item" @click="filterActive('0')">No Contract or Inactive</button>
+            <div class="col-md-5">
+                <div class="input-group">
+					<div class="input-group-addon">Services with</div>
+                    <div class="input-group-btn">
+						<button type="button" class="btn dropdown-toggle" :class="{'disabled' : loading}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						   {{ activeOption }}
+						</button>
+						<div class="dropdown-menu dropdown-menu-right">
+                            <button class="dropdown-item" @click="filterActive('')">All</button>
+    						<button class="dropdown-item" @click="filterActive('1')">Active Contract</button>
+    						<button class="dropdown-item" @click="filterActive('0')">No Contract or Inactive</button>
+						</div>
 					</div>
-				</div>
+                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="input-group pull-right">
 					<div class="input-group-addon">
 						<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -35,7 +38,7 @@
                 <div class="input-group pull-right">
 					<div class="input-group-addon">Invoices charged in </div>
                     <div class="input-group-btn">
-						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button type="button" class="btn dropdown-toggle" :class="{'disabled' : loading}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						{{ selectedMonth }}
 						</button>
 						<div class="dropdown-menu dropdown-menu-right">
@@ -47,7 +50,7 @@
 					</div>
 					<div class="input-group-addon">where payments are</div>
                     <div class="input-group-btn">
-						<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button type="button" class="btn dropdown-toggle" :class="{'disabled' : loading}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    {{ onTimeOption }}
 						</button>
 						<div class="dropdown-menu dropdown-menu-right">
@@ -78,7 +81,7 @@
                 ></vuetable>
             </div>
         </div>
-        <a href="{{ url }}/pdf" slot="buttonsBefore" class="btn btn-danger pull-left" target="_blank">
+        <a :href="pdfUrl" slot="buttonsBefore" class="btn btn-danger pull-left" :class="{'disabled' : loading}" target="_blank">
             <span class="fa fa-file-pdf-o"></span>&nbsp;&nbsp;&nbsp;Get PDF
         </a>
     </modal>
@@ -135,7 +138,7 @@ export default Vue.extend({
                 },
                 {
                     name: 'payments_month',
-                    title: 'Payments on Month'
+                    title: 'Sum Payments on Month'
                 }
 			],
 
@@ -208,12 +211,14 @@ export default Vue.extend({
             //     { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }
             // ],
             moreParams: [],
+            totalParams: {},
             activeOption: 'All',
             onTimeOption: 'All',
             currentMonth: Number(moment().format("MM"))-1,
             searchFor: '',
             loading: false,
-            url: Laravel.url+'query/servicescontractinvoices'
+            url: Laravel.url+'query/servicescontractinvoices',
+            pdfUrl: Laravel.url+'query/servicescontractinvoices'+'/pdf?'
         }
     },
     computed:{
@@ -240,9 +245,8 @@ export default Vue.extend({
             }else if(onTime == '0'){
                 this.onTimeOption = "Late";
             }
-            this.moreParams = [
-                'ontime=' + onTime
-            ]
+            this.totalParams['ontime'] = 'ontime=' + onTime;
+            this.updateParams()
             this.$nextTick(function() {
                 this.$broadcast('vuetable:refresh')
             });
@@ -251,10 +255,10 @@ export default Vue.extend({
         filterMonth(month, year, index){
             console.log([month, year, index]);
             this.currentMonth = index;
-            this.moreParams = [
-                'month=' + Number(month),
-                'year=' + Number(year)
-            ];
+
+            this.totalParams['month'] = 'month=' + Number(month);
+            this.totalParams['year'] = 'year=' + Number(year);
+            this.updateParams()
             this.$nextTick(function() {
                 this.$broadcast('vuetable:refresh')
             });
@@ -265,20 +269,19 @@ export default Vue.extend({
             }else if(active == '1'){
                 this.activeOption = "Active Contract";
             }else if(active == '0'){
-                this.activeOption = "No Contract";
+                this.activeOption = "No Contract or Inactive";
             }
-            this.moreParams = [
-                'contract=' + active
-            ]
+
+            this.totalParams['contract'] = 'contract=' + active;
+            this.updateParams()
             this.$nextTick(function() {
                 this.$broadcast('vuetable:refresh')
             });
         },
         // search
         setFilter(){
-            this.moreParams = [
-                'filter=' + this.searchFor
-            ]
+            this.totalParams['filter'] = 'filter=' + this.searchFor;
+            this.updateParams()
             this.$nextTick(function() {
                 this.$broadcast('vuetable:refresh')
             })
@@ -286,6 +289,14 @@ export default Vue.extend({
         resetFilter(){
             this.searchFor = ''
             this.setFilter()
+        },
+        // PDF URL
+        updateParams(){
+            let totalParams = this.totalParams;
+            let moreParams = Object.keys(totalParams).map(function(key){return totalParams[key]});
+            this.moreParams = moreParams;
+            let params = moreParams.join("&");
+            this.pdfUrl = this.url+'/pdf?'+params;
         },
         // highlight
         preg_quote: function( str ) {

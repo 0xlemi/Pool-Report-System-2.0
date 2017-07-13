@@ -40287,6 +40287,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _vue = require('vue');
 
 var _vue2 = _interopRequireDefault(_vue);
@@ -40333,7 +40337,7 @@ exports.default = _vue2.default.extend({
                 title: 'Monthly Price'
             }, {
                 name: 'payments_month',
-                title: 'Payments on Month'
+                title: 'Sum Payments on Month'
             }],
 
             months: [{
@@ -40391,12 +40395,14 @@ exports.default = _vue2.default.extend({
             //     { name: 'delete-item', label: '', icon: 'delete icon', class: 'ui red button' }
             // ],
             moreParams: [],
+            totalParams: {},
             activeOption: 'All',
             onTimeOption: 'All',
             currentMonth: Number(moment().format("MM")) - 1,
             searchFor: '',
             loading: false,
-            url: Laravel.url + 'query/servicescontractinvoices'
+            url: Laravel.url + 'query/servicescontractinvoices',
+            pdfUrl: Laravel.url + 'query/servicescontractinvoices' + '/pdf?'
         };
     },
 
@@ -40425,7 +40431,8 @@ exports.default = _vue2.default.extend({
             } else if (onTime == '0') {
                 this.onTimeOption = "Late";
             }
-            this.moreParams = ['ontime=' + onTime];
+            this.totalParams['ontime'] = 'ontime=' + onTime;
+            this.updateParams();
             this.$nextTick(function () {
                 this.$broadcast('vuetable:refresh');
             });
@@ -40433,7 +40440,10 @@ exports.default = _vue2.default.extend({
         filterMonth: function filterMonth(month, year, index) {
             console.log([month, year, index]);
             this.currentMonth = index;
-            this.moreParams = ['month=' + Number(month), 'year=' + Number(year)];
+
+            this.totalParams['month'] = 'month=' + Number(month);
+            this.totalParams['year'] = 'year=' + Number(year);
+            this.updateParams();
             this.$nextTick(function () {
                 this.$broadcast('vuetable:refresh');
             });
@@ -40444,9 +40454,11 @@ exports.default = _vue2.default.extend({
             } else if (active == '1') {
                 this.activeOption = "Active Contract";
             } else if (active == '0') {
-                this.activeOption = "No Contract";
+                this.activeOption = "No Contract or Inactive";
             }
-            this.moreParams = ['contract=' + active];
+
+            this.totalParams['contract'] = 'contract=' + active;
+            this.updateParams();
             this.$nextTick(function () {
                 this.$broadcast('vuetable:refresh');
             });
@@ -40454,7 +40466,8 @@ exports.default = _vue2.default.extend({
 
         // search
         setFilter: function setFilter() {
-            this.moreParams = ['filter=' + this.searchFor];
+            this.totalParams['filter'] = 'filter=' + this.searchFor;
+            this.updateParams();
             this.$nextTick(function () {
                 this.$broadcast('vuetable:refresh');
             });
@@ -40462,6 +40475,17 @@ exports.default = _vue2.default.extend({
         resetFilter: function resetFilter() {
             this.searchFor = '';
             this.setFilter();
+        },
+
+        // PDF URL
+        updateParams: function updateParams() {
+            var totalParams = this.totalParams;
+            var moreParams = (0, _keys2.default)(totalParams).map(function (key) {
+                return totalParams[key];
+            });
+            var params = moreParams.join("&");
+            this.moreParams = moreParams;
+            this.pdfUrl = this.url + '/pdf?' + params;
         },
 
         // highlight
@@ -40517,7 +40541,7 @@ exports.default = _vue2.default.extend({
 
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\" _v-5404efb2=\"\">Services Contract Payments in Month</button>\n\n    <modal title=\"Service Contract Payments in Month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\" _v-5404efb2=\"\">\n        <div class=\"col-md-12\" _v-5404efb2=\"\">\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n                <div class=\"btn-group\" _v-5404efb2=\"\">\n\t\t\t\t\t<button type=\"button\" class=\"btn btn-inline dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t{{ activeOption }}\n\t\t\t\t\t</button>\n\t\t\t\t\t<div class=\"dropdown-menu\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterActive('')\" _v-5404efb2=\"\">All</button>\n\t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterActive('1')\" _v-5404efb2=\"\">Active Contract</button>\n\t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterActive('0')\" _v-5404efb2=\"\">No Contract or Inactive</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-5404efb2=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-5404efb2=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n            </div>\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">Invoices charged in </div>\n                    <div class=\"input-group-btn\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t{{ selectedMonth }}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\" _v-5404efb2=\"\">\n                        \t<button v-for=\"month in months\" class=\"dropdown-item\" @click=\"filterMonth(month.month, month.year, $index)\" _v-5404efb2=\"\">\n                                {{ month.monthText+\" \"+month.year }}\n                            </button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">where payments are</div>\n                    <div class=\"input-group-btn\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t    {{ onTimeOption }}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\" _v-5404efb2=\"\">\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('')\" _v-5404efb2=\"\">All</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('1')\" _v-5404efb2=\"\">Payments On Time</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('0')\" _v-5404efb2=\"\">Payments Late</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-5404efb2=\"\"></vuetable>\n            </div>\n        </div>\n        <a href=\"{{ url }}/pdf\" slot=\"buttonsBefore\" class=\"btn btn-danger pull-left\" target=\"_blank\" _v-5404efb2=\"\">\n            <span class=\"fa fa-file-pdf-o\" _v-5404efb2=\"\"></span>&nbsp;&nbsp;&nbsp;Get PDF\n        </a>\n    </modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n    <button type=\"button\" class=\"btn btn-primary btn-sm\" @click=\"$broadcast('openModal', 'serviceContractsInovice')\" _v-5404efb2=\"\">Services Contract Payments in Month</button>\n\n    <modal title=\"Service Contract Payments in Month\" id=\"serviceContractsInovice\" modal-class=\"modal-lg\" _v-5404efb2=\"\">\n        <div class=\"col-md-12\" _v-5404efb2=\"\">\n            <div class=\"col-md-5\" _v-5404efb2=\"\">\n                <div class=\"input-group\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">Services with</div>\n                    <div class=\"input-group-btn\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn dropdown-toggle\" :class=\"{'disabled' : loading}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t   {{ activeOption }}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\" _v-5404efb2=\"\">\n                            <button class=\"dropdown-item\" @click=\"filterActive('')\" _v-5404efb2=\"\">All</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterActive('1')\" _v-5404efb2=\"\">Active Contract</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterActive('0')\" _v-5404efb2=\"\">No Contract or Inactive</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n                </div>\n            </div>\n            <div class=\"col-md-7\" _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-5404efb2=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-5404efb2=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-5404efb2=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n            </div>\n            <div class=\"col-md-6\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <div class=\"input-group pull-right\" _v-5404efb2=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">Invoices charged in </div>\n                    <div class=\"input-group-btn\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn dropdown-toggle\" :class=\"{'disabled' : loading}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t{{ selectedMonth }}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\" _v-5404efb2=\"\">\n                        \t<button v-for=\"month in months\" class=\"dropdown-item\" @click=\"filterMonth(month.month, month.year, $index)\" _v-5404efb2=\"\">\n                                {{ month.monthText+\" \"+month.year }}\n                            </button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"input-group-addon\" _v-5404efb2=\"\">where payments are</div>\n                    <div class=\"input-group-btn\" _v-5404efb2=\"\">\n\t\t\t\t\t\t<button type=\"button\" class=\"btn dropdown-toggle\" :class=\"{'disabled' : loading}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\" _v-5404efb2=\"\">\n\t\t\t\t\t\t    {{ onTimeOption }}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"dropdown-menu dropdown-menu-right\" _v-5404efb2=\"\">\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('')\" _v-5404efb2=\"\">All</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('1')\" _v-5404efb2=\"\">On Time</button>\n    \t\t\t\t\t\t<button class=\"dropdown-item\" @click=\"filterOnTime('0')\" _v-5404efb2=\"\">Late</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n            <div class=\"table-responsive\" _v-5404efb2=\"\">\n                <br _v-5404efb2=\"\">\n                <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-5404efb2=\"\"></vuetable>\n            </div>\n        </div>\n        <a :href=\"pdfUrl\" slot=\"buttonsBefore\" class=\"btn btn-danger pull-left\" :class=\"{'disabled' : loading}\" target=\"_blank\" _v-5404efb2=\"\">\n            <span class=\"fa fa-file-pdf-o\" _v-5404efb2=\"\"></span>&nbsp;&nbsp;&nbsp;Get PDF\n        </a>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -40532,7 +40556,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5404efb2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":270,"./vuetablePaginationBootstrap.vue":297,"moment":195,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],291:[function(require,module,exports){
+},{"./modal.vue":270,"./vuetablePaginationBootstrap.vue":297,"babel-runtime/core-js/object/keys":30,"moment":195,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

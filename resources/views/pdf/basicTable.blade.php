@@ -13,7 +13,8 @@
 
 <div class="col-md-12">
     <br>
-    <h2>My first paragraph.</h2>
+    <h2>Services Contracts Payments in Month</h2>
+    <h3>{{ $contractText }}</h3>
     <br>
 
     <table class="table table-bordered table-sm">

@@ -68,12 +68,27 @@ class QueryController extends PageController
     {
         $filter = $this->serviceContractFilter($request);
         $data = $this->serviceContractTrasformer($filter->services->get(), $filter->month, $filter->year, $filter->onTime);
-         $titles = [
+        $onTimeText = 'all';
+        if(!($filter->onTime == null)){
+            $onTimeText = 'late';
+            if($filter->onTime){
+                $onTimeText = 'on-time';
+            }
+        }
+        $contractText = '';
+        if(!($filter->contract == null)){
+            $contractText = '(No Contract or Inactive)';
+            if($filter->contract){
+                $contractText = '(Active Contract)';
+            }
+        }
+        $mothText = Carbon::createFromDate(null , $filter->month)->format('F');
+        $titles = [
             '#',
             'Name',
             'Address',
             'Monthly Price',
-            'Payments of Month'
+            "Sum of {$onTimeText} Payments of {$mothText}"
         ];
         $attributes = [
             'id',
@@ -82,9 +97,9 @@ class QueryController extends PageController
             'price',
             'payments_month'
         ];
-        return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
-        // $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data'));
-        // return $pdf->inline();
+        // return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
+        $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data', 'contractText'));
+        return $pdf->inline();
     }
 
     protected function serviceContractFilter(Request $request)
@@ -135,6 +150,7 @@ class QueryController extends PageController
             'year' => $year,
             'limit' => $limit,
             'onTime' => $request->ontime,
+            'contract' => $request->contract
         ];
     }
 
