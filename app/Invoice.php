@@ -23,6 +23,7 @@ class Invoice extends Model
         'amount',
         'currency',
         'description',
+        'pay_before',
         'company_id',
     ];
 

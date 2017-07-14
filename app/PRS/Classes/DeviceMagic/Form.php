@@ -12,7 +12,7 @@ use GuzzleHttp\Exception\ClientException;
 
 class Form {
 
-    public function add(Company $company)
+    public function updateReport(Company $company)
     {
         if($form_id = $company->form_id){
             return $this->updateRequest($company, $form_id);

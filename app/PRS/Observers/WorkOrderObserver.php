@@ -6,6 +6,7 @@ use App\WorkOrder;
 use App\Notifications\NewWorkOrderNotification;
 use App\Jobs\DeleteImagesFromS3;
 use App\PRS\Classes\Logged;
+use Carbon\Carbon;
 
 class WorkOrderObserver
 {
@@ -25,6 +26,7 @@ class WorkOrderObserver
             'amount' => $workOrder->price,
             'currency' => $workOrder->currency,
             'description' => $workOrder->description,
+            'pay_before' => Carbon::now()->addDays(20),
             'company_id' => $company->id,
         ]);
 

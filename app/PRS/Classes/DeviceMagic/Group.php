@@ -49,7 +49,7 @@ class Group {
             return true;
         }elseif($response->getStatusCode() == 304){
             // Group with that name already exists
-            $groupId = $this->getId($groupName);
+            $groupId = $this->getId($company);
             $company->group_id = $groupId;
             $company->save();
             return true;

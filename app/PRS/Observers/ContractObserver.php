@@ -29,6 +29,7 @@ class ContractObserver
                 'amount' => $contract->amount,
                 'currency' => $contract->currency,
                 'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
+                'pay_before' => Carbon::now()->addDays(20),
                 'company_id' => $company->id,
             ]);
         }

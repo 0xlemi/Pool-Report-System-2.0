@@ -13,19 +13,18 @@ class DeviceMagicController extends Controller
     public function forms(Request $request)
     {
         info($request);
-
     }
 
     public function form(Form $form)
     {
         $company = Logged::company();
-        return (string) $form->add($company);
+        return (string) $form->updateReport($company);
     }
 
     public function group(Group $group)
     {
         $company = Logged::company();
-        $group->create($company);    
+        $group->create($company);
     }
 
 }
