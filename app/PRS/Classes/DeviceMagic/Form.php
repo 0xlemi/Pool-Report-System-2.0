@@ -6,24 +6,41 @@ use Uuid;
 use Excel;
 use Storage;
 use App\PRS\Classes\Logged;
+use App\PRS\Classes\DeviceMagic\Destination;
 use App\Company;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 
 class Form {
 
-    public function updateReport(Company $company)
+    public $company;
+    public $destination;
+
+    public function __construct(Company $company, Destination $destination)
     {
-        if($form_id = $company->form_id){
-            return $this->updateRequest($company, $form_id);
-        }
-        return $this->createRequest($company);
+        $this->company = $company;
+        $this->destination = $destination;
     }
 
-    protected function createRequest(Company $company)
+    public function updateReport()
+    {
+        if($form_id = $this->company->form_id){
+            return $this->updateRequest($form_id);
+        }
+        return $this->createRequest($this->company);
+    }
+
+    protected function createRequest()
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
+        $services = $this->company->services()->withActiveContract()
+            ->get()->transform(function($service){
+                return (object) [
+                    "identifier" => $service->seq_id,
+                    "text" => $service->seq_id." ".$service->name,
+                ];
+        });
         $response =  Guzzle::post(
             "https://www.devicemagic.com/organizations/{$org_id}/forms",
             [
@@ -40,10 +57,8 @@ class Form {
                             "options" => [],
                             "type" => "select",
                             "required_rule" => "always",
-                            "options_resource" => "ab093910-4584-0135-3efa-22000a984cfd",
-                            "options_table" => "ab07eda0-4584-0135-3efa-22000a984cfd",
-                            "options_text_column" => "ab07f080-4584-0135-3efa-22000a984cfd",
-                            "options_identifier_column" => "ab07efd0-4584-0135-3efa-22000a984cfd"
+                            "options" => $services,
+                            "customOptionIdentifiers" => true,
                         ],
                         [
                             "identifier" => "image_1",
@@ -73,24 +88,53 @@ class Form {
                             "extra_large" => true,
                             "camera_only" => true,
                             "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
+                        ],
+                        [
+                            "identifier" => "image_4",
+                            "title" => "Image 4 (Optional Extra Image)",
+                            "type" => "image",
+                            "visible_rule" => "when",
+                            "extra_large" => true,
+                            "camera_only" => true,
+                            "visible_expr" => "AND(AND(NOTBLANK(image_1),NOTBLANK(image_2)),NOTBLANK(image_3))",
+                            "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
+                        ],
+                        [
+                            "identifier" => "image_5",
+                            "title" => "Image 5 (Optional Extra Image)",
+                            "type" => "image",
+                            "visible_rule" => "when",
+                            "extra_large" => true,
+                            "camera_only" => true,
+                            "visible_expr" => "AND(AND(AND(NOTBLANK(image_1),NOTBLANK(image_2)),NOTBLANK(image_3)),NOTBLANK(image_4))",
+                            "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
                         ]
                     ],
                     "title" => "Make Report / Crear Reporte",
-                    "description" => $company->name
+                    "description" => $this->company->name
                 ]
             ]
         );
 
-        $company->form_id = json_decode($response->getBody()->getContents())->id;
-        $company->save();
+        $this->company->form_id = json_decode($response->getBody()->getContents())->id;
+        $this->company->save();
+        $this->destination->add();
 
-        return $this->updateGroup($company);
+        return $this->updateGroup($this->company);
     }
 
-    protected function updateRequest(Company $company, int $form_id)
+    protected function updateRequest(int $form_id)
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
+
+        $services = $this->company->services()->withActiveContract()
+                ->get()->transform(function($service){
+                    return (object) [
+                        "identifier" => $service->seq_id,
+                        "text" => $service->seq_id." ".$service->name,
+                    ];
+        });
         try {
             $response =  Guzzle::put(
                 "https://www.devicemagic.com/organizations/{$org_id}/forms/{$form_id}",
@@ -105,13 +149,10 @@ class Form {
                             [
                                 "identifier" => "service",
                                 "title" => "Select Service / Seleccionar Servicio",
-                                "options" => [],
                                 "type" => "select",
                                 "required_rule" => "always",
-                                "options_resource" => "e098d1e0-4a7a-0135-300f-22000aef951e",
-                                "options_table" => "e0975f40-4a7a-0135-300f-22000aef951e",
-                                "options_text_column" => "e0976400-4a7a-0135-300f-22000aef951e",
-                                "options_identifier_column" => "e09762f0-4a7a-0135-300f-22000aef951e",
+                                "options" => $services,
+                                "customOptionIdentifiers" => true,
                             ],
                             [
                                 "identifier" => "image_1",
@@ -141,39 +182,62 @@ class Form {
                                 "extra_large" => true,
                                 "camera_only" => true,
                                 "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
+                            ],
+                            [
+                                "identifier" => "image_4",
+                                "title" => "Image 4 (Optional Extra Image)",
+                                "type" => "image",
+                                "visible_rule" => "when",
+                                "extra_large" => true,
+                                "camera_only" => true,
+                                "visible_expr" => "AND(AND(NOTBLANK(image_1),NOTBLANK(image_2)),NOTBLANK(image_3))",
+                                "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
+                            ],
+                            [
+                                "identifier" => "image_5",
+                                "title" => "Image 5 (Optional Extra Image)",
+                                "type" => "image",
+                                "visible_rule" => "when",
+                                "extra_large" => true,
+                                "camera_only" => true,
+                                "visible_expr" => "AND(AND(AND(NOTBLANK(image_1),NOTBLANK(image_2)),NOTBLANK(image_3)),NOTBLANK(image_4))",
+                                "hint" => "PICTURES SHOULD BE LANDSCAPE / TOMAR FOTO ACOSTADA"
                             ]
                         ],
                         "title" => "Make Report / Crear Reporte",
-                        "description" => $company->name
+                        "description" => $this->company->name
                     ]
                 ]
             );
         } catch (ClientException $e) {
             if($e->getResponse()->getStatusCode() == 404){
-                $company->form_id = null;
-                $company->save();
+                $this->company->form_id = null;
+                $this->company->save();
                 return response()->json(['message' => 'Cannot update form that don\'t exitst. Please try again'], 404);
             }
         }
-        return $this->updateGroup($company);
+
+        $this->destination->add();
+
+        return $this->updateGroup();
     }
 
-    protected function updateGroup(Company $company)
+    protected function updateGroup()
     {
-        if(!$company->form_id || !$company->group_id){
+        if(!$this->company->form_id || !$this->company->group_id){
             return false;
         }
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
         $response =  Guzzle::post(
-            "https://www.devicemagic.com/organizations/{$org_id}/forms/{$company->form_id}/properties",
+            "https://www.devicemagic.com/organizations/{$org_id}/forms/{$this->company->form_id}/properties",
             [
                 'headers' => [
                     'Authorization' => $auth,
                     'Content-Type' => 'application/json'
                 ],
                 'json' => [
-                    "group" => "PRS-{$company->name}-{$company->id}"
+                    "group" => "PRS-{$this->company->name}-{$this->company->id}"
                 ]
             ]
         );

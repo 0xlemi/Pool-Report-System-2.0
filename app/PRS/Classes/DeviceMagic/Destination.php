@@ -12,32 +12,47 @@ use GuzzleHttp\Exception\ClientException;
 
 class Destination {
 
-    public function view(Company $company)
+    protected $company;
+
+    public function __construct(Company $company)
     {
-        $org_id = config('services.devicemagic.organization_id');
-        $auth = 'Basic '.config('services.devicemagic.token');
-        $response =  Guzzle::get(
-            "https://www.devicemagic.com/api/forms/{$company->form_id}/destinations/2151965.json",
-            [
-                'headers' => [
-                    'Authorization' => $auth,
-                ],
-            ]
-        );
-
-        return json_decode($response->getBody()->getContents());
-
+        $this->company = $company;
     }
 
-    public function create(Company $company)
+    public function add()
     {
-        if((!$company->form_id) || $company->destination_id){
+        if(!$destinationId = $this->company->destination_id){
+            return $this->create();
+        }
+        $org_id = config('services.devicemagic.organization_id');
+        $auth = 'Basic '.config('services.devicemagic.token');
+        try{
+            $response =  Guzzle::get(
+                "https://www.devicemagic.com/api/forms/{$this->company->form_id}/destinations/{$destinationId}.json",
+                [
+                    'headers' => [
+                        'Authorization' => $auth,
+                    ],
+                ]
+            );
+        } catch (ClientException $e){
+            if($e->getResponse()->getStatusCode() == 404){
+                return $this->create();
+            }
+        }
+
+        return response()->json(['message' => 'There is already a destination in this form. You can only have one.'], 404);
+    }
+
+    protected function create()
+    {
+        if(!$this->company->form_id){
             return false;
         }
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
         $response =  Guzzle::post(
-            "https://www.devicemagic.com/api/forms/{$company->form_id}/destinations.json",
+            "https://www.devicemagic.com/api/forms/{$this->company->form_id}/destinations.json",
             [
                 'headers' => [
                     'Authorization' => $auth,
@@ -66,12 +81,11 @@ class Destination {
 
         if($response->getStatusCode() == 201){
             $destinationId = json_decode($response->getBody()->getContents())->destination->id;
-            $company->destination_id = $destinationId;
-            $company->save();
+            $this->company->destination_id = $destinationId;
+            $this->company->save();
         }
 
         return $response;
-
     }
 
 }
