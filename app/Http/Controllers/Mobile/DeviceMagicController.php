@@ -10,6 +10,8 @@ use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\Group;
 use App\PRS\Classes\DeviceMagic\Destination;
 use App\UserRoleCompany;
+use App\Jobs\DeviceMagic\CreateGroup;
+use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use Carbon\Carbon;
 
 class DeviceMagicController extends Controller
@@ -67,14 +69,14 @@ class DeviceMagicController extends Controller
         $company = Logged::company();
         $destination = new Destination($company);
         $form = new Form($company, $destination);
-        // $form = \App::make(Form::class);
-        return (string) $form->updateReport($company);
+        dispatch(new CreateOrUpdateForm($form));
     }
 
-    public function group(Group $group)
+    public function group()
     {
         $company = Logged::company();
-        $group->create($company);
+        $group = new Group($company);
+        dispatch(new CreateGroup($group));
     }
 
 }

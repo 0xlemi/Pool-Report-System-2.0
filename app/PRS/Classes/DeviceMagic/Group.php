@@ -12,23 +12,30 @@ use GuzzleHttp\Exception\ClientException;
 
 class Group {
 
-    public function addDevice(Company $company, string $deviceId)
-    {
-        if($groupId = $this->getId($company)){
+    protected $company;
 
-        }
-        return null;
+    public function __construct(Company $company)
+    {
+        $this->company = $company;
     }
+
+    // public function addDevice(Company $company, string $deviceId)
+    // {
+    //     if($groupId = $this->getId($company)){
+    //
+    //     }
+    //     return null;
+    // }
 
     /**
      * Add Company Group to Device Magic and store the group_id in database
      * @param Company $company
      */
-    public function create(Company $company)
+    public function create()
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
-        $groupName = "PRS-{$company->name}-{$company->id}";
+        $groupName = "PRS-{$this->company->name}-{$this->company->id}";
         $response =  Guzzle::post(
             "https://www.devicemagic.com/organizations/{$org_id}/groups",
             [
@@ -43,15 +50,15 @@ class Group {
         );
 
         if($response->getStatusCode() == 201){
-            $groupId = $this->getId($company);
-            $company->group_id = $groupId;
-            $company->save();
+            $groupId = $this->getId($this->company);
+            $this->company->group_id = $groupId;
+            $this->company->save();
             return true;
         }elseif($response->getStatusCode() == 304){
             // Group with that name already exists
-            $groupId = $this->getId($company);
-            $company->group_id = $groupId;
-            $company->save();
+            $groupId = $this->getId($this->company);
+            $this->company->group_id = $groupId;
+            $this->company->save();
             return true;
         }
 
@@ -63,11 +70,11 @@ class Group {
      * @param  string $groupName
      * @return integer           Group ID
      */
-    protected function getId(Company $company)
+    protected function getId()
     {
         $groups = $this->listResponse();
 
-        $groupName = "PRS-{$company->name}-{$company->id}";
+        $groupName = "PRS-{$this->company->name}-{$this->company->id}";
         $neededGroup = array_filter(
             $groups,
             function ($e) use ($groupName) {

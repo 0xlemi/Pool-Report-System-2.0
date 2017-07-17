@@ -13,8 +13,8 @@ use GuzzleHttp\Exception\ClientException;
 
 class Form {
 
-    public $company;
-    public $destination;
+    protected $company;
+    protected $destination;
 
     public function __construct(Company $company, Destination $destination)
     {
