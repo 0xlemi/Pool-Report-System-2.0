@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\PRS\Classes\Logged;
 use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\Group;
+use App\PRS\Classes\DeviceMagic\Device;
 use App\PRS\Classes\DeviceMagic\Destination;
 use App\UserRoleCompany;
 use App\Jobs\DeviceMagic\CreateGroup;
@@ -62,21 +63,6 @@ class DeviceMagicController extends Controller
             $image4,
             $image5
         ]);
-    }
-
-    public function form()
-    {
-        $company = Logged::company();
-        $destination = new Destination($company);
-        $form = new Form($company, $destination);
-        dispatch(new CreateOrUpdateForm($form));
-    }
-
-    public function group()
-    {
-        $company = Logged::company();
-        $group = new Group($company);
-        dispatch(new CreateGroup($group));
     }
 
 }

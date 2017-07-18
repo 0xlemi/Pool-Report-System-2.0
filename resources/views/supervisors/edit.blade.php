@@ -74,7 +74,7 @@
 								</div>
 							</div>
 
-							<div class="form-group row">
+							<!-- <div class="form-group row">
 								<label class="col-sm-2 form-control-label">Status:</label>
 								<div class="col-sm-10">
 								<input type="checkbox" data-toggle="toggle"
@@ -83,7 +83,7 @@
 										data-size="small" name="paid" {{ ($supervisor->paid) ? 'checked':'' }}>
 								<small class="text-muted">You are only charged for active supervisors.</small>
 								</div>
-							</div>
+							</div> -->
 
 							<div class="form-group row {{($errors->has('about'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">About Supervisor:</label>

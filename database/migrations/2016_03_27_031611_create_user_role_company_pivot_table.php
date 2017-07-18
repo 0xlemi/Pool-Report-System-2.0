@@ -25,7 +25,7 @@ class CreateUserRoleCompanyPivotTable extends Migration
             $table->text('about')->nullable();
 
             // Device Magic
-            $table->string('device_id')->unique()->nullable()->index();
+            $table->integer('device_id')->unique()->nullable()->index();
 
             // SendBird Chat
             $table->uuid('chat_id')->unique();
@@ -36,7 +36,8 @@ class CreateUserRoleCompanyPivotTable extends Migration
 
             $table->boolean('selected')->default(false); // We need to know which urc the user wants to use rigth now
             $table->boolean('accepted')->default(false); // Maybe the user don't what to be a part of this urc
-            $table->boolean('paid')->default(true); // Billable active account
+            // Set this back to true when the custom app is here
+            $table->boolean('paid')->default(false); // Billable active account
 
             $table->timestamps();
 

@@ -206,8 +206,9 @@ class SupervisorsController extends PageController
             'address' => $request->address,
             'about' => $request->about,
         ]));
-        $supervisor->paid = $status;
-        $supervisorSaved = $supervisor->save();
+        // Comented out while im using device magic
+        // $supervisor->paid = $status;
+        // $supervisorSaved = $supervisor->save();
 
         $photo = false;
         if($request->photo){

@@ -217,8 +217,9 @@ class TechniciansController extends PageController
             'address' => $request->address,
             'about' => $request->about,
         ]));
-        $technician->paid = $status;
-        $technician->save();
+        // While im using device magic i don't need this
+        // $technician->paid = $status;
+        // $technician->save();
 
         $photo = false;
         if($request->photo){
