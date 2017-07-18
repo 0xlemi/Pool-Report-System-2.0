@@ -17,24 +17,22 @@ trait ImageTrait{
     /**
      * add a image from form information
      */
-	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null){
-
-        $image = $this->images()->create([
-            'order' => ($order)?: $this->lastOrderNum()+1,
-            'type' => ($type)?: 1,
-        ]);
+	public function addImageFromForm(UploadedFile $file, int $order = null, int $type = null)
+    {
 
         $storageFolder = 'images/'.strtolower($this->modelName());
 
         //generate image names
         $randomName = str_random(50);
 
-        // Set image paths in database
-        $image->big = "{$storageFolder}/bg_{$randomName}.jpg";
-        $image->medium = "{$storageFolder}/md_{$randomName}.jpg";
-        $image->thumbnail = "{$storageFolder}/sm_{$randomName}.jpg";
-        $image->icon = "{$storageFolder}/ic_{$randomName}.jpg";
-        $image->save();
+        $image = $this->images()->create([
+            'order' => ($order)?: $this->lastOrderNum()+1,
+            'type' => ($type)?: 1,
+            'big' => "{$storageFolder}/bg_{$randomName}.jpg",
+            'medium' => "{$storageFolder}/md_{$randomName}.jpg",
+            'thumbnail' => "{$storageFolder}/sm_{$randomName}.jpg",
+            'icon' => "{$storageFolder}/ic_{$randomName}.jpg"
+        ]);
 
         // Stream file directly to S3.
         $tempFilePath = Storage::putFileAs('temp', $file, str_random(50).$file->guessExtension());
@@ -43,6 +41,27 @@ trait ImageTrait{
 
         return $image;
 	}
+
+    public function addImageFromUrl(string $tempFilePath, int $order = null, int $type = null)
+    {
+        $storageFolder = 'images/'.strtolower($this->modelName());
+
+        //generate image names
+        $randomName = str_random(50);
+
+        $image = $this->images()->create([
+            'order' => ($order)?: $this->lastOrderNum()+1,
+            'type' => ($type)?: 1,
+            'big' => "{$storageFolder}/bg_{$randomName}.jpg",
+            'medium' => "{$storageFolder}/md_{$randomName}.jpg",
+            'thumbnail' => "{$storageFolder}/sm_{$randomName}.jpg",
+            'icon' => "{$storageFolder}/ic_{$randomName}.jpg"
+        ]);
+
+        dispatch(new ProcessImage($image, $storageFolder, $randomName, $tempFilePath));
+
+        return $image;
+    }
 
     public function lastOrderNum()
     {
