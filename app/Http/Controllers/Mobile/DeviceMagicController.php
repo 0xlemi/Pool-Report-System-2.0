@@ -10,6 +10,7 @@ use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\Group;
 use App\PRS\Classes\DeviceMagic\Device;
 use App\PRS\Classes\DeviceMagic\Destination;
+use App\PRS\Helpers\ReportHelpers;
 use App\UserRoleCompany;
 use App\Jobs\DeviceMagic\CreateGroup;
 use App\Jobs\DeviceMagic\CreateOrUpdateForm;
@@ -19,7 +20,7 @@ use Carbon\Carbon;
 
 class DeviceMagicController extends Controller
 {
-    public function forms(Request $request)
+    public function forms(Request $request, ReportHelpers $helper)
     {
         $answers = $request->answers;
         $deviceId = $request->metadata['device_id'];
@@ -40,7 +41,7 @@ class DeviceMagicController extends Controller
             return response()->json(['error' => 'Service don\'t exists'], 404);
         }
 
-        $completed = Carbon::parse($answers['image_1']['timestamp'], $company->timezone)->setTimezone('UTC');
+        $completed = Carbon::parse($answers['image_1']['timestamp'], $company->timezone);
 
         $locationArray = explode(", ", $answers['image_1']['geostamp']);
         $location  = (object)[
@@ -48,12 +49,23 @@ class DeviceMagicController extends Controller
             'longitude' => str_replace('long=', '', $locationArray[1]),
         ];
 
+        $onTime = 'onTime';
+        if($service->hasServiceContract()){
+            $onTime = $helper->checkOnTimeValue(
+                // ****** check the timezone for check on time
+                    $completed,
+                    $service->serviceContract->start_time,
+                    $service->serviceContract->end_time,
+                    $company->timezone
+                );
+        }
+
         Report::flushEventListeners();
 
         $report = $service->reports()->create([
             'user_role_company_id' => $person->id,
-            'completed' => $completed,
-            'on_time' => 'onTime',
+            'completed' => $completed->setTimezone('UTC'),
+            'on_time' => $onTime,
             'latitude' => $location->latitude,
             'longitude' => $location->longitude,
         ]);
@@ -62,31 +74,30 @@ class DeviceMagicController extends Controller
         $image2 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_2']['value'])[1]);
         $image3 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_3']['value'])[1]);
         if(array_key_exists('image_4', $answers) && array_key_exists('value', $answers['image_4'])){
-            $image4 = $report->addImageFromUrl($answers['image_4']['value']);
+            $image4 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_4']['value'])[1]);
         }
         if(array_key_exists('image_5', $answers) && array_key_exists('value', $answers['image_5'])){
-            $image5 = $report->addImageFromUrl($answers['image_5']['value']);
+            $image5 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_5']['value'])[1]);
         }
 
-        // $people = $person->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
-        // foreach ($people as $urc){
-        //     $urc->notify(new NewReportNotification($report, $person));
-        // }
-        // foreach ($report->service->userRoleCompanies as $client) {
-        //     $client->notify(new NewReportNotification($report, $person));
-        // }
 
-        // throw new Exception("Just for Testing", 1);
+        $people = $person->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
+        foreach ($people as $urc){
+            $urc->notify(new NewReportNotification($report, $person));
+        }
+        foreach ($report->service->userRoleCompanies as $client) {
+            $client->notify(new NewReportNotification($report, $person));
+        }
 
-        info($report->toArray());
+        return response()->json(['message' => 'Report Created Successfully']);
     }
 
-    public function form()
-    {
-        $company = Logged::company();
-        $destination = new Destination($company);
-        $form = new Form($company, $destination);
-        dispatch(new CreateOrUpdateForm($form));
-    }
+    // public function form()
+    // {
+    //     $company = Logged::company();
+    //     $destination = new Destination($company);
+    //     $form = new Form($company, $destination);
+    //     dispatch(new CreateOrUpdateForm($form));
+    // }
 
 }

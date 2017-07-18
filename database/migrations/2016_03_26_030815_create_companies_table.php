@@ -32,7 +32,7 @@ class CreateCompaniesTable extends Migration
             $table->string('group_id')->unique()->nullable();
 
             // Billing
-                $table->integer('free_objects')->default(2);
+                $table->integer('free_objects')->default(0);
                 // Stripe
                 $table->string('stripe_id')->nullable()->index();
                 $table->string('card_brand')->nullable();
