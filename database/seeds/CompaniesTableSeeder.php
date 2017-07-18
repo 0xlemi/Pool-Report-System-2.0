@@ -42,7 +42,6 @@ class CompaniesTableSeeder extends Seeder
             'email' => 'lem@example.com',
             'password' => bcrypt('password'),
             'verified' => 1,
-			// 'api_token' => 'd8V8NawwkJuxjVz0vcvX4CbljBUsN41mCfHhpDpx0ZOfyU6KfsCKegY154K1',
         ]);
 
         $userRoleCompany1 = factory(UserRoleCompany::class)->create([
@@ -52,6 +51,7 @@ class CompaniesTableSeeder extends Seeder
     		'role_id' => 1,
     		'company_id' => $company1->id,
     		'selected' => true,
+            'paid' => true,
         ]);
         dispatch(new CreateUser($userRoleCompany1));
 
@@ -80,6 +80,7 @@ class CompaniesTableSeeder extends Seeder
     		'role_id' => 1,
     		'company_id' => $company2->id,
     		'selected' => true,
+            'paid' => true,
         ]);
         dispatch(new CreateUser($userRoleCompany2));
 

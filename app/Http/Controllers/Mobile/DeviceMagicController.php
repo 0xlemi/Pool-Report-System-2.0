@@ -26,6 +26,7 @@ class DeviceMagicController extends Controller
         try{
             $person = UserRoleCompany::query()->ofRole('sup', 'tech')->where('device_id', $deviceId)->firstOrFail();
         }catch(ModelNotFoundException $e){
+            logger()->error('UserRoleCompany Not Found. When crating Report by Device Magic.');
             return response()->json(['error' => 'Person don\'t exists'], 404);
         }
 
@@ -35,6 +36,7 @@ class DeviceMagicController extends Controller
         try{
             $service = $company->services()->bySeqId($serviceSeqId);
         }catch(ModelNotFoundException $e){
+            logger()->error('Service Not Found. When crating Report by Device Magic.');
             return response()->json(['error' => 'Service don\'t exists'], 404);
         }
 
@@ -56,9 +58,9 @@ class DeviceMagicController extends Controller
             'longitude' => $location->longitude,
         ]);
 
-        $image1 = $report->addImageFromUrl($answers['image_1']['value']);
-        $image2 = $report->addImageFromUrl($answers['image_2']['value']);
-        $image3 = $report->addImageFromUrl($answers['image_3']['value']);
+        $image1 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_1']['value'])[1]);
+        $image2 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_2']['value'])[1]);
+        $image3 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_3']['value'])[1]);
         if(array_key_exists('image_4', $answers) && array_key_exists('value', $answers['image_4'])){
             $image4 = $report->addImageFromUrl($answers['image_4']['value']);
         }
