@@ -30,7 +30,7 @@
 
         				@role('admin')
 						<div class="form-group row {{($errors->has('completed_at'))? 'form-group-error':''}}">
-							<label class="col-sm-2 form-control-label">Compleated at:</label>
+							<label class="col-sm-2 form-control-label">completed at:</label>
 							<div class="col-sm-10">
 								<div class='input-group date' id="editGenericDatepicker">
 									<input type='text' name='completed_at' class="form-control" id="editGenericDatepickerInput"/>
