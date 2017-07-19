@@ -5,7 +5,10 @@ namespace App\PRS\Observers;
 use App\Service;
 use App\Notifications\NewServiceNotification;
 use App\Jobs\DeleteImagesFromS3;
+use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use App\PRS\Classes\Logged;
+use App\PRS\Classes\DeviceMagic\Form;
+use App\PRS\Classes\DeviceMagic\Destination;
 
 class ServiceObserver
 {
@@ -23,6 +26,18 @@ class ServiceObserver
         foreach ($people as $person){
             $person->notify(new NewServiceNotification($service, $urc));
         }
+        $this->updateDeviceMagicServiceList();
+    }
+
+    /**
+     * Listen to the Service created event.
+     *
+     * @param  Service  $service
+     * @return void
+     */
+    public function updated(Service $service)
+    {
+        $this->updateDeviceMagicServiceList();
     }
 
     /**
@@ -56,5 +71,18 @@ class ServiceObserver
     public function deleted(Service $service)
     {
         dispatch(new DeleteImagesFromS3($service->images));
+        $this->updateDeviceMagicServiceList();
+    }
+
+    /**
+     * Update the service list in the mobile app
+     * @return void
+     */
+    protected function updateDeviceMagicServiceList()
+    {
+        $company = Logged::company();
+        $destination = new Destination($company);
+        $form = new Form($company, $destination);
+        dispatch(new CreateOrUpdateForm($form));
     }
 }

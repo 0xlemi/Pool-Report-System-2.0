@@ -9,6 +9,7 @@ use App\User;
 use App\Image;
 use App\Label;
 use App\Jobs\SendBird\CreateUser;
+use App\PRS\Classes\DeviceMagic\Group;
 
 class CompaniesTableSeeder extends Seeder
 {
@@ -54,6 +55,8 @@ class CompaniesTableSeeder extends Seeder
             'paid' => true,
         ]);
         dispatch(new CreateUser($userRoleCompany1));
+        $group = new Group($company1);
+        $group->create();
 
         $company2 = factory(Company::class)->create([
             'name' => 'Generic Pool Company',
@@ -83,6 +86,8 @@ class CompaniesTableSeeder extends Seeder
             'paid' => true,
         ]);
         dispatch(new CreateUser($userRoleCompany2));
+        $group = new Group($company2);
+        $group->create();
 
 
         // Make Other UserRoleCompany on the same user to test changeURC Functionality

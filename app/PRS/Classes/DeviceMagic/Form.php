@@ -34,7 +34,7 @@ class Form {
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
-        $services = $this->company->services()->withActiveContract()
+        $services = $this->company->services()->withActiveContract()->orderBy('services.seq_id')
             ->get()->transform(function($service){
                 return (object) [
                     "identifier" => $service->seq_id,
@@ -128,7 +128,7 @@ class Form {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
 
-        $services = $this->company->services()->withActiveContract()
+        $services = $this->company->services()->withActiveContract()->orderBy('services.seq_id')
                 ->get()->transform(function($service){
                     return (object) [
                         "identifier" => $service->seq_id,

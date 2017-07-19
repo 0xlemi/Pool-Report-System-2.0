@@ -92,12 +92,5 @@ class DeviceMagicController extends Controller
         return response()->json(['message' => 'Report Created Successfully']);
     }
 
-    // public function form()
-    // {
-    //     $company = Logged::company();
-    //     $destination = new Destination($company);
-    //     $form = new Form($company, $destination);
-    //     dispatch(new CreateOrUpdateForm($form));
-    // }
 
 }

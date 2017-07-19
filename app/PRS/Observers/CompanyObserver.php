@@ -4,11 +4,11 @@ namespace App\PRS\Observers;
 
 use App\Company;
 use DB;
+use App\Jobs\DeviceMagic\CreateGroup;
+use App\PRS\Classes\DeviceMagic\Group;
 
 class CompanyObserver
 {
-
-
 
     /**
      * Listen to the App\Company deleting event.
@@ -46,8 +46,12 @@ class CompanyObserver
         dispatch(new DeleteImagesFromS3($company->images));
     }
 
-        public function created(Company $company)
+    public function created(Company $company)
     {
+        // Greate deviceMagic company group
+        $group = new Group($company);
+        dispatch(new CreateGroup($group));
+
         DB::table('permission_role_company')->insert([
             // Supervisor
             ['role_id' => 3, 'permission_id' => 1, 'company_id' => $company->id],// Show Reports
