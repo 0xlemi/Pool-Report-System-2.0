@@ -66,7 +66,7 @@ class Destination {
                         "binary_transport_selection"=> "binary_s3_transport"
                     ],
                     "http_transport"=> [
-                        "uri"=> env('DEVICE_MAGIC_DESTINATION_URL')
+                        "uri"=> env('DEVICE_MAGIC_DESTINATION_URL').'/report'
                     ],
                     "binary_s3_transport"=> [
                         'access_key_id' => env('DEVICE_MAGIC_DESTINATION_S3_KEY_ID'),

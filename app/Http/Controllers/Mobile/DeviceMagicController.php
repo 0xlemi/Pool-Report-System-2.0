@@ -20,7 +20,7 @@ use Carbon\Carbon;
 
 class DeviceMagicController extends Controller
 {
-    public function forms(Request $request, ReportHelpers $helper)
+    public function report(Request $request, ReportHelpers $helper)
     {
         $answers = $request->answers;
         $deviceId = $request->metadata['device_id'];
