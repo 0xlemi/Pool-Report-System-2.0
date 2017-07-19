@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // Force Http in heroku
-        if(env('APP_ENV') == 'production'){
+        if(env('APP_HTTPS') == 'true'){
             URL::forceScheme('https');
         }
     }
