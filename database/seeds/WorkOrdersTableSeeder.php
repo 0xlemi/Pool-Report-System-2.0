@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class WorkOrdersTableSeeder extends Seeder
 {
 
-    private $amount = 800;
+    private $amount = 400;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)

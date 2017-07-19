@@ -9,7 +9,7 @@ use App\Work;
 class WorksTableSeeder extends Seeder
 {
 
-    private $amount = 2000;
+    private $amount = 1000;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)

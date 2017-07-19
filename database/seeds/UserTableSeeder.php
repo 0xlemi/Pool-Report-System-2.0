@@ -25,7 +25,7 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        $numOfClients = rand(100, 200);
+        $numOfClients = rand(70, 140);
         $numOfSupervisors = rand(10, 20);
         $numOfTechnicians = rand(20, 40);
 
