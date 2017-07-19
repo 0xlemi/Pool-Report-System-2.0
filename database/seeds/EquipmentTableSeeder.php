@@ -10,7 +10,7 @@ use App\Service;
 class EquipmentTableSeeder extends Seeder
 {
 
-    private $amount = 500;
+    private $amount = 300;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)

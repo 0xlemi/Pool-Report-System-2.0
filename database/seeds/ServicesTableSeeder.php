@@ -31,7 +31,7 @@ class ServicesTableSeeder extends Seeder
      */
     public function run()
     {
-        $number_of_services = rand(50, 90);
+        $number_of_services = rand(45, 60);
 
         // Disable observers
         Service::flushEventListeners();

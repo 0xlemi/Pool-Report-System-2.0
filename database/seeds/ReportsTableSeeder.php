@@ -11,7 +11,7 @@ use App\Technician;
 class ReportsTableSeeder extends Seeder
 {
     // number of reports to create
-    private $number_of_reports = 400;
+    private $number_of_reports = 200;
     private $seederHelper;
 
     public function __construct(SeederHelpers $seederHelper)
