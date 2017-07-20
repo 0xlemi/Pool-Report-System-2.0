@@ -16,12 +16,12 @@ class CreateUsersTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('email')->unique()->index();
-            $table->string('password');
+            $table->string('password')->nullable();
             // change this to verified
             $table->boolean('verified')->default(false); // Activated the account via email
 
             $table->string('name');
-            $table->string('last_name');
+            $table->string('last_name')->nullable();
             $table->char('language', 2)->default('en');
 
             // Stripe

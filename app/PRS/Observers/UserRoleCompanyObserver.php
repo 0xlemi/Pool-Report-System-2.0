@@ -46,12 +46,14 @@ class UserRoleCompanyObserver
         dispatch(new CreateUser($userRoleCompany));
 
         // Send Notifications
-        $urc = Logged::user()->selectedUser;
-        $people = $userRoleCompany->company->userRoleCompanies()->ofRole('admin', 'sup')->get();
-        foreach ($people as $person) {
-            // the supervisor creted should not be notified of his own creation
-            if(!($person->id == $userRoleCompany->id)){
-                $person->notify(new NewUserRoleCompanyNotification($userRoleCompany, $urc));
+        if($u = Logged::user()){
+            $urc = $u->selectedUser;
+            $people = $userRoleCompany->company->userRoleCompanies()->ofRole('admin', 'sup')->get();
+            foreach ($people as $person) {
+                // the supervisor creted should not be notified of his own creation
+                if(!($person->id == $userRoleCompany->id)){
+                    $person->notify(new NewUserRoleCompanyNotification($userRoleCompany, $urc));
+                }
             }
         }
     }

@@ -6,6 +6,8 @@ use App\User;
 use Validator;
 use Auth;
 use App\Http\Controllers\Controller;
+use App\UserRoleCompany;
+use App\Company;
 use App\Administrator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -67,16 +69,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $administrator = Administrator::create([
-            'name' => $data['name'],
-            'company_name' => $data['company_name'],
+        $company = Company::create([
+            'name' => $data['company_name'],
             'timezone' => $data['timezone'],
         ]);
-        $user = $administrator->user()->create([
+
+        $user = User::create([
+            'name' => $data['name'],
             'email' => $data['email'],
         ]);
         $user->password = bcrypt($data['password']);
         $user->save();
+
+        $urc = $company->userRoleCompanies()->create([
+            'user_id' => $user->id,
+            'role_id' => 1,
+            'about' => "System Administrator of {$company->name}"
+        ]);
 
         return $user;
     }
