@@ -86,6 +86,8 @@ class RegisterController extends Controller
             'role_id' => 1,
             'about' => "System Administrator of {$company->name}"
         ]);
+        $urc->paid = true;
+        $urc->save();
 
         return $user;
     }
