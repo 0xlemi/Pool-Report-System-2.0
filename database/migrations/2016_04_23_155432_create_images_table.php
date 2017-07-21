@@ -16,10 +16,10 @@ class CreateImagesTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->morphs('imageable');
-            $table->string('big'); // 1200x* image
-            $table->string('medium'); // 600x* image
-            $table->string('thumbnail');   // 250x* image
-            $table->string('icon'); // 64x64 image
+            $table->string('big')->nullable(); // 1200x* image
+            $table->string('medium')->nullable(); // 600x* image
+            $table->string('thumbnail')->nullable();   // 250x* image
+            $table->string('icon')->nullable(); // 64x64 image
             $table->smallInteger('order')->default(1);
             $table->smallInteger('type')->default(1); // main use is in Work orders
             $table->boolean('processing')->default(1);

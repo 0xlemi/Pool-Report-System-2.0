@@ -22,7 +22,7 @@ class CreateServiceContractsTable extends Migration
             $table->char('currency', 3);
             $table->time('start_time');
             $table->time('end_time');
-            $table->text('comments');
+            $table->text('comments')->nullable();
             $table->integer('service_id')->unsigned()->index();
             $table->timestamps();
 

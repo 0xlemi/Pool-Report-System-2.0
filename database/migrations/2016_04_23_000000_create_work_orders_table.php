@@ -16,7 +16,7 @@ class CreateWorkOrdersTable extends Migration
         Schema::create('work_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->dateTime('start');
             $table->dateTime('end')->nullable();
             $table->decimal('price', 16, 2);
