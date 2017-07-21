@@ -86,12 +86,12 @@ class TechniciansController extends PageController
         $company = $this->loggedCompany();
 
         // check if the you can add new users
-        if(!$company->canAddObject()){
-            flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
-                    'info');
-            return redirect()->back()->withInput();
-        }
+        // if(!$company->canAddObject()){
+        //     flash()->overlay("Oops, you need a Pro account.",
+        //             "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
+        //             'info');
+        //     return redirect()->back()->withInput();
+        // }
 
 
         $user = User::where('email', $request->email)->first();
@@ -205,12 +205,12 @@ class TechniciansController extends PageController
         // if he is setting the status to active
         // if is changing the status compared with the one already in database
         // or if admin dosn't pass the checks for subscription and free objects
-        if( ($status && ($status != $technician->paid)) && !$company->canAddObject()){
-            flash()->overlay("Oops, you need a Pro account.",
-                    "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
-                    'info');
-            return redirect()->back()->withInput();
-        }
+        // if( ($status && ($status != $technician->paid)) && !$company->canAddObject()){
+        //     flash()->overlay("Oops, you need a Pro account.",
+        //             "You ran out of your {$company->free_objects} free users, to activate more users subscribe to Pro account.",
+        //             'info');
+        //     return redirect()->back()->withInput();
+        // }
 
         $technician->fill(array_map('htmlentities', [
             'cellphone' => $request->cellphone,

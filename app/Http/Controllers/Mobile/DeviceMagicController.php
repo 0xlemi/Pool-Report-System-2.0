@@ -25,7 +25,7 @@ class DeviceMagicController extends Controller
         $answers = $request->answers;
         $deviceId = $request->metadata['device_id'];
         try{
-            $person = UserRoleCompany::query()->ofRole('sup', 'tech')->where('device_id', $deviceId)->firstOrFail();
+            $person = UserRoleCompany::query()->paid(true)->ofRole('sup', 'tech')->where('device_id', $deviceId)->firstOrFail();
         }catch(ModelNotFoundException $e){
             logger()->error('UserRoleCompany Not Found. When crating Report by Device Magic.');
             return response()->json(['error' => 'Person don\'t exists'], 404);

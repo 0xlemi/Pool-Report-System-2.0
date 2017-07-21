@@ -81,6 +81,11 @@ class UserRoleCompanyObserver
     public function deleted(UserRoleCompany $userRoleCompany)
     {
         dispatch(new DeleteImagesFromS3($userRoleCompany->images));
+        
+        // Update billing variables
+        if($userRoleCompany->isRole('sup', 'tech')){
+            dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
+        }
     }
 
 
