@@ -17,6 +17,7 @@ use App\Image;
 use App\Service;
 use App\Invoice;
 use App\Payment;
+use App\Company;
 use App\WorkOrder;
 use App\Equipment;
 
@@ -28,6 +29,7 @@ use App\PRS\Observers\ReportObserver;
 use App\PRS\Observers\ServiceObserver;
 use App\PRS\Observers\InvoiceObserver;
 use App\PRS\Observers\PaymentObserver;
+use App\PRS\Observers\CompanyObserver;
 use App\PRS\Observers\ContractObserver;
 use App\PRS\Observers\EquipmentObserver;
 use App\PRS\Observers\WorkOrderObserver;
@@ -45,6 +47,7 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Company::observe(CompanyObserver::class);
         ServiceContract::observe(ContractObserver::class);
         Equipment::observe(EquipmentObserver::class);
         Image::observe(ImageObserver::class);

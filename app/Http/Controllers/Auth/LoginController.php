@@ -68,7 +68,7 @@ class LoginController extends Controller
             Auth::logout();
 
             return redirect('/login')
-                ->withError('Your account has been deactivated. Contact your System Administrator to activate your account.');
+                ->withError('Your account has been deactivated (not paid). Contact your System Administrator to activate your account.');
         }
         // verify email
         elseif(!$user->verified){
