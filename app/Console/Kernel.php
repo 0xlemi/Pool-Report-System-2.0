@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\ClearLog;
 use App\Jobs\RecordServiceHistory;
 use App\Jobs\RemoveExpiredUrlSigners;
+use App\Jobs\UpdateSubscriptionQuantity;
 use App\Jobs\GenerateInvoicesForContracts;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,7 +20,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         // Commands\Inspire::class,
         Commands\imageVariousSizes::class,
-        Commands\ClearLog::class
+        Commands\ClearLog::class,
+        Commands\UpdateSubscriptionQuantity::class
     ];
 
     /**
@@ -43,6 +45,13 @@ class Kernel extends ConsoleKernel
         // set the missing services history for yesterday
         $schedule->call(function () {
             dispatch(new RecordServiceHistory());
+        })->daily();
+
+        // Update the stripe tech and sub user quantity for all companies
+        $schedule->call(function () {
+            foreach ($companies as $key => $company) {
+                dispatch(new UpdateSubscriptionQuantity($company));
+            }
         })->daily();
 
     }
