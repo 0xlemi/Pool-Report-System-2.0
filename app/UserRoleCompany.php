@@ -204,7 +204,7 @@ class UserRoleCompany extends Model
 	// this is intended for clients
     public function invoices()
     {
-        
+
     }
 
     // reports he has created

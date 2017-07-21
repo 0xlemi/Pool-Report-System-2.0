@@ -275,6 +275,9 @@ td {
                         </tr>
                       </table>
                       <!-- End Button -->
+
+
+
                       <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
                         <tr>
                           <td height="25" class="em_h20"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
@@ -294,6 +297,22 @@ td {
                           <td height="22" class="em_h20"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
                         </tr>
                       </table>
+
+					   <table align="center" width="100%" border="0" cellspacing="0" cellpadding="0" object="drag-module-small">
+                        <tr>
+                          <td height="25" class="em_h20"><img src="{{ \Storage::url('images/assets/email/spacer.gif') }}" width="1" alt="" height="1" border="0" style="display:block;" class="mCS_img_loaded"></td>
+                        </tr>
+                      </table>
+                      <table width="250" border="0" cellpadding="0" cellspacing="0" align="center" class="full" object="drag-module-small" style="position: relative; left: 0px; top: 0px;">
+                        <tr>
+                          <td align="center" width="100%" valign="middle"><table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="text-align: center; border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;" class="fullCenter">
+                              <tr>
+                                <td width="100%" align="center" style="font-size:11px; color:#161619; font-family:'Lato',Arial, sans-serif; font-weight:400; line-height:15px;"  cu-identify="element_07619713884377379"><span style="font-style: italic;">If the button don't work paste this url in your browser:<br> {!! implode('<br>', str_split(route('auth.activate', $token), 35)) !!}</span></td>
+                              </tr>
+                            </table></td>
+                        </tr>
+                      </table>
+
                       <div style="display: none;" id="element_05303488455111869"></div></p></div>
                       <table width="100" border="0" cellpadding="0" cellspacing="0" align="center" object="drag-module-small">
                         <tr>

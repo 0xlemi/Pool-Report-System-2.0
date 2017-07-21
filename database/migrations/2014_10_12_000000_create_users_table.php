@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('email')->unique()->index();
             $table->string('password')->nullable();
-            // change this to verified
             $table->boolean('verified')->default(false); // Activated the account via email
 
             $table->string('name');
