@@ -23,7 +23,7 @@ class CreateServicesTable extends Migration
             $table->string('state');
             $table->string('postal_code');
             $table->char('country', 2);
-            $table->text('comments');
+            $table->text('comments')->nullable();
             $table->integer('company_id')->unsigned();
             $table->integer('seq_id')->unsigned()->index();
             $table->softDeletes();

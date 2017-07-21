@@ -17,7 +17,7 @@ class CreateRolesTable extends Migration
             $table->engine = 'InnoDB';
             $table->integer('id')->unsigned();
             $table->string('name')->unique();
-            $table->string('route');
+            $table->string('route')->nullable();
             $table->string('icon');
             $table->string('text');
 

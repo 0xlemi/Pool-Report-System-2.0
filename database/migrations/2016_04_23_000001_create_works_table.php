@@ -16,7 +16,7 @@ class CreateWorksTable extends Migration
         Schema::create('works', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->decimal('quantity', 16, 2);
             $table->string('units');
             $table->decimal('cost', 16, 2); // currency is same as work order
