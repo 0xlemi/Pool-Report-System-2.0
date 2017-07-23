@@ -24,6 +24,9 @@ class Form {
 
     public function updateReport()
     {
+        if($this->company->services()->withActiveContract()->count() < 1){
+            throw new Exception("DeviceMagic Form With No Services.");
+        }
         if($form_id = $this->company->form_id){
             return $this->updateRequest($form_id);
         }
