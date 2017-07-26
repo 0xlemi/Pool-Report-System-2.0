@@ -176,20 +176,69 @@ class DataTableController extends PageController
     public function supervisors(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'sup']);
-
-        $this->validate($request, [
-            'status' => 'required|boolean',
+            $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+            'status' => 'boolean',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $userRoleCompanies = $this->loggedCompany()
-                                ->userRoleCompanies()
-                                ->ofRole('sup')
-                                ->paid($request->status)
-                                ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
+        // $status = ($request->status)? true : false;
 
-        return response()->json(
-                    $transformer->transformCollection($userRoleCompanies)
-                );
+        $urcs = Logged::company()->userRoleCompanies();
+
+        $urcs = $urcs->join('users', 'users.id', '=', 'user_role_company.user_id')
+                        ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $urcs = $urcs->where('users.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere('users.last_name', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('users.email', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
+        }
+
+        $urcs = $urcs->ofRole('sup');
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $urcs = $urcs->paid($request->toggle);
+        }else{
+            // Temporary
+            $urcs = $urcs->paid(true);
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $urcs = $urcs->orderBy($sort[0], $sort[1]);
+        }else{
+            $urcs = $urcs->seqIdOrdered();
+        }
+
+        $urcPaginated = $urcs->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($urcPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $urcPaginated->total(),
+                    'per_page' => $urcPaginated->perPage(),
+                    'current_page' => $urcPaginated->currentPage(),
+                    'last_page' => $urcPaginated->lastPage(),
+                    'next_page_url' => $urcPaginated->nextPageUrl(),
+                    'prev_page_url' => $urcPaginated->previousPageUrl(),
+                    'from' => $urcPaginated->firstItem(),
+                    'to' => $urcPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function technicians(Request $request, UserRoleCompanyDatatableTransformer $transformer)

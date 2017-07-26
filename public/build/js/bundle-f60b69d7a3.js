@@ -37732,116 +37732,160 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./BootstrapTable.vue":228,"./alert.vue":238,"./dropzone.vue":257,"./photoList.vue":282,"babel-runtime/helpers/defineProperty":33,"spin":199,"vue":214,"vue-hot-reload-api":211}],263:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n/* Loading Animation: */\n.vuetable-wrapper[_v-1ef8c711] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-1ef8c711] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-1ef8c711]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 
-var _alert = require('./alert.vue');
+var _keys = require('babel-runtime/core-js/object/keys');
 
-var _alert2 = _interopRequireDefault(_alert);
+var _keys2 = _interopRequireDefault(_keys);
 
-var _BootstrapTable = require('./BootstrapTable.vue');
+var _vue = require('vue');
 
-var _BootstrapTable2 = _interopRequireDefault(_BootstrapTable);
+var _vue2 = _interopRequireDefault(_vue);
+
+var _Vuetable = require('vuetable/src/components/Vuetable.vue');
+
+var _Vuetable2 = _interopRequireDefault(_Vuetable);
+
+var _vuetablePaginationBootstrap = require('./vuetablePaginationBootstrap.vue');
+
+var _vuetablePaginationBootstrap2 = _interopRequireDefault(_vuetablePaginationBootstrap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-	props: ['columns', 'button', 'toolbarSwitch', 'clickUrl', 'tableUrl'],
-	components: {
-		alert: _alert2.default,
-		BootstrapTable: _BootstrapTable2.default
-	},
-	data: function data() {
-		return {
-			// alert
-			alertMessage: '',
-			alertActive: false,
+_vue2.default.component('vuetable', _Vuetable2.default);
+_vue2.default.component('vuetable-pagination-bootstrap', _vuetablePaginationBootstrap2.default);
 
-			data: [],
-			tableOptions: {
-				iconsPrefix: 'font-icon',
-				toggle: 'table',
-				sidePagination: 'client',
-				pagination: 'true',
-				classes: 'table',
-				icons: {
-					paginationSwitchDown: 'font-icon-arrow-square-down',
-					paginationSwitchUp: 'font-icon-arrow-square-down up',
-					refresh: 'font-icon-refresh',
-					toggle: 'font-icon-list-square',
-					columns: 'font-icon-list-rotate',
-					export: 'font-icon-download'
-				},
-				paginationPreText: '<i class="font-icon font-icon-arrow-left"></i>',
-				paginationNextText: '<i class="font-icon font-icon-arrow-right"></i>',
-				pageSize: 10,
-				pageList: [5, 10, 20],
-				search: true,
-				showExport: true,
-				exportTypes: ['excel', 'pdf'],
-				minimumCountColumns: 2,
-				showFooter: false,
+exports.default = _vue2.default.extend({
+    props: ['dataUrl', 'actionsUrl', 'columns', 'highlightColumns', 'button', 'toggle'],
+    components: {},
+    data: function data() {
+        return {
+            itemActions: [{ name: 'view-item', label: 'view', icon: 'glyphicon glyphicon-zoom-in', class: 'btn btn-sm btn-primary' }],
 
-				uniqueId: 'id',
-				idField: 'id'
-			}
-		};
-	},
+            moreParams: [],
+            totalParams: {},
+            searchFor: '',
+            loading: false,
+            url: Laravel.url + this.dataUrl
 
-	events: {
-		rowClicked: function rowClicked(id) {
-			window.location = Laravel.url + this.clickUrl + id;
-		}
-	},
-	methods: {
-		getList: function getList(finished) {
-			var _this = this;
+        };
+    },
 
-			var listUrl = Laravel.url + this.tableUrl;
-			if (this.toolbarSwitch) {
-				listUrl = Laravel.url + this.tableUrl + (finished ? 1 : 0);
-			}
-			this.$broadcast('disableTable');
-			this.$http.get(listUrl).then(function (response) {
-				_this.data = response.data;
-				_this.validationErrors = {};
-				_this.$broadcast('refreshTable');
-			}, function (response) {
-				_this.alertMessage = "The information could not be retrieved, please try again.";
-				_this.alertActive = true;
-				_this.$broadcast('enableTable');
-			});
-		},
-		goToCreate: function goToCreate() {
-			window.location = Laravel.url + this.clickUrl + 'create';
-		}
-	},
-	ready: function ready() {
-		if (this.toolbarSwitch) {
-			this.getList(this.toolbarSwitch.checked);
-			this.getList(this.toolbarSwitch.checked);
-		} else {
-			this.getList();
-			this.getList();
-		}
-	}
-};
+    computed: {
+        vuetableWrapper: function vuetableWrapper() {
+            if (this.loading) {
+                return 'vuetable-wrapper loading';
+            }
+            return 'vuetable-wrapper';
+        }
+    },
+    methods: {
+        // search
+        setFilter: function setFilter() {
+            this.totalParams['filter'] = 'filter=' + this.searchFor;
+            this.updateParams();
+            this.$nextTick(function () {
+                this.$broadcast('vuetable:refresh');
+            });
+        },
+        resetFilter: function resetFilter() {
+            this.searchFor = '';
+            this.setFilter();
+        },
+        updateParams: function updateParams() {
+            var totalParams = this.totalParams;
+            var moreParams = (0, _keys2.default)(totalParams).map(function (key) {
+                return totalParams[key];
+            });
+            this.moreParams = moreParams;
+        },
+
+        // Toggle
+        changeToggle: function changeToggle(toggle) {
+            var toggleInt = toggle ? '1' : '0';
+            this.totalParams['toggle'] = 'toggle=' + toggleInt;
+            this.updateParams();
+            this.$nextTick(function () {
+                this.$broadcast('vuetable:refresh');
+            });
+        },
+
+        // Redirect to Create
+        goToCreate: function goToCreate() {
+            window.location.href = Laravel.url + this.actionsUrl + "/create";
+        },
+
+        // highlight
+        preg_quote: function preg_quote(str) {
+            return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+        },
+        highlight: function highlight(needle, haystack) {
+            return haystack.replace(new RegExp('(' + this.preg_quote(needle) + ')', 'ig'), '<mark>$1</mark>');
+        }
+    },
+    events: {
+        'vuetable:loading': function vuetableLoading() {
+            this.loading = true;
+        },
+        'vuetable:loaded': function vuetableLoaded() {
+            this.loading = false;
+        },
+        'vuetable:action': function vuetableAction(action, data) {
+            if (action == 'view-item') {
+                window.location.href = Laravel.url + this.actionsUrl + "/" + data.id;
+            }
+        },
+        'vuetable:cell-dblclicked': function vuetableCellDblclicked(item, field, event) {
+            var self = this;
+            console.log('cell-dblclicked: old value =', item[field.name]);
+            this.$editable(event, function (value) {
+                console.log('$editable callback:', value);
+            });
+        },
+        'vuetable:load-success': function vuetableLoadSuccess(response) {
+            var data = response.data.data;
+            if (this.searchFor !== '') {
+                for (n in data) {
+                    // basicly a foreach
+                    for (index in this.highlightColumns) {
+                        var column = this.highlightColumns[index];
+                        data[n][column] = this.highlight(this.searchFor, data[n][column]);
+                    }
+                }
+            }
+        },
+        'vuetable:load-error': function vuetableLoadError(response) {
+            if (response.status == 400) {
+                sweetAlert('Something\'s Wrong!', response.data.message, 'error');
+            } else {
+                sweetAlert('Oops', E_SERVER_ERROR, 'error');
+            }
+        }
+    }
+});
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"tableOptions\">\n\t    <alert type=\"danger\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n        <button v-if=\"button\" type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t<i :class=\"button.icon\"></i>&nbsp;&nbsp;&nbsp;{{ button.name }}\n\t\t</button>\n\n        <div v-if=\"toolbarSwitch\" class=\"checkbox-toggle\" style=\"display:inline;left:30px;\">\n\t\t\t<input type=\"checkbox\" id=\"toolbarSwitch\" v-model=\"toolbarSwitch.checked\" @click=\"getList(!toolbarSwitch.checked)\">\n\t\t\t<label for=\"toolbarSwitch\">{{ toolbarSwitch.name }}</label>\n\t\t</div>\n    </bootstrap-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"container-fluid\" _v-1ef8c711=\"\">\n\t\t<div class=\"row\" _v-1ef8c711=\"\">\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n\t\t\t\t<div class=\"col-md-12 form-group\" _v-1ef8c711=\"\">\n                \t<button v-if=\"button\" type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<i :class=\"button.icon\" _v-1ef8c711=\"\"></i>&nbsp;&nbsp;&nbsp;{{ button.label }}\n\t\t\t\t\t</button>\n\n\t\t\t\t\t <div v-if=\"toggle\" class=\"checkbox-toggle\" style=\"display:inline;left:30px;\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<input type=\"checkbox\" id=\"toggle\" v-model=\"toggle.checked\" @click=\"changeToggle(!toggle.checked)\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<label for=\"toggle\" _v-1ef8c711=\"\">{{ toggle.label }}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n                <div class=\"col-md-12 input-group pull-right\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-1ef8c711=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-1ef8c711=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t    <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :item-actions=\"itemActions\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-1ef8c711=\"\"></vuetable>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n/* Loading Animation: */\n.vuetable-wrapper[_v-1ef8c711] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-1ef8c711] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-1ef8c711]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-1ef8c711", module.exports)
   } else {
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"vue":214,"vue-hot-reload-api":211}],264:[function(require,module,exports){
+},{"./vuetablePaginationBootstrap.vue":297,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40792,27 +40836,29 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'name',
-                title: 'Name',
-                sortable: true
+                name: 'name',
+                sortField: 'name'
             }, {
-                field: 'email',
-                title: 'Email',
-                sortable: true
+                name: 'email',
+                sortField: 'email'
             }, {
-                field: 'cellphone',
-                title: 'Cellphone',
-                sortable: true
+                name: 'cellphone',
+                sortField: 'cellphone'
+            }, {
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', name: 'New Supervisor' }\" :toolbar-switch=\"{ checked: true, name: 'Active' }\" click-url=\"supervisors/\" table-url=\"datatables/supervisors?status=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/supervisors\" actions-url=\"supervisors\">\n    </index-table>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

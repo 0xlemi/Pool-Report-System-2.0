@@ -2,10 +2,11 @@
 
 	<index-table
         :columns="columns"
-        :button="{ icon: 'font-icon font-icon-eye', name: 'New Supervisor' }"
-        :toolbar-switch="{ checked: true, name: 'Active' }"
-        click-url="supervisors/"
-        table-url="datatables/supervisors?status=">
+        :button="{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }"
+		:toggle="{ checked: true, label: 'Paid'}"
+		:highlight-columns="['name', 'email', 'cellphone']"
+        data-url="datatables/supervisors"
+        actions-url="supervisors">
     </index-table>
 
 </template>
@@ -20,27 +21,30 @@ export default {
     data() {
         return {
             columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'name',
-    		        title: 'Name',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'email',
-    		        title: 'Email',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'cellphone',
-    		        title: 'Cellphone',
-    				sortable: true,
-                }
-		    ],
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
+                },
+                {
+                    name: 'name',
+                    sortField: 'name',
+                },
+				{
+                    name: 'email',
+                    sortField: 'email',
+                },
+				{
+                    name: 'cellphone',
+                    sortField: 'cellphone',
+                },
+				 {
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }
