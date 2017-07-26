@@ -35291,61 +35291,169 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./BootstrapTable.vue":228,"./alert.vue":238,"./modal.vue":270,"./photoList.vue":282,"vue":214,"vue-hot-reload-api":211}],247:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n/* Loading Animation: */\n.vuetable-wrapper[_v-508d771e] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-508d771e] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-508d771e]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n")
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _indexTable = require('./indexTable.vue');
+var _keys = require('babel-runtime/core-js/object/keys');
 
-var _indexTable2 = _interopRequireDefault(_indexTable);
+var _keys2 = _interopRequireDefault(_keys);
+
+var _vue = require('vue');
+
+var _vue2 = _interopRequireDefault(_vue);
+
+var _Vuetable = require('vuetable/src/components/Vuetable.vue');
+
+var _Vuetable2 = _interopRequireDefault(_Vuetable);
+
+var _vuetablePaginationBootstrap = require('./vuetablePaginationBootstrap.vue');
+
+var _vuetablePaginationBootstrap2 = _interopRequireDefault(_vuetablePaginationBootstrap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-    components: {
-        indexTable: _indexTable2.default
-    },
+_vue2.default.component('vuetable', _Vuetable2.default);
+_vue2.default.component('vuetable-pagination-bootstrap', _vuetablePaginationBootstrap2.default);
+
+exports.default = _vue2.default.extend({
+    components: {},
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'name',
-                title: 'Name',
-                sortable: true
+                name: 'name',
+                sortField: 'name'
             }, {
-                field: 'email',
-                title: 'Email',
-                sortable: true
+                name: 'email',
+                sortField: 'email'
             }, {
-                field: 'type',
-                title: 'Type',
-                sortable: true
+                name: 'type',
+                sortField: 'type'
             }, {
-                field: 'cellphone',
-                title: 'Cellphone',
-                sortable: true
-            }]
+                name: 'cellphone',
+                sortField: 'cellphone'
+            }, {
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
+            }],
+            itemActions: [{ name: 'view-item', label: 'view', icon: 'glyphicon glyphicon-zoom-in', class: 'btn btn-sm btn-primary' }],
+
+            moreParams: [],
+            totalParams: {},
+            searchFor: '',
+            loading: false,
+            url: Laravel.url + 'datatables/clients'
+
         };
+    },
+
+    computed: {
+        vuetableWrapper: function vuetableWrapper() {
+            if (this.loading) {
+                return 'vuetable-wrapper loading';
+            }
+            return 'vuetable-wrapper';
+        }
+    },
+    methods: {
+        // search
+        setFilter: function setFilter() {
+            this.totalParams['filter'] = 'filter=' + this.searchFor;
+            this.updateParams();
+            this.$nextTick(function () {
+                this.$broadcast('vuetable:refresh');
+            });
+        },
+        resetFilter: function resetFilter() {
+            this.searchFor = '';
+            this.setFilter();
+        },
+        updateParams: function updateParams() {
+            var totalParams = this.totalParams;
+            var moreParams = (0, _keys2.default)(totalParams).map(function (key) {
+                return totalParams[key];
+            });
+            this.moreParams = moreParams;
+        },
+
+        // Client
+        goToCreate: function goToCreate() {
+            window.location.href = Laravel.url + "clients/create";
+        },
+
+        // highlight
+        preg_quote: function preg_quote(str) {
+            return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
+        },
+        highlight: function highlight(needle, haystack) {
+            return haystack.replace(new RegExp('(' + this.preg_quote(needle) + ')', 'ig'), '<mark>$1</mark>');
+        }
+    },
+    events: {
+        'vuetable:loading': function vuetableLoading() {
+            this.loading = true;
+        },
+        'vuetable:loaded': function vuetableLoaded() {
+            this.loading = false;
+        },
+        'vuetable:action': function vuetableAction(action, data) {
+            if (action == 'view-item') {
+                window.location.href = Laravel.url + "clients/" + data.id;
+            }
+        },
+        'vuetable:cell-dblclicked': function vuetableCellDblclicked(item, field, event) {
+            var self = this;
+            console.log('cell-dblclicked: old value =', item[field.name]);
+            this.$editable(event, function (value) {
+                console.log('$editable callback:', value);
+            });
+        },
+        'vuetable:load-success': function vuetableLoadSuccess(response) {
+            var data = response.data.data;
+            if (this.searchFor !== '') {
+                for (n in data) {
+                    data[n].name = this.highlight(this.searchFor, data[n].name);
+                    data[n].email = this.highlight(this.searchFor, data[n].email);
+                    data[n].cellphone = this.highlight(this.searchFor, data[n].cellphone);
+                }
+            }
+        },
+        'vuetable:load-error': function vuetableLoadError(response) {
+            if (response.status == 400) {
+                sweetAlert('Something\'s Wrong!', response.data.message, 'error');
+            } else {
+                sweetAlert('Oops', E_SERVER_ERROR, 'error');
+            }
+        }
     }
-};
+});
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-user', name: 'New Client' }\" click-url=\"clients/\" table-url=\"datatables/clients\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"container-fluid\" _v-508d771e=\"\">\n\t\t<div class=\"row\" _v-508d771e=\"\">\n\t\t\t<div class=\"col-md-12\" _v-508d771e=\"\">\n\t\t\t\t<br _v-508d771e=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-508d771e=\"\">\n\t\t\t\t<div class=\"col-md-12 form-group\" _v-508d771e=\"\">\n                \t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\" _v-508d771e=\"\">\n\t\t\t\t\t\t<i class=\"glyphicon glyphicon-user\" _v-508d771e=\"\"></i>&nbsp;&nbsp;&nbsp;Create Client\n\t\t\t\t\t</button>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-508d771e=\"\">\n                <div class=\"col-md-12 input-group pull-right\" _v-508d771e=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-508d771e=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-508d771e=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-508d771e=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-508d771e=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-508d771e=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-508d771e=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n\t\t\t<div class=\"col-md-12\" _v-508d771e=\"\">\n\t\t\t\t<br _v-508d771e=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\" _v-508d771e=\"\">\n\t\t\t    <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :item-actions=\"itemActions\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-508d771e=\"\"></vuetable>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n/* Loading Animation: */\n.vuetable-wrapper[_v-508d771e] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-508d771e] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-508d771e]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord("_v-508d771e", module.exports)
   } else {
     hotAPI.update("_v-508d771e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":263,"vue":214,"vue-hot-reload-api":211}],248:[function(require,module,exports){
+},{"./vuetablePaginationBootstrap.vue":297,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],248:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

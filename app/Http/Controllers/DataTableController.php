@@ -17,6 +17,7 @@ use App\PRS\Transformers\FrontEnd\DataTables\SupervisorDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TechnicianDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TodaysRouteDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\UserRoleCompanyDatatableTransformer;
+use App\PRS\Classes\Logged;
 
 use App\Http\Requests;
 use App\UserRoleCompany;
@@ -125,18 +126,51 @@ class DataTableController extends PageController
                 );
     }
 
-    public function clients(UserRoleCompanyDatatableTransformer $transformer)
+    public function clients(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'client']);
 
-        $userRoleCompanies = $this->loggedCompany()
-                                    ->userRoleCompanies()
-                                    ->ofRole('client')
-                                    ->seqIdOrdered()->get();
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+            'filter' => 'string'
+        ]);
 
-        return response()->json(
-                    $transformer->transformCollection($userRoleCompanies)
-                );
+        $limit = ($request->limit)?: 10;
+
+        $urcs = Logged::company()->userRoleCompanies();
+
+        $urcs = $urcs->join('users', 'users.id', '=', 'user_role_company.user_id')
+                        ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $urcs = $urcs->where('users.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere('users.last_name', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('users.email', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
+        }
+
+        $urcPaginated = $urcs->ofRole('client')->seqIdOrdered()->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($urcPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $urcPaginated->total(),
+                    'per_page' => $urcPaginated->perPage(),
+                    'current_page' => $urcPaginated->currentPage(),
+                    'last_page' => $urcPaginated->lastPage(),
+                    'next_page_url' => $urcPaginated->nextPageUrl(),
+                    'prev_page_url' => $urcPaginated->previousPageUrl(),
+                    'from' => $urcPaginated->firstItem(),
+                    'to' => $urcPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function supervisors(Request $request, UserRoleCompanyDatatableTransformer $transformer)
