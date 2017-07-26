@@ -1,5 +1,4 @@
 <template>
-
 	<index-table
         :columns="columns"
         :button="{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }"
@@ -8,7 +7,6 @@
         data-url="datatables/supervisors"
         actions-url="supervisors">
     </index-table>
-
 </template>
 
 <script>

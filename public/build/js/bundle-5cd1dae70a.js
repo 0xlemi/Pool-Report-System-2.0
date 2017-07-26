@@ -35335,8 +35335,7 @@ exports.default = _vue2.default.extend({
                 name: 'email',
                 sortField: 'email'
             }, {
-                name: 'type',
-                sortField: 'type'
+                name: 'type'
             }, {
                 name: 'cellphone',
                 sortField: 'cellphone'
@@ -40858,7 +40857,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/supervisors\" actions-url=\"supervisors\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/supervisors\" actions-url=\"supervisors\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -40889,31 +40888,29 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'name',
-                title: 'Name',
-                sortable: true
+                name: 'name',
+                sortField: 'name'
             }, {
-                field: 'username',
-                title: 'Username',
-                sortable: true
+                name: 'email',
+                sortField: 'email'
             }, {
-                field: 'cellphone',
-                title: 'Cellphone',
-                sortable: true
+                name: 'cellphone',
+                sortField: 'cellphone'
             }, {
-                field: 'supervisor',
-                title: 'Supervisor',
-                sortable: true
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-wrench', name: 'New Technician' }\" :toolbar-switch=\"{ checked: true, name: 'Active' }\" click-url=\"technicians/\" table-url=\"datatables/technicians?status=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-wrench', label: 'New Technician' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/technicians\" actions-url=\"technicians\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

@@ -78,7 +78,6 @@ export default Vue.extend({
                 },
 				{
                     name: 'type',
-                    sortField: 'type',
                 },
 				{
                     name: 'cellphone',
