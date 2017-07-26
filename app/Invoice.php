@@ -54,7 +54,7 @@ class Invoice extends Model
         return $query->whereNull('invoices.closed');
     }
 
-    public function scopePaid()
+    public function scopePaid($query)
     {
         return $query->whereNotNull('invoices.closed');
     }

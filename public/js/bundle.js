@@ -37825,7 +37825,7 @@ exports.default = _vue2.default.extend({
             return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
         },
         highlight: function highlight(needle, haystack) {
-            return haystack.replace(new RegExp('(' + this.preg_quote(needle) + ')', 'ig'), '<mark>$1</mark>');
+            return haystack.toString().replace(new RegExp('(' + this.preg_quote(needle) + ')', 'ig'), '<mark>$1</mark>');
         }
     },
     events: {
@@ -37904,31 +37904,31 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'service',
-                title: 'Service',
-                sortable: true
+                name: 'service'
             }, {
-                field: 'type',
-                title: 'Type',
-                sortable: true
+                name: 'type',
+                sortField: 'invoiceable_type'
             }, {
-                field: 'amount',
-                title: 'Amount',
-                sortable: true
+                name: 'amount',
+                sortField: 'amount'
             }, {
-                field: 'closed',
-                title: 'Closed',
-                sortable: true
+                name: 'closed',
+                sortField: 'closed'
+            }, {
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :toolbar-switch=\"{ checked: false, name: 'Closed' }\" click-url=\"invoices/\" table-url=\"datatables/invoices?closed=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :toggle=\"{ checked: false, label: 'Closed'}\" :highlight-columns=\"['id', 'service', 'amount', 'closed']\" data-url=\"datatables/invoices\" actions-url=\"invoices\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

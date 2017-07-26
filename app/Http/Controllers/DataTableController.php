@@ -192,7 +192,6 @@ class DataTableController extends PageController
         $this->authorize('list', [UserRoleCompany::class, 'sup']);
             $this->validate($request, [
             'limit' => 'integer|between:1,25',
-            'status' => 'boolean',
             'toggle' => 'boolean',
             'filter' => 'string'
         ]);
@@ -262,7 +261,6 @@ class DataTableController extends PageController
         $this->authorize('list', [UserRoleCompany::class, 'tech']);
         $this->validate($request, [
             'limit' => 'integer|between:1,25',
-            'status' => 'boolean',
             'toggle' => 'boolean',
             'filter' => 'string'
         ]);
@@ -330,21 +328,79 @@ class DataTableController extends PageController
     public function invoices(Request $request, InvoiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Invoice::class);
-
         $this->validate($request, [
-            'closed' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $closed = $request->closed;
-        $condition = ($request->closed)? '!=' : '=';
-        $invoices = $this->loggedCompany()
-                        ->invoices()
-                        ->where('closed', $condition , NULL)
-                        ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
 
-        return response()->json(
-                    $transformer->transformCollection($invoices)
-                );
+        $invoices = Invoice::query();
+
+        // $invoices = $invoices->join('users', 'users.id', '=', 'user_role_company.user_id')
+        //                 ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            if(is_numeric($request->filter)){
+                $invoices = $invoices->where('invoices.amount', $request->filter)
+                                    ->orWhere('invoices.seq_id', (int) $request->filter);
+            }else{
+                $escapedInput = str_replace('%', '\\%', $request->filter);
+                $invoices = $invoices->where('invoices.currency', 'ilike', '%'.$escapedInput.'%' );
+                            // ->orWhere('invoices.closed', 'ilike', '%'.$escapedInput.'%');
+                            // ->orWhere('invoices.closed', 'ilike', '%'.$escapedInput.'%');
+                            // ->orWhere('invoices.closed', 'ilike', '%'.$escapedInput.'%');
+            }
+        }
+
+
+        // Only get URC from the company is logged in.
+        $invoices = $invoices->where('invoices.company_id', Logged::company()->id);
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $invoices = $invoices->paid();
+            }else{
+                $invoices = $invoices->unpaid();
+            }
+        }else{
+            // Temporary
+            $invoices = $invoices->unpaid();
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $invoices = $invoices->orderBy($sort[0], $sort[1]);
+        }else{
+            $invoices = $invoices->seqIdOrdered();
+        }
+
+        $invoicesPaginated = $invoices->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($invoicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $invoicesPaginated->total(),
+                    'per_page' => $invoicesPaginated->perPage(),
+                    'current_page' => $invoicesPaginated->currentPage(),
+                    'last_page' => $invoicesPaginated->lastPage(),
+                    'next_page_url' => $invoicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $invoicesPaginated->previousPageUrl(),
+                    'from' => $invoicesPaginated->firstItem(),
+                    'to' => $invoicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
 }

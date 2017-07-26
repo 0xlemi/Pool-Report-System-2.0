@@ -124,7 +124,7 @@ export default Vue.extend({
             return (str+'').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
         },
         highlight(needle, haystack) {
-            return haystack.replace(
+            return haystack.toString().replace(
                 new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
                 '<mark>$1</mark>'
             )
