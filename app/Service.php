@@ -59,10 +59,18 @@ class Service extends Model
         return $query->where('services.seq_id', $seqId)->firstOrFail();
     }
 
+    public function scopeContracts($query)
+    {
+        $serviceContractArray = $query->join('service_contracts', 'services.id', '=', 'service_contracts.service_id')
+                    ->select('service_contracts.id')->get()->pluck('id')->toArray();
+
+        return ServiceContract::whereIn('service_contracts.id', $serviceContractArray);
+    }
+
     public function scopeWorkOrders($query)
     {
         $workOrderIdArray = $query->join('work_orders', 'services.id', '=', 'work_orders.service_id')
-                    ->select('work_orders.id')->get()->toArray();
+                    ->select('work_orders.id')->get()->pluck('id')->toArray();
 
         return WorkOrder::whereIn('work_orders.id', $workOrderIdArray);
     }
@@ -75,9 +83,9 @@ class Service extends Model
         $serviceArray = $query->join('service_contracts', function ($join) {
                 $join->on('services.id', '=', 'service_contracts.service_id')
                      ->where('service_contracts.active', '=', 1);
-            })->select('services.id')->get()->toArray();
+            })->select('services.id')->get()->pluck('id')->toArray();
 
-		return Service::whereIn('id', $serviceArray);
+		return Service::whereIn('services.id', $serviceArray);
     }
 
     /**
@@ -113,7 +121,7 @@ class Service extends Model
 		$serviceArray = array_values($serviceArray);
 		// get Query Builder result with the whereIn
 		// because the find gives you a collection
-		return Service::whereIn('id', $serviceArray);
+		return Service::whereIn('services.id', $serviceArray);
     }
 
     // ******************************

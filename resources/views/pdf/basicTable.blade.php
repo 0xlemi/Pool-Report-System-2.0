@@ -41,6 +41,31 @@
             @endforeach
         </tbody>
     </table>
+    <br>
+    <table class="table table-bordered table-sm">
+        <thead style="display: table-row-group;">
+            <tr>
+                <th></th>
+                @foreach(config('constants.currencies') as $currency)
+                    <th>{{ $currency }}</th>
+                @endforeach
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td scope="row">Total Charged</td>
+                @foreach($totalCharged as $charged)
+                        <td>{{ $charged }}</td>
+                @endforeach
+            </tr>
+            <tr>
+                <td scope="row">Total Paid</td>
+                @foreach($totalPaid as $paid)
+                        <td>{{ $paid }}</td>
+                @endforeach
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>

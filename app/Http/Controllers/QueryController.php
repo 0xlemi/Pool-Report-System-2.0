@@ -48,7 +48,9 @@ class QueryController extends PageController
 
         $data = array_merge(
             [
-                'data' => $services
+                'data' => $services,
+                'total_charged' =>  $this->getTotalChargedServiceContract($request),
+                'total_paid' => $this->getTotalPaidServiceContract($request, $filter)
             ],
             [
                 'paginator' => [
@@ -72,6 +74,26 @@ class QueryController extends PageController
         $data = $this->serviceContractTrasformer($filter->services->get(), $filter->month, $filter->year, $filter->onTime, false);
         $data = $data->toArray();
 
+        $totalCharged = $this->getTotalChargedServiceContract($request);
+        $totalPaid = $this->getTotalPaidServiceContract($request, $filter);
+
+        // add total charged
+        $data = array_merge(
+                    $data,
+                    [['']],
+                    [array_merge(['Total Charged', ''], config('constants.currencies'))],
+                    [array_merge(['', ''], array_values($totalCharged)) ]
+                );
+
+        // add total paid
+        $data = array_merge(
+                    $data,
+                    [['']],
+                    [array_merge(['Total Paid', ''], config('constants.currencies'))],
+                    [array_merge(['', ''], array_values($totalPaid))]
+                );
+
+
         $uuid = Uuid::generate();
         $excel = Excel::create($uuid, function($excel) use ($data){
 
@@ -89,6 +111,8 @@ class QueryController extends PageController
     {
         $filter = $this->serviceContractFilter($request);
         $data = $this->serviceContractTrasformer($filter->services->get(), $filter->month, $filter->year, $filter->onTime);
+        $totalCharged = $this->getTotalChargedServiceContract($request);
+        $totalPaid = $this->getTotalPaidServiceContract($request, $filter);
         $onTimeText = 'all';
         if(!($filter->onTime == null)){
             $onTimeText = 'late';
@@ -118,9 +142,37 @@ class QueryController extends PageController
             'price',
             'payments_month'
         ];
-        // return view('pdf.basicTable', compact('attributes', 'titles', 'data'));
-        $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data', 'contractText'));
+        // return view('pdf.basicTable', compact('attributes', 'titles', 'data', 'contractText', 'totalCharged', 'totalPaid'));
+        $pdf = PDF::loadView('pdf.basicTable', compact('attributes', 'titles', 'data', 'contractText', 'totalCharged', 'totalPaid'));
         return $pdf->inline();
+    }
+
+    protected function getTotalChargedServiceContract(Request $request)
+    {
+        $currencies = config('constants.currencies');
+        $total = [];
+        foreach ($currencies as $currency) {
+            $total[$currency] = $this->serviceContractFilter($request)->services->contracts()
+                                            ->currency($currency)->active(true)->sum('service_contracts.amount');
+        }
+        return $total;
+    }
+
+    protected function getTotalPaidServiceContract(Request $request, $filter)
+    {
+        $currencies = config('constants.currencies');
+        $total = [];
+        foreach ($currencies as $currency) {
+            $tempTotal= $this->serviceContractFilter($request)->services->contracts()->invoices()
+                                            ->unpaid()->onMonth($filter->month, $filter->year)
+                                            ->currency($currency)->payments();
+            if($filter->onTime == null){
+                $total[$currency] = $tempTotal->sum('payments.amount');
+            }else{
+                $total[$currency] = $tempTotal->onTime($filter->onTime)->sum('payments.amount');
+            }
+        }
+        return $total;
     }
 
     protected function serviceContractFilter(Request $request)
