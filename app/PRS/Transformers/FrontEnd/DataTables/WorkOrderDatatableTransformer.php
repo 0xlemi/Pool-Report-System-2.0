@@ -25,12 +25,13 @@ class WorkOrderDatatableTransformer extends Transformer
     {
         return [
             'id' => $workOrder->seq_id,
+            'title' => $workOrder->title,
             'start' => $workOrder->start()
                             ->format('d M Y h:i:s A'),
             'end' =>  (string) $workOrder->end(),
             'price' => $workOrder->price.' <strong>'.$workOrder->currency.'</strong>',
             'service' => $workOrder->service->name,
-            'supervisor' => $workOrder->userRoleCompany->user->fullName,
+            'person' => $workOrder->userRoleCompany->user->fullName,
         ];
     }
 

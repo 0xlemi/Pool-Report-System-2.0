@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Response;
 use Validator;
 use Carbon\Carbon;
+use DB;
 
 use App\PRS\Transformers\FrontEnd\DataTables\ReportDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\ClientDatatableTransformer;
@@ -78,19 +79,89 @@ class DataTableController extends PageController
     public function workOrders(Request $request, WorkOrderDatatableTransformer $transformer)
     {
         $this->authorize('list', WorkOrder::class);
-
         $this->validate($request, [
-            'finished' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $workOrders = $this->loggedCompany()
-                        ->workOrders()
-                        ->finished($request->finished)
-                        ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
 
-        return response()->json(
-                    $transformer->transformCollection($workOrders)
-                );
+        $workOrders = WorkOrder::query();
+
+        $workOrders = $workOrders->join('services', 'services.id', '=', 'work_orders.service_id')
+                        ->select('work_orders.*', 'services.name as service_name', 'services.company_id');
+
+        $workOrders = $workOrders->join('user_role_company', 'user_role_company.id', '=', 'work_orders.user_role_company_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                'user_role_company.user_id as user_id'
+                            );
+
+        $workOrders = $workOrders->join('users', 'users.id', '=', 'user_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                DB::raw('users.name || \' \' || users.last_name as person_name')
+                            );
+
+        if($request->filter){
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $workOrders = $workOrders->where('services.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('work_orders.title', 'ilike', '%'.$escapedInput.'%')
+                            // ->orWhere('work_orders.start', 'ilike', '%'.$escapedInput.'%')
+                            // ->orWhere('work_orders.end', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere(DB::raw('(work_orders.price::text) || \' \' || work_orders.currency'), 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $workOrders = $workOrders->orWhere('work_orders.seq_id', (int) $request->filter);
+            }
+        }
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $workOrders = $workOrders->finished($request->toggle);
+        }else{
+            // Temporary
+            $workOrders = $workOrders->finished(false);
+        }
+
+        // Only get URC from the company is logged in.
+        $workOrders = $workOrders->where('user_role_company.company_id', Logged::company()->id);
+
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $workOrders = $workOrders->orderBy($sort[0], $sort[1]);
+        }else{
+            $workOrders = $workOrders->seqIdOrdered();
+        }
+
+        $workOrdersPaginated = $workOrders->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($workOrdersPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $workOrdersPaginated->total(),
+                    'per_page' => $workOrdersPaginated->perPage(),
+                    'current_page' => $workOrdersPaginated->currentPage(),
+                    'last_page' => $workOrdersPaginated->lastPage(),
+                    'next_page_url' => $workOrdersPaginated->nextPageUrl(),
+                    'prev_page_url' => $workOrdersPaginated->previousPageUrl(),
+                    'from' => $workOrdersPaginated->firstItem(),
+                    'to' => $workOrdersPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function services(Request $request, ServiceDatatableTransformer $transformer)
