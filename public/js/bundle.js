@@ -37768,7 +37768,7 @@ exports.default = _vue2.default.extend({
     }
 });
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"container-fluid\" _v-1ef8c711=\"\">\n\t\t<div class=\"row\" _v-1ef8c711=\"\">\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n\t\t\t\t<div class=\"col-md-12 form-group\" _v-1ef8c711=\"\">\n                \t<button v-if=\"button\" type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<i :class=\"button.icon\" _v-1ef8c711=\"\"></i>&nbsp;&nbsp;&nbsp;{{ button.label }}\n\t\t\t\t\t</button>\n\n\t\t\t\t\t <div v-if=\"toggle\" class=\"checkbox-toggle\" style=\"display:inline;left:30px;\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<input type=\"checkbox\" id=\"toggle\" v-model=\"toggle.checked\" @click=\"changeToggle(!toggle.checked)\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<label for=\"toggle\" _v-1ef8c711=\"\">{{ toggle.label }}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n                <div class=\"col-md-12 input-group pull-right\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-1ef8c711=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-1ef8c711=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t    <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :item-actions=\"itemActions\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-1ef8c711=\"\"></vuetable>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"container-fluid\" _v-1ef8c711=\"\">\n\t\t<div class=\"row\" _v-1ef8c711=\"\">\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n\t\t\t\t<div class=\"col-md-12 form-group\" _v-1ef8c711=\"\">\n                \t<button v-if=\"button\" type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<i :class=\"button.icon\" _v-1ef8c711=\"\"></i>&nbsp;&nbsp;&nbsp;{{ button.label }}\n\t\t\t\t\t</button>\n\n\t\t\t\t\t <div v-if=\"toggle\" class=\"checkbox-toggle\" style=\"display:inline;left:30px;\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<input type=\"checkbox\" id=\"toggle\" v-model=\"toggle.checked\" @click=\"changeToggle(!toggle.checked)\" :disabled=\"loading\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<label for=\"toggle\" _v-1ef8c711=\"\">{{ toggle.label }}</label>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class=\"col-md-6\" _v-1ef8c711=\"\">\n                <div class=\"col-md-12 input-group pull-right\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-addon\" _v-1ef8c711=\"\">\n\t\t\t\t\t\t<span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\" _v-1ef8c711=\"\"></span>\n\t\t\t\t\t</div>\n\t\t\t\t\t<input v-model=\"searchFor\" @keyup.enter=\"setFilter\" type=\"text\" class=\"form-control\" placeholder=\"Search\" :disabled=\"loading\" _v-1ef8c711=\"\">\n\t\t\t\t\t<div class=\"input-group-btn\" _v-1ef8c711=\"\">\n                        <button type=\"button\" class=\"btn btn-primary\" @click=\"setFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Go</button>\n                        <button type=\"button\" class=\"btn btn-default\" @click=\"resetFilter\" :disabled=\"loading\" _v-1ef8c711=\"\">Reset</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n            </div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t\t<br _v-1ef8c711=\"\">\n\t\t\t</div>\n\t\t\t<div class=\"col-md-12\" _v-1ef8c711=\"\">\n\t\t\t    <vuetable v-ref:vuetable=\"\" :api-url=\"url\" pagination-component=\"vuetable-pagination-bootstrap\" pagination-path=\"paginator\" table-wrapper=\"#content\" :fields=\"columns\" :item-actions=\"itemActions\" :append-params=\"moreParams\" table-class=\"table table-bordered table-hover\" ascending-icon=\"glyphicon glyphicon-chevron-up\" descending-icon=\"glyphicon glyphicon-chevron-down\" pagination-class=\"fixed-table-pagination\" pagination-info-class=\"pull-left pagination-detail\" :wrapper-class=\"vuetableWrapper\" _v-1ef8c711=\"\"></vuetable>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -40288,36 +40288,31 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'name',
-                title: 'Name',
-                sortable: true
+                name: 'name',
+                sortField: 'name'
             }, {
-                field: 'address',
-                title: 'Address',
-                sortable: true
+                name: 'address',
+                sortField: 'address_line'
             }, {
-                field: 'serviceDays',
-                title: 'Service Days',
-                sortable: true
+                name: 'service_days',
+                title: 'Service Days'
             }, {
-                field: 'measurements',
-                title: 'Measurements',
-                sortable: true
+                name: 'price'
             }, {
-                field: 'price',
-                title: 'Price',
-                sortable: true,
-                visible: true
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', name: 'New Service' }\" :toolbar-switch=\"{ checked: true, name: 'Active Contract' }\" click-url=\"services/\" table-url=\"datatables/services?status=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', label: 'New Service' }\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address', 'price']\" data-url=\"datatables/services\" actions-url=\"services\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

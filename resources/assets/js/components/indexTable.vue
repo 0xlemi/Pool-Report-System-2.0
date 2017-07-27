@@ -11,7 +11,7 @@
 					</button>
 
 					 <div v-if="toggle" class="checkbox-toggle" style="display:inline;left:30px;" >
-						<input type="checkbox" id="toggle" v-model="toggle.checked" @click="changeToggle(!toggle.checked)">
+						<input type="checkbox" id="toggle" v-model="toggle.checked" @click="changeToggle(!toggle.checked)" :disabled="loading">
 						<label for="toggle">{{ toggle.label }}</label>
 					</div>
 				</div>

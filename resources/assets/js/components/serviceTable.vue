@@ -1,13 +1,12 @@
 <template>
-
 	<index-table
         :columns="columns"
-        :button="{ icon: 'font-icon font-icon-home', name: 'New Service' }"
-        :toolbar-switch="{ checked: true, name: 'Active Contract' }"
-        click-url="services/"
-        table-url="datatables/services?status=">
+        :button="{ icon: 'font-icon font-icon-home', label: 'New Service' }"
+		:toggle="{ checked: true, label: 'Active Contract'}"
+		:highlight-columns="['id', 'name', 'address', 'price']"
+        data-url="datatables/services"
+        actions-url="services">
     </index-table>
-
 </template>
 
 <script>
@@ -19,39 +18,35 @@ export default {
     },
     data() {
         return {
-            columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'name',
-    		        title: 'Name',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'address',
-    		        title: 'Address',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'serviceDays',
-    		        title: 'Service Days',
-    				sortable: true,
+			columns: [
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
                 },
-    			{
-    		        field: 'measurements',
-    		        title: 'Measurements',
-    				sortable: true,
+                {
+                    name: 'name',
+                    sortField: 'name',
                 },
-    			{
-    		        field: 'price',
-    		        title: 'Price',
-    				sortable: true,
-    				visible: true,
-    		    }
-		    ],
+				{
+                    name: 'address',
+                    sortField: 'address_line',
+                },
+				{
+                    name: 'service_days',
+                    title: 'Service Days',
+                },
+				{
+                    name: 'price',
+                    // sortField: 'price',
+                },
+				{
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }

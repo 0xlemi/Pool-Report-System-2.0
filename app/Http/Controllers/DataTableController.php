@@ -96,21 +96,75 @@ class DataTableController extends PageController
     public function services(Request $request, ServiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Service::class);
-
         $this->validate($request, [
-            'status' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $company = $this->loggedCompany();
+        $limit = ($request->limit)?: 10;
 
-        if($request->status){
-            $services = $company->services()->withActiveContract()->get();
-        }else{
-            $services = $company->services()->withoutActiveContract()->get();
+        $services = Service::query();
+
+        // $services = $services->join('users', 'users.id', '=', 'user_role_company.user_id')
+        //                 ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $services = $services->where('services.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
+                            // ->orWhere('price', 'ilike', '%'.$escapedInput.'%')
+            if(is_numeric($request->filter)){
+                $services = $services->orWhere('services.seq_id', (int) $request->filter);
+            }
         }
-        return response()->json(
-                    $transformer->transformCollection($services)
-                );
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $services = $services->withActiveContract();
+            }else{
+                $services = $services->withoutActiveContract();
+            }
+        }else{
+            // Temporary
+            $services = $services->withActiveContract();
+        }
+
+        // Only get URC from the company is logged in.
+        $services = $services->where('services.company_id', Logged::company()->id);
+
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $services = $services->orderBy($sort[0], $sort[1]);
+        }else{
+            $services = $services->seqIdOrdered();
+        }
+
+        $servicesPaginated = $services->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($servicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $servicesPaginated->total(),
+                    'per_page' => $servicesPaginated->perPage(),
+                    'current_page' => $servicesPaginated->currentPage(),
+                    'last_page' => $servicesPaginated->lastPage(),
+                    'next_page_url' => $servicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
+                    'from' => $servicesPaginated->firstItem(),
+                    'to' => $servicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function userRoleCompanies(UserRoleCompanyDatatableTransformer $transformer)
