@@ -3,7 +3,7 @@
         :columns="columns"
         :button="{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }"
 		:toggle="{ checked: true, label: 'Paid'}"
-		:highlight-columns="['name', 'email', 'cellphone']"
+		:highlight-columns="['id', 'name', 'email', 'cellphone']"
         data-url="datatables/supervisors"
         actions-url="supervisors">
     </index-table>

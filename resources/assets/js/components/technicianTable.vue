@@ -3,7 +3,7 @@
         :columns="columns"
         :button="{ icon: 'glyphicon glyphicon-wrench', label: 'New Technician' }"
 		:toggle="{ checked: true, label: 'Paid'}"
-		:highlight-columns="['name', 'email', 'cellphone']"
+		:highlight-columns="['id', 'name', 'email', 'cellphone']"
         data-url="datatables/technicians"
         actions-url="technicians">
     </index-table>

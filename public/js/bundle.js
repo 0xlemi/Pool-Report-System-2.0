@@ -37837,7 +37837,12 @@ exports.default = _vue2.default.extend({
         },
         'vuetable:action': function vuetableAction(action, data) {
             if (action == 'view-item') {
-                window.location.href = Laravel.url + this.actionsUrl + "/" + data.id;
+                var id = data.id;
+                if (id.includes('<mark>')) {
+                    id = id.replace("<mark>", "");
+                    id = id.replace("</mark>", "");
+                }
+                window.location.href = Laravel.url + this.actionsUrl + "/" + id;
             }
         },
         'vuetable:cell-dblclicked': function vuetableCellDblclicked(item, field, event) {
@@ -40857,7 +40862,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/supervisors\" actions-url=\"supervisors\">\n    </index-table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-eye', label: 'New Supervisor' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['id', 'name', 'email', 'cellphone']\" data-url=\"datatables/supervisors\" actions-url=\"supervisors\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -40910,7 +40915,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-wrench', label: 'New Technician' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['name', 'email', 'cellphone']\" data-url=\"datatables/technicians\" actions-url=\"technicians\">\n    </index-table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'glyphicon glyphicon-wrench', label: 'New Technician' }\" :toggle=\"{ checked: true, label: 'Paid'}\" :highlight-columns=\"['id', 'name', 'email', 'cellphone']\" data-url=\"datatables/technicians\" actions-url=\"technicians\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

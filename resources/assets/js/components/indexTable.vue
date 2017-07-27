@@ -139,7 +139,12 @@ export default Vue.extend({
         },
         'vuetable:action': function(action, data) {
             if (action == 'view-item') {
-				window.location.href = Laravel.url+this.actionsUrl+"/"+data.id;
+				let id = data.id;
+				if(id.includes('<mark>')){
+					id = id.replace("<mark>", "");
+					id = id.replace("</mark>", "");
+				}
+				window.location.href = Laravel.url+this.actionsUrl+"/"+id;
             }
         },
         'vuetable:cell-dblclicked': function(item, field, event) {
