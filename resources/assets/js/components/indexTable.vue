@@ -139,7 +139,7 @@ export default Vue.extend({
         },
         'vuetable:action': function(action, data) {
             if (action == 'view-item') {
-				let id = data.id;
+				let id = data.id.toString();
 				if(id.includes('<mark>')){
 					id = id.replace("<mark>", "");
 					id = id.replace("</mark>", "");
