@@ -7,7 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Administrator;
+use App\Company;
 use Carbon\Carbon;
 
 class RecordServiceHistory implements ShouldQueue
@@ -21,16 +21,16 @@ class RecordServiceHistory implements ShouldQueue
      */
     public function handle()
     {
-        $admins = Administrator::all();
+        $companies = Company::all();
 
-        foreach ($admins as $admin) {
-            $yesterday = Carbon::today($admin->timezone)->subDays(1);
+        foreach ($companies as $company) {
+            $yesterday = Carbon::today($company->timezone)->subDays(1);
 
-            $servicesMissing = $admin->servicesDoIn($yesterday);
-            $numServicesMissing = $admin->numberServicesMissing($yesterday);
-            $numServicesDone = $admin->numberServicesDoIn($yesterday) - $numServicesMissing;
+            $servicesMissing = $company->servicesDoIn($yesterday);
+            $numServicesMissing = $company->numberServicesMissing($yesterday);
+            $numServicesDone = $company->numberServicesDoIn($yesterday) - $numServicesMissing;
 
-            $missingHistory = $admin->missingHistories()->create([
+            $missingHistory = $company->missingHistories()->create([
                 'date' => $yesterday,
                 'num_services_missing' => $numServicesMissing,
                 'num_services_done' => $numServicesDone

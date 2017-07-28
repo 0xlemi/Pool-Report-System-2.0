@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Service;
+use App\Invoice;
 
 use App\PRS\Helpers\ServiceHelpers;
 use App\PRS\ValueObjects\Service\EndTime;
@@ -42,6 +43,28 @@ class ServiceContract extends Model
     protected $appends = [
 		'price'
     ];
+
+
+    //************** SCOPES *********************
+
+    public function scopeActive($query, bool $active)
+    {
+        return $query->where('service_contracts.active', $active);
+    }
+
+    public function scopeCurrency($query, $currency)
+    {
+        return $query->where('service_contracts.currency', $currency);
+    }
+
+    public function scopeInvoices($query)
+    {
+        $invoicesIdArray = $query->join('invoices', function ($join) {
+                $join->on('service_contracts.id', '=', 'invoices.invoiceable_id')
+                     ->where('invoices.invoiceable_type', '=', 'App\ServiceContract');
+            })->select('invoices.id')->get()->pluck('id')->toArray();
+        return Invoice::whereIn('invoices.id', $invoicesIdArray);
+    }
 
     //************** ATTRIBUTES *************
     public function getPriceAttribute()

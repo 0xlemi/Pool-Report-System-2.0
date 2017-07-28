@@ -1,12 +1,11 @@
 <template>
-
 	<index-table
         :columns="columns"
-        :button="{ icon: 'font-icon font-icon-user', name: 'New Client' }"
-        click-url="clients/"
-        table-url="datatables/clients">
+        :button="{ icon: 'glyphicon glyphicon-user', label: 'New Client' }"
+		:highlight-columns="['id', 'name', 'email', 'cellphone']"
+        data-url="datatables/clients"
+        actions-url="clients">
     </index-table>
-
 </template>
 
 <script>
@@ -19,32 +18,34 @@ export default {
     data() {
         return {
             columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'name',
-    		        title: 'Name',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'email',
-    		        title: 'Email',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'type',
-    		        title: 'Type',
-    				sortable: true,
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
                 },
-    			{
-    		        field: 'cellphone',
-    		        title: 'Cellphone',
-    				sortable: true,
+                {
+                    name: 'name',
+                    sortField: 'name',
                 },
-		    ],
+				{
+                    name: 'email',
+                    sortField: 'email',
+                },
+				{
+                    name: 'type',
+                    sortField: 'type',
+                },
+				{
+                    name: 'cellphone',
+                    sortField: 'cellphone',
+                },
+				 {
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }

@@ -1,13 +1,12 @@
 <template>
-
 	<index-table
         :columns="columns"
-        :button="{ icon: 'glyphicon glyphicon-wrench', name: 'New Technician' }"
-        :toolbar-switch="{ checked: true, name: 'Active' }"
-        click-url="technicians/"
-        table-url="datatables/technicians?status=">
+        :button="{ icon: 'glyphicon glyphicon-wrench', label: 'New Technician' }"
+		:toggle="{ checked: true, label: 'Paid'}"
+		:highlight-columns="['id', 'name', 'email', 'cellphone']"
+        data-url="datatables/technicians"
+        actions-url="technicians">
     </index-table>
-
 </template>
 
 <script>
@@ -20,32 +19,30 @@ export default {
     data() {
         return {
             columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'name',
-    		        title: 'Name',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'username',
-    		        title: 'Username',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'cellphone',
-    		        title: 'Cellphone',
-    				sortable: true,
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
                 },
                 {
-    		        field: 'supervisor',
-    		        title: 'Supervisor',
-    				sortable: true,
-                }
-		    ],
+                    name: 'name',
+                    sortField: 'name',
+                },
+				{
+                    name: 'email',
+                    sortField: 'email',
+                },
+				{
+                    name: 'cellphone',
+                    sortField: 'cellphone',
+                },
+				{
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }

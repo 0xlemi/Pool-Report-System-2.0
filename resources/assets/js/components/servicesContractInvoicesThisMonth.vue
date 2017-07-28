@@ -80,6 +80,38 @@
                     table-wrapper=".vuetable-wrapper"
                 ></vuetable>
             </div>
+            <div class="col-md-10 col-md-offset-2">
+                <div class="form-group pull-right">
+                    <div class="col-md-6">
+    					<div class="input-group">
+    						<div class="input-group-addon">Total Charged </div>
+    						<input type="text" class="form-control" :value="totalCharged[totalChargedSelected]" readonly>
+                            <div class="input-group-btn dropup">
+    							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" :class="{'disabled' : loading}" aria-haspopup="true" aria-expanded="false">
+    								{{ totalChargedSelected }}
+    							</button>
+    							<div class="dropdown-menu dropdown-menu-right">
+            						<button v-for="(index, charged) in totalCharged" class="dropdown-item" @click="changeChargedSelected(index)">{{ index }}</button>
+        						</div>
+    						</div>
+    					</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+    						<div class="input-group-addon">Total Paid </div>
+    						<input type="text" class="form-control" :value="totalPaid[totalPaidSelected]" readonly>
+                            <div class="input-group-btn dropup">
+    							<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" :class="{'disabled' : loading}" aria-haspopup="true" aria-expanded="false">
+    								{{ totalPaidSelected }}
+    							</button>
+    							<div class="dropdown-menu dropdown-menu-right">
+            						<button v-for="(index, paid) in totalPaid" class="dropdown-item" @click="changePaidSelected(index)">{{ index }}</button>
+        						</div>
+    						</div>
+    					</div>
+				    </div>
+				</div>
+            </div>
         </div>
         <span slot="buttonsBefore">
             <a :href="pdfUrl" slot="buttonsBefore" class="btn btn-danger pull-left" :class="{'disabled' : loading}" target="_blank">
@@ -218,6 +250,10 @@ export default Vue.extend({
             // ],
             moreParams: [],
             totalParams: {},
+            totalCharged: {},
+            totalPaid: {},
+            totalChargedSelected: 'USD',
+            totalPaidSelected: 'USD',
             activeOption: 'All',
             onTimeOption: 'All',
             currentMonth: Number(moment().format("MM"))-1,
@@ -314,6 +350,13 @@ export default Vue.extend({
                 '<mark>$1</mark>'
             )
         },
+        // Total
+        changeChargedSelected(charged){
+            this.totalChargedSelected = charged;
+        },
+        changePaidSelected(paid){
+            this.totalPaidSelected = paid;
+        }
     },
     events: {
         'vuetable:loading': function(){
@@ -342,6 +385,8 @@ export default Vue.extend({
         },
         'vuetable:load-success': function(response) {
             var data = response.data.data
+            this.totalCharged = response.data.total_charged;
+            this.totalPaid = response.data.total_paid;
             if (this.searchFor !== '') {
                 for (n in data) {
                     data[n].name = this.highlight(this.searchFor, data[n].name)

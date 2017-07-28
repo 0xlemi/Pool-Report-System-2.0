@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Response;
 use Validator;
 use Carbon\Carbon;
+use DB;
 
 use App\PRS\Transformers\FrontEnd\DataTables\ReportDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\ClientDatatableTransformer;
@@ -17,6 +18,7 @@ use App\PRS\Transformers\FrontEnd\DataTables\SupervisorDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TechnicianDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\TodaysRouteDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\UserRoleCompanyDatatableTransformer;
+use App\PRS\Classes\Logged;
 
 use App\Http\Requests;
 use App\UserRoleCompany;
@@ -77,39 +79,182 @@ class DataTableController extends PageController
     public function workOrders(Request $request, WorkOrderDatatableTransformer $transformer)
     {
         $this->authorize('list', WorkOrder::class);
-
         $this->validate($request, [
-            'finished' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $workOrders = $this->loggedCompany()
-                        ->workOrders()
-                        ->finished($request->finished)
-                        ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
 
-        return response()->json(
-                    $transformer->transformCollection($workOrders)
-                );
+        $company = Logged::company();
+
+        $workOrders = WorkOrder::query();
+
+        $workOrders = $workOrders->join('services', 'services.id', '=', 'work_orders.service_id')
+                        ->select('work_orders.*', 'services.name as service_name', 'services.company_id');
+
+        $workOrders = $workOrders->join('user_role_company', 'user_role_company.id', '=', 'work_orders.user_role_company_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                'user_role_company.user_id as user_id'
+                            );
+
+        $workOrders = $workOrders->join('users', 'users.id', '=', 'user_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                DB::raw('users.name || \' \' || users.last_name as person_name')
+                            );
+
+        if($request->filter){
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $workOrders = $workOrders->where('services.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('work_orders.title', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere( // Convert the time to string and to the admin timezone
+                                    DB::raw(
+                                        'to_char(
+                                            CONVERT_TZ(work_orders.start,\'UTC\',\''.$company->timezone.'\'),
+                                            \'DD Mon YYYY HH12:MI:SS PM\')'
+                                    ),
+                                    'ilike',
+                                    '%'.$escapedInput.'%')
+                            ->orWhere( // Convert the time to string and to the admin timezone
+                                    DB::raw(
+                                        'to_char(
+                                            CONVERT_TZ(work_orders.end,\'UTC\',\''.$company->timezone.'\'),
+                                            \'DD Mon YYYY HH12:MI:SS PM\')'
+                                    ),
+                                    'ilike',
+                                    '%'.$escapedInput.'%')
+                            ->orWhere(DB::raw('(work_orders.price::text) || \' \' || work_orders.currency'), 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $workOrders = $workOrders->orWhere('work_orders.seq_id', (int) $request->filter);
+            }
+        }
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $workOrders = $workOrders->finished($request->toggle);
+        }else{
+            // Temporary
+            $workOrders = $workOrders->finished(false);
+        }
+
+        // Only get URC from the company is logged in.
+        $workOrders = $workOrders->where('user_role_company.company_id', $company->id);
+
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $workOrders = $workOrders->orderBy($sort[0], $sort[1]);
+        }else{
+            $workOrders = $workOrders->seqIdOrdered();
+        }
+
+        $workOrdersPaginated = $workOrders->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($workOrdersPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $workOrdersPaginated->total(),
+                    'per_page' => $workOrdersPaginated->perPage(),
+                    'current_page' => $workOrdersPaginated->currentPage(),
+                    'last_page' => $workOrdersPaginated->lastPage(),
+                    'next_page_url' => $workOrdersPaginated->nextPageUrl(),
+                    'prev_page_url' => $workOrdersPaginated->previousPageUrl(),
+                    'from' => $workOrdersPaginated->firstItem(),
+                    'to' => $workOrdersPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function services(Request $request, ServiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Service::class);
-
         $this->validate($request, [
-            'status' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $company = $this->loggedCompany();
+        $limit = ($request->limit)?: 10;
 
-        if($request->status){
-            $services = $company->services()->withActiveContract()->get();
-        }else{
-            $services = $company->services()->withoutActiveContract()->get();
+        $services = Service::query();
+
+        // $services = $services->join('service_contracts', 'services.id', '=', 'service_contracts.service_id')
+        //                 ->select(
+        //                         'services.*',
+        //                         DB::raw('service_contracts.amount || \' \' || service_contracts.currency as contract_price')
+        //                     );
+
+        // Missing search by price
+        if($request->filter){
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $services = $services->where('services.name', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
+                            // ->orWhere('price', 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $services = $services->orWhere('services.seq_id', (int) $request->filter);
+            }
         }
-        return response()->json(
-                    $transformer->transformCollection($services)
-                );
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $services = $services->withActiveContract();
+            }else{
+                $services = $services->withoutActiveContract();
+            }
+        }else{
+            // Temporary
+            $services = $services->withActiveContract();
+        }
+
+        // Only get URC from the company is logged in.
+        $services = $services->where('services.company_id', Logged::company()->id);
+
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $services = $services->orderBy($sort[0], $sort[1]);
+        }else{
+            $services = $services->seqIdOrdered();
+        }
+
+        $servicesPaginated = $services->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($servicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $servicesPaginated->total(),
+                    'per_page' => $servicesPaginated->perPage(),
+                    'current_page' => $servicesPaginated->currentPage(),
+                    'last_page' => $servicesPaginated->lastPage(),
+                    'next_page_url' => $servicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
+                    'from' => $servicesPaginated->firstItem(),
+                    'to' => $servicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function userRoleCompanies(UserRoleCompanyDatatableTransformer $transformer)
@@ -125,76 +270,305 @@ class DataTableController extends PageController
                 );
     }
 
-    public function clients(UserRoleCompanyDatatableTransformer $transformer)
+    public function clients(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'client']);
 
-        $userRoleCompanies = $this->loggedCompany()
-                                    ->userRoleCompanies()
-                                    ->ofRole('client')
-                                    ->seqIdOrdered()->get();
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+            'filter' => 'string'
+        ]);
 
-        return response()->json(
-                    $transformer->transformCollection($userRoleCompanies)
-                );
+        $limit = ($request->limit)?: 10;
+
+        $urcs = UserRoleCompany::query();
+
+        $urcs = $urcs->join('users', 'users.id', '=', 'user_role_company.user_id')
+                        ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
+            }
+        }
+
+        $urcs = $urcs->ofRole('client');
+
+        // Only get URC from the company is logged in.
+        $urcs = $urcs->where('user_role_company.company_id', Logged::company()->id);
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $urcs = $urcs->orderBy($sort[0], $sort[1]);
+        }else{
+            $urcs = $urcs->seqIdOrdered();
+        }
+
+        $urcPaginated = $urcs->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($urcPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $urcPaginated->total(),
+                    'per_page' => $urcPaginated->perPage(),
+                    'current_page' => $urcPaginated->currentPage(),
+                    'last_page' => $urcPaginated->lastPage(),
+                    'next_page_url' => $urcPaginated->nextPageUrl(),
+                    'prev_page_url' => $urcPaginated->previousPageUrl(),
+                    'from' => $urcPaginated->firstItem(),
+                    'to' => $urcPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function supervisors(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'sup']);
-
-        $this->validate($request, [
-            'status' => 'required|boolean',
+            $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $userRoleCompanies = $this->loggedCompany()
-                                ->userRoleCompanies()
-                                ->ofRole('sup')
-                                ->paid($request->status)
-                                ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
 
-        return response()->json(
-                    $transformer->transformCollection($userRoleCompanies)
-                );
+        $urcs = UserRoleCompany::query();
+
+        $urcs = $urcs->join('users', 'users.id', '=', 'user_role_company.user_id')
+                        ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
+            }
+        }
+
+        $urcs = $urcs->ofRole('sup');
+
+        // Only get URC from the company is logged in.
+        $urcs = $urcs->where('user_role_company.company_id', Logged::company()->id);
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $urcs = $urcs->paid($request->toggle);
+        }else{
+            // Temporary
+            $urcs = $urcs->paid(true);
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $urcs = $urcs->orderBy($sort[0], $sort[1]);
+        }else{
+            $urcs = $urcs->seqIdOrdered();
+        }
+
+        $urcPaginated = $urcs->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($urcPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $urcPaginated->total(),
+                    'per_page' => $urcPaginated->perPage(),
+                    'current_page' => $urcPaginated->currentPage(),
+                    'last_page' => $urcPaginated->lastPage(),
+                    'next_page_url' => $urcPaginated->nextPageUrl(),
+                    'prev_page_url' => $urcPaginated->previousPageUrl(),
+                    'from' => $urcPaginated->firstItem(),
+                    'to' => $urcPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function technicians(Request $request, UserRoleCompanyDatatableTransformer $transformer)
     {
         $this->authorize('list', [UserRoleCompany::class, 'tech']);
-
         $this->validate($request, [
-            'status' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $userRoleCompanies = $this->loggedCompany()
-                                ->userRoleCompanies()
-                                ->ofRole('tech')
-                                ->paid($request->status)
-                                ->seqIdOrdered()->get();
+        $limit = ($request->limit)?: 10;
 
-        return response()->json(
-                    $transformer->transformCollection($userRoleCompanies)
-                );
+        $urcs = UserRoleCompany::query();
+
+        $urcs = $urcs->join('users', 'users.id', '=', 'user_role_company.user_id')
+                        ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+
+        if($request->filter){
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
+            if(is_numeric($request->filter)){
+                $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
+            }
+        }
+
+        $urcs = $urcs->ofRole('tech');
+
+        // Only get URC from the company is logged in.
+        $urcs = $urcs->where('user_role_company.company_id', Logged::company()->id);
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $urcs = $urcs->paid($request->toggle);
+        }else{
+            // Temporary
+            $urcs = $urcs->paid(true);
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $urcs = $urcs->orderBy($sort[0], $sort[1]);
+        }else{
+            $urcs = $urcs->seqIdOrdered();
+        }
+
+        $urcPaginated = $urcs->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($urcPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $urcPaginated->total(),
+                    'per_page' => $urcPaginated->perPage(),
+                    'current_page' => $urcPaginated->currentPage(),
+                    'last_page' => $urcPaginated->lastPage(),
+                    'next_page_url' => $urcPaginated->nextPageUrl(),
+                    'prev_page_url' => $urcPaginated->previousPageUrl(),
+                    'from' => $urcPaginated->firstItem(),
+                    'to' => $urcPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function invoices(Request $request, InvoiceDatatableTransformer $transformer)
     {
         $this->authorize('list', Invoice::class);
-
         $this->validate($request, [
-            'closed' => 'required|boolean',
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $closed = $request->closed;
-        $condition = ($request->closed)? '!=' : '=';
-        $invoices = $this->loggedCompany()
-                        ->invoices()
-                        ->where('closed', $condition , NULL)
-                        ->seqIdOrdered()->get();
+        $company = Logged::company();
 
-        return response()->json(
-                    $transformer->transformCollection($invoices)
-                );
+        $limit = ($request->limit)?: 10;
+
+        $invoices = Invoice::query();
+
+        // $invoicesContracts = Invoice::query()->join('service_contracts', function ($join) {
+        //                 $join->on('service_contracts.id', '=', 'invoices.invoiceable_id')
+        //                      ->where('invoices.invoiceable_type', '=', 'App\ServiceContract');
+        //             })->select('invoices.*', 'service_contracts.service_id');
+        //
+        // $invoices = Invoice::query()->join('work_orders', function ($join) {
+        //                 $join->on('work_orders.id', '=', 'invoices.invoiceable_id')
+        //                      ->where('invoices.invoiceable_type', '=', 'App\WorkOrder');
+        //             })->select('invoices.*', 'work_orders.service_id')->union($invoicesContracts);
+
+
+        // dd($invoices->get()->toArray());
+
+        // Im missing filtering by Service Name
+        if($request->filter){
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $invoices = $invoices->where('invoices.invoiceable_type', 'ilike', '%'.$escapedInput.'%')
+                                ->orWhere(
+                                    DB::raw('(invoices.amount::text) || \' \' || invoices.currency'),
+                                    'ilike',
+                                    '%'.$escapedInput.'%'
+                                )->orWhere( // Need to convert the time to string and to the admin timezone
+                                        DB::raw(
+                                            'to_char(
+                                                CONVERT_TZ(invoices.closed,\'UTC\',\''.$company->timezone.'\'),
+                                                \'DD Mon YYYY HH12:MI:SS PM\')'
+                                        ),
+                                        'ilike',
+                                        '%'.$escapedInput.'%'
+                                    );
+            if(is_numeric($request->filter)){
+                $invoices = $invoices->orWhere('invoices.seq_id', (int) $request->filter);
+            }
+        }
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $invoices = $invoices->paid();
+            }else{
+                $invoices = $invoices->unpaid();
+            }
+        }else{
+            // Temporary
+            $invoices = $invoices->unpaid();
+        }
+
+        // Only get URC from the company is logged in.
+        $invoices = $invoices->where('invoices.company_id', $company->id);
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $invoices = $invoices->orderBy($sort[0], $sort[1]);
+        }else{
+            $invoices = $invoices->seqIdOrdered();
+        }
+
+        // dd($invoices->get());
+        $invoicesPaginated = $invoices->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($invoicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $invoicesPaginated->total(),
+                    'per_page' => $invoicesPaginated->perPage(),
+                    'current_page' => $invoicesPaginated->currentPage(),
+                    'last_page' => $invoicesPaginated->lastPage(),
+                    'next_page_url' => $invoicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $invoicesPaginated->previousPageUrl(),
+                    'from' => $invoicesPaginated->firstItem(),
+                    'to' => $invoicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
 }

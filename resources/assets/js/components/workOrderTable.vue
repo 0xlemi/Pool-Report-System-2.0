@@ -1,13 +1,12 @@
 <template>
-
 	<index-table
         :columns="columns"
-        :button="{ icon: 'glyphicon glyphicon-briefcase', name: 'New Work Order' }"
-        :toolbar-switch="{ checked: false, name: 'Finished' }"
-        click-url="workorders/"
-        table-url="datatables/workorders?finished=">
+        :button="{ icon: 'glyphicon glyphicon-briefcase', label: 'New Work Order' }"
+		:toggle="{ checked: false, label: 'Finished'}"
+		:highlight-columns="['id', 'title', 'service', 'person', 'start', 'end', 'price']"
+        data-url="datatables/workorders"
+        actions-url="workorders">
     </index-table>
-
 </template>
 
 <script>
@@ -19,39 +18,43 @@ export default {
     },
     data() {
         return {
-            columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'service',
-    		        title: 'Service',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'supervisor',
-    		        title: 'Supervisor',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'start',
-    		        title: 'Start at',
-    				sortable: true,
+			columns: [
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
                 },
-    			{
-    		        field: 'end',
-    		        title: 'End at',
-    				sortable: true,
+				{
+                    name: 'title',
+                    sortField: 'title',
                 },
-    			{
-    		        field: 'price',
-    		        title: 'Price',
-    				sortable: true,
-    				visible: true,
-    		    }
-		    ],
+                {
+                    name: 'service',
+                    sortField: 'service_name',
+                },
+				{
+                    name: 'person',
+                    sortField: 'person_name',
+                },
+				{
+                    name: 'start',
+                    sortField: 'start',
+                },
+				{
+                    name: 'end',
+                    sortField: 'end',
+                },
+				{
+                    name: 'price',
+                    sortField: 'price',
+                },
+				{
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }

@@ -39,7 +39,7 @@ class Invoice extends Model
     public function scopePayments($query)
     {
         $paymentsIdArray = $query->join('payments', 'invoices.id', '=', 'payments.invoice_id')
-                    ->select('payments.id')->get()->toArray();
+                    ->select('payments.id')->get()->pluck('id')->toArray();
 
         return Payment::whereIn('payments.id', $paymentsIdArray);
     }
@@ -54,7 +54,7 @@ class Invoice extends Model
         return $query->whereNull('invoices.closed');
     }
 
-    public function scopePaid()
+    public function scopePaid($query)
     {
         return $query->whereNotNull('invoices.closed');
     }

@@ -1,12 +1,11 @@
 <template>
-
 	<index-table
         :columns="columns"
-        :toolbar-switch="{ checked: false, name: 'Closed' }"
-        click-url="invoices/"
-        table-url="datatables/invoices?closed=">
+		:toggle="{ checked: false, label: 'Closed'}"
+		:highlight-columns="['id', 'service', 'amount', 'closed']"
+        data-url="datatables/invoices"
+        actions-url="invoices">
     </index-table>
-
 </template>
 
 <script>
@@ -18,33 +17,35 @@ export default {
     },
     data() {
         return {
-            columns: [
-    		    {
-    		        field: 'id',
-    		        title: '#',
-    				sortable: true,
-    		    },
-    		    {
-    		        field: 'service',
-    		        title: 'Service',
-    				sortable: true,
-    		    },
-    			{
-    		        field: 'type',
-    		        title: 'Type',
-    				sortable: true,
-    			},
-    			{
-    		        field: 'amount',
-    		        title: 'Amount',
-    				sortable: true,
+			columns: [
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
                 },
-    			{
-    		        field: 'closed',
-    		        title: 'Closed',
-    				sortable: true,
-                }
-		    ],
+                {
+                    name: 'service',
+                    // sortField: 'service',
+                },
+				{
+                    name: 'type',
+                    sortField: 'invoiceable_type',
+                },
+				{
+                    name: 'amount',
+                    sortField: 'amount',
+                },
+				{
+                    name: 'closed',
+                    sortField: 'closed',
+                },
+				{
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
         }
     }
 }
