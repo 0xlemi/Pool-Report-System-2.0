@@ -37731,7 +37731,7 @@ exports.default = _vue2.default.extend({
         },
         'vuetable:action': function vuetableAction(action, data) {
             if (action == 'view-item') {
-                var id = data.id;
+                var id = data.id.toString();
                 if (id.includes('<mark>')) {
                     id = id.replace("<mark>", "");
                     id = id.replace("</mark>", "");
@@ -40301,7 +40301,8 @@ exports.default = {
                 name: 'service_days',
                 title: 'Service Days'
             }, {
-                name: 'price'
+                name: 'price',
+                sortField: 'price'
             }, {
                 name: '__actions',
                 title: '',
