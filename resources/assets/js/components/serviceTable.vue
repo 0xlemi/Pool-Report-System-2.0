@@ -38,7 +38,7 @@ export default {
                 },
 				{
                     name: 'price',
-                    // sortField: 'price',
+                    sortField: 'price',
                 },
 				{
 			        name: '__actions',

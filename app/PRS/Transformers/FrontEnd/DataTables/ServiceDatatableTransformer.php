@@ -28,7 +28,7 @@ class ServiceDatatableTransformer extends Transformer
             'id' => $service->seq_id,
             'name' => $service->name,
             'address' => $service->address_line,
-            'serviceDays' => $serviceDays,
+            'service_days' => $serviceDays,
             'price' => $price,
         ];
     }

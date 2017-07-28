@@ -87,6 +87,8 @@ class DataTableController extends PageController
 
         $limit = ($request->limit)?: 10;
 
+        $company = Logged::company();
+
         $workOrders = WorkOrder::query();
 
         $workOrders = $workOrders->join('services', 'services.id', '=', 'work_orders.service_id')
@@ -113,8 +115,22 @@ class DataTableController extends PageController
             $workOrders = $workOrders->where('services.name', 'ilike', '%'.$escapedInput.'%' )
                             ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
                             ->orWhere('work_orders.title', 'ilike', '%'.$escapedInput.'%')
-                            // ->orWhere('work_orders.start', 'ilike', '%'.$escapedInput.'%')
-                            // ->orWhere('work_orders.end', 'ilike', '%'.$escapedInput.'%')
+                            ->orWhere( // Convert the time to string and to the admin timezone
+                                    DB::raw(
+                                        'to_char(
+                                            CONVERT_TZ(work_orders.start,\'UTC\',\''.$company->timezone.'\'),
+                                            \'DD Mon YYYY HH12:MI:SS PM\')'
+                                    ),
+                                    'ilike',
+                                    '%'.$escapedInput.'%')
+                            ->orWhere( // Convert the time to string and to the admin timezone
+                                    DB::raw(
+                                        'to_char(
+                                            CONVERT_TZ(work_orders.end,\'UTC\',\''.$company->timezone.'\'),
+                                            \'DD Mon YYYY HH12:MI:SS PM\')'
+                                    ),
+                                    'ilike',
+                                    '%'.$escapedInput.'%')
                             ->orWhere(DB::raw('(work_orders.price::text) || \' \' || work_orders.currency'), 'ilike', '%'.$escapedInput.'%');
             if(is_numeric($request->filter)){
                 $workOrders = $workOrders->orWhere('work_orders.seq_id', (int) $request->filter);
@@ -130,7 +146,7 @@ class DataTableController extends PageController
         }
 
         // Only get URC from the company is logged in.
-        $workOrders = $workOrders->where('user_role_company.company_id', Logged::company()->id);
+        $workOrders = $workOrders->where('user_role_company.company_id', $company->id);
 
 
         // Sort needs validation of some kind
@@ -177,15 +193,18 @@ class DataTableController extends PageController
 
         $services = Service::query();
 
-        // $services = $services->join('users', 'users.id', '=', 'user_role_company.user_id')
-        //                 ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+        // $services = $services->join('service_contracts', 'services.id', '=', 'service_contracts.service_id')
+        //                 ->select(
+        //                         'services.*',
+        //                         DB::raw('service_contracts.amount || \' \' || service_contracts.currency as contract_price')
+        //                     );
 
+        // Missing search by price
         if($request->filter){
-            // Searching for Full Name, Email and Cellphone
             $escapedInput = str_replace('%', '\\%', $request->filter);
             $services = $services->where('services.name', 'ilike', '%'.$escapedInput.'%' )
                             ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
-                            // ->orWhere('price', 'ilike', '%'.$escapedInput.'%')
+                            // ->orWhere('price', 'ilike', '%'.$escapedInput.'%');
             if(is_numeric($request->filter)){
                 $services = $services->orWhere('services.seq_id', (int) $request->filter);
             }
@@ -270,9 +289,8 @@ class DataTableController extends PageController
         if($request->filter){
             // Searching for Full Name, Email and Cellphone
             $escapedInput = str_replace('%', '\\%', $request->filter);
-            $urcs = $urcs->where('users.name', 'ilike', '%'.$escapedInput.'%' )
-                            ->orWhere('users.last_name', 'ilike', '%'.$escapedInput.'%')
-                            ->orWhere('users.email', 'ilike', '%'.$escapedInput.'%')
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
                             ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
             if(is_numeric($request->filter)){
                 $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
@@ -334,9 +352,8 @@ class DataTableController extends PageController
         if($request->filter){
             // Searching for Full Name, Email and Cellphone
             $escapedInput = str_replace('%', '\\%', $request->filter);
-            $urcs = $urcs->where('users.name', 'ilike', '%'.$escapedInput.'%' )
-                            ->orWhere('users.last_name', 'ilike', '%'.$escapedInput.'%')
-                            ->orWhere('users.email', 'ilike', '%'.$escapedInput.'%')
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
                             ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
             if(is_numeric($request->filter)){
                 $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
@@ -405,9 +422,8 @@ class DataTableController extends PageController
 
         if($request->filter){
             $escapedInput = str_replace('%', '\\%', $request->filter);
-            $urcs = $urcs->where('users.name', 'ilike', '%'.$escapedInput.'%' )
-                            ->orWhere('users.last_name', 'ilike', '%'.$escapedInput.'%')
-                            ->orWhere('users.email', 'ilike', '%'.$escapedInput.'%')
+            $urcs = $urcs->where('users.email', 'ilike', '%'.$escapedInput.'%' )
+                            ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
                             ->orWhere('cellphone', 'ilike', '%'.$escapedInput.'%');
             if(is_numeric($request->filter)){
                 $urcs = $urcs->orWhere('user_role_company.seq_id', (int) $request->filter);
@@ -467,35 +483,46 @@ class DataTableController extends PageController
             'filter' => 'string'
         ]);
 
+        $company = Logged::company();
+
         $limit = ($request->limit)?: 10;
 
         $invoices = Invoice::query();
 
-        // $invoices = $invoices->join('service_contracts', function ($join) {
+        // $invoicesContracts = Invoice::query()->join('service_contracts', function ($join) {
         //                 $join->on('service_contracts.id', '=', 'invoices.invoiceable_id')
         //                      ->where('invoices.invoiceable_type', '=', 'App\ServiceContract');
-        //             })->select('invoices.id')->get()->pluck('id')->toArray();
-        //                 // ->select('user_role_company.*', 'users.email', 'users.name', 'users.last_name');
+        //             })->select('invoices.*', 'service_contracts.service_id');
         //
+        // $invoices = Invoice::query()->join('work_orders', function ($join) {
+        //                 $join->on('work_orders.id', '=', 'invoices.invoiceable_id')
+        //                      ->where('invoices.invoiceable_type', '=', 'App\WorkOrder');
+        //             })->select('invoices.*', 'work_orders.service_id')->union($invoicesContracts);
+
+
         // dd($invoices->get()->toArray());
 
+        // Im missing filtering by Service Name
         if($request->filter){
-            // Searching for Full Name, Email and Cellphone
+            $escapedInput = str_replace('%', '\\%', $request->filter);
+            $invoices = $invoices->where('invoices.invoiceable_type', 'ilike', '%'.$escapedInput.'%')
+                                ->orWhere(
+                                    DB::raw('(invoices.amount::text) || \' \' || invoices.currency'),
+                                    'ilike',
+                                    '%'.$escapedInput.'%'
+                                )->orWhere( // Need to convert the time to string and to the admin timezone
+                                        DB::raw(
+                                            'to_char(
+                                                CONVERT_TZ(invoices.closed,\'UTC\',\''.$company->timezone.'\'),
+                                                \'DD Mon YYYY HH12:MI:SS PM\')'
+                                        ),
+                                        'ilike',
+                                        '%'.$escapedInput.'%'
+                                    );
             if(is_numeric($request->filter)){
-                $invoices = $invoices->where('invoices.amount', $request->filter)
-                                    ->orWhere('invoices.seq_id', (int) $request->filter);
-            }else{
-                $escapedInput = str_replace('%', '\\%', $request->filter);
-                $invoices = $invoices->where('invoices.currency', 'ilike', '%'.$escapedInput.'%' )
-                            ->orWhere('invoices.invoiceable_type', 'ilike', '%'.$escapedInput.'%');
-                            // ->orWhere('to_char(invoices.closed, \'DD Mon YYYY HH:MI:SS AM\')', 'ilike', '%'.$escapedInput.'%');
-                            // ->orWhere('invoices.closed', 'ilike', '%'.$escapedInput.'%');
+                $invoices = $invoices->orWhere('invoices.seq_id', (int) $request->filter);
             }
         }
-
-
-        // Only get URC from the company is logged in.
-        $invoices = $invoices->where('invoices.company_id', Logged::company()->id);
 
         // Check if it has been paid
         if($request->has('toggle')){
@@ -509,6 +536,9 @@ class DataTableController extends PageController
             $invoices = $invoices->unpaid();
         }
 
+        // Only get URC from the company is logged in.
+        $invoices = $invoices->where('invoices.company_id', $company->id);
+
         // Sort needs validation of some kind
         // Order the table by different columns
         if($request->has('sort')){
@@ -518,6 +548,7 @@ class DataTableController extends PageController
             $invoices = $invoices->seqIdOrdered();
         }
 
+        // dd($invoices->get());
         $invoicesPaginated = $invoices->paginate($limit);
 
         $data = array_merge(
