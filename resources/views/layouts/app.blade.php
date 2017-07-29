@@ -46,12 +46,7 @@
     </script>
     <script src="{{ url('js/plugins.js') }}"></script>
     <script src="{{ elixir('js/bundle.js') }}"></script>
-
-	<script>
-	  window.intercomSettings = {
-	    app_id: "zcndm75f"
-	  };
-	</script>
+	
 	<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="707ac46e-5a21-41ee-b22e-c1666477c8c0";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 
     @include('layouts.footer')
