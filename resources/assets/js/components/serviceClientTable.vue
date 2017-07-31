@@ -1,7 +1,6 @@
 <template>
 	<index-table
         :columns="columns"
-        :button="{ icon: 'font-icon font-icon-home', label: 'New Service' }"
 		:toggle="{ checked: true, label: 'Active Contract'}"
 		:highlight-columns="['id', 'name', 'address']"
         data-url="service/table"

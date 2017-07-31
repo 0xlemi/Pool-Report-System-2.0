@@ -12,6 +12,7 @@ use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Helpers\TechnicianHelpers;
 use App\PRS\Classes\Logged;
+use App\WorkOrder;
 use App\Service;
 use Carbon\Carbon;
 
@@ -74,7 +75,7 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.workorder.index');
     }
 
-    public function workOrderTable(Request $request, WorkOrderDatatableTransformer $workOrderTransformer)
+    public function workOrderTable(Request $request, WorkOrderDatatableTransformer $transformer)
     {
         $client = $request->user()->selectedUser;
         if(!$client->isRole('client')){
@@ -82,14 +83,105 @@ class ClientInterfaceController extends PageController
         }
 
         $this->validate($request, [
-            'finished' => 'required|boolean'
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
-        $workOrders = $client->clientWorkOrders()
-                            ->finished($request->finished)
-                            ->seqIdOrdered('desc')->get();
+        $limit = ($request->limit)?: 10;
 
-        return response($workOrderTransformer->transformCollection($workOrders));
+        $company = Logged::company();
+
+        $workOrders = $client->clientWorkOrders();
+
+        $workOrders = $workOrders->join('services', 'services.id', '=', 'work_orders.service_id')
+                        ->select('work_orders.*', 'services.name as service_name', 'services.company_id');
+
+        $workOrders = $workOrders->join('user_role_company', 'user_role_company.id', '=', 'work_orders.user_role_company_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                'user_role_company.user_id as user_id'
+                            );
+
+        $workOrders = $workOrders->join('users', 'users.id', '=', 'user_id')
+                        ->select(
+                                'work_orders.*',
+                                'services.name as service_name',
+                                'services.company_id',
+                                DB::raw('users.name || \' \' || users.last_name as person_name')
+                            );
+
+        if($filter = $request->filter){
+            $timezone = $company->timezone;
+            $workOrders = $workOrders->where(function ($query) use ($filter, $timezone) {
+                $escapedInput = str_replace('%', '\\%', $filter);
+                $query->where('services.name', 'ilike', '%'.$escapedInput.'%' )
+                        ->orWhere(DB::raw('users.name || \' \' || users.last_name'), 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere('work_orders.title', 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere( // Convert the time to string and to the admin timezone
+                                DB::raw(
+                                    'to_char(
+                                        CONVERT_TZ(work_orders.start,\'UTC\',\''.$timezone.'\'),
+                                        \'DD Mon YYYY HH12:MI:SS PM\')'
+                                ),
+                                'ilike',
+                                '%'.$escapedInput.'%')
+                        ->orWhere( // Convert the time to string and to the admin timezone
+                                DB::raw(
+                                    'to_char(
+                                        CONVERT_TZ(work_orders.end,\'UTC\',\''.$timezone.'\'),
+                                        \'DD Mon YYYY HH12:MI:SS PM\')'
+                                ),
+                                'ilike',
+                                '%'.$escapedInput.'%')
+                        ->orWhere(DB::raw('(work_orders.price::text) || \' \' || work_orders.currency'), 'ilike', '%'.$escapedInput.'%');
+                        // ->orWhere('services.seq_id', (int) $filter);
+                    if(is_numeric($filter)){
+                        $query->orWhere('work_orders.seq_id', (int) $filter);
+                    }
+            });
+
+        }
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            $workOrders = $workOrders->finished($request->toggle);
+        }else{
+            // Temporary
+            $workOrders = $workOrders->finished(false);
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $workOrders = $workOrders->orderBy($sort[0], $sort[1]);
+        }else{
+            $workOrders = $workOrders->seqIdOrdered();
+        }
+
+        $workOrdersPaginated = $workOrders->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($workOrdersPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $workOrdersPaginated->total(),
+                    'per_page' => $workOrdersPaginated->perPage(),
+                    'current_page' => $workOrdersPaginated->currentPage(),
+                    'last_page' => $workOrdersPaginated->lastPage(),
+                    'next_page_url' => $workOrdersPaginated->nextPageUrl(),
+                    'prev_page_url' => $workOrdersPaginated->previousPageUrl(),
+                    'from' => $workOrdersPaginated->firstItem(),
+                    'to' => $workOrdersPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
     public function workOrderShow(Request $request,

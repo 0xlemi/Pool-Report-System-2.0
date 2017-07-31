@@ -40253,7 +40253,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', label: 'New Service' }\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address']\" data-url=\"service/table\" actions-url=\"service\">\n    </index-table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address']\" data-url=\"service/table\" actions-url=\"service\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -41065,36 +41065,38 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'service',
-                title: 'Service',
-                sortable: true
+                name: 'title',
+                sortField: 'title'
             }, {
-                field: 'supervisor',
-                title: 'Supervisor',
-                sortable: true
+                name: 'service',
+                sortField: 'service_name'
             }, {
-                field: 'start',
-                title: 'Start at',
-                sortable: true
+                name: 'person',
+                sortField: 'person_name'
             }, {
-                field: 'end',
-                title: 'End at',
-                sortable: true
+                name: 'start',
+                sortField: 'start'
             }, {
-                field: 'price',
-                title: 'Price',
-                sortable: true,
-                visible: true
+                name: 'end',
+                sortField: 'end'
+            }, {
+                name: 'price',
+                sortField: 'price'
+            }, {
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :toolbar-switch=\"{ checked: false, name: 'Finished' }\" click-url=\"workorder/\" table-url=\"workorder/table?finished=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :toggle=\"{ checked: false, label: 'Finished'}\" :highlight-columns=\"['id', 'title', 'service', 'person', 'start', 'end', 'price']\" data-url=\"workorder/table\" actions-url=\"workorder\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

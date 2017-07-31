@@ -296,7 +296,7 @@ class UserRoleCompany extends Model
 				->join('work_orders', 'services.id', '=', 'work_orders.service_id')
 				->select('work_orders.id')->get()->pluck('id')->toArray();
 
-		return WorkOrder::whereIn('id', $workOrdersIdArray);
+		return WorkOrder::whereIn('work_orders.id', $workOrdersIdArray);
 	}
 
     //
