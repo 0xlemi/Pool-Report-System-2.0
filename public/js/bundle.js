@@ -40228,36 +40228,32 @@ exports.default = {
     data: function data() {
         return {
             columns: [{
-                field: 'id',
-                title: '#',
-                sortable: true
+                name: 'id',
+                sortField: 'seq_id',
+                title: '#'
             }, {
-                field: 'name',
-                title: 'Name',
-                sortable: true
+                name: 'name',
+                sortField: 'name'
             }, {
-                field: 'address',
-                title: 'Address',
-                sortable: true
+                name: 'address',
+                sortField: 'address_line'
             }, {
-                field: 'serviceDays',
-                title: 'Service Days',
-                sortable: true
+                name: 'service_days',
+                title: 'Service Days'
             }, {
-                field: 'measurements',
-                title: 'Measurements',
-                sortable: true
+                name: 'price',
+                sortField: 'price'
             }, {
-                field: 'price',
-                title: 'Price',
-                sortable: true,
-                visible: true
+                name: '__actions',
+                title: '',
+                titleClass: 'text-center',
+                dataClass: 'text-center'
             }]
         };
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<index-table :columns=\"columns\" :toolbar-switch=\"{ checked: true, name: 'Active Contract' }\" click-url=\"service/\" table-url=\"service/table?contract=\">\n    </index-table>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', label: 'New Service' }\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address']\" data-url=\"service/table\" actions-url=\"service\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -40313,7 +40309,7 @@ exports.default = {
     }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', label: 'New Service' }\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address', 'price']\" data-url=\"datatables/services\" actions-url=\"services\">\n    </index-table>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<index-table :columns=\"columns\" :button=\"{ icon: 'font-icon font-icon-home', label: 'New Service' }\" :toggle=\"{ checked: true, label: 'Active Contract'}\" :highlight-columns=\"['id', 'name', 'address']\" data-url=\"datatables/services\" actions-url=\"services\">\n    </index-table>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

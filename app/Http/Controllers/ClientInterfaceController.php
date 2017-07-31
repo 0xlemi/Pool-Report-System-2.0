@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use JavaScript;
+use DB;
 use App\PRS\Transformers\FrontEnd\ReportFrontTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\ServiceDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\InvoiceDatatableTransformer;
 use App\PRS\Transformers\FrontEnd\DataTables\WorkOrderDatatableTransformer;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Helpers\TechnicianHelpers;
+use App\PRS\Classes\Logged;
+use App\Service;
 use Carbon\Carbon;
 
 class ClientInterfaceController extends PageController
@@ -113,7 +116,7 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.service.index');
     }
 
-    public function serviceTable(Request $request, ServiceDatatableTransformer $serviceTransformer)
+    public function serviceTable(Request $request, ServiceDatatableTransformer $transformer)
     {
         $client = $request->user()->selectedUser;
         if(!$client->isRole('client')){
@@ -121,17 +124,84 @@ class ClientInterfaceController extends PageController
         }
 
         $this->validate($request, [
-            'contract' => 'required|boolean'
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
         ]);
 
+        $limit = ($request->limit)?: 10;
 
-        if($request->contract){
-            $services = $client->services()->withActiveContract()->seqIdOrdered()->get();
-        }else{
-            $services = $client->services()->withoutActiveContract()->seqIdOrdered()->get();
+        $services = Service::query();
+
+        $services = $services->join('urc_service', 'services.id', '=', 'urc_service.service_id')
+                        ->select(
+                                'services.*',
+                                'urc_service.urc_id as client_id'
+                            );
+
+        // Missing search by price
+        if($filter = $request->filter){
+            $escapedInput = str_replace('%', '\\%', $filter);
+            if(is_numeric($filter)){
+                $services  = $services->where(function ($query) use ($filter, $escapedInput) {
+                    $query->where('services.name', 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere('services.seq_id', (int) $filter);
+                });
+            }else{
+                $services = $services->where(function ($query) use ($escapedInput) {
+                    $query->where('services.name', 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
+                });
+            }
+
         }
 
-        return response($serviceTransformer->transformCollection($services));
+        // Only get URC from the company is logged in.
+        $services = $services->where('urc_service.urc_id', $client->id);
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $services = $services->withActiveContract();
+            }else{
+                $services = $services->withoutActiveContract();
+            }
+        }else{
+            // Temporary
+            $services = $services->withActiveContract();
+        }
+
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $services = $services->orderBy($sort[0], $sort[1]);
+        }else{
+            $services = $services->seqIdOrdered();
+        }
+
+        $servicesPaginated = $services->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($servicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $servicesPaginated->total(),
+                    'per_page' => $servicesPaginated->perPage(),
+                    'current_page' => $servicesPaginated->currentPage(),
+                    'last_page' => $servicesPaginated->lastPage(),
+                    'next_page_url' => $servicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $servicesPaginated->previousPageUrl(),
+                    'from' => $servicesPaginated->firstItem(),
+                    'to' => $servicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
 
     }
 

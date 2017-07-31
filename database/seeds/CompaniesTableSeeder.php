@@ -52,8 +52,9 @@ class CompaniesTableSeeder extends Seeder
     		'role_id' => 1,
     		'company_id' => $company1->id,
     		'selected' => true,
-            'paid' => true,
         ]);
+        $userRoleCompany1->paid = true;
+        $userRoleCompany1->save();
         dispatch(new CreateUser($userRoleCompany1));
         $group = new Group($company1);
         $group->create();
@@ -83,8 +84,9 @@ class CompaniesTableSeeder extends Seeder
     		'role_id' => 1,
     		'company_id' => $company2->id,
     		'selected' => true,
-            'paid' => true,
         ]);
+        $userRoleCompany2->paid = true;
+        $userRoleCompany2->save();
         dispatch(new CreateUser($userRoleCompany2));
         $group = new Group($company2);
         $group->create();
@@ -99,6 +101,9 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
+
+        $urcOwnCompanyClient1->paid = true;
+        $urcOwnCompanyClient1->save();
         dispatch(new CreateUser($urcOwnCompanyClient1));
 
         $urcOtherCompanySupervisor1 = factory(UserRoleCompany::class)->create([
@@ -109,6 +114,9 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
+
+        $urcOtherCompanySupervisor1->paid = true;
+        $urcOtherCompanySupervisor1->save();
         dispatch(new CreateUser($urcOtherCompanySupervisor1));
 
         $urcOwnCompanyClient2 = factory(UserRoleCompany::class)->create([
@@ -119,6 +127,9 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company2->id,
     		'selected' => false,
         ]);
+
+        $urcOwnCompanyClient2->paid = true;
+        $urcOwnCompanyClient2->save();
         dispatch(new CreateUser($urcOwnCompanyClient2));
 
         $urcOtherCompanyTechnician2 = factory(UserRoleCompany::class)->create([
@@ -129,6 +140,8 @@ class CompaniesTableSeeder extends Seeder
     		'company_id' => $company1->id,
     		'selected' => false,
         ]);
+        $urcOtherCompanyTechnician2->paid = true;
+        $urcOtherCompanyTechnician2->save();
         dispatch(new CreateUser($urcOtherCompanyTechnician2));
 
         // ***************************

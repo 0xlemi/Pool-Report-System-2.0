@@ -34,6 +34,11 @@ class UserRoleCompanyObserver
             dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
         }
 
+        if($userRoleCompany->isRole('admin', 'client')){
+            $userRoleCompany->paid = true;
+            $userRoleCompany->save();
+        }
+
         // Means the User was just created and needs verification
         if($user->userRoleCompanies()->count() == 1){
             dispatch(new CreateAndSendVerificationToken($userRoleCompany));
@@ -81,7 +86,7 @@ class UserRoleCompanyObserver
     public function deleted(UserRoleCompany $userRoleCompany)
     {
         dispatch(new DeleteImagesFromS3($userRoleCompany->images));
-        
+
         // Update billing variables
         if($userRoleCompany->isRole('sup', 'tech')){
             dispatch(new UpdateSubscriptionQuantity($userRoleCompany->company));
