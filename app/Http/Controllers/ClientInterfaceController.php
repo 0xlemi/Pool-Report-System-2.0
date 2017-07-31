@@ -137,7 +137,6 @@ class ClientInterfaceController extends PageController
                                 'ilike',
                                 '%'.$escapedInput.'%')
                         ->orWhere(DB::raw('(work_orders.price::text) || \' \' || work_orders.currency'), 'ilike', '%'.$escapedInput.'%');
-                        // ->orWhere('services.seq_id', (int) $filter);
                     if(is_numeric($filter)){
                         $query->orWhere('work_orders.seq_id', (int) $filter);
                     }
@@ -223,34 +222,19 @@ class ClientInterfaceController extends PageController
 
         $limit = ($request->limit)?: 10;
 
-        $services = Service::query();
-
-        $services = $services->join('urc_service', 'services.id', '=', 'urc_service.service_id')
-                        ->select(
-                                'services.*',
-                                'urc_service.urc_id as client_id'
-                            );
+        $services = $client->services();
 
         // Missing search by price
         if($filter = $request->filter){
-            $escapedInput = str_replace('%', '\\%', $filter);
-            if(is_numeric($filter)){
-                $services  = $services->where(function ($query) use ($filter, $escapedInput) {
-                    $query->where('services.name', 'ilike', '%'.$escapedInput.'%')
-                        ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%')
-                        ->orWhere('services.seq_id', (int) $filter);
-                });
-            }else{
-                $services = $services->where(function ($query) use ($escapedInput) {
-                    $query->where('services.name', 'ilike', '%'.$escapedInput.'%')
-                        ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
-                });
-            }
-
+            $services  = $services->where(function ($query) use ($filter) {
+                $escapedInput = str_replace('%', '\\%', $filter);
+                $query->where('services.name', 'ilike', '%'.$escapedInput.'%')
+                    ->orWhere('services.address_line', 'ilike', '%'.$escapedInput.'%');
+                    if(is_numeric($filter)){
+                        $query->orWhere('services.seq_id', (int) $filter);
+                    }
+            });
         }
-
-        // Only get URC from the company is logged in.
-        $services = $services->where('urc_service.urc_id', $client->id);
 
         // Check if it has been paid
         if($request->has('toggle')){
