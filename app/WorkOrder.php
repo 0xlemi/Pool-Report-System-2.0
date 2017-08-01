@@ -67,8 +67,10 @@ class WorkOrder extends Model
 
     public function scopeInvoices($query)
     {
-        $invoicesIdArray = $query->join('invoices', 'work_orders.id', '=', 'invoices.invoiceable_id')
-                    ->select('invoices.id')->get()->pluck('id')->toArray();
+        $invoicesIdArray = $query->join('invoices', function ($join) {
+                $join->on('work_orders.id', '=', 'invoices.invoiceable_id')
+                     ->where('invoices.invoiceable_type', '=', 'App\WorkOrder');
+            })->select('invoices.id')->get()->pluck('id')->toArray();
         return Invoice::whereIn('invoices.id', $invoicesIdArray);
     }
 

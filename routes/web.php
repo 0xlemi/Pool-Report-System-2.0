@@ -88,7 +88,9 @@ Route::get('workorder/{workorder}', 'ClientInterfaceController@workOrderShow');
 Route::get('service', 'ClientInterfaceController@services');
 Route::get('service/table', 'ClientInterfaceController@serviceTable');
 Route::get('service/{service}', 'ClientInterfaceController@serviceShow');
-Route::get('statement', 'ClientInterfaceController@statement');
+Route::get('invoice', 'ClientInterfaceController@invoices');
+Route::get('invoice/table', 'ClientInterfaceController@invoiceTable');
+Route::get('invoice/{inovice}', 'ClientInterfaceController@invoiceShow');
 
 // Todays Route
 Route::get('todaysroute', 'TodaysRouteController@index');

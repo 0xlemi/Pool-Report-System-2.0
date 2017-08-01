@@ -93,6 +93,7 @@ function isset(strVariableName) {
     let passportClients = require('./components/passport/Clients.vue');
     let passportPersonalAccessTokens = require('./components/passport/PersonalAccessTokens.vue');
     let servicesContractInvoicesThisMonth = require('./components/servicesContractInvoicesThisMonth.vue');
+    let invoiceClientTable = require('./components/invoiceClientTable.vue');
 
 
     let mainVue = new Vue({
@@ -136,6 +137,7 @@ function isset(strVariableName) {
             clientContract,
             clientEquipment,
             clientWorks,
+            invoiceClientTable, 
             // work orders
             workOrderTable,
             workOrderPhotosShow,

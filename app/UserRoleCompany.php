@@ -204,7 +204,9 @@ class UserRoleCompany extends Model
 	// this is intended for clients
     public function invoices()
     {
-
+        $contractInvoices = $this->services()->contracts()->invoices();
+        $workOrderInvoices = $this->services()->workOrders()->invoices();
+        return $contractInvoices->union($workOrderInvoices);
     }
 
     // reports he has created

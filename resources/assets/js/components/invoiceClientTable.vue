@@ -3,8 +3,8 @@
         :columns="columns"
 		:toggle="{ checked: false, label: 'Closed'}"
 		:highlight-columns="['id', 'amount', 'closed']"
-        data-url="datatables/invoices"
-        actions-url="invoices">
+        data-url="invoice/table"
+        actions-url="invoice">
     </index-table>
 </template>
 
@@ -17,7 +17,7 @@ export default {
     },
     data() {
         return {
-			columns: [
+        	columns: [
                 {
                     name: 'id',
                     sortField: 'seq_id',

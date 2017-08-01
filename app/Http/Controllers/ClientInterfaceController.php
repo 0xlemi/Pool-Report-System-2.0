@@ -14,6 +14,7 @@ use App\PRS\Helpers\TechnicianHelpers;
 use App\PRS\Classes\Logged;
 use App\WorkOrder;
 use App\Service;
+use App\Invoice;
 use Carbon\Carbon;
 
 class ClientInterfaceController extends PageController
@@ -300,21 +301,102 @@ class ClientInterfaceController extends PageController
 
     }
 
-    public function statement(Request $request)
+    public function invoices(Request $request)
     {
         if(!$request->user()->selectedUser->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
 
-        return view('clientInterface.statement');
+        return view('clientInterface.invoice.index');
     }
 
-    public function invoicesTable(Request $request, InvoiceDatatableTransformer $transformer)
+    public function invoiceTable(Request $request, InvoiceDatatableTransformer $transformer)
     {
-        if(!$request->user()->selectedUser->isRole('client')){
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
             abort(403, 'Only clients can view this page.');
         }
+        $this->validate($request, [
+            'limit' => 'integer|between:1,25',
+            'toggle' => 'boolean',
+            'filter' => 'string'
+        ]);
 
+        $company = Logged::company();
+
+        $limit = ($request->limit)?: 10;
+
+        $invoices = $client->invoices();
+
+        // Reset so pagination works
+        $invoices = Invoice::whereIn('invoices.id', $invoices->get()->pluck('id')->toArray());
+
+        // Im missing filtering by Service Name
+        if($filter = $request->filter){
+            $timezone = $company->timezone;
+            $invoices  = $invoices->where(function ($query) use ($filter, $timezone) {
+                $escapedInput = str_replace('%', '\\%', $filter);
+                $query->where('invoices.invoiceable_type', 'ilike', '%'.$escapedInput.'%')
+                        ->orWhere(
+                            DB::raw('(invoices.amount::text) || \' \' || invoices.currency'),
+                            'ilike',
+                            '%'.$escapedInput.'%'
+                        )->orWhere( // Need to convert the time to string and to the admin timezone
+                                DB::raw(
+                                    'to_char(
+                                        CONVERT_TZ(invoices.closed,\'UTC\',\''.$timezone.'\'),
+                                        \'DD Mon YYYY HH12:MI:SS PM\')'
+                                ),
+                                'ilike',
+                                '%'.$escapedInput.'%'
+                            );
+                if(is_numeric($filter)){
+                    $query->orWhere('invoices.seq_id', (int) $filter);
+                }
+            });
+        }
+
+        // Check if it has been paid
+        if($request->has('toggle')){
+            if($request->toggle){
+                $invoices = $invoices->paid();
+            }else{
+                $invoices = $invoices->unpaid();
+            }
+        }else{
+            // Temporary
+            $invoices = $invoices->unpaid();
+        }
+
+        // Sort needs validation of some kind
+        // Order the table by different columns
+        if($request->has('sort')){
+            $sort = explode('|', $request->sort);
+            $invoices = $invoices->orderBy($sort[0], $sort[1]);
+        }else{
+            $invoices = $invoices->seqIdOrdered();
+        }
+
+        $invoicesPaginated = $invoices->paginate($limit);
+
+        $data = array_merge(
+            [
+                'data' => $transformer->transformCollection($invoicesPaginated),
+            ],
+            [
+                'paginator' => [
+                    'total' => $invoicesPaginated->total(),
+                    'per_page' => $invoicesPaginated->perPage(),
+                    'current_page' => $invoicesPaginated->currentPage(),
+                    'last_page' => $invoicesPaginated->lastPage(),
+                    'next_page_url' => $invoicesPaginated->nextPageUrl(),
+                    'prev_page_url' => $invoicesPaginated->previousPageUrl(),
+                    'from' => $invoicesPaginated->firstItem(),
+                    'to' => $invoicesPaginated->lastItem(),
+                ]
+            ]
+        );
+        return response()->json($data);
     }
 
 
