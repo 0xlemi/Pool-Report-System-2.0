@@ -8,7 +8,7 @@
 				<h3>View Invoice</h3>
 				<ol class="breadcrumb breadcrumb-simple">
 					<li><a href="{{ url('invoice') }}">Invoices</a></li>
-					<li class="active">View Invoice #{{ $invoice->seq_id }}</li>
+					<li class="active">View Invoice {{ $invoice->seq_id }}</li>
 				</ol>
 			</div>
 		</div>
@@ -83,9 +83,13 @@
 						</div>
 					</div>
 
-					<payments invoice-id="{{ $invoice->seq_id }}"
-					    base-url="{{ url('/') }}">
-					</payments>
+					<div class="form-group row">
+						<label class="col-sm-2 form-control-label">Payments</label>
+						<div class="col-sm-10">
+							<client-payment>
+							</client-payment>
+						</div>
+					</div>
 
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Description</label>
@@ -94,11 +98,9 @@
 						</div>
 					</div>
 
-					<hr>
-					<br>
-					<br>
 				</div>
 		</section>
 	</div>
 </div>
+
 @endsection
