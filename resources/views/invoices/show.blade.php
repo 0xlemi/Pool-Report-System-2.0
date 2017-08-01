@@ -43,7 +43,7 @@
 					<div class="form-group row">
 						<label class="col-md-2 form-control-label">Created:</label>
 						<div class="col-md-10">
-							<input type="text" readonly class="form-control" value="{{ $service->created_at->format('d M Y h:i:s A') }}">
+							<input type="text" readonly class="form-control" value="{{ $invoice->created_at->format('d M Y h:i:s A') }}">
 						</div>
 					</div>
 

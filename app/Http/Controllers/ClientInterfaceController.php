@@ -310,6 +310,19 @@ class ClientInterfaceController extends PageController
         return view('clientInterface.invoice.index');
     }
 
+    public function invoiceShow(Request $request, $seq_id)
+    {
+        $client = $request->user()->selectedUser;
+        if(!$client->isRole('client')){
+            abort(403, 'Only clients can view this page.');
+        }
+
+        $invoice = $client->invoices()->bySeqId($seq_id);
+        $service = $invoice->invoiceable->service;
+
+        return view('clientInterface.invoice.show', compact('invoice', 'service'));
+    }
+
     public function invoiceTable(Request $request, InvoiceDatatableTransformer $transformer)
     {
         $client = $request->user()->selectedUser;
@@ -327,9 +340,6 @@ class ClientInterfaceController extends PageController
         $limit = ($request->limit)?: 10;
 
         $invoices = $client->invoices();
-
-        // Reset so pagination works
-        $invoices = Invoice::whereIn('invoices.id', $invoices->get()->pluck('id')->toArray());
 
         // Im missing filtering by Service Name
         if($filter = $request->filter){

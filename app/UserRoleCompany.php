@@ -12,6 +12,7 @@ use App\Role;
 use App\User;
 use App\Company;
 use App\Service;
+use App\Invoice;
 use App\WorkOrder;
 use App\UrlSigner;
 use App\UserRoleCompany;
@@ -206,7 +207,8 @@ class UserRoleCompany extends Model
     {
         $contractInvoices = $this->services()->contracts()->invoices();
         $workOrderInvoices = $this->services()->workOrders()->invoices();
-        return $contractInvoices->union($workOrderInvoices);
+        $idArray = $contractInvoices->union($workOrderInvoices);
+        return Invoice::whereIn('invoices.id', $idArray->get()->pluck('id')->toArray());
     }
 
     // reports he has created
