@@ -41,13 +41,17 @@ class DeviceMagicController extends Controller
             return response()->json(['error' => 'Service don\'t exists'], 404);
         }
 
-        $completed = Carbon::parse($answers['image_1']['timestamp'], $company->timezone);
+        $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
 
-        $locationArray = explode(", ", $answers['image_1']['geostamp']);
-        $location  = (object)[
-            'latitude' => str_replace('lat=', '', $locationArray[0]),
-            'longitude' => str_replace('long=', '', $locationArray[1]),
+        $location = (object)[
+            'latitude' => null,
+            'longitude' => null,
         ];
+        if(array_key_exists("geostamp" ,$answers['image_1'])){
+            $locationArray = explode(", ", $answers['image_1']['geostamp']);
+            $location->latitude = str_replace('lat=', '', $locationArray[0]);
+            $location->longitude = str_replace('lat=', '', $locationArray[0]);
+        }
 
         $onTime = 'onTime';
         if($service->hasServiceContract()){
