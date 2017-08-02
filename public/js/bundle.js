@@ -35316,7 +35316,7 @@ var _elementsTable2 = _interopRequireDefault(_elementsTable);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
-				props: ['inoviceId'],
+				props: ['invoiceId'],
 				components: {
 								modal: _modal2.default,
 								alert: _alert2.default,
@@ -35324,7 +35324,6 @@ exports.default = {
 				},
 				data: function data() {
 								return {
-												dataUrl: Laravel.url + '/invoices/' + invoiceId + '/payments',
 												focus: 2, //  2=list, 3=show
 
 												id: 0,
@@ -35355,6 +35354,11 @@ exports.default = {
 								};
 				},
 
+				computed: {
+								dataUrl: function dataUrl() {
+												return 'invoices/' + this.invoiceId + '/payments';
+								}
+				},
 				events: {},
 				methods: {
 								clickButton: function clickButton() {
@@ -35398,7 +35402,7 @@ exports.default = {
 				}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<button type=\"button\" class=\"btn btn-success\" @click=\"clickButton\">\n\t<i class=\"fa fa-money\"></i>&nbsp;&nbsp;&nbsp;See Payments\n</button>\n\n<modal title=\"Payments\" id=\"equipmentModal\" :modal-class=\"{'modal-lg' : (focus == 2)}\">\n\n    <!-- List -->\n\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n        <elements-table :dataurl=\"dataUrl\" :columns=\"columns\" :highlightcolumns=\"['id', 'created_at', 'price' ]\"></elements-table>\n\n\t</div>\n\n\n    <!-- Show Equipment -->\n\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t<div class=\"form-group row\">\n\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ type }}\">\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\n\t<button slot=\"buttonsBefore\" v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t</button>\n\n</modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<!-- Button -->\n<button type=\"button\" class=\"btn btn-success\" @click=\"clickButton\">\n\t<i class=\"fa fa-money\"></i>&nbsp;&nbsp;&nbsp;See Payments\n</button>\n\n<modal title=\"Payments\" id=\"equipmentModal\" :modal-class=\"{'modal-lg' : (focus == 2)}\">\n\n    <!-- List -->\n\t<div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n        <elements-table :data-url=\"dataUrl\" :columns=\"columns\" :highlight-columns=\"['id', 'created_at', 'price' ]\"></elements-table>\n\n\t</div>\n\n\n    <!-- Show Equipment -->\n\t<div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t<div class=\"form-group row\">\n\t\t\t<label class=\"col-sm-2 form-control-label\">Type</label>\n\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ type }}\">\n\t\t\t</div>\n\t\t</div>\n\n\t</div>\n\n\n\t<button slot=\"buttonsBefore\" v-if=\"!isFocus(2)\" class=\"btn btn-warning\" type=\"button\" @click=\"goBack\">\n\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t</button>\n\n</modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

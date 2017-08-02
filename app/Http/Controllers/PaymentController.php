@@ -23,19 +23,18 @@ class PaymentController extends PageController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($invoiceSeqId)
+    public function index(Request $request, $invoiceSeqId)
     {
         $invoice = $this->loggedCompany()->invoices()->bySeqId($invoiceSeqId);
         if($request->user()->selectedUser->isRole('client')){
-            // Check if client owns service, preventing client from looking
-            // at equipment from services that are not his
-            $this->authorize('view', $invoice);
+            // Check if client owns service, preventing client from looking other peolpe invoices
+            // $this->authorize('view', $invoice);
         }else{
             // change this to handle errors as api response
             $this->authorize('list', Payment::class);
         }
 
-        $payments = $inovice->payments();
+        $payments = $invoice->payments();
 
         $payments = $invoice->payments
                         ->transform(function($item) use ($invoice){

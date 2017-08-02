@@ -13,9 +13,9 @@
 		<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
         <elements-table
-            :dataUrl="dataUrl"
+            :data-url="dataUrl"
             :columns="columns"
-            :highlightColumns="['id', 'created_at', 'price' ]"
+            :highlight-columns="['id', 'created_at', 'price' ]"
         ></elements-table>
 
 	</div>
@@ -56,7 +56,6 @@ export default {
     },
     data(){
         return {
-            dataUrl: Laravel.url+'/invoices/'+invoiceId+'/payments',
             focus: 2, //  2=list, 3=show
 
             id: 0,
@@ -90,6 +89,11 @@ export default {
 			    }
 			],
 
+        }
+    },
+    computed: {
+        dataUrl(){
+            return 'invoices/'+this.invoiceId+'/payments';
         }
     },
 	events: {
