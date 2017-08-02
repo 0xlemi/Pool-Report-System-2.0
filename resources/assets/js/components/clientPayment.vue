@@ -12,6 +12,11 @@
 
 		<alert type="danger" :message="alertMessageList" :active="alertActiveList"></alert>
 
+        <elements-table
+            :dataUrl="dataUrl"
+            :columns="columns"
+            :highlightColumns="['id', 'created_at', 'price' ]"
+        ></elements-table>
 
 	</div>
 
@@ -40,19 +45,18 @@
 <script>
 import modal from './modal.vue';
 import alert from './alert.vue';
+import elementsTable from './elementsTable.vue';
 
 export default {
-	props: {
-        serviceId: {
-            required: true
-        },
-    },
+    props: ['invoiceId'],
 	components:{
         modal,
         alert,
+        elementsTable,
     },
     data(){
         return {
+            dataUrl: Laravel.url+'/invoices/'+invoiceId+'/payments',
             focus: 2, //  2=list, 3=show
 
             id: 0,
@@ -62,6 +66,29 @@ export default {
 			alertMessageList: '',
 			alertActiveList: false,
 
+            columns: [
+                {
+                    name: 'id',
+                    sortField: 'seq_id',
+                    title: '#'
+                },
+				{
+                    name: 'created_at',
+                    sortField: 'created_at',
+                    title: 'Paid at',
+                },
+                {
+                    name: 'amount',
+                    sortField: 'amount',
+                    sortField: 'Price',
+                },
+				{
+			        name: '__actions',
+			        title: '',
+			        titleClass: 'text-center',
+			        dataClass: 'text-center',
+			    }
+			],
 
         }
     },
@@ -71,7 +98,6 @@ export default {
     methods: {
 		clickButton(){
 			this.$broadcast('openModal', 'equipmentModal');
-			this.getList();
 		},
 		// getValues(id){
 		// 	this.resetAlert();

@@ -86,7 +86,7 @@
 					<div class="form-group row">
 						<label class="col-sm-2 form-control-label">Payments</label>
 						<div class="col-sm-10">
-							<client-payment>
+							<client-payment invoice-id="{{ $invoice->seq_id }}">
 							</client-payment>
 						</div>
 					</div>
