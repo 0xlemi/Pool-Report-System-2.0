@@ -12,6 +12,7 @@ use App\Role;
 use App\User;
 use App\Company;
 use App\Service;
+use App\Invoice;
 use App\WorkOrder;
 use App\UrlSigner;
 use App\UserRoleCompany;
@@ -204,7 +205,10 @@ class UserRoleCompany extends Model
 	// this is intended for clients
     public function invoices()
     {
-
+        $contractInvoices = $this->services()->contracts()->invoices();
+        $workOrderInvoices = $this->services()->workOrders()->invoices();
+        $idArray = $contractInvoices->union($workOrderInvoices);
+        return Invoice::whereIn('invoices.id', $idArray->get()->pluck('id')->toArray());
     }
 
     // reports he has created
@@ -296,7 +300,7 @@ class UserRoleCompany extends Model
 				->join('work_orders', 'services.id', '=', 'work_orders.service_id')
 				->select('work_orders.id')->get()->pluck('id')->toArray();
 
-		return WorkOrder::whereIn('id', $workOrdersIdArray);
+		return WorkOrder::whereIn('work_orders.id', $workOrdersIdArray);
 	}
 
     //

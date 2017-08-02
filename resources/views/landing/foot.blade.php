@@ -21,11 +21,6 @@
 <!-- Custom Script -->
 <script src="{{ url('js/custom.js') }}"></script>
 
-<script>
-  window.intercomSettings = {
-    app_id: "zcndm75f"
-  };
-</script>
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="707ac46e-5a21-41ee-b22e-c1666477c8c0";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 
 <iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;"></iframe>

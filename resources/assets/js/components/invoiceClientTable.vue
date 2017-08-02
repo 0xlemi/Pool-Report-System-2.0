@@ -1,10 +1,10 @@
 <template>
 	<index-table
         :columns="columns"
-		:toggle="{ checked: false, label: 'Finished'}"
-		:highlight-columns="['id', 'title', 'service', 'person', 'start', 'end', 'price']"
-        data-url="workorder/table"
-        actions-url="workorder">
+		:toggle="{ checked: false, label: 'Closed'}"
+		:highlight-columns="['id', 'amount', 'closed']"
+        data-url="invoice/table"
+        actions-url="invoice">
     </index-table>
 </template>
 
@@ -23,29 +23,21 @@ export default {
                     sortField: 'seq_id',
                     title: '#'
                 },
-				{
-                    name: 'title',
-                    sortField: 'title',
-                },
                 {
                     name: 'service',
-                    sortField: 'service_name',
+                    // sortField: 'service',
                 },
 				{
-                    name: 'person',
-                    sortField: 'person_name',
+                    name: 'type',
+                    sortField: 'invoiceable_type',
                 },
 				{
-                    name: 'start',
-                    sortField: 'start',
+                    name: 'amount',
+                    sortField: 'amount',
                 },
 				{
-                    name: 'end',
-                    sortField: 'end',
-                },
-				{
-                    name: 'price',
-                    sortField: 'price',
+                    name: 'closed',
+                    sortField: 'closed',
                 },
 				{
 			        name: '__actions',

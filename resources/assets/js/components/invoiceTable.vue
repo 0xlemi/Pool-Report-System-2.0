@@ -2,7 +2,7 @@
 	<index-table
         :columns="columns"
 		:toggle="{ checked: false, label: 'Closed'}"
-		:highlight-columns="['id', 'service', 'amount', 'closed']"
+		:highlight-columns="['id', 'amount', 'closed']"
         data-url="datatables/invoices"
         actions-url="invoices">
     </index-table>

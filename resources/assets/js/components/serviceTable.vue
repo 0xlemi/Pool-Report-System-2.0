@@ -3,7 +3,7 @@
         :columns="columns"
         :button="{ icon: 'font-icon font-icon-home', label: 'New Service' }"
 		:toggle="{ checked: true, label: 'Active Contract'}"
-		:highlight-columns="['id', 'name', 'address', 'price']"
+		:highlight-columns="['id', 'name', 'address']"
         data-url="datatables/services"
         actions-url="services">
     </index-table>

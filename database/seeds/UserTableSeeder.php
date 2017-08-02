@@ -59,6 +59,7 @@ class UserTableSeeder extends Seeder
                 'company_id' => $company->id,
             ]);
             $userRoleCompany->accepted = true;
+            $userRoleCompany->paid = true;
             $userRoleCompany->save();
             dispatch(new CreateUser($userRoleCompany));
 

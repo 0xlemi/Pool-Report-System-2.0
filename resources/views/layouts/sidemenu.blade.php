@@ -31,10 +31,10 @@
             </a>
         </li>
 
-        <li class="green {{ Request::is('statement*')? 'opened':'' }}">
-            <a href="{{ url('/statement') }}">
+        <li class="green {{ Request::is('invoice*')? 'opened':'' }}">
+            <a href="{{ url('/invoice') }}">
                 <i class="fa fa-dollar"></i>
-                <span class="lbl">Statement</span>
+                <span class="lbl">Invoices</span>
             </a>
         </li>
         @endrole
