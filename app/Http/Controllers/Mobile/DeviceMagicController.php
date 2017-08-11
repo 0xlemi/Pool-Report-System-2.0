@@ -24,22 +24,13 @@ class DeviceMagicController extends Controller
     {
         $answers = $request->answers;
         $deviceId = $request->metadata['device_id'];
-        try{
-            $person = UserRoleCompany::query()->paid(true)->ofRole('sup', 'tech')->where('device_id', $deviceId)->firstOrFail();
-        }catch(ModelNotFoundException $e){
-            logger()->error('UserRoleCompany Not Found. When crating Report by Device Magic.');
-            return response()->json(['error' => 'Person don\'t exists'], 404);
-        }
+
+        $person = $this->getPerson($deviceId);
 
         $company = $person->company;
 
         $serviceSeqId = (int) $answers['service']['value'];
-        try{
-            $service = $company->services()->bySeqId($serviceSeqId);
-        }catch(ModelNotFoundException $e){
-            logger()->error('Service Not Found. When crating Report by Device Magic.');
-            return response()->json(['error' => 'Service don\'t exists'], 404);
-        }
+        $service = $this->getService($serviceSeqId);
 
         $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
 
@@ -94,6 +85,42 @@ class DeviceMagicController extends Controller
         }
 
         return response()->json(['message' => 'Report Created Successfully']);
+    }
+
+    public function workorder(Request $request)
+    {
+        // info($request);
+        $answers = $request->answers;
+        $deviceId = $request->metadata['device_id'];
+
+        $person = $this->getPerson($deviceId);
+
+        $company = $person->company;
+
+        $serviceSeqId = (int) $answers['service']['value'];
+        $service = $this->getService($serviceSeqId);
+
+        $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
+    }
+
+    protected function getPerson($deviceId)
+    {
+        try{
+            return UserRoleCompany::query()->paid(true)->ofRole('sup', 'tech')->where('device_id', $deviceId)->firstOrFail();
+        }catch(ModelNotFoundException $e){
+            logger()->error('UserRoleCompany Not Found. When crating Report by Device Magic.');
+            throw new Exception("Invalid Device Id. UserRoleCompany Not Found.");
+        }
+    }
+
+    protected function getService($serviceSeqId)
+    {
+        try{
+            return $company->services()->bySeqId($serviceSeqId);
+        }catch(ModelNotFoundException $e){
+            logger()->error('Service Not Found. When crating Report by Device Magic.');
+            throw new Exception("Invalid Service Id. Service not Found.");
+        }
     }
 
 

@@ -59,6 +59,7 @@ Route::group(['middleware' => ['throttle:500'] ], function (){
 
 // Device Magic Mobile App
 Route::post('devicemagic/report', 'Mobile\DeviceMagicController@report');
+Route::post('devicemagic/workorder', 'Mobile\DeviceMagicController@workorder');
 
 // Query
 Route::get('/query/servicesworkorderinvoices', 'QueryController@servicesWorkOrderMonthlyBalance');
