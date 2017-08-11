@@ -17,6 +17,7 @@ use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use App\Report;
 use App\Notifications\NewReportNotification;
 use Carbon\Carbon;
+use Psy\Exception\Exception;
 
 class DeviceMagicController extends Controller
 {
@@ -30,7 +31,7 @@ class DeviceMagicController extends Controller
         $company = $person->company;
 
         $serviceSeqId = (int) $answers['service']['value'];
-        $service = $this->getService($serviceSeqId);
+        $service = $this->getService($serviceSeqId, $company);
 
         $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
 
@@ -98,9 +99,11 @@ class DeviceMagicController extends Controller
         $company = $person->company;
 
         $serviceSeqId = (int) $answers['service']['value'];
-        $service = $this->getService($serviceSeqId);
+        $service = $this->getService($serviceSeqId, $company);
 
         $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
+
+        
     }
 
     protected function getPerson($deviceId)
@@ -113,7 +116,7 @@ class DeviceMagicController extends Controller
         }
     }
 
-    protected function getService($serviceSeqId)
+    protected function getService($serviceSeqId, $company)
     {
         try{
             return $company->services()->bySeqId($serviceSeqId);
