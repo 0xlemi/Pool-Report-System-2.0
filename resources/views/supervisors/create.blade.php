@@ -53,7 +53,7 @@
 							<label class="col-sm-2 form-control-label">Name:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="name" maxlength="25" value="{{ old('name') }}">
+										name="name" maxlength="30" value="{{ old('name') }}">
 								<small class="text-muted">This value is only used if supervisor don't have a account already.</small>
 								@if ($errors->has('name'))
 									<small class="text-muted">{{ $errors->first('name') }}</small>
@@ -65,7 +65,7 @@
 							<label class="col-sm-2 form-control-label">Last name:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="last_name" maxlength="40" value="{{ old('last_name') }}">
+										name="last_name" maxlength="60" value="{{ old('last_name') }}">
 								<small class="text-muted">This value is only used if supervisor don't have a account already.</small>
 								@if ($errors->has('last_name'))
 									<small class="text-muted">{{ $errors->first('last_name') }}</small>
@@ -88,7 +88,7 @@
 							<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="cellphone" maxlength="20" value="{{ old('cellphone') }}">
+										name="cellphone" maxlength="50" value="{{ old('cellphone') }}">
 								@if ($errors->has('cellphone'))
 									<small class="text-muted">{{ $errors->first('cellphone') }}</small>
 								@endif

@@ -24,11 +24,11 @@ class UpdateUserRoleCompanyRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:25',
-            'last_name' => 'string|max:40',
+            'name' => 'string|max:30',
+            'last_name' => 'string|max:60',
             'email' => 'email',
-            'cellphone' => 'string|max:20',
-            'address' => 'string|max:50',
+            'cellphone' => 'string|max:50',
+            'address' => 'string|max:100',
             'language' => 'string|validLanguage',
             'photo' => 'mimes:jpg,jpeg,png',
             'about' => 'string|max:10000',
