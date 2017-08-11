@@ -5,6 +5,9 @@ namespace App\PRS\Observers;
 use App\ServiceContract;
 use App\Notifications\AddedContractNotification;
 use App\PRS\Classes\Logged;
+use App\PRS\Classes\DeviceMagic\Form;
+use App\PRS\Classes\DeviceMagic\ReportForm;
+use App\PRS\Classes\DeviceMagic\Destination;
 use Carbon\Carbon;
 
 class ContractObserver
@@ -34,6 +37,8 @@ class ContractObserver
             ]);
         }
 
+        $this->updateDeviceMagicServiceList();
+
         //  Notificitions
         $urc = Logged::user()->selectedUser;
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
@@ -47,6 +52,17 @@ class ContractObserver
     }
 
     /**
+     * Listen to the ServiceContract updated event.
+     *
+     * @param  ServiceContract  $contract
+     * @return void
+     */
+    public function updated(ServiceContract $contract)
+    {
+        $this->updateDeviceMagicServiceList();
+    }
+
+    /**
      * Listen to the ServiceContract  deleting event.
      *
      * @param  ServiceContract   $contract
@@ -57,5 +73,18 @@ class ContractObserver
         foreach ($contract->invoices as $invoice) {
             $invoice->delete();
         }
+        $this->updateDeviceMagicServiceList();
+    }
+
+        /**
+     * Update the service list in the mobile app
+     * @return void
+     */
+    protected function updateDeviceMagicServiceList()
+    {
+        $company = Logged::company();
+        $destination = new Destination($company);
+        $form = new ReportForm($destination);
+        dispatch(new CreateOrUpdateForm($form));
     }
 }

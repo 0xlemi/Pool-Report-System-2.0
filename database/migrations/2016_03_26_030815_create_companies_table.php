@@ -27,8 +27,8 @@ class CreateCompaniesTable extends Migration
             $table->decimal('longitude', 9, 6)->nullable();
 
             // Device Magic
-            $table->string('destination_id')->nullable();
-            $table->string('form_id')->nullable();
+            $table->string('destination_id')->nullable(); // removed
+            $table->string('form_id')->nullable(); // removed
             $table->string('group_id')->unique()->nullable();
 
             // Billing

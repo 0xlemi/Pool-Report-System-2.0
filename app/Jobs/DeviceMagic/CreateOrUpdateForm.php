@@ -32,6 +32,6 @@ class CreateOrUpdateForm implements ShouldQueue
      */
     public function handle()
     {
-        $this->form->updateReport();
+        $this->form->createOrUpdate();
     }
 }

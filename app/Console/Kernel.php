@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use App\Console\Commands\ClearLog;
+use App\Console\Commands\AddDeviceMagicForms;
 use App\Jobs\RecordServiceHistory;
 use App\Jobs\RemoveExpiredUrlSigners;
 use App\Jobs\UpdateSubscriptionQuantity;
@@ -18,10 +19,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
         Commands\imageVariousSizes::class,
         Commands\ClearLog::class,
-        Commands\UpdateSubscriptionQuantity::class
+        Commands\UpdateSubscriptionQuantity::class,
+        Commands\AddDeviceMagicForms::class
     ];
 
     /**
