@@ -56,7 +56,7 @@
 								<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="cellphone" maxlength="20" value="{{ $supervisor->cellphone }}">
+											name="cellphone" maxlength="50" value="{{ $supervisor->cellphone }}">
 									@if ($errors->has('cellphone'))
 										<small class="text-muted">{{ $errors->first('cellphone') }}</small>
 									@endif

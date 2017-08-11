@@ -24,11 +24,11 @@ class CreateUserRoleCompanyRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|string|max:25',
-            'last_name' => 'required|string|max:40',
+            'name' => 'required|string|max:30',
+            'last_name' => 'required|string|max:60',
             'email' => 'required|email',
-            'cellphone' => 'required|string|max:20',
-            'address' => 'string|max:50',
+            'cellphone' => 'required|string|max:50',
+            'address' => 'string|max:100',
             'language' => 'required|string|validLanguage',
             'photo' => 'mimes:jpg,jpeg,png',
             'about' => 'string|max:10000',

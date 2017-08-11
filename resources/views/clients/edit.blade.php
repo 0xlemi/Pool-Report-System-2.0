@@ -55,7 +55,7 @@
 								<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="cellphone" maxlength="20" value="{{ $client->cellphone }}">
+											name="cellphone" maxlength="50" value="{{ $client->cellphone }}">
 									@if ($errors->has('cellphone'))
 										<small class="text-muted">{{ $errors->first('cellphone') }}</small>
 									@endif
@@ -66,7 +66,7 @@
 								<label class="col-sm-2 form-control-label">Address:</label>
 								<div class="col-sm-10">
 									<input type="text" class="form-control maxlength-simple"
-											name="address" maxlength="50" value="{{ $client->address }}">
+											name="address" maxlength="100" value="{{ $client->address }}">
 									@if ($errors->has('address'))
 										<small class="text-muted">{{ $errors->first('address') }}</small>
 									@endif

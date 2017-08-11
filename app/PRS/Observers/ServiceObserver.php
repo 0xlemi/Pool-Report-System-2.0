@@ -8,6 +8,7 @@ use App\Jobs\DeleteImagesFromS3;
 use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use App\PRS\Classes\Logged;
 use App\PRS\Classes\DeviceMagic\Form;
+use App\PRS\Classes\DeviceMagic\ReportForm;
 use App\PRS\Classes\DeviceMagic\Destination;
 
 class ServiceObserver
@@ -82,7 +83,7 @@ class ServiceObserver
     {
         $company = Logged::company();
         $destination = new Destination($company);
-        $form = new Form($company, $destination);
+        $form = new ReportForm($destination);
         dispatch(new CreateOrUpdateForm($form));
     }
 }

@@ -53,7 +53,7 @@
 							<label class="col-sm-2 form-control-label">Name:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="name" maxlength="25" value="{{ old('name') }}">
+										name="name" maxlength="30" value="{{ old('name') }}">
 								@if ($errors->has('name'))
 									<small class="text-muted">{{ $errors->first('name') }}</small>
 								@endif
@@ -64,7 +64,7 @@
 							<label class="col-sm-2 form-control-label">Last name:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="last_name" maxlength="40" value="{{ old('last_name') }}">
+										name="last_name" maxlength="60" value="{{ old('last_name') }}">
 								@if ($errors->has('last_name'))
 									<small class="text-muted">{{ $errors->first('last_name') }}</small>
 								@endif
@@ -74,15 +74,15 @@
 						<div class="form-group row {{($errors->has('email'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Email:</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control maxlength-simple"
-										name="email" maxlength="25" value="{{ old('email') }}">
+								<input type="text" class="form-control"
+										name="email" value="{{ old('email') }}">
 								@if ($errors->has('email'))
 									<small class="text-muted">{{ $errors->first('email') }}</small>
 								@endif
 							</div>
 						</div>
 
-						<div class="form-group row {{($errors->has('password'))? 'form-group-error':''}}">
+						<!-- <div class="form-group row {{($errors->has('password'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Password:</label>
 							<div class="col-sm-10">
 								<input type="password" class="form-control"
@@ -91,13 +91,13 @@
 									<small class="text-muted">{{ $errors->first('password') }}</small>
 								@endif
 							</div>
-						</div>
+						</div> -->
 
 						<div class="form-group row {{($errors->has('cellphone'))? 'form-group-error':''}}">
 							<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control maxlength-simple"
-										name="cellphone" maxlength="20" value="{{ old('cellphone') }}">
+										name="cellphone" maxlength="50" value="{{ old('cellphone') }}">
 								@if ($errors->has('cellphone'))
 									<small class="text-muted">{{ $errors->first('cellphone') }}</small>
 								@endif

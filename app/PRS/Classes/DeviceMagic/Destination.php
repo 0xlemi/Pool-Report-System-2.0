@@ -19,40 +19,46 @@ class Destination {
         $this->company = $company;
     }
 
-    public function add()
+    public function add($formId, $destinationId, $path)
     {
-        if(!$destinationId = $this->company->destination_id){
-            return $this->create();
+        if($destinationId == null){
+            return $this->create($formId, $path);
         }
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
+
+        // Try to delete destination if it exists
         try{
-            $response =  Guzzle::get(
-                "https://www.devicemagic.com/api/forms/{$this->company->form_id}/destinations/{$destinationId}.json",
+            $response =  Guzzle::delete(
+                "https://www.devicemagic.com/api/forms/{$formId}/destinations/{$destinationId}.json",
                 [
                     'headers' => [
                         'Authorization' => $auth,
                     ],
                 ]
             );
-        } catch (ClientException $e){
-            if($e->getResponse()->getStatusCode() == 404){
-                return $this->create();
-            }
+        }catch (ClientException $e){
+            // if destination don't exist create a new one
+            // if($e->getResponse()->getStatusCode() == 404){
+            //     return $this->create($formId, $path);
+            // }
         }
 
-        return response()->json(['message' => 'There is already a destination in this form. You can only have one.'], 404);
+        // create a new one
+        return $this->create($formId, $path);
+
+        return false;
     }
 
-    protected function create()
+    protected function create($formId, $path)
     {
-        if(!$this->company->form_id){
+        if($formId == null){
             return false;
         }
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
         $response =  Guzzle::post(
-            "https://www.devicemagic.com/api/forms/{$this->company->form_id}/destinations.json",
+            "https://www.devicemagic.com/api/forms/{$formId}/destinations.json",
             [
                 'headers' => [
                     'Authorization' => $auth,
@@ -66,7 +72,7 @@ class Destination {
                         "binary_transport_selection"=> "binary_s3_transport"
                     ],
                     "http_transport"=> [
-                        "uri"=> env('DEVICE_MAGIC_DESTINATION_URL').'/report'
+                        "uri"=> env('DEVICE_MAGIC_DESTINATION_URL').$path
                     ],
                     "binary_s3_transport"=> [
                         'access_key_id' => env('DEVICE_MAGIC_DESTINATION_S3_KEY_ID'),
@@ -80,12 +86,14 @@ class Destination {
         );
 
         if($response->getStatusCode() == 201){
-            $destinationId = json_decode($response->getBody()->getContents())->destination->id;
-            $this->company->destination_id = $destinationId;
-            $this->company->save();
+            return json_decode($response->getBody()->getContents())->destination;
         }
+        return false;
+    }
 
-        return $response;
+    public function getCompany()
+    {
+        return $this->company;
     }
 
 }
