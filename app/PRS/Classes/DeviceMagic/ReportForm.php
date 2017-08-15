@@ -6,12 +6,13 @@ use Uuid;
 use Excel;
 use Storage;
 use App\PRS\Classes\Logged;
+use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\Destination;
 use App\Company;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 
-class ReportForm {
+class ReportForm extends Form {
 
     protected $company;
     protected $destination;
@@ -101,29 +102,6 @@ class ReportForm {
         }
 
         return $this->updateGroup();
-    }
-
-    protected function updateGroup()
-    {
-        if(!$this->company->report_form_id || !$this->company->group_id){
-            return false;
-        }
-        $org_id = config('services.devicemagic.organization_id');
-        $auth = 'Basic '.config('services.devicemagic.token');
-        $response =  Guzzle::post(
-            "https://www.devicemagic.com/organizations/{$org_id}/forms/{$this->company->report_form_id}/properties",
-            [
-                'headers' => [
-                    'Authorization' => $auth,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    "group" => "PRS-{$this->company->name}-{$this->company->id}"
-                ]
-            ]
-        );
-
-        return ($response->getStatusCode() === 200);
     }
 
     protected function formJson()

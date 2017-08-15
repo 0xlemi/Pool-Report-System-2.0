@@ -6,12 +6,13 @@ use Uuid;
 use Excel;
 use Storage;
 use App\PRS\Classes\Logged;
+use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\Destination;
 use App\Company;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException;
 
-class WorkOrderForm {
+class WorkOrderForm extends Form {
 
     protected $company;
     protected $destination;
@@ -102,29 +103,9 @@ class WorkOrderForm {
         return $this->updateGroup($formId);
     }
 
-    protected function updateGroup($formId)
-    {
-        $org_id = config('services.devicemagic.organization_id');
-        $auth = 'Basic '.config('services.devicemagic.token');
-        $response =  Guzzle::post(
-            "https://www.devicemagic.com/organizations/{$org_id}/forms/{$formId}/properties",
-            [
-                'headers' => [
-                    'Authorization' => $auth,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    "group" => "PRS-{$this->company->name}-{$this->company->id}"
-                ]
-            ]
-        );
-
-        return ($response->getStatusCode() === 200);
-    }
-
     protected function formJson()
     {
-        $services = $this->company->services()->withActiveContract()->orderBy('services.seq_id')
+        $services = $this->company->services()->orderBy('services.seq_id')
             ->get()->transform(function($service){
                 return (object) [
                     "identifier" => $service->seq_id,
