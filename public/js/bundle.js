@@ -40510,9 +40510,10 @@ exports.default = {
 
             this.resetAlert();
             this.$broadcast('disableTable');
-
             this.$http.get(Laravel.url + 'datatables/todaysroute', {
-                daysFromToday: val
+                params: {
+                    daysFromToday: val
+                }
             }).then(function (response) {
                 var data = response.data;
                 _this.data = data.list;

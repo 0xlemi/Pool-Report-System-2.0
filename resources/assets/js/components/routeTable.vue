@@ -99,9 +99,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
         getList(val){
 			this.resetAlert();
 			this.$broadcast('disableTable');
-
 			this.$http.get(Laravel.url+'datatables/todaysroute', {
-                daysFromToday: val
+                params: {
+                    daysFromToday: val
+                }
             }).then((response) => {
 				let data = response.data;
 				this.data = data.list;
