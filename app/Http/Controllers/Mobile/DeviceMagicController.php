@@ -16,6 +16,10 @@ use App\Jobs\DeviceMagic\CreateGroup;
 use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use App\Report;
 use App\Notifications\NewReportNotification;
+use App\Notifications\NewInvoiceNotification;
+use App\Notifications\NewWorkOrderNotification;
+use App\Invoice;
+use App\WorkOrder;
 use Carbon\Carbon;
 use Psy\Exception\Exception;
 
@@ -66,6 +70,7 @@ class DeviceMagicController extends Controller
             'longitude' => $location->longitude,
         ]);
 
+        // Add Images
         $image1 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_1']['value'])[1]);
         $image2 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_2']['value'])[1]);
         $image3 = $report->addImageFromUrl('temp/'.explode('/temp/', $answers['image_3']['value'])[1]);
@@ -77,8 +82,9 @@ class DeviceMagicController extends Controller
         }
 
 
-        $people = $person->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
-        foreach ($people as $urc){
+        // Send Notifications
+        $urcs = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
+        foreach ($urcs as $urc){
             $urc->notify(new NewReportNotification($report, $person));
         }
         foreach ($report->service->userRoleCompanies as $client) {
@@ -90,7 +96,6 @@ class DeviceMagicController extends Controller
 
     public function workorder(Request $request)
     {
-        // info($request);
         $answers = $request->answers;
         $deviceId = $request->metadata['device_id'];
 
@@ -103,7 +108,62 @@ class DeviceMagicController extends Controller
 
         $completed = Carbon::parse($request->metadata['submitted_at'], $company->timezone);
 
-        
+        WorkOrder::flushEventListeners();
+
+        // This need to be validated
+        $title = $answers['title']['value'];
+        $price = $answers['price']['value'];
+        $currency = $answers['currency']['value'];
+        $start = Carbon::parse($answers['start_at']['value'], $company->timezone);
+        $description = $answers['description']['value'];
+
+        $workOrder = $service->workOrders()->create([
+            'title' => $title,
+            'start' => $start->setTimezone('UTC'),
+            'price' => $price,
+            'currency' => $currency,
+            'description' => $description,
+            'user_role_company_id' => $person->id,
+        ]);
+
+        // add Images
+        if(array_key_exists('image_1', $answers) && array_key_exists('value', $answers['image_1'])){
+            $image1 = $workOrder->addImageFromUrl('temp/'.explode('/temp/', $answers['image_1']['value'])[1]);
+        }
+        if(array_key_exists('image_2', $answers) && array_key_exists('value', $answers['image_2'])){
+            $image2 = $workOrder->addImageFromUrl('temp/'.explode('/temp/', $answers['image_2']['value'])[1]);
+        }
+
+        Invoice::flushEventListeners();
+
+        // Create Invoice
+        $invoice = $workOrder->invoices()->create([
+            'amount' => $workOrder->price,
+            'currency' => $workOrder->currency,
+            'description' => $workOrder->description,
+            'pay_before' => Carbon::now()->addDays(20),
+            'company_id' => $company->id,
+        ]);
+        // Notification For the Invoice
+        $urcs = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
+        foreach ($urcs as $urc){
+            $urc->notify(new NewInvoiceNotification($invoice, $person));
+        }
+        foreach ($invoice->invoiceable->service->userRoleCompanies as $client) {
+            $client->notify(new NewInvoiceNotification($invoice, $person));
+        }
+
+        // Notifications For WorkOrder
+        $urcs = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
+        foreach ($urcs as $urc){
+            $urc->notify(new NewWorkOrderNotification($workOrder, $person));
+        }
+        $clients = $workOrder->service->userRoleCompanies;
+        foreach ($clients as $client) {
+            $client->notify(new NewWorkOrderNotification($workOrder, $person));
+        }
+
+        return response()->json(['message' => 'Work Order Created Successfully']);
     }
 
     protected function getPerson($deviceId)

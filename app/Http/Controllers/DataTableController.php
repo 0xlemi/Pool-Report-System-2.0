@@ -155,7 +155,7 @@ class DataTableController extends PageController
             $sort = explode('|', $request->sort);
             $workOrders = $workOrders->orderBy($sort[0], $sort[1]);
         }else{
-            $workOrders = $workOrders->seqIdOrdered();
+            $workOrders = $workOrders->seqIdOrdered('desc');
         }
 
         $workOrdersPaginated = $workOrders->paginate($limit);
