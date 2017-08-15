@@ -8,6 +8,7 @@ use App\PRS\Classes\Logged;
 use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\ReportForm;
 use App\PRS\Classes\DeviceMagic\Destination;
+use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use Carbon\Carbon;
 
 class ContractObserver

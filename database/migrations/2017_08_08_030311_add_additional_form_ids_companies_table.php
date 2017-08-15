@@ -14,10 +14,13 @@ class AddAdditionalFormIdsCompaniesTable extends Migration
     public function up()
     {
         Schema::table('companies', function (Blueprint $table) {
+            
             $table->string('report_form_id')->nullable();
             $table->string('report_destination_id')->nullable();
+
             $table->string('work_order_form_id')->nullable();
             $table->string('work_order_destination_id')->nullable();
+
             $table->string('work_form_id')->nullable();
             $table->string('work_destination_id')->nullable();
 
