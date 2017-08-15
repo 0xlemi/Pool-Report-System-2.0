@@ -51,7 +51,15 @@ class InvoiceController extends PageController
         $this->authorize('view', $invoice);
 
         $service = $invoice->invoiceable->service;
-        return view('invoices.show', compact('invoice', 'service'));
+        $paymentMethods = [];
+        foreach (config('constants.paymentMethods') as $key => $method) {
+            $paymentMethods[] = (object) [
+                'key' => $method,
+                'label' => title_case(str_replace('_', ' ' , $method)),
+                'icon' => '',
+            ];
+        }
+        return view('invoices.show', compact('invoice', 'service', 'paymentMethods'));
     }
 
     /**

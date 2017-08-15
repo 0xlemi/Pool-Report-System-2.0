@@ -60,9 +60,9 @@ class PaymentController extends PageController
     public function store(Request $request, $invoiceSeqId)
     {
         $this->authorize('create', Payment::class);
-
         $this->validate($request, [
             'amount' => 'required|numeric|max:10000000',
+            'method' => 'required|string|validMethod'
         ]);
         $invoice = $this->loggedCompany()->invoices()->bySeqId($invoiceSeqId);
 
@@ -93,6 +93,8 @@ class PaymentController extends PageController
         return response()->json([
             'amount' => $payment->amount,
             'paid' => $payment->createdAt()->format('d M Y h:i:s A'),
+            'method' => title_case(str_replace('_', ' ' , $payment->method)),
+            'verified' => $payment->verified
         ]);
     }
 

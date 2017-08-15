@@ -22,7 +22,7 @@ class GlobalMeasurementHelpers
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,
-                        'label' => $item->name,
+                        'label' => "{$item->seq_id} {$item->name}",
                         'icon' => \Storage::url($item->icon()),
                     );
                 });

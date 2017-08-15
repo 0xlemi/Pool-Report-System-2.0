@@ -22,7 +22,7 @@ class GlobalProductHelpers
                 ->transform(function($item){
                     return (object) array(
                         'key' => $item->seq_id,
-                        'label' => $item->name.' - '.$item->brand.' - '.$item->type,
+                        'label' => "{$item->seq_id} {$item->name} - {$item->brand} - {$item->type}",
                         'icon' => \Storage::url($item->icon()),
                     );
                 });

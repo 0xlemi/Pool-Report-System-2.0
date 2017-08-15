@@ -84,7 +84,8 @@
 					</div>
 
 					<payments invoice-id="{{ $invoice->seq_id }}"
-					    base-url="{{ url('/') }}">
+					    base-url="{{ url('/') }}"
+						:payment-methods="{{ json_encode($paymentMethods) }}">
 					</payments>
 
 					<div class="form-group row">

@@ -34,12 +34,12 @@ export default {
     },
     methods: {
         styleLabel ({ key, label }) {
-            return key+' '+label;
+            return label;
         },
         updateSelected (newSelected) {
             this.selected = newSelected;
             this.key = newSelected.key;
-            this.$dispatch('dropdownChanged', this.key);    
+            this.$dispatch('dropdownChanged', this.key);
         }
     },
     watch: {

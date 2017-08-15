@@ -17,6 +17,11 @@ class ValidationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        // Validation condition to check if methods are vaild
+        Validator::extend('validMethod', 'App\PRS\Validators\ValidMethod@validate');
+        Validator::replacer('validMethod', 'App\PRS\Validators\ValidMethod@message');
+
         // Validation condition to check if checkReportCanAcceptReading are vaild
         Validator::extend('checkReportCanRemoveReadingFromServiceId', 'App\PRS\Validators\CheckReportCanRemoveReadingFromServiceId@validate');
         Validator::replacer('checkReportCanRemoveReadingFromServiceId', 'App\PRS\Validators\CheckReportCanRemoveReadingFromServiceId@message');

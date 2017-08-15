@@ -36561,7 +36561,7 @@ exports.default = {
             var key = _ref.key,
                 label = _ref.label;
 
-            return key + ' ' + label;
+            return label;
         },
         updateSelected: function updateSelected(newSelected) {
             this.selected = newSelected;
@@ -39045,7 +39045,7 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"vue":214,"vue-hot-reload-api":211}],278:[function(require,module,exports){
-module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.key}} {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
+module.exports = '<span>\n    <img class="iconOptionDropdown" :src="option.icon">\n    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n    {{option.label}}\n</span>\n\n<style>\n.iconOptionDropdown {\n    display: block;\n    width: 20px;\n    height: 20px;\n    position: absolute;\n    left: 10px;\n    top: 10px;\n    border-radius: 50%;\n}\n</style>\n';
 },{}],279:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.action-link[_v-11863ff6] {\n    cursor: pointer;\n}\n\n.m-b-none[_v-11863ff6] {\n    margin-bottom: 0;\n}\n")
@@ -39520,16 +39520,21 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _dropdown = require('./dropdown.vue');
+
+var _dropdown2 = _interopRequireDefault(_dropdown);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
-
 exports.default = {
-	props: ['invoiceId', 'baseUrl'],
+	props: ['invoiceId', 'baseUrl', 'paymentMethods'],
 	components: {
 		alert: alert,
-		BootstrapTable: BootstrapTable
+		BootstrapTable: BootstrapTable,
+		dropdown: _dropdown2.default
 	},
 	data: function data() {
 		return {
@@ -39545,6 +39550,10 @@ exports.default = {
 			alertActiveList: false,
 			alertActiveShow: false,
 
+			selectedMethod: 'cash',
+
+			method: '',
+			verified: false,
 			amount: '',
 			paid: '',
 			currency: '',
@@ -39650,6 +39659,8 @@ exports.default = {
 				var data = response.data;
 				_this2.amount = data.amount;
 				_this2.paid = data.paid;
+				_this2.method = data.method;
+				_this2.verified = data.verified;
 				_this2.changeFocus(3);
 			}, function (response) {
 				_this2.focus = 2;
@@ -39676,7 +39687,8 @@ exports.default = {
 			}).spin(clickEvent.target);
 
 			this.$http.post(this.invoiceUrl, {
-				amount: this.amount
+				amount: this.amount,
+				method: this.selectedMethod
 			}).then(function (response) {
 				_this3.changeFocus(2);
 				_this3.getList();
@@ -39782,7 +39794,7 @@ exports.default = {
 	}
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Payments</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-success\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#paymentsModal\">\n\t\t\t\t<i class=\"fa fa-money\"></i>&nbsp;&nbsp;&nbsp;Manage Payments\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Payment preview -->\n\t<div class=\"modal fade\" id=\"paymentsModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n                                <div class=\"input-group\">\n                                    <div class=\"input-group-addon\">$</div>\n    \t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" v-model=\"amount\">\n    \t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n                                </div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Payment\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</bootstrap-table>\n\n                    </div>\n\n                    <!-- Show Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-md-2 form-control-label\">Paid at</label>\n\t\t\t\t\t\t\t<div class=\"col-md-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ paid }}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n                                <div class=\"input-group\">\n                                    <div class=\"input-group-addon\">$</div>\n    \t\t\t\t\t\t\t\t<input type=\"number\" readonly=\"\" class=\"form-control\" v-model=\"amount\">\n    \t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n                                </div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n\t<div class=\"form-group row\">\n\t\t<label class=\"col-sm-2 form-control-label\">Payments</label>\n\t\t<div class=\"col-sm-10\">\n\t\t\t<button type=\"button\" class=\"btn btn-success\" @click=\"getList\" data-toggle=\"modal\" data-target=\"#paymentsModal\">\n\t\t\t\t<i class=\"fa fa-money\"></i>&nbsp;&nbsp;&nbsp;Manage Payments\n\t\t\t</button>\n\t\t</div>\n\t</div>\n\n    <!-- Modal for Payment preview -->\n\t<div class=\"modal fade\" id=\"paymentsModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\">\n\t\t  <div class=\"modal-dialog\" role=\"document\">\n\t    <div class=\"modal-content\">\n\t      <div class=\"modal-header\">\n\t        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">×</span></button>\n\t        <h4 class=\"modal-title\" id=\"myModalLabel\">{{ title }}</h4>\n\t      </div>\n\t      <div class=\"modal-body\">\n\t\t\t\t<div class=\"row\">\n\n                    <!-- Create new Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(1)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageCreate\" :active=\"alertActiveCreate\"></alert>\n\n                        <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('amount'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n                                <div class=\"input-group\">\n                                    <div class=\"input-group-addon\">$</div>\n    \t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" v-model=\"amount\">\n    \t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n                                </div>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('amount')\" class=\"text-muted\">{{ validationErrors.amount[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t    <div class=\"form-group row\" :class=\"{'form-group-error' : (checkValidationError('method'))}\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Methods</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n\t\t\t\t\t\t\t\t<dropdown :key.sync=\"selectedMethod\" :options=\"paymentMethods\" :name=\"'method'\">\n\t\t\t\t\t\t\t\t</dropdown>\n\t\t\t\t\t\t\t\t<small v-if=\"checkValidationError('method')\" class=\"text-muted\">{{ validationErrors.method[0] }}</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n                    <!-- Index Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(2)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageList\" :active=\"alertActiveList\"></alert>\n\n\t\t\t\t\t\t<bootstrap-table :columns=\"columns\" :data=\"data\" :options=\"options\">\n\t\t\t\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" @click=\"goToCreate\">\n\t\t\t\t\t\t\t\t<i class=\"glyphicon glyphicon-plus\"></i>&nbsp;&nbsp;&nbsp;Add Payment\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</bootstrap-table>\n\n                    </div>\n\n                    <!-- Show Payment -->\n                    <div class=\"col-md-12\" v-show=\"isFocus(3)\">\n\n\t\t\t\t\t\t<alert type=\"danger\" :message=\"alertMessageShow\" :active=\"alertActiveShow\"></alert>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<div class=\"col-md-10 col-md-offset-2\">\n\t\t\t\t\t\t\t\t<h3 style=\"display: inline;\">\n\t\t\t\t\t\t\t\t\t<span v-if=\"verified\" class=\"label label-success\">Verified</span>\n\t\t\t\t\t\t\t\t\t<span v-else=\"\" class=\"label label-default\">Not Verified</span>\n\t\t\t\t\t\t\t\t</h3>\n\t\t\t\t\t\t\t\t<small v-if=\"verified\" class=\"text-muted\">Payment was done through Pool Report System.</small>\n\t\t\t\t\t\t\t\t<small v-else=\"\" class=\"text-muted\">Payment was added manually.</small>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-md-2 form-control-label\">Paid at</label>\n\t\t\t\t\t\t\t<div class=\"col-md-10\">\n\t\t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" value=\"{{ paid }}\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Amount</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n                                <div class=\"input-group\">\n                                    <div class=\"input-group-addon\">$</div>\n    \t\t\t\t\t\t\t\t<input type=\"number\" readonly=\"\" class=\"form-control\" v-model=\"amount\">\n    \t\t\t\t\t\t\t\t<div class=\"input-group-addon\">{{ currency }}</div>\n                                </div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class=\"form-group row\">\n\t\t\t\t\t\t\t<label class=\"col-sm-2 form-control-label\">Method</label>\n\t\t\t\t\t\t\t<div class=\"col-sm-10\">\n    \t\t\t\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" v-model=\"method\">\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\n                    </div>\n\n\t\t\t\t</div>\n\t      </div>\n\t      <div class=\"modal-footer\">\n\t\t\t<p style=\"float: left;\" v-if=\"isFocus(3)\">\n\t\t\t\t<button type=\"button\" class=\"btn btn-danger\" @click=\"destroy\">\n\t\t\t\t\t<i class=\"font-icon font-icon-close-2\"></i>&nbsp;&nbsp;&nbsp;Destroy\n\t\t\t\t</button>\n\t\t\t</p>\n\n\t        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" v-if=\"!isFocus(3)\">Close</button>\n\n\t\t\t<button type=\"button\" class=\"btn btn-warning\" v-if=\"isFocus(3) || isFocus(1)\" @click=\"changeFocus(2)\">\n\t\t\t\t<i class=\"glyphicon glyphicon-arrow-left\"></i>&nbsp;&nbsp;&nbsp;Go back\n\t\t\t</button>\n\n            <button type=\"button\" class=\"btn btn-primary\" v-if=\"isFocus(1)\" @click=\"create\">\n\t\t\t\tCreate\n\t\t\t</button>\n\n\t      </div>\n\t    </div>\n\t  </div>\n\t</div>\n\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -39793,7 +39805,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-ef1afa3c", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"spin":199,"vue":214,"vue-hot-reload-api":211}],284:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"./dropdown.vue":257,"spin":199,"vue":214,"vue-hot-reload-api":211}],284:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

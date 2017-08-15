@@ -24,6 +24,15 @@ return [
         'AUD',
     ],
 
+    'paymentMethods' => [
+        'cash',
+        'transfer',
+        'check',
+        'credit_card',
+        'debit',
+        'atm_withdrawals'
+    ],
+
     'languages' => [
         'en',
         'es'

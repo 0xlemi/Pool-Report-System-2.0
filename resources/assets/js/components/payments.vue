@@ -38,6 +38,17 @@
 							</div>
 						</div>
 
+					    <div class="form-group row" :class="{'form-group-error' : (checkValidationError('method'))}">
+							<label class="col-sm-2 form-control-label">Methods</label>
+							<div class="col-sm-10">
+								<dropdown :key.sync="selectedMethod"
+										:options="paymentMethods"
+										:name="'method'">
+								</dropdown>
+								<small v-if="checkValidationError('method')" class="text-muted">{{ validationErrors.method[0] }}</small>
+							</div>
+						</div>
+
                     </div>
 
                     <!-- Index Payment -->
@@ -59,6 +70,17 @@
 						<alert type="danger" :message="alertMessageShow" :active="alertActiveShow"></alert>
 
 						<div class="form-group row">
+							<div class="col-md-10 col-md-offset-2">
+								<h3 style="display: inline;">
+									<span v-if="verified" class="label label-success">Verified</span>
+									<span v-else class="label label-default">Not Verified</span>
+								</h3>
+								<small v-if="verified" class="text-muted">Payment was done through Pool Report System.</small>
+								<small v-else class="text-muted">Payment was added manually.</small>
+							</div>
+						</div>
+
+						<div class="form-group row">
 							<label class="col-md-2 form-control-label">Paid at</label>
 							<div class="col-md-10">
 								<input type="text" readonly class="form-control" value="{{ paid }}">
@@ -73,6 +95,13 @@
     								<input type="number" readonly class="form-control" v-model="amount">
     								<div class="input-group-addon">{{ currency }}</div>
                                 </div>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label class="col-sm-2 form-control-label">Method</label>
+							<div class="col-sm-10">
+    							<input type="text" readonly class="form-control" v-model="method">
 							</div>
 						</div>
 
@@ -110,12 +139,14 @@
 var alert = require('./alert.vue');
 var Spinner = require("spin");
 var BootstrapTable = require('./BootstrapTable.vue');
+import dropdown from './dropdown.vue';
 
   export default {
-    props: ['invoiceId', 'baseUrl'],
+    props: ['invoiceId', 'baseUrl', 'paymentMethods'],
 	components: {
 		alert,
-		BootstrapTable
+		BootstrapTable,
+		dropdown
 	},
     data () {
         return {
@@ -131,6 +162,10 @@ var BootstrapTable = require('./BootstrapTable.vue');
 			alertActiveList: false,
 			alertActiveShow: false,
 
+            selectedMethod: 'cash',
+
+            method: '',
+            verified: false,
             amount: '',
 			paid: '',
             currency: '',
@@ -235,6 +270,8 @@ var BootstrapTable = require('./BootstrapTable.vue');
 				let data = response.data;
 				this.amount = data.amount;
 				this.paid = data.paid;
+				this.method = data.method
+				this.verified = data.verified
 				this.changeFocus(3);
             }, (response) => {
 				this.focus = 2;
@@ -260,6 +297,7 @@ var BootstrapTable = require('./BootstrapTable.vue');
 
 			this.$http.post(this.invoiceUrl, {
                 amount: this.amount,
+                method: this.selectedMethod,
             }).then((response) => {
                 this.changeFocus(2);
 				this.getList();
