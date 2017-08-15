@@ -27,6 +27,8 @@ class Destination {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
 
+        // To get the response out of the try-catch
+        $response;
         // Try to delete destination if it exists
         try{
             $response =  Guzzle::delete(
@@ -38,14 +40,13 @@ class Destination {
                 ]
             );
         }catch (ClientException $e){
-            // if destination don't exist create a new one
-            // if($e->getResponse()->getStatusCode() == 404){
-            //     return $this->create($formId, $path);
-            // }
+            // destination don't exist for some reason
         }
 
         // create a new one
-        return $this->create($formId, $path);
+        if($response->getStatusCode() == 200){
+            return $this->create($formId, $path);
+        }
 
         return false;
     }

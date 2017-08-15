@@ -35,7 +35,8 @@ class Group {
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
-        $groupName = "PRS-{$this->company->name}-{$this->company->id}";
+        $companyName = str_replace(" ", "_", $this->company->name);
+        $groupName = "PRS-{$companyName}-{$this->company->id}";
         $response =  Guzzle::post(
             "https://www.devicemagic.com/organizations/{$org_id}/groups",
             [

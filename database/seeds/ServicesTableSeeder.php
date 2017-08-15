@@ -2,6 +2,10 @@
 
 use Illuminate\Database\Seeder;
 use App\PRS\Helpers\SeederHelpers;
+use App\PRS\Classes\DeviceMagic\Group;
+use App\PRS\Classes\DeviceMagic\ReportForm;
+use App\PRS\Classes\DeviceMagic\Destination;
+use App\PRS\Classes\DeviceMagic\WorkOrderForm;
 use App\ServiceContract;
 use App\Invoice;
 use App\Service;
@@ -13,6 +17,8 @@ use App\Notifications\NewInvoiceNotification;
 use App\Notifications\NewPaymentNotification;
 use App\Notifications\AddedContractNotification;
 use App\Measurement;
+use App\Jobs\DeviceMagic\CreateGroup;
+use App\Jobs\DeviceMagic\CreateOrUpdateForm;
 use Carbon\Carbon;
 class ServicesTableSeeder extends Seeder
 {
@@ -129,7 +135,22 @@ class ServicesTableSeeder extends Seeder
                 ]);
             }
 
-
     	}
+
+        // Create device magic forms
+        $companies = Company::all();
+        foreach ($companies as $company) {
+            // Create Groups
+            $group = new Group($company);
+            $group->create();
+
+            // Create Forms
+            $destination = new Destination($company);
+            $reportForm = new ReportForm($destination);
+            $reportForm->createOrUpdate();
+            $workOrderForm = new WorkOrderForm($destination);
+            $workOrderForm->createOrUpdate();
+        }
+
     }
 }

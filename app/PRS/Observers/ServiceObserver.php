@@ -10,6 +10,7 @@ use App\PRS\Classes\Logged;
 use App\PRS\Classes\DeviceMagic\Form;
 use App\PRS\Classes\DeviceMagic\ReportForm;
 use App\PRS\Classes\DeviceMagic\Destination;
+use App\PRS\Classes\DeviceMagic\WorkOrderForm;
 
 class ServiceObserver
 {
@@ -83,7 +84,9 @@ class ServiceObserver
     {
         $company = Logged::company();
         $destination = new Destination($company);
-        $form = new ReportForm($destination);
-        dispatch(new CreateOrUpdateForm($form));
+        $reportForm = new ReportForm($destination);
+        dispatch(new CreateOrUpdateForm($reportForm));
+        $workOrderForm = new WorkOrderForm($destination);
+        dispatch(new CreateOrUpdateForm($workOrderForm));
     }
 }
