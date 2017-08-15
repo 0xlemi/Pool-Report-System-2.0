@@ -62,7 +62,7 @@ class ReportForm extends Form {
             $this->company->save();
         }
 
-        return $this->updateGroup($this->company);
+        return $this->updateGroup($formId);
     }
 
     protected function update(int $formId)
@@ -101,7 +101,7 @@ class ReportForm extends Form {
             $this->company->save();
         }
 
-        return $this->updateGroup();
+        return $this->updateGroup($formId);
     }
 
     protected function formJson()

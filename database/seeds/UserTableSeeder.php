@@ -28,6 +28,7 @@ class UserTableSeeder extends Seeder
         $numOfClients = rand(40, 70);
         $numOfSupervisors = rand(9, 10);
         $numOfTechnicians = rand(15, 30);
+        $withSendbirdUsers = false;
 
         UserRoleCompany::flushEventListeners();
         User::flushEventListeners();
@@ -61,7 +62,9 @@ class UserTableSeeder extends Seeder
             $userRoleCompany->accepted = true;
             $userRoleCompany->paid = true;
             $userRoleCompany->save();
-            dispatch(new CreateUser($userRoleCompany));
+            if($withSendbirdUsers){
+                dispatch(new CreateUser($userRoleCompany));
+            }
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
@@ -113,9 +116,15 @@ class UserTableSeeder extends Seeder
                 'role_id' => 3,
                 'company_id' => $company_id,
             ]);
+            if($i == 0){
+                $userRoleCompany->device_id = 'iPhone_9D2093A0-5DEA-499A-A1F4-DF3C41C9D777';
+                $userRoleCompany->paid = true;
+            }
             $userRoleCompany->accepted = true;
             $userRoleCompany->save();
-            dispatch(new CreateUser($userRoleCompany));
+            if($withSendbirdUsers){
+                dispatch(new CreateUser($userRoleCompany));
+            }
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created
@@ -172,7 +181,9 @@ class UserTableSeeder extends Seeder
             ]);
             $userRoleCompany->accepted = true;
             $userRoleCompany->save();
-            dispatch(new CreateUser($userRoleCompany));
+            if($withSendbirdUsers){
+                dispatch(new CreateUser($userRoleCompany));
+            }
 
             DB::table('urc_notify_setting')->insert([
                 [ 'notify_setting_id' => 1, 'urc_id' => $userRoleCompany->id ],// Notification when Report is Created

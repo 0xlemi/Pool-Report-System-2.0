@@ -32,6 +32,7 @@ abstract class Form {
     {
         $org_id = config('services.devicemagic.organization_id');
         $auth = 'Basic '.config('services.devicemagic.token');
+        $companyName = str_replace(" ", "_", $this->company->name);
         $response =  Guzzle::post(
             "https://www.devicemagic.com/organizations/{$org_id}/forms/{$formId}/properties",
             [
@@ -40,7 +41,7 @@ abstract class Form {
                     'Content-Type' => 'application/json'
                 ],
                 'json' => [
-                    "group" => "PRS-{$this->company->name}-{$this->company->id}"
+                    "group" => "PRS-{$companyName}-{$this->company->id}"
                 ]
             ]
         );
