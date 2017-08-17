@@ -18,6 +18,7 @@ use App\VerificationToken;
 use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
+use App\Mail\ResetPasswordMail;
 
 class User extends Authenticatable
 {
@@ -61,7 +62,7 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification($token));
+		$this->selectedUser->notify(new ResetPasswordNotification($token));
     }
 
 	public function selectUserRoleCompany(UserRoleCompany $userRoleCompany)

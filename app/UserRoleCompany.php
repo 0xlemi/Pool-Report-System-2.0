@@ -19,6 +19,7 @@ use App\UserRoleCompany;
 use App\NotificationSetting;
 use Carbon\Carbon;
 use DB;
+use Psy\Exception\Exception;
 
 class UserRoleCompany extends Model
 {
@@ -47,6 +48,20 @@ class UserRoleCompany extends Model
 		'role_id',
 		'company_id',
 	];
+
+    protected $appends = [
+        'email'
+    ];
+
+
+	// ********** Attributes ************
+
+    public function getEmailAttribute()
+    {
+        return $this->user->email;
+    }
+
+	// ********** Regular ************
 
     public function isRole(...$roles)
     {

@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Carbon\Carbon;
 use Storage;
+use App\UserRoleCompany;
 use App\Payment;
 use App\User;
 
@@ -16,17 +17,17 @@ class NewPaymentMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $payment;
-    protected $user;
+    protected $userRoleCompany;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Payment $payment, User $user)
+    public function __construct(Payment $payment, UserRoleCompany $userRoleCompany)
     {
         $this->payment = $payment;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
     }
 
     /**
@@ -38,11 +39,11 @@ class NewPaymentMail extends Mailable
     {
         $payment = $this->payment;
         $invoice = $payment->invoice;
-        $loginSigner = $this->user->urlSigners()->create([
+        $loginSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->user->urlSigners()->create([
+        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);

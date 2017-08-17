@@ -11,13 +11,14 @@ use App\User;
 use App\PRS\Helpers\NotificationHelpers;
 use Carbon\Carbon;
 use Storage;
+use App\UserRoleCompany;
 
 class NewServiceMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     protected $service;
-    protected $user;
+    protected $userRoleCompany;
     protected $helper;
 
     /**
@@ -25,10 +26,10 @@ class NewServiceMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Service $service, User $user, NotificationHelpers $helper)
+    public function __construct(Service $service, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
     {
         $this->service = $service;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->helper = $helper;
     }
 
@@ -40,15 +41,15 @@ class NewServiceMail extends Mailable implements ShouldQueue
     public function build()
     {
         $service = $this->service;
-        $loginSigner = $this->user->urlSigners()->create([
+        $loginSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->user->urlSigners()->create([
+        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $person =  $this->helper->userStyled($this->user);
+        $person =  $this->helper->personStyled($this->userRoleCompany);
         $location = "services/{$service->seq_id}";
 
         $image = Storage::url('images/assets/email/house.png');

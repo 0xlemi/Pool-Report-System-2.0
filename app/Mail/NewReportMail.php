@@ -10,23 +10,24 @@ use App\User;
 use App\Report;
 use Carbon\Carbon;
 use Storage;
+use App\UserRoleCompany;
 
 class NewReportMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     private $report;
-    private $user;
+    private $userRoleCompany;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Report $report, User $user)
+    public function __construct(Report $report, UserRoleCompany $userRoleCompany)
     {
         $this->report = $report;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
     }
 
     /**
@@ -41,13 +42,13 @@ class NewReportMail extends Mailable implements ShouldQueue
                     ->toDayDateTimeString();
 
         // info needed by the template
-        $name = $this->user->userable()->name;
+        $name = $this->userRoleCompany->userable()->name;
         $location = "reports/{$this->report->seq_id}";
-        $loginSigner = $this->user->urlSigners()->create([
+        $loginSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $unsubscribeSigner = $this->user->urlSigners()->create([
+        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);

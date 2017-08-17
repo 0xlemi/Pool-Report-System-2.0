@@ -8,7 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Service;
 use App\Invoice;
-use App\User;
+use App\UserRoleCompany;
 use App\Administrator;
 use Carbon\Carbon;
 
@@ -17,7 +17,7 @@ class NewInvoiceMail extends Mailable
     use Queueable, SerializesModels;
 
     public $admin;
-    public $user;
+    public $userRoleCompany;
     public $service;
     public $invoice;
 
@@ -26,10 +26,10 @@ class NewInvoiceMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Administrator $admin, User $user, Service $service, Invoice $invoice)
+    public function __construct(Administrator $admin, UserRoleCompany $userRoleCompany, Service $service, Invoice $invoice)
     {
         $this->admin = $admin;
-        $this->user = $user;
+        $this->userRoleCompany = $userRoleCompany;
         $this->service = $service;
         $this->invoice = $invoice;
     }
@@ -41,12 +41,12 @@ class NewInvoiceMail extends Mailable
      */
     public function build()
     {
-        $loginSigner = $this->user->urlSigners()->create([
+        $loginSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
         $location = "invoices/{$this->invoice->seq_id}";
-        $unsubscribeSigner = $this->user->urlSigners()->create([
+        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
