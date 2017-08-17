@@ -28,13 +28,16 @@ class ComposerServiceProvider extends ServiceProvider
 
                 // List of Possible UserRoleCompanies for this User
                 $urc = $user->userRoleCompanies()
-                        ->join('companies', 'company_id', '=', 'companies.id')
-                        ->join('roles', 'role_id', '=', 'roles.id')
-                        ->select('companies.name as company_name',
-                                'user_role_company.id as id',
-                                'roles.name as role',
-                                'text', 'icon')
-                        ->get()->groupBy('company_name');
+                        ->get()->transform(function ($item) {
+                            $role = $item->role;
+                            return collect( [
+                                'id' => $item->id,
+                                'company_name' => $item->company->name,
+                                'role' => $role->name,
+                                'text' => $role->text,
+                                'icon' => $role->icon
+                            ]);
+                        })->groupBy('company_name');
                 $view->with('roles', $urc);
 
                 $view->with('chat', (object)[

@@ -11,7 +11,7 @@
             <div class="site-header-content-in">
                 <div class="site-header-shown">
 
-
+                    <role-picker :selected-user="{{ $selectedUser }}" :companies="{{ $roles }}"></role-picker>
 
                     <notifications-widget></notifications-widget>
                     <messages-widget :selected-user="{{ $selectedUser }}" sound-url="{{ $chat->sound }}"></messages-widget>

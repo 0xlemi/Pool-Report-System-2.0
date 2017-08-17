@@ -54,13 +54,6 @@ class UserRoleCompany extends Model
     ];
 
 
-	// ********** Attributes ************
-
-    public function getEmailAttribute()
-    {
-        return $this->user->email;
-    }
-
 	// ********** Regular ************
 
     public function isRole(...$roles)
@@ -170,6 +163,10 @@ class UserRoleCompany extends Model
 	// ***********************
 
 
+    public function getEmailAttribute()
+    {
+        return $this->user->email;
+    }
 
     // ******************************
     //            Scopes
