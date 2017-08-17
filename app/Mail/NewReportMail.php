@@ -52,16 +52,17 @@ class NewReportMail extends Mailable implements ShouldQueue
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
+        $magicLink =  url("/signin/{$loginSigner->token}?location={$location}");
         $data = array(
-            'logo' => Storage::url('images/assets/app/logo-black.png'),
-            'headerImage' => Storage::url('images/assets/email/email_header.png'),
+            'logo' => Storage::url('images/assets/app/logo-long.png'),
             'name' => $name,
             'address' => $this->report->service->address_line,
             'time' => $time,
             'photo1' => Storage::url($this->report->normalImage(1)),
             'photo2' => Storage::url($this->report->normalImage(2)),
             'photo3' => Storage::url($this->report->normalImage(3)),
-            'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
+            'magicLink' => $magicLink,
+            'magicLinkWithBreaks' => wordwrap($magicLink, 50, '<br>', true),
             'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
         );
 
