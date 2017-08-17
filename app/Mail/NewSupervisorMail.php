@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Supervisor;
 use App\User;
 use App\PRS\Helpers\NotificationHelpers;
 use Carbon\Carbon;
@@ -26,7 +25,7 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Supervisor $supervisor, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
+    public function __construct(UserRoleCompany $supervisor, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
     {
         $this->supervisor = $supervisor;
         $this->userRoleCompany = $userRoleCompany;
@@ -61,7 +60,7 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
                     'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Supervisor Created!",
-                    'moreInfo' => "The supervisor {$supervisor->name} {$supervisor->last_name} was created by {$person}",
+                    'moreInfo' => "The supervisor {$supervisor->user->fullName} was created by {$person}",
                     'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];

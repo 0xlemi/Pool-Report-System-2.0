@@ -77,9 +77,9 @@ class TechniciansController extends PageController
      */
     public function store(CreateUserRoleCompanyRequest $request)
     {
-        $this->validate($request, [
-            'password' => 'required|alpha_dash|between:6,200'
-        ]);
+        // $this->validate($request, [
+        //     'password' => 'required|alpha_dash|between:6,200'
+        // ]);
 
         $this->authorize('create', [UserRoleCompany::class, 'tech']);
 
@@ -103,8 +103,8 @@ class TechniciansController extends PageController
                 'last_name' => $request->last_name,
                 'language' => $request->language,
             ]));
-            $user->password = bcrypt($request->password);
-            $user->save();
+            // $user->password = bcrypt($request->password);
+            // $user->save();
         }
 
         // Check that there is no other URC with the same attributes

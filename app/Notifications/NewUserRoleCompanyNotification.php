@@ -61,13 +61,13 @@ class NewUserRoleCompanyNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         if($this->userRoleCompany->isRole('client')){
-            return (new NewClientMail($this->userRoleCompany, $notifiable, $this->helper))->to($notifiable->email);
+            return (new NewClientMail($this->userRoleCompany, $this->urc, $this->helper))->to($notifiable->email);
         }
         elseif($this->userRoleCompany->isRole('sup')){
-            return (new NewSupervisorMail($this->userRoleCompany, $notifiable, $this->helper))->to($notifiable->email);
+            return (new NewSupervisorMail($this->userRoleCompany, $this->urc, $this->helper))->to($notifiable->email);
         }
         elseif($this->userRoleCompany->isRole('tech')){
-            return (new NewTechnicianMail($this->userRoleCompany, $notifiable, $this->helper))->to($notifiable->email);
+            return (new NewTechnicianMail($this->userRoleCompany, $this->urc, $this->helper))->to($notifiable->email);
         }
         return null;
     }

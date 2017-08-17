@@ -8,15 +8,15 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Service;
 use App\Invoice;
+use App\Company;
 use App\UserRoleCompany;
-use App\Administrator;
 use Carbon\Carbon;
 
 class NewInvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $admin;
+    public $company;
     public $userRoleCompany;
     public $service;
     public $invoice;
@@ -26,9 +26,9 @@ class NewInvoiceMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Administrator $admin, UserRoleCompany $userRoleCompany, Service $service, Invoice $invoice)
+    public function __construct(Company $company, UserRoleCompany $userRoleCompany, Service $service, Invoice $invoice)
     {
-        $this->admin = $admin;
+        $this->company = $company;
         $this->userRoleCompany = $userRoleCompany;
         $this->service = $service;
         $this->invoice = $invoice;

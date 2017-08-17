@@ -6,7 +6,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Client;
 use App\User;
 use App\PRS\Helpers\NotificationHelpers;
 use Carbon\Carbon;
@@ -26,7 +25,7 @@ class NewClientMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Client $client, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
+    public function __construct(UserRoleCompany $client, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
     {
         $this->client = $client;
         $this->userRoleCompany = $userRoleCompany;
@@ -61,7 +60,7 @@ class NewClientMail extends Mailable implements ShouldQueue
                     'logo' => Storage::url('images/assets/app/logo-2.png'),
                     'objectImage' => $image,
                     'title' => "New Client Created!",
-                    'moreInfo' => "The client {$client->name} {$client->last_name} was created by {$person}",
+                    'moreInfo' => "The client {$client->user->fullName} was created by {$person}",
                     'magicLink' => url("/signin/{$loginSigner->token}?location={$location}"),
                     'unsubscribeLink' => url('/unsubscribe').'/'.$unsubscribeSigner->token,
                 ];

@@ -45,7 +45,7 @@ a { color: #ff646a; text-decoration: none; }
                 </tr>
                 <!-- company name -->
                 <tr>
-                  <td style="font-family: 'Open Sans', Arial, sans-serif; font-size:16px; color:#FFFFFF; line-height:26px; font-weight: bold;">{{ $admin->company_name }}</td>
+                  <td style="font-family: 'Open Sans', Arial, sans-serif; font-size:16px; color:#FFFFFF; line-height:26px; font-weight: bold;">{{ $company->name }}</td>
                 </tr>
                 <!-- end company name -->
                 <tr>
@@ -54,7 +54,7 @@ a { color: #ff646a; text-decoration: none; }
                 <!-- address -->
                 <tr>
                   <td style="font-family: 'Open Sans', Arial, sans-serif; font-size:13px; color:#FFFFFF; line-height:26px;">
-                    <br />{{ $admin->website }}</td>
+                    <br />{{ $company->website }}</td>
                 </tr>
                 <!-- end address -->
                 <tr>
@@ -89,7 +89,7 @@ a { color: #ff646a; text-decoration: none; }
                 </tr>
                 <!-- company name -->
                 <tr>
-                  <td align="right" style="font-family: 'Open Sans', Arial, sans-serif; font-size:16px; color:#3b3b3b; line-height:26px; font-weight: bold;">{{ $user->fullName }}</td>
+                  <td align="right" style="font-family: 'Open Sans', Arial, sans-serif; font-size:16px; color:#3b3b3b; line-height:26px; font-weight: bold;">{{ $userRoleCompany->user->fullName }}</td>
                 </tr>
                 <!-- end company name -->
                 <tr>

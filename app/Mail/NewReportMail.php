@@ -38,11 +38,11 @@ class NewReportMail extends Mailable implements ShouldQueue
     public function build()
     {
         $time = (new Carbon($this->report->completed, 'UTC'))
-                    ->setTimezone($this->report->admin()->timezone)
+                    ->setTimezone($this->report->company->timezone)
                     ->toDayDateTimeString();
 
         // info needed by the template
-        $name = $this->userRoleCompany->userable()->name;
+        $name = $this->userRoleCompany->user->name;
         $location = "reports/{$this->report->seq_id}";
         $loginSigner = $this->userRoleCompany->urlSigners()->create([
             'token' => str_random(128),
