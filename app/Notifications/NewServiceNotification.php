@@ -17,7 +17,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $service;
-    protected $userRoleCompany;
+    protected $urc;
     protected $helper;
 
     /**
@@ -25,10 +25,10 @@ class NewServiceNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Service $service, UserRoleCompany $userRoleCompany)
+    public function __construct(Service $service, UserRoleCompany $urc)
     {
         $this->service = $service;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->urc = $urc;
         $this->helper = new NotificationHelpers();
     }
 
@@ -51,7 +51,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewServiceMail($this->service, $notifiable, $this->helper))->to($notifiable->email);
+        return (new NewServiceMail($this->service, $notifiable, $this->urc, $this->helper))->to($notifiable->email);
     }
 
     /**
@@ -64,7 +64,7 @@ class NewServiceNotification extends Notification implements ShouldQueue
     {
         $service = $this->service;
 
-        $person =  $this->helper->personStyled($this->userRoleCompany);
+        $person =  $this->helper->personStyled($this->urc);
         return [
             'icon' => \Storage::url($service->icon()),
             'link' => "services/{$service->seq_id}",

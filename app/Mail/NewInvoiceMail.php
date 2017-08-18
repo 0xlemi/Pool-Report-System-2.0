@@ -17,7 +17,7 @@ class NewInvoiceMail extends Mailable
     use Queueable, SerializesModels;
 
     public $company;
-    public $userRoleCompany;
+    public $notifiable;
     public $service;
     public $invoice;
 
@@ -26,10 +26,10 @@ class NewInvoiceMail extends Mailable
      *
      * @return void
      */
-    public function __construct(Company $company, UserRoleCompany $userRoleCompany, Service $service, Invoice $invoice)
+    public function __construct(Company $company, UserRoleCompany $notifiable, Service $service, Invoice $invoice)
     {
         $this->company = $company;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
         $this->service = $service;
         $this->invoice = $invoice;
     }
@@ -41,12 +41,12 @@ class NewInvoiceMail extends Mailable
      */
     public function build()
     {
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
         $location = "invoices/{$this->invoice->seq_id}";
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);

@@ -17,7 +17,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $workOrder;
-    protected $userRoleCompany;
+    protected $urc;
     protected $helper;
 
     /**
@@ -25,10 +25,10 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(WorkOrder $workOrder, UserRoleCompany $userRoleCompany)
+    public function __construct(WorkOrder $workOrder, UserRoleCompany $urc)
     {
         $this->workOrder = $workOrder;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->urc = $urc;
         $this->helper = new NotificationHelpers();
     }
 
@@ -51,7 +51,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewWorkOrderMail($this->workOrder, $notifiable, $this->helper))->to($notifiable->email);
+        return (new NewWorkOrderMail($this->workOrder, $notifiable, $this->urc, $this->helper))->to($notifiable->email);
     }
 
     /**
@@ -64,7 +64,7 @@ class NewWorkOrderNotification extends Notification implements ShouldQueue
     {
         $workOrder = $this->workOrder;
 
-        $person =  $this->helper->personStyled($this->userRoleCompany);
+        $person =  $this->helper->personStyled($this->urc);
         return [
             'icon' => \Storage::url($workOrder->icon()),
             'link' => "workorders/{$workOrder->seq_id}",

@@ -17,7 +17,8 @@ class NewClientMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     protected $client;
-    protected $userRoleCompany;
+    protected $notifiable;
+    protected $urcDidIt;
     protected $helper;
 
     /**
@@ -25,10 +26,11 @@ class NewClientMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(UserRoleCompany $client, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
+    public function __construct(UserRoleCompany $client, UserRoleCompany $notifiable, UserRoleCompany $urcDidIt, NotificationHelpers $helper)
     {
         $this->client = $client;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
+        $this->urcDidIt = $urcDidIt;
         $this->helper = $helper;
     }
 
@@ -40,15 +42,15 @@ class NewClientMail extends Mailable implements ShouldQueue
     public function build()
     {
         $client = $this->client;
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $person =  $this->helper->personStyled($this->userRoleCompany);
+        $person =  $this->helper->personStyled($this->urcDidIt);
         $location = "clients/{$client->seq_id}";
 
         $image = Storage::url('images/assets/email/new_user.png');

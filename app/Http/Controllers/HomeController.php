@@ -59,7 +59,7 @@ class HomeController extends PageController
             return redirect('/login');
         }
 
-        $user = $signer->user;
+        $user = $signer->userRoleCompany->user;
 
         $signer->delete();
         Auth::login($user);
@@ -77,14 +77,14 @@ class HomeController extends PageController
             return redirect('/login');
         }
 
-        $user = $signer->user;
+        $userRoleCompany = $signer->userRoleCompany;
 
         // if the user is allready logged in send him to his settings
-        if($user == Logged::user()){
+        if($userRoleCompany->user == Logged::user()){
             return redirect('/settings');
         }
 
-        $notifications = $user->selectedUser->allNotificationSettings();
+        $notifications = $userRoleCompany->allNotificationSettings();
 
         return view('extras.emailSettings', compact('notifications', 'token'));
     }
@@ -97,9 +97,9 @@ class HomeController extends PageController
             return redirect('/login');
         }
 
-        $user = $signer->user;
+        $userRoleCompany = $signer->userRoleCompany;
 
-        $validNames = $user->notificationSettings->validNames();
+        $validNames = $userRoleCompany->notificationSettings->validNames();
         $requestNames = array_keys($request->except('token','_token'));
 
         // validate that the names sent are real notification settings
@@ -113,11 +113,11 @@ class HomeController extends PageController
         // set true or false depending if was sent in the request
         foreach ($validNames as $validName) {
             $value = in_array($validName, $requestNames);
-            $newNumber = $user->notificationSettings->notificationChanged($validName, 'mail', $value);
-            $user->$validName = $newNumber;
+            $newNumber = $userRoleCompany->notificationSettings->notificationChanged($validName, 'mail', $value);
+            $userRoleCompany->$validName = $newNumber;
         }
 
-        if($user->save()){
+        if($userRoleCompany->save()){
             $title = 'Email Settings Changed!';
             $isSuccess = true;
             $signer->delete();

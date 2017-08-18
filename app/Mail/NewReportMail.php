@@ -17,17 +17,17 @@ class NewReportMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     private $report;
-    private $userRoleCompany;
+    private $notifiable;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Report $report, UserRoleCompany $userRoleCompany)
+    public function __construct(Report $report, UserRoleCompany $notifiable)
     {
         $this->report = $report;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
     }
 
     /**
@@ -42,13 +42,13 @@ class NewReportMail extends Mailable implements ShouldQueue
                     ->toDayDateTimeString();
 
         // info needed by the template
-        $name = $this->userRoleCompany->user->name;
+        $name = $this->notifiable->user->name;
         $location = "reports/{$this->report->seq_id}";
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);

@@ -18,7 +18,7 @@ class NewWorkOrderMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $workOrder;
-    protected $userRoleCompany;
+    protected $urcDidIt;
     protected $helper;
 
     /**
@@ -26,10 +26,11 @@ class NewWorkOrderMail extends Mailable
      *
      * @return void
      */
-    public function __construct(WorkOrder $workOrder, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
+    public function __construct(WorkOrder $workOrder, UserRoleCompany $notifiable, UserRoleCompany $urcDidIt, NotificationHelpers $helper)
     {
         $this->workOrder = $workOrder;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
+        $this->urcDidIt = $urcDidIt;
         $this->helper = $helper;
     }
 
@@ -41,15 +42,15 @@ class NewWorkOrderMail extends Mailable
     public function build()
     {
         $workOrder = $this->workOrder;
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $person =  $this->helper->personStyled($this->userRoleCompany);
+        $person =  $this->helper->personStyled($this->urcDidIt);
         $location = "workorders/{$workOrder->seq_id}";
 
         $image = Storage::url('images/assets/email/briefcase.png');

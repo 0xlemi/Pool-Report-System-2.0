@@ -17,17 +17,17 @@ class NewPaymentMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $payment;
-    protected $userRoleCompany;
+    protected $notifiable;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Payment $payment, UserRoleCompany $userRoleCompany)
+    public function __construct(Payment $payment, UserRoleCompany $notifiable)
     {
         $this->payment = $payment;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
     }
 
     /**
@@ -39,11 +39,11 @@ class NewPaymentMail extends Mailable
     {
         $payment = $this->payment;
         $invoice = $payment->invoice;
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);

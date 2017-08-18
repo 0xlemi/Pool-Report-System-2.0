@@ -17,7 +17,8 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     protected $supervisor;
-    protected $userRoleCompany;
+    protected $notifiable;
+    protected $urcDidIt;
     protected $helper;
 
     /**
@@ -25,10 +26,11 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(UserRoleCompany $supervisor, UserRoleCompany $userRoleCompany, NotificationHelpers $helper)
+    public function __construct(UserRoleCompany $supervisor, UserRoleCompany $notifiable, UserRoleCompany $urcDidIt, NotificationHelpers $helper)
     {
         $this->supervisor = $supervisor;
-        $this->userRoleCompany = $userRoleCompany;
+        $this->notifiable = $notifiable;
+        $this->urcDidIt = $urcDidIt;
         $this->helper = $helper;
     }
 
@@ -40,15 +42,15 @@ class NewSupervisorMail extends Mailable implements ShouldQueue
     public function build()
     {
         $supervisor = $this->supervisor;
-        $loginSigner = $this->userRoleCompany->urlSigners()->create([
+        $loginSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(3)
         ]);
-        $unsubscribeSigner = $this->userRoleCompany->urlSigners()->create([
+        $unsubscribeSigner = $this->notifiable->urlSigners()->create([
             'token' => str_random(128),
             'expire' => Carbon::now()->addDays(10)
         ]);
-        $person =  $this->helper->personStyled($this->userRoleCompany);
+        $person =  $this->helper->personStyled($this->urcDidIt);
         $location = "supervisors/{$supervisor->seq_id}";
 
         $image = Storage::url('images/assets/email/eye.png');
