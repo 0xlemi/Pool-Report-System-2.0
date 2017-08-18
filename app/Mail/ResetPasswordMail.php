@@ -32,7 +32,13 @@ class ResetPasswordMail extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->subject('Password Reset')
-                    ->view('emails.auth.resetPassword');
+        $magicLink = url('password/reset').'/'.$this->token;
+        $data = [
+            'magicLink' => $magicLink,
+            'magicLinkWithBreaks' => wordwrap($magicLink, 50, '<br>', true)
+        ];
+        return $this->subject("Password Reset")
+                ->view('emails.auth.resetPassword')
+                ->with($data);
     }
 }
