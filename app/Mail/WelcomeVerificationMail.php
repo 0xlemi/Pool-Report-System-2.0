@@ -34,6 +34,13 @@ class WelcomeVerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.auth.welcome_activation');
+        $data = [
+            'company_name' => $this->company->name,
+            'magicLink' => route('auth.activate', $this->token),
+            'magicLinkWithBreaks' => wordwrap(route('auth.activate', $this->token), 50, '<br>', true)
+        ];
+        return $this->subject("{$this->company->name} is now using Pool Report System")
+                ->view('emails.auth.welcome_activation')
+                ->with($data);
     }
 }
