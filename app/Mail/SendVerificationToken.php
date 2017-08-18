@@ -31,6 +31,12 @@ class SendVerificationToken extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        return $this->view('emails.auth.activation');
+        $data = [
+            'magicLink' => route('auth.activate', $this->token),
+            'magicLinkWithBreaks' => wordwrap(route('auth.activate', $this->token), 50, '<br>', true)
+        ];
+        return $this->subject("Email Verification")
+                ->view('emails.auth.activation')
+                ->with($data);
     }
 }
