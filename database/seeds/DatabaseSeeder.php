@@ -48,12 +48,12 @@ class DatabaseSeeder extends Seeder
 		Artisan::call('passport:install');
 
     	$this->call(CompaniesTableSeeder::class);
-    	// $this->call(ServicesTableSeeder::class);
-    	// $this->call(UserTableSeeder::class);
-    	// $this->call(EquipmentTableSeeder::class);
-    	// $this->call(WorkOrdersTableSeeder::class);
-    	// $this->call(WorksTableSeeder::class);
-    	// $this->call(ReportsTableSeeder::class);
+    	$this->call(ServicesTableSeeder::class);
+    	$this->call(UserTableSeeder::class);
+    	$this->call(EquipmentTableSeeder::class);
+    	$this->call(WorkOrdersTableSeeder::class);
+    	$this->call(WorksTableSeeder::class);
+    	$this->call(ReportsTableSeeder::class);
     }
 
 
