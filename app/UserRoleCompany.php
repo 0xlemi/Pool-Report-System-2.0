@@ -80,6 +80,24 @@ class UserRoleCompany extends Model
         return $this->notificationSettings->where('name', $name)->contains('type', $type);
     }
 
+    public function setNotificationSetting(string $name, string $type, bool $value)
+    {
+        if($value){
+            // If it don't have this notification then attach
+            if(!$this->hasNotificationSetting($name, $type)){
+                $notification = NotificationSetting::where('name', $name)->where('type', $type)->firstOrFail();
+                return $this->notificationSettings()->attach($notification->id);
+            }
+        }else{
+            // If it does have this notification then remove
+            if($this->hasNotificationSetting($name, $type)){
+                $notification = NotificationSetting::where('name', $name)->where('type', $type)->firstOrFail();
+                return $this->notificationSettings()->detach($notification->id);
+            }
+        }
+        return true; // There was no need for change
+    }
+
     public function allNotificationSettings()
     {
         $urcNotifications = $this->notificationSettings()->select('name', 'type')->get();

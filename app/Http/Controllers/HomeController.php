@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\User;
 use App\PRS\Helpers\UserHelpers;
 use App\PRS\Classes\Logged;
+use App\NotificationSetting;
 use App\Service;
 use App\UrlSigner;
 
@@ -85,6 +86,7 @@ class HomeController extends PageController
         }
 
         $notifications = $userRoleCompany->allNotificationSettings();
+        // dd($notifications);
 
         return view('extras.emailSettings', compact('notifications', 'token'));
     }
@@ -99,22 +101,19 @@ class HomeController extends PageController
 
         $userRoleCompany = $signer->userRoleCompany;
 
-        $validNames = $userRoleCompany->notificationSettings->validNames();
-        $requestNames = array_keys($request->except('token','_token'));
+        $requestNames = collect(array_keys($request->except('token','_token')));
 
-        // validate that the names sent are real notification settings
+        // validate that the names sent are real notification settings (not null)
         foreach ($requestNames as $name) {
-            if(!in_array($name, $validNames)){
+            if(!NotificationSetting::where('name', $name)->where('type', 'mail')->first()){
                 $signer->delete();
                 return response("Something funny is going on, go away.", 422);
             }
         }
-        // run though all the valid notification
-        // set true or false depending if was sent in the request
-        foreach ($validNames as $validName) {
-            $value = in_array($validName, $requestNames);
-            $newNumber = $userRoleCompany->notificationSettings->notificationChanged($validName, 'mail', $value);
-            $userRoleCompany->$validName = $newNumber;
+
+        $allNotifications = NotificationSetting::where('type', 'mail')->pluck('name');
+        foreach ($allNotifications as $name) {
+            $userRoleCompany->setNotificationSetting($name, 'mail', $requestNames->contains($name));
         }
 
         if($userRoleCompany->save()){

@@ -60,17 +60,17 @@
                     <ul class="list-group">
                         @foreach($notifications as $notification)
                             <!-- check that the notification has email opiton -->
-                            @if(count($notification->buttons) > 1)
-                            <li class="list-group-item">
-                                <label>{{$notification->tag}}</label>
-                                <div class="material-switch pull-right">
-                                    <input id="switch{{$notification->name}}"
-                                            name="{{ $notification->name }}"
-                                            type="checkbox"
-                                            {{ ($notification->buttons[1]->value) ? 'checked' : '' }}>
-                                    <label for="switch{{$notification->name}}" class="label-success"></label>
-                                </div>
-                            </li>
+                            @if(count($notification) > 1)
+                                <li class="list-group-item">
+                                    <label>{{$notification[1]['text']}}</label>
+                                    <div class="material-switch pull-right">
+                                        <input id="switch{{$notification[1]['name']}}"
+                                                name="{{ $notification[1]['name'] }}"
+                                                type="checkbox"
+                                                {{ ($notification[1]['value']) ? 'checked' : '' }}>
+                                        <label for="switch{{$notification[1]['name']}}" class="label-success"></label>
+                                    </div>
+                                </li>
                             @endif
                         @endforeach
                     </ul>
