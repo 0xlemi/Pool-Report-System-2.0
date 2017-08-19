@@ -112,9 +112,9 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
-        Auth::logout();
-
-        return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
+        // Auth::logout();
+        //
+        // return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
     }
 
 }

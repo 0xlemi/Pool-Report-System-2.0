@@ -107,12 +107,7 @@ class VerificationController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        // try {
-            $userRoleCompany = $user->userRoleCompanies()->ofRole('admin')->firstOrFail();
-        // } catch (ModelNotFoundException $e) {
-        //     return redirect('/login')
-        //         ->withInfo('We could not found the user, send us a email to support@poolreportsystem.com');
-        // }
+        $userRoleCompany = $user->userRoleCompanies()->ofRole('admin')->firstOrFail();
 
         // check if the user is activated (email verification)
         if($user->verified){
