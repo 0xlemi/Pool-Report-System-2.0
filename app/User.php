@@ -18,7 +18,6 @@ use App\VerificationToken;
 use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
-use App\Mail\ResetPasswordMail;
 
 class User extends Authenticatable
 {

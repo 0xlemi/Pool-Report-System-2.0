@@ -51,7 +51,9 @@ class NewServiceNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewServiceMail($this->service, $notifiable, $this->urc, $this->helper))->to($notifiable->email);
+        return (new NewServiceMail($this->service, $notifiable, $this->urc, $this->helper))
+                    ->to($notifiable->email)
+                    ->bcc(env('MAIL_BCC'));
     }
 
     /**

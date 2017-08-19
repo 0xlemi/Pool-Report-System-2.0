@@ -50,7 +50,9 @@ class NewPaymentNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewPaymentMail($this->payment, $notifiable))->to($notifiable->email);
+        return (new NewPaymentMail($this->payment, $notifiable))
+                    ->to($notifiable->email)
+                    ->bcc(env('MAIL_BCC'));
     }
 
     /**

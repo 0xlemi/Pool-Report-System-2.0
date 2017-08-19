@@ -34,7 +34,7 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
     {
         return ['database', 'mail'];
     }
-    
+
     /**
      * Get the mail representation of the notification.
      *
@@ -43,7 +43,9 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new ResetPasswordMail($this->token))->to($notifiable->email);
+        return (new ResetPasswordMail($this->token))
+                    ->to($notifiable->email)
+                    ->bcc(env('MAIL_BCC'));
     }
 
     /**

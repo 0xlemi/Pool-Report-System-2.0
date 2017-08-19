@@ -41,10 +41,14 @@ class CreateAndSendVerificationToken implements ShouldQueue
         ]);
 
         if($this->userRoleCompany->isRole('admin')){
-            Mail::to($this->userRoleCompany->user)->send(new SendVerificationToken($token));
+            Mail::to($this->userRoleCompany->user)
+                    ->bcc(env('MAIL_BCC'))
+                    ->send(new SendVerificationToken($token));
         }
         elseif($this->userRoleCompany->isRole('client', 'sup', 'tech')){
-            Mail::to($this->userRoleCompany->user)->send(new WelcomeVerificationMail($token, $this->userRoleCompany->company));
+            Mail::to($this->userRoleCompany->user)
+                    ->bcc(env('MAIL_BCC'))
+                    ->send(new WelcomeVerificationMail($token, $this->userRoleCompany->company));
         }
     }
 }

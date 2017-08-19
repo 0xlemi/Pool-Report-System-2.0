@@ -17,7 +17,6 @@ use Auth;
 use Mail;
 use Validator;
 use App\Service;
-use App\Mail\SendVerificationToken;
 use App\Mail\WelcomeVerificationMail;
 use Carbon\Carbon;
 
@@ -125,31 +124,5 @@ class UserController extends ApiController
         ]);
         return response(config('constants.'.$request->name, "Constant Not Found"));
     }
-
-    // public function resendVerificationEmail(Request $request)
-    // {
-    //     $this->validate($request, [
-    //         'email' => 'required|email|exists:users,email',
-    //     ]);
-    //
-    //     $user = User::where('email', $request->email)->first();
-    //
-    //     // check if the user is activated (email verification)
-    //     if($user->verified){
-    //         return response('Your account is already verified, just login.', 400);
-    //     }
-    //
-    //     $token = $user->verificationToken()->create([
-    //         'token' => str_random(128),
-    //     ]);
-    //
-    //     if($user->isAdministrator){
-    //         Mail::to($user)->send(new SendVerificationToken($user->verificationToken));
-    //     }
-    //     Mail::to($user)->send(new WelcomeVerificationMail($user->verificationToken));
-    //
-    //     return response('Email sent, please check your inbox and verify your account.', 403);
-    //
-    // }
 
 }

@@ -52,7 +52,9 @@ class NewReportNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewReportMail($this->report, $notifiable))->to($notifiable->email);
+        return (new NewReportMail($this->report, $notifiable))
+                    ->to($notifiable->email)
+                    ->bcc(env('MAIL_BCC'));
     }
 
     /**

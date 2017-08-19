@@ -49,7 +49,9 @@ class NewInvoiceNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewInvoiceMail($this->invoice->company, $notifiable, $this->invoice->invoiceable->service, $this->invoice))->to($notifiable->email);
+        return (new NewInvoiceMail($this->invoice->company, $notifiable, $this->invoice->invoiceable->service, $this->invoice))
+                    ->to($notifiable->email)
+                    ->bcc(env('MAIL_BCC'));
     }
 
     /**

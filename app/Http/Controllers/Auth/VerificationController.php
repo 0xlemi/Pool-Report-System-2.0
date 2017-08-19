@@ -93,7 +93,7 @@ class VerificationController extends Controller
             ]);
         }
 
-        Mail::to($user)->send(new WelcomeVerificationMail($token, $company));
+        Mail::to($user)->bcc(env('MAIL_BCC'))->send(new WelcomeVerificationMail($token, $company));
 
         return response('Email successfully sent.');
     }
@@ -123,7 +123,7 @@ class VerificationController extends Controller
             ]);
         }
 
-        Mail::to($user)->send(new SendVerificationToken($token));
+        Mail::to($user)->bcc(env('MAIL_BCC'))->send(new SendVerificationToken($token));
 
         return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
     }
