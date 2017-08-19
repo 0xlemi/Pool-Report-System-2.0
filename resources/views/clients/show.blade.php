@@ -28,7 +28,7 @@
 							<div class="form-group row">
 								<email-verification-notice
 									name="Client"
-									email="{{ $user->email }}">
+									seq-id="{{ $client->seq_id }}">
 								</email-verification-noctice>
 							</div>
 							<br>

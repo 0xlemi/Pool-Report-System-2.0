@@ -22,7 +22,7 @@ export default {
     components:{
         alert
     },
-    props: ['name', 'email'],
+    props: ['name', 'seqId'],
     data(){
         return {
             'alertMessage': '',
@@ -47,7 +47,9 @@ export default {
             }).spin(clickEvent.target);
 
             this.alertActive = false;
-            this.$http.get(Laravel.url+'/activate/resend?email='+this.email)
+            this.$http.post(Laravel.url+'activate/resend', {
+				seq_id: this.seqId
+			})
             .then(response => {
                 this.alertMessage = 'The verification email was resent';
                 this.alertType = 'success';
@@ -59,7 +61,7 @@ export default {
 	                this.alertType = 'warning';
 	                this.alertActive = true;
 				}else{
-	                this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
+	                this.alertMessage = response.data;
 	                this.alertType = 'danger';
 	                this.alertActive = true;
 				}

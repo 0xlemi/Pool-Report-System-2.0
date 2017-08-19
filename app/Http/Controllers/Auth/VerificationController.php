@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\SendVerificationToken;
 use App\Mail\WelcomeVerificationMail;
 use App\VerificationToken;
+use App\PRS\Classes\Logged;
 
 class VerificationController extends Controller
 {
@@ -61,47 +62,75 @@ class VerificationController extends Controller
         return redirect('/dashboard');
     }
 
-    // ******* Needs to work with UserRoleCompany
-    // public function resend(Request $request)
-    // {
-    //     $this->validate($request, [
-    //         'email' => 'required|email|exists:users,email'
-    //     ]);
-    //
-    //     $user = User::where('email', $request->email)->first();
-    //
-    //     // check if the user is activated (email verification)
-    //     if($user->verified){
-    //         return redirect('/login')
-    //             ->withInfo('Your account is already verified, just login.');
-    //     }
-    //
-    //     if($request->wantsJson() && $user->verificationToken){
-    //         $hoursSinceSent = Carbon::parse($user->verificationToken->created_at)->diffInHours();
-    //         if($hoursSinceSent < 24){
-    //             $hoursLeft = 24 - $hoursSinceSent;
-    //             return response("You Need to wait {$hoursLeft} hours, for you to be able to send another verification email. (spam protection)", 409);
-    //         }
-    //     }
-    //
-    //     if($user->verificationToken){
-    //         $token = $user->verificationToken;
-    //     }else{
-    //         $token = $user->verificationToken()->create([
-    //             'token' => str_random(128),
-    //         ]);
-    //     }
-    //
-    //     if($user->isAdministrator()){
-    //         Mail::to($user)->send(new SendVerificationToken($token));
-    //     }
-    //     else{
-    //         if($request->wantsJson()){
-    //             Mail::to($user)->send(new WelcomeVerificationMail($token, $user->userable()->admin()));
-    //         }
-    //     }
-    //
-    //     return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
-    // }
+    // Is for Clients, Workorders and Technicians
+    public function resendFromAdmin(Request $request)
+    {
+        // Need to be validated to do this operation
+        $this->middleware('auth');
+
+        $this->validate($request, [
+            'seq_id' => 'required|integer'
+        ]);
+
+        $company = Logged::company();
+        $userRoleCompany = $company->userRoleCompanies()->bySeqId($request->seq_id);
+        $user = $userRoleCompany->user;
+
+        // check if the user is activated (email verification)
+        if($user->verified){
+            return response('That account is already verified.', 400);
+        }
+
+        if($token = $userRoleCompany->verificationToken){
+            $hoursSinceSent = Carbon::parse($token->created_at)->diffInHours();
+            if($hoursSinceSent < 24){
+                $hoursLeft = 24 - $hoursSinceSent;
+                return response("You Need to wait {$hoursLeft} hours, for you to be able to send another verification email. (spam protection)", 409);
+            }
+        }else{
+            $token = $userRoleCompany->verificationToken()->create([
+                'token' => str_random(128),
+            ]);
+        }
+
+        Mail::to($user)->send(new WelcomeVerificationMail($token, $company));
+
+        return response('Email successfully sent.');
+    }
+
+    // Only works with admins
+    public function resend(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        // try {
+            $userRoleCompany = $user->userRoleCompanies()->ofRole('admin')->firstOrFail();
+        // } catch (ModelNotFoundException $e) {
+        //     return redirect('/login')
+        //         ->withInfo('We could not found the user, send us a email to support@poolreportsystem.com');
+        // }
+
+        // check if the user is activated (email verification)
+        if($user->verified){
+            return redirect('/login')
+                ->withInfo('Your account is already verified, just login.');
+        }
+
+        if($userRoleCompany->verificationToken){
+            $token = $userRoleCompany->verificationToken;
+        }else{
+            $token = $userRoleCompany->verificationToken()->create([
+                'token' => str_random(128),
+            ]);
+        }
+
+        Mail::to($user)->send(new SendVerificationToken($token));
+
+        return redirect('/login')->withInfo('Email sent, please check your inbox and verify your account.');
+    }
 
 }

@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Company;
 use App\VerificationToken;
 
-class WelcomeVerificationMail extends Mailable
+class WelcomeVerificationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

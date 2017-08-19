@@ -36900,7 +36900,7 @@ exports.default = {
     components: {
         alert: _alert2.default
     },
-    props: ['name', 'email'],
+    props: ['name', 'seqId'],
     data: function data() {
         return {
             'alertMessage': '',
@@ -36928,7 +36928,9 @@ exports.default = {
             }).spin(clickEvent.target);
 
             this.alertActive = false;
-            this.$http.get(Laravel.url + '/activate/resend?email=' + this.email).then(function (response) {
+            this.$http.post(Laravel.url + 'activate/resend', {
+                seq_id: this.seqId
+            }).then(function (response) {
                 _this.alertMessage = 'The verification email was resent';
                 _this.alertType = 'success';
                 _this.alertActive = true;
@@ -36939,7 +36941,7 @@ exports.default = {
                     _this.alertType = 'warning';
                     _this.alertActive = true;
                 } else {
-                    _this.alertMessage = 'The verification could not be sent, please wait a for a moment and try again later.';
+                    _this.alertMessage = response.data;
                     _this.alertType = 'danger';
                     _this.alertActive = true;
                 }

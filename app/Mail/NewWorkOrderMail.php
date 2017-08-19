@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use Storage;
 use App\UserRoleCompany;
 
-class NewWorkOrderMail extends Mailable
+class NewWorkOrderMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

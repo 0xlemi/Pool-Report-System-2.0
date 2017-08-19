@@ -12,7 +12,7 @@ use App\Company;
 use App\UserRoleCompany;
 use Carbon\Carbon;
 
-class NewInvoiceMail extends Mailable
+class NewInvoiceMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

@@ -12,7 +12,7 @@ use App\UserRoleCompany;
 use App\Payment;
 use App\User;
 
-class NewPaymentMail extends Mailable
+class NewPaymentMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
