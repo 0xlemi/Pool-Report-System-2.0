@@ -11,6 +11,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use App\Mail\SendVerificationToken;
 use App\Mail\WelcomeVerificationMail;
+use App\Mail\VerificationEmployeeMail;
 use App\VerificationToken;
 use App\PRS\Classes\Logged;
 
@@ -93,9 +94,15 @@ class VerificationController extends Controller
             ]);
         }
 
-        Mail::to($user)->bcc(env('MAIL_BCC'))->send(new WelcomeVerificationMail($token, $company));
-
-        return response('Email successfully sent.');
+        if($userRoleCompany->isRole('client')){
+            Mail::to($user)->bcc(env('MAIL_BCC'))->send(new WelcomeVerificationMail($token, $company));
+            return response('Email successfully sent.');
+        }elseif($userRoleCompany->isRole('sup', 'tech')){
+            Mail::to($user)->bcc(env('MAIL_BCC'))->send(new VerificationEmployeeMail($token, $company));
+            return response('Email successfully sent.');
+        }
+        
+        return response('That account doesn\'t have a valid role, send us a email to support@poolreportsystem.com', 400);
     }
 
     // Only works with admins

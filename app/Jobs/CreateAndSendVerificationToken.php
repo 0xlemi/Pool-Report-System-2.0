@@ -11,6 +11,7 @@ use Mail;
 use App\UserRoleCompany;
 use App\Mail\SendVerificationToken;
 use App\Mail\WelcomeVerificationMail;
+use App\Mail\VerificationEmployeeMail;
 
 class CreateAndSendVerificationToken implements ShouldQueue
 {
@@ -45,10 +46,14 @@ class CreateAndSendVerificationToken implements ShouldQueue
                     ->bcc(env('MAIL_BCC'))
                     ->send(new SendVerificationToken($token));
         }
-        elseif($this->userRoleCompany->isRole('client', 'sup', 'tech')){
+        elseif($this->userRoleCompany->isRole('client')){
             Mail::to($this->userRoleCompany->user)
                     ->bcc(env('MAIL_BCC'))
                     ->send(new WelcomeVerificationMail($token, $this->userRoleCompany->company));
+        }elseif($this->userRoleCompany->isRole('sup', 'tech')){
+            Mail::to($this->userRoleCompany->user)
+                    ->bcc(env('MAIL_BCC'))
+                    ->send(new VerificationEmployeeMail($token, $this->userRoleCompany, $this->userRoleCompany->company));
         }
     }
 }
