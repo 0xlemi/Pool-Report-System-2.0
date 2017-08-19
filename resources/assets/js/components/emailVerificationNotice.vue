@@ -60,8 +60,12 @@ export default {
 					this.alertMessage = response.data;
 	                this.alertType = 'warning';
 	                this.alertActive = true;
+				}else if(response.status == 400){
+					this.alertMessage = response.data;
+	                this.alertType = 'danger';
+	                this.alertActive = true;
 				}else{
-	                this.alertMessage = response.data;
+	                this.alertMessage = 'There was a error, we could not send the email. Send us a email at support@poolreportsystem.com';
 	                this.alertType = 'danger';
 	                this.alertActive = true;
 				}

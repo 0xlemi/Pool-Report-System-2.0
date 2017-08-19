@@ -98,10 +98,10 @@ class VerificationController extends Controller
             Mail::to($user)->bcc(env('MAIL_BCC'))->send(new WelcomeVerificationMail($token, $company));
             return response('Email successfully sent.');
         }elseif($userRoleCompany->isRole('sup', 'tech')){
-            Mail::to($user)->bcc(env('MAIL_BCC'))->send(new VerificationEmployeeMail($token, $company));
+            Mail::to($user)->bcc(env('MAIL_BCC'))->send(new VerificationEmployeeMail($token, $userRoleCompany, $company));
             return response('Email successfully sent.');
         }
-        
+
         return response('That account doesn\'t have a valid role, send us a email to support@poolreportsystem.com', 400);
     }
 

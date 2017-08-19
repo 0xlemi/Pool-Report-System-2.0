@@ -25,6 +25,16 @@
 					<div class="card-block">
 						<form>
 
+							@if(!$technician->user->verified)
+							<div class="form-group row">
+								<email-verification-notice
+									name="Technician"
+									seq-id="{{ $technician->seq_id }}">
+								</email-verification-noctice>
+							</div>
+							<br>
+							@endif
+
 							@if($image)
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Technician photo</label>

@@ -36940,8 +36940,12 @@ exports.default = {
                     _this.alertMessage = response.data;
                     _this.alertType = 'warning';
                     _this.alertActive = true;
-                } else {
+                } else if (response.status == 400) {
                     _this.alertMessage = response.data;
+                    _this.alertType = 'danger';
+                    _this.alertActive = true;
+                } else {
+                    _this.alertMessage = 'There was a error, we could not send the email. Send us a email at support@poolreportsystem.com';
                     _this.alertType = 'danger';
                     _this.alertActive = true;
                 }
