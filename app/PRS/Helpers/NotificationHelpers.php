@@ -20,7 +20,7 @@ use HelperTrait;
         $channels = [];
         if($userRoleCompany->hasNotificationSetting($permissionName, 'database')){
             $channels[] = 'database';
-        }if($userRoleCompany->hasNotificationSetting($permissionName, 'mail')){
+        }if($userRoleCompany->hasNotificationSetting($permissionName, 'mail') && $userRoleCompany->user->verified){
             $channels[] = 'mail';
         }
         return $channels;
