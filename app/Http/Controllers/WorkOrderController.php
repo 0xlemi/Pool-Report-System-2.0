@@ -16,7 +16,6 @@ use App\PRS\Helpers\UserRoleCompanyHelpers;
 use App\PRS\Transformers\ImageTransformer;
 use App\PRS\Classes\Logged;
 use App\WorkOrder;
-use App\Notifications\NewWorkOrderNotification;
 
 
 class WorkOrderController extends PageController

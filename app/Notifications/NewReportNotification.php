@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use App\Mail\NewReportMail;
+use App\Mail\NewReportClientMail;
 use App\Report;
 use App\User;
 use App\PRS\Helpers\NotificationHelpers;
@@ -52,7 +52,7 @@ class NewReportNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        return (new NewReportMail($this->report, $notifiable))
+        return (new NewReportClientMail($this->report, $notifiable))
                     ->to($notifiable->email)
                     ->bcc(env('MAIL_BCC'));
     }

@@ -160,7 +160,7 @@ class DeviceMagicController extends Controller
         }
         $clients = $workOrder->service->userRoleCompanies;
         foreach ($clients as $client) {
-            $client->notify(new NewWorkOrderNotification($workOrder, $person));
+            // $client->notify(new NewWorkOrderNotification($workOrder, $person));
         }
 
         return response()->json(['message' => 'Work Order Created Successfully']);

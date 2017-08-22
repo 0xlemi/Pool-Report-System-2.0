@@ -9,9 +9,6 @@ use App\Company;
 use App\Image;
 
 use App\WorkOrder;
-use App\Notifications\NewInvoiceNotification;
-use App\Notifications\NewPaymentNotification;
-use App\Notifications\NewWorkOrderNotification;
 use App\UserRoleCompany;
 use Carbon\Carbon;
 

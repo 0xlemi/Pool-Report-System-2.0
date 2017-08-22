@@ -36,7 +36,7 @@ class WorkOrderObserver
         }
         $clients = $workOrder->service->userRoleCompanies;
         foreach ($clients as $client) {
-            $client->notify(new NewWorkOrderNotification($workOrder, $urc));
+            // $client->notify(new NewWorkOrderNotification($workOrder, $urc));
         }
 
     }
