@@ -40,6 +40,9 @@ class UserRoleCompany extends Model
      * @var array
      */
     protected $fillable = [
+        'name_extra',
+        'last_name_extra',
+        'email_extra',
         'type',
         'cellphone',
         'address',

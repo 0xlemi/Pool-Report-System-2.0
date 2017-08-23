@@ -53,6 +53,9 @@ class UserTableSeeder extends Seeder
             $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
+                'name_extra' => $user->name,
+                'last_name_extra' => $user->last_name,
+                'email_extra' => $user->email,
                 'chat_id' => Uuid::generate()->string,
                 'chat_nickname' => $user->fullName.' - '.title_case('client'),
                 'user_id' => $user->id,
@@ -109,7 +112,9 @@ class UserTableSeeder extends Seeder
             $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
-
+                'name_extra' => $user->name,
+                'last_name_extra' => $user->last_name,
+                'email_extra' => $user->email,
                 'chat_id' => Uuid::generate()->string,
                 'chat_nickname' => $user->fullName.' - '.title_case('sup'),
                 'user_id' => $user->id,
@@ -173,6 +178,9 @@ class UserTableSeeder extends Seeder
             $user->save();
 
             $userRoleCompany = factory(UserRoleCompany::class)->create([
+                'name_extra' => $user->name,
+                'last_name_extra' => $user->last_name,
+                'email_extra' => $user->email,
                 'chat_id' => Uuid::generate()->string,
                 'chat_nickname' => $user->fullName.' - '.title_case('tech'),
                 'user_id' => $user->id,

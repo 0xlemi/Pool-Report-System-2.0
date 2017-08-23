@@ -116,6 +116,9 @@ class TechniciansController extends PageController
         }
 
         $technician = $user->userRoleCompanies()->create(array_map('htmlentities', [
+            'name_extra' => $request->name,
+            'last_name_extra' => $request->last_name,
+            'email_extra' => $request->email,
             'cellphone' => $request->cellphone,
             'address' => $request->address,
             'about' => $request->about,
@@ -213,6 +216,9 @@ class TechniciansController extends PageController
         // }
 
         $technician->fill(array_map('htmlentities', [
+            'name_extra' => $request->name,
+            'last_name_extra' => $request->last_name,
+            'email_extra' => $request->email,
             'cellphone' => $request->cellphone,
             'address' => $request->address,
             'about' => $request->about,

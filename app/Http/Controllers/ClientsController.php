@@ -101,6 +101,9 @@ class ClientsController extends PageController
 
         $client = $user->userRoleCompanies()->create(
                         array_map('htmlentities', [
+                            'email_extra' => $request->email,
+                            'name_extra' => $request->name,
+                            'last_name_extra' => $request->last_name,
                             'type' => $request->type,
                             'cellphone' => $request->cellphone,
                             'address' => $request->address,
@@ -205,6 +208,9 @@ class ClientsController extends PageController
         }
 
         $client->update([
+            'name_extra' => $request->name,
+            'last_name_extra' => $request->last_name,
+            'email_extra' => $request->email,
             'type' => $request->type,
             'cellphone' => $request->cellphone,
             'address' => $request->address,

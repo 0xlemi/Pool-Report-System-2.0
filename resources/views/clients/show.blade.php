@@ -72,53 +72,98 @@
 									<input type="text" readonly class="form-control" value="{{ $client->seq_id }}">
 								</div>
 							</div>
-							<div class="form-group row">
+
+							<div class="form-group row" style="margin-bottom:30px">
 								<label class="col-sm-2 form-control-label">Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $user->name }}">
+									<div class="input-group" style="margin-bottom:10px">
+										<div class="input-group-addon">Real</div>
+										<input type="text" readonly class="form-control" value="{{ $user->name }}">
+										<span class="input-group-btn">
+											<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
+										</span>
+									</div>
+									<div class="input-group">
+										<div class="input-group-addon">Reference</div>
+										<input type="text" readonly class="form-control" value="{{ $client->name_extra }}">
+									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+
+							<div class="form-group row" style="margin-bottom:30px">
 								<label class="col-sm-2 form-control-label">Last Name</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
+									<div style="margin-bottom:10px">
+										<div class="input-group">
+											<div class="input-group-addon">Real</div>
+											<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
+											<span class="input-group-btn">
+												<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
+											</span>
+										</div>
+									</div>
+									<div class="input-group">
+										<div class="input-group-addon">Reference</div>
+										<input type="text" readonly class="form-control" value="{{ $client->last_name_extra }}">
+									</div>
 								</div>
 							</div>
-							<div class="form-group row">
+
+							<div class="form-group row" style="margin-bottom:30px">
 								<label class="col-sm-2 form-control-label">Email</label>
 								<div class="col-sm-10">
-									<input type="text" readonly class="form-control" value="{{ $user->email }}">
+									<div style="margin-bottom:10px">
+										<div class="input-group">
+											<div class="input-group-addon">Real</div>
+											<input type="text" readonly class="form-control" value="{{ $user->email }}">
+											<span class="input-group-btn">
+												<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
+											</span>
+										</div>
+										<small class="text-muted">Client logs in and recives emails to this email.</small>
+									</div>
+
+									<div class="input-group">
+										<div class="input-group-addon">Reference</div>
+										<input type="text" readonly class="form-control" value="{{ $client->email_extra }}">
+									</div>
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $client->cellphone }}">
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Address</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ $client->address }}">
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Type</label>
 								<div class="col-sm-10">
 									{!! $helper->styledTypeClient($client->type, false) !!}
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Receives email</label>
 								<div class="col-sm-10">
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Language</label>
 								<div class="col-sm-10">
 									<input type="text" readonly class="form-control" value="{{ languageCode_to_text($user->language) }}">
 								</div>
 							</div>
+
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">About</label>
 								<div class="col-sm-10">
@@ -127,6 +172,7 @@
 												readonly>{{ $client->about }}</textarea>
 								</div>
 							</div>
+
 						</form>
 						<hr>
 						<div id="toolbar">

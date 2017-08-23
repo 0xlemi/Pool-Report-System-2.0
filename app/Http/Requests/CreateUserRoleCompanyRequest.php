@@ -27,7 +27,7 @@ class CreateUserRoleCompanyRequest extends Request
             'name' => 'required|string|max:30',
             'last_name' => 'required|string|max:60',
             'email' => 'required|email',
-            'cellphone' => 'required|string|max:50',
+            'cellphone' => 'string|max:50',
             'address' => 'string|max:100',
             'language' => 'required|string|validLanguage',
             'photo' => 'mimes:jpg,jpeg,png',

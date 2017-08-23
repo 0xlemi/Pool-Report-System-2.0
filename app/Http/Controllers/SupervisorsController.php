@@ -105,6 +105,9 @@ class SupervisorsController extends PageController
         }
 
         $supervisor = $user->userRoleCompanies()->create(array_map('htmlentities', [
+            'name_extra' => $request->name,
+            'last_name_extra' => $request->last_name,
+            'email_extra' => $request->email,
             'cellphone' => $request->cellphone,
             'address' => $request->address,
             'about' => $request->about,
@@ -202,6 +205,9 @@ class SupervisorsController extends PageController
         // }
 
         $supervisor->fill(array_map('htmlentities', [
+            'name_extra' => $request->name,
+            'last_name_extra' => $request->last_name,
+            'email_extra' => $request->email,
             'cellphone' => $request->cellphone,
             'address' => $request->address,
             'about' => $request->about,

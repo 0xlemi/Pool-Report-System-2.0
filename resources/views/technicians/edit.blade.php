@@ -53,6 +53,42 @@
 				              	</div>
 							</div>
 
+							<div class="form-group row {{($errors->has('name'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Name:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="name" maxlength="50" value="{{ $technician->name_extra }}">
+									<small class="text-muted">This is just the <strong>REFERENCE</strong> value</small>
+									@if ($errors->has('name'))
+										<small class="text-muted">{{ $errors->first('name') }}</small>
+									@endif
+								</div>
+							</div>
+
+							<div class="form-group row {{($errors->has('last_name'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Last Name:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="last_name" maxlength="50" value="{{ $technician->last_name_extra }}">
+									<small class="text-muted">This is just the <strong>REFERENCE</strong> value</small>
+									@if ($errors->has('last_name'))
+										<small class="text-muted">{{ $errors->first('last_name') }}</small>
+									@endif
+								</div>
+							</div>
+
+							<div class="form-group row {{($errors->has('email'))? 'form-group-error':''}}">
+								<label class="col-sm-2 form-control-label">Email:</label>
+								<div class="col-sm-10">
+									<input type="text" class="form-control maxlength-simple"
+											name="email" maxlength="50" value="{{ $technician->email_extra }}">
+									<small class="text-muted">This is just the <strong>REFERENCE</strong> value</small>
+									@if ($errors->has('email'))
+										<small class="text-muted">{{ $errors->first('email') }}</small>
+									@endif
+								</div>
+							</div>
+
 							<div class="form-group row {{($errors->has('cellphone'))? 'form-group-error':''}}">
 								<label class="col-sm-2 form-control-label">Mobile Phone:</label>
 								<div class="col-sm-10">
