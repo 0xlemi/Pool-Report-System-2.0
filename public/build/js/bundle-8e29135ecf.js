@@ -34145,7 +34145,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-cf2fc28e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./datePicker.vue":254,"./reportTable.vue":288,"vue":214,"vue-hot-reload-api":211}],236:[function(require,module,exports){
+},{"./datePicker.vue":254,"./reportTable.vue":289,"vue":214,"vue-hot-reload-api":211}],236:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35037,7 +35037,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-36c5500d", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"./modal.vue":273,"./urcTable.vue":299,"moment":195,"vue":214,"vue-hot-reload-api":211}],244:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"./modal.vue":273,"./urcTable.vue":300,"moment":195,"vue":214,"vue-hot-reload-api":211}],244:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -36293,7 +36293,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3bc3379e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./alert.vue":238,"./globalProducts.vue":264,"./timezoneDropdown.vue":297,"spin":199,"vue":214,"vue-hot-reload-api":211}],254:[function(require,module,exports){
+},{"./alert.vue":238,"./globalProducts.vue":264,"./timezoneDropdown.vue":298,"spin":199,"vue":214,"vue-hot-reload-api":211}],254:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n.disabled[_v-9a4c0a5e]{\n    pointer-events:none;\n    background-color: white;\n    filter:alpha(opacity=50); /* IE */\n    opacity: 0.5; /* Safari, Opera */\n    -moz-opacity:0.50; /* FireFox */\n    z-index: 20;\n    height: 100%;\n    width: 100%;\n    background-repeat:no-repeat;\n    background-position:center;\n    position:absolute;\n    top: 0px;\n    left: 0px;\n}\n")
 "use strict";
@@ -36881,7 +36881,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1c7af6b2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./vuetablePaginationBootstrap.vue":300,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],261:[function(require,module,exports){
+},{"./vuetablePaginationBootstrap.vue":301,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -38065,7 +38065,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1ef8c711", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./vuetablePaginationBootstrap.vue":300,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],266:[function(require,module,exports){
+},{"./vuetablePaginationBootstrap.vue":301,"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],266:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40261,6 +40261,140 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _alert = require('./alert.vue');
+
+var _alert2 = _interopRequireDefault(_alert);
+
+var _modal = require('./modal.vue');
+
+var _modal2 = _interopRequireDefault(_modal);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Spinner = require("spin");
+
+exports.default = {
+    props: ['realValue', 'referenceValue', 'name', 'text', 'urcId'],
+    components: {
+        modal: _modal2.default,
+        alert: _alert2.default
+    },
+    data: function data() {
+        return {
+            newValue: '',
+            alertMessage: '',
+            alertActive: false,
+            alertType: 'danger',
+            validationErrors: {}
+        };
+    },
+
+    computed: {
+        title: function title() {
+            var name = this.name;
+            var title = name.split('_').join(' ');
+            // Title case
+            return title.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        },
+        modalId: function modalId() {
+            return 'modal' + this.name;
+        },
+        modalTitle: function modalTitle() {
+            return 'Request Change of ' + this.title;
+        }
+    },
+    methods: {
+        change: function change() {
+            var _this = this;
+
+            var clickEvent = event;
+            // save button text for later
+            var buttonTag = clickEvent.target.innerHTML;
+
+            this.resetAlert();
+            // Disable the submit button to prevent repeated clicks:
+            clickEvent.target.disabled = true;
+            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Requesting';
+            new Spinner({
+                left: "90%",
+                radius: 5,
+                length: 4,
+                width: 1
+            }).spin(clickEvent.target);
+
+            // clear the validation errors
+            this.validationErrors = {};
+
+            this.$http.post(Laravel.url + 'urc/' + this.urcId + '/requestChange', (0, _defineProperty3.default)({}, this.name + '_extra', this.newValue)).then(function (response) {
+                _this.revertButton(clickEvent, buttonTag);
+                swal({
+                    title: 'Request Sent',
+                    text: response.data.message,
+                    type: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                _this.clean();
+            }, function (response) {
+                if (response.status == 422) {
+                    _this.validationErrors = response.data;
+                } else {
+                    _this.alertMessage = "There was a error sending change request, send us a email at support@poolreportsystem.com";
+                    _this.alertActive = true;
+                    _this.alertType = "danger";
+                }
+                _this.revertButton(clickEvent, buttonTag);
+            });
+        },
+        revertButton: function revertButton(clickEvent, buttonTag) {
+            // enable, remove spinner and set tab to the one before
+            clickEvent.target.disabled = false;
+            clickEvent.target.innerHTML = buttonTag;
+        },
+        resetAlert: function resetAlert() {
+            this.alertMessage = "";
+            this.alertActive = false;
+            this.alertType = "danger";
+        },
+        checkValidationError: function checkValidationError(fildName) {
+            return fildName in this.validationErrors;
+        },
+        clean: function clean() {
+            this.newValue = '';
+            this.resetAlert();
+            $('#' + this.modalId).modal('hide');
+        },
+        openModal: function openModal() {
+            this.$broadcast('openModal', this.modalId);
+        }
+    }
+
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"form-group row\" style=\"margin-bottom:30px\">\n\t\t<label class=\"col-sm-2 form-control-label\">{{ title }}</label>\n\t\t<div class=\"col-sm-10\">\n\t\t    <div style=\"margin-bottom:10px\">\n    \t\t\t<div class=\"input-group\">\n    \t\t\t\t<div class=\"input-group-addon\">Real</div>\n    \t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"realValue\">\n    \t\t\t\t<span class=\"input-group-btn\">\n    \t\t\t\t\t<button class=\"btn btn-success bootstrap-touchspin-up\" @click=\"openModal\" type=\"button\">Request Change</button>\n    \t\t\t\t</span>\n    \t\t\t</div>\n\t\t\t    <small v-if=\"text\" class=\"text-muted\">{{ text }}</small>\n            </div>\n\t\t\t<div class=\"input-group\">\n\t\t\t\t<div class=\"input-group-addon\">Reference</div>\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"referenceValue\">\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\n    <modal :id=\"modalId\" :title=\"modalTitle\" class=\"\">\n        <div class=\"col-md-12\">\n            <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n            <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('real_value'))}\">\n    \t\t\t<input type=\"text\" v-model=\"newValue\" class=\"form-control\" placeholder=\"New {{ title }}\">\n    \t\t\t<small v-if=\"checkValidationError('real_value')\" class=\"text-muted\">{{ validationErrors.real_value[0] }}</small>\n    \t\t</fieldset>\n        </div>\n        <button slot=\"buttons\" @click=\"change\" type=\"button\" class=\"btn btn-success\">\n    \t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n    \t</button>\n    </modal>\n\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-70a90f66", module.exports)
+  } else {
+    hotAPI.update("_v-70a90f66", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./alert.vue":238,"./modal.vue":273,"babel-runtime/helpers/defineProperty":33,"spin":199,"vue":214,"vue-hot-reload-api":211}],289:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 var _alert = require('./alert.vue');
 
 var _alert2 = _interopRequireDefault(_alert);
@@ -40388,7 +40522,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-e51ec856", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"./missingServices.vue":272,"vue":214,"vue-hot-reload-api":211}],289:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"./missingServices.vue":272,"vue":214,"vue-hot-reload-api":211}],290:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40428,7 +40562,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-4acf9cce", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211}],290:[function(require,module,exports){
+},{"babel-runtime/core-js/object/keys":30,"vue":214,"vue-hot-reload-api":211}],291:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40558,7 +40692,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1906f37a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"vue":214,"vue-hot-reload-api":211}],291:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"vue":214,"vue-hot-reload-api":211}],292:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40614,7 +40748,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-12e0b07a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],292:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],293:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -40670,7 +40804,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-6a76754e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],293:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],294:[function(require,module,exports){
 var __vueify_insert__ = require("vueify/lib/insert-css")
 var __vueify_style__ = __vueify_insert__.insert("\n/* Loading Animation: */\n.vuetable-wrapper[_v-5404efb2] {\n    opacity: 1;\n    position: relative;\n    filter: alpha(opacity=100); /* IE8 and earlier */\n}\n.vuetable-wrapper.loading[_v-5404efb2] {\n  opacity:0.4;\n   transition: opacity .3s ease-in-out;\n   -moz-transition: opacity .3s ease-in-out;\n   -webkit-transition: opacity .3s ease-in-out;\n}\n.vuetable-wrapper.loading[_v-5404efb2]:after {\n  position: absolute;\n  content: '';\n  top: 40%;\n  left: 50%;\n  margin: -30px 0 0 -30px;\n  border-radius: 100%;\n  -webkit-animation-fill-mode: both;\n          animation-fill-mode: both;\n  border: 4px solid #000;\n  height: 60px;\n  width: 60px;\n  background: transparent !important;\n  display: inline-block;\n  -webkit-animation: pulse 1s 0s ease-in-out infinite;\n          animation: pulse 1s 0s ease-in-out infinite;\n}\n@-webkit-keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n@keyframes pulse {\n  0% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n  50% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n         border-width: 12px; }\n  100% {\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6); }\n}\n")
 'use strict';
@@ -40962,7 +41096,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5404efb2", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./modal.vue":273,"./vuetablePaginationBootstrap.vue":300,"babel-runtime/core-js/object/keys":30,"moment":195,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],294:[function(require,module,exports){
+},{"./modal.vue":273,"./vuetablePaginationBootstrap.vue":301,"babel-runtime/core-js/object/keys":30,"moment":195,"vue":214,"vue-hot-reload-api":211,"vueify/lib/insert-css":215,"vuetable/src/components/Vuetable.vue":216}],295:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41056,7 +41190,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-76407650", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./Permissions.vue":233,"./accountSettings.vue":236,"./alert.vue":238,"./billing.vue":239,"./changeEmail.vue":240,"./changePassword.vue":241,"./customizationSettings.vue":253,"./deleteAccount.vue":255,"./notificationSettings.vue":275,"./paymentClient.vue":282,"vue":214,"vue-hot-reload-api":211}],295:[function(require,module,exports){
+},{"./Permissions.vue":233,"./accountSettings.vue":236,"./alert.vue":238,"./billing.vue":239,"./changeEmail.vue":240,"./changePassword.vue":241,"./customizationSettings.vue":253,"./deleteAccount.vue":255,"./notificationSettings.vue":275,"./paymentClient.vue":282,"vue":214,"vue-hot-reload-api":211}],296:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41109,7 +41243,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-00d7fea1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],296:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],297:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41162,7 +41296,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-581e8425", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],297:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],298:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41188,7 +41322,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-8165b142", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":214,"vue-hot-reload-api":211}],298:[function(require,module,exports){
+},{"vue":214,"vue-hot-reload-api":211}],299:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41238,7 +41372,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-73c1b0fc", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":214,"vue-hot-reload-api":211}],299:[function(require,module,exports){
+},{"vue":214,"vue-hot-reload-api":211}],300:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41362,7 +41496,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-1f3ef786", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"vue":214,"vue-hot-reload-api":211}],300:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"vue":214,"vue-hot-reload-api":211}],301:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41395,7 +41529,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-463c4ea7", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":214,"vue-hot-reload-api":211,"vuetable/src/components/VuetablePaginationMixin.vue":217}],301:[function(require,module,exports){
+},{"vue":214,"vue-hot-reload-api":211,"vuetable/src/components/VuetablePaginationMixin.vue":217}],302:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41457,7 +41591,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5d1e310a", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],302:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],303:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41521,7 +41655,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-468323a3", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./dropzone.vue":258,"./photoList.vue":285,"vue":214,"vue-hot-reload-api":211}],303:[function(require,module,exports){
+},{"./dropzone.vue":258,"./photoList.vue":285,"vue":214,"vue-hot-reload-api":211}],304:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41601,7 +41735,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-5a5841d4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./photoList.vue":285,"vue":214,"vue-hot-reload-api":211}],304:[function(require,module,exports){
+},{"./photoList.vue":285,"vue":214,"vue-hot-reload-api":211}],305:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41663,7 +41797,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-584fdf06", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],305:[function(require,module,exports){
+},{"./indexTable.vue":265,"vue":214,"vue-hot-reload-api":211}],306:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42074,7 +42208,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-f400eac6", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"./BootstrapTable.vue":228,"./alert.vue":238,"./dropdown.vue":257,"./dropzone.vue":258,"./photoList.vue":285,"spin":199,"vue":214,"vue-hot-reload-api":211}],306:[function(require,module,exports){
+},{"./BootstrapTable.vue":228,"./alert.vue":238,"./dropdown.vue":257,"./dropzone.vue":258,"./photoList.vue":285,"spin":199,"vue":214,"vue-hot-reload-api":211}],307:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42158,7 +42292,7 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-3eff3ff4", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":214,"vue-hot-reload-api":211}],307:[function(require,module,exports){
+},{"vue":214,"vue-hot-reload-api":211}],308:[function(require,module,exports){
 'use strict';
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -42260,6 +42394,7 @@ $(document).ready(function () {
 	var servicesContractInvoicesThisMonth = require('./components/servicesContractInvoicesThisMonth.vue');
 	var invoiceClientTable = require('./components/invoiceClientTable.vue');
 	var clientPayment = require('./components/clientPayment.vue');
+	var referenceRealValues = require('./components/referenceRealValues.vue');
 
 	var mainVue = new Vue({
 		el: 'body',
@@ -42321,7 +42456,7 @@ $(document).ready(function () {
 			product: product,
 			equipment: equipment,
 			routeTable: routeTable
-		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
+		}, _defineProperty(_components, 'deleteButton', deleteButton), _defineProperty(_components, 'addressFields', addressFields), _defineProperty(_components, 'locationShow', locationShow), _defineProperty(_components, 'clientTable', clientTable), _defineProperty(_components, 'supervisorTable', supervisorTable), _defineProperty(_components, 'technicianTable', technicianTable), _defineProperty(_components, 'changeTechnicianPassword', changeTechnicianPassword), _defineProperty(_components, 'referenceRealValues', referenceRealValues), _defineProperty(_components, 'invoiceTable', invoiceTable), _defineProperty(_components, 'payments', payments), _components),
 		directives: { FormToAjax: FormToAjax },
 		events: {
 			messageViewed: function messageViewed(channel) {
@@ -43056,6 +43191,6 @@ $(document).ready(function () {
 	/* ========================================================================== */
 });
 
-},{"./components/AllNotificationsAsReadButton.vue":227,"./components/ClientReports.vue":231,"./components/Permissions.vue":233,"./components/ReportIndex.vue":235,"./components/addressFields.vue":237,"./components/alert.vue":238,"./components/billing.vue":239,"./components/changeTechnicianPassword.vue":242,"./components/chat.vue":243,"./components/clientContract.vue":245,"./components/clientEquipment.vue":246,"./components/clientPayment.vue":247,"./components/clientTable.vue":248,"./components/clientWorks.vue":249,"./components/contract.vue":250,"./components/countries.vue":251,"./components/deleteButton.vue":256,"./components/dropdown.vue":257,"./components/editReportPhotos.vue":259,"./components/emailVerificationNotice.vue":261,"./components/equipment.vue":262,"./components/finishWorkOrderButton.vue":263,"./components/invoiceClientTable.vue":266,"./components/invoiceTable.vue":267,"./components/locationShow.vue":269,"./components/measurement.vue":270,"./components/messagesWidget.vue":271,"./components/missingServices.vue":272,"./components/notificationsWidget.vue":276,"./components/passport/AuthorizedClients.vue":279,"./components/passport/Clients.vue":280,"./components/passport/PersonalAccessTokens.vue":281,"./components/payments.vue":283,"./components/photo.vue":284,"./components/photoList.vue":285,"./components/product.vue":286,"./components/profile.vue":287,"./components/rolePicker.vue":289,"./components/routeTable.vue":290,"./components/serviceClientTable.vue":291,"./components/serviceTable.vue":292,"./components/servicesContractInvoicesThisMonth.vue":293,"./components/settings.vue":294,"./components/supervisorTable.vue":295,"./components/technicianTable.vue":296,"./components/timezoneDropdown.vue":297,"./components/unreadMessagesCounter.vue":298,"./components/workOrderClientTable.vue":301,"./components/workOrderPhotosEdit.vue":302,"./components/workOrderPhotosShow.vue":303,"./components/workOrderTable.vue":304,"./components/works.vue":305,"./directives/FormToAjax.vue":306,"bootstrap-toggle":35,"dateformat":112,"dropzone":113,"jquery-locationpicker":117,"sendbird":197,"spin":199,"sweetalert":208,"vue":214,"vue-resource":213}]},{},[225,223,222,224,226,307]);
+},{"./components/AllNotificationsAsReadButton.vue":227,"./components/ClientReports.vue":231,"./components/Permissions.vue":233,"./components/ReportIndex.vue":235,"./components/addressFields.vue":237,"./components/alert.vue":238,"./components/billing.vue":239,"./components/changeTechnicianPassword.vue":242,"./components/chat.vue":243,"./components/clientContract.vue":245,"./components/clientEquipment.vue":246,"./components/clientPayment.vue":247,"./components/clientTable.vue":248,"./components/clientWorks.vue":249,"./components/contract.vue":250,"./components/countries.vue":251,"./components/deleteButton.vue":256,"./components/dropdown.vue":257,"./components/editReportPhotos.vue":259,"./components/emailVerificationNotice.vue":261,"./components/equipment.vue":262,"./components/finishWorkOrderButton.vue":263,"./components/invoiceClientTable.vue":266,"./components/invoiceTable.vue":267,"./components/locationShow.vue":269,"./components/measurement.vue":270,"./components/messagesWidget.vue":271,"./components/missingServices.vue":272,"./components/notificationsWidget.vue":276,"./components/passport/AuthorizedClients.vue":279,"./components/passport/Clients.vue":280,"./components/passport/PersonalAccessTokens.vue":281,"./components/payments.vue":283,"./components/photo.vue":284,"./components/photoList.vue":285,"./components/product.vue":286,"./components/profile.vue":287,"./components/referenceRealValues.vue":288,"./components/rolePicker.vue":290,"./components/routeTable.vue":291,"./components/serviceClientTable.vue":292,"./components/serviceTable.vue":293,"./components/servicesContractInvoicesThisMonth.vue":294,"./components/settings.vue":295,"./components/supervisorTable.vue":296,"./components/technicianTable.vue":297,"./components/timezoneDropdown.vue":298,"./components/unreadMessagesCounter.vue":299,"./components/workOrderClientTable.vue":302,"./components/workOrderPhotosEdit.vue":303,"./components/workOrderPhotosShow.vue":304,"./components/workOrderTable.vue":305,"./components/works.vue":306,"./directives/FormToAjax.vue":307,"bootstrap-toggle":35,"dateformat":112,"dropzone":113,"jquery-locationpicker":117,"sendbird":197,"spin":199,"sweetalert":208,"vue":214,"vue-resource":213}]},{},[225,223,222,224,226,308]);
 
 //# sourceMappingURL=bundle.js.map

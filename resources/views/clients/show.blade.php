@@ -73,6 +73,30 @@
 								</div>
 							</div>
 
+							<reference-real-values
+								real-value="{{ $user->name }}"
+								reference-value="{{ $client->name_extra }}"
+								name="name"
+								urc-id="{{ $client->seq_id }}">
+							</reference-real-values>
+
+
+							<reference-real-values
+								real-value="{{ $user->last_name }}"
+								reference-value="{{ $client->last_name_extra }}"
+								name="last_name"
+								urc-id="{{ $client->seq_id }}">
+							</reference-real-values>
+
+
+							<reference-real-values
+								real-value="{{ $user->email }}"
+								reference-value="{{ $client->email_extra }}"
+								name="email"
+								text="Client logs in and recives emails to this email."
+								urc-id="{{ $client->seq_id }}">
+							</reference-real-values>
+
 							<div class="form-group row" style="margin-bottom:30px">
 								<label class="col-sm-2 form-control-label">Name</label>
 								<div class="col-sm-10">

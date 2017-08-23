@@ -111,6 +111,9 @@ Route::resource('reports', 'ReportsController');
 Route::post('technicians/password/{seq_id}', 'TechniciansController@updatePassword');
 Route::resource('technicians', 'TechniciansController');
 
+// UserRoleCompanies
+Route::post('urc/{seq_id}/requestChange', 'UserRoleCompanyController@requestValueChange');
+
 // Work Orders
 Route::post('workorders/finish/{seq_id}', 'WorkOrderController@finish');
 Route::get('workorders/photos/before/{seq_id}', 'WorkOrderController@getPhotosBefore');

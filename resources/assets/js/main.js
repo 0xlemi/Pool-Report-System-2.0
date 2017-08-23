@@ -95,6 +95,7 @@ function isset(strVariableName) {
     let servicesContractInvoicesThisMonth = require('./components/servicesContractInvoicesThisMonth.vue');
     let invoiceClientTable = require('./components/invoiceClientTable.vue');
     let clientPayment = require('./components/clientPayment.vue');
+    let referenceRealValues = require('./components/referenceRealValues.vue');
 
 
     let mainVue = new Vue({
@@ -167,6 +168,8 @@ function isset(strVariableName) {
             // technician
             technicianTable,
             changeTechnicianPassword,
+            // userRoleCompany
+            referenceRealValues,
             // invoice
             invoiceTable,
             payments,
