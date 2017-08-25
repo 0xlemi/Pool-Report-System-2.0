@@ -81,7 +81,6 @@
 								urc-id="{{ $client->seq_id }}">
 							</reference-real-values>
 
-
 							<reference-real-values
 								real-value="{{ $user->last_name }}"
 								reference-value="{{ $client->last_name_extra }}"
@@ -89,7 +88,6 @@
 								:disabled="{{ $user->requestUserChanges->contains('name', 'last_name') }}"
 								urc-id="{{ $client->seq_id }}">
 							</reference-real-values>
-
 
 							<reference-real-values
 								real-value="{{ $user->email }}"

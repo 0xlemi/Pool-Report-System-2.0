@@ -59,26 +59,30 @@
 							</div>
 						</div>
 
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Name</label>
-							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $user->name }}">
-							</div>
-						</div>
+						<reference-real-values
+							real-value="{{ $user->name }}"
+							reference-value="{{ $supervisor->name_extra }}"
+							name="name"
+							:disabled="{{ $user->requestUserChanges->contains('name', 'name') }}"
+							urc-id="{{ $supervisor->seq_id }}">
+						</reference-real-values>
 
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Last Name</label>
-							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
-							</div>
-						</div>
+						<reference-real-values
+							real-value="{{ $user->last_name }}"
+							reference-value="{{ $supervisor->last_name_extra }}"
+							name="last_name"
+							:disabled="{{ $user->requestUserChanges->contains('name', 'last_name') }}"
+							urc-id="{{ $supervisor->seq_id }}">
+						</reference-real-values>
 
-						<div class="form-group row">
-							<label class="col-sm-2 form-control-label">Email</label>
-							<div class="col-sm-10">
-								<input type="text" readonly class="form-control" value="{{ $user->email }}">
-							</div>
-						</div>
+						<reference-real-values
+							real-value="{{ $user->email }}"
+							reference-value="{{ $supervisor->email_extra }}"
+							name="email"
+							text="Supervisor logs in and recives emails to this email."
+							:disabled="{{ $user->requestUserChanges->contains('name', 'email') }}"
+							urc-id="{{ $supervisor->seq_id }}">
+						</reference-real-values>
 
 						<div class="form-group row">
 							<label class="col-sm-2 form-control-label">Mobile Phone</label>
