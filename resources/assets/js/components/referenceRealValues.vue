@@ -7,9 +7,10 @@
     				<div class="input-group-addon">Real</div>
     				<input type="text" readonly class="form-control" :value="realValue">
     				<span class="input-group-btn">
-    					<button class="btn btn-success bootstrap-touchspin-up" @click="openModal" type="button">Request Change</button>
+    					<button class="btn btn-success bootstrap-touchspin-up" @click="openModal" type="button" :disabled="disabled">Request Change</button>
     				</span>
     			</div>
+			    <small v-if="disabled" class="text-muted">Request change disabled, because there is already a one pending.</small>
 			    <small v-if="text" class="text-muted">{{ text }}</small>
             </div>
 			<div class="input-group">
@@ -24,9 +25,9 @@
         <div class="col-md-12">
             <alert :type="alertType" :message="alertMessage" :active="alertActive"></alert>
 
-            <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError('real_value'))}">
+            <fieldset class="form-group" :class="{'form-group-error' : (checkValidationError(this.name))}">
     			<input type="text" v-model="newValue" class="form-control" placeholder="New {{ title }}">
-    			<small v-if="checkValidationError('real_value')" class="text-muted">{{ validationErrors.real_value[0] }}</small>
+    			<small v-if="checkValidationError(this.name)" class="text-muted">{{ validationErrors[this.name][0] }}</small>
     		</fieldset>
         </div>
         <button slot="buttons" @click="change" type="button" class="btn btn-success">
@@ -42,7 +43,7 @@ import modal from './modal.vue';
 var Spinner = require("spin");
 
 export default {
-    props: [ 'realValue' , 'referenceValue', 'name', 'text', 'urcId' ],
+    props: [ 'realValue' , 'referenceValue', 'name', 'text', 'urcId', 'disabled'],
     components: {
         modal,
         alert
@@ -91,7 +92,7 @@ export default {
 			this.validationErrors = {};
 
 			this.$http.post(Laravel.url+'urc/'+this.urcId+'/requestChange', {
-				[this.name+'_extra']: this.newValue,
+				[this.name]: this.newValue,
 			}).then((response) => {
 				this.revertButton(clickEvent, buttonTag);
 				swal({
@@ -101,10 +102,15 @@ export default {
 					timer: 2000,
 					showConfirmButton: false
                 });
+				this.disabled = true;
 				this.clean();
 			}, (response) => {
 				if(response.status == 422){
 					this.validationErrors = response.data;
+				}else if(response.status == 400){
+					this.alertMessage = response.data;
+					this.alertActive = true;
+					this.alertType = "warning";
 				}else{
 					this.alertMessage = "There was a error sending change request, send us a email at support@poolreportsystem.com";
 					this.alertActive = true;

@@ -40258,7 +40258,7 @@ if (module.hot) {(function () {  module.hot.accept()
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+				value: true
 });
 
 var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
@@ -40278,106 +40278,111 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Spinner = require("spin");
 
 exports.default = {
-    props: ['realValue', 'referenceValue', 'name', 'text', 'urcId'],
-    components: {
-        modal: _modal2.default,
-        alert: _alert2.default
-    },
-    data: function data() {
-        return {
-            newValue: '',
-            alertMessage: '',
-            alertActive: false,
-            alertType: 'danger',
-            validationErrors: {}
-        };
-    },
+				props: ['realValue', 'referenceValue', 'name', 'text', 'urcId', 'disabled'],
+				components: {
+								modal: _modal2.default,
+								alert: _alert2.default
+				},
+				data: function data() {
+								return {
+												newValue: '',
+												alertMessage: '',
+												alertActive: false,
+												alertType: 'danger',
+												validationErrors: {}
+								};
+				},
 
-    computed: {
-        title: function title() {
-            var name = this.name;
-            var title = name.split('_').join(' ');
-            // Title case
-            return title.replace(/\w\S*/g, function (txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-        },
-        modalId: function modalId() {
-            return 'modal' + this.name;
-        },
-        modalTitle: function modalTitle() {
-            return 'Request Change of ' + this.title;
-        }
-    },
-    methods: {
-        change: function change() {
-            var _this = this;
+				computed: {
+								title: function title() {
+												var name = this.name;
+												var title = name.split('_').join(' ');
+												// Title case
+												return title.replace(/\w\S*/g, function (txt) {
+																return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+												});
+								},
+								modalId: function modalId() {
+												return 'modal' + this.name;
+								},
+								modalTitle: function modalTitle() {
+												return 'Request Change of ' + this.title;
+								}
+				},
+				methods: {
+								change: function change() {
+												var _this = this;
 
-            var clickEvent = event;
-            // save button text for later
-            var buttonTag = clickEvent.target.innerHTML;
+												var clickEvent = event;
+												// save button text for later
+												var buttonTag = clickEvent.target.innerHTML;
 
-            this.resetAlert();
-            // Disable the submit button to prevent repeated clicks:
-            clickEvent.target.disabled = true;
-            clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Requesting';
-            new Spinner({
-                left: "90%",
-                radius: 5,
-                length: 4,
-                width: 1
-            }).spin(clickEvent.target);
+												this.resetAlert();
+												// Disable the submit button to prevent repeated clicks:
+												clickEvent.target.disabled = true;
+												clickEvent.target.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Requesting';
+												new Spinner({
+																left: "90%",
+																radius: 5,
+																length: 4,
+																width: 1
+												}).spin(clickEvent.target);
 
-            // clear the validation errors
-            this.validationErrors = {};
+												// clear the validation errors
+												this.validationErrors = {};
 
-            this.$http.post(Laravel.url + 'urc/' + this.urcId + '/requestChange', (0, _defineProperty3.default)({}, this.name + '_extra', this.newValue)).then(function (response) {
-                _this.revertButton(clickEvent, buttonTag);
-                swal({
-                    title: 'Request Sent',
-                    text: response.data.message,
-                    type: 'success',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-                _this.clean();
-            }, function (response) {
-                if (response.status == 422) {
-                    _this.validationErrors = response.data;
-                } else {
-                    _this.alertMessage = "There was a error sending change request, send us a email at support@poolreportsystem.com";
-                    _this.alertActive = true;
-                    _this.alertType = "danger";
-                }
-                _this.revertButton(clickEvent, buttonTag);
-            });
-        },
-        revertButton: function revertButton(clickEvent, buttonTag) {
-            // enable, remove spinner and set tab to the one before
-            clickEvent.target.disabled = false;
-            clickEvent.target.innerHTML = buttonTag;
-        },
-        resetAlert: function resetAlert() {
-            this.alertMessage = "";
-            this.alertActive = false;
-            this.alertType = "danger";
-        },
-        checkValidationError: function checkValidationError(fildName) {
-            return fildName in this.validationErrors;
-        },
-        clean: function clean() {
-            this.newValue = '';
-            this.resetAlert();
-            $('#' + this.modalId).modal('hide');
-        },
-        openModal: function openModal() {
-            this.$broadcast('openModal', this.modalId);
-        }
-    }
+												this.$http.post(Laravel.url + 'urc/' + this.urcId + '/requestChange', (0, _defineProperty3.default)({}, this.name, this.newValue)).then(function (response) {
+																_this.revertButton(clickEvent, buttonTag);
+																swal({
+																				title: 'Request Sent',
+																				text: response.data.message,
+																				type: 'success',
+																				timer: 2000,
+																				showConfirmButton: false
+																});
+																_this.disabled = true;
+																_this.clean();
+												}, function (response) {
+																if (response.status == 422) {
+																				_this.validationErrors = response.data;
+																} else if (response.status == 400) {
+																				_this.alertMessage = response.data;
+																				_this.alertActive = true;
+																				_this.alertType = "warning";
+																} else {
+																				_this.alertMessage = "There was a error sending change request, send us a email at support@poolreportsystem.com";
+																				_this.alertActive = true;
+																				_this.alertType = "danger";
+																}
+																_this.revertButton(clickEvent, buttonTag);
+												});
+								},
+								revertButton: function revertButton(clickEvent, buttonTag) {
+												// enable, remove spinner and set tab to the one before
+												clickEvent.target.disabled = false;
+												clickEvent.target.innerHTML = buttonTag;
+								},
+								resetAlert: function resetAlert() {
+												this.alertMessage = "";
+												this.alertActive = false;
+												this.alertType = "danger";
+								},
+								checkValidationError: function checkValidationError(fildName) {
+												return fildName in this.validationErrors;
+								},
+								clean: function clean() {
+												this.newValue = '';
+												this.resetAlert();
+												$('#' + this.modalId).modal('hide');
+								},
+								openModal: function openModal() {
+												this.$broadcast('openModal', this.modalId);
+								}
+				}
 
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"form-group row\" style=\"margin-bottom:30px\">\n\t\t<label class=\"col-sm-2 form-control-label\">{{ title }}</label>\n\t\t<div class=\"col-sm-10\">\n\t\t    <div style=\"margin-bottom:10px\">\n    \t\t\t<div class=\"input-group\">\n    \t\t\t\t<div class=\"input-group-addon\">Real</div>\n    \t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"realValue\">\n    \t\t\t\t<span class=\"input-group-btn\">\n    \t\t\t\t\t<button class=\"btn btn-success bootstrap-touchspin-up\" @click=\"openModal\" type=\"button\">Request Change</button>\n    \t\t\t\t</span>\n    \t\t\t</div>\n\t\t\t    <small v-if=\"text\" class=\"text-muted\">{{ text }}</small>\n            </div>\n\t\t\t<div class=\"input-group\">\n\t\t\t\t<div class=\"input-group-addon\">Reference</div>\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"referenceValue\">\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\n    <modal :id=\"modalId\" :title=\"modalTitle\" class=\"\">\n        <div class=\"col-md-12\">\n            <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n            <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError('real_value'))}\">\n    \t\t\t<input type=\"text\" v-model=\"newValue\" class=\"form-control\" placeholder=\"New {{ title }}\">\n    \t\t\t<small v-if=\"checkValidationError('real_value')\" class=\"text-muted\">{{ validationErrors.real_value[0] }}</small>\n    \t\t</fieldset>\n        </div>\n        <button slot=\"buttons\" @click=\"change\" type=\"button\" class=\"btn btn-success\">\n    \t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n    \t</button>\n    </modal>\n\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\t<div class=\"form-group row\" style=\"margin-bottom:30px\">\n\t\t<label class=\"col-sm-2 form-control-label\">{{ title }}</label>\n\t\t<div class=\"col-sm-10\">\n\t\t    <div style=\"margin-bottom:10px\">\n    \t\t\t<div class=\"input-group\">\n    \t\t\t\t<div class=\"input-group-addon\">Real</div>\n    \t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"realValue\">\n    \t\t\t\t<span class=\"input-group-btn\">\n    \t\t\t\t\t<button class=\"btn btn-success bootstrap-touchspin-up\" @click=\"openModal\" type=\"button\" :disabled=\"disabled\">Request Change</button>\n    \t\t\t\t</span>\n    \t\t\t</div>\n\t\t\t    <small v-if=\"disabled\" class=\"text-muted\">Request change disabled, because there is already a one pending.</small>\n\t\t\t    <small v-if=\"text\" class=\"text-muted\">{{ text }}</small>\n            </div>\n\t\t\t<div class=\"input-group\">\n\t\t\t\t<div class=\"input-group-addon\">Reference</div>\n\t\t\t\t<input type=\"text\" readonly=\"\" class=\"form-control\" :value=\"referenceValue\">\n\t\t\t</div>\n\t\t</div>\n\t</div>\n\n\n    <modal :id=\"modalId\" :title=\"modalTitle\" class=\"\">\n        <div class=\"col-md-12\">\n            <alert :type=\"alertType\" :message=\"alertMessage\" :active=\"alertActive\"></alert>\n\n            <fieldset class=\"form-group\" :class=\"{'form-group-error' : (checkValidationError(this.name))}\">\n    \t\t\t<input type=\"text\" v-model=\"newValue\" class=\"form-control\" placeholder=\"New {{ title }}\">\n    \t\t\t<small v-if=\"checkValidationError(this.name)\" class=\"text-muted\">{{ validationErrors[this.name][0] }}</small>\n    \t\t</fieldset>\n        </div>\n        <button slot=\"buttons\" @click=\"change\" type=\"button\" class=\"btn btn-success\">\n    \t\t<i class=\"glyphicon glyphicon-ok\"></i>&nbsp;&nbsp;&nbsp;Change\n    \t</button>\n    </modal>\n\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)

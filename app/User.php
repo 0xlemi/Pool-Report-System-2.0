@@ -15,6 +15,7 @@ use App\PRS\Traits\Model\ImageTrait;
 use Hash;
 use App\Notifications\ResetPasswordNotification;
 use App\VerificationToken;
+use App\RequestUserChange;
 use App\Company;
 use App\UserRoleCompany;
 use App\UrlSigner;
@@ -122,6 +123,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserRoleCompany::class);
     }
+
+	public function requestUserChanges()
+	{
+        return $this->hasMany(RequestUserChange::class);
+	}
 
 
 }

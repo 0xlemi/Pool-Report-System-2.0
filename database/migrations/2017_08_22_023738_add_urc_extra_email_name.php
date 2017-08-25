@@ -18,9 +18,6 @@ class AddUrcExtraEmailName extends Migration
             $table->string('last_name_extra')->nullable();
             $table->string('email_extra')->nullable();
 
-            // $table->boolean('change_email_request')->default(false);
-            // $table->boolean('change_name_request')->default(false);
-
             $table->boolean('denied_change_email')->default(false);
             $table->boolean('denied_change_name')->default(false);
         });
@@ -38,8 +35,6 @@ class AddUrcExtraEmailName extends Migration
                         'name_extra',
                         'last_name_extra',
                         'email_extra',
-                        // 'change_email_request',
-                        // 'change_name_request',
                         'denied_change_email',
                         'denied_change_name'
                     ]);

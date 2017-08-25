@@ -77,6 +77,7 @@
 								real-value="{{ $user->name }}"
 								reference-value="{{ $client->name_extra }}"
 								name="name"
+								:disabled="{{ $user->requestUserChanges->contains('name', 'name') }}"
 								urc-id="{{ $client->seq_id }}">
 							</reference-real-values>
 
@@ -85,6 +86,7 @@
 								real-value="{{ $user->last_name }}"
 								reference-value="{{ $client->last_name_extra }}"
 								name="last_name"
+								:disabled="{{ $user->requestUserChanges->contains('name', 'last_name') }}"
 								urc-id="{{ $client->seq_id }}">
 							</reference-real-values>
 
@@ -94,65 +96,9 @@
 								reference-value="{{ $client->email_extra }}"
 								name="email"
 								text="Client logs in and recives emails to this email."
+								:disabled="{{ $user->requestUserChanges->contains('name', 'email') }}"
 								urc-id="{{ $client->seq_id }}">
 							</reference-real-values>
-
-							<div class="form-group row" style="margin-bottom:30px">
-								<label class="col-sm-2 form-control-label">Name</label>
-								<div class="col-sm-10">
-									<div class="input-group" style="margin-bottom:10px">
-										<div class="input-group-addon">Real</div>
-										<input type="text" readonly class="form-control" value="{{ $user->name }}">
-										<span class="input-group-btn">
-											<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
-										</span>
-									</div>
-									<div class="input-group">
-										<div class="input-group-addon">Reference</div>
-										<input type="text" readonly class="form-control" value="{{ $client->name_extra }}">
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group row" style="margin-bottom:30px">
-								<label class="col-sm-2 form-control-label">Last Name</label>
-								<div class="col-sm-10">
-									<div style="margin-bottom:10px">
-										<div class="input-group">
-											<div class="input-group-addon">Real</div>
-											<input type="text" readonly class="form-control" value="{{ $user->last_name }}">
-											<span class="input-group-btn">
-												<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
-											</span>
-										</div>
-									</div>
-									<div class="input-group">
-										<div class="input-group-addon">Reference</div>
-										<input type="text" readonly class="form-control" value="{{ $client->last_name_extra }}">
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group row" style="margin-bottom:30px">
-								<label class="col-sm-2 form-control-label">Email</label>
-								<div class="col-sm-10">
-									<div style="margin-bottom:10px">
-										<div class="input-group">
-											<div class="input-group-addon">Real</div>
-											<input type="text" readonly class="form-control" value="{{ $user->email }}">
-											<span class="input-group-btn">
-												<button class="btn btn-success bootstrap-touchspin-up" type="button">Request Change</button>
-											</span>
-										</div>
-										<small class="text-muted">Client logs in and recives emails to this email.</small>
-									</div>
-
-									<div class="input-group">
-										<div class="input-group-addon">Reference</div>
-										<input type="text" readonly class="form-control" value="{{ $client->email_extra }}">
-									</div>
-								</div>
-							</div>
 
 							<div class="form-group row">
 								<label class="col-sm-2 form-control-label">Mobile Phone</label>
