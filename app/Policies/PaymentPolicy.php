@@ -34,7 +34,11 @@ class PaymentPolicy
      */
     public function view(User $user, Payment $payment)
     {
-        return $user->selectedUser->hasPermission('payment', 'view');
+        $urc = $user->selectedUser;
+        if($urc->isRole('client')){
+            return ($urc->invoices()->payments()->where('payments.id', $payment->id)->first()) ? true : false;
+        }
+        return $urc->hasPermission('payment', 'view');
     }
 
     /**
