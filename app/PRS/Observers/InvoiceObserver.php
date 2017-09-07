@@ -16,14 +16,14 @@ class InvoiceObserver
      */
     public function created(Invoice $invoice)
     {
-        // Notifications
         $urc = Logged::user()->selectedUser;
+        // Notifications
         $people = $urc->company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($people as $person){
-            $person->notify(new NewInvoiceNotification($invoice, $urc));
+            $person->notify(new NewInvoiceNotification($invoice));
         }
         foreach ($invoice->invoiceable->service->userRoleCompanies as $client) {
-            $client->notify(new NewInvoiceNotification($invoice, $urc));
+            $client->notify(new NewInvoiceNotification($invoice));
         }
     }
 

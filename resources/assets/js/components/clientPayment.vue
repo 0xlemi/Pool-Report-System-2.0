@@ -1,7 +1,7 @@
 <template>
 
 	<button type="button" class="btn btn-success" @click="clickButton">
-		<i class="fa fa-money"></i>&nbsp;&nbsp;&nbsp;Manage Payments
+		<i class="fa fa-money"></i>&nbsp;&nbsp;&nbsp;See Payments
 	</button>
 
 	<modal :title="title" id="paymentsModal">
@@ -27,7 +27,7 @@
 						<span v-else class="label label-default">Not Verified</span>
 					</h3>
 					<small v-if="verified" class="text-muted">Payment was done through Pool Report System.</small>
-					<small v-else class="text-muted">Payment was added manually.</small>
+					<small v-else class="text-muted">Payment was logged manually by you pool company.</small>
 				</div>
 			</div>
 

@@ -85,7 +85,8 @@ class DeviceMagicController extends Controller
         // Send Notifications
         $urcs = $company->userRoleCompanies()->ofRole('admin', 'supervisor')->get();
         foreach ($urcs as $urc){
-            $urc->notify(new NewReportNotification($report, $person));
+            // need a special type of notifiacatoin for employees
+            // $urc->notify(new NewReportNotification($report, $person));
         }
         foreach ($report->service->userRoleCompanies as $client) {
             $client->notify(new NewReportNotification($report, $person));

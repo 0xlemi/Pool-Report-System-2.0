@@ -40,6 +40,8 @@ class QueryController extends PageController
         // NEEDS TO OPTIMIZE
     public function servicesContractMonthlyBalance(Request $request)
     {
+        // if(Logged::user()
+
         $filter = $this->serviceContractFilter($request);
         // Paginate
         $servicesPaginated = $filter->services->paginate($filter->limit);

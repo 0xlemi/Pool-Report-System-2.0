@@ -3,12 +3,11 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
-use App\Console\Commands\ClearLog;
-use App\Console\Commands\AddDeviceMagicForms;
 use App\Jobs\RecordServiceHistory;
 use App\Jobs\RemoveExpiredUrlSigners;
 use App\Jobs\UpdateSubscriptionQuantity;
 use App\Jobs\GenerateInvoicesForContracts;
+use App\Company;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -22,7 +21,9 @@ class Kernel extends ConsoleKernel
         Commands\imageVariousSizes::class,
         Commands\ClearLog::class,
         Commands\UpdateSubscriptionQuantity::class,
-        Commands\AddDeviceMagicForms::class
+        Commands\AddDeviceMagicForms::class,
+        Commands\CreateContractInvoicesTodayCommand::class,
+        Commands\CreateContactInvoice::class,
     ];
 
     /**
@@ -35,7 +36,9 @@ class Kernel extends ConsoleKernel
     {
         // add invoices to serviceContracts that their day is do
         $schedule->call(function () {
-            dispatch(new GenerateInvoicesForContracts());
+            foreach (Company::all() as $company) {
+                dispatch(new GenerateInvoicesForContracts($company));
+            }
         })->daily();
 
         // remove UrlSigners that are expired
@@ -50,7 +53,7 @@ class Kernel extends ConsoleKernel
 
         // Update the stripe tech and sub user quantity for all companies
         $schedule->call(function () {
-            foreach ($companies as $key => $company) {
+            foreach (Company::all() as $company) {
                 dispatch(new UpdateSubscriptionQuantity($company));
             }
         })->daily();

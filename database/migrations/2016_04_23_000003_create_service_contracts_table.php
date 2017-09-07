@@ -15,7 +15,7 @@ class CreateServiceContractsTable extends Migration
     {
         Schema::create('service_contracts', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('start');
+            $table->date('start'); // Company Timezone
             $table->boolean('active')->default(true);
             $table->integer('service_days');
             $table->decimal('amount', 16, 2);

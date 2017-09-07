@@ -6,12 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\ServiceContract;
-use Carbon\Carbon;
+use Artisan;
+use App\Company;
 
 class GenerateInvoicesForContracts implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $company;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct(Company $company)
+    {
+        $this->company = $company;
+    }
 
     /**
      * Execute the job.
@@ -20,23 +32,8 @@ class GenerateInvoicesForContracts implements ShouldQueue
      */
     public function handle()
     {
-        $contracts = ServiceContract::all();
-
-        foreach ($contracts as $contract) {
-            if($contract->checkIfTodayContractChargesInvoice()){
-
-                $now = Carbon::now($contract->admin()->timezone);
-                $month = $now->format('F');
-                $year = $now->format('Y');
-
-                $contract->invoices()->create([
-                    'amount' => $contract->amount,
-                    'currency' => $contract->currency,
-                    'description' => "Pool Cleaning Service and Manteniance for {$month} of {$year}",
-                    'admin_id' => $contract->admin()->id,
-                ]);
-
-            }
-        }
+        Artisan::call('invoice:contractsToday', [
+            'company_id' => $company->id,
+        ]);
     }
 }
