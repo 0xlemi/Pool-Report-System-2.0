@@ -59,6 +59,11 @@ class Invoice extends Model
         return $query->whereNotNull('invoices.closed');
     }
 
+    public function scopeOnDay($query, int $day)
+    {
+        $invoices = $query->whereDay('invoices.created_at', $day);
+    }
+
     public function scopeOnMonth($query, int $month, int $year = null)
     {
         $company = Logged::company();

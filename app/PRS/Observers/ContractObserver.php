@@ -22,7 +22,7 @@ class ContractObserver
     public function created(ServiceContract $contract)
     {
         // check invoice for date
-        if($contract->checkIfTodayContractChargesInvoice(false)){
+        if($contract->checkIfInDayContractInvoiceIsDo(false)){
 
             $company = $contract->company;
             $now = Carbon::now($company->timezone);

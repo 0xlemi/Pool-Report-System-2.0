@@ -113,7 +113,7 @@ class ServiceContract extends Model
         return false;
     }
 
-    public function checkIfTodayContractChargesInvoice($checkActive = true)
+    public function checkIfInDayContractInvoiceIsDo($checkActive = true, int $day)
     {
         // we dont charge unactive services
         if((!$this->active) && $checkActive){
@@ -121,16 +121,23 @@ class ServiceContract extends Model
         }
 
         $today = Carbon::today($this->company->timezone);
+        // If day is null use it as today
+        if(!$day){
+            $day = $today->format('d');
+        }
         // check for another invoice linked to the service contract in the same day
         // so we dont generate duplicate invoices
-        if($this->invoicedByDate($today)){
-            return false;
-        }
+        // if($this->invoices()->onMonth()->onDay($day)->count() < 1){
+        //     return false;
+        // }
+        // if($this->invoicedByDate($day)){
+        //     return false;
+        // }
 
         $contractStartDate = Carbon::parse($this->start, $this->company->timezone);
         // check that is the date of the month
         // for this service contract
-        return ($today->format('d') == $contractStartDate->format('d'));
+        return ($day == $contractStartDate->format('d'));
     }
 
     //******** VALUE OBJECTS ********

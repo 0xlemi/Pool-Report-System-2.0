@@ -14,14 +14,14 @@ class CreateContractInvoicesTodayCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'invoice:contractsToday {company_id}';
+    protected $signature = 'invoice:contractsToday {company_id} {day=default : days of the month the invoice is due.} {description=default : Description in the invoices created}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create invoices for all the service contracts that payment is due today';
+    protected $description = 'Create invoices for all the service contracts that payment is due in a day of the month.';
 
     /**
      * Create a new command instance.
@@ -50,17 +50,18 @@ class CreateContractInvoicesTodayCommand extends Command
             $this->info('No active contracts with today as generation day.');
             return null;
         }
-
         $all = [];
         $count = 0;
+        $day = ($this->argument('day') != "default") ?: Carbon::today($company->timezone)->format('d');
         foreach ($contracts as $contract) {
-            if($contract->checkIfTodayContractChargesInvoice()){
+            if($contract->checkIfInDayContractInvoiceIsDo(true, $day)){
                 $generateInvoices->createInoviceFromContract($contract, Carbon::now());
                 $count++;
             }
+
         }
         if($count == 0){
-            $this->info("No invocies needed to be created.");
+            $this->info("No invocies needed to be created for the day.");
         }else{
             $this->info("There where {$count} invoices created.");
         }

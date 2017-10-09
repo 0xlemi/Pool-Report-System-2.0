@@ -43,7 +43,7 @@ class ServiceContractTest extends DatabaseTester
         ]);
 
         // When
-        $true = $contract->checkIfTodayContractChargesInvoice();
+        $true = $contract->checkIfInDayContractInvoiceIsDo();
 
         // Then
         $this->assertTrue($true);
